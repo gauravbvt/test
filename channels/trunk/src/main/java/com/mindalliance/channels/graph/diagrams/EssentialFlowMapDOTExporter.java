@@ -252,7 +252,7 @@ public class EssentialFlowMapDOTExporter extends AbstractDOTExporter<Node, Flow>
 
     private void exportGoalEdge( Part part, Goal goal, PrintWriter out, Graph<Node, Flow> g ) {
         List<DOTAttribute> attributes = getNonFlowEdgeAttributes();
-        attributes.add( new DOTAttribute( "label", "achieves" ) );
+        attributes.add( new DOTAttribute( "label", "impact" ) );
         String goalId = getGoalVertexId( part, goal );
         String partId = getMetaProvider().getVertexIDProvider().getVertexName( part );
         out.print( getIndent() + partId + getArrow( g ) + goalId );

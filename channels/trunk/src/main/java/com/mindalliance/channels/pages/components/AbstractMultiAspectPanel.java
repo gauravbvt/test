@@ -265,7 +265,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      */
     protected abstract MenuPanel makeActionMenu( String menuId );
 
-    private void annotateHeaderTitle( ModelObject object, Analyst analyst ) {
+    protected void annotateHeaderTitle( ModelObject object, Analyst analyst ) {
 
         String summary = analyst.getIssuesSummary( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
 

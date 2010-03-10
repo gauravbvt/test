@@ -623,9 +623,18 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             Part connectingPart = connector.getInnerFlow().getLocalPart();
             return getNode().isConnectedTo( isSend(), connectingPart, getFlow().getName() );
         } else {
+            // Tested connector is from another segment -> would lead to an external flow
             Flow flow = getFlow();
+            // only a target connector (externalized connector)  registers the external flows
+            // external flows are to a part which is itself the target of an internal flow
+            // with another (internalized) connector as source
             Connector externalizedConnector = (Connector) ( isSend() ? flow.getTarget() : connector );
-            final Connector internalizedConnector = (Connector) ( !isSend() ? flow.getSource() : connector );
+            final Connector internalizedConnector = (Connector) (
+                    isSend()
+                            ? connector :
+                            flow.isExternal()
+                                    ? ( (ExternalFlow) flow ).getConnector()
+                                    : flow.getSource() );
             return CollectionUtils.exists(
                     IteratorUtils.toList( externalizedConnector.externalFlows() ),
                     new Predicate() {

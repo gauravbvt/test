@@ -50,7 +50,7 @@ public class ActorPlaybook extends PlaybookPage {
                 new Label( "title", "Playbook: " + name ),
                 new Label( "header", name ).setRenderBodyOnly( true ),
                 new Label( "ess", name.endsWith( "s" ) ? "" : "s" ).setRenderBodyOnly( true ),
-
+                new Label( "planName", service.getCurrentPlan().getName() ),
                 new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class ),
 
                 new ListView<EventParts>( "events", classifyParts( service, actor ) ) {
@@ -71,7 +71,7 @@ public class ActorPlaybook extends PlaybookPage {
                     protected void populateItem( ListItem<FlowSet> item ) {
                         FlowSet flowSet = item.getModelObject();
                         item.add(
-                                new Label( "spec", flowSet.getSourceString( ) ).setRenderBodyOnly( true ),
+                                new Label( "spec", flowSet.getSourceString() ).setRenderBodyOnly( true ),
                                 newFlowList( actor, flowSet.getSynonymSets() ),
                                 createPicture( "pic", flowSet.getActor(), "../", DEFAULT_PIC ) );
                     }
@@ -189,7 +189,7 @@ public class ActorPlaybook extends PlaybookPage {
         ResourceSpec spec = ResourceSpec.with( actor );
 
         Set<Flow> flows = new HashSet<Flow>();
-        for ( Part part : service.findAllAssignedParts( actor ) )  {
+        for ( Part part : service.findAllAssignedParts( actor ) ) {
             for ( Iterator<Flow> iterator = part.flows(); iterator.hasNext(); ) {
                 Flow flow = iterator.next();
                 if ( part.equals( flow.getTarget() ) && flow.isTriggeringToTarget() )

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
@@ -82,6 +83,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel,
                           Set<Long> expansions, String aspect ) {
         super( id, iModel, expansions, aspect );
+    }
+
+    protected void annotateHeaderTitle( ModelObject object, Analyst analyst ) {
+        // Show no issue indicator - too costly! --todo : review
     }
 
     /**

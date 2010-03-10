@@ -40,7 +40,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
     /**
      * Font for subgraph labels.
      */
-    private static final String SUBGRAPH_FONT = "Arial-Bold";
+    private static final String SUBGRAPH_FONT = "Arial Bold Oblique";
     /**
      * Font size for subgraph labels.
      */
@@ -61,7 +61,19 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
      * Distance for edge head and tail labels.
      */
     private static final String LABEL_ANGLE = "45";
+   /**
+     * Highlight pen width.
+     */
+    private static final String HIGHLIGHT_PENWIDTH = "2.0";
     /**
+     * Highlight pen color.
+     */
+    private static final String HIGHLIGHT_COLOR = "gray";
+    /**
+     * Font of highlighted node.
+     */
+    private static final String HIGHLIGHT_NODE_FONT = "Arial Bold";
+   /**
      * Segment in context.
      */
     private ModelObject context;
@@ -238,14 +250,16 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                 if ( highlighted ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
                     list.add( new DOTAttribute( "style", "solid" ) );
-                    list.add( new DOTAttribute( "color", "gray" ) );
+                    list.add( new DOTAttribute( "color", HIGHLIGHT_COLOR ) );
+                    list.add( new DOTAttribute( "penwidth", HIGHLIGHT_PENWIDTH ) );
+                    list.add( new DOTAttribute( "fontname", HIGHLIGHT_NODE_FONT ) );
                 } else {
                     list.add( new DOTAttribute( "shape", "none" ) );
+                    list.add( new DOTAttribute( "fontname", NODE_FONT ) );
                 }
             }
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
-            list.add( new DOTAttribute( "fontname", NODE_FONT ) );
             if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,

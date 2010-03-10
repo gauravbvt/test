@@ -7,13 +7,18 @@
     <script type="text/javascript" src="jquery-ui-1.7.2.custom.min.js"></script>
     <link rel="stylesheet" href="channels.css" type="text/css">
     <script type="text/javascript">
-        function channels_keypress( kc, t ) {
-            // Patch autocomplete field bug (choices list not hidden)
-            if ( kc == 13 && t == 'text' ) {
-                var autocompleteList = $(".wicket-aa-container");
-                if ( autocompleteList != null ) {
-                    autocompleteList.hide();
+        function channels_keypress( kc, t, target ) {
+            if ( kc == 13 ) {
+                // Patch autocomplete field bug (choices list not hidden)
+                if ( t == 'text' ) {
+                    var autocompleteList = $(".wicket-aa-container");
+                    if ( autocompleteList != null ) {
+                        autocompleteList.hide();
+                    }
                 }
+                target.focus();
+                target.blur();
+                return false;
             }
             // Capture backspace keypress when not in an input field
             return ((kc != 8) || ( t == 'text' ) ||
@@ -24,13 +29,13 @@
             document.onkeydown = function() { // IE
                 var t = event.srcElement.type;
                 var kc = event.keyCode;
-                return channels_keypress(kc, t);
+                return channels_keypress(kc, t, event.srcElement);
             }
         else
             document.onkeypress = function( e ) { // FireFox/Others
                 var t = e.target.type;
                 var kc = e.keyCode;
-                return channels_keypress(kc, t);
+                return channels_keypress(kc, t, e.target);
             }
     </script>
     <!--[if IE 7]><link rel="stylesheet" type="text/css" href="channels-ie.css" /><![endif]-->

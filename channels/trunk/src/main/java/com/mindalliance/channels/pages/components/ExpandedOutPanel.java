@@ -4,7 +4,6 @@ import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Flow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -36,13 +35,7 @@ public class ExpandedOutPanel extends ExpandedFlowPanel {
     protected WebMarkupContainer createChannelRow() {
         WebMarkupContainer result = new WebMarkupContainer( "channel-row" );              // NON-NLS
         result.setOutputMarkupPlaceholderTag( true );
-        result.add( new Label( "channel-title", new AbstractReadOnlyModel<String>() {     // NON-NLS
-
-            @Override
-            public String getObject() {
-                return getFlow().isAskedFor() ? "Incoming:" : "Outgoing:";
-            }
-        } ) );
+        result.add( new Label( "channel-title", "Channels:" ) );
 
         ChannelListPanel channelListPanel = new ChannelListPanel(
                 "channels",                                                               // NON-NLS
