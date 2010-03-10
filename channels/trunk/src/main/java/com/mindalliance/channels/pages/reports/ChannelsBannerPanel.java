@@ -12,6 +12,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,6 +30,10 @@ import java.util.Set;
  */
 public class ChannelsBannerPanel extends Panel {
 
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( ChannelsBannerPanel.class );
     /**
      * A resource spec.
      */
@@ -61,6 +67,10 @@ public class ChannelsBannerPanel extends Panel {
             protected void populateItem( ListItem<Channel> item ) {
                 Channel channel = item.getModelObject();
                 TransmissionMedium medium = channel.getMedium();
+                if ( medium == null ) {
+                    medium = TransmissionMedium.UNKNOWN; // todo -patch
+                    LOG.warn( "Channel's medium was null.");
+                }
                 String address = medium.isUnknown() ? "" : channel.getAddress();
                 Label mediumLabel = new Label( "medium",
                         medium.isUnknown()

@@ -1,7 +1,7 @@
 <export>
-  <plan id="1" uri="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/26 12:08:43 EST">
+  <plan id="1" uri="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/03/08 8:53:01 EST">
     <whenVersioned>2010/02/09 11:46:28 EST</whenVersioned>
-    <lastId>705</lastId>
+    <lastId>972</lastId>
     <name>Rail Security</name>
     <client>EastWest Institute Workshop</client>
     <description>Information sharing for an IED attack on a public transit system.</description>
@@ -670,14 +670,14 @@
     <organization-involved id="282">Metropolis Transit Authority</organization-involved>
     <organization-involved id="284">Metropolis Transit Operations</organization-involved>
     <organization-involved id="330">Smallville Transit Authority</organization-involved>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/26 12:08:43 EST" id="4" name="IED threat warning">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/03/08 8:53:01 EST" id="4" name="IED threat warning">
       <description>The IED attack warning is disseminated within the rail transit system.</description>
       <trigger-event id="8">Bomb threat</trigger-event>
       <phase id="3">Responding</phase>
       <goal>
         <category>Health</category>
-        <intent>mitigate</intent>
         <organization id="9" kind="Type">Public Transit Agency</organization>
+        <intent>mitigate</intent>
         <level>High</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
@@ -1358,14 +1358,14 @@
         <maxDelay>immediately</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/26 12:08:43 EST" id="107" name="Local response plan activated">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/03/08 8:53:01 EST" id="107" name="Local response plan activated">
       <description>Train station or bus terminal executes its threat response plan</description>
       <trigger-event id="8">Bomb threat</trigger-event>
       <phase id="3">Responding</phase>
       <goal>
         <category>Health</category>
-        <intent>mitigate</intent>
         <organization id="16" kind="Type">Transit Operations</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
@@ -1612,14 +1612,14 @@
         <maxDelay>1 minute</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/02/26 12:08:43 EST" id="150" name="IED attack suspected">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/03/08 8:53:01 EST" id="150" name="IED attack suspected">
       <description>A suspicious activity is reported</description>
       <trigger-event id="2">Attack suspected</trigger-event>
       <phase id="3">Responding</phase>
       <goal>
         <category>Health</category>
-        <intent>mitigate</intent>
         <organization id="9" kind="Type">Public Transit Agency</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
