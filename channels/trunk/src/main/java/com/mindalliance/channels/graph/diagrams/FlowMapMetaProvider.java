@@ -133,7 +133,9 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
              * @return a URL string
              */
             public String getEdgeURL( Flow edge ) {
-                return null;
+                // Plan id = 0 for now sice there is only one plan
+                Object[] args = {0, edge.getId()};
+                return MessageFormat.format( EDGE_URL_FORMAT, args );
             }
         };
     }

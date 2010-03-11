@@ -112,6 +112,16 @@ public class InternalFlow extends Flow {
      * {@inheritDoc}
      */
     @Override
+    public boolean hasPart( Part part ) {
+        return
+                source.isPart() && source.equals( part )
+                || target.isPart() && target.equals( part );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean canSetNameAndElements() {
         return true;
     }

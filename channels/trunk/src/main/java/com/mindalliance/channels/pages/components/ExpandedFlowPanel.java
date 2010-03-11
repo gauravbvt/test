@@ -622,7 +622,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         if ( connector.getSegment().equals( getNode().getSegment() ) ) {
             Part connectingPart = connector.getInnerFlow().getLocalPart();
             return getNode().isConnectedTo( isSend(), connectingPart, getFlow().getName() );
-        } else {
+        } else if ( getFlow().hasConnector() ) {
             // Tested connector is from another segment -> would lead to an external flow
             Flow flow = getFlow();
             // only a target connector (externalized connector)  registers the external flows
@@ -644,6 +644,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                         }
                     }
             );
+        } else {
+            return false;
         }
     }
 

@@ -13,26 +13,33 @@
         <td><input type="text" size="40" id="task" wicket:id="task" value="investigating fire"></td>
     </tr>
     <tr>
-        <th align="right"><label for="location">Location:</label>
+        <th align="right">
+            <label for="location"><span wicket:id="location-link" href="#">Location</span>:</label>
         </th>
         <td><span id="location" wicket:id="location">[entity reference panel]</span></td>
     </tr>
     <tr>
-        <th align="right"><label for="actor">Agent:</label></th>
+        <th align="right">
+            <label for="actor"><span wicket:id="actor-link" href="#">Agent</span>:</label>
+        </th>
         <td><span id="actor" wicket:id="actor" >[entity reference panel]</span></td>
     </tr>
     <tr>
-        <th align="right"><label for="role">Role:</label>
+        <th align="right">
+            <label for="role"><span wicket:id="role-link" href="#">Role:</span>
+            </label>
         </th>
         <td><span id="role" wicket:id="role">[entity reference panel]</span></td>
     </tr>
     <tr>
-        <th align="right"><label for="jurisdiction">Jurisdiction:</label>
+        <th align="right">
+            <label for="jurisdiction"><span wicket:id="jurisdiction-link" href="#">Jurisdiction</span>:</label>
         </th>
         <td><span id="jurisdiction" wicket:id="jurisdiction">[entity reference panel]</span></td>
     </tr>
     <tr>
-        <th align="right"><label for="organization">Organization:</label>
+        <th align="right">
+            <label for="organization"><span wicket:id="organization-link" href="#">Organization</span>:</label>
         </th>
         <td><span id="organization" wicket:id="organization">[entity reference panel]</span></td>
     </tr>
@@ -47,7 +54,8 @@
          </td>
     </tr>
     <tr>
-        <th align="right"><label for="initiatedEvent">Causes event:</label>
+        <th align="right">
+            <label for="initiatedEvent">Causes <span wicket:id="initiatedEvent-link" href="#">event</span>:</label>
         </th>
         <td><input type="text" size="40" id="initiatedEvent" wicket:id="initiatedEvent" value=""></td>
     </tr>

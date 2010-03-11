@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.diagrams;
 import com.mindalliance.channels.NotFoundException;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -154,7 +155,16 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             int scrollTop,
             int scrollLeft,
             AjaxRequestTarget target ) {
-        // do nothing - never called
+        long id =  Long.valueOf( edgeId );
+        try {
+            Flow flow = getQueryService().find( Flow.class, id );
+            String js = scroll( domIdentifier, scrollTop, scrollLeft );
+            Change change = new Change( Change.Type.Selected, flow );
+            change.setScript( js );
+            update( target, change );
+        } catch ( NotFoundException e ) {
+            LOG.warn( "Selected flow not found at id " + id );
+        }
     }
 
     private Segment getSegment() {

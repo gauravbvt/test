@@ -1329,11 +1329,13 @@ public final class PlanPage extends WebPage implements Updatable {
                 expand( identifiable );
             } else if ( change.isSelected() ) {
                 Flow flow = (Flow) identifiable;
-                expand( identifiable );
                 if ( flow.getSegment() != segment ) {
                     setSegment( flow.getSegment() );
                 }
-                setPart( flow.getLocalPart() );
+                if ( !flow.hasPart( getPart() ) ) {
+                    setPart( flow.getLocalPart() );
+                }
+                expand( identifiable );
             }
         } else if ( identifiable instanceof UserIssue && change.isAdded() ) {
             UserIssue userIssue = (UserIssue) identifiable;

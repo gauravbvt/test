@@ -424,7 +424,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Test if a node is at either end of this flow.
      *
      * @param isSend true for checking target, false for source
-     * @param node    the node
+     * @param node   the node
      * @return true if node is included in this flow
      */
     public boolean isConnectedTo( boolean isSend, Node node ) {
@@ -955,6 +955,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * A flow is important (i.e. could be essential) if it is a sharing flow, and is either critical
      * to the target part or triggers it.
+     *
      * @return a boolean
      */
     public boolean isImportant() {
@@ -1032,6 +1033,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
         return sharingWithSelf;
     }
+
+    /**
+     * Flow has part as source or target.
+     *
+     * @param part a part
+     * @return a boolean
+     */
+    public abstract boolean hasPart( Part part );
 
 
     /**

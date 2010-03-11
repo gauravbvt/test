@@ -95,6 +95,10 @@ public class PartShowMenuPanel extends MenuPanel {
             modelObjects.add( new ModelObjectWrapper(
                     "Location",
                     part.getLocation() ) );
+        if ( part.getInitiatedEvent() != null )
+            modelObjects.add( new ModelObjectWrapper(
+                    "Event",
+                    part.getInitiatedEvent() ) );
         return modelObjects;
     }
 

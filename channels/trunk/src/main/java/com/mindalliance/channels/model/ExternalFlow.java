@@ -155,6 +155,14 @@ public class ExternalFlow extends Flow {
         }
     }
 
+    /**
+      * {@inheritDoc}
+      */
+     @Override
+    public boolean hasPart( Part part ) {
+        return this.part.equals( part );
+    }
+
 
     /**
      * Get external part.

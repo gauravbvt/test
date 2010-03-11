@@ -13,6 +13,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
+import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -27,8 +28,10 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -79,6 +82,11 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     static {
         COMPARATOR.setStrength( Collator.PRIMARY );
     }
+
+    /**
+     * Links to entities that are part proeperty values.
+     */
+    private Map<String, ModelObjectLink> entityLinks = new HashMap<String, ModelObjectLink>();
 
     /**
      * The part edited by this form.
@@ -178,6 +186,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addOrganizationField();
         addJurisdictionField();
         addLocationField();
+        addEntityLinks();
     }
 
     public List<String> getAllTasks() {
@@ -241,7 +250,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 new PropertyModel<Part>( this, "part" ),
                 getAllActorNames(),
                 ACTOR_PROPERTY,
-                Actor.class);
+                Actor.class );
         addOrReplace( field );
         entityFields.add( field );
     }
@@ -274,7 +283,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 new PropertyModel<Part>( this, "part" ),
                 getAllPlaceNames(),
                 JURISDICTION_PROPERTY,
-                Place.class);
+                Place.class );
         addOrReplace( field );
         entityFields.add( field );
     }
@@ -332,6 +341,26 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             }
         } );
         add( initiatedEventField );
+    }
+
+    private void addEntityLinks() {
+        String[] entityProps = {"location", "actor", "role",
+                "jurisdiction", "organization", "initiatedEvent"};
+        Part part = getPart();
+        for ( String prop : entityProps ) {
+            ModelObjectLink moLink = new ModelObjectLink(
+                    prop + "-link",
+                    new PropertyModel<ModelEntity>( part, prop ),
+                    new Model<String>(
+                            prop.equals( "initiatedEvent" )
+                                    ? "event"
+                                    : WordUtils.capitalize( prop.equals( "actor" )
+                                    ? "agent"
+                                    : prop ) ) );
+            moLink.setOutputMarkupId( true );
+            entityLinks.put( prop, moLink );
+            addOrReplace( moLink );
+        }
     }
 
     private void addTimingFields() {
@@ -772,6 +801,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                     entityReferencePanel.updateIssues();
                     target.addComponent( entityReferencePanel );
                 }
+                if ( change.getSubject().equals( getPart() ) ) {
+                    updateEntityLink( target, change );
+                }
                 if ( property.equals( "goals" ) ) {
                     addGoals();
                     target.addComponent( taskGoalsPanel );
@@ -785,6 +817,12 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             }
         }
         super.updateWith( target, change, updated );
+    }
+
+    private void updateEntityLink( AjaxRequestTarget target, Change change ) {
+        String property = change.getProperty();
+        ModelObjectLink moLink = entityLinks.get( property );
+        if ( moLink != null ) target.addComponent( moLink );
     }
 
 
