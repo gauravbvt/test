@@ -6,7 +6,7 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
-import com.mindalliance.channels.graph.diagrams.EssentialFlowMapDiagram;
+import com.mindalliance.channels.graph.diagrams.FailureImpactsDiagram;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
@@ -142,7 +142,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             double[] diagramSize,
             String orientation ) {
         LOG.debug("Making critical flow map diagram" );
-        return new EssentialFlowMapDiagram( segmentObject, assumeFails, diagramSize, orientation );
+        return new FailureImpactsDiagram( segmentObject, assumeFails, diagramSize, orientation );
     }
 
 

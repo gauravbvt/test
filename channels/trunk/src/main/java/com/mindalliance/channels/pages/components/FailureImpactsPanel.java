@@ -4,7 +4,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.pages.components.diagrams.EssentialFlowMapDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.FailreImpactsDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.RequestCycle;
@@ -68,7 +68,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     /**
      * Essential flows diagram panel.
      */
-    private EssentialFlowMapDiagramPanel essentialFlowsDiagramPanel;
+    private FailreImpactsDiagramPanel failureImpactsDiagramPanel;
     /**
      * Failures table panel.
      */
@@ -109,7 +109,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addEssentialFlowMap();
                 addFailedTasks();
-                target.addComponent( essentialFlowsDiagramPanel );
+                target.addComponent( failureImpactsDiagramPanel );
                 target.addComponent( failuresTablePanel );
             }
         } );
@@ -140,7 +140,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                 flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / 96.0;
                 flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
                 addEssentialFlowMap();
-                target.addComponent( essentialFlowsDiagramPanel );
+                target.addComponent( failureImpactsDiagramPanel );
             }
         } );
         add( reduceToFit );
@@ -150,7 +150,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
             protected void onEvent( AjaxRequestTarget target ) {
                 flowDiagramDim = new double[2];
                 addEssentialFlowMap();
-                target.addComponent( essentialFlowsDiagramPanel );
+                target.addComponent( failureImpactsDiagramPanel );
             }
         } );
         add( fullSize );
@@ -160,13 +160,13 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         double[] dim = flowDiagramDim[0] <= 0.0 || flowDiagramDim[1] <= 0.0 ? null : flowDiagramDim;
         Settings settings = new Settings( DOM_IDENTIFIER, null, dim, true, true );
 
-        essentialFlowsDiagramPanel = new EssentialFlowMapDiagramPanel(
+        failureImpactsDiagramPanel = new FailreImpactsDiagramPanel(
                 "essentialFlowMap",
                 new Model<SegmentObject>( getSegmentObject() ),
                 assumeFails,
                 settings );
-        essentialFlowsDiagramPanel.setOutputMarkupId( true );
-        addOrReplace( essentialFlowsDiagramPanel );
+        failureImpactsDiagramPanel.setOutputMarkupId( true );
+        addOrReplace( failureImpactsDiagramPanel );
     }
 
     private void addFailedTasks() {
