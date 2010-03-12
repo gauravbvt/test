@@ -54,7 +54,7 @@ public class FailureImpactsDiagram extends AbstractDiagram<Node, Flow> {
         } else {
             graphRenderer.highlightEdge( (Flow) segmentObject );
         }
-        FlowMapMetaProvider metaProvider = new FlowMapMetaProvider(
+        FailureImpactsMetaProvider metaProvider = new FailureImpactsMetaProvider(
                 (ModelObject) segmentObject,
                 outputFormat,
                 diagramFactory.getImageDirectory(),

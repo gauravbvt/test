@@ -180,7 +180,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
         };
     }
 
-    private String getNodeLabel( Node node ) {
+    protected String getNodeLabel( Node node ) {
         if ( node.isPart() ) {
             Part part = (Part) node;
             return part.getFullTitle( "|" );

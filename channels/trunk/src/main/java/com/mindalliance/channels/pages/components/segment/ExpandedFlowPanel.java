@@ -15,8 +15,8 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.AbstractFlowPanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
@@ -26,6 +26,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -325,8 +326,16 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addSignificanceToSource() {
         significanceToSourceRow = new WebMarkupContainer( "significance-to-source" );
         add( significanceToSourceRow );
-        significanceToSourceRow.add(
-                new Label( "source-task", isSend() ? "This task" : "Sender's task" ) );
+        Component sourceTaskReference;
+        if ( isSend() ) {
+            sourceTaskReference = new Label( "source-task", "This task" );
+        } else {
+            sourceTaskReference = new ModelObjectLink(
+                    "source-task",
+                    new Model<ModelObject>( getFlow().getSource() ),
+                    new Model<String>( "Sender's task" ) );
+        }
+        significanceToSourceRow.add( sourceTaskReference );
         triggersSourceContainer = new WebMarkupContainer( "triggers-source-container" );
         significanceToSourceRow.add( triggersSourceContainer );
         triggersSourceCheckBox = new CheckBox(

@@ -122,7 +122,7 @@ public class DefaultImagingService implements ImagingService {
     private File getImageFile( String url ) {
         return new File(
                 attachmentManager.getUploadDirectory(),
-                url.replaceFirst( attachmentManager.getUploadPath(), "" ));
+                url.replaceFirst( attachmentManager.getUploadPath(), "" ) );
     }
 
     /**
@@ -148,7 +148,7 @@ public class DefaultImagingService implements ImagingService {
             ImageIO.write( resized, "png", iconFile );
             createNumberedIcons( resized, width, modelObject );
         } catch ( Exception e ) {
-            LOG.warn( "Failed to iconize uploaded image at " + url + " (" + e.getMessage() + ")", e);
+            LOG.warn( "Failed to iconize uploaded image at " + url + " (" + e.getMessage() + ")", e );
             return false;
         }
         return true;
@@ -180,7 +180,7 @@ public class DefaultImagingService implements ImagingService {
         } else {
             if ( modelObject.hasImage() ) {
                 boolean success = iconize( modelObject.getImageUrl(), modelObject );
-                if (success)
+                if ( success )
                     return getIconPath( modelObject );
                 else
                     return null;
@@ -287,7 +287,11 @@ public class DefaultImagingService implements ImagingService {
     }
 
     private String sanitize( String fileName ) {
-        return fileName.replaceAll( File.separator, "" );
+        if ( File.separator.equals( "\\" ) ) {
+            return fileName.replaceAll( "\\\\", "" );
+        } else {
+            return fileName.replaceAll( File.separator, "" );
+        }
     }
 
     /**

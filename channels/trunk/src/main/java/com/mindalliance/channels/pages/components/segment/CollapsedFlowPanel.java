@@ -4,7 +4,6 @@ import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.pages.components.AbstractFlowPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
