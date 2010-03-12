@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.menus;
+package com.mindalliance.channels.pages.components.segment.menus;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
@@ -15,6 +15,8 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
+import com.mindalliance.channels.pages.components.menus.CommandWrapper;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 

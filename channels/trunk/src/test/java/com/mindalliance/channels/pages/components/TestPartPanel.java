@@ -20,6 +20,7 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.TestSegmentPage;
+import com.mindalliance.channels.pages.components.segment.ExpandedPartPanel;
 import com.mindalliance.channels.query.DefaultQueryService;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.Model;

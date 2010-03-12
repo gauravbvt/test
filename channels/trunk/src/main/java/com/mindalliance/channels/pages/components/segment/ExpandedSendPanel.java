@@ -1,7 +1,8 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.pages.components.ChannelListPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -10,24 +11,24 @@ import org.apache.wicket.model.PropertyModel;
 import java.util.Set;
 
 /**
- * Details of an expanded receive.
+ * An expanded send flow.
  */
-public class ExpandedReqPanel extends ExpandedFlowPanel {
+public class ExpandedSendPanel extends ExpandedFlowPanel {
 
-    public ExpandedReqPanel( String id, IModel<Flow> model, Set<Long> expansions ) {
-        super( id, model, false, expansions );
+    public ExpandedSendPanel( String id, IModel<Flow> model, Set<Long> expansions ) {
+        super( id, model, true, expansions );
     }
 
     /** {@inheritDoc} */
     @Override
     protected boolean isChannelRelevant( Flow f ) {
-        return !( getOther().isConnector() && f.isAskedFor() && f.isInternal() );
+        return !getOther().isConnector() || f.isAskedFor() || !f.isInternal();
     }
 
     /** {@inheritDoc} */
     @Override
     protected boolean isChannelEditable( Flow f ) {
-        return f.isInternal() || !f.isAskedFor();
+        return f.isInternal() || f.isAskedFor();
     }
 
     /** {@inheritDoc} */

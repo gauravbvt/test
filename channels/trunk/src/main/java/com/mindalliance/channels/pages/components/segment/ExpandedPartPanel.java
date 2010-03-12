@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateSegmentObject;
@@ -13,6 +13,11 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.AttachmentPanel;
+import com.mindalliance.channels.pages.components.DelayPanel;
+import com.mindalliance.channels.pages.components.EntityReferencePanel;
+import com.mindalliance.channels.pages.components.IssuesPanel;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;

@@ -1,9 +1,11 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.pages.components.AbstractTablePanel;
+import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.diagrams.FailreImpactsDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.util.SortableBeanProvider;

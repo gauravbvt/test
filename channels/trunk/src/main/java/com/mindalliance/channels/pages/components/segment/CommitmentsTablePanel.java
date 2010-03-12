@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;

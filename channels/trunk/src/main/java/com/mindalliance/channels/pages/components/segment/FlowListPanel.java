@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -93,8 +94,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 long flowId = flow.getId();
                 if ( expansions.contains( flowId ) ) {
                     ExpandedFlowPanel flowPanel = areSends ?
-                            new ExpandedOutPanel( "flow", new Model<Flow>( flow ), expansions )
-                            : new ExpandedReqPanel( "flow", new Model<Flow>( flow ), expansions );
+                            new ExpandedSendPanel( "flow", new Model<Flow>( flow ), expansions )
+                            : new ExpandedReceivePanel( "flow", new Model<Flow>( flow ), expansions );
                     item.add( flowPanel );
                 } else {
                     CollapsedFlowPanel flowPanel =

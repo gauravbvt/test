@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.pages.components.menus.FlowActionsMenuPanel;
+import com.mindalliance.channels.pages.components.segment.menus.FlowActionsMenuPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;

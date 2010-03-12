@@ -7,7 +7,7 @@ import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.pages.components.CommitmentsTablePanel;
+import com.mindalliance.channels.pages.components.segment.CommitmentsTablePanel;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.pages.components.SegmentLink;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;
 import org.apache.wicket.AttributeModifier;

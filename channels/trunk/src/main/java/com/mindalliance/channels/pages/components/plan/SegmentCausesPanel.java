@@ -1,8 +1,9 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;

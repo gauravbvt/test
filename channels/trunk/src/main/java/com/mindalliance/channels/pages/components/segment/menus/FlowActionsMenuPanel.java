@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.menus;
+package com.mindalliance.channels.pages.components.segment.menus;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandException;
@@ -11,6 +11,9 @@ import com.mindalliance.channels.command.commands.DuplicateFlow;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.pages.components.menus.CommandWrapper;
+import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
+import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;

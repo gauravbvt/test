@@ -213,7 +213,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
     /**
      * A Model object wrapper.
      */
-    protected static class ModelObjectWrapper implements Serializable {
+    public static class ModelObjectWrapper implements Serializable {
         /**
          * Model object.
          */
@@ -223,7 +223,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
          */
         private String title;
 
-        protected ModelObjectWrapper( String title, ModelObject modelObject ) {
+        public ModelObjectWrapper( String title, ModelObject modelObject ) {
             this.title = title;
             this.modelObject = modelObject;
         }

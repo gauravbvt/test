@@ -1,9 +1,10 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -20,7 +21,7 @@ import java.util.Set;
  * Date: Oct 28, 2009
  * Time: 1:29:01 PM
  */
-public class FlowCommitmentsPanel extends FloatingCommandablePanel {
+public class SharingCommitmentsPanel extends FloatingCommandablePanel {
 
     /**
      * Pad top on move.
@@ -51,7 +52,7 @@ public class FlowCommitmentsPanel extends FloatingCommandablePanel {
      */
     private CommitmentsTablePanel commitmentsTablePanel;
 
-    public FlowCommitmentsPanel( String id, IModel<Flow> flowModel, Set<Long> expansions ) {
+    public SharingCommitmentsPanel( String id, IModel<Flow> flowModel, Set<Long> expansions ) {
         super( id, flowModel, expansions );
         init();
     }

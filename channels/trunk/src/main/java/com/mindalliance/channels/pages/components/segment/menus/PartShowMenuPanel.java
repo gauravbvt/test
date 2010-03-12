@@ -1,7 +1,9 @@
-package com.mindalliance.channels.pages.components.menus;
+package com.mindalliance.channels.pages.components.segment.menus;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
+import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;

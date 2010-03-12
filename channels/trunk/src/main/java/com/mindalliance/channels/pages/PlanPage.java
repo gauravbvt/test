@@ -20,22 +20,22 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.pages.components.FailureImpactsPanel;
-import com.mindalliance.channels.pages.components.FlowCommitmentsPanel;
-import com.mindalliance.channels.pages.components.FlowEOIsPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
-import com.mindalliance.channels.pages.components.MaximizedFlowPanel;
-import com.mindalliance.channels.pages.components.PartAssignmentsPanel;
 import com.mindalliance.channels.pages.components.SegmentImportPanel;
 import com.mindalliance.channels.pages.components.SegmentLink;
-import com.mindalliance.channels.pages.components.SegmentPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import com.mindalliance.channels.pages.components.menus.PlanActionsMenuPanel;
-import com.mindalliance.channels.pages.components.menus.PlanShowMenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
+import com.mindalliance.channels.pages.components.plan.menus.PlanActionsMenuPanel;
+import com.mindalliance.channels.pages.components.plan.menus.PlanShowMenuPanel;
+import com.mindalliance.channels.pages.components.segment.FailureImpactsPanel;
+import com.mindalliance.channels.pages.components.segment.FlowEOIsPanel;
+import com.mindalliance.channels.pages.components.segment.MaximizedFlowPanel;
+import com.mindalliance.channels.pages.components.segment.PartAssignmentsPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
+import com.mindalliance.channels.pages.components.segment.SegmentPanel;
+import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
 import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
 import com.mindalliance.channels.surveys.Survey;
 import org.apache.commons.collections.CollectionUtils;
@@ -680,7 +680,7 @@ public final class PlanPage extends WebPage implements Updatable {
             commitmentsPanel.setOutputMarkupId( true );
             makeVisible( commitmentsPanel, false );
         } else {
-            commitmentsPanel = new FlowCommitmentsPanel(
+            commitmentsPanel = new SharingCommitmentsPanel(
                     "commitments",
                     new Model<Flow>( flowViewed ),
                     getReadOnlyExpansions()
@@ -1535,8 +1535,8 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( change.isUnknown() || identifiable instanceof Flow && change.isAspect( "commitments" ) ) {
             addCommitmentsPanel();
             target.addComponent( commitmentsPanel );
-        } else if ( commitmentsPanel instanceof FlowCommitmentsPanel ) {
-            ( (FlowCommitmentsPanel) commitmentsPanel ).refresh(
+        } else if ( commitmentsPanel instanceof SharingCommitmentsPanel ) {
+            ( (SharingCommitmentsPanel) commitmentsPanel ).refresh(
                     target,
                     change,
                     updated );

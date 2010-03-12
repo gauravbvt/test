@@ -1,8 +1,9 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.RequestCycle;

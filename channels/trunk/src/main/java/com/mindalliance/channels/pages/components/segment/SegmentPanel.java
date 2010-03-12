@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -10,10 +10,11 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
-import com.mindalliance.channels.pages.components.menus.PartActionsMenuPanel;
-import com.mindalliance.channels.pages.components.menus.PartShowMenuPanel;
+import com.mindalliance.channels.pages.components.segment.menus.PartActionsMenuPanel;
+import com.mindalliance.channels.pages.components.segment.menus.PartShowMenuPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;

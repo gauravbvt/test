@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
@@ -16,6 +16,11 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.AbstractFlowPanel;
+import com.mindalliance.channels.pages.components.AttachmentPanel;
+import com.mindalliance.channels.pages.components.DelayPanel;
+import com.mindalliance.channels.pages.components.IssuesPanel;
+import com.mindalliance.channels.pages.components.SegmentLink;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;

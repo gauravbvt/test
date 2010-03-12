@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.menus;
+package com.mindalliance.channels.pages.components.plan.menus;
 
 import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.command.Change;
@@ -7,6 +7,8 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.AdminPage;
+import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
+import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.apache.wicket.Component;
