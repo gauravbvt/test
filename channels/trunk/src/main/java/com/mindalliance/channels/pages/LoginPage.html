@@ -6,11 +6,21 @@
         xml:lang="en"
         lang="en">
 <head>
-    <title>Channels - Login</title>
+    <title>Channels - Sign in</title>
     <link rel="stylesheet" href="playbook.css" type="text/css">
     <link rel="stylesheet" href="iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
+	<style type="text/css">
+		body#login {background:#E9F0FF}
+		div#top {width:300px; border:1px solid #CCCCCC; margin-top:100px; min-width:300px;}
+		div#header {margin-bottom:0;}
+		div#contents {padding:10px; background:#F6F6F6; border-top:1px solid #CCCCCC;}
+		div#contents label {font-weight:bold;}
+		input#j_username, input#j_password {width:275px; height:20px;}
+		div#login-username,	div#login-password {padding-top:3px; padding-bottom:10px;}
+		div#login-submit {padding-top:10px;}
+	</style>
 </head>
-<body>
+<body id="login">
 <div id="top">
     <div id="header">
         <div>
@@ -20,18 +30,24 @@
     </div>
     <div id="contents">
         <form action="login.do" method="POST">
-            <p>Please sign in:</p>
-            <table>
-                <tbody>
-                    <tr><td align="right"><label for="j_username">User name: </label></td>
-                        <td width="100%"><input width="30" name="j_username" id="j_username"></td></tr>
-                    <tr><td align="right"><label for="j_password">Password: </label></td>
-                        <td width="100%"><input width="30" name="j_password" id="j_password" type="password"></td></tr>
-                    <tr><td>&nbsp;</td>
-                        <td width="100%"><input type="checkbox" name="_acegi_security_remember_me"/> Remember me on this browser</td></tr>
-                </tbody>
-            </table>
-            <p><input type="submit" value="submit"></p>
+			<div>
+				<label for="j_username">Username: </label>
+			</div>
+			<div id="login-username">
+				<input width="30" name="j_username" id="j_username">
+			</div>
+			<div>
+				<label for="j_password">Password: </label>
+			</div>
+			<div id="login-password">
+				<input width="30" name="j_password" id="j_password" type="password">
+			</div>
+			<div>
+				<input type="checkbox" name="_acegi_security_remember_me"/> Remember me on this browser
+			</div>
+			<div id="login-submit">
+				<input type="submit" value="sign in">
+			</div>
         </form>
     </div>
 </div>
