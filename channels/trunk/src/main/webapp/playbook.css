@@ -399,6 +399,55 @@ ul.flows li.send-notification.terminate, ul.flows li.receive-answer.terminate {
     background-image: url('images/right_box.png');
 }
 
+/* Login (RC) 03.15.2010 -----------------------------------------*/
+
+body#login {
+	background:#E9F0FF;
+}
+
+body#login div#top {
+	width:300px;
+	border:1px solid #CCCCCC;
+	margin-top:100px;
+	min-width:300px;
+}
+
+body#login div#header {
+	margin-bottom:0;
+}
+
+body#login div#contents {
+	padding:10px;
+	background:#F6F6F6;
+	border-top:1px solid #CCCCCC;
+}
+
+body#login div#contents label {
+	font-weight:bold;
+}
+
+body#login input#j_username, body#login input#j_password {
+	width:275px;
+	height:20px;
+}
+
+body#login div#login-username, body#login div#login-password {
+	margin:3px 0 10px 0;
+}
+
+body#login div#login-rememberme label {
+	font-weight:normal;
+}
+
+body#login div#login-submit {
+	margin:10px 0 0 0;
+}
+
+body#login div#login-submit input {
+	padding:5px 10px;
+}
+
+
 /* Printed version -----------------------------------------------*/
 @media print {
 
