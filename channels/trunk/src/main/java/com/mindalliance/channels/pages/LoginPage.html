@@ -17,6 +17,7 @@
 		div#contents label {font-weight:bold;}
 		input#j_username, input#j_password {width:275px; height:20px;}
 		div#login-username,	div#login-password {margin:3px 0 10px 0;}
+		div#login-rememberme label {font-weight:normal}
 		div#login-submit {margin:10px 0 0 0;}
 		div#login-submit input {padding:5px 10px;}
 	</style>
@@ -43,8 +44,10 @@
 			<div id="login-password">
 				<input width="30" name="j_password" id="j_password" type="password">
 			</div>
-			<div>
-				<input type="checkbox" name="_acegi_security_remember_me"/> Remember me on this browser
+			<div id="login-rememberme">
+				<label for="_acegi_security_remember_me">
+					<input type="checkbox" name="_acegi_security_remember_me" id="_acegi_security_remember_me" /> Remember me on this browser
+				</label>
 			</div>
 			<div id="login-submit">
 				<input type="submit" value="Sign in">
