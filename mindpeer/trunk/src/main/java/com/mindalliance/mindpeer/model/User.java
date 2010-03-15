@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +41,7 @@ public class User extends ModelObject implements IUser {
         Terminated
     }
 
-    /** The user name (not the fullname). Unique for all users. */
+    /** The user name (not the full name). Unique for all users. */
     @Column( unique = true, nullable = false )
     private String username;
 
@@ -65,6 +66,9 @@ public class User extends ModelObject implements IUser {
     @OneToOne( cascade = CascadeType.ALL, optional = true )
     private Profile profile;
 
+    @OneToMany( cascade = CascadeType.MERGE, mappedBy = "user" )
+    private List<Focus> focusList = new ArrayList<Focus>();
+
     //=======================================
     /**
      * Create a new User instance.
@@ -72,6 +76,13 @@ public class User extends ModelObject implements IUser {
     public User() {
         confirmation = TICKET_MIN + Math.round( Math.random() * TICKET_RANGE );
         profile = new Profile( this );
+
+ //       add( new Focus( "Untitled" ) );
+    }
+
+    public void add( Focus focus ) {
+        focus.setUser( this );
+        focusList.add( focus );
     }
 
     /**
@@ -245,6 +256,7 @@ public class User extends ModelObject implements IUser {
      * @param profile the new profile value.
      */
     public void setProfile( Profile profile ) {
+        profile.setUser( this );
         this.profile = profile;
     }
 
@@ -263,6 +275,33 @@ public class User extends ModelObject implements IUser {
      */
     public void setConfirmed( boolean confirmed ) {
         this.confirmed = confirmed;
+    }
+
+    /**
+     * Return the user's focus list.
+     * @return the value of focusList
+     */
+    public List<Focus> getFocusList() {
+        return focusList;
+    }
+
+    /**
+     * Sets the focus list of this user.
+     * @param focusList the new focus list value.
+     *
+     */
+    public void setFocusList( List<Focus> focusList ) {
+        if ( focusList.isEmpty() )
+            throw new IllegalArgumentException( "Must have at least one focus" );
+        this.focusList = focusList;
+    }
+
+    /**
+     * Return the user's default focus.
+     * @return the default focus
+     */
+    public Focus getDefaultFocus() {
+        return focusList.get( 0 );
     }
 
     /**

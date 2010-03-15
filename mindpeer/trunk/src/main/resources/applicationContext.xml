@@ -31,7 +31,9 @@
 
     <!-- Application-level objects -->
     <bean id="userDao" class="com.mindalliance.mindpeer.dao.jpa.UserDaoImpl" />
+    <bean id="profileDao" class="com.mindalliance.mindpeer.dao.jpa.ProfileDaoImpl" />
     <bean id="tagDao" class="com.mindalliance.mindpeer.dao.jpa.TagDaoImpl" />
+    <bean id="focusDao" class="com.mindalliance.mindpeer.dao.jpa.FocusDaoImpl" />
 
 	<bean id="init" class="com.mindalliance.mindpeer.DataInitializer"/>
 
@@ -53,13 +55,31 @@
         </property>
     </bean>
 
-    <sec:http auto-config='true' access-denied-page="/denied.html">
-      <sec:intercept-url pattern="/user/**" access="ROLE_USER" requires-channel="https" />
-      <sec:intercept-url pattern="/**" filters="none" requires-channel="any" />
-      <sec:form-login login-page="/login.html" default-target-url="/user/" />
+    <sec:http auto-config='true' access-denied-page="/static/denied.html">
+        <sec:intercept-url pattern="/login" filters="none" requires-channel="https" />
+        <sec:intercept-url pattern="/static/**" filters="none" requires-channel="any" />
+        <sec:intercept-url pattern="/account" access="ROLE_USER" requires-channel="https" />
+        <sec:intercept-url pattern="/account/**" access="ROLE_USER" requires-channel="https" />
+        <sec:intercept-url pattern="/admin" access="ROLE_ADMIN" requires-channel="https" />
+        <sec:intercept-url pattern="/admin/**" access="ROLE_ADMIN" requires-channel="https" />
+        <sec:intercept-url pattern="/confirm/**" filters="none" requires-channel="https" />
+        <sec:intercept-url pattern="/focus" access="ROLE_USER" requires-channel="https" />
+        <sec:intercept-url pattern="/focus/**" access="ROLE_USER" requires-channel="https" />
+        <sec:intercept-url pattern="/products" access="ROLE_USER" requires-channel="https" />
+        <sec:intercept-url pattern="/products/**" access="ROLE_USER" requires-channel="https" />
+        <sec:intercept-url pattern="/search/**" access="ROLE_USER" requires-channel="https" />
+        <sec:intercept-url pattern="/*/avatar.png" filters="none" requires-channel="any" />
+        <sec:intercept-url pattern="/*/vcard.vcf" access="ROLE_USER" requires-channel="https" />
+        <!--<sec:intercept-url pattern="/**" access="ROLE_USER" requires-channel="https" />-->
+        <!--<sec:intercept-url pattern="/*" filters="none" requires-channel="any" />-->
+        <sec:form-login login-page="/login" default-target-url="/focus/all" />
+        <sec:remember-me key="mindpeer"/>
+        <!--<sec:session-management>-->
+            <!--<sec:concurrency-control max-sessions="1"/>-->
+        <!--</sec:session-management>-->
     </sec:http>
 
-    <sec:authentication-manager alias="authenticationManager" >
+    <sec:authentication-manager alias="authenticationManager">
         <sec:authentication-provider user-service-ref="userDao">
           <sec:password-encoder hash="sha"/>
         </sec:authentication-provider>

@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+    <wicket:extend>
+        <wicket:child>
+        </wicket:child>
+        <div id="left">
+            <div wicket:id="tabs">
+                (Tabs and stuff)
+            </div>
+        </div>
+
+        <div id="right">
+            <hr/>
+            <div class="list">
+                <h3 wicket:id="list-title">Product List</h3>
+                <div class="button-right"><a wicket:id="newItem">New</a></div>
+                <ul>
+                    <li wicket:id="list">
+                        <span wicket:id="item">(product)</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="profile">
+                <h3>Profile</h3>
+                <div class="button-right"><a wicket:id="profile-link">Edit</a></div>
+                <img wicket:id="pic" align="left" src="" alt="(your face)"/>
+                <div>
+                    <ul>
+                        <li wicket:id="profile.name" class="name">Your name</li>
+                        <li><span wicket:id="profile.productCount">5</span> Products</li>
+                        <li><span wicket:id="profile.subscriberCount">3322</span> Subscribers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </wicket:extend>
+</body>
+</html>

@@ -27,7 +27,9 @@ import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.StringValidator;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * The registration page.
@@ -93,13 +95,20 @@ public class RegistrationPage extends WebPage {
         form.add(
             usernameField.add(
                 new StringValidator.MinimumLengthValidator( NAME_MIN_LEN ),
-                new PatternValidator( "\\p{Alpha}\\p{Alnum}*" ),
+                new PatternValidator( "\\p{Alpha}[\\p{Alnum}\\.\\-_]*" ),
                 new AbstractValidator<String>() {
                         @Override
                         protected void onValidate( IValidatable<String> validatable ) {
-                            if ( userDao.findByName( validatable.getValue() ) != null )
-                                error( validatable, "user.exists" );
+                            String newName = validatable.getValue();
+                            Map<String, Object> map = new HashMap<String, Object>();
+                            map.put( "name", newName );
+                            if ( UserDispatchPage.Reserved.contains( newName ) )
+                                error( validatable, "user.invalidName", map );
+                            if ( userDao.findByName( newName ) != null )
+                                error( validatable, "user.exists", map );
                         }
+
+
                     } ),
             pw1.add( new StringValidator.MinimumLengthValidator( PWD_MIN_LEN ) ),
             pw2,

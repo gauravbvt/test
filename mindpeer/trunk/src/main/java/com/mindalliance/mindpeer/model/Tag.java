@@ -28,7 +28,7 @@ public class Tag implements Serializable, Comparable<Tag> {
 
     @ManyToMany( cascade = { CascadeType.MERGE, CascadeType.PERSIST },
                  mappedBy = "interests" )
-    @OrderBy( "fullName" )
+    @OrderBy( "name" )
     private Set<Profile> profiles;
 
     /**

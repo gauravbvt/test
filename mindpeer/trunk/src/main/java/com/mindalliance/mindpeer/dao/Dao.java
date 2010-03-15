@@ -6,6 +6,7 @@ package com.mindalliance.mindpeer.dao;
 import com.mindalliance.mindpeer.model.ModelObject;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -45,5 +46,14 @@ public interface Dao<T extends ModelObject> {
      * @return the number of objects in the database
      */
     int countAll();
+
+    /**
+     * Get a partial iterator on a window of results.
+     * @param first the first item to iterate on
+     * @param count how many to get
+     * @return an iterator
+     */
+    Iterator<T> iterator( int first, int count );
+
 }
 

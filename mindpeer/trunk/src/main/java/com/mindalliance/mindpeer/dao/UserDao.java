@@ -25,9 +25,9 @@ public interface UserDao  extends Dao<User> {
     User findByEmail( String email );
 
     /**
-     * Find current user.
+     * Find the id of the current user.
      * @return null if not authenticated
      */
-    User currentUser();
+    Long currentUserId();
 
 }

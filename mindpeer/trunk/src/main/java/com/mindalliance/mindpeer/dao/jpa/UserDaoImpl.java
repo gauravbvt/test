@@ -5,6 +5,8 @@ package com.mindalliance.mindpeer.dao.jpa;
 
 import com.mindalliance.mindpeer.dao.UserDao;
 import com.mindalliance.mindpeer.model.User;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,8 @@ import java.util.List;
  * User DAO JPA implementation.
  */
 public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao, UserDetailsService {
+
+    private static final Logger LOG = LoggerFactory.getLogger( UserDaoImpl.class );
 
     /**
      * Create a new UserDaoImpl instance.
@@ -37,12 +41,16 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao, UserD
         if ( name == null )
             return null;
 
+
         return (User) getJpaTemplate().execute( new JpaCallback() {
             public Object doInJpa( EntityManager em ) {
                 Query query = em.createQuery(
                         "select e from User e where username = '" + name.toLowerCase() + '\'' );
                 List<?> resultList = query.getResultList();
-                return resultList.isEmpty() ? null : resultList.get( 0 );
+                Object result = resultList.isEmpty() ? null : resultList.get( 0 );
+
+                LOG.debug( "findByName({}) --> {}", name, result );
+                return result;
             }
         } );
     }
@@ -61,7 +69,10 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao, UserD
                 Query query = em.createQuery(
                         "select e from User e where email = '" + email + '\'' );
                 List<?> resultList = query.getResultList();
-                return resultList.isEmpty() ? null : resultList.get( 0 );
+
+                Object result = resultList.isEmpty() ? null : resultList.get( 0 );
+                LOG.debug( "findByEmail({}) --> {}", email, result );
+                return result;
             }
         } );
     }
@@ -86,15 +97,15 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao, UserD
     }
 
     /**
-     * Find current user.
+     * Find the id of the current user.
      * @return null if not authenticated
      */
-    public User currentUser() {
+    public Long currentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ( authentication != null ) {
             Object principal = authentication.getPrincipal();
             if ( principal instanceof User )
-                return (User) principal;
+                return ( (User) principal ).getId();
         }
 
         return null;

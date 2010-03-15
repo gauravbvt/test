@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <h2><span wicket:id="name">Products</span></h2>
+    <div class="tabs">
+        <ul>
+            <li class="hack">&nbsp;</li>
+            <li wicket:id="tabs"><a wicket:id="tab-link" href="#"><span wicket:id="tab-label">Comments</span></a></li>
+        </ul>
+    </div>
+    <div class="status">
+        <div class="button-left"><a href="#">Options</a></div>
+        <span wicket:id="status">A nice header</span>
+    </div>
+    <div class="contents" wicket:id="contents">
+        <p>This section lets you define what you offer to other MindPeer users.</p>
+        <p>Use the list on the right to add/edit/delete products.</p>
+    </div>
+</wicket:panel>
+</body>
+</html>

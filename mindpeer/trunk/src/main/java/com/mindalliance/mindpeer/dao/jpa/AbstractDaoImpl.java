@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -59,6 +60,26 @@ public abstract class AbstractDaoImpl<T extends ModelObject> extends JpaDaoSuppo
                 String className = domainClass.getSimpleName();
                 Query query = em.createQuery( "select e from " + className + " e" );
                 return query.getResultList();
+            }
+        } );
+    }
+
+    /**
+     * Get a partial iterator on a window of results.
+     * @param first the first item to iterate on
+     * @param count how many to get
+     * @return an iterator
+     */
+    @Transactional
+    @SuppressWarnings( { "unchecked" } )
+    public Iterator<T> iterator( final int first, final int count ) {
+        return (Iterator<T>) getJpaTemplate().execute( new JpaCallback() {
+            public Object doInJpa( EntityManager em ) {
+                String className = domainClass.getSimpleName();
+                Query query = em.createQuery( "select e from " + className + " e" );
+                query.setFirstResult( first );
+                query.setMaxResults( count );
+                return query.getResultList().iterator();
             }
         } );
     }

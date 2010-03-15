@@ -180,12 +180,13 @@ public class TestUserDaoImpl {
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(
             new AnonymousAuthenticationToken( "bla", "something", authList( "ROLE_ANONYMOUS" ) ) );
-        assertNull( userDao.currentUser() );
+        assertNull( userDao.currentUserId() );
 
+        User guest = userDao.findByName( "guest" );
         User bob = new User();
         context.setAuthentication(
-            new AnonymousAuthenticationToken( "bla", bob, authList( "ROLE_USER" ) ) );
-         assertEquals( bob, userDao.currentUser() );
+            new AnonymousAuthenticationToken( "guest", guest, authList( "ROLE_USER" ) ) );
+         assertEquals( guest.getId(), userDao.currentUserId() );
     }
 
     private static List<GrantedAuthority> authList( String... authority ) {

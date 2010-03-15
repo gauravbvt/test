@@ -18,8 +18,7 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class ModelObject implements IClusterable {
 
-    /** Persistent objects may be persisted. */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -1730275307746042188L;
 
     /** Timestamp of the object's creation. */
     @Temporal( TemporalType.TIMESTAMP )

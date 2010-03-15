@@ -37,7 +37,7 @@ public class DataInitializer implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         if ( userDao.countAll() == 0 ) {
             User admin = new User();
-            admin.setUsername( "admin" );
+            admin.setUsername( "support" );
             admin.setPassword( "52357ffc0a5ed1f7fb909060187249b3c278a7da" );
             admin.setEmail( "support@mind-alliance.com" );
             admin.setConfirmed( true );

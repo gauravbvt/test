@@ -153,6 +153,27 @@ public class TestRegistrationPage extends IntegrationTest {
      * ...
      */
     @Test
+    @Transactional
+    @Rollback
+    public void testInvalidName3() {
+
+        formTester.setValue( "username", "focus" );
+        formTester.setValue( "password", "Robert" );
+        formTester.setValue( "verify",   "Robert" );
+        formTester.setValue( "email",    "bob@example.com" );
+
+        formTester.submit();
+
+        verifyNoMoreInteractions( mailSender );
+        tester.assertRenderedPage( RegistrationPage.class );
+        tester.assertErrorMessages( new String[]{
+                "Username focus is reserved." } );
+    }
+
+    /**
+     * ...
+     */
+    @Test
     public void testInvalidEmail() {
         formTester.setValue( "username", "bob" );
         formTester.setValue( "password", "Robert" );

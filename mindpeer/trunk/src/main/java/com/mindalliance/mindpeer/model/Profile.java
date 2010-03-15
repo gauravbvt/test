@@ -4,13 +4,23 @@
 package com.mindalliance.mindpeer.model;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,14 +29,14 @@ import java.util.Set;
  * Profile properties will be used in faceted searches.
  */
 @Entity
-public class Profile extends ModelObject {
+public class Profile extends NamedModelObject {
+
+    private static final long serialVersionUID = -8519781448042452022L;
 
     @OneToOne
     private User user;
 
-    private String fullName;
-
-    private String organisation;
+    private String organization;
 
     private String designation;
 
@@ -38,12 +48,20 @@ public class Profile extends ModelObject {
 
     private String website;
 
+    @Column( length = 32*1024 )
+    private byte[] picture;
+
     @ManyToMany( cascade = { CascadeType.MERGE, CascadeType.PERSIST } )
     @JoinTable( name = "Profile_Interest",
                 joinColumns = @JoinColumn( name = "profile_id" ),
                 inverseJoinColumns = @JoinColumn( name = "tag_id" ) )
     @OrderBy( "description" )
     private Set<Tag> interests = new HashSet<Tag>();
+
+    @OneToMany( cascade = { CascadeType.MERGE }, mappedBy = "profile" )
+    @OrderBy( "name" )
+    @MapKey( name = "name" )
+    private Map<String, Product> products = new HashMap<String, Product>();
 
     /**
      * Create a new Profile instance.
@@ -52,27 +70,21 @@ public class Profile extends ModelObject {
     }
 
     /**
-     * Create a new profile instance for a given user
-     * @param user of type User
+     * Create a new Profile instance.
+     * @param name the given name
+     */
+    protected Profile( String name ) {
+        super( name );
+    }
+
+    /**
+     * Create a new Profile instance.
+     *
+     * @param user the given user
      */
     public Profile( User user ) {
+        this( "Unknown" );
         this.user = user;
-    }
-
-    /**
-     * Return the user's full name.
-     * @return the value of fullName
-     */
-    public String getFullName() {
-        return fullName;
-    }
-
-    /**
-     * Sets the full name of the associated user.
-     * @param fullName the new full name.
-     */
-    public void setFullName( String fullName ) {
-        this.fullName = fullName;
     }
 
     /**
@@ -164,17 +176,17 @@ public class Profile extends ModelObject {
      * Return the Profile's organisation.
      * @return the value of organisation
      */
-    public String getOrganisation() {
-        return organisation;
+    public String getOrganization() {
+        return organization;
     }
 
     /**
      * Sets the organisation of this Profile.
-     * @param organisation the new organisation value.
+     * @param organization the new organisation value.
      *
      */
-    public void setOrganisation( String organisation ) {
-        this.organisation = organisation;
+    public void setOrganization( String organization ) {
+        this.organization = organization;
     }
 
     /**
@@ -209,5 +221,99 @@ public class Profile extends ModelObject {
      */
     public void setWebsite( String website ) {
         this.website = website;
+    }
+
+    /**
+     * Return the Profile's picture.
+     * @return the value of picture
+     */
+    public byte[] getPicture() {
+        return picture;
+    }
+
+    /**
+     * Sets the picture of this Profile.
+     * @param picture the new picture value.
+     *
+     */
+    public void setPicture( byte[] picture ) {
+        this.picture = picture;
+    }
+
+    @Transient
+    public List<Product> getProducts() {
+        List<Product> result = new ArrayList<Product>( products.values() );
+        Collections.sort( result );
+
+        return Collections.unmodifiableList( result );
+    }
+
+    @Transient
+    public Iterator<Product> products() {
+        return products.values().iterator();
+    }
+
+    /**
+     * ...
+     *
+     * @param product the given product
+     */
+    public void addProduct( Product product ) {
+        product.setProfile( this );
+        products.put( product.getName(), product );
+    }
+
+    /**
+     * ...
+     *
+     * @param name the given name
+     * @return AbstractProduct
+     */
+    public Product getProduct( String name ) {
+        return products.get( name );
+    }
+
+    /**
+     * Remove a product.
+     *
+     * @param productName the name of the product
+     */
+    public void removeProduct( String productName ) {
+        products.remove( productName );
+    }
+
+    /**
+     * Return the number of defined products.
+     * @return the number of defined products
+     */
+    @Transient
+    public int getProductCount() {
+        return products.size();
+    }
+
+    @Transient
+    public int getSubscriberCount() {
+        int result = 0;
+        for ( Product product : products.values() )
+            result += product.getCount();
+
+        return result;
+    }
+
+    /**
+     * ...
+     * @return String
+     */
+    @Override
+    public String toString() {
+        return "Profile[" + getId() + ':' + getName() + ']';
+    }
+
+    /**
+     * Return the count to show in a listing.
+     * @return the value of count
+     */
+    public int getCount() {
+        return 0;
     }
 }

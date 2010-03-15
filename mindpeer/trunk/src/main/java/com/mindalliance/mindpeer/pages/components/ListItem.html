@@ -6,13 +6,9 @@
         xml:lang="en"
         lang="en">
 <body>
-    <h1>Home page</h1>
-
-    <p>You are now logged in to your personal home page.</p>
-
-    <ul>
-        <li><a wicket:id="public-home">Go to public home</a></li>
-        <li><a href="j_spring_security_logout">Logout <span wicket:id="username">user</span></a></li>
-    </ul>
+<wicket:panel>
+    <a class="headline" wicket:id="name-link"><span wicket:id="name">name</span></a>
+    <span class="count" wicket:id="count">1234</span>
+</wicket:panel>
 </body>
 </html>

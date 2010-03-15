@@ -40,7 +40,7 @@ public class TestUser {
         user.setUsername( "bob" );
         user.setPassword( "pwd" );
         user.setEmail( "bla" );
-        user.setProfile( new Profile( user ) );
+        user.setProfile( new Profile() );
     }
 
     @After
@@ -58,6 +58,8 @@ public class TestUser {
         assertEquals( "pwd", user.getPassword() );
         assertEquals( "bla", user.getEmail() );
         assertFalse( user.isConfirmed() );
+
+        assertEquals( 0, user.getFocusList().size() );
     }
 
     /**

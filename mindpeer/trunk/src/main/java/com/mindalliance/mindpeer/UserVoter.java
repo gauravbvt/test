@@ -102,11 +102,11 @@ public class UserVoter implements AccessDecisionVoter {
             Collection<ConfigAttribute> configAttributes ) {
 
         Object user = authentication.getPrincipal();
+        Object target = object instanceof JoinPoint ? ( (JoinPoint) object ).getTarget()
+                                                    : object;
 
         for ( ConfigAttribute ca : configAttributes ) {
             String attribute = ca.getAttribute();
-            Object target = object instanceof JoinPoint ? ( (JoinPoint) object ).getTarget()
-                                                        : object;
 
             if ( attribute.equals( PREFIX ) ) {
                 // Check if object is the principal

@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * ...
@@ -41,14 +43,14 @@ public class TestProfile {
         assertEquals( user, profile.getUser() );
 
         String s = "Some string";
-        profile.setFullName( s );
-        assertEquals( s, profile.getFullName() );
+        profile.setName( s );
+        assertEquals( s, profile.getName() );
 
         profile.setUser( null );
         assertNull( profile.getUser() );
 
-        profile.setOrganisation( s );
-        assertEquals( s, profile.getOrganisation() );
+        profile.setOrganization( s );
+        assertEquals( s, profile.getOrganization() );
 
         profile.setPhone( s );
         assertEquals( s, profile.getPhone() );
@@ -65,9 +67,42 @@ public class TestProfile {
         profile.setLocation( s );
         assertEquals( s, profile.getLocation() );
 
-        HashSet<Tag> tags = new HashSet<Tag>();
+        Set<Tag> tags = new HashSet<Tag>();
         profile.setInterests( tags );
         assertSame( tags, profile.getInterests() );
+
+        byte[] pic = new byte[12];
+        profile.setPicture( pic );
+        assertSame( pic, profile.getPicture() );
+    }
+
+    @Test
+    public void testToString() {
+        assertEquals( "Profile[null:Unknown]", profile.toString() );
+
+        profile.setId( 1L );
+        profile.setName( "bla" );
+        assertEquals( "Profile[1:bla]", profile.toString() );
+    }
+
+    @Test
+    public void testProduct() {
+        assertEquals( 0, profile.getProductCount() );
+        assertNull( profile.getProduct( null ) );
+        assertEquals( 0, profile.getProducts().size() );
+
+        CommentFeed feed = new CommentFeed();
+        profile.addProduct( feed );
+        assertEquals( 1, profile.getProductCount() );
+        assertEquals( profile, feed.getProfile() );
+        assertEquals( feed, profile.getProduct( feed.getName() ) );
+
+        List<Product> products = profile.getProducts();
+        assertEquals( 1, products.size() );
+        assertEquals( feed, products.get( 0 ) );
+
+        profile.removeProduct( feed.getName() );
+        assertEquals( 0, profile.getProductCount() );
     }
 
 }

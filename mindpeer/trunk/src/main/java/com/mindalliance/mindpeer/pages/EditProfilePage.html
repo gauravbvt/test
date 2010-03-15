@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <div id="errors" wicket:id="feedback"/>
+
+    <form wicket:id="profile" method="post">
+        <img wicket:id="current" src="" align="left"/>
+        <table>
+            <tr><th>Full name:</th><td><input wicket:id="profile.name"/></td></tr>
+            <tr><th>Designation:</th><td><input wicket:id="profile.designation"/></td></tr>
+            <tr><th>Organization:</th><td><input wicket:id="profile.organization"/></td></tr>
+            <tr><th>Location:</th><td><input wicket:id="profile.location"/></td></tr>
+            <tr><th>Interests:</th><td><input wicket:id="profile.interests"/></td></tr>
+            <tr><th>Bio:</th><td><textarea cols="40" rows="5" wicket:id="profile.description">(bio)</textarea></td></tr>
+            <tr><th>Email:</th><td><input wicket:id="email"/></td></tr>
+            <tr><th>Phone:</th><td><input wicket:id="profile.phone"/></td></tr>
+            <tr><th>Fax:</th><td><input wicket:id="profile.fax"/></td></tr>
+            <tr><th>Website:</th><td><input wicket:id="profile.website"/></td></tr>
+            <tr><th>Picture:</th><td><input type="file" wicket:id="picture"/><input wicket:id="reset" type="submit" value="Reset picture"/></td></tr>
+        </table>
+        <input type="submit" value="Submit"/>
+    </form>
+</wicket:extend>
+</body>
+</html>
