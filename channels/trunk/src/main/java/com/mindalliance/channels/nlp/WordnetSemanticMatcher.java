@@ -146,7 +146,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
         URL url = WordnetSemanticMatcher.class.getResource( JWNL_PROPERTIES );
         // Class[] classes = {String.class};
         String template = getText( url );
-        String dictPath = wordnetDict.getFile().getAbsolutePath().replaceAll("\\\\", "\\\\");
+        String dictPath = wordnetDict.getFile().getAbsolutePath().replaceAll("\\\\", "\\\\\\\\");
         String adjustedTemplate = template.replaceFirst(
                 "_WORDNET_DICT_",
                 dictPath );
