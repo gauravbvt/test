@@ -129,6 +129,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 addTitleCell( item );
                 addEntityCell( item, "role" );
                 addEntityCell( item, "jurisdiction" );
+                addEntityCell( item, "supervisor" );
                 addShowFlowsCell( item );
             }
         };
@@ -382,6 +383,9 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                     getCommander().cleanup( Role.class, resourceSpec.getRole().getName() );
                 if ( resourceSpec.getJurisdiction() != null )
                     getCommander().cleanup( Place.class, resourceSpec.getJurisdiction().getName() );
+                if ( job.getSupervisor() != null )
+                    getCommander().cleanup( Actor.class, job.getSupervisor().getName() );
+
             }
         }
 
@@ -484,6 +488,31 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 getCommander().cleanup( Place.class, oldName );
             }
         }
+
+        public String getSupervisorName() {
+            return job.getSupervisorName();
+        }
+
+        public void setSupervisorName( String name ) {
+            String oldName = getSupervisorName();
+            if ( name != null && !isSame( name, oldName ) ) {
+                if ( markedForCreation ) {
+                    job.setSupervisor( getQueryService().findOrCreate( Actor.class, name ) );
+                } else {
+                    int index = getOrganization().getJobs().indexOf( job );
+                    if ( index >= 0 ) {
+                        doCommand( new UpdatePlanObject(
+                                getOrganization(),
+                                "jobs[" + index + "].supervisorName",
+                                name,
+                                UpdateObject.Action.Set
+                        ) );
+                    }
+                }
+                getCommander().cleanup( Actor.class, oldName );
+            }
+        }
+
 
         /**
          * Wrapped job can be confirmed?
@@ -588,9 +617,12 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             Class<? extends ModelEntity> moClass =
                     property.equals( "actor" )
                             ? Actor.class
-                            : ( property.equals( "role" )
+                            : property.equals( "role" )
                             ? Role.class
-                            : Place.class );
+                            : property.equals( "jurisdiction" )
+                            ? Place.class
+                            // supervisor
+                            : Actor.class;
             final List<String> choices = getQueryService().findAllEntityNames( moClass );
             // text field
             TextField<String> entityField = new AutoCompleteTextField<String>(

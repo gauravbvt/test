@@ -59,6 +59,12 @@ public class JobConverter extends AbstractChannelsConverter {
         writer.startNode( "title" );
         writer.setValue( job.getTitle() );
         writer.endNode();
+        if ( job.getSupervisor() != null ) {
+            writer.startNode( "supervisor" );
+            writer.addAttribute( "id", Long.toString( job.getSupervisor().getId() ) );
+            writer.setValue( job.getSupervisorName() );
+            writer.endNode();
+        }
     }
 
     public Object unmarshal(
@@ -102,6 +108,16 @@ public class JobConverter extends AbstractChannelsConverter {
                 job.setJurisdiction( jurisdiction );
             } else if ( nodeName.equals( "title" ) ) {
                 job.setTitle( reader.getValue() );
+            } else if ( nodeName.equals( "supervisor" ) ) {
+                String id = reader.getAttribute( "id" );
+                Actor supervisor = getEntity(
+                        Actor.class,
+                        reader.getValue(),
+                        Long.parseLong( id ),
+                        false,
+                        importingPlan,
+                        idMap );
+                job.setSupervisor( supervisor );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }

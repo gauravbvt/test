@@ -146,9 +146,11 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
         URL url = WordnetSemanticMatcher.class.getResource( JWNL_PROPERTIES );
         // Class[] classes = {String.class};
         String template = getText( url );
+        String dictPath = wordnetDict.getFile().getAbsolutePath().replaceAll("\\\\", "\\\\");
         String adjustedTemplate = template.replaceFirst(
                 "_WORDNET_DICT_",
-                wordnetDict.getFile().getAbsolutePath() );
+                dictPath );
+        LOG.info( adjustedTemplate );
         return new ByteArrayInputStream( adjustedTemplate.getBytes() );
     }
 
@@ -172,7 +174,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
     /**
      * {@inheritDoc}
      */
-    public boolean matches( String text, String otherText, Proximity minLevel ) {
+    public synchronized boolean matches( String text, String otherText, Proximity minLevel ) {
         try {
             initialize();
             Proximity level = semanticProximity( text, otherText );

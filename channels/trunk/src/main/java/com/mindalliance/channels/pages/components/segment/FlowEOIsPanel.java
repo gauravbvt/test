@@ -83,6 +83,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     }
 
     private void init() {
+        addDoneButton();
         eoisContainer = new WebMarkupContainer( "eoisContainer" );
         eoisContainer.setOutputMarkupId( true );
         add( eoisContainer );
@@ -90,6 +91,16 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         addAboutFlow();
         addEOIs();
     }
+
+    private void addDoneButton() {
+        AjaxFallbackLink doneLink = new AjaxFallbackLink( "done" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                close( target );
+            }
+        };
+        add( doneLink );
+    }
+
 
     private void addHeaders() {
         WebMarkupContainer classificationsHeaderContainer =

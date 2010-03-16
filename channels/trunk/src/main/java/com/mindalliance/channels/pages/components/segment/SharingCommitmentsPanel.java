@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -59,6 +60,7 @@ public class SharingCommitmentsPanel extends FloatingCommandablePanel {
 
     private void init() {
         addAbout();
+        addDoneButton();
         addCommitmentsTable();
     }
 
@@ -69,6 +71,15 @@ public class SharingCommitmentsPanel extends FloatingCommandablePanel {
         Label toTask = new Label( "toTask", new Model<String>( ( (Part) getFlow().getTarget() ).getTask() ) );
         toTask.setOutputMarkupId( true );
         addOrReplace( toTask );
+    }
+
+    private void addDoneButton() {
+        AjaxFallbackLink doneLink = new AjaxFallbackLink( "done" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                close( target );
+            }
+        };
+        add( doneLink );
     }
 
     private void addCommitmentsTable() {

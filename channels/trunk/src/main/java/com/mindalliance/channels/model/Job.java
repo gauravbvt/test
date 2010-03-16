@@ -38,6 +38,10 @@ public class Job implements Serializable, Mappable, GeoLocatable {
      * A jurisdiction.
      */
     private Place jurisdiction;
+    /**
+     * The supervisor actor.
+     */
+    private Actor supervisor;
 
     /**
      * Primary key for persistence.
@@ -86,6 +90,11 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         this.jurisdiction = jurisdiction;
     }
 
+    public String getSupervisorName() {
+        if ( supervisor == null ) return "";
+        else return supervisor.getName();
+    }
+
     public String getTitle() {
         return title;
     }
@@ -104,6 +113,14 @@ public class Job implements Serializable, Mappable, GeoLocatable {
 
     public Place getJurisdiction() {
         return jurisdiction;
+    }
+
+    public Actor getSupervisor() {
+        return supervisor;
+    }
+
+    public void setSupervisor( Actor supervisor ) {
+        this.supervisor = supervisor;
     }
 
     /**
@@ -132,7 +149,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
                 + ( getJurisdictionName().isEmpty() ? "" : " for " + getJurisdictionName() );
     }
 
-   /**
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -146,6 +163,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
             return false;
         }
     }
+
     /**
      * {@inheritDoc}
      */
@@ -204,6 +222,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         mappedObject.set( "role", role );
         mappedObject.set( "jurisdiction", jurisdiction );
         mappedObject.set( "title", title );
+        mappedObject.set( "supervisor", supervisor );
         return mappedObject;
     }
 
@@ -237,6 +256,8 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     public boolean references( ModelObject mo ) {
         return ModelObject.areIdentical( actor, mo )
                 || ModelObject.areIdentical( role, mo )
-                || ModelObject.areIdentical( jurisdiction, mo );
+                || ModelObject.areIdentical( jurisdiction, mo )
+                || ModelObject.areIdentical( supervisor, mo );
     }
+
 }
