@@ -75,6 +75,15 @@ div.section-content {
     overflow: hidden;
 }
 
+#part .summary {
+    display: block;
+}
+
+#part .instructions {
+    display: block;
+    font-style: italic;
+}
+
 #graph {
     top: 0;
     bottom: 49.5%;

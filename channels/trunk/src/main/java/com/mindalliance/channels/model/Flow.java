@@ -60,32 +60,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     protected Flow() {
     }
 
-    // todo - remove when cut-over is completed
-    public void setDescription( String val ) {
-        if ( !val.isEmpty() ) setEOIsFrom( val );
-    }
-
-    @Override
-    public String getDescription() {
-        return descriptionFromEOIs();
-    }
-
-    // todo - remove when cut-over is completed
-    private void setEOIsFrom( String val ) {
-        List<String> contents = Matcher.extractEOIs( val );
-        for ( String content : contents ) {
-            ElementOfInformation eoi = new ElementOfInformation();
-            eoi.setContent( content );
-            addEoi( eoi );
-        }
-    }
-
-    /**
+       /**
      * Get EOIs as a string.
      *
      * @return a string
      */
-    private String descriptionFromEOIs() {
+    public String getEoisSummary() {
         StringBuilder sb = new StringBuilder();
         Iterator<ElementOfInformation> iter = getEois().iterator();
         while ( iter.hasNext() ) {

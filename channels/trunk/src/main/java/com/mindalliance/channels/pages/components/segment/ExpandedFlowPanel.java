@@ -123,6 +123,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     private CheckBox triggersSourceCheckBox;
     /**
+     * Flow description.
+     */
+    private TextArea<String> flowDescription;
+
+    /**
      * Issues panel.
      */
     private IssuesPanel issuesPanel;
@@ -159,6 +164,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         add( channelRow );
         addMaxDelayRow();
         addSignificanceToSource();
+        addFlowDescription();
         add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
         issuesPanel = new IssuesPanel(
                 "issues",
@@ -178,7 +184,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         add( editEOIsLink );
         TextArea<String> eoisDescriptionField = new TextArea<String>(
                 "eois",
-                new PropertyModel<String>( getFlow(), "description" ) );
+                new PropertyModel<String>( getFlow(), "eoisSummary" ) );
         eoisDescriptionField.setEnabled( false );
         add( eoisDescriptionField );                              // NON-NLS
     }
@@ -209,6 +215,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( lockedByUser && f.canSetTerminatesSource() );
         otherChoice.setEnabled( lockedByUser );
+        flowDescription.setEnabled( isLockedByUser( getFlow() ) );
         makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
     }
 
@@ -368,6 +375,19 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                         "notifying-or-replying",
                         new PropertyModel<String>( this, "replyingOrNotifying" ) ) );
     }
+
+    private void addFlowDescription() {
+        flowDescription = new TextArea<String>( "description",
+                new PropertyModel<String>( this, "description" ) );
+        flowDescription.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getFlow(), "description" ) );
+            }
+        } );
+        flowDescription.setOutputMarkupId( true );
+        add( flowDescription );
+    }
+
 
     /**
      * Return label string according to type of flow.
@@ -783,6 +803,16 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     public String getDescription() {
         return getFlow().getDescription();
     }
+
+    /**
+     * Set flow description via command.
+     *
+     * @param val a string
+     */
+    public void setDescription( String val ) {
+        doCommand( new UpdateSegmentObject( getFlow(), "description", val ) );
+    }
+
 
     public boolean isAskedFor() {
         return getFlow().isAskedFor();

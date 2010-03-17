@@ -26,6 +26,10 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
      */
     private Label summaryLabel;
     /**
+     * Instructions label.
+     */
+    private Label descriptionLabel;
+    /**
      * Part issues panel.
      */
     private IssuesPanel partIssuesPanel;
@@ -38,13 +42,21 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
     private void init() {
         setOutputMarkupId( true );
         addSummaryLabel();
+        addDescriptionLabel();
         addIssuesPanel();
         adjustFields();
     }
 
     private void addSummaryLabel() {
         summaryLabel = new Label( "partSummary", new PropertyModel( getPart(), "summary" ) );
+        summaryLabel.setOutputMarkupId( true );
         addOrReplace( summaryLabel );
+    }
+
+    private void addDescriptionLabel() {
+        descriptionLabel = new Label( "description", new PropertyModel( getPart(), "description" ) );
+        descriptionLabel.setOutputMarkupId( true );
+        addOrReplace( descriptionLabel );
     }
 
     private void addIssuesPanel() {
@@ -69,6 +81,7 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
      * {@inheritDoc}
      */
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        target.addComponent( descriptionLabel );
         target.addComponent( summaryLabel );
         addIssuesPanel();
         adjustFields();

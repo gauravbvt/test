@@ -174,7 +174,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private void addPartDescription() {
         partDescription = new TextArea<String>( "description",                            // NON-NLS
-                new PropertyModel<String>( getPart(), "description" ) );
+                new PropertyModel<String>( this, "description" ) );
         partDescription.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "description" ) );
@@ -767,6 +767,24 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         }
         doCommand( new UpdateSegmentObject( getPart(), "initiatedEvent", newEvent ) );
         getCommander().cleanup( Event.class, oldName );
+    }
+
+    /**
+     * Get part description.
+     *
+     * @return a string
+     */
+    public String getDescription() {
+        return getPart().getDescription();
+    }
+
+    /**
+     * Set part description via command.
+     *
+     * @param val a string
+     */
+    public void setDescription( String val ) {
+        doCommand( new UpdateSegmentObject( getPart(), "description", val ) );
     }
 
 

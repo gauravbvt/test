@@ -94,6 +94,7 @@ public class VCardPage extends WebPage {
         add(
                 new Label( "pagetitle", title ),
                 new Label( "name", title ),
+                new Label( "description", flow.getDescription() ).setVisible( !flow.getDescription().isEmpty() ),
                 new VCardPanel( "person", job.resourceSpec( organization ), PREFIX ),
                 organization == null ? new WebMarkupContainer( "org" ).setVisible( false )
                         : new VCardPanel( "org", new ResourceSpec( organization ), PREFIX )

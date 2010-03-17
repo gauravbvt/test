@@ -9,6 +9,9 @@
     <script type="text/javascript">
         function channels_keypress( kc, t, target ) {
             if ( kc == 13 ) {
+                if ( t == 'textarea' ) {
+                    return true;
+                }
                 // Patch autocomplete field bug (choices list not hidden)
                 if ( t == 'text' ) {
                     var autocompleteList = $(".wicket-aa-container");
@@ -19,10 +22,11 @@
                 target.focus();
                 target.blur();
                 return false;
+            } else {
+                // Capture backspace keypress when not in an input field
+                return ((kc != 8) || ( t == 'text' ) ||
+                        (t == 'textarea') || ( t == 'submit') || (t == 'password'))
             }
-            // Capture backspace keypress when not in an input field
-            return ((kc != 8) || ( t == 'text' ) ||
-                    (t == 'textarea') || ( t == 'submit') || (t == 'password'))
         }
 
         if ( typeof window.event != 'undefined' ) // IE
