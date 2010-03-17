@@ -215,7 +215,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( lockedByUser && f.canSetTerminatesSource() );
         otherChoice.setEnabled( lockedByUser );
-        flowDescription.setEnabled( isLockedByUser( getFlow() ) );
+        flowDescription.setEnabled( ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() )
+                && isLockedByUser( getFlow() ) );
         makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
     }
 
