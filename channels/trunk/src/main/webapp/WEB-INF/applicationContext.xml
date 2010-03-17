@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+CONFIGURATION NOTES:
+
+  For new Channels server instances,, see comments prefaced with NOTE:
+
+-->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -10,14 +17,23 @@
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
 
     <bean id="semanticMatcher" class="com.mindalliance.channels.nlp.WordnetSemanticMatcher">
+    <!--  NOTE:
+              For WINDOWS installation,  use
+            <property name="wordnetDict" value="WEB-INF\data\windows-wordnet-2\dict"/>
+            <property name="simIndex" value="WEB-INF\data\jwsl\wn_index"/>
+        -->
         <property name="wordnetDict" value="WEB-INF/data/wordnet-2/dict"/>
         <property name="simIndex" value="WEB-INF/data/jwsl/wn_index"/>
     </bean>
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <!-- NOTE: Enter the SMTP service domain here -->
         <property name="host" value="smtp.gmail.com"/>
+        <!-- NOTE: Enter Channels email account id here -->
         <property name="username" value="channels.mindalliance@gmail.com"/>
+        <!-- NOTE: Enter Channels email account password -->
         <property name="password" value="trafalg4r"/>
+        <!-- NOTE: Enter Channels email service port here -->
         <property name="port" value="465"/>
         <property name="protocol" value="smtps"/>
         <property name="javaMailProperties">
@@ -54,10 +70,13 @@
     </bean>
 
     <bean id="geoService" class="com.mindalliance.channels.geo.DefaultGeoService">
+        <!-- NOTE: Enter your Google Maps API key here -->
         <property name="googleMapsAPIKey"
                   value="ABQIAAAAOEFNCNhUR4YjTHX0nnN5VRR4EqRj3RNZnoYuzojShxUjcPQKRRSLJekGZYEI4kGxmTTJBHr4EJ6Xpg"/>
         <property name="geonamesServer" value="ws.geonames.net"/>
+        <!-- NOTE: Enter your Geonames user id here -->
         <property name="geonamesUserName" value="mindalliance"/>
+        <!-- NOTE: Enter your Geonames password here -->
         <property name="geonamesToken" value="trafalg4r"/>
     </bean>
 
@@ -74,11 +93,15 @@
     </bean>
 
     <bean id="surveyService" class="com.mindalliance.channels.surveys.SurveyGizmoService">
+        <!-- NOTE: Enter your SurveyGizmo API key here -->
         <property name="apiKey" value="f244197f935b14559b8061cea"/>
+        <!-- NOTE: Enter your SurveyGizmo user key here -->
         <property name="userKey" value="vxvnv4nys*29"/>
+        <!-- NOTE: Enter survey template id here -->
         <property name="template" value="1800"/>
         <property name="analyst" ref="analyst"/>
         <property name="queryService" ref="queryService"/>
+        <!-- NOTE: Enter Channels instance email address here -->
         <property name="defaultEmailAddress" value="channels.mindalliance@gmail.com"/>
         <property name="mailSender" ref="mailSender"/>
         <property name="userDetailsService" ref="userDetails"/>
@@ -109,6 +132,7 @@
     </bean>
 
     <bean id="graphvizRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
+        <!-- NOTE:  Point to installation directory of graphviz-->
         <property name="dotPath" value="/usr/bin"/>
         <property name="algo" value="dot"/>
         <property name="timeout" value="10000"/>
@@ -313,6 +337,15 @@
                       <property name="queryService" ref="queryService"/>
                   </bean>
                 <bean class="com.mindalliance.channels.analysis.detectors.IncorrectMediumDelegation">
+                      <property name="queryService" ref="queryService"/>
+                  </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnsupervisedJob">
+                      <property name="queryService" ref="queryService"/>
+                  </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.ExternalSupervisor">
+                      <property name="queryService" ref="queryService"/>
+                  </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.CircularSupervision">
                       <property name="queryService" ref="queryService"/>
                   </bean>
             </list>

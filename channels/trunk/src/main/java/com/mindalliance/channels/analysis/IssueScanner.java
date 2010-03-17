@@ -90,9 +90,10 @@ public class IssueScanner implements Scanner {
      */
     public void terminate() {
         LOG.debug( "Terminating issue scans" );
-        for ( Daemon daemon : daemons.values() ) {
-            daemon.terminate();
-        }
+        if ( daemons != null )
+            for ( Daemon daemon : daemons.values() ) {
+                daemon.terminate();
+            }
     }
 
     /**
@@ -201,7 +202,7 @@ public class IssueScanner implements Scanner {
                 if ( !active ) return;
                 analyst.countTestFailures( getPlan(), Issue.ROBUSTNESS );
                 long endTime = System.currentTimeMillis();
-                LOG.info( "Issue sweep completed on " + getPlan() + " in " + (endTime - startTime) + " msecs" );
+                LOG.info( "Issue sweep completed on " + getPlan() + " in " + ( endTime - startTime ) + " msecs" );
             } catch ( Throwable e ) {
                 e.printStackTrace();
                 LOG.debug( "Deamon failed", e );

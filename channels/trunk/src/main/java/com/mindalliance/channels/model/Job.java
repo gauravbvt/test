@@ -150,6 +150,16 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     }
 
     /**
+     * Get descriptive text.
+     *
+     * @return a string
+     */
+    public String getLabel() {
+        return toString();
+    }
+
+
+    /**
      * {@inheritDoc}
      */
     @Override

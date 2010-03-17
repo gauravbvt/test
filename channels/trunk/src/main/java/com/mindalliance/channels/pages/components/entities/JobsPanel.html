@@ -32,6 +32,15 @@
             </tr>
         </table>
     </div>
+    <input wicket:id="transfer" type="checkbox"/>&nbsp;Transfer jobs
+    <span wicket:id="transferDiv">
+        from
+        <select wicket:id="fromOrganization">
+            <option>ACME</option>
+        </select>
+        <span wicket:id="jobTransfers">[job transfers table]</span>
+        <input wicket:id="doTransfer" type="button" value="Transfer jobs"/>
+    </span>
     <span wicket:id="flows">
         <div class="section-title">
             Flows involving <span wicket:id="job">job</span>

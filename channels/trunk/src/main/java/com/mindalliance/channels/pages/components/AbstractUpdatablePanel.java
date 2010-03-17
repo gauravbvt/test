@@ -71,6 +71,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
             IModel<? extends Identifiable> model,
             Set<Long> expansions ) {
         super( id, model );
+        setOutputMarkupId( true );
         this.model = model;
         this.expansions = expansions;
     }
@@ -237,7 +238,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return true if strings are equivalent
      */
     protected static boolean isSame( String name, String target ) {
-        return COMPARATOR.compare( name, target ) == 0;
+        return name != null && target != null && COMPARATOR.compare( name, target ) == 0;
     }
 
     /**

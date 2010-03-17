@@ -145,14 +145,14 @@ public class SegmentPanel extends AbstractCommandablePanel {
         partShowMenu.setOutputMarkupId( true );
         add( partShowMenu );
         AjaxFallbackLink addPartLink = new AjaxFallbackLink( "addPart" ) {
-             public void onClick( AjaxRequestTarget target ) {
-                 Command command = new AddPart( getSegment() );
-                 Change change = doCommand( command );
-                 update( target, change );
-             }
-         };
-         addPartLink.setVisible( getPlan().isDevelopment() );
-         add( addPartLink );        
+            public void onClick( AjaxRequestTarget target ) {
+                Command command = new AddPart( getSegment() );
+                Change change = doCommand( command );
+                update( target, change );
+            }
+        };
+        addPartLink.setVisible( getPlan().isDevelopment() );
+        add( addPartLink );
     }
 
     private void addPartActionsMenu() {
@@ -277,12 +277,18 @@ public class SegmentPanel extends AbstractCommandablePanel {
      */
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        boolean stopUpdates = false;
         if ( !change.isNone() ) {
             Identifiable identifiable = change.getSubject();
             if ( identifiable == getPart() ) {
                 if ( change.isUpdated() ) {
                     receivesFlowPanel.refresh( target );
                     sendsFlowPanel.refresh( target );
+                }
+                if ( change.isDisplay() ) {
+                    addPartPanel();
+                    target.addComponent( partPanel );
+                    stopUpdates = true;
                 }
             }
             if ( identifiable instanceof Issue || identifiable instanceof SegmentObject ) {
@@ -294,9 +300,9 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 addPartPanel();
                 target.addComponent( partPanel );
             }
+            refreshMenus( target );
+            if ( !stopUpdates ) super.updateWith( target, change, updated );
         }
-        refreshMenus( target );
-        super.updateWith( target, change, updated );
     }
 
     /**

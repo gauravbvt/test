@@ -94,31 +94,43 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     }
 
     /**
+     * Whether identifiable is locked by another user.
+     *
+     * @param identifiable an identifiable
+     * @return a boolean
+     */
+    protected boolean isLockedByOtherUser( Identifiable identifiable ) {
+        return !isLockedByUser( identifiable ) && getLockOwner( identifiable ) != null;
+    }
+
+    /**
      * Safely find or create a model entity via a command.
+     *
      * @param clazz a model entity class
-     * @param name a name
+     * @param name  a name
      * @return a model entity
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     protected <T extends ModelEntity> T doSafeFindOrCreate( Class<T> clazz, String name ) {
-        return (T)doCommand( new CreateEntityIfNew(
-                            clazz,
-                            name,
-                            ModelEntity.Kind.Actual ) ).getSubject();
+        return (T) doCommand( new CreateEntityIfNew(
+                clazz,
+                name,
+                ModelEntity.Kind.Actual ) ).getSubject();
     }
 
     /**
      * Safely find or create a model entity type via a command.
+     *
      * @param clazz a model entity class
-     * @param name a name
+     * @param name  a name
      * @return a model entity
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     protected <T extends ModelEntity> T doSafeFindOrCreateType( Class<T> clazz, String name ) {
         return (T) doCommand( new CreateEntityIfNew(
-                            clazz,
-                            name,
-                            ModelEntity.Kind.Type ) ).getSubject();
+                clazz,
+                name,
+                ModelEntity.Kind.Type ) ).getSubject();
     }
 
 }

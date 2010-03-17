@@ -1332,4 +1332,11 @@ public interface QueryService extends Service {
      * @return a list of parts
      */
     List<Part> findAllAssignedParts( Segment segment, Actor actor );
+
+    /**
+     * Find all employments where actors are directly or indirectly supervised by a given actor.
+     * @param actor  an actor
+     * @return a list of actors
+     */
+    List<Employment> findAllSupervisedBy( Actor actor );
 }

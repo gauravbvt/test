@@ -176,6 +176,9 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new FlowOverUndersecuredMedium() );
         detectors.add( new BroadcastOnlyChannels() );
         detectors.add( new IncorrectMediumDelegation() );
+        detectors.add( new UnsupervisedJob() );
+        detectors.add( new CircularSupervision() );
+        detectors.add( new ExternalSupervisor() );
         for ( IssueDetector detector : detectors ) {
             ( (AbstractIssueDetector) detector ).setQueryService( queryService );
         }

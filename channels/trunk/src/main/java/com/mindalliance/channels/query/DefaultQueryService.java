@@ -3059,6 +3059,32 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 } );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public List<Employment> findAllSupervisedBy( Actor actor ) {
+        return findAllSupervisedBy( actor, new HashSet<Actor>() );
+    }
+
+    private List<Employment> findAllSupervisedBy( Actor actor, Set<Actor> visited ) {
+        List<Employment> employments = new ArrayList<Employment>();
+        if ( !visited.contains( actor ) ) {
+            visited.add( actor );
+            for ( Organization org : listActualEntities( Organization.class ) ) {
+                for ( Job job : org.getJobs() ) {
+                    if ( job.getSupervisor() != null && job.getSupervisor().equals( actor ) ) {
+                        Employment employment = new Employment( org, job );
+                        if ( !employments.contains( employment ) ) {
+                            employments.add( employment );
+                            employments.addAll( findAllSupervisedBy( job.getActor(), visited ) );
+                        }
+                    }
+                }
+            }
+        }
+        return employments;
+    }
+
 
 }
 

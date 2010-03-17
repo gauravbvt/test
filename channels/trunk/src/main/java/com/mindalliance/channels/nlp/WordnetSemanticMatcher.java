@@ -146,11 +146,11 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
         URL url = WordnetSemanticMatcher.class.getResource( JWNL_PROPERTIES );
         // Class[] classes = {String.class};
         String template = getText( url );
+        // Windows fix
         String dictPath = wordnetDict.getFile().getAbsolutePath().replaceAll("\\\\", "\\\\\\\\");
         String adjustedTemplate = template.replaceFirst(
                 "_WORDNET_DICT_",
                 dictPath );
-        LOG.info( adjustedTemplate );
         return new ByteArrayInputStream( adjustedTemplate.getBytes() );
     }
 

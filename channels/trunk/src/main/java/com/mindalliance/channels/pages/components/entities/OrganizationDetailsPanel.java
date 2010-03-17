@@ -9,7 +9,6 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.EntityReferencePanel;
 import com.mindalliance.channels.util.Matcher;
@@ -420,13 +419,4 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
-    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        // Don't propagate UI updates because of changes to jobs
-        if ( change.getProperty() == null || !change.getProperty().equals( "jobs" ) ) {
-            super.updateWith( target, change, updated );
-        }
-    }
 }

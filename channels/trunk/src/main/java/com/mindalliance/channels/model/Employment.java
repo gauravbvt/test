@@ -43,6 +43,12 @@ public class Employment implements Serializable, GeoLocatable {
         this.organization = organization;
     }
 
+    public Employment( Organization organization, Job job ) {
+        this.organization = organization;
+        this.job = job;
+        actor = job.getActor();
+    }
+
     public Employment( Actor actor, Organization organization, Job job ) {
         this.actor = actor;
         this.organization = organization;
@@ -84,6 +90,19 @@ public class Employment implements Serializable, GeoLocatable {
     public Place getJurisdiction() {
         if ( job != null ) {
             return job.getJurisdiction();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get supervisor from job, if any.
+     *
+     * @return an actor or null
+     */
+    public Actor getSupervisor() {
+        if ( job != null ) {
+            return job.getSupervisor();
         } else {
             return null;
         }
@@ -174,7 +193,6 @@ public class Employment implements Serializable, GeoLocatable {
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + getActor().hashCode();
-        hash = hash * 31 + getRole().hashCode();
         if (job != null) hash = hash * 31 + job.hashCode();
         return hash;
     }
@@ -194,4 +212,5 @@ public class Employment implements Serializable, GeoLocatable {
                 && ModelEntity.implies( getOrganization(), part.getOrganization() )
                 && ModelEntity.implies( getJurisdiction(), part.getJurisdiction() );
     }
+
 }

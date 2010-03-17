@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.TransferJobs;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Actor;
@@ -18,14 +19,22 @@ import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.Play;
+import com.mindalliance.channels.util.SortableBeanProvider;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -69,6 +78,10 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
      */
     private Job selectedJob;
     /**
+     * Unconfirmed job.
+     */
+    private Job unconfirmedJob;
+    /**
      * Flows container.
      */
     private WebMarkupContainer flowsDiv;
@@ -81,6 +94,28 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
      */
     private NameRangePanel rangePanel;
 
+    /**
+     * Whether job transfer UI activated.
+     */
+    private boolean transferring;
+    /**
+     * Job transfer markup container.
+     */
+    private WebMarkupContainer jobTransferDiv;
+    /**
+     * Organization jobs are being transferred from.
+     */
+    private Organization transferFrom;
+    /**
+     * Jobs tranfer panel.
+     */
+    private Component jobTransferPanel;
+    /**
+     * Do transfer button.
+     */
+    private AjaxFallbackLink<String> doTransfer;
+
+
     public JobsPanel( String id, IModel<Organization> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
@@ -88,11 +123,11 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
     private void init() {
         addJobs();
+        addJobTransfers();
         flowsDiv = new WebMarkupContainer( "flows" );
         flowsDiv.setOutputMarkupId( true );
-        add( flowsDiv );
+        addOrReplace( flowsDiv );
         addJobPlaybook( null );
-        setOutputMarkupId( true );
     }
 
     public void setNameRange( AjaxRequestTarget target, NameRange range ) {
@@ -105,7 +140,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     private void addJobs() {
         jobsDiv = new WebMarkupContainer( "jobsDiv" );
         jobsDiv.setOutputMarkupId( true );
-        add( jobsDiv );
+        addOrReplace( jobsDiv );
         rangePanel = new NameRangePanel(
                 "ranges",
                 new PropertyModel<List<String>>( this, "jobActorLastNames" ),
@@ -133,6 +168,128 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 addShowFlowsCell( item );
             }
         };
+    }
+
+    private void addJobTransfers() {
+        jobTransferDiv = new WebMarkupContainer( "transferDiv" );
+        jobTransferDiv.setOutputMarkupId( true );
+        makeVisible( jobTransferDiv, isTransferring() );
+        addOrReplace( jobTransferDiv );
+        DropDownChoice transferFromChoice = new DropDownChoice<Organization>(
+                "fromOrganization",
+                new PropertyModel<Organization>( this, "transferFrom" ),
+                new PropertyModel<List<? extends Organization>>( this, "transferFromOrganizations" ),
+                new IChoiceRenderer<Organization>() {
+                    public Object getDisplayValue( Organization org ) {
+                        if ( !JobsPanel.this.isLockedByOtherUser( org ) )
+                            return org.getLabel();
+                        else
+                            return org.getLabel()
+                                    + " (edited by "
+                                    + JobsPanel.this.getLockOwner( org ) + ")";
+                    }
+
+                    public String getIdValue( Organization org, int index ) {
+                        return Integer.toString( index );
+                    }
+                }
+        );
+        transferFromChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addJobTransferPanel( jobTransferDiv );
+                target.addComponent( jobTransferPanel );
+            }
+        } );
+        jobTransferDiv.add( transferFromChoice );
+        addJobTransferPanel( jobTransferDiv );
+        doTransfer = new AjaxFallbackLink<String>(
+                "doTransfer",
+                new PropertyModel<String>( this, "transferButtonLabel" ) ) {
+            public void onClick( AjaxRequestTarget target ) {
+                if ( executeJobTransfers() ) {
+                    addJobs();
+                    addJobTransfers();
+                    target.addComponent( jobsDiv );
+                    target.addComponent( jobTransferDiv );
+                    update( target, new Change(
+                            Change.Type.Updated,
+                            getOrganization(),
+                            "jobs"
+                    ) );
+                }
+            }
+        };
+        doTransfer.setOutputMarkupId( true );
+        makeVisible(doTransfer, isTransferring());
+        jobTransferDiv.add( doTransfer );
+        CheckBox transferCheckBox = new CheckBox(
+                "transfer",
+                new PropertyModel<Boolean>( this, "transferring" ) );
+        transferCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addJobTransferPanel( jobTransferDiv );
+                makeVisible( jobTransferDiv, isTransferring() );
+                target.addComponent( jobTransferDiv );
+            }
+        } );
+        transferCheckBox.setOutputMarkupId( true );
+        addOrReplace( transferCheckBox );
+    }
+
+    private boolean executeJobTransfers() {
+        List<Job> transferredJobs = getTransferredJobs();
+        if ( transferredJobs.isEmpty() ) {
+            return false;
+        } else {
+            doCommand( new TransferJobs(
+                    getTransferFrom(),
+                    getOrganization(),
+                    transferredJobs ) );
+            return true;
+        }
+    }
+
+    private void addJobTransferPanel( WebMarkupContainer transferringDiv ) {
+        if ( getTransferFrom() == null ) {
+            jobTransferPanel = new Label( "jobTransfers", "" );
+        } else {
+            jobTransferPanel = new JobTransferTable(
+                    "jobTransfers",
+                    new PropertyModel<Organization>( this, "transferFrom" )
+            );
+        }
+        jobTransferPanel.setOutputMarkupId( true );
+        makeVisible( jobTransferPanel, getTransferFrom() != null );
+        transferringDiv.addOrReplace( jobTransferPanel );
+    }
+
+    public boolean isTransferring() {
+        return transferring;
+    }
+
+    public void setTransferring( boolean transferring ) {
+        this.transferring = transferring;
+    }
+
+    public Organization getTransferFrom() {
+        return transferFrom;
+    }
+
+    public void setTransferFrom( Organization transferFrom ) {
+        this.transferFrom = transferFrom;
+    }
+
+    public List<Organization> getTransferFromOrganizations() {
+        List<Organization> orgs = new ArrayList<Organization>(
+                getQueryService().listActualEntities( Organization.class ) );
+        orgs.remove( getOrganization() );
+        orgs.remove( Organization.UNKNOWN );
+        Collections.sort( orgs, new Comparator<Organization>() {
+            public int compare( Organization o1, Organization o2 ) {
+                return Collator.getInstance().compare( o1.getName(), o2.getName() );
+            }
+        } );
+        return orgs;
     }
 
     private void addJobPlaybook( Job job ) {
@@ -264,14 +421,16 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     // Used by PropertyModel
     private List<JobWrapper> getJobWrappers() {
         List<JobWrapper> jobWrappers = new ArrayList<JobWrapper>();
+        List<Job> confirmedJobs = getOrganization().getJobs();
         // Confirmed jobs
-        for ( Job job : getOrganization().getJobs() ) {
+        for ( Job job : confirmedJobs ) {
             if ( jobActorRange == null
                     || jobActorRange.contains( job.getActorLastName().trim().toLowerCase() ) )
                 jobWrappers.add( new JobWrapper( job, true ) );
         }
         // Unconfirmed jobs
-        for ( Job job : getQueryService().findUnconfirmedJobs( getOrganization() ) ) {
+        List<Job> unconfirmedJobs = getQueryService().findUnconfirmedJobs( getOrganization() );
+        for ( Job job : unconfirmedJobs ) {
             if ( jobActorRange == null
                     || jobActorRange.contains( job.getActorLastName().trim().toLowerCase() ) )
                 jobWrappers.add( new JobWrapper( job, false ) );
@@ -282,7 +441,14 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             }
         } );
         // New job
-        JobWrapper creationJobWrapper = new JobWrapper( new Job(), false );
+        JobWrapper creationJobWrapper;
+        // Use previously unconfirmed job if not null and not already implied
+        if ( unconfirmedJob != null && !unconfirmedJobs.contains( unconfirmedJob ) ) {
+            creationJobWrapper = new JobWrapper( unconfirmedJob, false );
+            unconfirmedJob = null;
+        } else {
+            creationJobWrapper = new JobWrapper( new Job(), false );
+        }
         creationJobWrapper.setMarkedForCreation( true );
         jobWrappers.add( creationJobWrapper );
         return jobWrappers;
@@ -307,12 +473,28 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     /**
      * {@inheritDoc}
      */
+    public void update( AjaxRequestTarget target, Object object, String action ) {
+        makeVisible( doTransfer, !getTransferredJobs().isEmpty() );
+        target.addComponent( doTransfer );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated() ) {
             if ( selectedJob != null )
                 setNameRange( target, rangePanel.getRangeFor( selectedJob.getActorLastName() ) );
         }
         super.updateWith( target, change, updated );
+    }
+
+    private List<Job> getTransferredJobs() {
+        if ( jobTransferPanel instanceof JobTransferTable ) {
+            return ( (JobTransferTable) jobTransferPanel ).getTransferredJobs();
+        } else {
+            return new ArrayList<Job>();
+        }
     }
 
     /**
@@ -370,6 +552,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 ) );
                 selectedJob = job;
             } else if ( !markedForCreation ) {
+                unconfirmedJob = job;
                 doCommand( new UpdatePlanObject(
                         getOrganization(),
                         "jobs",
@@ -425,16 +608,6 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
                     job.setActor( getQueryService().findOrCreate( Actor.class, name ) );
-                } else {
-                    int index = getOrganization().getJobs().indexOf( job );
-                    if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject(
-                                getOrganization(),
-                                "jobs[" + index + "].actorName",
-                                name,
-                                UpdateObject.Action.Set
-                        ) );
-                    }
                 }
                 getCommander().cleanup( Actor.class, oldName );
             }
@@ -450,16 +623,6 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
                     job.setRole( getQueryService().findOrCreateType( Role.class, name ) );
-                } else {
-                    int index = getOrganization().getJobs().indexOf( job );
-                    if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject(
-                                getOrganization(),
-                                "jobs[" + index + "].roleName",
-                                name,
-                                UpdateObject.Action.Set
-                        ) );
-                    }
                 }
                 getCommander().cleanup( Role.class, oldName );
             }
@@ -471,19 +634,12 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
         public void setJurisdictionName( String name ) {
             String oldName = getJurisdictionName();
-            if ( name != null && !isSame( name, oldName ) ) {
+            if ( !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setJurisdiction( getQueryService().findOrCreate( Place.class, name ) );
-                } else {
-                    int index = getOrganization().getJobs().indexOf( job );
-                    if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject(
-                                getOrganization(),
-                                "jobs[" + index + "].jurisdictionName",
-                                name,
-                                UpdateObject.Action.Set
-                        ) );
-                    }
+                    if ( name != null )
+                        job.setJurisdiction( getQueryService().findOrCreate( Place.class, name ) );
+                    else
+                        job.setJurisdiction( null );
                 }
                 getCommander().cleanup( Place.class, oldName );
             }
@@ -495,19 +651,12 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
         public void setSupervisorName( String name ) {
             String oldName = getSupervisorName();
-            if ( name != null && !isSame( name, oldName ) ) {
+            if ( !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setSupervisor( getQueryService().findOrCreate( Actor.class, name ) );
-                } else {
-                    int index = getOrganization().getJobs().indexOf( job );
-                    if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject(
-                                getOrganization(),
-                                "jobs[" + index + "].supervisorName",
-                                name,
-                                UpdateObject.Action.Set
-                        ) );
-                    }
+                    if ( name != null )
+                        job.setSupervisor( getQueryService().findOrCreate( Actor.class, name ) );
+                    else
+                        job.setSupervisor( null );
                 }
                 getCommander().cleanup( Actor.class, oldName );
             }
@@ -654,6 +803,177 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             makeVisible( entityField, jobWrapper.isMarkedForCreation() );
         }
 
+    }
+
+    /**
+     * Job transfer wrapper.
+     */
+    public class JobTransfer implements Serializable {
+        /**
+         * Job.
+         */
+        private Job job;
+        /**
+         * Whether transferred.
+         */
+        private boolean confirmed;
+
+        public JobTransfer( Job job ) {
+            this.job = job;
+            confirmed = false;
+        }
+
+        public boolean isConfirmed() {
+            return confirmed;
+        }
+
+        public void setConfirmed( boolean confirmed ) {
+            this.confirmed = confirmed;
+        }
+
+        public Job getJob() {
+            return job;
+        }
+
+        public Actor getActor() {
+            return job.getActor();
+        }
+
+        public Role getRole() {
+            return job.getRole();
+        }
+
+        public Place getJurisdiction() {
+            return job.getJurisdiction();
+        }
+
+        public Actor getSupervisor() {
+            return job.getSupervisor();
+        }
+
+        public String getTitle() {
+            return job.getTitle();
+        }
+
+    }
+
+    public class JobTransferTable extends AbstractFilterableTablePanel {
+
+        /**
+         * Job transfer origin.
+         */
+        private IModel<Organization> fromOrgModel;
+        /**
+         * Jobs to be transferred.
+         */
+        private List<JobTransfer> jobTransfers;
+
+        public JobTransferTable(
+                String id,
+                IModel<Organization> fromOrgModel ) {
+            super( id );
+            this.fromOrgModel = fromOrgModel;
+            initialize();
+        }
+
+        @SuppressWarnings( "unchecked" )
+        private void initialize() {
+            jobTransfers = (List<JobTransfer>) CollectionUtils.collect(
+                    getFromOrganization().getJobs(),
+                    new Transformer() {
+                        public Object transform( Object input ) {
+                            return new JobTransfer( (Job) input );
+                        }
+                    }
+            );
+            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            // Columns
+            columns.add( makeCheckBoxColumn(
+                    "Transfer",
+                    "confirmed",
+                    isLockedByUser( getOrganization() ) && !isLockedByOtherUser( getFromOrganization() ),
+                    JobsPanel.this
+            ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Agent",
+                    "actor",
+                    "actor.normalizedName",
+                    EMPTY,
+                    JobTransferTable.this ) );
+            columns.add( makeColumn(
+                    "Title",
+                    "title",
+                    ""
+            ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Role",
+                    "role",
+                    "role.name",
+                    EMPTY,
+                    JobTransferTable.this ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Jurisdiction",
+                    "jurisdiction",
+                    "jurisdiction.name",
+                    EMPTY,
+                    JobTransferTable.this ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Supervisor",
+                    "supervisor",
+                    "supervisor.name",
+                    EMPTY,
+                    JobTransferTable.this ) );
+            // provider and table
+            addOrReplace( new AjaxFallbackDefaultDataTable(
+                    "transferableJobs",
+                    columns,
+                    new SortableBeanProvider<JobTransfer>(
+                            getFilteredTransfers(),
+                            "actor.normalizedName" ),
+                    getPageSize() ) );
+        }
+
+        private Organization getFromOrganization() {
+            return fromOrgModel.getObject();
+        }
+
+        /**
+         * Find all agreements implied or confirmed by this organization.
+         *
+         * @return a list of agreement wrappers.
+         */
+        @SuppressWarnings( "unchecked" )
+        public List<JobTransfer> getFilteredTransfers() {
+            return (List<JobTransfer>) CollectionUtils.select(
+                    jobTransfers,
+                    new Predicate() {
+                        public boolean evaluate( Object obj ) {
+                            return !isFilteredOut( obj );
+                        }
+                    }
+            );
+        }
+
+
+        protected void resetTable( AjaxRequestTarget target ) {
+            initialize();
+            target.addComponent( this );
+        }
+
+        /**
+         * Get jobs to be transferred.
+         *
+         * @return a list of jobs
+         */
+        public List<Job> getTransferredJobs() {
+            List<Job> jobs = new ArrayList<Job>();
+            for ( JobTransfer jobTransfer : jobTransfers ) {
+                if ( jobTransfer.isConfirmed() ) {
+                    jobs.add( jobTransfer.getJob() );
+                }
+            }
+            return jobs;
+        }
     }
 
 
