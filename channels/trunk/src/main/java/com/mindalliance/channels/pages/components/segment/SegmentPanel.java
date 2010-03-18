@@ -285,7 +285,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
                     receivesFlowPanel.refresh( target );
                     sendsFlowPanel.refresh( target );
                 }
-                if ( change.isDisplay() ) {
+                if ( change.isExpanded() || change.isCollapsed() ) {
                     addPartPanel();
                     target.addComponent( partPanel );
                     stopUpdates = true;
