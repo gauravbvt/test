@@ -148,7 +148,6 @@ Floater.beginResize = function( elementToResize, event, minWidth, minHeight, pad
     var startY = event.clientY;
     var startWidth = parseInt(elementToResize.style.width);
     var startHeight = $(elementToResize).height();
-    var startLeft = parseInt(elementToResize.style.left);
     var startBottom = parseInt(elementToResize.style.bottom);
 
     if ( document.addEventListener ) {
@@ -177,9 +176,7 @@ Floater.beginResize = function( elementToResize, event, minWidth, minHeight, pad
         var width = startWidth + deltaX;
         var height = startHeight + deltaY;
         var bottom = Math.max(padBottom, startBottom - deltaY);
-        var left = startLeft + deltaX;
-        var rightX = left + $(elementToResize).width();
-        if ( width > minWidth && (rightX + padRight) < $(elementToResize.parentNode).width() ) {
+        if ( width > minWidth ) {
             elementToResize.style.width = width + "px";
         }
         if ( height > minHeight ) {
