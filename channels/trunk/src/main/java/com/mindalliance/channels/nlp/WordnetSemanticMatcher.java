@@ -180,8 +180,8 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
             Proximity level = semanticProximity( text, otherText );
             return level.getOrdinal() >= minLevel.getOrdinal();
         } catch ( Exception e ) {
-            LOG.error( "Semantic matching failed", e );
-            throw new RuntimeException( e );
+            LOG.warn( "Semantic matching failed", e );
+            return false;
         }
     }
 
@@ -198,8 +198,8 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
             }
             return max;
         } catch ( Exception e ) {
-            LOG.error( "Semantic matching failed", e );
-            throw new RuntimeException( e );
+            LOG.warn( "Semantic matching failed", e );
+            return Proximity.NONE;
         }
     }
 
@@ -242,8 +242,8 @@ public class WordnetSemanticMatcher implements SemanticMatcher {
                     + "\"" + text + "\" <=> " + "\"" + otherText + "\"" );
             return matchingLevel;
         } catch ( Exception e ) {
-            LOG.error( "Semantic matching failed", e );
-            throw new RuntimeException( e );
+            LOG.warn( "Semantic matching failed", e );
+            return Proximity.NONE;
         }
     }
 
