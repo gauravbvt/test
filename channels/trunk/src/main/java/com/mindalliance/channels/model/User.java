@@ -1,18 +1,19 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.util.LoginFilter;
-import org.acegisecurity.Authentication;
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.GrantedAuthorityImpl;
-import org.acegisecurity.annotation.Secured;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.userdetails.UserDetails;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +37,6 @@ public class User implements UserDetails {
      * The user role string. Implied if user is listed in user list.
      */
     public static final String ROLE_USER = "ROLE_USER";
-
-    public static final User ANONYMOUS = new User();
 
     /**
      * The user id of the user.
@@ -108,7 +107,7 @@ public class User implements UserDetails {
         return username;
     }
 
-    @Secured( {"ROLE_ADMIN", "RUN_AS_SERVER"} )
+    @Secured( { "ROLE_ADMIN", "RUN_AS_SERVER" } )
     public void setUsername( String username ) {
         this.username = username;
     }
@@ -156,7 +155,7 @@ public class User implements UserDetails {
      *
      * @return the authorities (never <code>null</code>)
      */
-    public GrantedAuthority[] getAuthorities() {
+    public Collection<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> result = new ArrayList<GrantedAuthority>();
         if ( isAdmin() )
             result.add( new GrantedAuthorityImpl( ROLE_ADMIN ) );
@@ -165,14 +164,14 @@ public class User implements UserDetails {
 
         result.add( new GrantedAuthorityImpl( ROLE_USER ) );
 
-        return result.toArray( new GrantedAuthority[result.size()] );
+        return Collections.unmodifiableList( result );
     }
 
     /**
      * Indicates whether the user's account has expired. An expired account cannot be authenticated.
      *
-     * @return <code>true</code> if the user's account is valid (ie non-expired), <code>false</code> if no longer valid
-     *         (ie expired)
+     * @return <code>true</code> if the user's account is valid (ie non-expired), <code>false</code>
+     * if no longer valid (ie expired)
      */
     public boolean isAccountNonExpired() {
         return true;
@@ -191,8 +190,8 @@ public class User implements UserDetails {
      * Indicates whether the user's credentials (password) has expired. Expired credentials prevent
      * authentication.
      *
-     * @return <code>true</code> if the user's credentials are valid (ie non-expired), <code>false</code> if no longer
-     *         valid (ie expired)
+     * @return <code>true</code> if the user's credentials are valid (ie non-expired),
+     * <code>false</code> if no longer valid (ie expired)
      */
     public boolean isCredentialsNonExpired() {
         return true;
@@ -217,17 +216,19 @@ public class User implements UserDetails {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ( authentication != null ) {
             Object obj = authentication.getPrincipal();
-            User currentUser = obj instanceof User ? (User) obj : new User( obj.toString() );
-            if ( LoginFilter.containsRole( authentication, "ROLE_PLANNER" ) )
-                currentUser.setPlanAccess( currentUser.getPlan().getUri(), true );
-            if ( LoginFilter.containsRole( authentication, "ROLE_ADMIN" ) )
-                currentUser.setAdmin( true );
-            return currentUser;
-        } else
-            return ANONYMOUS;
+            if ( obj instanceof User )
+                return (User) obj;
+        }
+
+        return new User();
     }
 
-    @Secured( {"ROLE_ADMIN", "RUN_AS_SERVER"} )
+    /**
+     * Add a plan to this user's access list.
+     * @param planUri the plan id
+     * @param canPlan true if user can modify the plan; false if only a playbook user
+     */
+    @Secured( { "ROLE_ADMIN", "RUN_AS_SERVER" } )
     public void setPlanAccess( String planUri, boolean canPlan ) {
         plans.put( planUri, canPlan );
     }
@@ -243,8 +244,8 @@ public class User implements UserDetails {
         return (List<Plan>) CollectionUtils.select(
                 planManager.getPlans(),
                 new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return canPlan( (Plan) obj );
+                    public boolean evaluate( Object object ) {
+                        return canPlan( (Plan) object );
                     }
                 }
         );
@@ -261,8 +262,8 @@ public class User implements UserDetails {
         return (List<Plan>) CollectionUtils.select(
                 planManager.getPlans(),
                 new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return canRead( (Plan) obj );
+                    public boolean evaluate( Object object ) {
+                        return canRead( (Plan) object );
                     }
                 }
         );
@@ -448,4 +449,17 @@ public class User implements UserDetails {
         return normalized + " (" + username + ")";
     }
 
+    /**
+     * Test for a given role string in an authentication object.
+     * @param authentication the authentication
+     * @param role the role
+     * @return true is role is included
+     */
+    public static boolean containsRole( Authentication authentication, String role ) {
+        for ( GrantedAuthority a : authentication.getAuthorities() )
+            if ( role.equals( a.getAuthority() ) )
+                return true;
+
+        return false;
+    }
 }

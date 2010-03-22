@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.dao.DataRetrievalFailureException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -168,7 +167,8 @@ public class PlanManager implements InitializingBean {
 
     public void setPlanDefinitionsFileName( String planDefinitionsFileName ) {
         this.planDefinitionsFileName = planDefinitionsFileName;
-        plansFile = planDefinitionsFileName == null ? null : new File( base, planDefinitionsFileName );
+        plansFile = planDefinitionsFileName == null ? null
+                                                    : new File( base, planDefinitionsFileName );
     }
 
     public String getPlanDefinitionsFileName() {
@@ -196,7 +196,7 @@ public class PlanManager implements InitializingBean {
     }
 
     public void setSurveysFileName( String surveysFileName ) {
-        this.surveysFileName = surveysFileName;
+         this.surveysFileName = surveysFileName;
     }
 
     public void setUploadsDirName( String uploadsDirName ) {
@@ -236,7 +236,7 @@ public class PlanManager implements InitializingBean {
         } catch ( IOException e ) {
             String msg = "Unable to load plan definitions";
             LOG.error( msg, e );
-            throw new DataRetrievalFailureException( msg, e );
+            throw new RuntimeException( msg, e );
         }
     }
 

@@ -1,133 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:sec="http://www.springframework.org/schema/security"
+        xmlns:context="http://www.springframework.org/schema/context"
 
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 
-    <bean name="user" class="com.mindalliance.channels.model.User" scope="session" factory-method="current">
-    </bean>
-    <bean name="plan" class="com.mindalliance.channels.model.Plan" scope="session" factory-bean="user" factory-method="getPlan">
-    </bean>
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
 
-    <!-- Internal methods authorization -->
-    <!--<bean id="methodLevelSecurity" class="org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor">-->
-      <!--<property name="validateConfigAttributes" value="true"/>-->
-      <!--<property name="authenticationManager" ref="authenticationManager"/>-->
-      <!--<property name="accessDecisionManager" ref="accessDecisionManager"/>-->
-      <!--<property name="runAsManager"><bean class="org.acegisecurity.runas.RunAsManagerImpl">-->
-          <!--<property name="key" value="bla"/>-->
-      <!--</bean></property>-->
-      <!--<property name="afterInvocationManager"><bean class="org.acegisecurity.afterinvocation.AfterInvocationProviderManager">-->
-          <!--<property name="providers"></property>-->
-      <!--</bean></property>-->
-    <!--</bean>-->
+        default-autowire="byName">
 
-    <!-- Web Security -->
-    <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
-        <property name="filterInvocationDefinitionSource">
-            <value>
-                CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
-                PATTERN_TYPE_APACHE_ANT
-                /*.ico=#NONE#
-                /*.css=#NONE#
-                /static/**=#NONE#
-                /images/**=#NONE#
-                /resources/**=#NONE#
-                /login.html=#NONE#
-                /**=httpSessionContextIntegrationFilter,rememberMeFilter,loginFilter,logoutFilter,exceptionFilter,securityInterceptor
-            </value>
-        </property>
-     </bean>
+    <bean name="user" class="com.mindalliance.channels.model.User" factory-method="current"
+          scope="session" autowire="no"/>
 
-    <!-- Maintains security context between requests (using the session). -->
-    <bean id="httpSessionContextIntegrationFilter"
-          class="org.acegisecurity.context.HttpSessionContextIntegrationFilter">
-        <property name="forceEagerSessionCreation" value="true"/>
-    </bean>
+    <bean name="plan" class="com.mindalliance.channels.model.Plan" factory-bean="user" factory-method="getPlan"
+          scope="session" />
 
-    <!-- remember me processing filter -->
-    <bean id="rememberMeFilter"
-          class="org.acegisecurity.ui.rememberme.RememberMeProcessingFilter">
-        <property name="rememberMeServices" ref="rememberMeServices"/>
-        <property name="authenticationManager" ref="authenticationManager"/>
-    </bean>
-
-    <bean id="rememberMeServices" class="org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices">
-        <property name="userDetailsService" ref="userDetails"/>
-        <property name="key" value="channels"/>
-    </bean>
-
-    <bean id="loginFilter" class="com.mindalliance.channels.util.LoginFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="modelerRole" value="ROLE_PLANNER"/>
-        <property name="modelerUrl" value="/plan"/>
-        <property name="defaultTargetUrl" value="/playbook"/>
-        <property name="authenticationFailureUrl" value="/static/failed.html"/>
-        <property name="filterProcessesUrl" value="/login.do"/>
-        <property name="rememberMeServices" ref="rememberMeServices"/>
-    </bean>
-
-    <bean id="logoutFilter" class="org.acegisecurity.ui.logout.LogoutFilter">
-        <constructor-arg value="/"/>
-        <constructor-arg><list>
-            <bean class="org.acegisecurity.ui.logout.SecurityContextLogoutHandler"/>
-            <ref bean="rememberMeServices"/>
-        </list></constructor-arg>
-        <property name="filterProcessesUrl" value="/logout"/>
-    </bean>
-
-    <bean id="filterEP" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
-        <property name="loginFormUrl" value="/login.html"/>
-    </bean>
-
-    <bean id="exceptionFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
-        <property name="authenticationEntryPoint" ref="filterEP"/>
-    </bean>
-
-    <bean id="accessDecisionManager" class="org.acegisecurity.vote.AffirmativeBased">
-        <property name="decisionVoters">
-            <list><bean class="org.acegisecurity.vote.RoleVoter"/></list>
-        </property>
-    </bean>
-
-    <bean id="securityInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="accessDecisionManager" ref="accessDecisionManager"/>
-        <property name="objectDefinitionSource">
-          <value>
-            CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
-            PATTERN_TYPE_APACHE_ANT
-              /plan=ROLE_PLANNER
-              /**=ROLE_USER
-          </value>
-        </property>
-    </bean>
-
-    <bean id="userDetails" class="com.mindalliance.channels.util.FileUserDetailsService">
+    <bean id="userDetailsService" class="com.mindalliance.channels.util.FileUserDetailsService">
         <constructor-arg ref="planManager"/>
-        <property name="userDefinitions" value="channels/users.properties"/>
+        <property name="base" value="${channels.home}"/>
+        <property name="userDefinitions" value="users.properties"/>
         <property name="defaultDefinitions" value="/WEB-INF/users.properties"/>
     </bean>
 
-    <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
-        <property name="providers">
+    <sec:http auto-config='true' access-denied-page="/static/403.html" create-session="always"
+              disable-url-rewriting="false">
+
+        <sec:intercept-url pattern="/*.css" filters="none"/>
+        <sec:intercept-url pattern="/*.js" filters="none"/>
+        <sec:intercept-url pattern="/*.ico" filters="none"/>
+        <sec:intercept-url pattern="/static/**" filters="none"/>
+        <sec:intercept-url pattern="/images/**" filters="none"/>
+        <sec:intercept-url pattern="/resources/**" filters="none"/>
+
+        <sec:intercept-url pattern="/login.html" filters="none"/>
+        <sec:intercept-url pattern="/plan" access="ROLE_PLANNER"/>
+        <sec:intercept-url pattern="/admin" access="ROLE_ADMIN"/>
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+
+        <sec:form-login login-page="/login.html" login-processing-url="/login.do"
+                        default-target-url="/"
+                        authentication-failure-url="/static/failed.html"/>
+        <sec:logout logout-url="/logout" logout-success-url="/"/>
+        <sec:remember-me key="channels"/>
+
+    </sec:http>
+
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider user-service-ref="userDetailsService">
+            <sec:password-encoder hash="md5"/>
+        </sec:authentication-provider>
+    </sec:authentication-manager>
+
+    <sec:global-method-security secured-annotations="enabled"/>
+
+    <bean id="runAsManager" class="org.springframework.security.access.intercept.RunAsManagerImpl">
+        <property name="key" value="bla"/>
+    </bean>
+    <bean id="runAsAuthenticationProvider" class="org.springframework.security.access.intercept.RunAsImplAuthenticationProvider">
+        <property name="key" value="bla"/>
+    </bean>
+
+    <bean id="securityInterceptor" class="org.springframework.security.access.intercept.aspectj.AspectJAnnotationSecurityInterceptor">
+        <property name="securityMetadataSource">
+            <bean class="org.springframework.security.access.annotation.SecuredAnnotationSecurityMetadataSource"/>
+        </property>
+        <property name="validateConfigAttributes" value="false"/>
+    </bean>
+
+    <bean id="accessDecisionManager"
+          class="org.springframework.security.access.vote.AffirmativeBased">
+        <property name="decisionVoters">
             <list>
-                <bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
-                    <property name="passwordEncoder">
-                        <bean class="org.acegisecurity.providers.encoding.Md5PasswordEncoder"/>
-                    </property>
-                    <property name="userDetailsService" ref="userDetails"/>
-                </bean>
-                <bean id="rememberMeAuthenticationProvider"
-                      class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
-                    <property name="key" value="channels"/>
-                </bean>
+                <bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
             </list>
         </property>
     </bean>

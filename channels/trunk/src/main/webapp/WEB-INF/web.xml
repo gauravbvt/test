@@ -8,28 +8,27 @@
 
     <filter>
         <filter-name>Request Log</filter-name>
-        <filter-class>org.springframework.web.filter.Log4jNestedDiagnosticContextFilter</filter-class>
+        <filter-class>org.springframework.web.filter.Log4jNestedDiagnosticContextFilter
+        </filter-class>
         <init-param>
             <param-name>includeClientInfo</param-name>
             <param-value>true</param-value>
         </init-param>
     </filter>
-    <!--<filter>-->
-        <!--<filter-name>Transactional Requests</filter-name>-->
-        <!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
-        <!--<init-param>-->
-            <!--<param-name>targetBeanName</param-name>-->
-            <!--<param-value>txPerRequest</param-value>-->
-        <!--</init-param>-->
-    <!--</filter>-->
+    <filter-mapping>
+        <filter-name>Request Log</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <filter>
-        <filter-name>Acegi HTTP Request Security Filter</filter-name>
-        <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
-        <init-param>
-            <param-name>targetClass</param-name>
-            <param-value>org.acegisecurity.util.FilterChainProxy</param-value>
-        </init-param>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <filter>
         <filter-name>Wicket</filter-name>
         <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
@@ -38,32 +37,19 @@
             <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
         </init-param>
     </filter>
-
-    <filter-mapping>
-        <filter-name>Request Log</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    <!--<filter-mapping>-->
-        <!--<filter-name>Transactional Requests</filter-name>-->
-        <!--<url-pattern>/*</url-pattern>-->
-    <!--</filter-mapping>-->
-    <filter-mapping>
-        <filter-name>Acegi HTTP Request Security Filter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
     <filter-mapping>
         <filter-name>Wicket</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <error-page>
-		<error-code>403</error-code>
-		<location>/static/403.html</location>
-	</error-page>
+        <error-code>403</error-code>
+        <location>/static/403.html</location>
+    </error-page>
     <error-page>
-		<error-code>404</error-code>
-		<location>/static/404.html</location>
-	</error-page>
+        <error-code>404</error-code>
+        <location>/static/404.html</location>
+    </error-page>
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/applicationContext.xml /WEB-INF/*Config.xml</param-value>
@@ -78,7 +64,8 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     <listener>
-        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+        <listener-class>org.springframework.web.context.request.RequestContextListener
+        </listener-class>
     </listener>
 
 </web-app>

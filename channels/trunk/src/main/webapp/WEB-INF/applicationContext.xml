@@ -7,14 +7,85 @@ CONFIGURATION NOTES:
 
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-           http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:sec="http://www.springframework.org/schema/security"
+        xmlns:context="http://www.springframework.org/schema/context"
 
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+
+        default-autowire="byName">
+
+    <!-- =========================== Main Components -->
+    <bean id="wicketApplication" class="com.mindalliance.channels.Channels"/>
+    <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
+    <bean id="issueScanner" class="com.mindalliance.channels.analysis.IssueScanner"/>
+
+    <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager">
+        <property name="base" value="${channels.home}"/>
+        <property name="importDirectory" value="file:${channels.home}/import"/>
+        <property name="planDefinitionsFileName" value="plans.properties"/>
+        <property name="defaultPlanDefinitions" value="/WEB-INF/plans.properties"/>
+        <property name="surveysFileName" value="surveys"/>
+        <property name="uploadsDirName" value="uploads"/>
+        <property name="dataDirectory" value="file:${channels.home}/data"/>
+        <property name="snapshotThreshold" value="10"/>
+        <property name="builtInMedia">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+                <ref bean="landline"/>
+                <ref bean="fax"/>
+                <ref bean="cell"/>
+                <ref bean="pager"/>
+                <ref bean="conferenceCall"/>
+                <ref bean="email"/>
+                <ref bean="notificationSystem"/>
+                <ref bean="im"/>
+                <ref bean="radio"/>
+                <ref bean="television"/>
+                <ref bean="courier"/>
+                <ref bean="mail"/>
+                <ref bean="faceToFace"/>
+                <ref bean="meeting"/>
+                <ref bean="paSystem"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
+        <property name="uploadPath" value="uploads/"/>
+    </bean>
+
+    <bean id="queryService" class="com.mindalliance.channels.query.DefaultQueryService">
+        <constructor-arg ref="planManager"/>
+        <constructor-arg ref="attachmentManager"/>
+    </bean>
+
+    <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
+        <property name="dotPath" value="/usr/bin"/>
+        <property name="algo" value="dot"/>
+        <property name="timeout" value="10000"/>
+    </bean>
+
+    <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst"
+          init-method="start" destroy-method="stop"/>
+
+    <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
+        <property name="iconDirectory" value="file:${channels.home}/icons"/>
+        <property name="iconPath" value="icons/"/>
+    </bean>
+
+    <bean id="importExportFactory" class="com.mindalliance.channels.export.xml.XmlStreamer">
+        <constructor-arg ref="idGenerator"/>
+        <property name="version" value="1.0"/>
+    </bean>
 
     <bean id="semanticMatcher" class="com.mindalliance.channels.nlp.WordnetSemanticMatcher">
     <!--  NOTE:
@@ -22,354 +93,231 @@ CONFIGURATION NOTES:
             <property name="wordnetDict" value="WEB-INF\data\windows-wordnet-2\dict"/>
             <property name="simIndex" value="WEB-INF\data\jwsl\wn_index"/>
         -->
-        <property name="wordnetDict" value="WEB-INF/data/wordnet-2/dict"/>
-        <property name="simIndex" value="WEB-INF/data/jwsl/wn_index"/>
+        <property name="wordnetDict" value="WEB-INF${file.separator}data${file.separator}wordnet-2${file.separator}dict"/>
+        <property name="simIndex" value="WEB-INF${file.separator}data${file.separator}jwsl${file.separator}wn_index"/>
     </bean>
 
-    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <!-- NOTE: Enter the SMTP service domain here -->
-        <property name="host" value="smtp.gmail.com"/>
-        <!-- NOTE: Enter Channels email account id here -->
-        <property name="username" value="channels.mindalliance@gmail.com"/>
-        <!-- NOTE: Enter Channels email account password -->
-        <property name="password" value="trafalg4r"/>
-        <!-- NOTE: Enter Channels email service port here -->
-        <property name="port" value="465"/>
-        <property name="protocol" value="smtps"/>
-        <property name="javaMailProperties">
-            <props>
-                <prop key="mail.smtps.auth">true</prop>
-                <prop key="mail.smtps.starttls.enable">true</prop>
-                <prop key="mail.smtps.debug">true</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
-        <property name="attachmentManager" ref="attachmentManager"/>
-        <property name="iconDirectory" value="file:${user.home}/channels/icons"/>
-        <property name="iconPath" value="icons/"/>
-    </bean>
-
-    <bean id="queryService" class="com.mindalliance.channels.query.DefaultQueryService">
-        <constructor-arg ref="planManager"/>
-        <constructor-arg ref="attachmentManager"/>
-        <property name="semanticMatcher" ref="semanticMatcher"/>
-        <property name="imagingService" ref="imagingService"/>
-        <property name="userDetailsService" ref="userDetails"/>
-    </bean>
-
-    <bean id="serializer" class="com.mindalliance.channels.export.xml.XmlStreamer">
-        <constructor-arg ref="idGenerator"/>
-        <property name="version" value="1.0"/>
-    </bean>
-
-    <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
-        <property name="uploadPath" value="uploads/"/>
-        <property name="planManager" ref="planManager"/>
-    </bean>
-
-    <bean id="geoService" class="com.mindalliance.channels.geo.DefaultGeoService">
-        <!-- NOTE: Enter your Google Maps API key here -->
-        <property name="googleMapsAPIKey"
-                  value="ABQIAAAAOEFNCNhUR4YjTHX0nnN5VRR4EqRj3RNZnoYuzojShxUjcPQKRRSLJekGZYEI4kGxmTTJBHr4EJ6Xpg"/>
-        <property name="geonamesServer" value="ws.geonames.net"/>
-        <!-- NOTE: Enter your Geonames user id here -->
-        <property name="geonamesUserName" value="mindalliance"/>
-        <!-- NOTE: Enter your Geonames password here -->
-        <property name="geonamesToken" value="trafalg4r"/>
-    </bean>
-
-    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+   <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="velocityProperties">
             <value>
                 resource.loader=file
                 file.resource.loader.class=org.apache.velocity.runtime.resource.loader.FileResourceLoader
-                file.resource.loader.path=${user.home}/channels/templates
+                file.resource.loader.path=${channels.home}/templates
                 file.resource.loader.cache=true
                 file.resource.loader.modificationCheckInterval=2
             </value>
         </property>
     </bean>
 
-    <bean id="surveyService" class="com.mindalliance.channels.surveys.SurveyGizmoService">
-        <!-- NOTE: Enter your SurveyGizmo API key here -->
-        <property name="apiKey" value="f244197f935b14559b8061cea"/>
-        <!-- NOTE: Enter your SurveyGizmo user key here -->
-        <property name="userKey" value="vxvnv4nys*29"/>
-        <!-- NOTE: Enter survey template id here -->
-        <property name="template" value="1800"/>
-        <property name="analyst" ref="analyst"/>
-        <property name="queryService" ref="queryService"/>
-        <!-- NOTE: Enter Channels instance email address here -->
-        <property name="defaultEmailAddress" value="channels.mindalliance@gmail.com"/>
-        <property name="mailSender" ref="mailSender"/>
-        <property name="userDetailsService" ref="userDetails"/>
-        <property name="velocityEngine" ref="velocityEngine"/>
-        <property name="surveysFile" value="surveys"/>
-        <property name="planManager" ref="planManager"/>
-        <property name="templatesDir" value="${user.home}/channels/templates"/>
-        <property name="templatesSource" value="WEB-INF/templates"/>
-    </bean>
-
-    <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
-
-    <!--<bean id="idGenerator" class="com.mindalliance.channels.dao.SimpleIdGenerator"/>-->
-
-    <!-- setup wicket application -->
-    <bean id="wicketApplication" class="com.mindalliance.channels.Channels">
-        <property name="geoService" ref="geoService"/>
-        <property name="importExportFactory" ref="serializer"/>
-        <property name="analyst" ref="analyst"/>
-        <property name="queryService" ref="queryService"/>
-    </bean>
-
-    <!-- Flow diagram factory : a prototype -->
-    <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory" scope="prototype">
-        <property name="graphRenderer" ref="graphvizRenderer"/>
-        <property name="imageDirectory" value="WEB-INF/images"/>
-        <property name="queryService" ref="queryService"/>
-    </bean>
-
-    <bean id="graphvizRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
-        <!-- NOTE:  Point to installation directory of graphviz-->
-        <property name="dotPath" value="/usr/bin"/>
-        <property name="algo" value="dot"/>
-        <property name="timeout" value="10000"/>
-    </bean>
-
-    <bean id="issueScanner" class="com.mindalliance.channels.analysis.IssueScanner">
-        <property name="planManager" ref="planManager"/>
-        <property name="queryService" ref="queryService"/>
-        <property name="analyst" ref="analyst"/>
-    </bean>
-
     <bean id="detective" class="com.mindalliance.channels.analysis.DefaultDetective">
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
-                <bean class="com.mindalliance.channels.analysis.detectors.FromUser">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.NoSegmentRepondsToIncident">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithoutGoal">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.PartWithActorOrRoleButNoOrganization">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.InvalidChannel">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.OrphanedPart">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.RedundantPart">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.RedundantFlow">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnconnectedConnector">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy">
-                    <property name="attachmentManager" ref="attachmentManager"/>
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnconfirmedJob">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowToSelf">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.GeonameButNoLocation">
-                    <property name="geoService" ref="geoService"/>
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.SegmentNeverEnds">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.TriggeredButNeverStartedDefinedTask">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.NeverTriggeredSpecifiedTask">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.AutoStartPartAlsoTriggered">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.SegmentEventNeverCaused">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.SegmentNeverStarts">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.CyclicTriggering">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.ActorNotInOneOrganization">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithSameGoal">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UselessPart">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnverifiedPostalCode">
-                    <property name="geoService" ref="geoService"/>
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.PlaceInheritsDifferentPostalCode">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.PlaceInheritsDifferentStreetAddress">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.PlaceContainedInSelf">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.RedundantPlace">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.EmptyNeedOrCapability">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnsatisfiedNeed">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.PersonInSystemRole">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.CommitmentWithoutRequiredAgreement">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyTriggeringSharing">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyCriticalSharing">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnTargetPart">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnSourcePart">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UserIsManyActors">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.NoSegmentForEventPhase">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnplayedPart">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UselessActor">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.InvalidEntityTyping">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowDeclassifies">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.SharingWithoutCommitments">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.InsufficientClearance">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.AgreementWithoutCommitment">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.AgreementEncompassedByOther">
-                    <property name="queryService" ref="queryService"/>
-                </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.MediumWithoutMode">
-                      <property name="queryService" ref="queryService"/>
-                  </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.CommittmentWithoutRequiredUnicastChannel">
-                     <property name="queryService" ref="queryService"/>
-                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.CommittmentOverUnsecuredChannel">
-                     <property name="queryService" ref="queryService"/>
-                 </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowOverUndersecuredMedium">
-                      <property name="queryService" ref="queryService"/>
-                  </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.BroadcastOnlyChannels">
-                      <property name="queryService" ref="queryService"/>
-                  </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.IncorrectMediumDelegation">
-                      <property name="queryService" ref="queryService"/>
-                  </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.UnsupervisedJob">
-                      <property name="queryService" ref="queryService"/>
-                  </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.ExternalSupervisor">
-                      <property name="queryService" ref="queryService"/>
-                  </bean>
-                <bean class="com.mindalliance.channels.analysis.detectors.CircularSupervision">
-                      <property name="queryService" ref="queryService"/>
-                  </bean>
+                <bean class="com.mindalliance.channels.analysis.detectors.FromUser"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NoSegmentRepondsToIncident"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithoutGoal"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartWithActorOrRoleButNoOrganization"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.InvalidChannel"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartWithInvalidTiming"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.OrphanedPart"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantPart"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantFlow"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnconnectedConnector"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnconfirmedJob"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowToSelf"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.GeonameButNoLocation"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartWithRoleWithNoKnownActor"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SegmentNeverEnds"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.TriggeredButNeverStartedDefinedTask"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NeverTriggeredSpecifiedTask"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.AutoStartPartAlsoTriggered"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SegmentEventNeverCaused"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SegmentNeverStarts"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.CyclicTriggering"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ActorNotInOneOrganization"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithSameGoal"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UselessPart"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnverifiedPostalCode"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PlaceInheritsDifferentPostalCode"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PlaceInheritsDifferentStreetAddress"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PlaceContainedInSelf"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantPlace"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.EmptyNeedOrCapability"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnsatisfiedNeed"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PersonInSystemRole"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.CommitmentWithoutRequiredAgreement"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyTriggeringSharing"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyCriticalSharing"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnTargetPart"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnSourcePart"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UserIsManyActors"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NoSegmentForEventPhase"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UnplayedPart"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UselessActor"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.InvalidEntityTyping"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowDeclassifies"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SharingWithoutCommitments"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.InsufficientClearance"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.AgreementWithoutCommitment"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.AgreementEncompassedByOther"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.MediumWithoutMode"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.CommittmentWithoutRequiredUnicastChannel"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.CommittmentOverUnsecuredChannel"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.FlowOverUndersecuredMedium"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.BroadcastOnlyChannels"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.IncorrectMediumDelegation"/>
             </list>
         </property>
     </bean>
 
-    <!-- Analyst -->
-    <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst"
-          init-method="start" destroy-method="stop">
-        <property name="queryService" ref="queryService"/>
-        <property name="detective" ref="detective"/>
+    <!-- =========================== Prototypes -->
+    <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory"
+          scope="prototype">
+        <property name="imageDirectory" value="WEB-INF/images"/>
     </bean>
 
-    <!-- Lock manager -->
-    <bean id="lockManager" class="com.mindalliance.channels.command.DefaultLockManager" scope="prototype">
-        <property name="queryService" ref="queryService"/>
-    </bean>
+    <bean id="lockManager" class="com.mindalliance.channels.command.DefaultLockManager"
+          scope="prototype"/>
 
-    <!-- Commander -->
-    <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander" scope="prototype">
+    <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander"
+          scope="prototype">
         <property name="timeout" value="300"/>
-        <property name="queryService" ref="queryService"/>
-        <property name="analyst" ref="analyst"/>
-        <property name="lockManager" ref="lockManager"/>
+    </bean>
+
+    <!-- =========================== Transmission Media -->
+    <bean id="phone" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Phone"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern"
+                  value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="landline" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Landline"/>
+        <property name="kind" value="Type"/>
+        <property name="tags">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="fax" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Fax"/>
+        <property name="kind" value="Type"/>
+        <property name="tags">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="cell" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Cell"/>
+        <property name="kind" value="Type"/>
+        <property name="tags">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="pager" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Pager"/>
+        <property name="kind" value="Type"/>
+        <property name="tags">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="conferenceCall" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Conference call"/>
+        <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
+        <property name="cast" value="Multicast"/>
+        <property name="delegatedToMedia">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="email" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Email"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value="[^@\s]+@[^@\s]+\.\w+"/>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="notificationSystem" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Notification system"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Multicast"/>
+        <property name="delegatedToMedia">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+                <ref bean="email"/>
+                <ref bean="im"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="im" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="IM"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="radio" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Radio"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Broadcast"/>
+    </bean>
+    <bean id="television" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Television"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Broadcast"/>
+    </bean>
+    <bean id="courier" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Courier"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="mail" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Mail"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="faceToFace" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Face to face"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".*"/>
+        <property name="cast" value="Unicast"/>
+        <property name="direct" value="true"/>
+    </bean>
+    <bean id="meeting" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Meeting"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Multicast"/>
+    </bean>
+    <bean id="paSystem" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="PA System"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Broadcast"/>
     </bean>
 
 </beans>
