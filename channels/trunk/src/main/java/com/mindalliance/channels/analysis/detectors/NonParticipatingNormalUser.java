@@ -48,7 +48,7 @@ public class NonParticipatingNormalUser extends AbstractIssueDetector {
         }
         return issues;
     }
-
+    
     /**
      * {@inheritDoc}
      */
