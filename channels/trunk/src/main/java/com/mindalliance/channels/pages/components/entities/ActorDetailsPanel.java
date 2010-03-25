@@ -13,7 +13,6 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
@@ -34,17 +33,13 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -77,26 +72,14 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     private static final int MAX_ROWS = 13;
     /**
-     * Collator.
-     */
-    private static Collator collator = Collator.getInstance();
-    /**
      * The plan manager.
      */
     @SpringBean
     private PlanManager planManager;
     /**
-     * Whether actor is also a participant.
-     */
-    private boolean participant;
-    /**
      * Checkbox indicating if actor is also a participant.
      */
-    private CheckBox isParticipantCheckBox;
-    /**
-     * A choice of users.
-     */
-    private DropDownChoice<User> userChoice;
+    private CheckBox isArchetypeCheckBox;
     /**
      * Is system checkbox.
      */
@@ -145,7 +128,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
-        addUserChoice();
+        addArchetypicalCheckBox();
         addIsSystem();
         rolesContainer = new WebMarkupContainer( "rolesContainer" );
         moDetailsDiv.add( rolesContainer );
@@ -161,7 +144,6 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addAssignmentsPanel();
         addCommitmentsPanel();
         adjustFields();
-        makeVisible( userChoice, isParticipant() );
     }
 
     private void addContactInfo() {
@@ -186,42 +168,19 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         clearancesContainer.setVisible( getEntity().isActual() );
     }
 
-    private void addUserChoice() {
-        WebMarkupContainer userContainer = new WebMarkupContainer( "user" );
-        isParticipantCheckBox = new CheckBox(
-                "isParticipant",
-                new PropertyModel<Boolean>( this, "participant" ) );
-        isParticipantCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+    private void addArchetypicalCheckBox() {
+        WebMarkupContainer archetypeContainer = new WebMarkupContainer( "archetype" );
+        isArchetypeCheckBox = new CheckBox(
+                "isArchetype",
+                new PropertyModel<Boolean>( this, "archetype" ) );
+        isArchetypeCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                makeVisible( userChoice, isParticipant() );
-                target.addComponent( userChoice );
-                if ( !( isParticipant() && getActor().getUserName() == null ) ) {
-                    update( target, new Change( Change.Type.Updated, getActor(), "userName" ) );
-                }
+                update( target, new Change( Change.Type.Updated, getActor(), "archetype" ) );
             }
         } );
-        userContainer.add( isParticipantCheckBox );
-        userContainer.setVisible( getEntity().isActual() );
-        moDetailsDiv.add( userContainer );
-        userChoice = new DropDownChoice<User>(
-                "user",
-                new PropertyModel<User>( this, "user" ),
-                new PropertyModel<List<User>>( this, "participants" ),
-                new IChoiceRenderer<User>() {
-                    public Object getDisplayValue( User user ) {
-                        return user.getNormalizedFullName();
-                    }
-
-                    public String getIdValue( User user, int i ) {
-                        return String.valueOf( i );
-                    }
-                } );
-        userChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getActor(), "userName" ) );
-            }
-        } );
-        userContainer.add( userChoice );
+        archetypeContainer.add( isArchetypeCheckBox );
+        archetypeContainer.setVisible( getEntity().isActual() );
+        moDetailsDiv.add( archetypeContainer );
     }
 
     private void addIsSystem() {
@@ -239,8 +198,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void adjustFields() {
-        isParticipantCheckBox.setEnabled( isLockedByUser( getActor() ) );
-        userChoice.setEnabled( isLockedByUser( getActor() ) );
+        isArchetypeCheckBox.setEnabled( isLockedByUser( getActor() ) );
         systemCheckBox.setEnabled( isLockedByUser( getActor() ) );
         rolesContainer.setVisible( getActor().isActual() );
     }
@@ -510,64 +468,12 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      *
      * @return a boolean
      */
-    public boolean isParticipant() {
-        return participant
-                || ( getActor().getUserName() != null && !getActor().getUserName().isEmpty() );
+    public boolean isArchetype() {
+        return getActor().isArchetype();
     }
 
-    public void setParticipant( boolean participant ) {
-        this.participant = participant;
-        if ( !participant ) {
-            setUser( null );
-        }
-    }
-
-    /**
-     * Run command to change actor userName property.
-     *
-     * @param user a user
-     */
-    public void setUser( User user ) {
-        String newName;
-        if ( user == null ) {
-            newName = null;
-        } else {
-            newName = user.getUsername();
-        }
-        Actor actor = getActor();
-        if ( ( user == null && actor.getUserName() != null )
-                || ( user != null
-                && ( actor.getUserName() == null || !actor.getUserName().equals( newName ) ) ) )
-            doCommand( new UpdatePlanObject( actor, "userName", newName ) );
-    }
-
-    /**
-     * The user associated with the actor.
-     *
-     * @return a user
-     */
-    public User getUser() {
-        return planManager.getParticipant( getActor().getUserName() );
-    }
-
-    /**
-     * Get the list of participant sorted on their full names.
-     *
-     * @return a list of users
-     */
-    public List<User> getParticipants() {
-        List<User> participants = planManager.getParticipants();
-        Collections.sort(
-                participants,
-                new Comparator<User>() {
-                    public int compare( User user1, User user2 ) {
-                        return collator.compare(
-                                user1.getNormalizedFullName(),
-                                user2.getNormalizedFullName() );
-                    }
-                }
-        );
-        return participants;
+    public void seArchetype( boolean val ) {
+        doCommand( new UpdatePlanObject( getActor(), "archetype", val ) );
     }
 
     private Actor getActor() {

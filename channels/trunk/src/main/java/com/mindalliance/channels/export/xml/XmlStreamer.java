@@ -23,6 +23,7 @@ import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
@@ -188,6 +189,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.registerConverter( new FlowConverter( this ) );
             stream.registerConverter( new ElementOfInformationConverter( this ) );
             stream.registerConverter( new ActorConverter( this ) );
+            stream.registerConverter( new ParticipationConverter( this ) );
             stream.registerConverter( new RoleConverter( this ) );
             stream.registerConverter( new OrganizationConverter( this ) );
             stream.registerConverter( new PlaceConverter( this ) );
@@ -209,6 +211,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.alias( "medium", TransmissionMedium.class );
             stream.alias( "planevent", Event.class );
             stream.alias( "actor", Actor.class );
+            stream.alias( "participant", Participation.class );
             stream.aliasType( "flow", Flow.class );
             stream.aliasType( "eoi", ElementOfInformation.class );
             stream.alias( "jurisdiction", Place.class );

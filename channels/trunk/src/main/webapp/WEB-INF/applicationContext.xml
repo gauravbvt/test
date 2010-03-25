@@ -159,7 +159,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnTargetPart"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnSourcePart"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.UserIsManyActors"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NonParticipatingNormalUser"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.NoSegmentForEventPhase"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnplayedPart"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UselessActor"/>

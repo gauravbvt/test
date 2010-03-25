@@ -33,16 +33,13 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
      * {@inheritDoc}
      */
     public List<Channel> getEffectiveChannels() {
-        return channels;
+        return getChannels();
     }
 
     /**
      * {@inheritDoc}
      */
     public void addChannel( Channel channel ) {
-        if ( !channel.isUnicast() ) {
-            System.out.println("oops");
-        }
         assert channel.isUnicast();
         if ( !channels.contains( channel ) ) channels.add( channel );
     }

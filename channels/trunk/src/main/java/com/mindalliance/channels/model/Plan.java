@@ -415,12 +415,12 @@ public class Plan extends ModelObject {
     public boolean references( final ModelObject mo ) {
         return
                 CollectionUtils.exists(
-                        segments,
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return ModelObject.areIdentical( (ModelObject) obj, mo );
-                            }
-                        } )
+                                segments,
+                                new Predicate() {
+                                    public boolean evaluate( Object obj ) {
+                                        return ModelObject.areIdentical( (ModelObject) obj, mo );
+                                    }
+                                } )
                         ||
                         CollectionUtils.exists(
                                 incidents,

@@ -27,11 +27,11 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
      * Whether the actor is a system, vs. a person.
      */
     private boolean system;
-    /**
-     * Name of the user, if any, represented by this actor.
-     */
-    private String userName;
 
+    /**
+     * Whether this (actual) agent is an archetype.
+     */
+    private boolean archetype = false;
     /**
      * Clearances.
      */
@@ -79,12 +79,12 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
         this.system = system;
     }
 
-    public String getUserName() {
-        return userName;
+    public boolean isArchetype() {
+        return archetype;
     }
 
-    public void setUserName( String userName ) {
-        this.userName = userName;
+    public void setArchetype( boolean archetype ) {
+        this.archetype = archetype;
     }
 
     public List<Classification> getClearances() {
@@ -108,14 +108,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
         } else {
             return false;
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isEntity() {
-        return true;
     }
 
     /**

@@ -172,7 +172,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      */
     @Override
     public String toString() {
-        return name;
+        return getName();
     }
 
     public Date getLastModified() {
@@ -370,7 +370,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     public static List<Class> referencingClasses() {
         Class[] classes = {
                 Actor.class, Event.class, Organization.class, Phase.class, Place.class, Phase.class, Role.class,
-                Segment.class, Part.class, Flow.class, TransmissionMedium.class
+                Segment.class, Part.class, Flow.class, TransmissionMedium.class, Participation.class
         };
         return Arrays.asList( classes );
     }

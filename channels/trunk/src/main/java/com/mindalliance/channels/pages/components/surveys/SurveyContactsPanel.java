@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
@@ -188,16 +189,15 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
         List<ContactDescriptor> contactDescriptors = new ArrayList<ContactDescriptor>();
         for ( Contact contact : getAllContacts() ) {
             String username = contact.getUsername();
-            List<Actor> actors = queryService.findAllActorsAsUser( username );
-            if ( actors.isEmpty() ) {
+            Actor actor = queryService.findOrCreate( Participation.class, username ).getActor();
+            if ( actor == null ) {
                 contactDescriptors.add( new ContactDescriptor( contact, null ) );
             } else {
-                for ( Actor actor : actors ) {
-                    List<ResourceSpec> specs = queryService
-                            .findAllResourcesNarrowingOrEqualTo( ResourceSpec.with( actor ) );
-                    for ( ResourceSpec spec : specs ) {
-                        contactDescriptors.add( new ContactDescriptor( contact, spec ) );
-                    }
+                // TODO - Does this make sense?
+                List<ResourceSpec> specs = queryService
+                        .findAllResourcesNarrowingOrEqualTo( ResourceSpec.with( actor ) );
+                for ( ResourceSpec spec : specs ) {
+                    contactDescriptors.add( new ContactDescriptor( contact, spec ) );
                 }
             }
         }

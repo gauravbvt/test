@@ -101,12 +101,18 @@ public class IssueScanner implements Scanner {
      */
     public void rescan( Plan plan ) {
         assert plan.isDevelopment();
-        LOG.debug( "Rescanning issue in " + plan.getName() );
-        Daemon daemon = daemons.get( plan.getVersionUri() );
-        if ( daemon != null ) daemon.terminate();
-        daemon = new Daemon( plan );
-        daemons.put( plan.getVersionUri(), daemon );
-        daemon.activate();
+        if ( isInitialized() ) {
+            LOG.debug( "Rescanning issue in " + plan.getName() );
+            Daemon daemon = daemons.get( plan.getVersionUri() );
+            if ( daemon != null ) daemon.terminate();
+            daemon = new Daemon( plan );
+            daemons.put( plan.getVersionUri(), daemon );
+            daemon.activate();
+        }
+    }
+
+    private boolean isInitialized() {
+        return daemons != null;
     }
 
     /**

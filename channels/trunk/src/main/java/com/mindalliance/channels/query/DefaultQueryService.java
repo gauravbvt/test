@@ -35,6 +35,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
@@ -204,6 +205,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             return (T) Role.UNKNOWN;
         else if ( clazz.isAssignableFrom( TransmissionMedium.class ) && TransmissionMedium.UNKNOWN.getId() == id )
             return (T) TransmissionMedium.UNKNOWN;
+        else if ( clazz.isAssignableFrom( Participation.class ) && Participation.UNKNOWN.getId() == id )
+            return (T) Participation.UNKNOWN;
         else
             throw new NotFoundException();
     }
@@ -288,6 +291,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         entityIterators.add( listReferencedEntities( Organization.class ).iterator() );
         entityIterators.add( listReferencedEntities( Event.class ).iterator() );
         entityIterators.add( listReferencedEntities( Phase.class ).iterator() );
+        entityIterators.add( listReferencedEntities( Participation.class ).iterator() );
         return (Iterator<ModelEntity>) IteratorUtils.chainedIterator( entityIterators );
     }
 
@@ -665,21 +669,26 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     @SuppressWarnings( "unchecked" )
     public Boolean isReferenced( final ModelObject mo ) {
-        boolean hasReference = false;
-        Iterator classes = ModelObject.referencingClasses().iterator();
-        if ( planManager.getCurrentPlan().references( mo ) ) return true;
-        while ( !hasReference && classes.hasNext() ) {
-            List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
-            hasReference = CollectionUtils.exists(
-                    mos,
-                    new Predicate() {
-                        public boolean evaluate( Object obj ) {
-                            return ( (ModelObject) obj ).references( mo );
+        if ( mo instanceof Participation ) {
+            // Participations are not referenced per se but are not obsolete if they name a registered user.
+            return ( (Participation) mo ).hasUser( this );
+        } else {
+            boolean hasReference = false;
+            Iterator classes = ModelObject.referencingClasses().iterator();
+            if ( planManager.getCurrentPlan().references( mo ) ) return true;
+            while ( !hasReference && classes.hasNext() ) {
+                List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
+                hasReference = CollectionUtils.exists(
+                        mos,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ( (ModelObject) obj ).references( mo );
+                            }
                         }
-                    }
-            );
+                );
+            }
+            return hasReference;
         }
-        return hasReference;
     }
 
     public Boolean isReferenced( final Classification classification ) {
@@ -2366,22 +2375,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( "unchecked" )
-    public List<Actor> findAllActorsAsUser( final String userName ) {
-        return (List<Actor>) CollectionUtils.select(
-                listActualEntities( Actor.class ),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        String name = ( (Actor) obj ).getUserName();
-                        return name != null && name.equals( userName );
-                    }
-                }
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public Plan getCurrentPlan() {
         return planManager.getCurrentPlan();
     }
@@ -2486,6 +2479,30 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         User user = userDetailsService.getUserNamed( userName );
         if ( user != null ) {
             return user.getFullName();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String findUserEmail( String userName ) {
+        User user = userDetailsService.getUserNamed( userName );
+        if ( user != null ) {
+            return user.getEmail();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String findUserRole( String userName ) {
+        User user = userDetailsService.getUserNamed( userName );
+        if ( user != null ) {
+            return user.getRole();
         } else {
             return null;
         }

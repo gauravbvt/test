@@ -2,8 +2,8 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -13,34 +13,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * XStream Actor converter
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Jan 16, 2009
- * Time: 6:42:21 PM
+ * Date: Mar 19, 2010
+ * Time: 3:10:36 PM
  */
-public class ActorConverter extends EntityConverter {
-
+public class ParticipationConverter extends EntityConverter {
 
     /**
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( ActorConverter.class );
 
-    public ActorConverter( XmlStreamer.Context context ) {
+    public ParticipationConverter( XmlStreamer.Context context ) {
         super( context );
     }
 
     public boolean canConvert( Class aClass ) {
-        return Actor.class.isAssignableFrom( aClass );
+        return Participation.class.isAssignableFrom( aClass );
     }
 
     /**
      * {@inheritDoc}
      */
     protected Class<? extends ModelEntity> getEntityClass() {
-        return Actor.class;
+        return Participation.class;
     }
 
     /**
@@ -49,27 +47,23 @@ public class ActorConverter extends EntityConverter {
     protected void writeSpecifics( ModelEntity entity,
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
-        Actor actor = (Actor) entity;
-        if ( actor.isSystem() ) {
-            writer.startNode( "system" );
-            writer.setValue( "true" );
+        Participation participation = (Participation) entity;
+        if ( participation.getUsername() != null ) {
+            writer.startNode( "user" );
+            writer.setValue( participation.getUsername() );
             writer.endNode();
         }
-        if ( actor.isArchetype() ) {
-            writer.startNode( "archetype" );
-            writer.setValue( "true" );
+        if ( participation.getActor() != null ) {
+            Actor actor = participation.getActor();
+            writer.startNode( "actor" );
+            writer.addAttribute( "id", Long.toString( actor.getId() ) );
+            writer.setValue( actor.getName() );
             writer.endNode();
         }
         // channels
-        for ( Channel channel : actor.getChannels() ) {
+        for ( Channel channel : participation.getChannels() ) {
             writer.startNode( "channel" );
             context.convertAnother( channel );
-            writer.endNode();
-        }
-        // classification clearances
-        for ( Classification clearance : actor.getClearances() ) {
-            writer.startNode( "clearance" );
-            context.convertAnother( clearance );
             writer.endNode();
         }
     }
@@ -81,19 +75,17 @@ public class ActorConverter extends EntityConverter {
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
         Plan plan = getPlan();
-        Actor actor = (Actor) entity;
-        if ( nodeName.equals( "channel" ) ) {
+        Participation participation = (Participation) entity;
+        if ( nodeName.equals( "actor" ) ) {
+            Long id = Long.parseLong( reader.getAttribute( "id" ) );
+            String name = reader.getValue();
+            Actor actor = getEntity( Actor.class, name, id, ModelEntity.Kind.Actual, context );
+            participation.setActor( actor );
+        } else if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( plan, Channel.class );
-            actor.addChannel( channel );
-        } else if ( nodeName.equals( "system" ) ) {
-            boolean isSystem = reader.getValue().equals( "true" );
-            actor.setSystem( isSystem );
-        } else if ( nodeName.equals( "archetype" ) ) {
-            boolean isArchetype = reader.getValue().equals( "true" );
-            actor.setArchetype( isArchetype );
-        } else if ( nodeName.equals( "clearance" ) ) {
-            Classification clearance = (Classification) context.convertAnother( plan, Classification.class );
-            actor.addClearance( clearance );
+            participation.addChannel( channel );
+        } else if ( nodeName.equals( "user" ) ) {
+            participation.setUsername( reader.getValue() );
         } else {
             LOG.warn( "Unknown element " + nodeName );
         }

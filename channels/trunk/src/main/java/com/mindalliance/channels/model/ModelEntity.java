@@ -57,6 +57,10 @@ public abstract class ModelEntity extends ModelObject {
      */
     public static TransmissionMedium ANY_MEDIUM_TYPE;
     /**
+     * Universal participation type.
+     */
+    public static Participation ANY_PARTICIPATION_TYPE;
+    /**
      * All universal types.
      */
     public static List<ModelEntity> UNIVERSAL_TYPES;
@@ -104,6 +108,10 @@ public abstract class ModelEntity extends ModelObject {
         ANY_MEDIUM_TYPE.setId( 10000000L - 16 );
         ANY_MEDIUM_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_MEDIUM_TYPE );
+        ANY_PARTICIPATION_TYPE = new Participation( "any participation" );
+        ANY_PARTICIPATION_TYPE.setId( 10000000L - 17 );
+        ANY_PARTICIPATION_TYPE.setType();
+        UNIVERSAL_TYPES.add( ANY_PARTICIPATION_TYPE );
     }
 
     public ModelEntity() {
@@ -248,7 +256,8 @@ public abstract class ModelEntity extends ModelObject {
                 || equals( ANY_PLACE_TYPE )
                 || equals( ANY_ROLE_TYPE )
                 || equals( ANY_PHASE_TYPE )
-                || equals( ANY_MEDIUM_TYPE );
+                || equals( ANY_MEDIUM_TYPE )
+                || equals( ANY_PARTICIPATION_TYPE );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -267,6 +276,8 @@ public abstract class ModelEntity extends ModelObject {
             return (T) ANY_PHASE_TYPE;
         } else if ( entityClass == TransmissionMedium.class ) {
             return (T) ANY_MEDIUM_TYPE;
+        } else if ( entityClass == Participation.class ) {
+            return (T) ANY_PARTICIPATION_TYPE;
         } else {
             throw new RuntimeException( "No known universal type for " + entityClass.getSimpleName() );
         }

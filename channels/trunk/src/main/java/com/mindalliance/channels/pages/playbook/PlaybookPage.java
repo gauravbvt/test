@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.User;
@@ -86,11 +87,9 @@ public abstract class PlaybookPage extends WebPage {
     private Actor getActualActor() {
         Actor actualActor = getParm( ACTOR_PARM, Actor.class );
         if ( actualActor == null ) {
-            List<Actor> userActors = queryService.findAllActorsAsUser( user.getUsername() );
-            if ( userActors.size() == 1 )
-                actualActor = userActors.get( 0 );
+            Participation participation = queryService.findOrCreate( Participation.class, user.getUsername() );
+            actualActor = participation.getActor();
         }
-
         return actualActor;
     }
 

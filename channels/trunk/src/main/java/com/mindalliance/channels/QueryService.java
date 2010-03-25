@@ -445,7 +445,7 @@ public interface QueryService extends Service {
     /**
      * Make a replicate of the flow
      *
-     * @param flow      the flow to replicate
+     * @param flow   the flow to replicate
      * @param isSend whether to replicate as send or receive
      * @return a created flow
      */
@@ -538,14 +538,15 @@ public interface QueryService extends Service {
      */
     List<Actor> findActors( Organization organization, Role role, Segment segment );
 
-/**
+    /**
      * Find all jobs of an actor in an organization or all organizations
+     *
      * @param organization an organization or null (for all)
-     * @param actor an actor
-     * @return  a list of jobs
+     * @param actor        an actor
+     * @return a list of jobs
      */
     List<Job> findAllJobs( Organization organization, Actor actor );
-    
+
     /**
      * Whether the model object is referenced in another model object.
      *
@@ -1053,14 +1054,6 @@ public interface QueryService extends Service {
     Level getPartPriority( Part part );
 
     /**
-     * Find all actors personifying user with given username.
-     *
-     * @param userName a string
-     * @return a list of actors
-     */
-    List<Actor> findAllActorsAsUser( String userName );
-
-    /**
      * Get current plan.
      *
      * @return a plan
@@ -1099,6 +1092,22 @@ public interface QueryService extends Service {
      * @return a string
      */
     String findUserFullName( String userName );
+
+    /**
+     * Given his/her username find the user's email.
+     *
+     * @param userName a string
+     * @return a string
+     */
+    String findUserEmail( String userName );
+
+    /**
+     * Given his/her username find the user's role.
+     *
+     * @param userName a string
+     * @return a string
+     */
+    String findUserRole( String userName );
 
     /**
      * Given his/her username find the user's normalized full name.
@@ -1320,6 +1329,7 @@ public interface QueryService extends Service {
 
     /**
      * Find all parts assigned to an actor.
+     *
      * @param actor an actor
      * @return a list of parts
      */
@@ -1327,15 +1337,17 @@ public interface QueryService extends Service {
 
     /**
      * Find all parts assigned to an actor in a segment.
+     *
      * @param segment a plan segment
-     * @param actor an actor
+     * @param actor   an actor
      * @return a list of parts
      */
     List<Part> findAllAssignedParts( Segment segment, Actor actor );
 
     /**
      * Find all employments where actors are directly or indirectly supervised by a given actor.
-     * @param actor  an actor
+     *
+     * @param actor an actor
      * @return a list of actors
      */
     List<Employment> findAllSupervisedBy( Actor actor );

@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.pages.Releaseable;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.model.IModel;
 
@@ -133,4 +134,37 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
                 ModelEntity.Kind.Type ) ).getSubject();
     }
 
+    /**
+     * Release locks acquired after initialization.
+     */
+    public void release() {
+        Releaseable releaseable = findParent( Releaseable.class );
+        if ( releaseable != null ) {
+            releaseable.release();
+        }
+    }
+
+    /**
+     * Release any lock on an identifiable.
+     *
+     * @param identifiable an identifiable
+     */
+    public void releaseAnyLockOn( Identifiable identifiable ) {
+        Releaseable releaseable = findParent( Releaseable.class );
+        if ( releaseable != null ) {
+            releaseable.releaseAnyLockOn( identifiable );
+        }
+    }
+
+    /**
+     * Release any lock on an identifiable.
+     *
+     * @param identifiable an identifiable
+     */
+    public void requestLockOn( Identifiable identifiable ) {
+        Releaseable releaseable = findParent( Releaseable.class );
+        if ( releaseable != null ) {
+            releaseable.requestLockOn( identifiable );
+        }
+    }
 }

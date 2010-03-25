@@ -73,7 +73,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         NewMediumType.setId( Long.MAX_VALUE );
     }
 
-    public ChannelListPanel( String id, IModel<Channelable> model ) {
+    public ChannelListPanel( String id, IModel<? extends Channelable> model ) {
         super( id, model, null );
         init();
     }
@@ -206,8 +206,10 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     doAction( getChannelable(), UpdateObject.Action.Remove );
                     getCommander().cleanup( TransmissionMedium.class, medium.getName() );
                 }
+/*
                 doAction( getChannelable(), included ? UpdateObject.Action.Add
                         : UpdateObject.Action.Remove );
+*/
             }
         }
 

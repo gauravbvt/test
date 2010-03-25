@@ -11,10 +11,13 @@ import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.IssueScanner;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
@@ -478,6 +481,7 @@ public class PlanManager implements InitializingBean {
                         commander.replay( dao.getJournal() );
                         LOG.info( "Replayed journal for plan {}", plan );
                         dao.save( importExportFactory.createExporter( queryService, plan ) );
+                        createRequisiteModelObjects( queryService, commander );
                     }
                 } catch ( IOException e ) {
                     LOG.error( MessageFormat.format( "Unable to save plan {0}", dao.getPlan() ), e );
@@ -489,6 +493,18 @@ public class PlanManager implements InitializingBean {
                     currentDao = null;
                 }
             }
+        }
+    }
+
+    private void createRequisiteModelObjects(
+            QueryService queryService,
+            Commander commander ) throws CommandException {
+        // Make sure that there is one participation per user
+        for ( String username : queryService.findAllPlanUsernames() ) {
+            commander.doCommand( new CreateEntityIfNew(
+                    Participation.class,
+                    username,
+                    ModelEntity.Kind.Actual ) );
         }
     }
 
@@ -591,6 +607,7 @@ public class PlanManager implements InitializingBean {
 
     private void importPlan( PlanDao dao, QueryService queryService ) {
         Plan plan = dao.getPlan();
+        User.current().setPlan(  plan );   // TODO - HACK
         Importer importer = importExportFactory.createImporter( queryService, plan );
         try {
             currentDao = dao;
@@ -619,6 +636,7 @@ public class PlanManager implements InitializingBean {
         Phase.createImmutables( queryService );
         Role.createImmutables( queryService );
         TransmissionMedium.createImmutables( getBuiltInMedia(), queryService );
+        Participation.createImmutables( getBuiltInMedia(), queryService );
     }
 
     private void registerPlanDao( PlanDao dao ) {
@@ -987,4 +1005,6 @@ public class PlanManager implements InitializingBean {
     public List<String> getPlanNames() {
         return (List<String>)CollectionUtils.collect(getPlans(), TransformerUtils.invokerTransformer( "getName" ));
     }
+
+
 }

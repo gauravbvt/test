@@ -10,12 +10,14 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
 import com.mindalliance.channels.util.ChannelsUtils;
+import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -30,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -426,15 +429,66 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             final String action,
             final Updatable updatable
     ) {
+        return makeActionLinkColumn( name, label, action, null, updatable );
+    }
+
+    /**
+     * Make actionlink column.
+     *
+     * @param name      column name
+     * @param label     cell content
+     * @param action    action to call on row object
+     * @param property  if not null, property which value must be non-null for a link to appear
+     * @param updatable target of call
+     * @return a column
+     */
+    protected AbstractColumn<T> makeActionLinkColumn(
+            String name,
+            final String label,
+            final String action,
+            final String property,
+            final Updatable updatable
+    ) {
         return new AbstractColumn<T>( new Model<String>( name ), label ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
                 T bean = model.getObject();
-                ActionLinkPanel cellContent = new ActionLinkPanel( id, label, bean, action, updatable );
-                cellItem.add( cellContent );
+                if ( property == null || ChannelsUtils.getProperty( bean, property, null ) != null ) {
+                    ActionLinkPanel cellContent = new ActionLinkPanel( id, label, bean, action, updatable );
+                    cellItem.add( cellContent );
+                } else {
+                    cellItem.add( new Label( id, "" ) );
+                }
             }
 
+        };
+    }
+
+    protected AbstractColumn<T> makeEntityReferenceColumn(
+            String name,
+            final String entityProperty,
+            final Class<? extends ModelEntity> entityClass,
+            final boolean isActual,
+            final String title,
+            final Updatable updatable
+    ) {
+        return new AbstractColumn<T>( new Model<String>( name ), entityProperty ) {
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      IModel<T> model ) {
+                T bean = model.getObject();
+                EntityNamePanel cellContent = new EntityNamePanel(
+                        id,
+                        bean,
+                        entityProperty,
+                        entityClass,
+                        isActual,
+                        updatable
+                );
+                cellContent.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
+                cellItem.add( cellContent );
+            }
         };
     }
 
@@ -507,12 +561,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 final String action,
                 final Updatable updatable ) {
             super( id );
-            AjaxLink link = new AjaxLink<String>( "link", new Model<String>( label ) ) {
+            AjaxLink link = new AjaxLink<String>( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     updatable.update( target, bean, action );
                 }
             };
             add( link );
+            link.add( new Label("label", new Model<String>( label )));
         }
     }
 
@@ -617,4 +672,65 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         }
     }
 
+    private class EntityNamePanel extends Panel {
+
+        private T bean;
+        private String entityProperty;
+        private ModelEntity.Kind kind;
+        private Class<? extends ModelEntity> entityClass;
+
+        public EntityNamePanel(
+                String id,
+                final T bean,
+                String entityProperty,
+                Class<? extends ModelEntity> entityClass,
+                boolean actual,
+                final Updatable updatable ) {
+            super( id );
+            this.bean = bean;
+            this.entityProperty = entityProperty;
+            kind = actual ? ModelEntity.Kind.Actual : ModelEntity.Kind.Type;
+            this.entityClass = entityClass;
+            final List<String> choices = getQueryService().findAllEntityNames(
+                    entityClass,
+                    kind );
+            AutoCompleteTextField<String> nameField = new AutoCompleteTextField<String>(
+                    "entityName",
+                    new PropertyModel<String>( this, "entityName" ) ) {
+                protected Iterator<String> getChoices( String s ) {
+                    List<String> candidates = new ArrayList<String>();
+                    for ( String choice : choices ) {
+                        if ( Matcher.matches( s, choice ) ) candidates.add( choice );
+                    }
+                    return candidates.iterator();
+                }
+            };
+            nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                protected void onUpdate( AjaxRequestTarget target ) {
+                    updatable.update( target, bean, "entity named" );
+                }
+            } );
+            add( nameField );
+        }
+
+        public String getEntityName() {
+            ModelEntity entity = (ModelEntity) ChannelsUtils.getProperty( bean, entityProperty, null );
+            return entity == null ? "" : entity.getName();
+        }
+
+        public void setEntityName( String name ) {
+            ModelEntity entity = null;
+            if ( name != null && !name.isEmpty() ) {
+                entity = ( kind == ModelEntity.Kind.Actual )
+                        ? getQueryService().findOrCreate( entityClass, name )
+                        : getQueryService().findOrCreateType( entityClass, name );
+            }
+            try {
+                PropertyUtils.setProperty( bean, entityProperty, entity );
+            } catch ( Exception e ) {
+                LOG.error( "Failed to set property " + entityProperty );
+                throw new RuntimeException( e );
+            }
+        }
+    }
 }

@@ -6,6 +6,7 @@ import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +20,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +32,7 @@ import java.util.Set;
  * Date: May 6, 2009
  * Time: 7:56:27 PM
  */
-public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel {
+public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel implements Releaseable {
 
     /**
      * Pad top on move.
@@ -61,6 +63,12 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      * Details aspect.
      */
     public static final String DETAILS = "details";
+
+    /**
+     * Identifiables locked after initialization.
+     */
+    private Set<Identifiable> lockedIdentifiables = new HashSet<Identifiable>();
+
 
     /**
      * Outermost container.
@@ -113,6 +121,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      * {@inheritDoc}
      */
     protected void close( AjaxRequestTarget target ) {
+        releaseAspectShown();
         Change change = new Change( Change.Type.Collapsed, getObject() );
         update( target, change );
     }
@@ -302,9 +311,16 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
     }
 
     private void showAspect( String aspect ) {
+        releaseAspectShown();
         aspectPanel = makeAspectPanel( aspect == null ? getDefaultAspect() : aspect );
         aspectPanel.setOutputMarkupId( true );
         moContainer.addOrReplace( aspectPanel );
+    }
+
+    private void releaseAspectShown() {
+        if ( aspectPanel != null && aspectPanel instanceof AbstractCommandablePanel ) {
+            ( (AbstractCommandablePanel) aspectPanel ).release();
+        }
     }
 
     /**
@@ -359,6 +375,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         target.addComponent( headerTitle );
         target.addComponent( aspectPanel );
 */
+        releaseAspectShown();
         update( target, new Change( Change.Type.AspectReplaced, getObject(), aspect ) );
     }
 
@@ -433,6 +450,34 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
             showAspect( aspect );
             target.addComponent( aspectPanel );
         }
+    }
+
+        /**
+     * Release locks acquired after initialization.
+     */
+    public void release() {
+        for (Identifiable identifiable : lockedIdentifiables ) {
+            getCommander().releaseAnyLockOn( identifiable );
+        }
+        lockedIdentifiables = new HashSet<Identifiable>();
+    }
+
+    /**
+     * Release any lock on an identifiable.
+     * @param identifiable  an identifiable
+     */
+    public void releaseAnyLockOn( Identifiable identifiable ) {
+        getCommander().releaseAnyLockOn( identifiable );
+        lockedIdentifiables.remove( identifiable );
+    }
+
+    /**
+     * Release any lock on an identifiable.
+     * @param identifiable  an identifiable
+     */
+    public void requestLockOn( Identifiable identifiable ) {
+        getCommander().requestLockOn( identifiable );
+        lockedIdentifiables.add( identifiable );
     }
 
 }

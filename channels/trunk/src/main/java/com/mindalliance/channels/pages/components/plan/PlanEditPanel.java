@@ -30,6 +30,10 @@ import java.util.Set;
 public class PlanEditPanel extends AbstractMultiAspectPanel {
 
     /**
+     * Participations aspect.
+     */
+    public static final String PARTICIPATIONS = "participations";
+    /**
      * Incidents aspect.
      */
     public static final String EVENTS = "events";
@@ -160,7 +164,9 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanDetailsPanel();
         } else if ( aspect.equals( MAP ) ) {
             return getPlanMapPanel();
-        } else if ( aspect.equals( EVENTS ) ) {
+        } else if ( aspect.equals( PARTICIPATIONS ) ) {
+            return getPlanParticipationsPanel();
+        }  else if ( aspect.equals( EVENTS ) ) {
             return getPlanIncidentsPanel();
         } else if ( aspect.equals( CLASSIFICATIONS ) ) {
             return getPlanClassificationsPanel();
@@ -190,6 +196,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
 
     private Component getPlanMapPanel() {
         return new PlanMapPanel( "aspect", getModel(), getExpansions() );
+    }
+
+    private Component getPlanParticipationsPanel() {
+        return new PlanPartipationsPanel( "aspect", getModel(), getExpansions() );
     }
 
     private Component getPlanIncidentsPanel() {

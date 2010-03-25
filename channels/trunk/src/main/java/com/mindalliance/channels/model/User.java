@@ -78,6 +78,8 @@ public class User implements UserDetails {
      */
     private Plan plan;
 
+    private static User ANONYMOUS = new User();
+
     public User() {
         anonymous = true;
     }
@@ -220,7 +222,8 @@ public class User implements UserDetails {
                 return (User) obj;
         }
 
-        return new User();
+        // return new User();
+        return ANONYMOUS;  // TODO - HACK
     }
 
     /**
@@ -462,4 +465,15 @@ public class User implements UserDetails {
 
         return false;
     }
+
+    /**
+     * Return a string describing the most privileged role of the user.
+     * @return  a String
+     */
+    public String getRole() {
+        if ( isAdmin() ) return "Admin";
+        else if ( isPlanner() ) return "Planner";
+        else return "Playbook";
+    }
+    
 }

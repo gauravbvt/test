@@ -160,7 +160,7 @@ public class AbstractChannelsTest extends TestCase {
         detectors.add( new InconsistentImpactOnTargetPart() );
         detectors.add( new UntimelyCriticalSharing() );
         detectors.add( new SinglePointOfFailure() );
-        detectors.add( new UserIsManyActors() );
+        detectors.add( new NonParticipatingNormalUser() );
         detectors.add( new NoSegmentForEventPhase() );
         detectors.add( new InvalidEntityTyping() );
         detectors.add( new FlowDeclassifies() );
