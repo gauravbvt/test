@@ -31,7 +31,7 @@ public class CreateEntityIfNew extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "create entity";
+        return "create entity if new";
     }
 
     /**

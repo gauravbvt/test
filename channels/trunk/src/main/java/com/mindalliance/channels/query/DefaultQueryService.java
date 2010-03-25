@@ -2523,13 +2523,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<String> findAllPlanUsernames() {
-        return userDetailsService.getAllPlanUsernames();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @SuppressWarnings( "unchecked" )
     public List<Segment> findAllSegmentsForPhase( final Phase phase ) {
         return (List<Segment>) CollectionUtils.select(
@@ -3102,6 +3095,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return employments;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public FileUserDetailsService getUserDetailsService() {
+        return userDetailsService;
+    }
 
 }
 

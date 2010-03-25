@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Segment;
@@ -58,10 +59,18 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
      * Link to phase.
      */
     private ModelObjectLink eventLink;
+    /**
+     * Event level choice.
+     */
+    private DropDownChoice<String> eventLevelChoice;
+    /**
+     * Name for unspecified level.
+     */
+    private static final String ANY = "Any";
 
     public SegmentEditDetailsPanel( String id,
-                                     IModel<? extends Identifiable> model,
-                                     Set<Long> expansions ) {
+                                    IModel<? extends Identifiable> model,
+                                    Set<Long> expansions ) {
         super( id, model, expansions );
         init();
     }
@@ -72,9 +81,53 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
         addPhaseLink();
         addPhaseChoice();
         addEventLink();
+        addEventLevelChoice();
         addEventField();
         addIssuesPanel();
         add( new AttachmentPanel( "attachments", new PropertyModel<Segment>( this, "segment" ) ) );
+    }
+
+    private void addEventLevelChoice() {
+        eventLevelChoice = new DropDownChoice<String>(
+                "event-level",
+                new PropertyModel<String>( this, "eventLevel" ),
+                getEventLevelChoices() );
+        eventLevelChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getSegment(), "eventLevel" ) );
+            }
+        } );
+        eventLevelChoice.setOutputMarkupId( true );
+        eventLevelChoice.setEnabled( getSegment().getEvent() != null );
+        addOrReplace( eventLevelChoice );
+    }
+
+    public String getEventLevel() {
+        Level level = getSegment().getEventLevel();
+        if ( level == null ) {
+            return ANY;
+        } else {
+            return level.name();
+        }
+    }
+
+    public void setEventLevel( String val ) {
+        Level level;
+        if ( val.equals( ANY ) ) {
+            level = null;
+        } else {
+            level = Level.valueOf( val );
+        }
+        doCommand( new UpdatePlanObject( getSegment(), "eventLevel", level ) );
+    }
+
+    private List<String> getEventLevelChoices() {
+        List<String> levels = new ArrayList<String>();
+        levels.add( ANY );
+        for ( Level level : Level.values() ) {
+            levels.add( level.name() );
+        }
+        return levels;
     }
 
     private void addIdentityFields() {
@@ -114,17 +167,17 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
     private void addPhaseChoice() {
         phaseChoices = new DropDownChoice<Phase>(
                 "phase-choices",
-                new PropertyModel<Phase>( this, "phase"),
-                new PropertyModel<List<Phase>>( getPlan(), "phases")
+                new PropertyModel<Phase>( this, "phase" ),
+                new PropertyModel<List<Phase>>( getPlan(), "phases" )
         );
         phaseChoices.setOutputMarkupId( true );
         phaseChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addPhaseLink();
-                target.addComponent( phaseLink);
+                target.addComponent( phaseLink );
                 update( target, new Change( Change.Type.Updated, getSegment(), "phase" ) );
             }
-        });
+        } );
         phaseChoices.setEnabled( isLockedByUserIfNeeded( getSegment() ) );
         addOrReplace( phaseChoices );
     }
@@ -147,6 +200,8 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addEventLink();
                 target.addComponent( eventLink );
+                addEventLevelChoice();
+                target.addComponent( eventLevelChoice );
                 update( target, new Change( Change.Type.Updated, getSegment(), "event" ) );
             }
         } );

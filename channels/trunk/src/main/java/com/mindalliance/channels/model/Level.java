@@ -18,9 +18,13 @@ public enum Level {
      */
     Medium,
     /**
-     * Severe.
+     * High.
      */
-    High;
+    High,
+    /**
+     * Highest
+     */
+    Highest;
 
     /**
      * A string representing the severity level.
@@ -57,6 +61,8 @@ public enum Level {
                 return "Major";
             case High:
                 return "Severe";
+            case Highest:
+                return "Extreme";
             default:
                 return "UNKNOWN";
         }

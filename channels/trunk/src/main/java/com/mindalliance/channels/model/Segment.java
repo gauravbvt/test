@@ -59,6 +59,10 @@ public class Segment extends ModelObject {
      */
     private Event event;
     /**
+     * A qualifcation of the intensity of the event.
+     */
+    private Level eventLevel;
+    /**
      * Plan phase addressed by this segment.
      */
     private Phase phase;
@@ -96,6 +100,14 @@ public class Segment extends ModelObject {
     public void setEvent( Event event ) {
         assert event.isType();
         this.event = event;
+    }
+
+    public Level getEventLevel() {
+        return eventLevel;
+    }
+
+    public void setEventLevel( Level eventLevel ) {
+        this.eventLevel = eventLevel;
     }
 
     /**

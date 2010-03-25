@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -96,6 +97,11 @@ public class SegmentConverter extends AbstractChannelsConverter {
             writer.addAttribute( "id", Long.toString( event.getId() ) );
             writer.setValue( event.getName() );
             writer.endNode();
+            if ( segment.getEventLevel() != null ) {
+                writer.startNode( "event-level" );
+                writer.setValue( segment.getEventLevel().name() );
+                writer.endNode();
+            }
         }
         // Plan phase
         Phase phase = segment.getPhase();
@@ -189,6 +195,8 @@ public class SegmentConverter extends AbstractChannelsConverter {
                 Event event = findOrCreateType( Event.class, reader.getValue(), id );
                 segment.setEvent( event );
                 // Phase
+            } else if ( nodeName.equals( "event-level" ) ) {
+                segment.setEventLevel( Level.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "phase" ) ) {
                 String id = reader.getAttribute( "id" );
                 Phase phase = findOrCreate( Phase.class, reader.getValue(), id );

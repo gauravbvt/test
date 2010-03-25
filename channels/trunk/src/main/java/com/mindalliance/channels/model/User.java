@@ -223,7 +223,7 @@ public class User implements UserDetails {
         }
 
         // return new User();
-        return ANONYMOUS;  // TODO - HACK
+        return ANONYMOUS;
     }
 
     /**

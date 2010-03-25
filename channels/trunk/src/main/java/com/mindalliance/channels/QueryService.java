@@ -32,6 +32,7 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.nlp.Proximity;
+import com.mindalliance.channels.util.FileUserDetailsService;
 import com.mindalliance.channels.util.Play;
 
 import java.util.Iterator;
@@ -1118,13 +1119,6 @@ public interface QueryService extends Service {
     String findUserNormalizedFullName( String userName );
 
     /**
-     * Find usernames of all users who can access the current plan.
-     *
-     * @return a list of strings
-     */
-    List<String> findAllPlanUsernames();
-
-    /**
      * Find all plan segments for a given phase.
      *
      * @param phase a phase
@@ -1351,4 +1345,11 @@ public interface QueryService extends Service {
      * @return a list of actors
      */
     List<Employment> findAllSupervisedBy( Actor actor );
+
+    /**
+     * Get file user details service.
+     *
+     * @return a file user details service
+     */
+    FileUserDetailsService getUserDetailsService();
 }

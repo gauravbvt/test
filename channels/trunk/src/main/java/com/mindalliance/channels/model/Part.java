@@ -114,6 +114,13 @@ public class Part extends Node implements GeoLocatable {
         return MessageFormat.format( "{0} {1}", getName(), WordUtils.uncapitalize( getTask() ) );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String getTypeName() {
+        return "task";
+    }    
+
     public String getTask() {
         return task;
     }

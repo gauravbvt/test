@@ -500,7 +500,7 @@ public class PlanManager implements InitializingBean {
             QueryService queryService,
             Commander commander ) throws CommandException {
         // Make sure that there is one participation per user
-        for ( String username : queryService.findAllPlanUsernames() ) {
+        for ( String username : queryService.getUserDetailsService().getAllPlanUsernames() ) {
             commander.doCommand( new CreateEntityIfNew(
                     Participation.class,
                     username,
@@ -574,6 +574,7 @@ public class PlanManager implements InitializingBean {
                 importPlan( dao, queryService );
             }
         }
+        User.current().setPlan( null );
         // Create new, defined plans
         for ( PlanDao dao : daos ) {
             if ( !dao.isPersisted() ) {
@@ -607,7 +608,7 @@ public class PlanManager implements InitializingBean {
 
     private void importPlan( PlanDao dao, QueryService queryService ) {
         Plan plan = dao.getPlan();
-        User.current().setPlan(  plan );   // TODO - HACK
+        User.current().setPlan(  plan );
         Importer importer = importExportFactory.createImporter( queryService, plan );
         try {
             currentDao = dao;
@@ -1006,5 +1007,4 @@ public class PlanManager implements InitializingBean {
         return (List<String>)CollectionUtils.collect(getPlans(), TransformerUtils.invokerTransformer( "getName" ));
     }
 
-
-}
+ }

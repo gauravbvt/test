@@ -219,7 +219,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
                     contacts,
                     TransformerUtils.invokerTransformer( "getUsername" ) );
             List<String> others = (List<String>) CollectionUtils.subtract(
-                    queryService.findAllPlanUsernames(),
+                    queryService.getUserDetailsService().getAllPlanUsernames(),
                     surveyed );
             for ( String other : others ) {
                 contacts.add( new Contact( other ) );

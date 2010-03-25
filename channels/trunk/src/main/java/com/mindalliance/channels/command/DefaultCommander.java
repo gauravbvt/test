@@ -218,6 +218,7 @@ public class DefaultCommander extends AbstractService implements Commander, Init
             try {
                 Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
                 change = command.execute( this );
+                if ( change.isNone() ) LOG.info( "No change" );
                 lockManager.releaseLocks( grabbedLocks );
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );

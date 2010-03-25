@@ -31,7 +31,7 @@ public class NonParticipatingNormalUser extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         QueryService queryService = getQueryService();
-        for ( String username : queryService.findAllPlanUsernames() ) {
+        for ( String username : queryService.getUserDetailsService().getAllPlanUsernames() ) {
             if ( queryService.findUserRole( username ).equals( User.ROLE_USER ) ) {
                 Participation participation = queryService.findOrCreate(  Participation.class, username );
                 if ( participation.getActor() == null ) {

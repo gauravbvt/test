@@ -49,6 +49,7 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
         for ( Segment other : getQueryService().list( Segment.class ) ) {
             if ( !segment.equals( other )
                     && segment.getEvent().equals( other.getEvent() )
+                    && sameLevel( segment.getEventLevel(), other.getEventLevel() )
                     && segment.getPhase().equals( other.getPhase() ) ) {
                 Set<Goal> sharedGoals = new HashSet<Goal>();
                 for ( Goal goal : segment.getGoals() ) {
@@ -75,6 +76,12 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
             }
         }
         return issues;
+    }
+
+    private boolean sameLevel( Level level, Level other ) {
+        return
+                level == null && other == null
+                        || level != null && other != null && level.equals( other );
     }
 
     /**
