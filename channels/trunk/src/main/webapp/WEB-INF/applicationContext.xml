@@ -113,7 +113,7 @@ CONFIGURATION NOTES:
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.analysis.detectors.FromUser"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.NoSegmentRepondsToIncident"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NoSegmentRespondsToIncident"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithoutGoal"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole"/>

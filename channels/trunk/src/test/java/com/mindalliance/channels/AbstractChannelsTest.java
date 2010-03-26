@@ -113,7 +113,7 @@ public class AbstractChannelsTest extends TestCase {
 
     private List<IssueDetector> createDetectors( DefaultQueryService queryService ) {
         List<IssueDetector> detectors = new ArrayList<IssueDetector>();
-        detectors.add( new NoSegmentRepondsToIncident() );
+        detectors.add( new NoSegmentRespondsToIncident() );
         detectors.add( new SegmentWithoutGoal() );
         detectors.add( new FromUser() );
         detectors.add( new FlowWithoutChannel() );
