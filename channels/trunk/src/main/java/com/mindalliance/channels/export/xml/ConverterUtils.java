@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.export.PartSpecification;
 import com.mindalliance.channels.export.SegmentSpecification;
 import com.mindalliance.channels.model.Part;
@@ -48,29 +48,26 @@ public class ConverterUtils {
         }
     }
 
-    public static List<Segment> findMatchingSegments( SegmentSpecification scSpec, QueryService queryService ) {
-         return findMatchingSegments(scSpec.getName(), scSpec.getDescription(), queryService);
+    public static List<Segment> findMatchingSegments(
+            PlanDao planDao, SegmentSpecification scSpec ) {
+        return findMatchingSegments( scSpec.getName(), scSpec.getDescription(), planDao );
     }
 
     // TODO do semantic match on segment name and description
-    public static List<Segment> findMatchingSegments( String segmentName,
-                                                        String segmentDescription,
-                                                        QueryService queryService) {
+    public static List<Segment> findMatchingSegments(
+            String segmentName, String segmentDescription, PlanDao planDao ) {
         List<Segment> segments = new ArrayList<Segment>();
         try {
-            segments.add( queryService.findSegment( segmentName ) );
+            segments.add( planDao.findSegment( segmentName ) );
         } catch ( NotFoundException e ) {
             LoggerFactory.getLogger( ConverterUtils.class ).info(
-                    "No segment found matching name ["
-                            + segmentName
-                            + "] and description ["
-                            + segmentDescription
-                            + "]" );
+                "No segment found matching name [" + segmentName
+                + "] and description [" + segmentDescription + ']' );
         }
         return segments;
     }
 
-    public static List<Part> findMatchingParts( Segment segment, PartSpecification partSpec) {
+    public static List<Part> findMatchingParts( Segment segment, PartSpecification partSpec ) {
         return findMatchingParts(
                 segment,
                 partSpec.getRoleName(),

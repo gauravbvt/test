@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
@@ -39,7 +39,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      */
     @SpringBean
     private PlanManager planManager;
-    
+
     /**
      * List of segments to be mapped.
      */
@@ -182,7 +182,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      */
     @Override
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, planManager.getCurrentPlan() ) );
+        update( target, new Change( Change.Type.Selected, PlanManager.plan() ) );
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Identifiable;

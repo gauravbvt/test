@@ -206,7 +206,7 @@ public class EventListPanel extends AbstractCommandablePanel {
 
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
-            Plan plan = planManager.getCurrentPlan();
+            Plan plan = PlanManager.plan();
             if ( confirmed ) {
                 Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
                 doCommand( new UpdatePlanObject(

@@ -1,12 +1,12 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
@@ -43,7 +43,7 @@ public class AddPart extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        QueryService queryService = commander.getQueryService();
+        PlanDao planDao = commander.getPlanDao();
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         // Identify any undefined part likely created to be the lone default part.
         Long defaultPartId = (Long) get( "defaultPart" );
@@ -55,9 +55,9 @@ public class AddPart extends AbstractCommand {
             }
         }
         Long priorId = (Long) get( "part" );
-        Part part = queryService.createPart( segment, priorId );
+        Part part = planDao.createPart( segment, priorId );
         set( "part", part.getId() );
-        if ( defaultPart != null ) segment.removeNode( defaultPart );
+        if ( defaultPart != null ) segment.removeNode( defaultPart, planDao );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
         if ( partState != null ) {
             ChannelsUtils.initPartFrom( part, partState, commander );

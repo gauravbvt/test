@@ -1,10 +1,9 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.attachments.BitBucket;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;
 import com.mindalliance.channels.export.DummyExporter;
-import com.mindalliance.channels.query.DefaultQueryService;
 import junit.framework.TestCase;
 
 import java.util.HashMap;
@@ -23,7 +22,8 @@ public class TestNode extends TestCase {
     private Part p1;
     private Part p2;
     private Segment segment;
-    private DefaultQueryService queryService;
+
+    private PlanDao planDao;
 
     public TestNode() {
     }
@@ -32,28 +32,31 @@ public class TestNode extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
-        planManager.afterPropertiesSet();
+        planManager.validate();
+
+        Plan plan = planManager.getPlans().get( 0 );
+        planDao = planManager.getDao( plan );
         User user = new User();
-        user.setPlan( planManager.getPlans().get( 0 ) );
-        queryService = new DefaultQueryService( planManager, new BitBucket() );
-        queryService.afterPropertiesSet();
+        user.setPlan( plan );
 
-        segment = queryService.createSegment();
-        p1 = queryService.createPart( segment );
-            p1.setActor( queryService.findOrCreate( Actor.class, "p1" ) );
-        p2 = queryService.createPart( segment );
-            p2.setActor( queryService.findOrCreate( Actor.class, "p2" ) );
+        segment = planDao.createSegment( null, null );
+        p1 = planDao.createPart( segment, null );
+            p1.setActor( planDao.findOrCreate( Actor.class, "p1", null ) );
+        p2 = planDao.createPart( segment, null );
+            p2.setActor( planDao.findOrCreate( Actor.class, "p2", null ) );
 
-        f1 = p1.createSend( queryService );
+        f1 = p1.createSend( planDao );
                 f1.setName( "A" );
-        f2 = p2.createReceive( queryService );
+        f2 = p2.createReceive( planDao );
                 f2.setName( "B" );
-        f3 = queryService.connect( p1, p2, "message" );
+        f3 = planDao.connect( p1, p2, "message", null );
     }
 
     public void testSetSends() {
         p1.setSends( new HashMap<Long,Flow>() );
         assertFalse( p1.sends().hasNext() );
+
+        // setSends does not disconnect anymore ?
         assertNull( f1.getSource() );
         assertNull( f3.getSource() );
 
@@ -71,6 +74,8 @@ public class TestNode extends TestCase {
     public void testSetReceives() {
         p2.setReceives( new HashMap<Long,Flow>() );
         assertFalse( p2.receives().hasNext() );
+
+        // Set receives does not disconnect anymore?
         assertNull( f2.getTarget() );
         assertNull( f3.getTarget() );
 
@@ -106,10 +111,10 @@ public class TestNode extends TestCase {
     }
 
     public void testIsness() {
-        Part part = queryService.createPart( segment );
+        Part part = planDao.createPart( segment, null );
         assertTrue( part.isPart() );
         assertFalse( part.isConnector() );
-        Connector c = queryService.createConnector( segment );
+        Connector c = planDao.createConnector( segment, null );
         assertFalse( c.isPart() );
         assertTrue( c.isConnector() );
     }

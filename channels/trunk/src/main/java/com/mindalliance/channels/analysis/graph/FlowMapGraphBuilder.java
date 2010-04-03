@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.Graph;
@@ -30,8 +31,11 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
      */
     private Segment segment;
 
-    public FlowMapGraphBuilder( Segment segment ) {
+    private QueryService queryService;
+
+    public FlowMapGraphBuilder( Segment segment, QueryService queryService ) {
         this.segment = segment;
+        this.queryService = queryService;
     }
 
     public DirectedGraph<Node, Flow> buildDirectedGraph() {
@@ -65,10 +69,10 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
                 // added if not part of a flow
                 graph.addVertex( node );
         }
-        for ( Part initiator : segment.getQueryService().findInitiators( segment ) ) {
+        for ( Part initiator : queryService.findInitiators( segment ) ) {
             graph.addVertex( initiator );
         }
-        for ( Part terminator : segment.getQueryService().findExternalTerminators( segment ) ) {
+        for ( Part terminator : queryService.findExternalTerminators( segment ) ) {
             graph.addVertex( terminator );
         }
         // add flows as edges

@@ -1,7 +1,6 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Connector;
@@ -9,6 +8,10 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import org.junit.After;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -23,17 +26,16 @@ import java.util.Iterator;
 public class TestSatisfyNeed extends AbstractChannelsTest {
 
     private Segment segment;
-    private QueryService queryService;
-    Part source;
-    Part target;
-    Part otherTarget;
-    Flow flow;
-    Connector connector;
+    private Part source;
+    private Part target;
+    private Part otherTarget;
+    private Flow flow;
+    private Connector connector;
 
     @Override
-    protected void setUp() throws IOException {
+    public void setUp() throws IOException {
         super.setUp();
-        queryService = app.getQueryService();
+
         segment = queryService.createSegment();
         source = segment.getDefaultPart();
         source.setRole( queryService.findOrCreate( Role.class, "source" ) );
@@ -49,31 +51,35 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
         queryService.connect( connector, otherTarget, "info" );
     }
 
-    protected void tearDown() {
+    @Override
+    @After
+    public void tearDown() {
         queryService.remove( segment );
+        super.tearDown();
     }
 
+    @Test
     public void testSatisfyNeed() throws CommandException {
-        assertTrue( countFlows( source.sends() ) == 1 );
-        assertTrue( countFlows( target.receives() ) == 1 );
-        assertTrue( countFlows( otherTarget.receives() ) == 1 );
+        assertSame( 1, countFlows( source.sends() ) );
+        assertSame( 1, countFlows( target.receives() ) );
+        assertSame( 1, countFlows( otherTarget.receives() ) );
         Command satisfyNeed = new SatisfyNeed( flow, connector.getInnerFlow() );
-        assertTrue( commander.canDo( satisfyNeed ) );
-        assertTrue( commander.doCommand( satisfyNeed ).isAdded() );
-        assertTrue( countFlows( source.sends() ) == 1 );
-        assertTrue( countFlows( target.receives() ) == 0 );
-        assertTrue( countFlows( otherTarget.receives() ) == 2 );
-        assertTrue( commander.canUndo() );
-        assertTrue( commander.undo().isUnknown() );
-        assertTrue( countFlows( source.sends() ) == 1 );
-        assertTrue( countFlows( target.receives() ) == 1 );
-        assertTrue( countFlows( otherTarget.receives() ) == 1 );
-        assertTrue( commander.canRedo() );
-        assertTrue( commander.redo().isUnknown() );
-        assertTrue( countFlows( source.sends() ) == 1 );
-        assertTrue( countFlows( target.receives() ) == 0 );
-        assertTrue( countFlows( otherTarget.receives() ) == 2 );
-        assertTrue( commander.canUndo() );
+        assertTrue( getCommander().canDo( satisfyNeed ) );
+        assertTrue( getCommander().doCommand( satisfyNeed ).isAdded() );
+        assertSame( 1, countFlows( source.sends() ) );
+        assertSame( 0, countFlows( target.receives() ) );
+        assertSame( 2, countFlows( otherTarget.receives() ) );
+        assertTrue( getCommander().canUndo() );
+        assertTrue( getCommander().undo().isUnknown() );
+        assertSame( 1, countFlows( source.sends() ) );
+        assertSame( 1, countFlows( target.receives() ) );
+        assertSame( 1, countFlows( otherTarget.receives() ) );
+        assertTrue( getCommander().canRedo() );
+        assertTrue( getCommander().redo().isUnknown() );
+        assertSame( 1, countFlows( source.sends() ) );
+        assertSame( 0, countFlows( target.receives() ) );
+        assertSame( 2, countFlows( otherTarget.receives() ) );
+        assertTrue( getCommander().canUndo() );
     }
 
     private int countFlows( Iterator<Flow> flows ) {

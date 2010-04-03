@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.iterators.IteratorChain;
 
@@ -125,14 +125,14 @@ public abstract class Node extends ModelObject implements SegmentObject {
     /**
      * Create a new send for this node.
      *
-     * @param queryService the underlying store
+     * @param planDao the dao
      * @return an internal flow to a new connector
      */
-    public Flow createSend( QueryService queryService ) {
-        return queryService.connect(
+    public Flow createSend( PlanDao planDao ) {
+        return planDao.connect(
                 this,
-                queryService.createConnector( getSegment() ),
-                DEFAULT_FLOW_NAME );
+                planDao.createConnector( getSegment(), null ),
+                DEFAULT_FLOW_NAME, null );
     }
 
     /**
@@ -200,11 +200,12 @@ public abstract class Node extends ModelObject implements SegmentObject {
     /**
      * Create and add a new receive.
      *
-     * @param queryService the underyling store
+     * @param planDao the dao
      * @return a flow from a new connector to this node
      */
-    public Flow createReceive( QueryService queryService ) {
-        return queryService.connect( queryService.createConnector( getSegment() ), this, DEFAULT_FLOW_NAME );
+    public Flow createReceive( PlanDao planDao ) {
+        return planDao.connect(
+                planDao.createConnector( getSegment(), null ), this, DEFAULT_FLOW_NAME, null );
     }
 
     /**

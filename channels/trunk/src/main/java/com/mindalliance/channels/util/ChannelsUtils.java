@@ -1,7 +1,7 @@
 package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.command.CommandException;

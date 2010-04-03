@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.dao.Memory;
+
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
@@ -107,11 +109,12 @@ public class Connector extends Node {
 
     /**
      * Remove all external connectors.
+     * @param planDao the plan dao
      */
-    public void disconnect() {
+    public void disconnect( Memory planDao ) {
         Collection<ExternalFlow> flows = new HashSet<ExternalFlow>( getExternalFlows() );
         for ( ExternalFlow flow : flows )
-            flow.disconnect();
+            flow.disconnect( planDao );
     }
 
 }

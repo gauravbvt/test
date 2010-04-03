@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -55,7 +55,7 @@ public class BreakUpFlow extends AbstractCommand {
             // else this is a replay
             multi.execute( commander );
             set( "flowState", ChannelsUtils.getFlowState( flow ) );
-            flow.disconnect();
+            flow.disconnect( commander.getPlanDao() );
 //            breakup( flow, commander );
             ignoreLock( (Long) get( "flow" ) );
             return new Change( Change.Type.Recomposed, segment );

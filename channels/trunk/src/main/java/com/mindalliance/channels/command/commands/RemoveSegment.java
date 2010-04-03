@@ -1,14 +1,12 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.Exporter;
+import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
@@ -52,8 +50,7 @@ public class RemoveSegment extends AbstractCommand {
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             segment.setBeingDeleted( true );
-            ImportExportFactory factory = Channels.instance().getImportExportFactory();
-            Exporter exporter = factory.createExporter( queryService, commander.getPlan() );
+            Exporter exporter = commander.getExporter();
             exporter.export( segment, bos );
             set( "xml", bos.toString() );
             Plan plan = commander.getPlan();
@@ -65,6 +62,7 @@ public class RemoveSegment extends AbstractCommand {
             }
             queryService.remove( segment );
             return new Change( Change.Type.Removed, segment );
+
         } catch ( IOException e ) {
             throw new CommandException( "Failed to remove segment.", e );
         }
@@ -80,6 +78,7 @@ public class RemoveSegment extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         String xml = (String) get( "xml" );
         if ( xml != null ) {
@@ -98,6 +97,7 @@ public class RemoveSegment extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isSegmentSpecific() {
         return false;
     }

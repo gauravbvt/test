@@ -1,6 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
@@ -61,7 +61,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
                          MarshallingContext context ) {
         Segment segment = (Segment) object;
         Plan plan = getContext().getPlan();
-        QueryService queryService = getQueryService();
+        PlanDao planDao = getPlanDao();
         boolean exportingInPlan = isExportingPlan( context ) || segment.isBeingDeleted();
         context.put( "segment", segment );
         writer.addAttribute( "plan", plan.getUri() );
@@ -76,7 +76,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
         exportAttachments( segment, writer );
         if ( !exportingInPlan ) {
             // All entities if not within a plan export
-            Iterator<ModelEntity> entities = queryService.iterateEntities();
+            Iterator<ModelEntity> entities = planDao.iterateEntities();
             while ( entities.hasNext() ) {
                 ModelEntity entity = entities.next();
                 writer.startNode( entity.getClass().getSimpleName().toLowerCase() );
@@ -107,7 +107,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
         Phase phase = segment.getPhase();
         if ( phase == null ) {
             // Make sur a segment is always saved with a phase.
-            phase = plan.getDefaultPhase( getQueryService() );
+            phase = plan.getDefaultPhase();
         }
         writer.startNode( "phase" );
         writer.addAttribute( "id", Long.toString( phase.getId() ) );
@@ -150,11 +150,11 @@ public class SegmentConverter extends AbstractChannelsConverter {
         Map<Long, Long> idMap = getIdMap( context );
         boolean importingPlan = isImportingPlan( context );
         getProxyConnectors( context );
-        QueryService queryService = getQueryService();
+        PlanDao planDao = getPlanDao();
         Long oldId = Long.parseLong( reader.getAttribute( "id" ) );
         Segment segment = importingPlan
-                ? queryService.createSegment( oldId )
-                : queryService.createSegment();
+                ? planDao.createSegment( oldId, null )
+                : planDao.createSegment( null, null );
         Part defaultPart = segment.getDefaultPart();
         context.put( "segment", segment );
         segment.setName( reader.getAttribute( "name" ) );
@@ -218,11 +218,12 @@ public class SegmentConverter extends AbstractChannelsConverter {
             }
             reader.moveUp();
         }
+
         // Remove automatically created default part
-        segment.removeNode( defaultPart );
+        segment.removeNode( defaultPart, getPlanDao() );
         if ( segment.getPhase() == null ) {
             LOG.warn( "Setting segment's phase to plan default." );
-            segment.setPhase( getContext().getPlan().getDefaultPhase( getQueryService() ) );
+            segment.setPhase( getPlan().getDefaultPhase() );
         }
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "segment", segment );

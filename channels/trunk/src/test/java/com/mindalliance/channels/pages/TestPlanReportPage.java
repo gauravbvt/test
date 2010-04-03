@@ -2,8 +2,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
-
-import java.io.IOException;
+import org.junit.Test;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -14,16 +13,9 @@ import java.io.IOException;
  */
 public class TestPlanReportPage extends AbstractChannelsTest {
 
-    @Override
-    protected void setUp() throws IOException {
-        super.setUp();
-        initTester();
-    }
-
+    @Test
     public void testPage() {
-        tester.startPage( PlanReportPage.class );
-        tester.assertRenderedPage( PlanReportPage.class );
-        tester.assertNoErrorMessage();
+        assertRendered( "report", PlanReportPage.class );
     }
 
 

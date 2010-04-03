@@ -221,7 +221,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             protected void populateItem( ListItem<Attachment> item ) {
                 Attachment a = item.getModelObject();
                 ExternalLink documentLink = new ExternalLink( "attachment",
-                        a.getUrl(), attachmentManager.getLabel( a ) );
+                        a.getUrl(), attachmentManager.getLabel( getPlan(), a ) );
                 documentLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
                 item.add( documentLink );
                 addCopyImage( item );
@@ -324,7 +324,8 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         if ( upload != null ) {
             ModelObject mo = getAttachee();
             LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", mo );
-            Attachment attachment = attachmentManager.upload( getSelectedType(), upload );
+            Attachment attachment = attachmentManager.upload(
+                    getPlan(), getSelectedType(), upload );
             // Only add non-redundant attachment.
             if ( attachment != null ) {
                 doCommand( new AttachDocument( mo, attachment ) );

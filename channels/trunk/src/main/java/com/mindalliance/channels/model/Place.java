@@ -450,7 +450,7 @@ public class Place extends ModelEntity implements GeoLocatable {
             service.refineWithAddress( geoLocation, streetAddress, postalCode );
     }
 
-    public List<GeoLocation> getGeoLocations( QueryService queryService ) {
+    public List<GeoLocation> getGeoLocations() {
         return geoLocations;
     }
 

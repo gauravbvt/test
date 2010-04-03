@@ -1,9 +1,12 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.io.IOException;
 
@@ -20,32 +23,36 @@ public class TestUpdateSegmentObject extends AbstractChannelsTest {
     private Part part;
 
     @Override
-    protected void setUp() throws IOException {
+    public void setUp() throws IOException {
         super.setUp();
-        Segment segment = app.getQueryService().getDefaultSegment();
+
+        Segment segment = queryService.getDefaultSegment();
         part = segment.getDefaultPart();
         command = new UpdateSegmentObject( part, "description", "ipso lorem etc." );
-        commander.reset();
+        getCommander().reset();
     }
 
+    @Test
     public void testCommand() throws Exception {
+        Commander commander = getCommander();
+
         assertTrue( commander.canDo( command ) );
         String description = part.getDescription();
         Change change = commander.doCommand( command );
         assertTrue( change.isUpdated() );
-        assertTrue( change.getChangedPropertyValue().equals( "ipso lorem etc." ) );
+        assertEquals( "ipso lorem etc.", change.getChangedPropertyValue() );
         String newDescription = part.getDescription();
         assertFalse( description.equals( newDescription ) );
         assertTrue( commander.canUndo() );
         change = commander.undo();
         assertTrue( change.isUpdated() );
-        assertTrue( change.getChangedPropertyValue().equals( description ) );
+        assertEquals( description, change.getChangedPropertyValue() );
         newDescription = part.getDescription();
-        assertTrue( description.equals( newDescription ) );
+        assertEquals( description, newDescription );
         assertTrue( commander.canRedo() );
         change = commander.redo();
         assertTrue( change.isUpdated() );
-        assertTrue( change.getChangedPropertyValue().equals( "ipso lorem etc." ) );
+        assertEquals( "ipso lorem etc.", change.getChangedPropertyValue() );
         newDescription = part.getDescription();
         assertFalse( description.equals( newDescription ) );
     }

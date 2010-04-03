@@ -1,8 +1,9 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.Memory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -30,10 +31,6 @@ import java.util.Set;
 public class Segment extends ModelObject {
 
     /**
-     * Class logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( Segment.class );
-    /**
      * The default name for new segments.
      */
     public static final String DEFAULT_NAME = "Untitled";
@@ -43,6 +40,13 @@ public class Segment extends ModelObject {
      */
     public static final String DEFAULT_DESCRIPTION = "No description";
 
+    private static final long serialVersionUID = -595829017311913002L;
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( Segment.class );
+
     /**
      * Initial node capacity.
      */
@@ -51,46 +55,37 @@ public class Segment extends ModelObject {
     /**
      * Nodes, indexed by id.
      */
-    private Map<Long, Node> nodeIndex;
+    private final Map<Long, Node> nodeIndex = new HashMap<Long, Node>( INITIAL_CAPACITY );
+
     /**
      * Plan event addressed to by this segment.
      * The event is always a type
      * (planning is done for types of events, not actual events since they have yet to occur).
      */
     private Event event;
+
     /**
      * A qualifcation of the intensity of the event.
      */
     private Level eventLevel;
+
     /**
      * Plan phase addressed by this segment.
      */
     private Phase phase;
+
     /**
      * Goals (risk mitigations, gains to be made) for the segment.
      */
     private List<Goal> goals = new ArrayList<Goal>();
 
     /**
-     * The query service in charge of this segment.
-     */
-    private transient QueryService queryService;
-    /**
      * Whether this segment is in the process of being deleted.
      * Used by xml export only.
      */
-    private boolean beingDeleted = false;
+    private boolean beingDeleted;
 
     public Segment() {
-        setNodeIndex( new HashMap<Long, Node>( INITIAL_CAPACITY ) );
-    }
-
-    Map<Long, Node> getNodeIndex() {
-        return nodeIndex;
-    }
-
-    void setNodeIndex( Map<Long, Node> nodeIndex ) {
-        this.nodeIndex = nodeIndex;
     }
 
     public Event getEvent() {
@@ -167,8 +162,7 @@ public class Segment extends ModelObject {
      * @return an iterator on sorted nodes
      */
     public Iterator<Node> nodes() {
-        List<Node> nodes = new ArrayList<Node>();
-        nodes.addAll( getNodeIndex().values() );
+        List<Node> nodes = new ArrayList<Node>( nodeIndex.values() );
         Collections.sort( nodes, new Comparator<Node>() {
             /**
              * {@inheritDoc}
@@ -187,7 +181,7 @@ public class Segment extends ModelObject {
      * @return the number of nodes in this segment
      */
     public int getNodeCount() {
-        return getNodeIndex().size();
+        return nodeIndex.size();
     }
 
     /**
@@ -237,17 +231,19 @@ public class Segment extends ModelObject {
      * Quietly succeeds if node is not part of the segment
      *
      * @param node the node to remove.
+     * @param planDao the dao
      */
-    public void removeNode( Node node ) {
-        if ( getNodeIndex().containsKey( node.getId() )
-                && ( node.isConnector() || hasMoreThanOnePart() ) ) {
+    public void removeNode( Node node, Memory planDao ) {
+        if ( nodeIndex.containsKey( node.getId() )
+                && ( node.isConnector() || hasMoreThanOnePart() ) )
+        {
             Iterator<Flow> ins = node.receives();
             while ( ins.hasNext() ) {
-                ins.next().disconnect();
+                ins.next().disconnect( planDao );
             }
             Iterator<Flow> outs = node.sends();
             while ( outs.hasNext() ) {
-                outs.next().disconnect();
+                outs.next().disconnect( planDao );
             }
 
             if ( node.isConnector() ) {
@@ -258,11 +254,10 @@ public class Segment extends ModelObject {
                 }
                 // Avoid ConcurrentModificationException
                 for ( ExternalFlow flow : toDisconnect ) {
-                    flow.disconnect();
+                    flow.disconnect( planDao );
                 }
             }
-
-            queryService.remove( node );
+            planDao.remove( node );
             nodeIndex.remove( node.getId() );
             node.setSegment( null );
         }
@@ -288,11 +283,12 @@ public class Segment extends ModelObject {
     /**
      * Remove any connections to the outside world
      * (essentially, anything connected to an input or output connector).
+     * @param planDao
      */
-    public void disconnect() {
+    public void disconnect( Memory planDao ) {
         for ( Node n : nodeIndex.values() ) {
             if ( n.isConnector() )
-                ( (Connector) n ).disconnect();
+                ( (Connector) n ).disconnect( planDao );
         }
 
     }
@@ -302,7 +298,7 @@ public class Segment extends ModelObject {
      *
      * @return an iterator on connectors having sends
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -317,7 +313,7 @@ public class Segment extends ModelObject {
      *
      * @return an iterator on parts
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -332,7 +328,7 @@ public class Segment extends ModelObject {
      *
      * @return an iterator on connectors having receives
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -427,16 +423,16 @@ public class Segment extends ModelObject {
         while ( parts.hasNext() ) {
             Part part = parts.next();
             if ( part.isIn( organization ) ) {
-                if ( part.getRole() != null )
-                    roles.add( part.getRole() );
-                else
+                if ( part.getRole() == null ) {
                     hasUnknown = true;
+                } else {
+                    roles.add( part.getRole() );
+                }
             }
         }
 
         List<Role> list = new ArrayList<Role>( roles );
         Collections.sort( list, new Comparator<Role>() {
-            /** {@inheritDoc} */
             public int compare( Role o1, Role o2 ) {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );
             }
@@ -451,8 +447,7 @@ public class Segment extends ModelObject {
      *
      * @param id a long
      * @return a flow
-     * @throws com.mindalliance.channels.NotFoundException
-     *          if not found
+     * @throws NotFoundException if not found
      */
     public Flow findFlow( long id ) throws NotFoundException {
         Flow flow = null;
@@ -466,16 +461,7 @@ public class Segment extends ModelObject {
     }
 
     public QueryService getQueryService() {
-        if ( queryService == null ) {
-            queryService = Channels.instance().getQueryService();
-            LOG.warn( "Query service was not set" );
-        }
-        return queryService;
-    }
-
-    public void setQueryService( QueryService queryService ) {
-        assert queryService != null;
-        this.queryService = queryService;
+        return Channels.instance().getQueryService();
     }
 
     /**
@@ -494,6 +480,7 @@ public class Segment extends ModelObject {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void beforeRemove( QueryService queryService ) {
         super.beforeRemove( queryService );
         queryService.getCurrentPlan().removeSegment( this );
@@ -507,13 +494,15 @@ public class Segment extends ModelObject {
      * @param orgName  a string
      * @return a goal or null if none matching
      */
-    public Goal getGoal( final Goal.Category category, final boolean positive, final String orgName ) {
+    public Goal getGoal(
+            final Goal.Category category, final boolean positive, final String orgName ) {
+
         return (Goal) CollectionUtils.find( goals, new Predicate() {
-            public boolean evaluate( Object obj ) {
-                Goal goal = (Goal) obj;
+            public boolean evaluate( Object object ) {
+                Goal goal = (Goal) object;
                 return goal.getCategory() == category
                         && goal.isPositive() == positive
-                        && goal.getOrganization().getName().equals( orgName );
+                        && orgName.equals( goal.getOrganization().getName() );
             }
         } );
     }
@@ -563,18 +552,19 @@ public class Segment extends ModelObject {
      */
     public String getPhaseEventTitle() {
         StringBuilder sb = new StringBuilder();
-        sb.append( StringUtils.capitalize( getPhase().getName() ) );
+        sb.append( StringUtils.capitalize( phase.getName() ) );
         sb.append( ' ' );
-        sb.append( getPhase().getPreposition() );
+        sb.append( phase.getPreposition() );
         sb.append( ' ' );
-        sb.append( StringUtils.uncapitalize( getEvent().getName() ) );
+        sb.append( StringUtils.uncapitalize( event.getName() ) );
         return sb.toString();
     }
 
     /**
      * Whether the segment can be initiated by a given part.
      * True if the part causes this segment's event and the segment phase is concurrent.
-     * True if the part terminates a concurrent segment for same event and this segment is postEvent.
+     * True if the part terminates a concurrent segment for same event and this segment is
+     * postEvent.
      *
      * @param part a part
      * @return a boolean
@@ -590,19 +580,18 @@ public class Segment extends ModelObject {
      * @return a string
      */
     public String initiationCause( Part part ) {
-        Event initiatedEvent = part.getInitiatedEvent();
-        if ( initiatedEvent != null && initiatedEvent.equals( getEvent() )
-                && getPhase().isConcurrent() ) {
-            return "causes event \"" + getEvent().getName().toLowerCase() + "\"";
-        } else if ( part.isTerminatesEventPhase()
-                && part.getSegment().getPhase().isConcurrent()
-                && part.getSegment().getEvent().equals( getEvent() )
-                && getPhase().isPostEvent() ) {
-            return "terminates event \"" + getEvent().getName().toLowerCase() + "\"";
-        } else {
-            return "";
+        Event initiator = part.getInitiatedEvent();
+        if ( event.equals( initiator ) && phase.isConcurrent() )
+            return "causes event \"" + event.getName().toLowerCase() + '\"';
+        else {
+            Segment partSegment = part.getSegment();
+            return part.isTerminatesEventPhase()
+                   && partSegment.getPhase().isConcurrent()
+                   && event.equals( partSegment.getEvent() )
+                   && phase.isPostEvent() ?
+                      "terminates event \"" + event.getName().toLowerCase() + '\"'
+                    : "";
         }
-
     }
 
     /**
@@ -624,18 +613,12 @@ public class Segment extends ModelObject {
      * @return a string
      */
     public String terminationCause( Part part ) {
-        Event initiatedEvent = part.getInitiatedEvent();
-        if ( part.getSegment().equals( this )
-                && part.isTerminatesEventPhase() ) {
-            return "terminates " + this.getPhaseEventTitle().toLowerCase();
-        } else if ( initiatedEvent != null
-                && initiatedEvent.equals( getEvent() )
-                && getPhase().isPreEvent() ) {
-            return "causes event \"" + initiatedEvent.getName().toLowerCase() + "\"";
-        } else {
-            return "";
-        }
-
+        Event initiator = part.getInitiatedEvent();
+        return equals( part.getSegment() ) && part.isTerminatesEventPhase() ?
+                    "terminates " + getPhaseEventTitle().toLowerCase()
+             : event.equals( initiator ) && getPhase().isPreEvent() ?
+                    "causes event \"" + initiator.getName().toLowerCase() + '\"'
+             : "";
     }
 
     /**
@@ -648,8 +631,8 @@ public class Segment extends ModelObject {
         return (List<Connector>) CollectionUtils.select(
                 (List<Node>) IteratorUtils.toList( nodes() ),
                 new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ( (Node) obj ).isConnector();
+                    public boolean evaluate( Object object ) {
+                        return ( (Node) object ).isConnector();
                     }
                 }
         );
@@ -666,7 +649,7 @@ public class Segment extends ModelObject {
             Iterator<ExternalFlow> externalFlows = connector.externalFlows();
             while ( externalFlows.hasNext() ) {
                 Part part = externalFlows.next().getPart();
-                if ( !part.getSegment().equals( this ) ) {
+                if ( !equals( part.getSegment() ) ) {
                     externalParts.add( part );
                 }
             }
@@ -751,7 +734,7 @@ public class Segment extends ModelObject {
             }
         }
 
-        @SuppressWarnings( {"unchecked"} )
+        @SuppressWarnings( { "unchecked" } )
         private void setIterators( Node node ) {
             sendIterator = node.sends();
             reqIterator = (Iterator<Flow>) new FilterIterator(
@@ -764,8 +747,7 @@ public class Segment extends ModelObject {
         }
 
         public boolean hasNext() {
-            while ( !sendIterator.hasNext() && !reqIterator.hasNext()
-                    && nodeIterator.hasNext() )
+            while ( !sendIterator.hasNext() && !reqIterator.hasNext() && nodeIterator.hasNext() )
                 setIterators( nodeIterator.next() );
 
             return sendIterator.hasNext() || reqIterator.hasNext();
@@ -794,6 +776,7 @@ public class Segment extends ModelObject {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isLockable() {
         return false;
     }
@@ -809,16 +792,16 @@ public class Segment extends ModelObject {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean references( final ModelObject mo ) {
         return ModelObject.areIdentical( phase, mo )
-                || ModelObject.areIdentical( event, mo )
-                ||
-                CollectionUtils.exists(
-                        goals,
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return ( (Goal) obj ).references( mo );
-                            }
-                        } );
+            || ModelObject.areIdentical( event, mo )
+            || CollectionUtils.exists(
+                    goals,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return ( (Goal) object ).references( mo );
+                        }
+                    } );
     }
 }

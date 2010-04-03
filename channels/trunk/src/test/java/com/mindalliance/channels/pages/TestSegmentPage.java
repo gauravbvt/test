@@ -1,41 +1,20 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.Importer;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.attachments.BitBucket;
+import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.SimpleIdGenerator;
-import com.mindalliance.channels.export.DummyExporter;
-import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.query.DefaultQueryService;
-import junit.framework.TestCase;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
-import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTester;
-import static org.easymock.EasyMock.anyBoolean;
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.notNull;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -44,86 +23,20 @@ import java.util.Set;
  * Simple test using the WicketTester.
  */
 @SuppressWarnings( {"HardCodedStringLiteral"} )
-public class TestSegmentPage extends TestCase {
+public class TestSegmentPage extends AbstractChannelsTest {
 
-    private WicketTester tester;
+    @Autowired
+    private PlanManager planManager;
+
     private Segment segment;
-    private Memory dao;
-    private Channels app;
-
-    public TestSegmentPage() {
-    }
 
     @Override
-    public void setUp() throws Exception {
+    public void setUp() throws IOException {
         super.setUp();
-        app = new Channels();
-        PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
-        planManager.afterPropertiesSet();
-        DefaultQueryService queryService = new DefaultQueryService( planManager, new BitBucket() );
-//        queryService.setAddingSamples( true );
-
-        queryService.afterPropertiesSet();
-
-        app.setQueryService( queryService );
-        DiagramFactory dm = createMock( DiagramFactory.class );
-        Diagram fd = createMock( Diagram.class );
-        expect( fd.makeImageMap() ).andReturn( "" ).anyTimes();
-        expect( dm.newFlowMapDiagram( (Segment) anyObject(), null, null, null ) )
-                .andReturn( fd ).anyTimes();
-        replay( dm );
-        replay( fd );
-        app.setDiagramFactory( dm );
-
-        Analyst sa = createNiceMock( Analyst.class );
-        expect( sa.getIssuesSummary( (ModelObject) anyObject(), anyBoolean() ) )
-                .andReturn( "" ).anyTimes();
-        expect( sa.getIssuesSummary( (ModelObject) anyObject(), (String) anyObject() ) )
-                .andReturn( "" ).anyTimes();
-        expect( sa.listIssues( (ModelObject) anyObject(), anyBoolean() ).iterator() )
-                .andReturn( new ArrayList<Issue>().iterator() ).anyTimes();
-        replay( sa );
-        app.setAnalyst( sa );
-
-        segment = app.getQueryService().getDefaultSegment();
-        tester = new WicketTester( app );
-        tester.setParametersForNextRequest( new HashMap<String, String[]>() );
+        segment = queryService.getDefaultSegment();
     }
 
-    /**
-     * Workaround for wicket form tester bug re: file upload. File must be set
-     * otherwise all fields set to null. Resolved in wickets 1.4-RC2, coming out
-     * soon to a theater near you...
-     *
-     * @param ft  the tester to fix
-     * @param app
-     * @throws java.io.IOException
-     * @todo remove when moving to Wickets 1.4-RC2
-     * @see {https://issues.apache.org/jira/browse/WICKET-1931}
-     */
-    public static void setFiles( FormTester ft, Channels app ) throws IOException {
-
-        Importer importer = createMock( Importer.class );
-        expect( importer.importSegment( (InputStream) notNull() ) )
-                .andReturn( app.getQueryService().createSegment() );
-
-        replay( importer );
-//        app.setImporterFactory( importer );
-
-        File file = new File( TestSegmentPage.class.getResource( "test.txt" ).getFile() );
-        assertTrue( "Can't find " + file.getAbsolutePath(), file.exists() );
-        ft.setFile( "sc-import", file, "text/plain" );
-        ft.setFile( "attachments:upload", file, "text/plain" );
-    }
-
-    /**
-     * @param app the Channels app
-     * @todo remove when moving to Wickets 1.4-RC2
-     */
-    public static void checkFiles( Channels app ) {
-        verify( app.getImportExportFactory() );
-    }
-
+    @Test
     public void testParms() {
         tester.startPage( PlanPage.class );
         tester.assertRenderedPage( RedirectPage.class );
@@ -176,6 +89,7 @@ public class TestSegmentPage extends TestCase {
     /**
      * Test all nodes pages in default segment.
      */
+    @Test
     public void testNodes() {
         Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
@@ -185,23 +99,19 @@ public class TestSegmentPage extends TestCase {
         }
     }
 
-    private long getSegmentCount() {
-        return (long) dao.list( Segment.class ).size();
-    }
-
+    @Test
     public void testNewSegment() throws NotFoundException {
         tester.startPage( new PlanPage( segment ) );
-
-        long size = getSegmentCount();
+        long size = PlanManager.plan().getSegmentCount();
         tester.clickLink( "big-form:sc-new" );
-        assertEquals( size + 1, getSegmentCount() );
+        assertEquals( size + 1, PlanManager.plan().getSegmentCount() );
 
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
         tester.startPage( new PlanPage( segment ) );
         tester.clickLink( "big-form:sc-new" );
-        assertEquals( size + 2, getSegmentCount() );
+        assertEquals( size + 2, PlanManager.plan().getSegmentCount() );
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
     }
@@ -209,8 +119,9 @@ public class TestSegmentPage extends TestCase {
     /**
      * Test submit with part modifications.
      *
-     * @throws NotFoundException on error
+     * @throws com.mindalliance.channels.dao.NotFoundException on error
      */
+    @Test
     public void testEmptySubmit() throws NotFoundException, IOException {
         Part part = segment.getDefaultPart();
 
@@ -220,12 +131,10 @@ public class TestSegmentPage extends TestCase {
         tester.assertNoErrorMessage();
 
         FormTester ft = tester.newFormTester( "big-form" );
-        setFiles( ft, app );
         ft.submit();
 
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
-        checkFiles( app );
     }
 
     /**
@@ -233,6 +142,7 @@ public class TestSegmentPage extends TestCase {
      *
      * @throws NotFoundException on error
      */
+    @Test
     public void testDescriptionSubmit1() throws NotFoundException, IOException {
         Part part = segment.getDefaultPart();
         part.setDescription( "" );
@@ -246,14 +156,12 @@ public class TestSegmentPage extends TestCase {
         FormTester ft = tester.newFormTester( "big-form" );
         String desc = "New value";
         ft.setValue( "description", desc );
-        setFiles( ft, app );
         ft.submit();
 
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
         assertEquals( desc, part.getDescription() );
-        checkFiles( app );
     }
 
     /**
@@ -261,6 +169,7 @@ public class TestSegmentPage extends TestCase {
      *
      * @throws NotFoundException on error
      */
+    @Test
     public void testDescriptionSubmit2() throws NotFoundException, IOException {
         Part part = segment.getDefaultPart();
         part.setDescription( "something" );
@@ -273,44 +182,43 @@ public class TestSegmentPage extends TestCase {
         FormTester ft = tester.newFormTester( "big-form" );
         String desc = "";
         ft.setValue( "description", desc );
-        setFiles( ft, app );
         ft.submit();
 
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
 
         assertEquals( desc, part.getDescription() );
-        checkFiles( app );
     }
 
+    @Test
     public void testDeleteSegment() throws IOException, NotFoundException {
-        assertEquals( 2, getSegmentCount() );
-        Segment sc2 = app.getQueryService().createSegment();
+        assertEquals( 2, PlanManager.plan().getSegmentCount() );
+        Segment sc2 = queryService.createSegment();
         sc2.setName( "Test" );
-        assertEquals( 3, getSegmentCount() );
+        assertEquals( 3, PlanManager.plan().getSegmentCount() );
 
         tester.startPage( new PlanPage( segment ) );
         tester.setupRequestAndResponse();
         tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
-        assertEquals( 3, getSegmentCount() );
+        assertEquals( 3, PlanManager.plan().getSegmentCount() );
 
         FormTester ft = tester.newFormTester( "big-form" );
-        setFiles( ft, app );
         ft.setValue( "sc-del", "true" );
 
         ft.submit();
         try {
+            Memory dao = planManager.getDao( PlanManager.plan() );
             assertNull( dao.find( Segment.class, segment.getId() ) );
             fail();
         } catch ( NotFoundException ignored ) {
         }
-
-        assertEquals( 3, getSegmentCount() );
+        assertEquals( 3, PlanManager.plan().getSegmentCount() );
         // the setFiles() imports/creates a new segment...
 
     }
 
+    @Test
     public void testGetParameters1() {
         Part part = segment.getDefaultPart();
         PageParameters parms = PlanPage.getParameters( segment, part );
@@ -319,6 +227,7 @@ public class TestSegmentPage extends TestCase {
         assertEquals( part.getId(), (long) parms.getAsLong( "part" ) );
     }
 
+    @Test
     public void testGetParameters2() {
         Part part = segment.getDefaultPart();
 

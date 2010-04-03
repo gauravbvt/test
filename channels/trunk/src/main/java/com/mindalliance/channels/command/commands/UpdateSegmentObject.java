@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Node;

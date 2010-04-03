@@ -210,7 +210,6 @@ public class IssueScanner implements Scanner {
                 long endTime = System.currentTimeMillis();
                 LOG.info( "Issue sweep completed on " + getPlan() + " in " + ( endTime - startTime ) + " msecs" );
             } catch ( Throwable e ) {
-                e.printStackTrace();
                 LOG.debug( "Deamon failed", e );
             }
         }

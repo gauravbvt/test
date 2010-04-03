@@ -1,12 +1,24 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.Exporter;
-import com.mindalliance.channels.Importer;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Participation;
+import com.mindalliance.channels.model.Phase;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.model.User;
+import org.apache.commons.collections.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,20 +29,27 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Wrapper for per-plan dao-related operations.
  */
 public class PlanDao extends Memory {
-    /**
-     * Name of file contining last id used in plan or and in journal, if any.
-     */
-    private static final String LAST_ID_FILE = "lastid";
+
     /**
      * Name of persisted data file.
      */
     public static final String DATA_FILE = "data.xml";
+
+    /**
+     * Name of file contining last id used in plan or and in journal, if any.
+     */
+    private static final String LAST_ID_FILE = "lastid";
 
     /**
      * Name of command journal file.
@@ -45,7 +64,7 @@ public class PlanDao extends Memory {
     /**
      * The logger.
      */
-    private final Logger logger = LoggerFactory.getLogger( getClass() );
+    private static final Logger LOG = LoggerFactory.getLogger( PlanDao.class );
 
     /**
      * The wrapped plan.
@@ -57,15 +76,22 @@ public class PlanDao extends Memory {
      */
     private Journal journal = new Journal();
 
-    /**
-     * The plan manager.
-     */
-    private final PlanManager planManager;
+    /** The id generator. */
+    private final IdGenerator idGenerator;
+
+    /** Base directory of data. */
+    private final File baseDirectory;
+
+    /** Interval of commands at which snapshots are taken. */
+    private int snapshotThreshold = 10;
+
+    private FileUserDetailsService userDetailsService;
 
     //-------------------------------------
-    PlanDao( PlanManager planManager, Plan plan ) {
+    PlanDao( Plan plan, File baseDirectory, IdGenerator idGenerator ) {
         this.plan = plan;
-        this.planManager = planManager;
+        this.idGenerator = idGenerator;
+        this.baseDirectory = baseDirectory;
     }
 
     @Override
@@ -73,9 +99,12 @@ public class PlanDao extends Memory {
         return plan;
     }
 
-    @Override
-    public PlanManager getPlanManager() {
-        return planManager;
+    public synchronized int getSnapshotThreshold() {
+        return snapshotThreshold;
+    }
+
+    public synchronized void setSnapshotThreshold( int snapshotThreshold ) {
+        this.snapshotThreshold = snapshotThreshold;
     }
 
     public synchronized Journal getJournal() {
@@ -87,7 +116,15 @@ public class PlanDao extends Memory {
      */
     @Override
     public IdGenerator getIdGenerator() {
-        return planManager.getIdGenerator();
+        return idGenerator;
+    }
+
+    public FileUserDetailsService getUserDetailsService() {
+        return userDetailsService;
+    }
+
+    public void setUserDetailsService( FileUserDetailsService userDetailsService ) {
+        this.userDetailsService = userDetailsService;
     }
 
     /**
@@ -98,10 +135,11 @@ public class PlanDao extends Memory {
      */
     public synchronized void load( Importer importer ) throws IOException {
         Long lastId = readLastAssignedId();
-        if ( lastId > 0L ) getIdGenerator().setLastAssignedId( lastId, getPlan() );
+        if ( lastId > 0L )
+            idGenerator.setLastAssignedId( lastId, getPlan() );
         File dataFile = getDataFile();
         if ( dataFile.length() > 0L ) {
-            logger.info( "Importing snapshot for plan {}", plan );
+            LOG.info( "Importing snapshot for plan {} from {}", plan, dataFile.getAbsolutePath() );
             FileInputStream in = null;
             try {
                 in = new FileInputStream( dataFile );
@@ -123,7 +161,7 @@ public class PlanDao extends Memory {
         try {
             return new File( getPlanStoreDirectory(), DATA_FILE ).exists();
         } catch ( IOException e ) {
-            logger.warn( "IO failure", e );
+            LOG.warn( "IO failure", e );
             return false;
         }
     }
@@ -148,7 +186,6 @@ public class PlanDao extends Memory {
      * @throws IOException on error
      */
     public File getPlanStoreDirectory() throws IOException {
-        File baseDirectory = planManager.getDataDirectory().getFile();
         File directory = new File(
                 baseDirectory,
                 sanitize( plan.getUri() ) + File.separator + plan.getVersion() );
@@ -178,7 +215,7 @@ public class PlanDao extends Memory {
 
     private Journal loadJournal( Importer importer ) throws IOException {
         FileInputStream inputStream = null;
-        if ( getPlan().isDevelopment() && importer != null )
+        if ( plan.isDevelopment() && importer != null )
             try {
                 File journalFile = getJournalFile();
                 if ( journalFile.length() > 0L ) {
@@ -226,12 +263,12 @@ public class PlanDao extends Memory {
     }
 
     private void takeSnapshot( Exporter exporter ) throws IOException {
-        logger.info( "Taking snapshot of plan {}", plan.getUri() );
+        LOG.info( "Taking snapshot of plan {}", plan.getUri() );
 
         // Make backup
         File dataFile = getDataFile();
         if ( dataFile.length() > 0L ) {
-            String backupPath = dataFile.getAbsolutePath() + "_" + System.currentTimeMillis();
+            String backupPath = dataFile.getAbsolutePath() + '_' + System.currentTimeMillis();
             File backup = new File( backupPath );
             dataFile.renameTo( backup );
         }
@@ -240,7 +277,7 @@ public class PlanDao extends Memory {
         FileOutputStream out = null;
         try {
             out = new FileOutputStream( getDataFile() );
-            exporter.export( plan, out );
+            exporter.export( out );
         } finally {
             if ( out != null )
                 out.close();
@@ -267,16 +304,6 @@ public class PlanDao extends Memory {
     }
 
     /**
-     * Remove persistent files, for test purposes.
-     *
-     * @throws IOException on errors
-     */
-    public synchronized void reset() throws IOException {
-        getJournalFile().delete();
-        getDataFile().delete();
-    }
-
-    /**
      * Callback after a command was executed.
      * Update snapshot if needed.
      *
@@ -285,7 +312,7 @@ public class PlanDao extends Memory {
      */
     public synchronized void onAfterCommand( Command command, Exporter exporter ) {
         try {
-            if ( command.forcesSnapshot() || journal.size() >= planManager.getSnapshotThreshold() )
+            if ( command.forcesSnapshot() || journal.size() >= snapshotThreshold )
                 save( exporter );
             else {
                 journal.addCommand( command );
@@ -297,7 +324,7 @@ public class PlanDao extends Memory {
     }
 
     private void updateLastIdRecord() throws IOException {
-        long lastId = getIdGenerator().getLastAssignedId( getPlan() );
+        long lastId = idGenerator.getLastAssignedId( getPlan() );
         getLastIdFile().delete();
         PrintWriter out = null;
         try {
@@ -320,29 +347,156 @@ public class PlanDao extends Memory {
     /**
      * Validate the underlying plan.
      *
-     * @param queryService to use for validation
      */
-    public void validate( QueryService queryService ) {
+    public void validate() {
         // Make sure there is at least one event per plan
         List<Event> incidents = plan.getIncidents();
         if ( incidents.isEmpty() ) {
             Event unnamedEvent = findOrCreate( Event.class, DEFAULT_EVENT_NAME, null );
             unnamedEvent.setType();
             plan.addIncident( unnamedEvent );
+
         } else if ( incidents.size() > 1 ) {
             // Remove default event if not referenced
             Event event = find( Event.class, DEFAULT_EVENT_NAME );
-            if ( event != null && queryService.getReferenceCount( event ) <= 1 ) {
+            if ( event != null && getReferenceCount( event ) <= 1 ) {
                 incidents.remove( event );
                 remove( event );
             }
         }
+
         // Make sure there is at least one phase.
-        if ( plan.getPhases().isEmpty() ) {
-            plan.addDefaultPhase( queryService );
-        }
+        if ( plan.getPhases().isEmpty() )
+            addDefaultPhase();
+
         // Make sure there is at least one segment per plan
         if ( !list( Segment.class ).iterator().hasNext() )
-            plan.addSegment( queryService.createSegment() );
+            plan.addSegment( createSegment( null, null ) );
+    }
+
+    /**
+     * Add default phase to plan.
+     */
+    public void addDefaultPhase() {
+        Phase phase = findOrCreate( Phase.class, Plan.DEFAULT_PHASE_NAME, null );
+        phase.setActual();
+        phase.setTiming( Plan.DEFAULT_PHASE_TIMING );
+
+        plan.addPhase( phase );
+    }
+
+    public Segment createSegment( Long id, Long defaultPartId ) {
+        Segment newSegment = new Segment();
+        add( newSegment, id );
+
+        newSegment.setName( Segment.DEFAULT_NAME );
+        newSegment.setDescription( Segment.DEFAULT_DESCRIPTION );
+        // Make sure a plan segment responds to an event.
+        newSegment.setEvent( plan.getDefaultEvent() );
+        newSegment.setPhase( plan.getDefaultPhase() );
+        createPart( newSegment, defaultPartId );
+        return newSegment;
+    }
+
+    /**
+     * Get reference count for event.
+     *
+     * @param event an event
+     * @return an int
+     */
+    public int getReferenceCount( Event event ) {
+        int count = 0;
+        for ( Event incident : plan.getIncidents() ) {
+            if ( incident.equals( event ) ) count++;
+        }
+        // look in plan segments
+        for ( Segment segment : list( Segment.class ) ) {
+            if ( event.equals( segment.getEvent() ) ) count++;
+            Iterator<Part> parts = segment.parts();
+            while ( parts.hasNext() ) {
+                Part part = parts.next();
+                if ( part.initiatesEvent() && event.equals( part.getInitiatedEvent() ) ) count++;
+            }
+        }
+        return count;
+    }
+
+
+    @SuppressWarnings( { "unchecked" } )
+    public Iterator<ModelEntity> iterateEntities() {
+        Set<? extends ModelObject> referencers = getReferencingObjects();
+        Class<?>[] classes = {
+            TransmissionMedium.class, Actor.class, Role.class, Place.class, Organization.class,
+            Event.class, Phase.class, Participation.class
+        };
+
+        Iterator<? extends ModelEntity>[] iterators = new Iterator[ classes.length ];
+        for ( int i = 0; i < classes.length; i++ ) {
+            Class<? extends ModelEntity> clazz = (Class<? extends ModelEntity>) classes[i];
+            iterators[i] = listReferencedEntities( clazz, referencers ).iterator();
+        }
+
+        return (Iterator<ModelEntity>) IteratorUtils.chainedIterator( iterators );
+    }
+
+    private <T extends ModelEntity> List<T> listReferencedEntities(
+            Class<T> clazz, Set<? extends ModelObject> referencers ) {
+
+        Collection<T> inputCollection = list( clazz );
+        List<T> answer = new ArrayList<T>( inputCollection.size() );
+
+        for ( T item : inputCollection )
+            if ( item.isImmutable() && !item.isUnknown()
+                 || isReferenced( item, referencers ) )
+                answer.add( item );
+
+        return answer;
+    }
+
+    @SuppressWarnings( { "unchecked", "RawUseOfParameterizedType" } )
+    private boolean isReferenced( ModelObject mo, Set<? extends ModelObject> referencingObjects ) {
+        if ( mo instanceof Participation ) {
+            // Participations are not referenced per se but are not obsolete if they name a
+            // registered user.
+            Participation participation = (Participation) mo;
+            User user = userDetailsService.getUserNamed( participation.getUsername() );
+            return user != null;
+
+        } else if ( plan.references( mo ) )
+            return true;
+
+        for ( ModelObject object : referencingObjects )
+            if ( object.references( mo ) )
+                return true;
+
+        return false;
+    }
+
+    @SuppressWarnings( { "unchecked" } )
+    private Set<? extends ModelObject> getReferencingObjects() {
+        Set<? extends ModelObject> referencingObjects = new HashSet<ModelObject>();
+        for ( Class refClass : ModelObject.referencingClasses() )
+            referencingObjects.addAll( findAllModelObjects( refClass ) );
+        return referencingObjects;
+    }
+
+    @SuppressWarnings( { "unchecked" } )
+    private <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
+        List<T> domain;
+        boolean isPart = Part.class.isAssignableFrom( clazz );
+        boolean isFlow = Flow.class.isAssignableFrom( clazz );
+
+        if ( isPart || isFlow ) {
+            domain = new ArrayList<T>();
+            for ( Segment segment : list( Segment.class ) ) {
+                Iterator<T> items = (Iterator<T>) ( isPart ? segment.parts() : segment.flows() );
+                while ( items.hasNext() )
+                    domain.add( items.next() );
+            }
+
+        } else
+            domain = list( clazz );
+
+        return domain;
     }
 }

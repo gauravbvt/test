@@ -1,17 +1,20 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.Dao;
-import com.mindalliance.channels.DuplicateKeyException;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.Dao;
+import com.mindalliance.channels.dao.DuplicateKeyException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
+import com.mindalliance.channels.model.InvalidEntityKindException;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.DefaultQueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -31,7 +34,7 @@ public abstract class Memory implements Dao {
     /**
      * Class logger.
      */
-    public static final Logger LOG = LoggerFactory.getLogger( Memory.class );
+    private static final Logger LOG = LoggerFactory.getLogger( Memory.class );
 
     /**
      * ModelObjects indexed by id.
@@ -45,13 +48,6 @@ public abstract class Memory implements Dao {
      */
     protected Memory() {
     }
-
-    /**
-     * The plan manager.
-     *
-     * @return The plan manager.
-     */
-    public abstract PlanManager getPlanManager();
 
     /**
      * The plan for the data managed by this dao.
@@ -114,7 +110,7 @@ public abstract class Memory implements Dao {
             if ( id != null && indexMap.containsKey( id ) ) {
                 throw new DuplicateKeyException();
             }
-            object.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
+            object.setId( getIdGenerator().assignId( id, getPlan() ) );
             indexMap.put( object.getId(), object );
             if ( object instanceof Segment ) {
                 getPlan().addSegment( (Segment) object );
@@ -133,8 +129,9 @@ public abstract class Memory implements Dao {
      */
     public Part createPart( Segment segment, Long id ) {
         Part part = new Part();
-        part.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
+        part.setId( getIdGenerator().assignId( id, getPlan() ) );
         part.setSegment( segment );
+        segment.addNode( part );
         return part;
     }
 
@@ -143,7 +140,7 @@ public abstract class Memory implements Dao {
      */
     public Connector createConnector( Segment segment, Long id ) {
         Connector connector = new Connector();
-        connector.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
+        connector.setId( getIdGenerator().assignId( id, getPlan() ) );
         connector.setSegment( segment );
         return connector;
     }
@@ -153,7 +150,7 @@ public abstract class Memory implements Dao {
      */
     public ExternalFlow createExternalFlow( Node source, Node target, String name, Long id ) {
         ExternalFlow externalFlow = new ExternalFlow( source, target, name );
-        externalFlow.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
+        externalFlow.setId( getIdGenerator().assignId( id, getPlan() ) );
         return externalFlow;
     }
 
@@ -162,7 +159,7 @@ public abstract class Memory implements Dao {
      */
     public InternalFlow createInternalFlow( Node source, Node target, String name, Long id ) {
         InternalFlow internalFlow = new InternalFlow( source, target, name );
-        internalFlow.setId( getIdGenerator().assignId( id, getPlanManager().getCurrentPlan() ) );
+        internalFlow.setId( getIdGenerator().assignId( id, getPlan() ) );
         return internalFlow;
     }
 
@@ -185,10 +182,11 @@ public abstract class Memory implements Dao {
     }
 
     private void removeSegment( Segment segment ) {
-        indexMap.remove( segment.getId() );
-        segment.disconnect();
+        if ( list( Segment.class ).size() > 1 ) {
+            indexMap.remove( segment.getId() );
+            segment.disconnect( this );
+        }
     }
-
 
     private ModelObject find( long id ) throws NotFoundException {
         ModelObject result = indexMap.get( id );
@@ -249,6 +247,7 @@ public abstract class Memory implements Dao {
                 result = clazz.newInstance();
                 result.setName( name );
                 add( result, id );
+
             } catch ( InstantiationException e ) {
                 throw new RuntimeException( e );
             } catch ( IllegalAccessException e ) {
@@ -257,4 +256,55 @@ public abstract class Memory implements Dao {
         }
         return result;
     }
+
+    /**
+     * Find a named segment.
+     * @param name the name
+     * @return the segment, if found
+     * @throws NotFoundException if none exists
+     */
+    public Segment findSegment( String name ) throws NotFoundException {
+        for ( Segment s : list( Segment.class ) )
+            if ( name.equals( s.getName() ) )
+                return s;
+
+        throw new NotFoundException();
+    }
+
+    public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id ) {
+        T entityType = ModelEntity.getUniversalType( name, clazz );
+        if ( entityType == null ) {
+            entityType = findOrCreate( clazz, name, id );
+            if ( entityType.isActual() )
+                throw new InvalidEntityKindException(
+                        clazz.getSimpleName() + ' ' + name + " is actual" );
+            entityType.setType();
+        }
+        return entityType;
+    }
+
+    public Flow connect( Node source, Node target, String name, Long id ) {
+        Flow result;
+
+        if ( DefaultQueryService.isInternal( source, target ) ) {
+            result = createInternalFlow( source, target, name, id );
+            source.addSend( result );
+            target.addReceive( result );
+
+        } else if ( DefaultQueryService.isExternal( source, target ) ) {
+            result = createExternalFlow( source, target, name, id );
+            if ( source.isConnector() ) {
+                target.addReceive( result );
+                ( (Connector) source ).addExternalFlow( (ExternalFlow) result );
+            } else {
+                source.addSend( result );
+                ( (Connector) target ).addExternalFlow( (ExternalFlow) result );
+            }
+
+        } else
+            throw new IllegalArgumentException();
+
+        return result;
+    }
+
 }

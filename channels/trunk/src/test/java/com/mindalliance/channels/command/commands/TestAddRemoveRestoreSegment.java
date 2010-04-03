@@ -1,12 +1,13 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Segment;
+import org.junit.After;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -19,26 +20,22 @@ import java.util.List;
 public class TestAddRemoveRestoreSegment extends AbstractChannelsTest {
 
     private Segment segment;
-    private QueryService queryService;
 
-    protected void setUp() throws IOException {
-        super.setUp();
-        queryService = app.getQueryService();
-    }
-
-    protected void tearDown() {
+    @After
+    public void cleanup() {
         if ( segment != null ) queryService.remove( segment );
     }
 
+    @Test
     public void testAddRemoveRestore() throws Exception {
         int count = countSegments();
         Command command = new AddSegment();
-        assertTrue( commander.canDo( command ) );
-        Change change = commander.doCommand( command );
+        assertTrue( getCommander().canDo( command ) );
+        Change change = getCommander().doCommand( command );
         assertTrue( change.isAdded() );
         segment = (Segment) change.getSubject();
-        assertTrue( countSegments() == count + 1 );
-        assertFalse( commander.canUndo() );
+        assertSame( count + 1, countSegments() );
+        assertFalse( getCommander().canUndo() );
     }
 
     @SuppressWarnings( {"UnusedDeclaration"} )

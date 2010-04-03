@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.attachments.FileBasedManager;
+import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
@@ -27,6 +28,9 @@ public class UploadPage extends Page {
     @SpringBean
     private FileBasedManager attachmentManager;
 
+    @SpringBean
+    private Plan plan;
+
     /** The file to upload, if any. */
     private File file;
 
@@ -37,7 +41,7 @@ public class UploadPage extends Page {
         if ( filename == null )
             throw new AbortWithWebErrorCodeException( 403 );
 
-        file = new File( attachmentManager.getUploadDirectory(), filename );
+        file = new File( attachmentManager.getUploadDirectory( plan ), filename );
         if ( file.exists() ) {
             Response response = getResponse();
             response.setContentLength( file.length() );

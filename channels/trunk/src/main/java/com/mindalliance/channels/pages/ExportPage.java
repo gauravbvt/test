@@ -1,14 +1,17 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.Exporter;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,16 @@ public class ExportPage extends WebPage {
 
     /** The segment to export. */
     private Segment segment;
+
+    /** The plan manager. */
+    @SpringBean
+    private PlanManager planManager;
+
+    @SpringBean
+    private Plan plan;
+
+    @SpringBean
+    private ImportExportFactory importExportFactory;
 
     public ExportPage( PageParameters parameters ) {
         super( parameters );
@@ -53,11 +66,12 @@ public class ExportPage extends WebPage {
     }
 
     private Exporter getExporter() {
-        Channels channels = (Channels) getApplication();
-        ImportExportFactory exportFactory = channels.getImportExportFactory();
-        return exportFactory.createExporter(
-                channels.getQueryService(),
-                channels.getQueryService().getCurrentPlan() );
+        try {
+            return importExportFactory.createExporter( planManager.getDao( plan ) );
+
+        } catch ( NotFoundException e ) {
+            throw new RuntimeException( e );
+        }
     }
 
     @Override

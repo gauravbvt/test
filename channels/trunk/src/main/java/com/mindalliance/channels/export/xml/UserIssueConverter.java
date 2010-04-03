@@ -1,6 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.UserIssue;
@@ -104,9 +104,9 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                     reader.moveUp();
                 }
                 if ( importingPlan ) {
-                    getQueryService().add( issue, issueId );
+                    getPlanDao().add( issue, issueId );
                 } else {
-                    getQueryService().add( issue );
+                    getPlanDao().add( issue );
                 }
                 idMap.put( issueId, issue.getId() );
             } else {

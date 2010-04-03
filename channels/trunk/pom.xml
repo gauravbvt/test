@@ -362,13 +362,13 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.2</version>
+            <version>4.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>2.4</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.8.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -383,7 +383,6 @@
 
     <build>
         <resources>
-
             <resource>
                 <filtering>false</filtering>
                 <directory>src/main/resources</directory>
@@ -410,17 +409,7 @@
                     <exclude>**/*.java</exclude>
                 </excludes>
             </testResource>
-            <testResource>
-                <filtering>false</filtering>
-                <directory>src/main/webapp</directory>
-                <includes>
-                    <include>**</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </testResource>
-        </testResources>
+       </testResources>
         <plugins>
             <plugin>
                 <inherited>true</inherited>

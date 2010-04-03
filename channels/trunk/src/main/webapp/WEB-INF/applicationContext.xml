@@ -28,7 +28,7 @@ CONFIGURATION NOTES:
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
     <bean id="issueScanner" class="com.mindalliance.channels.analysis.IssueScanner"/>
 
-    <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager">
+    <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager" lazy-init="true">
         <property name="base" value="${channels.home}"/>
         <property name="importDirectory" value="file:${channels.home}/import"/>
         <property name="planDefinitionsFileName" value="plans.properties"/>
@@ -88,16 +88,11 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="semanticMatcher" class="com.mindalliance.channels.nlp.WordnetSemanticMatcher">
-    <!--  NOTE:
-              For WINDOWS installation,  use
-            <property name="wordnetDict" value="WEB-INF\data\windows-wordnet-2\dict"/>
-            <property name="simIndex" value="WEB-INF\data\jwsl\wn_index"/>
-        -->
         <property name="wordnetDict" value="WEB-INF${file.separator}data${file.separator}wordnet-2${file.separator}dict"/>
         <property name="simIndex" value="WEB-INF${file.separator}data${file.separator}jwsl${file.separator}wn_index"/>
     </bean>
 
-   <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="velocityProperties">
             <value>
                 resource.loader=file
@@ -189,7 +184,10 @@ CONFIGURATION NOTES:
           scope="prototype"/>
 
     <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander"
-          scope="prototype">
+          scope="prototype" autowire="no">
+        <property name="analyst" ref="analyst"/>
+        <property name="planManager" ref="planManager"/>
+        <property name="queryService" ref="queryService"/>
         <property name="timeout" value="300"/>
     </bean>
 

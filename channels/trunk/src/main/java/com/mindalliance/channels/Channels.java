@@ -1,6 +1,8 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.pages.AdminPage;
@@ -30,12 +32,12 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionIdentifierAware;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +48,8 @@ import java.util.Map;
  *
  * @TODO split into a bonified service-level object
  */
-public final class Channels extends WebApplication implements ApplicationListener {
+public class Channels extends WebApplication
+        implements ApplicationListener, ApplicationContextAware {
 
     /**
      * Class logger.
@@ -72,19 +75,27 @@ public final class Channels extends WebApplication implements ApplicationListene
      * Analyst
      */
     private Analyst analyst;
+
     /**
      * GeoService
      */
     private GeoService geoService;
 
+    private PlanManager planManager;
+
     /**
-     * One commander per plan
+     * One commander per plan.
      */
-    private Map<Plan, Commander> commanders = new HashMap<Plan, Commander>();
+    private final Map<Plan, Commander> commanders = new HashMap<Plan, Commander>();
+
     /**
-     * One lock manager per plan
+     * One lock manager per plan.
      */
-    private Map<Plan, LockManager> lockManagers = new HashMap<Plan, LockManager>();
+    private final Map<Plan, LockManager> lockManagers = new HashMap<Plan, LockManager>();
+
+    private SpringComponentInjector injector;
+
+    private ApplicationContext applicationContext;
 
     /**
      * Default Constructor.
@@ -92,13 +103,6 @@ public final class Channels extends WebApplication implements ApplicationListene
     public Channels() {
     }
 
-    private Map<Plan, Commander> getCommanders() {
-        return commanders;
-    }
-
-    private Map<Plan, LockManager> getLockManagers() {
-        return lockManagers;
-    }// TODO - get rid of this
 
     /**
      * Set to strip wicket tags from subpanels.
@@ -107,7 +111,7 @@ public final class Channels extends WebApplication implements ApplicationListene
     protected void init() {
         super.init();
 
-        addComponentInstantiationListener( new SpringComponentInjector( this ) );
+        addComponentInstantiationListener( getInjector() );
 
         getMarkupSettings().setStripWicketTags( true );
 
@@ -136,6 +140,16 @@ public final class Channels extends WebApplication implements ApplicationListene
 
     }
 
+    public SpringComponentInjector getInjector() {
+        if ( injector == null )
+            injector = new SpringComponentInjector( this );
+        return injector;
+    }
+
+    public void setInjector( SpringComponentInjector injector ) {
+        this.injector = injector;
+    }
+
     @Override
     protected void onDestroy() {
         LOG.info( "Goodbye!" );
@@ -144,13 +158,14 @@ public final class Channels extends WebApplication implements ApplicationListene
     }
 
     /**
-     *
+     * Get the home page for the current user.
      */
     @Override
     public Class<? extends WebPage> getHomePage() {
         User user = User.current();
-        return user.isAdmin() ? AdminPage.class
-             : user.isPlanner() ? PlanPage.class : PlanReportPage.class ;
+        return user.isAdmin()   ? AdminPage.class
+             : user.isPlanner() ? PlanPage.class
+                                : PlanReportPage.class ;
     }
 
     public QueryService getQueryService() {
@@ -167,12 +182,16 @@ public final class Channels extends WebApplication implements ApplicationListene
             return diagramFactory;
         } else {
             // Get a prototype bean
-            return (DiagramFactory) getApplicationContext().getBean( "diagramFactory" );
+            return (DiagramFactory) applicationContext.getBean( "diagramFactory" );
         }
     }
 
-    private ApplicationContext getApplicationContext() {
-        return WebApplicationContextUtils.getRequiredWebApplicationContext( getServletContext() );
+    public void setApplicationContext( ApplicationContext applicationContext ) {
+        this.applicationContext = applicationContext;
+    }
+
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
     // FOR TESTING ONLY
@@ -201,29 +220,26 @@ public final class Channels extends WebApplication implements ApplicationListene
     }
 
     /**
-     * Get the active plan's commander
-     *
-     * @return a commander
-     */
-    public Commander getCommander() {
-        Plan plan = queryService.getCurrentPlan();
-        return instance().getCommander( plan );
-    }
-
-    /**
-     * Get the active plan's commander
+     * Get the given plan's commander
      *
      * @param plan a plan
      * @return a commander
      */
     public Commander getCommander( Plan plan ) {
-        Map<Plan, Commander> commanders = getCommanders();
+        assert plan != null;
         synchronized ( commanders ) {
             Commander commander = commanders.get( plan );
             if ( commander == null ) {
-                commander = (Commander) getApplicationContext().getBean( "commander" );
-                commander.setLockManager( Channels.instance().getLockManager() );
+                commander = (Commander) applicationContext.getBean( "commander" );
+                commander.setLockManager( getLockManager( plan ) );
+                try {
+                    commander.setPlanDao( planManager.getDao( plan ) );
+                } catch ( NotFoundException e ) {
+                    // Program error if this happens...
+                    throw new RuntimeException( e );
+                }
                 commanders.put( plan, commander );
+                commander.initialize();
             }
             return commander;
         }
@@ -236,7 +252,7 @@ public final class Channels extends WebApplication implements ApplicationListene
      */
     public LockManager getLockManager() {
         Plan plan = queryService.getCurrentPlan();
-        return instance().getLockManager( plan );
+        return getLockManager( plan );
     }
 
     /**
@@ -246,11 +262,10 @@ public final class Channels extends WebApplication implements ApplicationListene
      * @return a lock manager
      */
     public LockManager getLockManager( Plan plan ) {
-        Map<Plan, LockManager> lockManagers = getLockManagers();
         synchronized ( lockManagers ) {
             LockManager lockManager = lockManagers.get( plan );
             if ( lockManager == null ) {
-                lockManager = (LockManager) getApplicationContext().getBean( "lockManager" );
+                lockManager = (LockManager) applicationContext.getBean( "lockManager" );
                 lockManagers.put( plan, lockManager );
             }
             return lockManager;
@@ -276,5 +291,11 @@ public final class Channels extends WebApplication implements ApplicationListene
         this.geoService = geoService;
     }
 
+    public PlanManager getPlanManager() {
+        return planManager;
+    }
 
+    public void setPlanManager( PlanManager planManager ) {
+        this.planManager = planManager;
+    }
 }

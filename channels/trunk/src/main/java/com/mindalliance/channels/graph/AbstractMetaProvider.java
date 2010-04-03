@@ -1,6 +1,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
 import org.apache.commons.lang.StringUtils;
@@ -121,7 +122,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      */
     protected Plan getPlan() {
         // TODO -- Demeter's law...
-        return analyst.getQueryService().getPlanManager().getCurrentPlan();
+        return PlanManager.plan();
     }
 
     /**

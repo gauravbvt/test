@@ -1,8 +1,13 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.command.commands.HelloCommand;
 import com.mindalliance.channels.model.Segment;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 
@@ -15,18 +20,23 @@ import java.io.IOException;
  */
 public class TestDefaultCommander extends AbstractChannelsTest {
 
-    protected void setUp() throws IOException {
+    private Commander commander;
+
+    @Override
+    @Before
+    public void setUp() throws IOException {
         super.setUp();
-        commander.reset();
+        commander = getCommander();
     }
 
+    @Test
     public void testExecuteSimpleCommand() {
         AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
         try {
             assertTrue( commander.canDo( command ) );
             assertFalse( commander.canUndo() );
-            Change change;
-            change = commander.doCommand( command );
+
+            Change change = commander.doCommand( command );
             assertTrue( change.isUnknown() );
             assertTrue( commander.canUndo() );
             assertTrue( commander.undo().isUnknown() );
@@ -38,9 +48,11 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         }
     }
 
+    @Test
     public void testCommandLocking() throws Exception {
+        LockManager lockManager = getLockManager();
         AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
-        Segment segment = app.getQueryService().getDefaultSegment();
+        Segment segment = wicketApplication.getQueryService().getDefaultSegment();
         Lock lock = lockManager.grabLockOn( segment.getId() );
         lock.setUserName( "bob" );
         command.needLockOn( segment );
@@ -62,6 +74,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         }
     }
 
+    @Test
     public void testUndoingConflicts() throws Exception {
         AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
         AbstractCommand otherUserCommand = HelloCommand.makeCommand( "hello", commander );

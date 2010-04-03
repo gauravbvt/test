@@ -90,8 +90,8 @@ public class PlaceConverter extends EntityConverter {
             writer.setValue( placeRef.getReference().getName() );
             writer.endNode();
         }
-        if ( place.getGeoLocations( getQueryService() ) != null ) {
-            for ( GeoLocation geoLoc : place.getGeoLocations( getQueryService() ) ) {
+        if ( place.getGeoLocations() != null ) {
+            for ( GeoLocation geoLoc : place.getGeoLocations() ) {
                 writer.startNode( "alternateGeoLocation" );
                 context.convertAnother( geoLoc );
                 writer.endNode();

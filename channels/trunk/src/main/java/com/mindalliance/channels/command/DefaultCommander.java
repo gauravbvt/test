@@ -3,18 +3,24 @@ package com.mindalliance.channels.command;
 import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.LockManager;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.dao.FileUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +30,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.io.IOException;
+import java.text.MessageFormat;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -32,7 +40,8 @@ import java.util.Set;
  * Date: Mar 3, 2009
  * Time: 1:47:58 PM
  */
-public class DefaultCommander extends AbstractService implements Commander, InitializingBean {
+public class DefaultCommander extends AbstractService implements Commander {
+
     /**
      * Logger.
      */
@@ -57,10 +66,16 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      * Plan analyst.
      */
     private Analyst analyst;
+
     /**
      * Whether in reloading mode, i.e. replaying journaled commands.
      */
-    private boolean replaying = false;
+    private boolean replaying;
+
+    /** The planDao (and therefore, plan) used by this commander. */
+    private PlanDao planDao;
+
+    private PlanManager planManager;
 
     /**
      * Record of when users were most recently active.
@@ -93,11 +108,16 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      */
     private long whenLastCheckedForTimeouts = System.currentTimeMillis();
 
+    //===============================================
     public DefaultCommander() {
     }
 
     public void setAnalyst( Analyst analyst ) {
         this.analyst = analyst;
+    }
+
+    public Analyst getAnalyst() {
+        return analyst;
     }
 
     public Map<String, Object> getCopy() {
@@ -141,7 +161,6 @@ public class DefaultCommander extends AbstractService implements Commander, Init
         return queryService;
     }
 
-
     public int getTimeout() {
         return timeout;
     }
@@ -172,10 +191,8 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     /**
      * {@inheritDoc}
      */
-    public void resetUserHistory( String userName, boolean all ) {
-        synchronized ( this ) {
-            history.resetForUser( userName, all );
-        }
+    public synchronized void resetUserHistory( String userName, boolean all ) {
+        history.resetForUser( userName, all );
     }
 
     /**
@@ -233,116 +250,110 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     /**
      * {@inheritDoc}
      */
-    public boolean canUndo() {
-        synchronized ( this ) {
-            if ( !getPlan().isDevelopment() ) return false;
-            boolean canUndo = false;
+    public synchronized boolean canUndo() {
+        if ( getPlan().isDevelopment() ) {
             Memento memento = history.getUndo();
             if ( memento != null ) {
                 Command command = memento.getCommand();
                 if ( command.isUndoable() ) {
                     try {
-                        canUndo = command.noLockRequired()
-                                || canDo( command.getUndoCommand( this ) );
+                        return command.noLockRequired() || canDo( command.getUndoCommand( this ) );
                     } catch ( CommandException e ) {
-                        e.printStackTrace();
-                        canUndo = false;
+                        LOG.debug( "Unable to test undoability", e );
                     }
                 }
             }
-            return canUndo;
         }
+
+        return false;
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean canRedo() {
-        synchronized ( this ) {
-            if ( !getPlan().isDevelopment() ) return false;
-            boolean canRedo = false;
+    public synchronized boolean canRedo() {
+        if ( getPlan().isDevelopment() ) {
             Memento memento = history.getRedo();
             if ( memento != null ) {
                 Command command = memento.getCommand();
                 if ( command.isUndoable() ) {
                     try {
-                        canRedo = command.noLockRequired()
-                                || canDo( command.getUndoCommand( this ) );
+                        return command.noLockRequired() || canDo( command.getUndoCommand( this ) );
                     } catch ( CommandException e ) {
-                        e.printStackTrace();
-                        canRedo = false;
+                        LOG.debug( "Unable to test redoability", e );
                     }
                 }
             }
-            return canRedo;
         }
+
+        return false;
     }
 
 
     /**
      * {@inheritDoc}
      */
-    public Change doCommand( Command command ) throws CommandException {
-        synchronized ( this ) {
-            if ( !getPlan().isDevelopment() )
-                throw new CommandException( "This version is no longer in development. You need to refresh. " );
-            if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
-            LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
-            Change change = execute( command );
-            if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
-            history.recordDone( command );
-            afterExecution( command, change );
-            return change;
-        }
+    public synchronized Change doCommand( Command command ) throws CommandException {
+        if ( !getPlan().isDevelopment() )
+            throw new CommandException(
+                    "This version is no longer in development. You need to refresh. " );
+        if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
+        LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
+        Change change = execute( command );
+        if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
+        history.recordDone( command );
+        afterExecution( command, change );
+        return change;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Change undo() throws CommandException {
-        synchronized ( this ) {
-            // Get memento of command to undo
-            Memento memento = history.getUndo();
-            if ( memento == null ) throw new CommandException( "Nothing can be undone right now." );
-            Command undoCommand = memento.getCommand().getUndoCommand( this );
-            if ( undoCommand instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
-            LOG.info( "Undoing: " + undoCommand.toString() );
-            Change change = execute( undoCommand );
-            if ( undoCommand instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
-            change.setUndoing( true );
-            history.recordUndone( memento, undoCommand );
-            afterExecution( undoCommand, change );
-            return change;
-        }
+    public synchronized Change undo() throws CommandException {
+        Memento memento = history.getUndo();
+        if ( memento == null )
+            throw new CommandException( "Nothing can be undone right now." );
+
+        Command undoCommand = memento.getCommand().getUndoCommand( this );
+        if ( undoCommand instanceof MultiCommand )
+            LOG.info( "*** START multicommand ***" );
+        LOG.info( "Undoing: " + undoCommand.toString() );
+        Change change = execute( undoCommand );
+        if ( undoCommand instanceof MultiCommand )
+            LOG.info( "*** END multicommand ***" );
+
+        change.setUndoing( true );
+        history.recordUndone( memento, undoCommand );
+        afterExecution( undoCommand, change );
+        return change;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Change redo() throws CommandException {
-        synchronized ( this ) {
-            // Get memento of undoing command
-            Memento memento = history.getRedo();
-            if ( memento == null ) throw new CommandException( "Nothing can be redone right now." );
-            // undo the undoing
-            Command redoCommand = memento.getCommand().getUndoCommand( this );
-            LOG.info( "Redoing: " + redoCommand.toString() );
-            Change change = execute( redoCommand );
-            change.setUndoing( true );
-            history.recordRedone( memento, redoCommand );
-            afterExecution( redoCommand, change );
-            return change;
-        }
+    public synchronized Change redo() throws CommandException {
+        // Get memento of undoing command
+        Memento memento = history.getRedo();
+        if ( memento == null )
+            throw new CommandException( "Nothing can be redone right now." );
+
+        // undo the undoing
+        Command redoCommand = memento.getCommand().getUndoCommand( this );
+        LOG.info( "Redoing: {}", redoCommand.toString() );
+        Change change = execute( redoCommand );
+        change.setUndoing( true );
+        history.recordRedone( memento, redoCommand );
+        afterExecution( redoCommand, change );
+        return change;
     }
 
     private void afterExecution( Command command, Change change ) {
         if ( !isReplaying() && command.isTop() && !change.isNone() ) {
             LOG.debug( "***After command" );
-            PlanManager planManager = queryService.getPlanManager();
-            Plan plan = getPlan();
+
             // TODO Implement proper observers/listeners
-            planManager.onAfterCommand( queryService, plan, command );
-            analyst.onAfterCommand( plan );
+            planManager.onAfterCommand( getPlan(), command );
+            analyst.onAfterCommand( getPlan() );
         }
     }
 
@@ -358,20 +369,18 @@ public class DefaultCommander extends AbstractService implements Commander, Init
     /**
      * {@inheritDoc}
      */
-    public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
-        synchronized ( this ) {
-            if ( name != null && !name.trim().isEmpty() ) {
-                ModelObject mo = queryService.getDao().find( clazz, name.trim() );
-                if ( mo != null && !mo.isUnknown() && mo.isUndefined() ) {
-                    if ( !queryService.isReferenced( mo ) && !mo.isImmutable() ) {
-                        LOG.info( "Removing unused " + mo.getClass().getSimpleName() + " " + mo );
-                        queryService.remove( mo );
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+    public synchronized boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
+        if ( name == null || name.trim().isEmpty() )
+            return false;
+
+        ModelObject mo = planDao.find( clazz, name.trim() );
+        if ( mo == null || mo.isUnknown() || !mo.isUndefined()
+                        || queryService.isReferenced( mo ) || mo.isImmutable() )
+            return false;
+
+        LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );
+        queryService.remove( mo );
+        return true;
     }
 
     /**
@@ -442,31 +451,27 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      * {@inheritDoc}
      */
     public void keepAlive( String userName, int refreshDelay ) {
-        if ( !userLives.containsKey( userName ) ) {
-            LOG.info( userName + " is planning" );
-        }
-        userLives.put(
-                userName,
-                System.currentTimeMillis() + ( refreshDelay * 2 * 1000 ) );
+        if ( !userLives.containsKey( userName ) )
+            LOG.info( "{} is planning", userName );
+        userLives.put( userName, System.currentTimeMillis() + refreshDelay * 2 * 1000 );
     }
 
     /**
      * {@inheritDoc}
      */
     public void processDeaths() {
-        long now = System.currentTimeMillis();
         List<String> deads = new ArrayList<String>();
-        for ( String userName : userLives.keySet() ) {
-            long timeOfDeath = userLives.get( userName );
-            if ( now > timeOfDeath ) {
+
+        long now = System.currentTimeMillis();
+        for ( String userName : userLives.keySet() )
+            if ( now > userLives.get( userName ) ) {
                 deads.add( userName );
-                LOG.info( userName + " is done planning" );
+                LOG.info( "{} is done planning", userName );
                 lockManager.releaseAllLocks( userName );
             }
-        }
-        for ( String userName : deads ) {
+
+        for ( String userName : deads )
             userLives.remove( userName );
-        }
     }
 
 
@@ -475,19 +480,17 @@ public class DefaultCommander extends AbstractService implements Commander, Init
      */
     public synchronized void processTimeOuts() {
         long now = System.currentTimeMillis();
-        long timeoutMillis = timeout * 1000;
-        if ( ( now - whenLastCheckedForTimeouts ) > timeoutMillis ) {
+        long timeoutMillis = timeout * 1000L;
+        if ( timeoutMillis < now - whenLastCheckedForTimeouts ) {
             for ( String userName : whenLastActive.keySet() ) {
                 long time = whenLastActive.get( userName );
-                if ( ( now - time ) > timeoutMillis ) {
-                    if ( lockManager.releaseAllLocks( userName ) ) {
-                        timedOut.add( userName );
-                    }
-                }
+                if ( timeoutMillis < now - time && lockManager.releaseAllLocks( userName ) )
+                    timedOut.add( userName );
             }
-            for ( String userName : timedOut ) {
+
+            for ( String userName : timedOut )
                 whenLastActive.remove( userName );
-            }
+
             whenLastCheckedForTimeouts = now;
         }
     }
@@ -525,41 +528,88 @@ public class DefaultCommander extends AbstractService implements Commander, Init
         reset();
     }
 
-    /**
-     * Replay journal for available plans.
-     */
-    public void afterPropertiesSet() {
-        queryService.replayJournals( this );
-        queryService.getAttachmentManager().removeUnattached( queryService );
-        analyst.onStart();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public Plan getPlan() {
-        return queryService.getCurrentPlan();
+        return planDao.getPlan();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setResyncRequired() {
-        queryService.getPlanManager().setResyncRequired( PlanManager.plan().getUri() );
+        planManager.setResyncRequired( getPlan().getUri() );
     }
 
     /**
      * {@inheritDoc}
      */
     public void resynced() {
-        queryService.getPlanManager().resynced( User.current() );
+        planManager.resynced( User.current() );
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isOutOfSync() {
-        return queryService.getPlanManager().isOutOfSync( User.current(), PlanManager.plan().getUri() );
+        return planManager.isOutOfSync( User.current(), getPlan().getUri() );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public Exporter getExporter() {
+        ImportExportFactory factory = planManager.getImportExportFactory();
+        return factory.createExporter( planDao );
+    }
+
+    public PlanManager getPlanManager() {
+        return planManager;
+    }
+
+    public void setPlanManager( PlanManager planManager ) {
+        this.planManager = planManager;
+    }
+
+    public PlanDao getPlanDao() {
+        return planDao;
+    }
+
+    public void setPlanDao( PlanDao planDao ) {
+        this.planDao = planDao;
+    }
+
+    public void initialize() {
+        this.replayJournal();
+        queryService.getAttachmentManager().removeUnattached( queryService, getPlan() );
+        analyst.onStart();
+    }
+
+    public void createRequisiteModelObjects( FileUserDetailsService userDetailsService )
+            throws CommandException {
+
+        // Make sure that there is one participation per user
+        for ( String username : userDetailsService.getAllPlanUsernames() ) {
+            if ( planManager.getParticipant( getPlan(), username ) != null )
+                doCommand( new CreateEntityIfNew(
+                        Participation.class, username, ModelEntity.Kind.Actual ) );
+        }
+    }
+
+    /**
+     * Replay journaled commands for current plan.
+     */
+    public void replayJournal() {
+        Plan plan = getPlan();
+        try {
+            if ( plan.isDevelopment() ) {
+                replay( planDao.getJournal() );
+                LOG.info( "Replayed journal for plan {}", plan );
+                planDao.save( planManager.getImportExportFactory().createExporter( planDao ) );
+                createRequisiteModelObjects( planManager.getUserDetailsService() );
+            }
+        } catch ( IOException e ) {
+            LOG.error( MessageFormat.format( "Unable to save plan {0}", plan ), e );
+        } catch ( CommandException e ) {
+            LOG.error( MessageFormat.format( "Unable to replay journal for plan {0}", plan ), e );
+        }
+    }
 }

@@ -1,43 +1,41 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.DuplicateKeyException;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.attachments.BitBucket;
-import com.mindalliance.channels.export.DummyExporter;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.dao.DuplicateKeyException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.User;
-import com.mindalliance.channels.query.DefaultQueryService;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class TestMemory extends TestCase {
+import java.io.IOException;
 
-    private Memory memory ;
+public class TestMemory extends AbstractChannelsTest {
 
-    private DefaultQueryService queryService;
+    @Autowired
+    private PlanManager planManager;
+
+    private PlanDao planDao;
 
     public TestMemory() {
     }
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws IOException {
         super.setUp();
-        PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
-        planManager.afterPropertiesSet();
-        Plan plan = planManager.getPlans().get( 0 );
-        memory = planManager.getDao( plan );
-        queryService = new DefaultQueryService( planManager, new BitBucket() );
-        User test = new User();
-        test.setPlan( plan );
-//        queryService.setAddingSamples( true );
-        queryService.afterPropertiesSet();
+        try {
+            planDao = planManager.getDao( PlanManager.plan() );
+        } catch ( NotFoundException e ) {
+            fail( "No plan for guest" );
+        }
     }
 
+    @Test
     public void testInitial() {
-        assertEquals( 2, getSegmentCount() );
-        assertTrue( memory.list( Segment.class ).iterator().hasNext() );
+        assertEquals( 1, getSegmentCount() );
+        assertTrue( planDao.list( Segment.class ).iterator().hasNext() );
         try {
-            queryService.findSegment( "bla" );
+            planDao.findSegment( "bla" );
             fail();
         } catch ( NotFoundException ignored ) {
             try {
@@ -49,9 +47,10 @@ public class TestMemory extends TestCase {
     }
 
     private long getSegmentCount() {
-        return (long) memory.list( Segment.class ).size();
+        return (long) planDao.list( Segment.class ).size();
     }
 
+    @Test
     public void testAddDelete() throws DuplicateKeyException, NotFoundException {
         long size = getSegmentCount();
 
@@ -60,46 +59,49 @@ public class TestMemory extends TestCase {
 
         assertEquals( size + 1, getSegmentCount() );
 
-        assertSame( s, queryService.findSegment( s.getName() ) );
+        assertSame( s, planDao.findSegment( s.getName() ) );
         assertSame( s, queryService.find( Segment.class, s.getId() ) );
 
-        memory.remove( s );
+        planDao.remove( s );
         try {
-            queryService.findSegment( s.getName() );
+            planDao.findSegment( s.getName() );
             fail();
         } catch ( NotFoundException ignored ) {}
         try {
-            memory.find( Segment.class, s.getId() );
+            planDao.find( Segment.class, s.getId() );
             fail();
         } catch ( NotFoundException ignored ) {}
 
         for ( long i = size; i > 0 ; i-- )
-            memory.remove( queryService.getDefaultSegment() );
+            planDao.remove( queryService.getDefaultSegment() );
         assertEquals( 1, getSegmentCount() );
         // last one not deleted
     }
 
+    @Test
     public void testAddTwice() throws DuplicateKeyException {
         Segment a = new Segment();
         a.setName( "Bogus" );
-        memory.add( a );
+        planDao.add( a, 0L );
         try {
-            memory.add( a );
+            planDao.add( a, 0L );
             fail();
         } catch ( DuplicateKeyException ignored ) {
             // success
         }
     }
 
+    @Test
     public void testDefault() {
         assertNotNull( queryService.getDefaultSegment() );
     }
 
+    @Test
     public void testCreateSegment() throws NotFoundException {
-        assertEquals( 2, getSegmentCount() );
+        assertEquals( 1, getSegmentCount() );
         Segment s = queryService.createSegment();
-        assertEquals( 3, getSegmentCount() );
-        assertSame( s, memory.find( Segment.class, s.getId() ) );
+        assertEquals( 2, getSegmentCount() );
+        assertSame( s, planDao.find( Segment.class, s.getId() ) );
     }
 
 }

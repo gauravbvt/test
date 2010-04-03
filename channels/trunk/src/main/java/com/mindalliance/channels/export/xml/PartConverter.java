@@ -145,8 +145,8 @@ public class PartConverter extends AbstractChannelsConverter {
         boolean importingPlan = isImportingPlan( context );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
         Part part = importingPlan
-                ? getQueryService().createPart( segment, id )
-                : getQueryService().createPart( segment );
+                ? getPlanDao().createPart( segment, id )
+                : getPlanDao().createPart( segment, null );
         idMap.put( id, part.getId() );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
@@ -194,7 +194,7 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "jurisdiction" ) ) {
                 String idString = reader.getAttribute( "id" );
                 ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
-                part.setJurisdiction( getEntity( 
+                part.setJurisdiction( getEntity(
                         Place.class,
                         reader.getValue(),
                         Long.parseLong( idString ),

@@ -2,6 +2,7 @@ package com.mindalliance.channels.imaging;
 
 import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.ImagingService;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.ModelObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,7 +122,7 @@ public class DefaultImagingService implements ImagingService {
 
     private File getImageFile( String url ) {
         return new File(
-                attachmentManager.getUploadDirectory(),
+                attachmentManager.getUploadDirectory( PlanManager.plan() ),
                 url.replaceFirst( attachmentManager.getUploadPath(), "" ) );
     }
 
@@ -131,7 +132,7 @@ public class DefaultImagingService implements ImagingService {
      * @return a directory
      */
     public File uploadDirectory() {
-        return attachmentManager.getUploadDirectory();
+        return attachmentManager.getUploadDirectory( PlanManager.plan() );
     }
 
     /**

@@ -59,9 +59,8 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
-        // TODO -- Patch: sometimes a segment has no query service set.
-        segment.setQueryService( getQueryService() );
-        GraphBuilder<Node,Flow> graphBuilder = new FlowMapGraphBuilder( segment );
+        GraphBuilder<Node,Flow> graphBuilder =
+                new FlowMapGraphBuilder( segment, getQueryService() );
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( );
         StrongConnectivityInspector<Node, Flow> sci =
                 new StrongConnectivityInspector<Node, Flow>( digraph );

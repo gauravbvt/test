@@ -4,6 +4,8 @@ import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,36 +27,33 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
     private List<Segment> segments;
 
     @Override
-    protected void setUp() throws IOException {
+    public void setUp() throws IOException {
         super.setUp();
-        segments = app.getQueryService().list( Segment.class );
-
+        segments = queryService.list( Segment.class );
     }
 
+    @Test
     public void testGetSVG() {
         for ( Segment segment : segments ) {
             Node selectedNode = findSelected( segment );
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                DiagramFactory diagramFactory = app.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, selectedNode, null, null );
-                flowDiagram.render( DiagramFactory.SVG, new BufferedOutputStream( baos ) );
-                String svg = baos.toString();
-                assertFalse( svg.isEmpty() );
-                assertTrue( svg.startsWith( "<?xml" ) );
-                // System.out.print( svg );
-            } catch ( Exception e ) {
-                fail( e.toString() );
-            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DiagramFactory diagramFactory = wicketApplication.getDiagramFactory();
+            Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, selectedNode, null, null );
+            flowDiagram.render( DiagramFactory.SVG, new BufferedOutputStream( baos ) );
+            String svg = baos.toString();
+            assertFalse( svg.isEmpty() );
+            assertTrue( svg.startsWith( "<?xml" ) );
+            // System.out.print( svg );
         }
     }
 
+    @Test
     public void testGetPNG() {
         for ( Segment segment : segments ) {
             Node selectedNode = findSelected( segment );
             try {
                 FileOutputStream fileOut = new FileOutputStream( "target/" + segment.getName() + ".png" );
-                DiagramFactory diagramFactory = app.getDiagramFactory();
+                DiagramFactory diagramFactory = wicketApplication.getDiagramFactory();
                 Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, selectedNode, null, null );
                 flowDiagram.render( DiagramFactory.PNG, fileOut );
                 fileOut.flush();
@@ -69,18 +68,15 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
         }
     }
 
+    @Test
     public void testGetImageMap() {
         for ( Segment segment : segments ) {
-            try {
-                DiagramFactory diagramFactory = app.getDiagramFactory();
-                Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, segment.getDefaultPart(), null, null );
-                String map = flowDiagram.makeImageMap();
-                System.out.print( map );
-                assertFalse( map.isEmpty() );
-                assertTrue( map.startsWith( "<map" ) );
-            } catch ( Exception e ) {
-                fail( e.toString() );
-            }
+            DiagramFactory diagramFactory = wicketApplication.getDiagramFactory();
+            Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, segment.getDefaultPart(), null, null );
+            String map = flowDiagram.makeImageMap();
+            System.out.print( map );
+            assertFalse( map.isEmpty() );
+            assertTrue( map.startsWith( "<map" ) );
         }
     }
 

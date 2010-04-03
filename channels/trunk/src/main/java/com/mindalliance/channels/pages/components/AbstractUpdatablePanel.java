@@ -113,7 +113,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a commander
      */
     protected Commander getCommander() {
-        return getChannels().getCommander();
+        return getChannels().getCommander( PlanManager.plan() );
     }
 
     /**
@@ -125,7 +125,6 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return getQueryService().getPlanManager();
     }
 
-
     /**
      * Get the lock manager.
      *
@@ -136,7 +135,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     private Channels getChannels() {
-        return Channels.instance();
+        return (Channels) getApplication();
     }
 
     /**

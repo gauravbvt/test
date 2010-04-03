@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -47,7 +47,7 @@ public class DisconnectFlow extends AbstractCommand {
             assert get( "flow" ) != null;
             Flow flow = segment.findFlow( (Long) get( "flow" ) );
             set( "flowState", ChannelsUtils.getFlowState( flow ) );
-            flow.disconnect();
+            flow.disconnect( commander.getPlanDao() );
             commander.releaseAnyLockOn( flow );
             return new Change( Change.Type.Removed, flow );
         } catch ( NotFoundException e ) {

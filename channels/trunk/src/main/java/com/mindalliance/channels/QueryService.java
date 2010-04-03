@@ -4,6 +4,9 @@ import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.FileUserDetailsService;
+import com.mindalliance.channels.dao.Dao;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Assignment;
@@ -31,8 +34,8 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.nlp.Proximity;
-import com.mindalliance.channels.util.FileUserDetailsService;
 import com.mindalliance.channels.util.Play;
 
 import java.util.Iterator;
@@ -65,22 +68,13 @@ public interface QueryService extends Service {
     AttachmentManager getAttachmentManager();
 
     /**
-     * Find a plan segment given its name.
-     *
-     * @param name the name
-     * @return the named segment
-     * @throws NotFoundException when not found
-     */
-    Segment findSegment( String name ) throws NotFoundException;
-
-    /**
      * Find a model object given its id.
      *
      * @param clazz the subclass of modelobject
      * @param id    the id
      * @param <T>   a subclass of modelObject
      * @return the object
-     * @throws NotFoundException when not found
+     * @throws com.mindalliance.channels.dao.NotFoundException when not found
      */
     <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
 
@@ -565,15 +559,6 @@ public interface QueryService extends Service {
     Boolean isReferenced( Classification classification );
 
     /**
-     * Get reference count for event.
-     *
-     * @param event an event
-     * @return an int
-     */
-    int getReferenceCount( Event event );
-
-
-    /**
      * Called when application is terminated.
      */
     void onDestroy();
@@ -1005,13 +990,6 @@ public interface QueryService extends Service {
     List<Hierarchical> findAllDescendants( Hierarchical hierarchical );
 
     /**
-     * Replay journals for all plans and save the results.
-     *
-     * @param commander the commander for replaying
-     */
-    void replayJournals( Commander commander );
-
-    /**
      * Whether two string reach a given level of semantic proximity.
      *
      * @param text      a string
@@ -1352,4 +1330,12 @@ public interface QueryService extends Service {
      * @return a file user details service
      */
     FileUserDetailsService getUserDetailsService();
+
+
+    /**
+     * Define all immutable entities (not plan dependent).
+     * @param media list of media to initialized
+     */
+    void defineImmutableEntities( List<TransmissionMedium> media );
+
 }

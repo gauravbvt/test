@@ -80,7 +80,7 @@ public class RemovePart extends AbstractCommand {
             Part defaultPart = queryService.createPart( segment );
             set( "defaultPart", defaultPart.getId() );
         }
-        segment.removeNode( part );
+        segment.removeNode( part, commander.getPlanDao() );
         commander.releaseAnyLockOn( part );
         ignoreLock( (Long) get( "part" ) );
         return new Change( Change.Type.Recomposed, segment );

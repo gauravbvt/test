@@ -52,7 +52,8 @@ public class PlanReportPage extends WebPage {
     private QueryService queryService;
 
     /** The current plan. */
-    private Plan plan = planManager.getCurrentPlan();
+    @SpringBean
+    private Plan plan;
 
     /** Restrictions to report generation. */
     private SelectorPanel selector;

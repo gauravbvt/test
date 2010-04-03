@@ -3,7 +3,10 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
@@ -146,9 +149,9 @@ public interface Commander extends Service {
     /**
      * Turns on/off journal replay mode.
      *
-     * @param val a boolean
+     * @param replaying a boolean
      */
-    void setReplaying( boolean val );
+    void setReplaying( boolean replaying );
 
     /**
      * Remove entity with old name if not referenced and if not defined.
@@ -332,4 +335,27 @@ public interface Commander extends Service {
      *  Signal that the current user is in sync with the plan versions.
      */
     void resynced();
+
+    /**
+     * Get a proper exporter.
+     * @return an exporter
+     */
+    Exporter getExporter();
+
+    /**
+     * Initialize the commander when ready to go.
+     */
+    void initialize();
+
+    void createRequisiteModelObjects( FileUserDetailsService userDetailsService )
+        throws CommandException;
+
+    PlanDao getPlanDao();
+
+    void setPlanDao( PlanDao planDao );
+
+    /**
+     * Replay journaled commands for all plans.
+     */
+    void replayJournal();
 }

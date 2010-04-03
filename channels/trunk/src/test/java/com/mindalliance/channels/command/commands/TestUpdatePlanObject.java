@@ -1,8 +1,12 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Segment;
+import org.junit.Assert;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.io.IOException;
 
@@ -19,33 +23,35 @@ public class TestUpdatePlanObject extends AbstractChannelsTest {
     private Segment segment;
 
     @Override
-    protected void setUp() throws IOException {
+    public void setUp() throws IOException {
         super.setUp();
-        segment = app.getQueryService().getDefaultSegment();
+        segment = queryService.getDefaultSegment();
         command = new UpdatePlanObject( segment, "description", "ipso lorem etc." );
-        commander.reset();
+        getCommander().reset();
     }
 
+    @Test
     public void testCommand() throws Exception {
+        Commander commander = getCommander();
+
         assertTrue( commander.canDo( command ) );
         String description = segment.getDescription();
         Change change = commander.doCommand( command );
         assertTrue( change.isUpdated() );
-        assertTrue( change.getChangedPropertyValue().equals( "ipso lorem etc." ) );
+        assertEquals( "ipso lorem etc.", change.getChangedPropertyValue() );
         String newDescription = segment.getDescription();
         assertFalse( description.equals( newDescription ) );
         assertTrue( commander.canUndo() );
         change = commander.undo();
         assertTrue( change.isUpdated() );
-        assertTrue( change.getChangedPropertyValue().equals( description ) );
+        assertEquals( change.getChangedPropertyValue(), description );
         newDescription = segment.getDescription();
-        assertTrue( description.equals( newDescription ) );
+        Assert.assertEquals( description, newDescription );
         assertTrue( commander.canRedo() );
         change = commander.redo();
         assertTrue( change.isUpdated() );
-        assertTrue( change.getChangedPropertyValue().equals( "ipso lorem etc." ) );
+        assertEquals( "ipso lorem etc.", change.getChangedPropertyValue() );
         newDescription = segment.getDescription();
         assertFalse( description.equals( newDescription ) );
     }
-
 }

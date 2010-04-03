@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Delay;
@@ -10,6 +10,9 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
+import org.junit.After;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,14 +32,19 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
     private Part target;
     private BreakUpFlow command;
 
+    private Commander commander;
+
     @Override
-    protected void setUp() throws IOException {
+    public void setUp() throws IOException {
         super.setUp();
-        final QueryService queryService = app.getQueryService();
+
+        commander = getCommander();
+
         segment = queryService.createSegment();
         source = segment.getDefaultPart();
         source.setRole( queryService.findOrCreate( Role.class, "Manager" ) );
         target = segment.createPart( queryService, queryService.findOrCreate( Role.class, "Employee" ), "nodding" );
+
         Flow flow = queryService.connect( source, target, "bizspeak" );
         flow.setDescription( "Leveraging core values" );
         flow.setMaxDelay( new Delay( 5, Delay.Unit.minutes ) );
@@ -44,10 +52,10 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         flow.setSignificanceToTarget( Flow.Significance.Triggers );
         flow.setChannels( new ArrayList<Channel>() {
             {
-                add( new Channel(queryService.findOrCreate(
+                add( new Channel(queryService.findOrCreateType(
                 TransmissionMedium.class,
                 "Phone" ), "800-555-1212" ) );
-                add( new Channel( queryService.findOrCreate(
+                add( new Channel( queryService.findOrCreateType(
                 TransmissionMedium.class,
                 "Email" ), "stuff@acme.com" ) );
             }
@@ -55,34 +63,40 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         command = new BreakUpFlow( flow );
     }
 
-    protected void tearDown() {
-        app.getQueryService().remove( segment );
+    @Override
+    @After
+    public void tearDown() {
+        queryService.remove( segment );
+        super.tearDown();
     }
 
+    @Test
     public void testInternalBreakUp() throws Exception {
-        assertTrue( countFlows() == 1 );
+        assertSame( 1, countFlows() );
         assertNotNull( findFlow() );
         assertTrue( commander.canDo( command ) );
+
         Change change = commander.doCommand( command );
         assertTrue( change.isRecomposed() );
         assertTrue( change.getSubject() instanceof Segment );
         assertNull( findFlow() );
-        assertTrue( countFlows() == 2 );
+        assertSame( 2, countFlows() );
         assertTrue( commander.canUndo() );
         assertTrue( commander.undo().isUnknown() );
+
         Flow f = findFlow();
         assertNotNull( f );
-        assertTrue( f.getName().equals( "bizspeak" ) );
-        assertTrue( f.getDescription().equals( "Leveraging core values" ) );
-        assertTrue( f.getMaxDelay().equals( new Delay( 5, Delay.Unit.minutes ) ) );
-        assertTrue( f.getSignificanceToSource().equals( Flow.Significance.Terminates ) );
-        assertTrue( f.getSignificanceToTarget().equals( Flow.Significance.Triggers ) );
-        assertTrue( f.getChannels().size() == 2 );
-        assertTrue( countFlows() == 1 );
+        assertEquals( "bizspeak", f.getName() );
+        assertEquals( "Leveraging core values", f.getDescription() );
+        assertEquals( new Delay( 5, Delay.Unit.minutes ), f.getMaxDelay() );
+        assertEquals( Flow.Significance.Terminates, f.getSignificanceToSource() );
+        assertEquals( Flow.Significance.Triggers, f.getSignificanceToTarget() );
+        assertSame( 2, f.getChannels().size() );
+        assertSame( 1, countFlows() );
         assertTrue( commander.canRedo() );
-        assertTrue( commander.redo().isUnknown());
+        assertTrue( commander.redo().isUnknown() );
         assertNull( findFlow() );
-        assertTrue( countFlows() == 2 );
+        assertSame( 2, countFlows() );
     }
 
     private Flow findFlow() {

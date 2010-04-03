@@ -31,7 +31,7 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
         String geoname = place.getGeoname();
-        List<GeoLocation> geoLocations = place.getGeoLocations( getQueryService() );
+        List<GeoLocation> geoLocations = place.getGeoLocations();
         if ( geoname != null && !geoname.isEmpty() && ( geoLocations == null || geoLocations.isEmpty() ) ) {
             DetectedIssue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
             issue.setSeverity( Level.Medium );

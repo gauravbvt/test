@@ -9,6 +9,9 @@ import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.PropertyModel;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Segment import panel.
@@ -110,7 +113,11 @@ public class SegmentImportPanel extends AbstractCommandablePanel {
     public void setUpload( FileUpload upload ) {
         this.upload = upload;
         if ( upload != null ) {
-            getPlanManager().importSegment( upload, getQueryService() );
+            try {
+                getPlanManager().importSegment( upload.getInputStream() );
+            } catch ( IOException e ) {
+                LoggerFactory.getLogger( getClass() ).warn( "Unable to get upload stream", e );
+            }
             ( (PlanPage) getPage() ).redirectToPlan();
         }
     }

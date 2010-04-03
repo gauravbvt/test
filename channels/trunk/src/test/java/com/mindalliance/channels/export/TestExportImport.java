@@ -1,10 +1,16 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Exporter;
-import com.mindalliance.channels.Importer;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.Importer;
+import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.model.Segment;
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -26,87 +32,95 @@ import java.util.Map;
  */
 public class TestExportImport extends AbstractChannelsTest {
 
-    private List<String> segmentNames;
-    private QueryService queryService;
+    @Autowired
+    private ImportExportFactory importExportFactory;
 
+    private List<String> segmentNames;
+
+    private PlanDao planDao;
 
     @Override
-    protected void setUp() throws IOException {
+    public void setUp() throws IOException {
         super.setUp();
-        queryService = app.getQueryService();
+
         segmentNames = new ArrayList<String>();
-        for ( Segment segment : app.getQueryService().list( Segment.class ) ) {
+        for ( Segment segment : queryService.list( Segment.class ) ) {
             segmentNames.add( segment.getName() );
+        }
+        try {
+            planDao = planManager.getDao( PlanManager.plan() );
+        } catch ( NotFoundException e ) {
+            fail();
         }
     }
 
-    public void testExportImportSegment() throws Exception {
-        Map<String,String> exported0 = new HashMap<String,String>();
-        Map<String,String> exported1 = new HashMap<String,String>();
-        Map<String,String> exported2 = new HashMap<String,String>();
+    @Test
+    public void testExportImportSegment() throws IOException, NotFoundException {
+        Map<String, String> exported0 = new HashMap<String, String>();
+        Map<String, String> exported1 = new HashMap<String, String>();
+        Map<String, String> exported2 = new HashMap<String, String>();
         // allow removal of all named segments by creating an empty one
         queryService.createSegment();
         // Export all named segments
-
-        exportAll(exported0);
+        exportAll( exported0 );
         removeAll();
-        importAll(exported0);
+        importAll( exported0 );
         // re-export
-        exportAll(exported1);
+        exportAll( exported1 );
         // Import in reverse order
         removeAll();
         Collections.reverse( segmentNames );
-        importAll(exported0);
+        importAll( exported0 );
         // re-export
-        exportAll(exported2);
+        exportAll( exported2 );
         // Make sure all xml serializations are similar
-        for (String name : segmentNames ) {
+        for ( String name : segmentNames ) {
             // export vs export-import-export
-            compare(exported0.get(name), exported1.get(name));
+            compare( exported0.get( name ), exported1.get( name ) );
             // export vs export-reverse import-export
-            compare(exported1.get(name), exported2.get(name));
+            compare( exported1.get( name ), exported2.get( name ) );
         }
     }
 
-    private void compare(String xml, String otherXml) throws Exception {
+    private void compare( String xml, String otherXml ) throws IOException {
         // for now just check if same number of lines
-        assertTrue("same number of lines", countLines(xml) == countLines(otherXml));
+        assertSame( "same number of lines", countLines( xml ), countLines( otherXml ) );
     }
 
-    private int countLines(String text) throws Exception {
+    private int countLines( String text ) throws IOException {
         int count = 0;
-        BufferedReader reader = new BufferedReader(new StringReader(text));
-        while(reader.readLine() != null) count++;
+        BufferedReader reader = new BufferedReader( new StringReader( text ) );
+        while ( reader.readLine() != null )
+            count++;
         return count;
     }
 
-    private void exportAll(Map<String,String> exported) throws Exception {
+    private void exportAll( Map<String, String> exported ) throws IOException, NotFoundException {
         for ( String name : segmentNames ) {
-            Segment segment = queryService.findSegment( name );
+            Segment segment = planDao.findSegment( name );
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ImportExportFactory exportFactory = app.getImportExportFactory();
-            Exporter exporter = exportFactory.createExporter( queryService, plan );
+            Exporter exporter = importExportFactory.createExporter( planDao );
             exporter.export( segment, out );
             String xml = out.toString();
             // System.out.println( xml );
-            exported.put(name,xml);
+            exported.put( name, xml );
             assertTrue( xml.length() > 0 );
         }
     }
 
-    private void removeAll() throws Exception {
+    private void removeAll() throws NotFoundException {
         for ( String name : segmentNames ) {
-            queryService.remove( queryService.findSegment( name ) );
+            queryService.remove( planDao.findSegment( name ) );
         }
     }
 
-    private void importAll(Map<String,String> exported) throws Exception {
+    private void importAll( Map<String, String> exported ) throws IOException {
         for ( String name : segmentNames ) {
             String xml = exported.get( name );
             ByteArrayInputStream in = new ByteArrayInputStream( xml.getBytes() );
-            Importer importer = app.getImportExportFactory().createImporter( queryService, plan );
+            Importer importer = importExportFactory.createImporter( planDao );
             Segment segment = importer.importSegment( in );
-            assertTrue(name.equals(segment.getName()));
+            assertEquals( name, segment.getName() );
         }
     }
 }

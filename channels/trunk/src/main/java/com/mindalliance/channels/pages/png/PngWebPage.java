@@ -55,7 +55,7 @@ public abstract class PngWebPage extends WebPage {
     }
 
     private Channels getChannels() {
-        return Channels.instance();
+        return (Channels) getApplication();
     }
 
     @Override

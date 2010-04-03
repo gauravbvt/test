@@ -7,7 +7,6 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.util.ChannelsUtils;
 
@@ -49,7 +48,7 @@ public class AddUserIssue extends AbstractCommand {
                 (Long) get( "modelObject" ) ) );
         // State is set when undoing a RemoveIssue
         Map<String, Object> state = (Map<String, Object>) get( "state" );
-        issue.setReportedBy( User.current().getUsername() );
+        issue.setReportedBy( getUserName() );
         if ( state != null ) {
             ChannelsUtils.initialize( issue, state );
         }

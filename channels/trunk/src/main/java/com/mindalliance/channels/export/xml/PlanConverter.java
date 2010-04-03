@@ -1,6 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Event;
@@ -63,7 +63,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
         Plan plan = (Plan) obj;
-        QueryService queryService = getQueryService();
+        PlanDao planDao = getPlanDao();
         writer.addAttribute( "id", String.valueOf( plan.getId() ) );
         writer.addAttribute( "uri", plan.getUri() );
         writer.addAttribute( "version", getVersion() );
@@ -73,7 +73,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.endNode();
         writer.startNode( "lastId" );
         writer.setValue( String.valueOf(
-                getContext().getIdGenerator().getLastAssignedId( getContext().getPlan() ) ) );
+                planDao.getIdGenerator().getLastAssignedId( getContext().getPlan() ) ) );
         writer.endNode();
         writer.startNode( "name" );
         writer.setValue( plan.getName() );
@@ -100,7 +100,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         exportAttachments( plan, writer );
         context.put( "exporting-plan", "true" );
         // All entities
-        Iterator<ModelEntity> entities = queryService.iterateEntities();
+        Iterator<ModelEntity> entities = planDao.iterateEntities();
         while ( entities.hasNext() ) {
             ModelEntity entity = entities.next();
             if ( !entity.isImmutable() ) {

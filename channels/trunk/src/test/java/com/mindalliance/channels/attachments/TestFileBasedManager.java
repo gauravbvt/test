@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.upload.FileItem;
-import org.easymock.EasyMock;
+import static org.mockito.Mockito.mock;
 
 /**
  * ...
@@ -34,7 +34,7 @@ public class TestFileBasedManager extends TestCase {
 //        mgr.setDirectory( new FileSystemResource( directory ) );
         map = new File( directory, mgr.getDigestsMapFile() );
 
-        fileItem = EasyMock.createMock( FileItem.class );
+        fileItem = mock( FileItem.class );
         upload = new FileUpload( fileItem );
     }
 

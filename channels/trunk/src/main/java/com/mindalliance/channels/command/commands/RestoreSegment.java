@@ -1,13 +1,13 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.model.Segment;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class RestoreSegment extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         ImportExportFactory importExportFactory = queryService.getPlanManager().getImportExportFactory();
-        Importer importer = importExportFactory.createImporter( queryService, queryService.getCurrentPlan() );
+        Importer importer = importExportFactory.createImporter( commander.getPlanDao() );
         String xml = (String) get( "xml" );
         if ( xml != null ) {
             Long defaultSegmentId = (Long) get( "defaultSegment" );

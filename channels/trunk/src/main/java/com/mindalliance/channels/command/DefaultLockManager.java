@@ -2,7 +2,7 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.LockManager;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;

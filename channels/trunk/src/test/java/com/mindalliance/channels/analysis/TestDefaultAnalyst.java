@@ -7,6 +7,10 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,19 +26,21 @@ import java.util.List;
  */
 public class TestDefaultAnalyst extends AbstractChannelsTest {
 
-    Iterator<Segment> segments;
-    Analyst analyst;
+    private Iterator<Segment> segments;
+
+    @Autowired
+    private Analyst analyst;
 
     @Override
-    protected void setUp() throws IOException {
+    public void setUp() throws IOException {
         super.setUp();
-        segments = app.getQueryService().list( Segment.class ).iterator();
-        analyst = app.getAnalyst();
+        segments = queryService.list( Segment.class ).iterator();
     }
 
     /**
      * Apply all applicable detectors to all nodes and flows and gather issues.
      */
+    @Test
     public void testFindAllIssues() {
         while ( segments.hasNext() ) {
             Segment segment = segments.next();
@@ -64,7 +70,7 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
                 Analyst.INCLUDE_PROPERTY_SPECIFIC ).iterator();
         while ( issues.hasNext() ) {
             Issue issue = issues.next();
-            System.out.println( issue );
+            //System.out.println( issue );
             collector.add( issue );
         }
     }
@@ -72,6 +78,7 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
     /**
      * Get issue summaries on all model objects.
      */
+    @Test
     public void testGetIssueSummaries() {
         while ( segments.hasNext() ) {
             Segment segment = segments.next();

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
@@ -50,7 +51,8 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
         DiagramFactory<Node, Flow> diagramFactory = getDiagramFactory();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        GraphBuilder flowMapGraphBuilder = new FlowMapGraphBuilder( segment );
+        GraphBuilder flowMapGraphBuilder =
+                new FlowMapGraphBuilder( segment, Channels.instance().getQueryService() );
         Graph<Node, Flow> graph = flowMapGraphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Flow> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
@@ -76,5 +78,5 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
         );
 
     }
-    
+
 }

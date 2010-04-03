@@ -3,7 +3,6 @@ package com.mindalliance.channels.model;
 import com.mindalliance.channels.dao.PlanManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -109,7 +108,6 @@ public class User implements UserDetails {
         return username;
     }
 
-    @Secured( { "ROLE_ADMIN", "RUN_AS_SERVER" } )
     public void setUsername( String username ) {
         this.username = username;
     }
@@ -134,18 +132,6 @@ public class User implements UserDetails {
         } else {
             return plans.keySet().iterator().next();
         }
-    }
-
-    /**
-     * Switch to a new plan.
-     *
-     * @param newPlan the plan
-     * @return the previous plan
-     */
-    public Plan switchPlan( Plan newPlan ) {
-        Plan result = plan;
-        setPlan( newPlan );
-        return result;
     }
 
     public boolean isAnonymous() {
@@ -231,7 +217,6 @@ public class User implements UserDetails {
      * @param planUri the plan id
      * @param canPlan true if user can modify the plan; false if only a playbook user
      */
-    @Secured( { "ROLE_ADMIN", "RUN_AS_SERVER" } )
     public void setPlanAccess( String planUri, boolean canPlan ) {
         plans.put( planUri, canPlan );
     }
@@ -339,7 +324,6 @@ public class User implements UserDetails {
         return admin;
     }
 
-    @Secured( {"ROLE_ADMIN", "RUN_AS_SERVER"} )
     public void setAdmin( boolean admin ) {
         this.admin = admin;
     }
@@ -423,7 +407,6 @@ public class User implements UserDetails {
      *
      * @param roleString a role string
      */
-    @Secured( {"ROLE_ADMIN", "RUN_AS_SERVER"} )
     public void addRole( String roleString ) {
         if ( ROLE_ADMIN.equals( roleString ) )
             setAdmin( true );
@@ -449,7 +432,7 @@ public class User implements UserDetails {
         } else {
             normalized = name;
         }
-        return normalized + " (" + username + ")";
+        return normalized + " (" + username + ')';
     }
 
     /**
@@ -471,9 +454,9 @@ public class User implements UserDetails {
      * @return  a String
      */
     public String getRole() {
-        if ( isAdmin() ) return "Admin";
-        else if ( isPlanner() ) return "Planner";
-        else return "Playbook";
+        return isAdmin()   ? "Admin"
+             : isPlanner() ? "Planner"
+                           : "Playbook";
     }
-    
+
 }

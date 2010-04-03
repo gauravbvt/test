@@ -69,7 +69,7 @@ public class AdminPage extends WebPage {
       * @param plan a plan
       */
      public void setPlan( Plan plan ) {
-         user.switchPlan( plan );
+         user.setPlan( plan );
      }
 
     /**

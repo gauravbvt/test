@@ -23,7 +23,7 @@
     <bean name="plan" class="com.mindalliance.channels.model.Plan" factory-bean="user" factory-method="getPlan"
           scope="session" />
 
-    <bean id="userDetailsService" class="com.mindalliance.channels.util.FileUserDetailsService">
+    <bean id="userDetailsService" class="com.mindalliance.channels.dao.FileUserDetailsService">
         <constructor-arg ref="planManager"/>
         <property name="base" value="${channels.home}"/>
         <property name="userDefinitions" value="users.properties"/>

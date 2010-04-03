@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.analysis.graph.HierarchyRelationship;
 import com.mindalliance.channels.graph.Diagram;

@@ -1,12 +1,11 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.NotFoundException;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
@@ -54,8 +53,8 @@ public abstract class AbstractChannelsConverter implements Converter {
         return context;
     }
 
-    public QueryService getQueryService() {
-        return context.getQueryService();
+    public PlanDao getPlanDao() {
+        return context.getPlanDao();
     }
 
     public AttachmentManager getAttachmentManager() {
@@ -93,9 +92,9 @@ public abstract class AbstractChannelsConverter implements Converter {
     protected <T extends ModelEntity> T findOrCreate( Class<T> entityClass, String name, String id ) {
         if ( id == null ) {
             LOG.warn( "Recreating referenced " + entityClass.getSimpleName() + " without id" );
-            return getQueryService().findOrCreate( entityClass, name );
+            return getPlanDao().findOrCreate( entityClass, name, null );
         } else {
-            return getQueryService().findOrCreate( entityClass, name, Long.valueOf( id ) );
+            return getPlanDao().findOrCreate( entityClass, name, Long.valueOf( id ) );
         }
     }
 
@@ -110,9 +109,9 @@ public abstract class AbstractChannelsConverter implements Converter {
     protected <T extends ModelEntity> T findOrCreateType( Class<T> entityClass, String name, String id ) {
         if ( id == null ) {
             LOG.warn( "Recreating referenced " + entityClass.getSimpleName() + " without id" );
-            return getQueryService().findOrCreateType( entityClass, name );
+            return getPlanDao().findOrCreateType( entityClass, name, null );
         } else {
-            return getQueryService().findOrCreateType( entityClass, name, Long.valueOf( id ) );
+            return getPlanDao().findOrCreateType( entityClass, name, Long.valueOf( id ) );
         }
     }
 
@@ -161,13 +160,14 @@ public abstract class AbstractChannelsConverter implements Converter {
             ModelObject modelObject,
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
-        List<Issue> issues = getQueryService().findAllUserIssues( modelObject );
-        for ( Issue issue : issues ) {
-            writer.startNode( "issue" );
-            context.convertAnother( issue );
-            writer.endNode();
-        }
 
+        // TODO export issues? really?
+//        List<Issue> issues = getPlanDao().findAllUserIssues( modelObject );
+//        for ( Issue issue : issues ) {
+//            writer.startNode( "issue" );
+//            context.convertAnother( issue );
+//            writer.endNode();
+//        }
     }
 
     /**
@@ -223,10 +223,10 @@ public abstract class AbstractChannelsConverter implements Converter {
             if ( nodeName.equals( "attachment" ) ) {
                 Attachment.Type type = Attachment.Type.valueOf( reader.getAttribute( "type" ) );
                 String url = reader.getValue();
-                if ( attachmentManager.exists( url ) ) {
+                if ( attachmentManager.exists( getPlan(), url ) ) {
                     modelObject.addAttachment( new Attachment( url, type ) );
                 } else {
-                    LOG.warn( "Dropping attachment to " + url + " (not found)" );
+                    LOG.warn( "Dropping attachment to {} (not found)", url );
                 }
             }
             reader.moveUp();
@@ -265,7 +265,7 @@ public abstract class AbstractChannelsConverter implements Converter {
             // in case the issue is about the plan being loaded -- it is not yet findable.
             about = (T) getContext().getPlan();
         } else {
-            about = getQueryService().find( clazz, id );
+            about = getPlanDao().find( clazz, id );
         }
         return about;
     }
@@ -314,15 +314,18 @@ public abstract class AbstractChannelsConverter implements Converter {
             boolean isType,
             boolean importingPlan,
             Map<Long, Long> idMap ) {
+
         T entity;
         if ( isType ) {
             entity = importingPlan
-                    ? getQueryService().findOrCreateType( clazz, name, id )
-                    : getQueryService().findOrCreateType( clazz, name );
+                    ? getPlanDao().findOrCreateType( clazz, name, id )
+                    : getPlanDao().findOrCreateType( clazz, name, null );
+            entity.setType();
         } else {
             entity = importingPlan
-                    ? getQueryService().findOrCreate( clazz, name, id )
-                    : getQueryService().findOrCreate( clazz, name );
+                    ? getPlanDao().findOrCreate( clazz, name, id )
+                    : getPlanDao().findOrCreate( clazz, name , null);
+            entity.setActual();
         }
         idMap.put( id, entity.getId() );
         return entity;
@@ -334,7 +337,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return a plan
      */
     protected Plan getPlan() {
-        return getQueryService().getCurrentPlan();
+        return getPlanDao().getPlan();
     }
 
     /**
@@ -344,9 +347,9 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return an entity kind
      */
     protected ModelEntity.Kind kind( String name ) {
-        if ( name == null ) return ModelEntity.Kind.Actual;
-        if ( name.equals( "Type" ) ) return ModelEntity.Kind.Type;
-        return ModelEntity.Kind.Actual;
+        return name == null          ? ModelEntity.Kind.Actual
+             : "Type".equals( name ) ? ModelEntity.Kind.Type
+                                     : ModelEntity.Kind.Actual;
     }
 
 }

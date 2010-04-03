@@ -1,11 +1,10 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.AbstractService;
-import com.mindalliance.channels.Exporter;
-import com.mindalliance.channels.Importer;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +80,7 @@ public class Serializer extends AbstractService implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
-    public void export( Plan plan, OutputStream stream ) throws IOException {
+    public void export( OutputStream stream ) throws IOException {
         // TODO
     }
 

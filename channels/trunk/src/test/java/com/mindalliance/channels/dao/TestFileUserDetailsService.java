@@ -1,7 +1,8 @@
-package com.mindalliance.channels.util;
+package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;
+import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.export.DummyExporter;
 import com.mindalliance.channels.model.User;
 import junit.framework.TestCase;
@@ -31,7 +32,6 @@ public class TestFileUserDetailsService extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
-        planManager.afterPropertiesSet();
         service = new FileUserDetailsService( planManager );
     }
 
@@ -57,9 +57,9 @@ public class TestFileUserDetailsService extends TestCase {
         assertTrue( details.isCredentialsNonExpired() );
 
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) details.getAuthorities();
+        assertEquals( 2, authorities.size() );
         assertEquals( "ROLE_ADMIN", authorities.get(0).getAuthority() );
-        assertEquals( "ROLE_PLANNER", authorities.get(1).getAuthority() );
-        assertEquals( "ROLE_USER", authorities.get(2).getAuthority() );
+        assertEquals( "ROLE_USER", authorities.get(1).getAuthority() );
 
         assertNull( details.getPlan() );
     }
@@ -79,9 +79,9 @@ public class TestFileUserDetailsService extends TestCase {
         assertTrue( details.isCredentialsNonExpired() );
 
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) details.getAuthorities();
+        assertEquals( 2, authorities.size() );
         assertEquals( "ROLE_ADMIN", authorities.get(0).getAuthority() );
-        assertEquals( "ROLE_PLANNER", authorities.get(1).getAuthority() );
-        assertEquals( "ROLE_USER", authorities.get(2).getAuthority() );
+        assertEquals( "ROLE_USER", authorities.get(1).getAuthority() );
 
         assertNull( details.getPlan() );
     }
@@ -104,11 +104,11 @@ public class TestFileUserDetailsService extends TestCase {
         service.setUserDefinitions( "target/users.properties" );
         User jf = (User) service.loadUserByUsername( "jf" );
         assertTrue( jf.isAdmin() );
-        assertTrue( jf.isPlanner() );
+        assertTrue( jf.isPlanner( "mindalliance.com/channels/plans/acme" ) );
 
         User david = (User) service.loadUserByUsername( "david" );
         assertFalse( david.isAdmin() );
-        assertTrue( david.isPlanner() );
+        assertTrue( david.isPlanner( "mindalliance.com/channels/plans/acme" ) );
     }
 
 }

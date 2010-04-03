@@ -1,6 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.export.PartSpecification;
 import com.mindalliance.channels.export.SegmentSpecification;
@@ -244,22 +244,13 @@ public class FlowConverter extends AbstractChannelsConverter {
     }
 
     private Flow makeFlow(
-            Node source,
-            Node target,
-            String name,
-            Long flowId,
-            boolean preserveId ) {
+            Node source, Node target, String name, Long flowId, boolean preserveId ) {
 
-        QueryService queryService = getQueryService();
-        Flow flow = queryService.connect(
-                source,
-                target,
-                name,
-                preserveId ? flowId : null );
+        PlanDao planDao = getPlanDao();
+        Flow flow = planDao.connect( source, target, name, preserveId ? flowId : null );
         idMap.put( flowId, flow.getId() );
         return flow;
     }
-
 
     private Node resolveNode( HierarchicalStreamReader reader,
                               Segment segment,
@@ -296,10 +287,10 @@ public class FlowConverter extends AbstractChannelsConverter {
         if ( importingPlan && externalSegmentName == null ) {
             // reuse prior id
             Long id = Long.parseLong( reader.getAttribute( "id" ) );
-            connector = getQueryService().createConnector( segment, id );
+            connector = getPlanDao().createConnector( segment, id );
         } else {
             // use new id
-            connector = getQueryService().createConnector( segment );
+            connector = getPlanDao().createConnector( segment, null );
         }
         if ( externalSegmentName != null ) {
             // Connector is in other segment

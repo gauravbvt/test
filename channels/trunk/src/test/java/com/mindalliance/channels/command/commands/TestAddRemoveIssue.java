@@ -2,13 +2,17 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.UserIssue;
+import org.junit.After;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 import java.io.IOException;
 
@@ -22,38 +26,43 @@ import java.io.IOException;
 public class TestAddRemoveIssue extends AbstractChannelsTest {
 
     private Segment segment;
-    private QueryService queryService;
     private Analyst analyst;
 
     @Override
-    protected void setUp() throws IOException {
+    public void setUp() throws IOException {
         super.setUp();
-        queryService = app.getQueryService();
-        analyst = app.getAnalyst();
+        analyst = wicketApplication.getAnalyst();
         segment = queryService.createSegment();
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() {
         queryService.remove( segment );
         super.tearDown();
     }
 
+    @Test
     public void testAddRemoveIssue() throws Exception {
+        Commander commander = getCommander();
+
         int count = countIssues( segment );
         Command addIssue = new AddUserIssue( segment );
         assertTrue( commander.canDo( addIssue ) );
+
         Change change = commander.doCommand( addIssue );
         assertTrue( change.isAdded() );
         UserIssue issue = (UserIssue) change.getSubject();
-        assertTrue( countIssues( segment ) == count + 1 );
+        assertSame( count + 1, countIssues( segment ) );
+
         issue.setDescription( "fubar" );
         assertTrue( commander.canUndo() );
         assertTrue( commander.undo().isRemoved() );
-        assertTrue( countIssues( segment ) == count );
+        assertSame( count, countIssues( segment ) );
         assertTrue( commander.canRedo() );
         assertTrue( commander.redo().isAdded() );
-        assertTrue( countIssues( segment ) == count + 1 );
+        assertSame( count + 1, countIssues( segment ) );
+
         boolean found = false;
         for ( Issue i : analyst.listIssues( segment, false ) ) {
             found = found || i.getDescription().equals( "fubar" );

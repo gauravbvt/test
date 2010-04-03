@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.command.Change;
@@ -79,16 +79,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
  * The plan's home page.
  * Note: When a user switches plan, this page *must* be reloaded.
  */
 public final class PlanPage extends WebPage implements Updatable {
+
     /**
      * Delay between refresh check callbacks.
      */
     public static final int REFRESH_DELAY = 10;
+
     /**
      * The 'expand' parameter in the URL.
      */
@@ -118,60 +119,67 @@ public final class PlanPage extends WebPage implements Updatable {
      * Length a segment title is abbreviated to
      */
     private static final int SEGMENT_DESCRIPTION_MAX_LENGTH = 94;
-    /**
-     * The plan manager.
-     */
-    @SpringBean
-    private PlanManager planManager;
 
     /**
      * Id of components that are expanded.
      */
     private Set<Long> expansions = new HashSet<Long>();
+
     /**
      * Aspects shown.
      */
     private Map<Long, List<String>> aspects = new HashMap<Long, List<String>>();
+
     /**
      * Page history.
      */
     private List<PageState> pageHistory = new ArrayList<PageState>();
+
     /**
      * Page history cursor.
      */
     private int historyCursor = -1;
+
     /**
      * Label with name of segment.
      */
     private Label segmentNameLabel;
+
     /**
      * Link to mapping of parts.
      */
     private GeomapLinkPanel partsMapLink;
+
     /**
      * Label with description of segment.
      */
     private Label segmentDescriptionLabel;
+
     /**
      * Container of segment selector.
      */
     private WebMarkupContainer selectSegmentContainer;
+
     /**
      * Choice of segments.
      */
     private DropDownChoice<Segment> segmentDropDownChoice;
+
     /**
      * Container of plan switcher.
      */
     private WebMarkupContainer switchPlanContainer;
+
     /**
      * Segments action menu.
      */
     private MenuPanel planActionsMenu;
+
     /**
      * Segments show menu.
      */
     private MenuPanel planShowMenu;
+
     /**
      * The current part.
      */
@@ -186,14 +194,17 @@ public final class PlanPage extends WebPage implements Updatable {
      * The big form -- used for attachments and segment imports only.
      */
     private IndicatorAwareForm form;
+
     /**
      * Import segment "dialog".
      */
     private SegmentImportPanel segmentImportPanel;
+
     /**
      * Segment edit panel.
      */
     private Component segmentEditPanel;
+
     /**
      * The segment panel.
      */
@@ -203,78 +214,99 @@ public final class PlanPage extends WebPage implements Updatable {
      * The entity panel.
      */
     private Component entityPanel;
+
     /**
      * The assignments panel.
      */
     private Component assignmentsPanel;
+
     /**
      * The commitments panel.
      */
     private Component commitmentsPanel;
+
     /**
      * The flow EOIs panel.
      */
     private Component eoisPanel;
+
     /**
      * The segments map panel.
      */
     private Component planEditPanel;
+
     /**
      * The surveys panel.
      */
     private Component surveysPanel;
+
     /**
      * Failure impacts panel.
      */
     private Component failureImpactsPanel;
+
     /**
      * The aspect for entity panel.
      */
     // private String entityAspect = EntityPanel.DETAILS;
+
     /**
      * Refresh button container.
      */
     private WebMarkupContainer refreshNeededContainer;
+
     /**
      * Go back button container.
      */
     private WebMarkupContainer goBackContainer;
+
     /**
      * Go forward button container.
      */
     private WebMarkupContainer goForwardContainer;
+
     /**
      * When last refreshed.
      */
     private long lastRefreshed = System.currentTimeMillis();
+
     /**
      * Modal dialog window.
      */
     private ModalWindow dialogWindow;
+
     /**
      * Maximized flow map panel.
      */
     private Component maximizedFlowPanel;
+
     /**
      * Whether the flow map is maximized.
      */
-    private boolean flowMaximized = false;
+    private boolean flowMaximized;
 
     /**
      * Cumulated change to an expanded identifiable.
      */
     private Map<Identifiable, Change> changes = new HashMap<Identifiable, Change>();
 
-    @SpringBean
     /**
      * Query service.
      */
+    @SpringBean
     private QueryService queryService;
+
     /**
      * Survey service.
      */
     @SpringBean
     private SurveyService surveyService;
+
+    /**
+     * The plan manager.
+     */
+    @SpringBean
+    private PlanManager planManager;
 
     /**
      * Used when page is called without parameters.
@@ -287,7 +319,6 @@ public final class PlanPage extends WebPage implements Updatable {
     public PlanPage( PageParameters parameters ) {
         // Call super to remember parameters in links
         super( parameters );
-        QueryService queryService = getQueryService();
         Segment sc = findSegment( queryService, parameters );
         init( sc, findPart( sc, parameters ), findExpansions( parameters ) );
     }
@@ -311,18 +342,19 @@ public final class PlanPage extends WebPage implements Updatable {
         init( sc, p, new HashSet<Long>() );
     }
 
-
     private void init( Segment sc, Part p, Set<Long> expanded ) {
-        getCommander().releaseAllLocks( getUser().getUsername() );
+        final Commander commander = getCommander();
+        commander.releaseAllLocks( getUser().getUsername() );
         setSegment( sc );
         setPart( p );
         expansions = expanded;
         for ( Long id : expansions ) {
-            getCommander().requestLockOn( id );
+            commander.requestLockOn( id );
         }
-
         setVersioned( false );
-        add( new Label( "sg-title", new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
+
+        add( new Label( "sg-title",
+                        new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
 
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
@@ -336,7 +368,7 @@ public final class PlanPage extends WebPage implements Updatable {
         addHeader();
         addRefresh();
         addGoBackAndForward();
-        getCommander().resynced();
+        commander.resynced();
         addPlanMenubar();
         addSegmentSelector();
         addPlanSwitcher();
@@ -352,6 +384,7 @@ public final class PlanPage extends WebPage implements Updatable {
         addPlanEditPanel();
         addSurveysPanel( null );
         add( form );
+
         updateSelectorsVisibility();
         updateNavigation();
         LOG.debug( "Segment page generated" );
@@ -360,9 +393,8 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void addMaximizedFlowPanel() {
         if ( flowMaximized ) {
-            maximizedFlowPanel = new MaximizedFlowPanel(
-                    "maximized-flow",
-                    new PropertyModel<Part>( this, "part" ) );
+            maximizedFlowPanel = new MaximizedFlowPanel( "maximized-flow",
+                                                         new PropertyModel<Part>( this, "part" ) );
         } else {
             maximizedFlowPanel = new Label( "maximized-flow" );
         }
@@ -381,16 +413,14 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addHeader() {
-        segmentNameLabel = new Label(
-                "header",                                                                 // NON-NLS
-                new AbstractReadOnlyModel() {
-                    @Override
-                    public Object getObject() {
-                        return StringUtils.abbreviate(
-                                segment.getName(), SEGMENT_TITLE_MAX_LENGTH );
-                    }
-                }
-        );
+        segmentNameLabel = new Label( "header",// NON-NLS
+                                      new AbstractReadOnlyModel() {
+                                          @Override
+                                          public Object getObject() {
+                                              return StringUtils.abbreviate( segment.getName(),
+                                                                             SEGMENT_TITLE_MAX_LENGTH );
+                                          }
+                                      } );
         segmentNameLabel.setOutputMarkupId( true );
 
         // Add style mods from analyst.
@@ -402,19 +432,18 @@ public final class PlanPage extends WebPage implements Updatable {
 
         // Segment description
         segmentDescriptionLabel = new Label( "sg-desc",                                  // NON-NLS
-                new AbstractReadOnlyModel<String>() {
-                    @Override
-                    public String getObject() {
-                        return StringUtils.abbreviate(
-                                StringUtils.capitalize(
-                                        segment.getPhaseEventTitle() ),
-                                SEGMENT_DESCRIPTION_MAX_LENGTH );
-                    }
-                }
-        );
+                                             new AbstractReadOnlyModel<String>() {
+                                                 @Override
+                                                 public String getObject() {
+                                                     return StringUtils.abbreviate( StringUtils.capitalize(
+                                                             segment.getPhaseEventTitle() ),
+                                                                                    SEGMENT_DESCRIPTION_MAX_LENGTH );
+                                                 }
+                                             } );
         segmentDescriptionLabel.setOutputMarkupId( true );
         form.add( segmentDescriptionLabel );
-        form.add( new Label( "user", getUser().getUsername() ) );                              // NON-NLS
+        form.add( new Label( "user",
+                             getUser().getUsername() ) );                              // NON-NLS
     }
 
     private void addSegmentImportDialog() {
@@ -423,12 +452,10 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addSegmentPanel() {
-        segmentPanel = new SegmentPanel(
-                "segment",
-                new PropertyModel<Segment>( this, "segment" ),
-                new PropertyModel<Part>( this, "part" ),
-                getReadOnlyExpansions()
-        );
+        segmentPanel = new SegmentPanel( "segment",
+                                         new PropertyModel<Segment>( this, "segment" ),
+                                         new PropertyModel<Part>( this, "part" ),
+                                         getReadOnlyExpansions() );
         form.add( segmentPanel );
     }
 
@@ -436,12 +463,12 @@ public final class PlanPage extends WebPage implements Updatable {
         List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
         for ( Iterator<Part> parts = segment.parts(); parts.hasNext(); )
             geoLocatables.add( parts.next() );
-
         GeomapLinkPanel panel = new GeomapLinkPanel( "geomapLink",
-                new Model<String>( "Tasks with known locations in plan segment " + segment.getName() ),
-                geoLocatables,
-                new Model<String>( "Show tasks in map" ) );
-
+                                                     new Model<String>(
+                                                             "Tasks with known locations in plan segment "
+                                                             + segment.getName() ),
+                                                     geoLocatables,
+                                                     new Model<String>( "Show tasks in map" ) );
         panel.setOutputMarkupId( true );
         partsMapLink = panel;
         return panel;
@@ -465,7 +492,6 @@ public final class PlanPage extends WebPage implements Updatable {
                 doTimedUpdate( target );
             }
         } );
-
         form.add( refreshNeededContainer );
         updateRefreshNotice();
     }
@@ -493,7 +519,8 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void doTimedUpdate( AjaxRequestTarget target ) {
         if ( getCommander().isOutOfSync() ) {
-            if ( !dialogWindow.isShown() ) dialogWindow.show( target );
+            if ( !dialogWindow.isShown() )
+                dialogWindow.show( target );
         }
         getCommander().keepAlive( User.current().getUsername(), REFRESH_DELAY );
         getCommander().processDeaths();
@@ -506,26 +533,25 @@ public final class PlanPage extends WebPage implements Updatable {
         }
     }
 
-
     private void updateRefreshNotice() {
         String reasonsToRefresh = getReasonsToRefresh();
         makeVisible( refreshNeededContainer, !reasonsToRefresh.isEmpty() );
-        refreshNeededContainer.add(
-                new AttributeModifier( "title", true,
-                        new Model<String>( "Refresh:" + reasonsToRefresh ) ) );
+        refreshNeededContainer.add( new AttributeModifier( "title", true, new Model<String>(
+                "Refresh:" + reasonsToRefresh ) ) );
     }
 
     private String getReasonsToRefresh() {
         String reasons = "";
         String lastModifier = getCommander().getLastModifier();
         long lastModified = getCommander().getLastModified();
-        if ( lastModified > lastRefreshed && !lastModifier.isEmpty()
-                && !lastModifier.equals( getUser().getUsername() ) )
+        if ( lastModified > lastRefreshed && !lastModifier.isEmpty() && !lastModifier.equals(
+                getUser().getUsername() ) )
             reasons = " -- Plan was modified by " + lastModifier;
 
         // Find expansions that were locked and are not unlocked
         for ( ModelObject mo : getEditableModelObjects( expansions ) ) {
-            if ( !( mo instanceof Segment || mo instanceof Plan ) && getCommander().isUnlocked( mo ) ) {
+            if ( !( mo instanceof Segment || mo instanceof Plan )
+                 && getCommander().isUnlocked( mo ) ) {
                 reasons += " -- " + mo.getName() + " can now be edited.";
             }
         }
@@ -533,7 +559,6 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private Set<ModelObject> getEditableModelObjects( Set<Long> expansions ) {
-
         Set<ModelObject> editables = new HashSet<ModelObject>();
         for ( Long id : expansions ) {
             try {
@@ -548,33 +573,31 @@ public final class PlanPage extends WebPage implements Updatable {
     private void annotateSegmentName() {
         Analyst analyst = getApp().getAnalyst();
         String issue = analyst.getIssuesSummary( segment, Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        segmentNameLabel.add(
-                new AttributeModifier( "class", true,                                     // NON-NLS
-                        new Model<String>( issue.isEmpty() ? "no-error" : "error" ) ) );  // NON-NLS
-        segmentNameLabel.add(
-                new AttributeModifier( "title", true,                                     // NON-NLS
-                        new Model<String>( issue.isEmpty() ? "No known issue" : issue ) ) );
+        segmentNameLabel.add( new AttributeModifier( "class", true,// NON-NLS
+                                                     new Model<String>( issue.isEmpty() ? "no-error"
+                                                                        : "error" ) ) );  // NON-NLS
+        segmentNameLabel.add( new AttributeModifier( "title", true,// NON-NLS
+                                                     new Model<String>( issue.isEmpty()
+                                                                        ? "No known issue"
+                                                                        : issue ) ) );
     }
 
     private void addPlanMenubar() {
         PropertyModel<Segment> sc = new PropertyModel<Segment>( this, "segment" );
         Set<Long> exps = getReadOnlyExpansions();
-
         planActionsMenu = new PlanActionsMenuPanel( "planActionsMenu", sc, exps );
         planActionsMenu.setOutputMarkupId( true );
         form.add( planActionsMenu );
-
         planShowMenu = new PlanShowMenuPanel( "planShowMenu", sc, exps );
         planShowMenu.setOutputMarkupId( true );
         form.add( planShowMenu );
-        form.add( new Label( "username", getUser().getUsername() ) );
+        // form.add( new Label( "username", getUser().getUsername() ) );
     }
 
     private void addPlanActionsMenu() {
-        planActionsMenu = new PlanActionsMenuPanel(
-                "planActionsMenu",
-                new PropertyModel<Segment>( this, "segment" ),
-                getReadOnlyExpansions() );
+        planActionsMenu = new PlanActionsMenuPanel( "planActionsMenu",
+                                                    new PropertyModel<Segment>( this, "segment" ),
+                                                    getReadOnlyExpansions() );
         planActionsMenu.setOutputMarkupId( true );
         form.addOrReplace( planActionsMenu );
     }
@@ -583,10 +606,14 @@ public final class PlanPage extends WebPage implements Updatable {
         selectSegmentContainer = new WebMarkupContainer( "select-segment" );
         selectSegmentContainer.setOutputMarkupId( true );
         form.add( selectSegmentContainer );
-        segmentDropDownChoice = new DropDownChoice<Segment>(
-                "sg-sel",                                                                 // NON-NLS
-                new PropertyModel<Segment>( this, "segment" ),                          // NON-NLS
-                new PropertyModel<List<? extends Segment>>( this, "allSegments" ) );    // NON-NLS
+        segmentDropDownChoice = new DropDownChoice<Segment>( "sg-sel",
+                                                             // NON-NLS
+                                                             new PropertyModel<Segment>( this,
+                                                                                         "segment" ),
+                                                             // NON-NLS
+                                                             new PropertyModel<List<? extends Segment>>(
+                                                                     this,
+                                                                     "allSegments" ) );    // NON-NLS
         segmentDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) { // NON-NLS
 
             @Override
@@ -602,10 +629,13 @@ public final class PlanPage extends WebPage implements Updatable {
         switchPlanContainer = new WebMarkupContainer( "switch-plan" );
         switchPlanContainer.setOutputMarkupId( true );
         form.add( switchPlanContainer );
-        DropDownChoice<Plan> planDropDownChoice = new DropDownChoice<Plan>(
-                "plan-sel",
-                new PropertyModel<Plan>( this, "plan" ),
-                new PropertyModel<List<? extends Plan>>( this, "plannablePlans" ) );
+        DropDownChoice<Plan> planDropDownChoice = new DropDownChoice<Plan>( "plan-sel",
+                                                                            new PropertyModel<Plan>(
+                                                                                    this,
+                                                                                    "plan" ),
+                                                                            new PropertyModel<List<? extends Plan>>(
+                                                                                    this,
+                                                                                    "plannablePlans" ) );
         planDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -618,11 +648,9 @@ public final class PlanPage extends WebPage implements Updatable {
     private void addModalDialog() {
         dialogWindow = new ModalWindow( "dialog" );
         dialogWindow.setResizable( false );
-        dialogWindow.setContent( new DialogPanel(
-                dialogWindow.getContentId(),
-                new Model<String>(
-                        "There is a new version of the plan. "
-                                + "Closing this alert will switch you to it." ) ) );
+        dialogWindow.setContent( new DialogPanel( dialogWindow.getContentId(), new Model<String>(
+                "There is a new version of the plan. "
+                + "Closing this alert will switch you to it." ) ) );
         dialogWindow.setTitle( "Alert" );
         dialogWindow.setCookieName( "refresh-alert" );
         dialogWindow.setCloseButtonCallback( new ModalWindow.CloseButtonCallback() {
@@ -648,11 +676,10 @@ public final class PlanPage extends WebPage implements Updatable {
             entityPanel.setOutputMarkupId( true );
             makeVisible( entityPanel, false );
         } else {
-            entityPanel = new EntityPanel(
-                    "entity",
-                    new Model<ModelEntity>( entity ),
-                    getReadOnlyExpansions(),
-                    getAspectShown( entity ) );
+            entityPanel = new EntityPanel( "entity",
+                                           new Model<ModelEntity>( entity ),
+                                           getReadOnlyExpansions(),
+                                           getAspectShown( entity ) );
         }
         form.addOrReplace( entityPanel );
     }
@@ -664,11 +691,9 @@ public final class PlanPage extends WebPage implements Updatable {
             assignmentsPanel.setOutputMarkupId( true );
             makeVisible( assignmentsPanel, false );
         } else {
-            assignmentsPanel = new PartAssignmentsPanel(
-                    "assignments",
-                    new Model<Part>( partViewed ),
-                    getReadOnlyExpansions()
-            );
+            assignmentsPanel = new PartAssignmentsPanel( "assignments",
+                                                         new Model<Part>( partViewed ),
+                                                         getReadOnlyExpansions() );
         }
         form.addOrReplace( assignmentsPanel );
     }
@@ -680,11 +705,9 @@ public final class PlanPage extends WebPage implements Updatable {
             commitmentsPanel.setOutputMarkupId( true );
             makeVisible( commitmentsPanel, false );
         } else {
-            commitmentsPanel = new SharingCommitmentsPanel(
-                    "commitments",
-                    new Model<Flow>( flowViewed ),
-                    getReadOnlyExpansions()
-            );
+            commitmentsPanel = new SharingCommitmentsPanel( "commitments",
+                                                            new Model<Flow>( flowViewed ),
+                                                            getReadOnlyExpansions() );
         }
         form.addOrReplace( commitmentsPanel );
     }
@@ -696,28 +719,26 @@ public final class PlanPage extends WebPage implements Updatable {
             eoisPanel.setOutputMarkupId( true );
             makeVisible( eoisPanel, false );
         } else {
-            eoisPanel = new FlowEOIsPanel(
-                    "eois",
-                    new Model<Flow>( flowViewed ),
-                    getReadOnlyExpansions()
-            );
+            eoisPanel = new FlowEOIsPanel( "eois",
+                                           new Model<Flow>( flowViewed ),
+                                           getReadOnlyExpansions() );
         }
         form.addOrReplace( eoisPanel );
     }
 
     private void addFailureImpactsPanel() {
-        SegmentObject segmentObject = (SegmentObject) getModelObjectViewed( ModelObject.class, "failure" );
-        if ( segmentObject == null
-                || !( segmentObject instanceof Part || segmentObject instanceof Flow && ( (Flow) segmentObject ).isSharing() ) ) {
+        SegmentObject segmentObject =
+                (SegmentObject) getModelObjectViewed( ModelObject.class, "failure" );
+        if ( segmentObject == null || !( segmentObject instanceof Part ||
+                                         segmentObject instanceof Flow
+                                         && ( (Flow) segmentObject ).isSharing() ) ) {
             failureImpactsPanel = new Label( "impacts", "" );
             failureImpactsPanel.setOutputMarkupId( true );
             makeVisible( failureImpactsPanel, false );
         } else {
-            failureImpactsPanel = new FailureImpactsPanel(
-                    "impacts",
-                    new Model<SegmentObject>( segmentObject ),
-                    getReadOnlyExpansions()
-            );
+            failureImpactsPanel = new FailureImpactsPanel( "impacts",
+                                                           new Model<SegmentObject>( segmentObject ),
+                                                           getReadOnlyExpansions() );
         }
         form.addOrReplace( failureImpactsPanel );
     }
@@ -728,11 +749,11 @@ public final class PlanPage extends WebPage implements Updatable {
     private void addSegmentEditPanel() {
         boolean showSegmentEdit = expansions.contains( getSegment().getId() );
         if ( showSegmentEdit ) {
-            segmentEditPanel = new SegmentEditPanel(
-                    "sg-editor",                                                              // NON-NLS
-                    new PropertyModel<Segment>( this, "segment" ),
-                    getReadOnlyExpansions(),
-                    getAspectShown( getSegment() ) );
+            segmentEditPanel = new SegmentEditPanel( "sg-editor",
+                                                     // NON-NLS
+                                                     new PropertyModel<Segment>( this, "segment" ),
+                                                     getReadOnlyExpansions(),
+                                                     getAspectShown( getSegment() ) );
         } else {
             segmentEditPanel = new Label( "sg-editor", "" );
             segmentEditPanel.setOutputMarkupId( true );
@@ -757,9 +778,9 @@ public final class PlanPage extends WebPage implements Updatable {
         boolean showPlanEdit = expansions.contains( plan.getId() );
         if ( showPlanEdit ) {
             planEditPanel = new PlanEditPanel( "plan",
-                    new Model<Plan>( plan ),
-                    getReadOnlyExpansions(),
-                    getAspectShown( plan ) );
+                                               new Model<Plan>( plan ),
+                                               getReadOnlyExpansions(),
+                                               getAspectShown( plan ) );
         } else {
             planEditPanel = new Label( "plan", "" );
             planEditPanel.setOutputMarkupId( true );
@@ -771,9 +792,7 @@ public final class PlanPage extends WebPage implements Updatable {
     private void addSurveysPanel( Survey survey ) {
         boolean showSurveys = expansions.contains( surveyService.getId() );
         if ( showSurveys ) {
-            surveysPanel = new SurveysPanel( "surveys", survey,
-                    getReadOnlyExpansions() );
-
+            surveysPanel = new SurveysPanel( "surveys", survey, getReadOnlyExpansions() );
         } else {
             surveysPanel = new Label( "surveys", "" );
             surveysPanel.setOutputMarkupId( true );
@@ -797,20 +816,19 @@ public final class PlanPage extends WebPage implements Updatable {
      * @param plan a plan
      */
     public void setPlan( Plan plan ) {
-        getUser().switchPlan( plan );
+        getUser().setPlan( plan );
     }
 
     private ModelEntity findExpandedEntity() {
         for ( long id : expansions ) {
             try {
                 ModelObject mo = queryService.find( ModelObject.class, id );
-                if ( mo.isEntity() ) return ( (ModelEntity) mo );
-            }
-            catch ( NotFoundException ignored ) {
+                if ( mo.isEntity() )
+                    return ( (ModelEntity) mo );
+            } catch ( NotFoundException ignored ) {
                 // ignore
             }
         }
-
         return null;
     }
 
@@ -821,7 +839,6 @@ public final class PlanPage extends WebPage implements Updatable {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );
             }
         } );
-
         return allSegments;
     }
 
@@ -901,13 +918,12 @@ public final class PlanPage extends WebPage implements Updatable {
             exps.append( "&expand=" );                                                    // NON-NLS
             exps.append( Long.toString( id ) );
         }
-        setResponsePage(
-                new RedirectPage(
-                        MessageFormat.format(
-                                "/plan?segment={0,number,0}&part={1,number,0}{2}",            // NON-NLS
-                                sid,
-                                nid,
-                                exps ) ) );
+        setResponsePage( new RedirectPage( MessageFormat.format(
+                "/plan?segment={0,number,0}&part={1,number,0}{2}",
+                // NON-NLS
+                sid,
+                nid,
+                exps ) ) );
     }
 
     /**
@@ -920,7 +936,6 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     public static PageParameters getParameters(
             Segment segment, Part p, Set<Long> expanded ) {
-
         PageParameters result = new PageParameters();
         result.put( SEGMENT_PARM, Long.toString( segment.getId() ) );
         if ( p != null ) {
@@ -973,7 +988,8 @@ public final class PlanPage extends WebPage implements Updatable {
      * @return set of ids
      */
     public static Set<Long> findExpansions( PageParameters parameters ) {
-        if ( parameters == null ) return new HashSet<Long>();
+        if ( parameters == null )
+            return new HashSet<Long>();
         Set<Long> result = new HashSet<Long>( parameters.size() );
         if ( parameters.containsKey( EXPAND_PARM ) ) {
             List<String> stringList = Arrays.asList( parameters.getStringArray( EXPAND_PARM ) );
@@ -1002,7 +1018,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private Commander getCommander() {
         // return Channels.instance().getCommander();
-        return getApp().getCommander();
+        return getApp().getCommander( getPlan() );
     }
 
     /**
@@ -1021,9 +1037,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private boolean isZombie( Part part ) {
-        return part == null
-                || segment.getNode( part.getId() ) == null
-                || part.getSegment() == null;
+        return part == null || segment.getNode( part.getId() ) == null || part.getSegment() == null;
     }
 
     /**
@@ -1037,8 +1051,10 @@ public final class PlanPage extends WebPage implements Updatable {
             collapsePartObjects();
         }
         part = p;
-        if ( part == null ) part = segment.getDefaultPart();
-        if ( part.getSegment() != segment ) setSegment( part.getSegment() );
+        if ( part == null )
+            part = segment.getDefaultPart();
+        if ( part.getSegment() != segment )
+            setSegment( part.getSegment() );
     }
 
     /**
@@ -1063,7 +1079,8 @@ public final class PlanPage extends WebPage implements Updatable {
     @Override
     public PageParameters getPageParameters() {
         PageParameters params = super.getPageParameters();
-        if ( params == null ) params = new PageParameters();
+        if ( params == null )
+            params = new PageParameters();
         return params;
     }
 
@@ -1080,7 +1097,8 @@ public final class PlanPage extends WebPage implements Updatable {
         result.remove( EXPAND_PARM );
         if ( expanded != null ) {
             for ( String exp : expanded )
-                if ( !exp.equals( idString ) ) result.add( EXPAND_PARM, exp );
+                if ( !exp.equals( idString ) )
+                    result.add( EXPAND_PARM, exp );
         }
         return result;
     }
@@ -1108,9 +1126,8 @@ public final class PlanPage extends WebPage implements Updatable {
      * @param visible   a boolean
      */
     private static void makeVisible( Component component, boolean visible ) {
-        component.add( new AttributeModifier( "style",
-                true,
-                new Model<String>( visible ? "" : "display:none" ) ) );
+        component.add( new AttributeModifier( "style", true, new Model<String>(
+                visible ? "" : "display:none" ) ) );
     }
 
     private void reacquireLocks() {
@@ -1129,9 +1146,8 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void expand( Identifiable identifiable ) {
         // Never lock a segment or plan, or anything in a production plan
-        if ( getPlan().isDevelopment()
-                && identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isLockable() ) {
+        if ( getPlan().isDevelopment() && identifiable instanceof ModelObject
+             && ( (ModelObject) identifiable ).isLockable() ) {
             getCommander().requestLockOn( identifiable );
         }
         if ( identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isEntity() ) {
@@ -1165,7 +1181,8 @@ public final class PlanPage extends WebPage implements Updatable {
             aspects.remove( identifiable.getId() );
         } else {
             List<String> aspectsShown = aspects.get( identifiable.getId() );
-            if ( aspectsShown == null ) aspectsShown = new ArrayList<String>();
+            if ( aspectsShown == null )
+                aspectsShown = new ArrayList<String>();
             if ( !aspectsShown.contains( aspect ) )
                 aspectsShown.add( aspect );
             aspects.put( identifiable.getId(), aspectsShown );
@@ -1196,23 +1213,20 @@ public final class PlanPage extends WebPage implements Updatable {
         return viewed;
     }
 
-
     // Assumes that only instance of clazz can view the given aspect at a time.
-    private Long findIdForAspectViewed( final Class<? extends ModelObject> clazz, final String aspect ) {
-        return (Long) CollectionUtils.find(
-                aspects.keySet(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        Long id = (Long) obj;
-                        try {
-                            getQueryService().find( clazz, id );
-                        } catch ( NotFoundException e ) {
-                            return false;
-                        }
-                        return aspects.get( id ).contains( aspect );
-                    }
+    private Long findIdForAspectViewed(
+            final Class<? extends ModelObject> clazz, final String aspect ) {
+        return (Long) CollectionUtils.find( aspects.keySet(), new Predicate() {
+            public boolean evaluate( Object obj ) {
+                Long id = (Long) obj;
+                try {
+                    getQueryService().find( clazz, id );
+                } catch ( NotFoundException e ) {
+                    return false;
                 }
-        );
+                return aspects.get( id ).contains( aspect );
+            }
+        } );
     }
 
     private void collapseSegmentObjects() {
@@ -1259,12 +1273,12 @@ public final class PlanPage extends WebPage implements Updatable {
         }
     }
 
-
     /**
      * {@inheritDoc}
      */
     public void changed( Change change ) {
-        if ( change.isNone() ) return;
+        if ( change.isNone() )
+            return;
         Identifiable identifiable = change.getSubject();
         if ( !( identifiable instanceof Survey ) ) {
             if ( change.isCollapsed() || change.isRemoved() )
@@ -1317,7 +1331,8 @@ public final class PlanPage extends WebPage implements Updatable {
             if ( change.isAdded() || change.isSelected() ) {
                 setPart( (Part) identifiable );
                 flowMaximized = false;
-                if ( change.isAdded() ) expand( identifiable );
+                if ( change.isAdded() )
+                    expand( identifiable );
             } else if ( change.isRemoved() ) {
                 collapse( getPart() );
                 collapsePartObjects();
@@ -1354,10 +1369,8 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( !change.isNone() ) {
             if ( change.getSubject() instanceof Plan && change.isSelected() ) {
                 redirectToPlan();
-            } else if ( change.isUndoing()
-                    || change.isUnknown()
-                    || change.isRecomposed()
-                    || change.isAdded() && change.getSubject() instanceof Part ) {
+            } else if ( change.isUndoing() || change.isUnknown() || change.isRecomposed()
+                        || change.isAdded() && change.getSubject() instanceof Part ) {
                 refresh( target, change, new ArrayList<Updatable>() );
             } else if ( change.isUpdated() && isExpanded( change.getSubject() ) ) {
                 Change accumulatedChange = changes.get( change.getSubject() );
@@ -1392,7 +1405,8 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * {@inheritDoc}
      */
-    public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated, String aspect ) {
+    public void refresh(
+            AjaxRequestTarget target, Change change, List<Updatable> updated, String aspect ) {
         // Do nothing
     }
 
@@ -1450,7 +1464,8 @@ public final class PlanPage extends WebPage implements Updatable {
         target.addComponent( switchPlanContainer );
     }
 
-    private void refreshChildren( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshChildren(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         refreshPlanEditPanel( target, change, updated );
         refreshSegmentEditPanel( target, change, updated );
         refreshEntityPanel( target, change, updated );
@@ -1462,7 +1477,8 @@ public final class PlanPage extends WebPage implements Updatable {
         refreshFailureImpactsPanel( target, change, updated );
     }
 
-    private void refreshSegmentPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshSegmentPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
         if ( identifiable instanceof Part && ( change.isSelected() || change.isDisplay() ) ) {
             segmentPanel.doRefresh( target, change );
@@ -1472,81 +1488,81 @@ public final class PlanPage extends WebPage implements Updatable {
         }
     }
 
-    private void refreshPlanEditPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshPlanEditPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
         Plan plan = getPlan();
         if ( change.isUnknown() || change.isDisplay() && identifiable instanceof Plan ) {
             addPlanEditPanel();
             target.addComponent( planEditPanel );
         } else if ( planEditPanel instanceof PlanEditPanel ) {
-            ( (PlanEditPanel) planEditPanel ).refresh(
-                    target,
-                    change,
-                    updated,
-                    getAspectShown( plan ) );
+            ( (PlanEditPanel) planEditPanel ).refresh( target,
+                                                       change,
+                                                       updated,
+                                                       getAspectShown( plan ) );
         }
     }
 
-    private void refreshSegmentEditPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshSegmentEditPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUnknown()
-                || ( change.isDisplay() || change.isAdded() ) && change.getSubject() instanceof Segment
-                || change.isSelected() && change.getSubject() instanceof Part ) {
+             || ( change.isDisplay() || change.isAdded() ) && change.getSubject() instanceof Segment
+             || change.isSelected() && change.getSubject() instanceof Part ) {
             addSegmentEditPanel();
             target.addComponent( segmentEditPanel );
             target.addComponent( segmentDropDownChoice );
         } else if ( segmentEditPanel instanceof SegmentEditPanel ) {
-            ( (SegmentEditPanel) segmentEditPanel ).refresh(
-                    target,
-                    change,
-                    updated,
-                    getAspectShown( getSegment() ) );
+            ( (SegmentEditPanel) segmentEditPanel ).refresh( target,
+                                                             change,
+                                                             updated,
+                                                             getAspectShown( getSegment() ) );
         }
     }
 
-    private void refreshEntityPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshEntityPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         ModelEntity entity = findExpandedEntity();
-        if ( change.isUnknown() || change.isDisplay() && change.getSubject() instanceof ModelEntity ) {
+        if ( change.isUnknown()
+             || change.isDisplay() && change.getSubject() instanceof ModelEntity ) {
             addEntityPanel();
             target.addComponent( entityPanel );
         } else if ( entityPanel instanceof EntityPanel ) {
-            ( (EntityPanel) entityPanel ).refresh(
-                    target,
-                    change,
-                    updated,
-                    getAspectShown( entity ) );
+            ( (EntityPanel) entityPanel ).refresh( target,
+                                                   change,
+                                                   updated,
+                                                   getAspectShown( entity ) );
         }
     }
 
-    private void refreshAssignmentsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshAssignmentsPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( change.isUnknown() || identifiable instanceof Part && change.isAspect( "assignments" ) ) {
+        if ( change.isUnknown()
+             || identifiable instanceof Part && change.isAspect( "assignments" ) ) {
             addAssignmentsPanel();
             target.addComponent( assignmentsPanel );
         } else if ( assignmentsPanel instanceof PartAssignmentsPanel ) {
-            ( (PartAssignmentsPanel) assignmentsPanel ).refresh(
-                    target,
-                    change,
-                    updated );
+            ( (PartAssignmentsPanel) assignmentsPanel ).refresh( target, change, updated );
         }
     }
 
-    private void refreshCommitmentsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshCommitmentsPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( change.isUnknown() || identifiable instanceof Flow && change.isAspect( "commitments" ) ) {
+        if ( change.isUnknown()
+             || identifiable instanceof Flow && change.isAspect( "commitments" ) ) {
             addCommitmentsPanel();
             target.addComponent( commitmentsPanel );
         } else if ( commitmentsPanel instanceof SharingCommitmentsPanel ) {
-            ( (SharingCommitmentsPanel) commitmentsPanel ).refresh(
-                    target,
-                    change,
-                    updated );
+            ( (SharingCommitmentsPanel) commitmentsPanel ).refresh( target, change, updated );
         }
     }
 
-    private void refreshEOIsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshEOIsPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( change.isUnknown() || identifiable instanceof Flow &&
-                ( change.isCollapsed() || change.isAspect( "eois" ) ) ) {
+        if ( change.isUnknown() || identifiable instanceof Flow && ( change.isCollapsed()
+                                                                     || change.isAspect( "eois" ) ) ) {
             addEOIsPanel();
             target.addComponent( eoisPanel );
         } else if ( eoisPanel instanceof FlowEOIsPanel ) {
@@ -1554,52 +1570,43 @@ public final class PlanPage extends WebPage implements Updatable {
         }
     }
 
-    private void refreshFailureImpactsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshFailureImpactsPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( change.isUnknown() || identifiable instanceof SegmentObject && change.isAspect( "failure" ) ) {
+        if ( change.isUnknown() || identifiable instanceof SegmentObject && change.isAspect(
+                "failure" ) ) {
             addFailureImpactsPanel();
             target.addComponent( failureImpactsPanel );
         } else if ( failureImpactsPanel instanceof FailureImpactsPanel ) {
-            ( (FailureImpactsPanel) failureImpactsPanel ).refresh(
-                    target,
-                    change,
-                    updated );
+            ( (FailureImpactsPanel) failureImpactsPanel ).refresh( target, change, updated );
         }
     }
 
-    private void refreshSurveysPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshSurveysPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( change.isUnknown() || change.isDisplay()
-                && ( identifiable instanceof SurveyService || identifiable instanceof Survey ) ) {
+        if ( change.isUnknown() || change.isDisplay() && ( identifiable instanceof SurveyService
+                                                           || identifiable instanceof Survey ) ) {
             addSurveysPanel( identifiable instanceof Survey ? (Survey) identifiable : null );
             target.addComponent( surveysPanel );
         } else if ( surveysPanel instanceof SurveysPanel ) {
-            ( (SurveysPanel) surveysPanel ).refresh(
-                    target,
-                    change,
-                    updated,
-                    getAspectShown( surveyService ) );
+            ( (SurveysPanel) surveysPanel ).refresh( target,
+                                                     change,
+                                                     updated,
+                                                     getAspectShown( surveyService ) );
         }
     }
 
-
     private void updateNavigation() {
-        goBackContainer.add( new AttributeModifier(
-                "src",
-                true,
-                new Model<String>( isCanGoBack() ? "images/go_back.png" : "images/go_back_disabled.png" ) ) );
-        goBackContainer.add( new AttributeModifier(
-                "title",
-                true,
-                new Model<String>( isCanGoBack() ? "Go back" : "" ) ) );
-        goForwardContainer.add( new AttributeModifier(
-                "src",
-                true,
-                new Model<String>( isCanGoForward() ? "images/go_forward.png" : "images/go_forward_disabled.png" ) ) );
-        goForwardContainer.add( new AttributeModifier(
-                "title",
-                true,
-                new Model<String>( isCanGoForward() ? "Go forward" : "" ) ) );
+        goBackContainer.add( new AttributeModifier( "src", true, new Model<String>( isCanGoBack()
+                                                                                    ? "images/go_back.png"
+                                                                                    : "images/go_back_disabled.png" ) ) );
+        goBackContainer.add( new AttributeModifier( "title", true, new Model<String>(
+                isCanGoBack() ? "Go back" : "" ) ) );
+        goForwardContainer.add( new AttributeModifier( "src", true, new Model<String>(
+                isCanGoForward() ? "images/go_forward.png" : "images/go_forward_disabled.png" ) ) );
+        goForwardContainer.add( new AttributeModifier( "title", true, new Model<String>(
+                isCanGoForward() ? "Go forward" : "" ) ) );
     }
 
     private void updateNavigation( AjaxRequestTarget target ) {
@@ -1708,9 +1715,11 @@ public final class PlanPage extends WebPage implements Updatable {
     @SuppressWarnings( "unchecked" )
     private void reinstate( PageState pageState, AjaxRequestTarget target ) {
         // Expand what's expanded in page state but not in current expansions
-        List<Long> expandSet = (List<Long>) CollectionUtils.subtract( pageState.getExpansions(), expansions );
+        List<Long> expandSet =
+                (List<Long>) CollectionUtils.subtract( pageState.getExpansions(), expansions );
         // Collapse what's in expansions but not in page state
-        List<Long> collapseSet = (List<Long>) CollectionUtils.subtract( expansions, pageState.getExpansions() );
+        List<Long> collapseSet =
+                (List<Long>) CollectionUtils.subtract( expansions, pageState.getExpansions() );
         for ( Long id : expandSet ) {
             try {
                 ModelObject toExpand = getQueryService().find( ModelObject.class, id );
@@ -1738,10 +1747,10 @@ public final class PlanPage extends WebPage implements Updatable {
             } catch ( NotFoundException e ) {
                 // Do nothing
             }
-
         }
         try {
-            Segment previousSegment = getQueryService().find( Segment.class, pageState.getSegmentId() );
+            Segment previousSegment =
+                    getQueryService().find( Segment.class, pageState.getSegmentId() );
             if ( !getSegment().equals( previousSegment ) ) {
                 setSegment( previousSegment );
             }
@@ -1754,7 +1763,6 @@ public final class PlanPage extends WebPage implements Updatable {
         }
         refreshAll( target );
     }
-
 
     /**
      * Dialog panel.
@@ -1772,18 +1780,22 @@ public final class PlanPage extends WebPage implements Updatable {
      * Page state.
      */
     private class PageState implements Serializable {
+
         /**
          * Segment id.
          */
         private long segmentId;
+
         /**
          * Part id.
          */
         private long partId;
+
         /**
          * Expansions
          */
         private Set<Long> expanded;
+
         /**
          * Aspects viewed.
          */
@@ -1831,10 +1843,9 @@ public final class PlanPage extends WebPage implements Updatable {
         public boolean equals( Object obj ) {
             if ( obj instanceof PageState ) {
                 PageState other = (PageState) obj;
-                return segmentId == other.getSegmentId()
-                        && partId == other.getPartId()
-                        && CollectionUtils.isEqualCollection( expanded, other.getExpansions() )
-                        && hasSameAspects( other );
+                return segmentId == other.getSegmentId() && partId == other.getPartId()
+                       && CollectionUtils.isEqualCollection( expanded, other.getExpansions() )
+                       && hasSameAspects( other );
             } else {
                 return false;
             }
@@ -1842,14 +1853,11 @@ public final class PlanPage extends WebPage implements Updatable {
 
         private boolean hasSameAspects( PageState other ) {
             Map<Long, List<String>> otherAspects = other.getAspects();
-            if ( !CollectionUtils.isEqualCollection(
-                    aspects.keySet(),
-                    otherAspects.keySet() ) )
+            if ( !CollectionUtils.isEqualCollection( aspects.keySet(), otherAspects.keySet() ) )
                 return false;
             for ( Long id : aspects.keySet() ) {
-                if ( !CollectionUtils.isEqualCollection(
-                        otherAspects.get( id ),
-                        aspects.get( id ) ) )
+                if ( !CollectionUtils.isEqualCollection( otherAspects.get( id ),
+                                                         aspects.get( id ) ) )
                     return false;
             }
             return true;

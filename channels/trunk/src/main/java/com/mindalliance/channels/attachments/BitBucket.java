@@ -2,6 +2,7 @@ package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 import java.io.File;
@@ -17,35 +18,37 @@ public class BitBucket implements AttachmentManager {
     /**
       * {@inheritDoc}
       */
-    public boolean exists( String url ) {
+    public boolean exists( Plan plan, String url ) {
         return false;
     }
 
     /**
       * {@inheritDoc}
       */
-    public Attachment upload( Attachment.Type selectedType, FileUpload upload ) {
+    public Attachment upload(
+            Plan plan, Attachment.Type selectedType, FileUpload upload ) {
         return null;
     }
 
     /**
       * {@inheritDoc}
       */
-    public String getLabel( Attachment attachment ) {
+    public String getLabel( Plan plan, Attachment attachment ) {
         return null;
     }
 
     /**
       * {@inheritDoc}
       */
-    public void removeUnattached( QueryService service ) {
+    public void removeUnattached( QueryService service, Plan plan ) {
         // Do nothing
     }
 
     /**
       * {@inheritDoc}
-      */
-    public File getUploadDirectory() {
+     * @param plan
+     */
+    public File getUploadDirectory( Plan plan ) {
         return null;
     }
 

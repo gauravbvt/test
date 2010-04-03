@@ -1,6 +1,7 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -377,8 +378,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     /**
      * Disconnect from source and target.
+     * @param planDao
      */
-    public abstract void disconnect();
+    public abstract void disconnect( Memory planDao );
 
     /**
      * @return true for internal flows; false for external flows.
@@ -970,9 +972,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                                     && alternate.isSharing()
                                     && Matcher.same( getName(), alternate.getName() )
                                     && Matcher.subsetOf(
-                                    getEois(),
-                                    alternate.getEois(),
-                                    getSegment().getQueryService()
+                                    getEois(), alternate.getEois(), getSegment().getQueryService()
                             );
                         }
                     } );

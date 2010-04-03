@@ -2,6 +2,7 @@ package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.dao.PlanManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -60,7 +61,7 @@ public class FileBasedManager implements AttachmentManager {
     /**
      * The logger.
      */
-    private final Logger log = LoggerFactory.getLogger( FileBasedManager.class );
+    private static final Logger LOG = LoggerFactory.getLogger( FileBasedManager.class );
 
     /**
      * Plan manager.
@@ -95,40 +96,39 @@ public class FileBasedManager implements AttachmentManager {
         this.planManager = planManager;
     }
 
-    private Map<String, FileDocument> getDocumentMap() {
+    private synchronized Map<String, FileDocument> getDocumentMap( Plan plan ) {
         if ( documentMap == null ) {
-            documentMap = Collections.synchronizedMap(
-                    new HashMap<String, FileDocument>() );
-            load( documentMap );
+            documentMap = Collections.synchronizedMap( new HashMap<String, FileDocument>() );
+            load( plan, documentMap );
         }
         return documentMap;
     }
 
-    private File createFile( String name ) {
+    private File createFile( Plan plan, String name ) {
         String truncatedName = StringUtils.reverse(
-                StringUtils.reverse( name ).substring( 0, Math.min( name.length(), getMaxLength() ) ) );
+                StringUtils.reverse( name ).substring(
+                        0, Math.min( name.length(), getMaxLength() ) ) );
         // String idealName = escape( truncatedName );
-        File result = new File( getUploadDirectory(), truncatedName );
+        File result = new File( getUploadDirectory( plan ), truncatedName );
         int i = 0;
         while ( result.exists() ) {
             String actual = ++i + "_" + truncatedName;
-            result = new File( getUploadDirectory(), actual );
+            result = new File( getUploadDirectory( plan ), actual );
         }
 
         return result;
     }
 
-
     // Return pre-existing document if one exists for the same file.
-    private FileDocument resolve( final FileDocument document ) {
+    private FileDocument resolve( Plan plan, final FileDocument document ) {
         FileDocument toSameFile = (FileDocument) CollectionUtils.find(
-                getDocumentMap().values(),
+                getDocumentMap( plan ).values(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         FileDocument prior = (FileDocument) object;
                         return prior.isFile()
-                                && document.getFile().getName().
                                 // > 0 -> must not be the exact same file, but a duplicate
+                                && document.getFile().getName().
                                         indexOf( prior.getFile().getName() ) > 0
                                 && document.getDigest().equals( prior.getDigest() );
                     }
@@ -141,11 +141,11 @@ public class FileBasedManager implements AttachmentManager {
         return document;
     }
 
-    public synchronized String getUploadPath() {
+    public String getUploadPath() {
         return uploadPath;
     }
 
-    public synchronized void setUploadPath( String uploadPath ) {
+    public void setUploadPath( String uploadPath ) {
         this.uploadPath = uploadPath;
     }
 
@@ -212,55 +212,55 @@ public class FileBasedManager implements AttachmentManager {
     }
 
 
-    private void save() {
+    private void save( Plan plan ) {
         Writer out = null;
         try {
-            File file = new File( getUploadDirectory(), digestsMapFile );
-            out = new FileWriter( file );
             Properties digests = new Properties();
-            for ( String url : getDocumentMap().keySet() ) {
-                digests.setProperty( url, getDocumentMap().get( url ).getDigest() );
-            }
+            for ( Map.Entry<String, FileDocument> entry : getDocumentMap( plan ).entrySet() )
+                digests.setProperty( entry.getKey(), entry.getValue().getDigest() );
+
+            out = new FileWriter( new File( getUploadDirectory( plan ), digestsMapFile ) );
             digests.store( out, " File digests. Do not edit." );
+
         } catch ( IOException e ) {
-            log.error( "Unable to save document digests " + digestsMapFile + ".", e );
+            LOG.error( "Unable to save document digests " + digestsMapFile + '.', e );
+
         } finally {
             if ( out != null )
                 try {
                     out.close();
                 } catch ( IOException e ) {
-                    log.error( "Unable to document digest map" + digestsMapFile + ".", e );
+                    LOG.error( "Unable to document digest map" + digestsMapFile + '.', e );
                 }
         }
     }
 
-
-    private synchronized void load( Map<String, FileDocument> docMap ) {
+    private void load( Plan plan, Map<String, FileDocument> docMap ) {
         Properties digests = new Properties();
         Reader in = null;
         try {
-            in = new FileReader( new File( getUploadDirectory(), digestsMapFile ) );
+            in = new FileReader( new File( getUploadDirectory( plan ), digestsMapFile ) );
             digests.load( in );
 
         } catch ( FileNotFoundException ignored ) {
-            log.info( "Creating new file map." );
+            LOG.info( "Creating new file map." );
         } catch ( IOException e ) {
-            log.error( "Error while reading file map. Some attachments may be lost", e );
+            LOG.error( "Error while reading file map. Some attachments may be lost", e );
         } finally {
             if ( in != null )
                 try {
                     in.close();
                 } catch ( IOException e ) {
-                    log.error( "Unable to close file map.", e );
+                    LOG.error( "Unable to close file map.", e );
                 }
         }
         for ( String url : digests.stringPropertyNames() ) {
             String digest = digests.getProperty( url );
             // String unescapedUrl = unescape( url );
             FileDocument document = new FileDocument(
-                    new File( getUploadDirectory(), url ),
+                    new File( getUploadDirectory( plan ), url ),
                     /*path + */url, digest );
-            if ( exists( url ) ) {
+            if ( exists( plan, url ) ) {
                 docMap.put( url, document );
             }
         }
@@ -270,22 +270,24 @@ public class FileBasedManager implements AttachmentManager {
     /**
      * {@inheritDoc}
      */
-    public boolean exists( String url ) {
-        return isValidUrl( url ) && ( !isFileDocument( url ) || isUploaded( url ) );
+    public boolean exists( Plan plan, String url ) {
+        return isValidUrl( url ) && ( !isFileDocument( url ) || isUploaded( plan, url ) );
     }
 
     private boolean isValidUrl( String url ) {
-        if ( url.startsWith( uploadPath ) ) return true;
-        try {
-            new URL( url );
-        } catch ( MalformedURLException e ) {
-            return false;
+        if ( !url.startsWith( uploadPath ) ) {
+            try {
+                new URL( url );
+            } catch ( MalformedURLException ignored ) {
+                return false;
+            }
         }
+
         return true;
     }
 
-    private boolean isUploaded( final String url ) {
-        return getUploadDirectory().listFiles( new FilenameFilter() {
+    private boolean isUploaded( Plan plan, final String url ) {
+        return getUploadDirectory( plan ).listFiles( new FilenameFilter() {
             public boolean accept( File dir, String name ) {
                 return url.substring( url.lastIndexOf( '/' ) + 1 ).equals( name );
             }
@@ -296,22 +298,23 @@ public class FileBasedManager implements AttachmentManager {
         return url.startsWith( uploadPath );
     }
 
-
     /**
      * {@inheritDoc}
      */
-    public Attachment upload( Attachment.Type type, FileUpload fileUpload ) {
-        String fileName = fileUpload.getClientFileName();
+    public Attachment upload(
+            Plan plan, Attachment.Type selectedType, FileUpload upload ) {
+
+        String fileName = upload.getClientFileName();
         //String escaped = escape( fileName );
         BufferedInputStream in = null;
         BufferedOutputStream out = null;
         Attachment attachment = null;
         try {
-            File file = createFile( fileName );
+            File file = createFile( plan, fileName );
             MessageDigest messageDigest = MessageDigest.getInstance( "SHA" );
             in = new BufferedInputStream(
                     new DigestInputStream(
-                            fileUpload.getInputStream(),
+                            upload.getInputStream(),
                             messageDigest ) );
             out = new BufferedOutputStream( new FileOutputStream( file ) );
             int c;
@@ -327,22 +330,24 @@ public class FileBasedManager implements AttachmentManager {
                     file,
                     uploadPath + file.getName(),
                     digest );
+
             synchronized ( this ) {
-                FileDocument actual = resolve( fileDocument );
-                getDocumentMap().put( actual.getUrl(), actual );
-                attachment = new Attachment( actual.getUrl(), type );
-                save();
+                FileDocument actual = resolve( plan, fileDocument );
+                getDocumentMap( plan ).put( actual.getUrl(), actual );
+                attachment = new Attachment( actual.getUrl(), selectedType );
+                save( plan );
             }
+
         } catch ( IOException e ) {
-            log.error( MessageFormat.format( "Error while uploading file: {0}", fileName ), e );
+            LOG.error( MessageFormat.format( "Error while uploading file: {0}", fileName ), e );
         } catch ( NoSuchAlgorithmException e ) {
-            log.error( MessageFormat.format( "Error while uploading file: {0}", fileName ), e );
+            LOG.error( MessageFormat.format( "Error while uploading file: {0}", fileName ), e );
         } finally {
             try {
                 if ( in != null ) in.close();
                 if ( out != null ) out.close();
             } catch ( IOException e ) {
-                e.printStackTrace();
+                LOG.warn( "Unable to close uploaded file", e );
             }
         }
         return attachment;
@@ -351,8 +356,8 @@ public class FileBasedManager implements AttachmentManager {
     /**
      * {@inheritDoc }
      */
-    public String getLabel( Attachment attachment ) {
-        FileDocument fileDocument = getDocumentMap().get( attachment.getUrl() );
+    public String getLabel( Plan plan, Attachment attachment ) {
+        FileDocument fileDocument = getDocumentMap( plan ).get( attachment.getUrl() );
         return fileDocument == null ? attachment.getUrl() : fileDocument.getFile().getName();
     }
 
@@ -360,10 +365,11 @@ public class FileBasedManager implements AttachmentManager {
      * {@inheritDoc }
      *
      * @param service
+     * @param plan
      */
-    public synchronized void removeUnattached( QueryService service ) {
+    public synchronized void removeUnattached( QueryService service, Plan plan ) {
         List<String> attachedUrls = service.findAllAttached();
-        File[] files = getUploadDirectory().listFiles();
+        File[] files = getUploadDirectory( plan ).listFiles();
         if ( files != null ) {
             List<File> uploadedFiles = Arrays.asList( files );
             for ( File file : uploadedFiles ) {
@@ -372,26 +378,28 @@ public class FileBasedManager implements AttachmentManager {
                         || name.equals( digestsMapFile ) ) ) {
                     String url = uploadPath + name;
                     if ( !attachedUrls.contains( url ) ) {
-                        log.warn( "Removing unattached " + url );
+                        LOG.warn( "Removing unattached " + url );
                         file.delete();
-                        getDocumentMap().remove( url );
+                        getDocumentMap( plan ).remove( url );
                     }
                 }
             }
-            save();
+            save( plan );
         }
     }
 
     /**
      * Get the location of the uploaded files.
      *
+     * @param plan the plan
      * @return a directory
      */
-    public File getUploadDirectory() {
-        File uploadsDir = new File( planManager.getPlanVersionDirectory() + File.separator + uploadPath );
+    public File getUploadDirectory( Plan plan ) {
+        File uploadsDir = new File(
+                        planManager.getPlanVersionDirectory( plan ) + File.separator + uploadPath );
         if ( !uploadsDir.exists() ) {
             uploadsDir.mkdir();
-            log.info( "Created upload directory: {}", uploadsDir.getAbsolutePath() );
+            LOG.info( "Created upload directory: {}", uploadsDir.getAbsolutePath() );
         }
         return uploadsDir;
     }

@@ -3,16 +3,16 @@ package com.mindalliance.channels.query;
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.Dao;
 import com.mindalliance.channels.ImagingService;
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.SemanticMatcher;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Assignment;
@@ -47,7 +47,6 @@ import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
-import com.mindalliance.channels.util.FileUserDetailsService;
 import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
@@ -146,7 +145,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      *
      * @return the dao
      */
-    public Dao getDao() {
+    public PlanDao getDao() {
         try {
             return planManager.getDao( planManager.getCurrentPlan() );
         } catch ( NotFoundException e ) {
@@ -177,7 +176,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * Make sure plans are valid initialized with some proper http://bit.ly/24Reg.
      */
     public void afterPropertiesSet() {
-        planManager.validate( this );
+        planManager.validate();
+        defineImmutableEntities( planManager.getBuiltInMedia() );
     }
 
     /**
@@ -255,10 +255,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz ) {
         return (List<T>) CollectionUtils.select( list( clazz ),
                 new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        ModelEntity entity = (ModelEntity) obj;
+                    public boolean evaluate( Object object ) {
+                        ModelEntity entity = (ModelEntity) object;
                         return entity.isImmutable() && !entity.isUnknown()
-                                || isReferenced( entity );
+                               || isReferenced( entity );
                     }
                 } );
     }
@@ -306,23 +306,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
-        T entity = null;
         if ( name != null && !name.trim().isEmpty() ) {
-            String candidateName = name.trim();
-            boolean success = false;
+            String root = name.trim();
+            String candidateName = root;
             int i = 1;
-            while ( !success ) {
+            while ( i < 10 ) {
                 try {
-                    entity = findOrCreate( clazz, candidateName, id );
-                    success = true;
-                } catch ( InvalidEntityKindException e ) {
+                    return findOrCreate( clazz, candidateName, id );
+                } catch ( InvalidEntityKindException ignored ) {
                     LOG.warn( "Entity name conflict creating actual " + candidateName );
-                    candidateName = candidateName + " (" + i + ")";
+                    candidateName = root + " (" + i + ')';
                     i++;
                 }
             }
+            LOG.warn( "Unable to create actual " + root );
         }
-        return entity;
+        return null;
     }
 
 
@@ -337,19 +336,26 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, Long id ) {
+        T result;
+
         // If entity can only be a type, find or create a type.
-        if ( !ModelEntity.canBeActualOrType( clazz ) ) {
-            if ( ModelEntity.defaultKindFor( clazz ).equals( ModelEntity.Kind.Type ) ) {
-                return findOrCreateType( clazz, name, id );
+        if ( !ModelEntity.canBeActualOrType( clazz )
+             && ModelEntity.defaultKindFor( clazz ).equals( ModelEntity.Kind.Type ) )
+            result = findOrCreateType( clazz, name, id );
+
+        else if ( ModelEntity.getUniversalType( name, clazz ) == null ) {
+            result = getDao().findOrCreate( clazz, name, id );
+            if ( result.isType() ) {
+                throw new InvalidEntityKindException(
+                        clazz.getSimpleName() + ' ' + name + " is a type" );
             }
-        }
-        if ( ModelEntity.getUniversalType( name, clazz ) != null )
-            throw new InvalidEntityKindException( clazz.getSimpleName() + " " + name + " is a type" );
-        T actualEntity = getDao().findOrCreate( clazz, name, id );
-        if ( actualEntity.isType() )
-            throw new InvalidEntityKindException( clazz.getSimpleName() + " " + name + " is a type" );
-        actualEntity.setActual();
-        return actualEntity;
+            result.setActual();
+
+        } else
+            throw new InvalidEntityKindException(
+                    clazz.getSimpleName() + ' ' + name + " is a type" );
+
+        return result;
     }
 
     /**
@@ -407,7 +413,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         if ( entityType == null ) {
             entityType = getDao().findOrCreate( clazz, name, id );
             if ( entityType.isActual() )
-                throw new InvalidEntityKindException( clazz.getSimpleName() + " " + name + " is actual" );
+                throw new InvalidEntityKindException( clazz.getSimpleName() + ' ' + name + " is actual" );
             entityType.setType();
         }
         return entityType;
@@ -460,19 +466,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Segment createSegment( Long id, Long defaultPartId ) {
-        Segment newSegment = new Segment();
-        if ( id == null )
-            getDao().add( newSegment );
-        else
-            getDao().add( newSegment, id );
-        newSegment.setName( Segment.DEFAULT_NAME );
-        newSegment.setDescription( Segment.DEFAULT_DESCRIPTION );
-        // Make sure a plan segment responds to an event.
-        newSegment.setEvent( planManager.getCurrentPlan().getDefaultEvent() );
-        newSegment.setPhase( planManager.getCurrentPlan().getDefaultPhase( this ) );
-        newSegment.setQueryService( this );
-        createPart( newSegment, defaultPartId );
-        return newSegment;
+        return getDao().createSegment( id, defaultPartId );
     }
 
     /**
@@ -561,9 +555,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Part createPart( Segment segment, Long id ) {
-        Part result = getDao().createPart( segment, id );
-        segment.addNode( result );
-        return result;
+        return getDao().createPart( segment, id );
     }
 
     /**
@@ -633,12 +625,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return toSortedList( list( Segment.class ) ).get( 0 );
     }
 
-    private static boolean isInternal( Node source, Node target ) {
+    public static boolean isInternal( Node source, Node target ) {
         Segment segment = source.getSegment();
         return segment != null && segment.equals( target.getSegment() );
     }
 
-    private static boolean isExternal( Node source, Node target ) {
+    public static boolean isExternal( Node source, Node target ) {
         Segment segment = source.getSegment();
         return segment != null
                 && !segment.equals( target.getSegment() )
@@ -709,39 +701,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 }
         );
         return hasReference;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public int getReferenceCount( Event event ) {
-        int count = 0;
-        for ( Event incident : planManager.getCurrentPlan().getIncidents() ) {
-            if ( incident.equals( event ) ) count++;
-        }
-        // look in plan segments
-        for ( Segment segment : list( Segment.class ) ) {
-            if ( segment.getEvent().equals( event ) ) count++;
-            Iterator<Part> parts = segment.parts();
-            while ( parts.hasNext() ) {
-                Part part = parts.next();
-                if ( part.initiatesEvent() && part.getInitiatedEvent().equals( event ) ) count++;
-            }
-        }
-        return count;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Segment findSegment( String name ) throws NotFoundException {
-        for ( Segment s : getDao().list( Segment.class ) ) {
-            if ( name.equals( s.getName() ) )
-                return s;
-        }
-
-        throw new NotFoundException();
     }
 
     /**
@@ -2269,32 +2228,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Hierarchical>( descendants );
     }
 
-    private boolean hasAncestor(
-            Hierarchical hierarchical,
-            final Hierarchical other,
-            final Set<Hierarchical> visited ) {
-        if ( !visited.contains( hierarchical ) ) {
-            visited.add( hierarchical );
-            List<Hierarchical> superiors = hierarchical.getSuperiors();
-            return !superiors.isEmpty()
-                    && ( superiors.contains( other )
-                    || CollectionUtils.find(
-                    superiors,
-                    new Predicate() {
-                        public boolean evaluate( Object obj ) {
-                            return hasAncestor( (Hierarchical) obj, other, visited );
-                        }
-                    } ) != null );
-        } else {
-            return false;
-        }
-    }
+    private static boolean hasAncestor(
+            Hierarchical hierarchical, final Hierarchical other, final Set<Hierarchical> visited ) {
 
-    /**
-     * {@inheritDoc}
-     */
-    public void replayJournals( Commander commander ) {
-        getPlanManager().replayJournals( this, commander );
+        if ( visited.contains( hierarchical ) )
+            return false;
+
+        visited.add( hierarchical );
+        List<Hierarchical> superiors = hierarchical.getSuperiors();
+        Object superior = CollectionUtils.find( superiors, new Predicate() {
+            public boolean evaluate( Object object ) {
+                return hasAncestor( (Hierarchical) object, other, visited );
+            }
+        } );
+
+        return !superiors.isEmpty()
+            && ( superiors.contains( other ) || superior != null );
     }
 
     /**
@@ -2309,12 +2258,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public boolean likelyRelated( String text, String otherText ) {
-        return
-                Matcher.matches( text, otherText ) ||
-                        isSemanticMatch(
-                                StringUtils.uncapitalize( text ),
-                                StringUtils.uncapitalize( otherText ),
-                                Proximity.HIGH );
+        return Matcher.matches( text, otherText )
+               || isSemanticMatch( StringUtils.uncapitalize( text ),
+                                   StringUtils.uncapitalize( otherText ),
+                                   Proximity.HIGH );
     }
 
     /**
@@ -3096,11 +3043,25 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     /**
+     * Define all immutable entities (not plan dependent).
+     * @param media list of media to initialized
+     */
+    public void defineImmutableEntities( List<TransmissionMedium> media ) {
+        Actor.createImmutables( this );
+        Event.createImmutables( this );
+        Organization.createImmutables( this );
+        Place.createImmutables( this );
+        Phase.createImmutables( this );
+        Role.createImmutables( this );
+        TransmissionMedium.createImmutables( media, this );
+        Participation.createImmutables( media, this );
+    }
+
+    /**
      * {@inheritDoc}
      */
     public FileUserDetailsService getUserDetailsService() {
         return userDetailsService;
     }
-
 }
 

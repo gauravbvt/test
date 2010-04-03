@@ -10,8 +10,5 @@ package com.mindalliance.channels;
  */
 public class AbstractService implements Service {
 
-    public Channels getChannels() {
-        return Channels.instance();
-    }
 
 }

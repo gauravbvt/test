@@ -293,7 +293,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
         String oldName = oldEvent == null ? "" : oldEvent.getName();
         Event newEvent = null;
         if ( name == null || name.trim().isEmpty() )
-            newEvent = planManager.getCurrentPlan().getDefaultEvent();
+            newEvent = PlanManager.plan().getDefaultEvent();
         else {
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().findOrCreateType( Event.class, name );

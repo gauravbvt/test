@@ -2,14 +2,14 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.Exporter;
-import com.mindalliance.channels.Importer;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.dao.IdGenerator;
 import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.export.ConnectionSpecification;
-import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
@@ -80,30 +80,38 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
      */
     private final IdGenerator idGenerator;
 
+
+    /** Where the attachments are managed... */
+    private AttachmentManager attachmentManager;
+
     public XmlStreamer( IdGenerator idGenerator ) {
         this.idGenerator = idGenerator;
     }
 
     /**
      * Create an import context.
-     *
-     * @param service the query service
-     * @param plan    the current plan
+     * @param planDao the plan dao
      * @return an importer
      */
-    public Importer createImporter( QueryService service, Plan plan ) {
-        return new Context( service, plan );
+    public Importer createImporter( PlanDao planDao ) {
+        return new Context( planDao );
     }
 
     /**
      * Create an export context.
-     *
-     * @param service the query service
-     * @param plan    the current plan
+     * @param planDao the plan dao
      * @return an exporter
      */
-    public Exporter createExporter( QueryService service, Plan plan ) {
-        return new Context( service, plan );
+    public Exporter createExporter( PlanDao planDao ) {
+        return new Context( planDao );
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
     }
 
     /**
@@ -120,7 +128,8 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
     }
 
     /**
-     * {@inheritDoc}
+     * Return the mime type of imported/exported files.
+     * @return application/xml
      */
     public String getMimeType() {
         return "application/xml";
@@ -144,16 +153,16 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
         /**
          * The current plan.
          */
-        private Plan plan;
+        private final Plan plan;
 
         /**
          * The current service.
          */
-        private final QueryService queryService;
+        private final PlanDao planDao;
 
-        private Context( QueryService queryService, Plan plan ) {
-            this.plan = plan;
-            this.queryService = queryService;
+        private Context( PlanDao planDao ) {
+            plan = planDao.getPlan();
+            this.planDao = planDao;
             addAliases( xstream );
             registerConverters( xstream );
         }
@@ -162,22 +171,15 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             return plan;
         }
 
-        public QueryService getQueryService() {
-            return queryService;
+        public PlanDao getPlanDao() {
+            return planDao;
         }
 
         public AttachmentManager getAttachmentManager() {
-            return queryService.getAttachmentManager();
+            return XmlStreamer.this.getAttachmentManager();
         }
 
-        public IdGenerator getIdGenerator() {
-            return XmlStreamer.this.getIdGenerator();
-        }
-
-        public String getVersion() {
-            return XmlStreamer.this.getVersion();
-        }
-
+        @SuppressWarnings( { "OverlyLongMethod", "OverlyCoupledMethod" } )
         private void registerConverters( XStream stream ) {
             stream.registerConverter( new PlanConverter( this ) );
             stream.registerConverter( new EventConverter( this ) );
@@ -202,6 +204,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             stream.registerConverter( new ExportConverter( this ) );
         }
 
+        @SuppressWarnings( { "OverlyLongMethod", "OverlyCoupledMethod" } )
         private void addAliases( XStream stream ) {
             stream.setMode( XStream.NO_REFERENCES );
             stream.alias( "command", AbstractCommand.class );
@@ -299,7 +302,7 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
         /**
          * {@inheritDoc}
          */
-        public void export( Plan plan, OutputStream stream ) throws IOException {
+        public void export( OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
             out.writeObject( plan );
             out.close();
@@ -389,16 +392,16 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             ExternalFlow externalFlow;
             if ( loadingPlan ) {
                 Long id = conSpec.getExternalFlowId();
-                externalFlow = conSpec.isSource() ?
-                        (ExternalFlow) queryService.connect( externalConnector, part, innerName, id )
-                        : (ExternalFlow) queryService.connect( part, externalConnector, innerName, id );
+                externalFlow = (ExternalFlow) ( conSpec.isSource() ?
+                          planDao.connect( externalConnector, part, innerName, id )
+                        : planDao.connect( part, externalConnector, innerName, id ) );
             } else {
-                externalFlow = conSpec.isSource() ?
-                        (ExternalFlow) queryService.connect( externalConnector, part, innerName )
-                        : (ExternalFlow) queryService.connect( part, externalConnector, innerName );
+                externalFlow = (ExternalFlow) ( conSpec.isSource() ?
+                          planDao.connect( externalConnector, part, innerName, null )
+                        : planDao.connect( part, externalConnector, innerName, null ) );
             }
             copy( localInnerFlow, externalFlow );
-            localInnerFlow.disconnect();
+            localInnerFlow.disconnect( planDao );
         }
 
         private void copy( Flow inner, Flow external ) {
@@ -416,15 +419,12 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
         @SuppressWarnings( "unchecked" )
         private List<Connector> findMatchingConnectors( final ConnectionSpecification conSpec ) {
             List<Connector> connectors = new ArrayList<Connector>();
-            List<Segment> segments = ConverterUtils.findMatchingSegments(
-
-                    conSpec.getSegmentSpecification(),
-                    getQueryService() );
+            List<Segment> segments = ConverterUtils.findMatchingSegments( getPlanDao(), conSpec.getSegmentSpecification() );
             for ( Segment segment : segments ) {
                 Iterator<Connector> iterator =
                         (Iterator<Connector>) new FilterIterator( segment.nodes(), new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                Node node = (Node) obj;
+                            public boolean evaluate( Object object ) {
+                                Node node = (Node) object;
                                 return node.isConnector() &&
                                         connectorMatches( (Connector) node, conSpec );
                             }
@@ -441,7 +441,8 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
             // so it's input-edness is the reverse of that of the connector
             if ( externalConnector.isSource() == conSpec.isSource() ) return false;
             Flow externalInnerFlow = externalConnector.getInnerFlow();
-            Part part = (Part) ( conSpec.isSource() ? externalInnerFlow.getSource()
+            Part part = (Part) ( conSpec.isSource() ?
+                      externalInnerFlow.getSource()
                     : externalInnerFlow.getTarget() );
             Long partIdValue = Long.parseLong( conSpec.getPartSpecification().getId() );
             boolean partIdMatches = partIdValue != null && partIdValue == part.getId();
@@ -455,6 +456,10 @@ public class XmlStreamer extends AbstractService implements ImportExportFactory 
          */
         public String getMimeType() {
             return XmlStreamer.this.getMimeType();
+        }
+
+        public String getVersion() {
+            return XmlStreamer.this.getVersion();
         }
     }
 

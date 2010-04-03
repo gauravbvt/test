@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -26,11 +25,11 @@ public class Plan extends ModelObject {
     /**
      * Name of the default phase of a plan.
      */
-    private static final String DEFAULT_PHASE_NAME = "Responding";
+    public static final String DEFAULT_PHASE_NAME = "Responding";
     /**
      * Timing of the default phase.
      */
-    private static final Phase.Timing DEFAULT_PHASE_TIMING = Phase.Timing.Concurrent;
+    public static final Phase.Timing DEFAULT_PHASE_TIMING = Phase.Timing.Concurrent;
 
     /**
      * The status of a (version of) plan.
@@ -134,6 +133,14 @@ public class Plan extends ModelObject {
 
     public void setRetired() {
         status = Status.RETIRED;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus( Status status ) {
+        this.status = status;
     }
 
     /**
@@ -283,11 +290,9 @@ public class Plan extends ModelObject {
     /**
      * Get a segment's default phase, adding it if needed.
      *
-     * @param queryService a query service
      * @return a phase
      */
-    public Phase getDefaultPhase( QueryService queryService ) {
-        if ( phases.isEmpty() ) addDefaultPhase( queryService );
+    public Phase getDefaultPhase() {
         return phases.get( 0 );
     }
 
@@ -351,17 +356,6 @@ public class Plan extends ModelObject {
 
     public void setPhases( List<Phase> phases ) {
         this.phases = phases;
-    }
-
-    /**
-     * Add default phase to plan.
-     *
-     * @param queryService a query service
-     */
-    public void addDefaultPhase( QueryService queryService ) {
-        Phase defaultPhase = queryService.findOrCreate( Phase.class, DEFAULT_PHASE_NAME );
-        defaultPhase.setTiming( DEFAULT_PHASE_TIMING );
-        phases.add( defaultPhase );
     }
 
     /**

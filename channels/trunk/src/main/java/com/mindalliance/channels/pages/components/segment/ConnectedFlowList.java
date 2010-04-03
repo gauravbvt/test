@@ -97,7 +97,7 @@ public class ConnectedFlowList extends Panel {
          * todo refactor this here and there
          */
         protected void addIssues( Component component, ModelObject object, String property ) {
-            Analyst analyst = Channels.instance().getAnalyst();
+            Analyst analyst = getAnalyst();
             final String summary = property == null ? analyst.getIssuesSummary( object, false )
                     : analyst.getIssuesSummary( object, property );
             boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
@@ -115,6 +115,12 @@ public class ConnectedFlowList extends Panel {
                             new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
                 }
             }
+        }
+
+        private Analyst getAnalyst() {
+            Channels channels = (Channels) getApplication();
+            Analyst analyst = channels.getAnalyst();
+            return analyst;
         }
     }
 

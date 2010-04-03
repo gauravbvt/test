@@ -57,7 +57,7 @@ public class PlanShowMenuPanel extends MenuPanel {
     @SuppressWarnings( "unchecked" )
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
-        final Plan plan = planManager.getCurrentPlan();
+        final Plan plan = PlanManager.plan();
         // Edit<->Hide
         if ( getExpansions().contains( plan.getId() ) ) {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {

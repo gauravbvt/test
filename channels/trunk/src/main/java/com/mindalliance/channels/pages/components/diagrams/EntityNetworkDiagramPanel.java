@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.NotFoundException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
@@ -27,7 +27,7 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
      */
     @SpringBean
     private PlanManager planManager;
-    
+
 
     /**
      * Class logger.
@@ -115,7 +115,7 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
     }
 
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, planManager.getCurrentPlan() ) );
+        update( target, new Change( Change.Type.Selected, PlanManager.plan() ) );
     }
 
     /**

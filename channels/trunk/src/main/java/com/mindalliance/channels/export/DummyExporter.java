@@ -1,11 +1,11 @@
 package com.mindalliance.channels.export;
 
-import com.mindalliance.channels.Exporter;
-import com.mindalliance.channels.Importer;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 
 import java.io.FileInputStream;
@@ -27,20 +27,18 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
     /**
      * Create an import context.
      * @param service the query service
-     * @param plan the current plan
      * @return an importer
      */
-    public Importer createImporter( QueryService service, Plan plan ) {
+    public Importer createImporter( PlanDao service ) {
         return this;
     }
 
     /**
      * Create an export context.
-     * @param service the query service
-     * @param plan the current plan
+     * @param planDao
      * @return an exporter
      */
-    public Exporter createExporter( QueryService service, Plan plan ) {
+    public Exporter createExporter( PlanDao planDao ) {
         return this;
     }
 
@@ -55,11 +53,10 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
 
     /**
      * Export all data on the given stream.
-     * @param plan the plan to export
      * @param stream the stream
      * @throws IOException on errors
      */
-    public void export( Plan plan, OutputStream stream ) throws IOException {
+    public void export( OutputStream stream ) throws IOException {
     }
 
     /**
