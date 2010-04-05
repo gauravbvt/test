@@ -1,8 +1,5 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.dao.Dao;
-import com.mindalliance.channels.dao.DuplicateKeyException;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
@@ -14,7 +11,6 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.query.DefaultQueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -142,6 +138,7 @@ public abstract class Memory implements Dao {
         Connector connector = new Connector();
         connector.setId( getIdGenerator().assignId( id, getPlan() ) );
         connector.setSegment( segment );
+        segment.addNode( connector );
         return connector;
     }
 
@@ -286,12 +283,12 @@ public abstract class Memory implements Dao {
     public Flow connect( Node source, Node target, String name, Long id ) {
         Flow result;
 
-        if ( DefaultQueryService.isInternal( source, target ) ) {
+        if ( Flow.isInternal( source, target ) ) {
             result = createInternalFlow( source, target, name, id );
             source.addSend( result );
             target.addReceive( result );
 
-        } else if ( DefaultQueryService.isExternal( source, target ) ) {
+        } else if ( Flow.isExternal( source, target ) ) {
             result = createExternalFlow( source, target, name, id );
             if ( source.isConnector() ) {
                 target.addReceive( result );

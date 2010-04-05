@@ -2,10 +2,16 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.dao.PlanManager;
 import org.junit.After;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -102,7 +108,7 @@ public class TestSegment extends AbstractChannelsTest {
 
         segment.removeNode( p2, planDao );
         // node replaced in flows by connectors
-        assertEquals( 4, segment.getNodeCount() );
+        assertEquals( 2, segment.getNodeCount() );
         assertSame( p1, segment.getNode( p1.getId() ) );
         assertNull( segment.getNode( p2.getId() ) );
         assertSame( p3, segment.getNode( p3.getId() ) );
@@ -131,11 +137,11 @@ public class TestSegment extends AbstractChannelsTest {
         Part p1 = planDao.createPart( segment, null );
         Part p2 = planDao.createPart( segment, null );
 
-        planDao.connect( p1, p2, "", null );
+        planDao.connect( p1, p2, "info", null );
         Part p3 = planDao.createPart( segment, null );
         Part p4 = planDao.createPart( segment, null );
 
-        Flow f = planDao.connect( p3, p4, "", null );
+        Flow f = planDao.connect( p3, p4, "info", null );
         assertSame( p3, f.getSource() );
         assertSame( p4, f.getTarget() );
         assertSame( f, p3.getFlow( f.getId() ) );
@@ -144,13 +150,13 @@ public class TestSegment extends AbstractChannelsTest {
         assertSame( f, p4.receives().next() );
 
         // we now allow flows of same name between same nodes
-        Iterator<Flow> iterator = p3.sendsNamed( "" );
+        Iterator<Flow> iterator = p3.sendsNamed( "info" );
         assertTrue( iterator.hasNext() );
         assertSame( f, iterator.next() );
         assertFalse( iterator.hasNext() );
-        Flow f2 = planDao.connect( p3, p4, "", null );
+        Flow f2 = planDao.connect( p3, p4, "info", null );
 
-        iterator = p4.receivesNamed( "" );
+        iterator = p4.receivesNamed( "info" );
         assertTrue( iterator.hasNext() );
         assertSame( f, iterator.next() );
         assertTrue( iterator.hasNext() );

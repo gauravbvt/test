@@ -44,8 +44,8 @@ public abstract class Node extends ModelObject implements SegmentObject {
     private Segment segment;
 
     protected Node() {
-        setSends( new HashMap<Long, Flow>() );
-        setReceives( new HashMap<Long, Flow>() );
+        sends = new HashMap<Long, Flow>();
+        receives = new HashMap<Long, Flow>();
     }
 
     /**
@@ -160,15 +160,6 @@ public abstract class Node extends ModelObject implements SegmentObject {
         return receives;
     }
 
-    /**
-     * Set receives, rebuilding the index.
-     * Package-visible for tests.
-     *
-     * @param receives the new receives
-     */
-    void setReceives( Map<Long, Flow> receives ) {
-        this.receives = receives;
-    }
 
     /**
      * Iterates over receives, alphabetically by print string.

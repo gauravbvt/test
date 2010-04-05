@@ -1,9 +1,9 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;
-import com.mindalliance.channels.dao.ImportExportFactory;
 import junit.framework.TestCase;
 import org.mockito.Mockito;
 
@@ -52,8 +52,8 @@ public class TestExternalFlow extends TestCase {
         s2Part.createSend( planDao );
         s2Part.createReceive( planDao );
 
-//        planDao.connect( s1p1, s2.inputs().next(), "", null );
-//        planDao.connect( s2.outputs().next(), s1p2, "", null );
+        planDao.connect( s1p1, s2.inputs().next(), "", null );
+        planDao.connect( s2.outputs().next(), s1p2, "", null );
     }
 
     public void testConstructor() {
@@ -73,12 +73,12 @@ public class TestExternalFlow extends TestCase {
     public void testInitial() {
         Flow f1 = s1p1.sends().next();
         assertFalse( f1.isInternal() );
-        assertEquals( "p1 notify p3 of something", f1.toString() );
+        assertEquals( "p1 notify p3 of \"something\"", f1.toString() );
         assertTrue( s2.inputs().next().externalFlows().hasNext() );
 
         Flow f2 = s1p2.receives().next();
         assertFalse( f2.isInternal() );
-        assertEquals( "p3 notify p2 of something", f2.toString() );
+        assertEquals( "p3 notify p2 of \"something\"", f2.toString() );
         assertTrue( s2.outputs().next().externalFlows().hasNext() );
     }
 

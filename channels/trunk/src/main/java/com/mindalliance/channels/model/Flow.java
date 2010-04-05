@@ -61,7 +61,33 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     protected Flow() {
     }
 
-       /**
+    /**
+     * Whether a flow connecting source and target would be an internal flow.
+     *
+     * @param source a node
+     * @param target a node
+     * @return a boolean
+     */
+    public static boolean isInternal( Node source, Node target ) {
+        Segment segment = source.getSegment();
+        return segment != null && segment.equals( target.getSegment() );
+    }
+
+    /**
+     * Whether a flow connecting source and target would be an external flow.
+     *
+     * @param source a node
+     * @param target a node
+     * @return a boolean
+     */
+    public static boolean isExternal( Node source, Node target ) {
+        Segment segment = source.getSegment();
+        return segment != null
+                && !segment.equals( target.getSegment() )
+                && ( target.isConnector() || source.isConnector() );
+    }
+
+    /**
      * Get EOIs as a string.
      *
      * @return a string
@@ -378,6 +404,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     /**
      * Disconnect from source and target.
+     *
      * @param planDao
      */
     public abstract void disconnect( Memory planDao );

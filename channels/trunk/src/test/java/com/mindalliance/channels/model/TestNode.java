@@ -6,9 +6,7 @@ import com.mindalliance.channels.dao.SimpleIdGenerator;
 import com.mindalliance.channels.export.DummyExporter;
 import junit.framework.TestCase;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Test generic node functionality
@@ -50,44 +48,6 @@ public class TestNode extends TestCase {
         f2 = p2.createReceive( planDao );
                 f2.setName( "B" );
         f3 = planDao.connect( p1, p2, "message", null );
-    }
-
-    public void testSetSends() {
-        p1.setSends( new HashMap<Long,Flow>() );
-        assertFalse( p1.sends().hasNext() );
-
-        // setSends does not disconnect anymore ?
-        assertNull( f1.getSource() );
-        assertNull( f3.getSource() );
-
-        Map<Long,Flow> flows = new HashMap<Long,Flow>();
-        flows.put( f1.getId(), f1 );
-        flows.put( f2.getId(), f2 );
-        p1.setSends( flows );
-        assertSame( f1, p1.getFlow( f1.getId() ) );
-        assertSame( p1, f1.getSource() );
-        assertSame( p1, f2.getSource() );
-        assertSame( f2, p1.getFlow( f2.getId() ) );
-        assertNull( p1.getFlow( f3.getId() ) );
-    }
-
-    public void testSetReceives() {
-        p2.setReceives( new HashMap<Long,Flow>() );
-        assertFalse( p2.receives().hasNext() );
-
-        // Set receives does not disconnect anymore?
-        assertNull( f2.getTarget() );
-        assertNull( f3.getTarget() );
-
-        Map<Long, Flow> flows = new HashMap<Long,Flow>();
-        flows.put( f1.getId(), f1 );
-        flows.put( f2.getId(), f2 );
-        p2.setReceives( flows );
-        assertSame( f1, p2.getFlow( f1.getId() ) );
-        assertSame( p2, f1.getTarget() );
-        assertSame( p2, f2.getTarget() );
-        assertSame( f2, p2.getFlow( f2.getId() ) );
-        assertNull( p2.getFlow( f3.getId() ) );
     }
 
     public void testSends() {

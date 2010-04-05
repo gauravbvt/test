@@ -4,15 +4,15 @@ import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.ImagingService;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.SemanticMatcher;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.dao.FileUserDetailsService;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Assignment;
@@ -571,12 +571,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public Flow connect( Node source, Node target, String name, Long id ) {
         Flow result;
 
-        if ( isInternal( source, target ) ) {
+        if ( Flow.isInternal( source, target ) ) {
             result = getDao().createInternalFlow( source, target, name, id );
             source.addSend( result );
             target.addReceive( result );
 
-        } else if ( isExternal( source, target ) ) {
+        } else if ( Flow.isExternal( source, target ) ) {
             result = getDao().createExternalFlow( source, target, name, id );
             if ( source.isConnector() ) {
                 target.addReceive( result );
@@ -624,19 +624,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public Segment getDefaultSegment() {
         return toSortedList( list( Segment.class ) ).get( 0 );
     }
-
-    public static boolean isInternal( Node source, Node target ) {
-        Segment segment = source.getSegment();
-        return segment != null && segment.equals( target.getSegment() );
-    }
-
-    public static boolean isExternal( Node source, Node target ) {
-        Segment segment = source.getSegment();
-        return segment != null
-                && !segment.equals( target.getSegment() )
-                && ( target.isConnector() || source.isConnector() );
-    }
-
 
     /**
      * {@inheritDoc}

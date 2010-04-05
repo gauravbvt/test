@@ -5,18 +5,24 @@ import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
 import org.junit.After;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -60,6 +66,11 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
                 "Email" ), "stuff@acme.com" ) );
             }
         } );
+        ElementOfInformation eoi = new ElementOfInformation();
+        eoi.setContent( "content" );
+        eoi.setSources( "sources" );
+        eoi.setSpecialHandling( "handling" );
+        flow.addEoi( eoi );
         command = new BreakUpFlow( flow );
     }
 
@@ -92,6 +103,12 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         assertEquals( Flow.Significance.Terminates, f.getSignificanceToSource() );
         assertEquals( Flow.Significance.Triggers, f.getSignificanceToTarget() );
         assertSame( 2, f.getChannels().size() );
+        List<ElementOfInformation> eois = f.getEois();
+        assertSame( 1, eois.size() );
+        ElementOfInformation eoi = eois.get( 0 );
+        assertEquals( eoi.getContent(), "content" );
+        assertEquals( eoi.getSources(), "sources" );
+        assertEquals( eoi.getSpecialHandling(), "handling" );
         assertSame( 1, countFlows() );
         assertTrue( commander.canRedo() );
         assertTrue( commander.redo().isUnknown() );
