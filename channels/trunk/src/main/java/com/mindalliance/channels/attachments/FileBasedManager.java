@@ -2,8 +2,8 @@ package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.AttachmentManager;
 import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.model.Plan;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -346,7 +346,7 @@ public class FileBasedManager implements AttachmentManager {
             try {
                 if ( in != null ) in.close();
                 if ( out != null ) out.close();
-            } catch ( IOException e ) {
+            } catch ( Exception e ) {
                 LOG.warn( "Unable to close uploaded file", e );
             }
         }

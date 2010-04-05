@@ -8,12 +8,12 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.components.segment.ExpandedPartPanel;
-import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.tester.FormTester;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -224,7 +224,7 @@ public class TestPartPanel extends AbstractChannelsTest {
      *
      * @throws IOException if fails
      */
-    @Test
+/*    @Test
     public void testForm() throws IOException {
         PlanPage page = new PlanPage( segment, part );
         tester.startPage( page );
@@ -253,5 +253,5 @@ public class TestPartPanel extends AbstractChannelsTest {
         assertEquals( "World", part.getJurisdiction().getName() );
         assertNotNull( part.getLocation() );
         assertEquals( "Somewhere", part.getLocation().getName() );
-    }
+    }*/
 }

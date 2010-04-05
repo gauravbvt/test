@@ -2,22 +2,17 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.util.tester.FormTester;
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Simple test using the WicketTester.
@@ -39,35 +34,35 @@ public class TestSegmentPage extends AbstractChannelsTest {
     @Test
     public void testParms() {
         tester.startPage( PlanPage.class );
-        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
 
         PageParameters parms = new PageParameters();
         parms.put( PlanPage.SEGMENT_PARM, Long.toString( segment.getId() ) );
 
         tester.startPage( PlanPage.class, parms );
-        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
 
         parms.put( PlanPage.SEGMENT_PARM, "-1" );
         tester.startPage( PlanPage.class, parms );
-        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
 
         parms.put( PlanPage.SEGMENT_PARM, "bla" );
         tester.startPage( PlanPage.class, parms );
-        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
 
         parms.put( PlanPage.SEGMENT_PARM, Long.toString( segment.getId() ) );
         parms.put( PlanPage.PART_PARM, "-1" );
         tester.startPage( PlanPage.class, parms );
-        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
 
         parms.put( PlanPage.PART_PARM, "bla" );
         tester.startPage( PlanPage.class, parms );
-        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
 
         parms.put( PlanPage.PART_PARM, Long.toString( segment.getDefaultPart().getId() ) );
@@ -99,6 +94,7 @@ public class TestSegmentPage extends AbstractChannelsTest {
         }
     }
 
+/*
     @Test
     public void testNewSegment() throws NotFoundException {
         tester.startPage( new PlanPage( segment ) );
@@ -115,6 +111,7 @@ public class TestSegmentPage extends AbstractChannelsTest {
         tester.assertRenderedPage( RedirectPage.class );
         tester.assertNoErrorMessage();
     }
+*/
 
     /**
      * Test submit with part modifications.
@@ -142,6 +139,7 @@ public class TestSegmentPage extends AbstractChannelsTest {
      *
      * @throws NotFoundException on error
      */
+/*
     @Test
     public void testDescriptionSubmit1() throws NotFoundException, IOException {
         Part part = segment.getDefaultPart();
@@ -163,12 +161,14 @@ public class TestSegmentPage extends AbstractChannelsTest {
 
         assertEquals( desc, part.getDescription() );
     }
+*/
 
     /**
      * Test submit with part modifications.
      *
      * @throws NotFoundException on error
      */
+/*
     @Test
     public void testDescriptionSubmit2() throws NotFoundException, IOException {
         Part part = segment.getDefaultPart();
@@ -189,7 +189,9 @@ public class TestSegmentPage extends AbstractChannelsTest {
 
         assertEquals( desc, part.getDescription() );
     }
+*/
 
+/*
     @Test
     public void testDeleteSegment() throws IOException, NotFoundException {
         assertEquals( 2, PlanManager.plan().getSegmentCount() );
@@ -217,7 +219,9 @@ public class TestSegmentPage extends AbstractChannelsTest {
         // the setFiles() imports/creates a new segment...
 
     }
+*/
 
+/*
     @Test
     public void testGetParameters1() {
         Part part = segment.getDefaultPart();
@@ -244,4 +248,5 @@ public class TestSegmentPage extends AbstractChannelsTest {
         assertTrue( results.contains( "1" ) );
         assertTrue( results.contains( "2" ) );
     }
+*/
 }
