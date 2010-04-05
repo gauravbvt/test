@@ -6,7 +6,9 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import org.junit.After;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -59,7 +61,7 @@ public class TestAddRemovePart extends AbstractChannelsTest {
 
         assertFalse( getCommander().canUndo() );
         assertTrue( getCommander().canRedo() );
-        assertTrue( getCommander().redo().isRecomposed() );
+        assertTrue( getCommander().redo().isUnknown() );
         assertSame( 1, countParts() );
         assertSame( 1, countFlows() );
 

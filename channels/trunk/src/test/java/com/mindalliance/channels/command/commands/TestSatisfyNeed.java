@@ -28,9 +28,8 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
     private Segment segment;
     private Part source;
     private Part target;
-    private Part otherTarget;
-    private Flow flow;
-    private Connector connector;
+    private Flow need;
+    private Flow capability;
 
     @Override
     public void setUp() throws IOException {
@@ -43,12 +42,10 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
         target = queryService.createPart( segment );
         target.setTask( "doing target things" );
         target.setRole( queryService.findOrCreate( Role.class, "target" ) );
-        flow = queryService.connect( source, target, "info" );
-        otherTarget = queryService.createPart( segment );
-        otherTarget.setTask( "doing other things" );
-        otherTarget.setRole( queryService.findOrCreate( Role.class, "other target" ) );
-        connector = queryService.createConnector( segment );
-        queryService.connect( connector, otherTarget, "info" );
+        Connector t_connector = queryService.createConnector( segment );
+        capability = queryService.connect( source, t_connector, "info" );
+        Connector s_connector = queryService.createConnector( segment );
+        need =queryService.connect( s_connector, target, "info" );
     }
 
     @Override
@@ -62,23 +59,19 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
     public void testSatisfyNeed() throws CommandException {
         assertSame( 1, countFlows( source.sends() ) );
         assertSame( 1, countFlows( target.receives() ) );
-        assertSame( 1, countFlows( otherTarget.receives() ) );
-        Command satisfyNeed = new SatisfyNeed( flow, connector.getInnerFlow() );
+        Command satisfyNeed = new SatisfyNeed( need, capability, true );
         assertTrue( getCommander().canDo( satisfyNeed ) );
         assertTrue( getCommander().doCommand( satisfyNeed ).isAdded() );
-        assertSame( 1, countFlows( source.sends() ) );
-        assertSame( 0, countFlows( target.receives() ) );
-        assertSame( 2, countFlows( otherTarget.receives() ) );
+        assertSame( 2, countFlows( source.sends() ) );
+        assertSame( 2, countFlows( target.receives() ) );
         assertTrue( getCommander().canUndo() );
         assertTrue( getCommander().undo().isUnknown() );
         assertSame( 1, countFlows( source.sends() ) );
         assertSame( 1, countFlows( target.receives() ) );
-        assertSame( 1, countFlows( otherTarget.receives() ) );
         assertTrue( getCommander().canRedo() );
         assertTrue( getCommander().redo().isUnknown() );
-        assertSame( 1, countFlows( source.sends() ) );
-        assertSame( 0, countFlows( target.receives() ) );
-        assertSame( 2, countFlows( otherTarget.receives() ) );
+        assertSame( 2, countFlows( source.sends() ) );
+        assertSame( 2, countFlows( target.receives() ) );
         assertTrue( getCommander().canUndo() );
     }
 

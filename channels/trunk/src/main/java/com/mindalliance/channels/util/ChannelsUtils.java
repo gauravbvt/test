@@ -1,10 +1,10 @@
 package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
@@ -64,6 +64,7 @@ public final class ChannelsUtils {
      */
     public static Map<String, Object> getFlowAttributes( final Flow flow ) {
         Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put( "description", flow.getDescription() );
         attributes.put( "eois", copyEois( flow ) );
         attributes.put( "askedFor", flow.isAskedFor() );
         attributes.put( "all", flow.isAll() );

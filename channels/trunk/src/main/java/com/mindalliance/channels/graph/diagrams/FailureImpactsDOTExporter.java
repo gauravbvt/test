@@ -157,28 +157,32 @@ public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     private String getGoalIcon( Goal goal ) {
-        if ( goal.isRiskMitigation() )  {
-        switch ( goal.getLevel() ) {
-            case Low:
-                return "risk_minor.png";
-            case Medium:
-                return "risk_major.png";
-            case High:
-                return "risk_severe.png";
-            default:
-                throw new RuntimeException( "Unknown risk level" );
-        }
+        if ( goal.isRiskMitigation() ) {
+            switch ( goal.getLevel() ) {
+                case Low:
+                    return "risk_minor.png";
+                case Medium:
+                    return "risk_major.png";
+                case High:
+                    return "risk_severe.png";
+                case Highest:
+                    return "risk_extreme.png";
+                default:
+                    throw new RuntimeException( "Unknown risk level" );
+            }
         } else {
             switch ( goal.getLevel() ) {
-            case Low:
-                return "gain_low.png";
-            case Medium:
-                return "gain_medium.png";
-            case High:
-                return "gain_high.png";
-            default:
-                throw new RuntimeException( "Unknown gain level" );
-        }
+                case Low:
+                    return "gain_low.png";
+                case Medium:
+                    return "gain_medium.png";
+                case High:
+                    return "gain_high.png";
+                case Highest:
+                    return "gain_highest.png";
+                default:
+                    throw new RuntimeException( "Unknown gain level" );
+            }
         }
     }
 
