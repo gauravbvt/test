@@ -38,7 +38,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
             if ( flowChannels.isEmpty() ) {
                 issues.add( createIssue( modelObject,
                         getSeverity( flow ),
-                        "At least one channel is requried.",
+                        "At least one channel is required.",
                         "Add a channel" ) );
 
             } /*else if ( !flow.canBeUnicast() ) {

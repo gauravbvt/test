@@ -181,6 +181,10 @@ public abstract class ModelEntity extends ModelObject {
         immutable = true;
     }
 
+    public void setImmutable( boolean val ) {
+        immutable = val;
+    }
+
     /**
      * {@inheritDoc}
      */

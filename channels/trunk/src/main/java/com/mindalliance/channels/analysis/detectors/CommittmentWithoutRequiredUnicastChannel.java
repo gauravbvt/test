@@ -43,8 +43,7 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
                                     public boolean evaluate( Object object ) {
                                         Channel channel = (Channel) object;
                                         return channel.isValid()
-                                                && channel.getMedium().narrowsOrEquals( flowChannel.getMedium() )
-                                                && channel.hasValidAddress();
+                                                && channel.getMedium().narrowsOrEquals( flowChannel.getMedium() );
                                     }
                                 } );
                         if ( !hasValidChannel ) {
