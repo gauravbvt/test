@@ -8,7 +8,7 @@ import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.Graph;

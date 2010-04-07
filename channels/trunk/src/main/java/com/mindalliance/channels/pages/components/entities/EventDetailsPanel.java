@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Event;

@@ -1,7 +1,8 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -52,10 +53,10 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
     /**
      * Create immutables.
      *
-     * @param queryService a query service
+     * @param dao
      */
-    public static void createImmutables( QueryService queryService ) {
-        UNKNOWN = queryService.findOrCreate( Actor.class, UnknownName );
+    public static void createImmutables( PlanDao dao ) {
+        UNKNOWN = dao.findOrCreate( Actor.class, UnknownName, null );
         UNKNOWN.makeImmutable();
     }
 

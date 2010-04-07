@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;

@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.query.QueryService;
 import org.springframework.core.io.Resource;
 
 import java.util.List;

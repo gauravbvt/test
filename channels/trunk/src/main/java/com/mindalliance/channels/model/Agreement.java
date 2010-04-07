@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.Matcher;

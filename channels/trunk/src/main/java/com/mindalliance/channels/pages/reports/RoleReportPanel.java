@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -35,7 +35,7 @@ public class RoleReportPanel extends Panel {
 
         super( id );
         setRenderBodyOnly( true );
-        
+
         add( new Label( "sg-name", segment.getName() ),                                  // NON-NLS
              new Label( "org", organization.toString() ),                                 // NON-NLS
              new Label( "name", role.getName() ),                                         // NON-NLS

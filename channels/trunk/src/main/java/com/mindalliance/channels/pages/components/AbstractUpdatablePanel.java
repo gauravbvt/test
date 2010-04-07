@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.DiagramFactory;
 import com.mindalliance.channels.LockManager;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Identifiable;

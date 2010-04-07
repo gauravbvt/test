@@ -2,9 +2,7 @@ package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.ImagingService;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.SemanticMatcher;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
@@ -13,6 +11,7 @@ import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Assignment;
@@ -44,9 +43,9 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
@@ -177,7 +176,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public void afterPropertiesSet() {
         planManager.validate();
-        defineImmutableEntities( planManager.getBuiltInMedia() );
     }
 
     /**
@@ -361,7 +359,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean entityExists( Class<ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
+    public boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
         ModelEntity entity = ModelEntity.getUniversalType( name, clazz );
         if ( entity == null ) entity = getDao().find( clazz, name );
         return entity != null && entity.getKind().equals( kind );
@@ -2401,7 +2399,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( "unchecked" )
     public List<String> findAllPlanners() {
         return (List<String>) CollectionUtils.collect(
-                userDetailsService.getAllPlanners(),
+                userDetailsService.getPlanners( PlanManager.plan().getUri() ),
                 TransformerUtils.invokerTransformer( "getUsername" )
         );
     }
@@ -2436,7 +2434,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public String findUserRole( String userName ) {
         User user = userDetailsService.getUserNamed( userName );
         if ( user != null ) {
-            return user.getRole();
+            return user.getRole( user.getPlan().getUri() );
         } else {
             return null;
         }
@@ -3027,21 +3025,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
         }
         return employments;
-    }
-
-    /**
-     * Define all immutable entities (not plan dependent).
-     * @param media list of media to initialized
-     */
-    public void defineImmutableEntities( List<TransmissionMedium> media ) {
-        Actor.createImmutables( this );
-        Event.createImmutables( this );
-        Organization.createImmutables( this );
-        Place.createImmutables( this );
-        Phase.createImmutables( this );
-        Role.createImmutables( this );
-        TransmissionMedium.createImmutables( media, this );
-        Participation.createImmutables( media, this );
     }
 
     /**

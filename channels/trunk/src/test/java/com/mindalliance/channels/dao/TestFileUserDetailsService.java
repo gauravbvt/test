@@ -1,10 +1,5 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.SimpleIdGenerator;
-import com.mindalliance.channels.dao.FileUserDetailsService;
-import com.mindalliance.channels.export.DummyExporter;
-import com.mindalliance.channels.model.User;
 import junit.framework.TestCase;
 import org.apache.wicket.util.file.File;
 import org.springframework.core.io.FileSystemResource;
@@ -31,15 +26,14 @@ public class TestFileUserDetailsService extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
-        service = new FileUserDetailsService( planManager );
+        service = new FileUserDetailsService();
     }
 
     public void testNoData() {
         try {
             service.loadUserByUsername( "bob" );
-            fail( "Found non existant user" );
-        } catch ( UsernameNotFoundException e ) {
+            fail( "Found non existent user" );
+        } catch ( IllegalStateException ignored ) {
             // ok
         }
     }
@@ -57,9 +51,8 @@ public class TestFileUserDetailsService extends TestCase {
         assertTrue( details.isCredentialsNonExpired() );
 
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) details.getAuthorities();
-        assertEquals( 2, authorities.size() );
+        assertEquals( 1, authorities.size() );
         assertEquals( "ROLE_ADMIN", authorities.get(0).getAuthority() );
-        assertEquals( "ROLE_USER", authorities.get(1).getAuthority() );
 
         assertNull( details.getPlan() );
     }
@@ -79,9 +72,8 @@ public class TestFileUserDetailsService extends TestCase {
         assertTrue( details.isCredentialsNonExpired() );
 
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) details.getAuthorities();
-        assertEquals( 2, authorities.size() );
+        assertEquals( 1, authorities.size() );
         assertEquals( "ROLE_ADMIN", authorities.get(0).getAuthority() );
-        assertEquals( "ROLE_USER", authorities.get(1).getAuthority() );
 
         assertNull( details.getPlan() );
     }

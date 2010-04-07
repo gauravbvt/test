@@ -9,7 +9,7 @@ import com.mindalliance.channels.command.commands.DisconnectAndRemoveSegment;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.PastePart;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.pages.ExportPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;

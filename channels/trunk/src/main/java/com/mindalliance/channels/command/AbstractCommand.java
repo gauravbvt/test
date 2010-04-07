@@ -2,10 +2,10 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Mappable;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.User;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

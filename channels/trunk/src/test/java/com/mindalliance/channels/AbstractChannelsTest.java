@@ -1,10 +1,11 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.User;
-import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.dao.FileUserDetailsService;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.query.DefaultQueryService;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.IRequestCodingStrategy;
@@ -72,7 +73,8 @@ import java.util.List;
     loader = AbstractChannelsTest.MyContextLoader.class,
     locations = {
         "file:src/main/webapp/WEB-INF/applicationContext.xml",
-        "file:src/main/webapp/WEB-INF/securityConfig.xml",
+            "file:src/main/webapp/WEB-INF/securityConfig.xml",
+//            "file:src/main/webapp/WEB-INF/persistenceConfig.xml",
         "testConfig.xml" } )
 @TestExecutionListeners( {
         AbstractChannelsTest.ClearDataListener.class,
@@ -374,6 +376,10 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
 
         @Override
         public void beforeTestClass( TestContext testContext ) {
+//            CacheManager cacheManager =
+//                    (CacheManager) testContext.getApplicationContext().getBean( "cacheManager" );
+//            cacheManager.clearAll();
+
             clearData();
         }
     }

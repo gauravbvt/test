@@ -1,9 +1,10 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +48,10 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * Create immutables.
      *
-     * @param queryService a query service
+     * @param dao a query service
      */
-    public static void createImmutables( QueryService queryService ) {
-        UNKNOWN = queryService.findOrCreate( Event.class, UnknownName );
+    public static void createImmutables( PlanDao dao ) {
+        UNKNOWN = dao.findOrCreate( Event.class, UnknownName, null );
         UNKNOWN.makeImmutable();
     }
 

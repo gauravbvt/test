@@ -1,8 +1,8 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.dao.Memory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;

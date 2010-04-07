@@ -1,9 +1,10 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -74,10 +75,11 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     /**
      * Create immutables.
      *
-     * @param queryService a query service
+     * @param dao a query service
      */
-    public static void createImmutables( QueryService queryService ) {
-        UNKNOWN = queryService.findOrCreate( Organization.class, UnknownName );
+    public static void createImmutables( PlanDao dao ) {
+        UNKNOWN = dao.findOrCreate( Organization.class, UnknownName, null );
+        UNKNOWN.setActual();
         UNKNOWN.makeImmutable();
     }
 

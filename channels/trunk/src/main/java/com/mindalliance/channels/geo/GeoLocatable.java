@@ -1,6 +1,6 @@
 package com.mindalliance.channels.geo;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 
 import java.io.Serializable;
 import java.util.List;

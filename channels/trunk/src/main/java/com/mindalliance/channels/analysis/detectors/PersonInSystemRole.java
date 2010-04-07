@@ -28,7 +28,7 @@ public class PersonInSystemRole extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Actor person = (Actor) modelObject;
         for ( Role role : getQueryService().findAllRolesOf( person ) ) {
-            if ( role.isSystem() ) {
+            if ( role.isSystem() && !person.isUnknown() ) {
                 DetectedIssue issue = makeIssue( Issue.VALIDITY, person );
                 issue.setDescription( "Person assigned a role meant for systems." );
                 issue.setRemediation( "Make the agent a system\nor do not assign the role." );

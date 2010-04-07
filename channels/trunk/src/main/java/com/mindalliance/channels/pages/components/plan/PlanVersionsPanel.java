@@ -7,7 +7,7 @@ import com.mindalliance.channels.command.commands.AddProducer;
 import com.mindalliance.channels.command.commands.RemoveProducer;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;

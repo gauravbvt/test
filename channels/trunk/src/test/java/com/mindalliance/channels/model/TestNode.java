@@ -3,6 +3,7 @@ package com.mindalliance.channels.model;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.export.DummyExporter;
 import junit.framework.TestCase;
 

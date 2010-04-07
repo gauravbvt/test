@@ -1,13 +1,12 @@
 package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
 import com.mindalliance.channels.analysis.IssueScanner;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -25,27 +24,19 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
  * Persistent store for plans.
  */
 public class PlanManager {
-
-    /**
-     * Lowest id for mutable model objects.
-     */
-    public static final long IMMUTABLE_RANGE = -1000L;
 
     /**
      * Default uri.
@@ -82,12 +73,6 @@ public class PlanManager {
      */
     private final Map<String, PlanDao> planIndex =
             Collections.synchronizedMap( new HashMap<String, PlanDao>() );
-
-    /**
-     * User participations in plans.
-     * plan uri => participation
-     */
-    private final Set<User> users = new HashSet<User>();
 
     /**
      * For each plan uri, usernames of users who not in sync with its current version.
@@ -252,6 +237,7 @@ public class PlanManager {
 
         } catch ( IOException e ) {
             LOG.error( "Unable to read plan properties", e );
+
         } finally {
             if ( inputStream != null )
                 try {
@@ -309,9 +295,9 @@ public class PlanManager {
     public List<Plan> getPlans() {
         synchronized ( planIndex ) {
             List<Plan> result = new ArrayList<Plan>( planIndex.size() );
-            for ( PlanDao dao : planIndex.values() ) {
+            for ( PlanDao dao : planIndex.values() )
                 result.add( dao.getPlan() );
-            }
+
             Collections.sort( result );
             return Collections.unmodifiableList( result );
         }
@@ -323,13 +309,12 @@ public class PlanManager {
      * @param name a string
      * @return a boolean
      */
-    public boolean isPlanNameTaken( final String name ) {
-        return CollectionUtils.find( planIndex.values(), new Predicate() {
-            public boolean evaluate( Object object ) {
-                PlanDao w = (PlanDao) object;
-                return w.getPlan().getName().equals( name );
-            }
-        } ) != null;
+    public boolean isPlanNameTaken( String name ) {
+        for ( PlanDao object : planIndex.values() )
+            if ( name.equals( object.getPlan().getName() ) )
+                return true;
+
+        return false;
     }
 
     public ImportExportFactory getImportExportFactory() {
@@ -445,6 +430,7 @@ public class PlanManager {
             PlanDao dao = new PlanDao( plan, getDataDirectory().getFile(), idGenerator );
             dao.setSnapshotThreshold( snapshotThreshold );
             dao.setUserDetailsService( userDetailsService );
+            dao.defineImmutableEntities( builtInMedia );
             dao.add( plan, plan.getId() );
 
             return dao;
@@ -461,22 +447,30 @@ public class PlanManager {
     public synchronized void validate() {
         createDataDir();
 
+
         // Load persisted, defined plans
         for ( PlanDao dao : getDaos() ) {
             if ( dao.isPersisted() )
-                importPlan( dao );
-            else
-                registerPlanDao( dao );
+                dao.importPlan( importExportFactory, getBuiltInMedia() );
+
+            registerPlanDao( dao );
             dao.validate();
         }
 
         if ( plansFile != null && !plansFile.exists() ) {
+            // Save plan description file, if none exists
             try {
                 writePlanDefinitions();
             } catch ( IOException e ) {
                 throw new RuntimeException( "Failed to write plan definitions", e );
             }
         }
+
+        // Assign default plan to users
+        if ( userDetailsService != null )
+            for ( User user : userDetailsService.getUsers() )
+                user.setPlan( getDefaultPlan( user ) );
+
     }
 
     /**
@@ -520,22 +514,6 @@ public class PlanManager {
         }
     }
 
-    private void importPlan( PlanDao dao ) {
-        Plan plan = dao.getPlan();
-        try {
-            dao.getIdGenerator().setLastAssignedId( IMMUTABLE_RANGE, plan );
-            // set last id to start of mutable range
-            dao.getIdGenerator().setLastAssignedId( 0, plan );
-            dao.load( importExportFactory.createImporter( dao ) );
-            registerPlanDao( dao );
-
-        } catch ( IOException e ) {
-            String msg = MessageFormat.format( "Unable to import plan {0}", plan.getName() );
-            LOG.error( msg, e );
-            throw new RuntimeException( msg, e );
-        }
-    }
-
     private void registerPlanDao( PlanDao dao ) {
         String key = dao.getPlan().getVersionUri();
         if ( planIndex.get( key ) != null ) {
@@ -558,46 +536,6 @@ public class PlanManager {
                 return ( (Plan) obj ).getUri().equals( uri );
             }
         } );
-    }
-
-    /**
-     * Register user.
-     *
-     * @param user a user
-     */
-    public void addUser( User user ) {
-        users.add( user );
-    }
-
-    /**
-     * Get all users participating in the given plan.
-     *
-     * @param plan the given plan
-     * @return a list of users
-     */
-    public List<User> getParticipants( Plan plan ) {
-        List<User> answer = new ArrayList<User>( users.size() );
-
-        for ( User user : users )
-            if ( user.isParticipant( plan ) )
-                answer.add( user );
-
-        return answer;
-    }
-
-    /**
-     * Find participant given user name.
-     *
-     * @param plan the plan
-     * @param userName a string
-     * @return a user
-     */
-    public User getParticipant( Plan plan, String userName ) {
-        for ( User user : getParticipants( plan ) )
-            if ( userName.equals( user.getUsername() ) )
-                return user;
-
-        return null;
     }
 
     /**
@@ -684,7 +622,7 @@ public class PlanManager {
         // Create development plan from copy of old dev plan
         Plan newDevPlan = makeNewDevPlan( oldDevPlan );
         // Substitute current plans of users as appropriate
-        for ( User user : users ) {
+        for ( User user : userDetailsService.getUsers() ) {
             Plan userPlan = user.getPlan();
             if ( userPlan != null && userPlan.getUri().equals( oldDevPlan.getUri() ) ) {
                 if ( userPlan.isDevelopment() ) {
@@ -770,7 +708,8 @@ public class PlanManager {
             newDevPlan.setName( oldDevPlan.getName() );
             newDevPlan.setClient( oldDevPlan.getClient() );
             PlanDao dao = createDao( newDevPlan );
-            importPlan( dao );
+            dao.importPlan( this.getImportExportFactory(), getBuiltInMedia() );
+            registerPlanDao( dao );
             newDevPlan.removeAllProducers();
             dao.save( importExportFactory.createExporter( dao ) );
             // TODO - remove initial data_???.xml backup file since it has producers set.
@@ -793,10 +732,10 @@ public class PlanManager {
     public boolean addProducer( String producer, final Plan plan ) {
         plan.addProducer( producer );
         final List<String> producers = plan.getProducers();
-        boolean unanimous = !CollectionUtils.exists( users, new Predicate() {
+        boolean unanimous = !CollectionUtils.exists( userDetailsService.getUsers(), new Predicate() {
             public boolean evaluate( Object object ) {
                 User user = (User) object;
-                return user.isPlanner( plan ) && !producers.contains( user.getUsername() );
+                return user.isPlanner( plan.getUri() ) && !producers.contains( user.getUsername() );
             }
         } );
         if ( unanimous ) {
@@ -808,7 +747,7 @@ public class PlanManager {
 
     public List<User> getPlanners( String uri ) {
         List<User> planners = new ArrayList<User>();
-        for ( User user : users ) {
+        for ( User user : userDetailsService.getUsers() ) {
             if ( user.isPlanner( uri ) ) {
                 planners.add( user );
             }
@@ -826,14 +765,7 @@ public class PlanManager {
      * @param uri the plan's uri
      */
     public synchronized void setResyncRequired( String uri ) {
-        outOfSyncUsers.put( uri, allUsernames() );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private List<String> allUsernames() {
-        return (List<String>) CollectionUtils.collect( users,
-                                                       TransformerUtils.invokerTransformer(
-                                                               "getUsername" ) );
+        outOfSyncUsers.put( uri, userDetailsService.getUsernames() );
     }
 
     /**
@@ -871,4 +803,56 @@ public class PlanManager {
                                                                "getName" ) );
     }
 
- }
+    /**
+     * Return the list of plans the user has at least planner privileges to.
+     *
+     * @param user the user of concern
+     * @return a list of plans
+     */
+    public List<Plan> getPlannablePlans( User user ) {
+        List<Plan> planList = getPlans();
+        List<Plan> result = new ArrayList<Plan>( planList.size() );
+
+        for ( Plan p : planList )
+            if ( user.isPlanner( p.getUri() ) )
+                result.add( p );
+
+        return result;
+    }
+
+    /**
+     * Return the list of plans the user has at least user privileges to.
+     *
+     * @param user the user
+     * @return a list of plans
+     */
+    public List<Plan> getReadablePlans( User user ) {
+        List<Plan> planList = getPlans();
+        List<Plan> result = new ArrayList<Plan>( planList.size() );
+
+        for ( Plan object : planList )
+            if ( user.isParticipant( object.getUri() ) )
+                result.add( object );
+
+        return result;
+    }
+
+    /**
+     * Get a plan the uer can edit, else one the user can read, else the default plan.
+     * @param user a user
+     * @return a plan, or null if none
+     */
+    public Plan getDefaultPlan( User user ) {
+        List<Plan> planList = getPlans();
+        for ( Plan plan : planList )
+            if ( plan.isDevelopment() && user.isPlanner( plan.getUri() ) )
+                return plan;
+
+        for ( Plan plan : planList )
+            if ( plan.isProduction() && user.isParticipant( plan.getUri() ) )
+                return plan;
+
+        LOG.warn( "No default plan for user {}", user.getUsername() );
+        return null;
+    }
+}

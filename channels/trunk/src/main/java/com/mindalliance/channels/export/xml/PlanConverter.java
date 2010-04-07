@@ -13,7 +13,7 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;

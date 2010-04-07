@@ -1,18 +1,15 @@
-package com.mindalliance.channels;
+package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.GeoService;
+import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.dao.ImportExportFactory;
+import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.User;
-import com.mindalliance.channels.pages.AdminPage;
-import com.mindalliance.channels.pages.ErrorPage;
-import com.mindalliance.channels.pages.ExpiredPage;
-import com.mindalliance.channels.pages.ExportPage;
-import com.mindalliance.channels.pages.GeoMapPage;
-import com.mindalliance.channels.pages.LoginPage;
-import com.mindalliance.channels.pages.PlanPage;
-import com.mindalliance.channels.pages.UploadPage;
 import com.mindalliance.channels.pages.playbook.ContactPage;
 import com.mindalliance.channels.pages.playbook.PlaybookPage;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
@@ -23,6 +20,7 @@ import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.HierarchyPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
@@ -163,9 +161,10 @@ public class Channels extends WebApplication
     @Override
     public Class<? extends WebPage> getHomePage() {
         User user = User.current();
-        return user.isAdmin()   ? AdminPage.class
-             : user.isPlanner() ? PlanPage.class
-                                : PlanReportPage.class ;
+        Plan plan = user.getPlan();
+        return user.isAdmin()                  ? AdminPage.class
+             : user.isPlanner( plan.getUri() ) ? PlanPage.class
+                                               : PlanReportPage.class ;
     }
 
     public QueryService getQueryService() {

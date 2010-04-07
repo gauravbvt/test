@@ -4,6 +4,7 @@ import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;
+import com.mindalliance.channels.dao.User;
 import junit.framework.TestCase;
 import org.mockito.Mockito;
 

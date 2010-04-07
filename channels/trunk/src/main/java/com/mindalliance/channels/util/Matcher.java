@@ -1,6 +1,6 @@
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Place;

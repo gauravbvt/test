@@ -4,6 +4,8 @@ import org.apache.commons.lang.StringUtils;
 
 import java.text.MessageFormat;
 
+import com.mindalliance.channels.dao.User;
+
 /**
  * A user provided issue
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

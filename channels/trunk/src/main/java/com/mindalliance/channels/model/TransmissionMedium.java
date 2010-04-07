@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.PlanDao;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,10 +92,13 @@ public class TransmissionMedium extends ModelEntity {
 
     }
 
-    public static void createImmutables( List<TransmissionMedium> builtInMedia, QueryService queryService ) {
-        UNKNOWN = queryService.findOrCreateType( TransmissionMedium.class, UnknownName );
+    public static void createImmutables( List<TransmissionMedium> builtInMedia, PlanDao dao ) {
+        UNKNOWN = dao.findOrCreateType( TransmissionMedium.class, UnknownName, null );
         UNKNOWN.makeImmutable();
-        addBuiltIn( builtInMedia, queryService );
+        for ( TransmissionMedium medium : builtInMedia ) {
+            dao.add( medium );
+            medium.makeImmutable();
+        }
     }
 
     /**
@@ -329,19 +332,6 @@ public class TransmissionMedium extends ModelEntity {
     @Override
     public String toString() {
         return getLabel();
-    }
-
-    /**
-     * Register pre-defined media on startup.
-     *
-     * @param builtInMedia a list of media
-     * @param queryService a query service
-     */
-    public static void addBuiltIn( List<TransmissionMedium> builtInMedia, QueryService queryService ) {
-        for ( TransmissionMedium medium : builtInMedia ) {
-            queryService.getDao().add( medium );
-            medium.makeImmutable();
-        }
     }
 
     /**

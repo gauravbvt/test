@@ -4,12 +4,12 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.Map;
 
@@ -347,15 +347,7 @@ public interface Commander extends Service {
      */
     void initialize();
 
-    void createRequisiteModelObjects( FileUserDetailsService userDetailsService )
-        throws CommandException;
-
     PlanDao getPlanDao();
 
     void setPlanDao( PlanDao planDao );
-
-    /**
-     * Replay journaled commands for all plans.
-     */
-    void replayJournal();
 }

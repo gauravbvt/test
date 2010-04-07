@@ -1,12 +1,15 @@
-package com.mindalliance.channels;
+package com.mindalliance.channels.query;
 
+import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.AttachmentManager;
+import com.mindalliance.channels.Service;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.Attachment;
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.Dao;
+import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Assignment;
@@ -34,7 +37,6 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.util.Play;
 
@@ -259,7 +261,7 @@ public interface QueryService extends Service {
      * @param kind  actual or type
      * @return a boolean
      */
-    boolean entityExists( Class<ModelEntity> clazz, String name, ModelEntity.Kind kind );
+    boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind );
 
     /**
      * Create a connector in a plan segment.
@@ -1330,12 +1332,4 @@ public interface QueryService extends Service {
      * @return a file user details service
      */
     FileUserDetailsService getUserDetailsService();
-
-
-    /**
-     * Define all immutable entities (not plan dependent).
-     * @param media list of media to initialized
-     */
-    void defineImmutableEntities( List<TransmissionMedium> media );
-
 }

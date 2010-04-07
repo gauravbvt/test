@@ -24,7 +24,7 @@ CONFIGURATION NOTES:
         default-autowire="byName">
 
     <!-- =========================== Main Components -->
-    <bean id="wicketApplication" class="com.mindalliance.channels.Channels"/>
+    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels"/>
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
     <bean id="issueScanner" class="com.mindalliance.channels.analysis.IssueScanner"/>
 

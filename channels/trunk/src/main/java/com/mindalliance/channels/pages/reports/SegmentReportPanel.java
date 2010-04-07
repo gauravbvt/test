@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.ModelObject;
@@ -47,7 +47,7 @@ public class SegmentReportPanel extends Panel {
 
         addSegmentPage( segment, showingIssues );
 
-        add( new ListView<Organization>( 
+        add( new ListView<Organization>(
                 "organizations",
                 queryService.findAllInvolvedOrganizations( segment ) ) { // NON-NLS
 

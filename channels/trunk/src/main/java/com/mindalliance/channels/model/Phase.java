@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.PlanDao;
 
 import java.text.Collator;
 
@@ -22,7 +22,7 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
      * Name of unknown phase.
      */
     private static String UnknownName = "(unknown)";
-    
+
     /**
      * The timing of the phase relative to an event.
      */
@@ -38,10 +38,10 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
     /**
      * Create immutables.
      *
-     * @param queryService a query service
+     * @param dao a query service
      */
-    public static void createImmutables( QueryService queryService ) {
-        UNKNOWN = queryService.findOrCreate( Phase.class, UnknownName );
+    public static void createImmutables( PlanDao dao ) {
+        UNKNOWN = dao.findOrCreate( Phase.class, UnknownName, null );
         UNKNOWN.makeImmutable();
     }
     public Timing getTiming() {
@@ -135,7 +135,7 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
     public boolean isPreEvent() {
         return timing == Timing.PreEvent;
     }
-    
+
     /**
      * The timing of a phase.
      */

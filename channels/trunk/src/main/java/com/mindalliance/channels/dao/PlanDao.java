@@ -1,7 +1,5 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
@@ -17,7 +15,6 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.model.User;
 import org.apache.commons.collections.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -87,6 +85,11 @@ public class PlanDao extends Memory {
 
     private FileUserDetailsService userDetailsService;
 
+    /**
+     * Lowest id for mutable model objects.
+     */
+    public static final long IMMUTABLE_RANGE = -1000L;
+
     //-------------------------------------
     PlanDao( Plan plan, File baseDirectory, IdGenerator idGenerator ) {
         this.plan = plan;
@@ -125,31 +128,6 @@ public class PlanDao extends Memory {
 
     public void setUserDetailsService( FileUserDetailsService userDetailsService ) {
         this.userDetailsService = userDetailsService;
-    }
-
-    /**
-     * Load plan data.
-     *
-     * @param importer the loading mechanism
-     * @throws IOException on loading errors
-     */
-    public synchronized void load( Importer importer ) throws IOException {
-        Long lastId = readLastAssignedId();
-        if ( lastId > 0L )
-            idGenerator.setLastAssignedId( lastId, getPlan() );
-        File dataFile = getDataFile();
-        if ( dataFile.length() > 0L ) {
-            LOG.info( "Importing snapshot for plan {} from {}", plan, dataFile.getAbsolutePath() );
-            FileInputStream in = null;
-            try {
-                in = new FileInputStream( dataFile );
-                importer.importPlan( in );
-            } finally {
-                if ( in != null )
-                    in.close();
-            }
-        }
-        journal = loadJournal( importer );
     }
 
     /**
@@ -231,22 +209,6 @@ public class PlanDao extends Memory {
         return new Journal();
     }
 
-    private long readLastAssignedId() throws IOException {
-        BufferedReader reader = null;
-        Long lastId = 0L;
-        try {
-            File lastIdFile = getLastIdFile();
-            if ( lastIdFile.length() > 0L ) {
-                reader = new BufferedReader( new FileReader( lastIdFile ) );
-                lastId = Long.parseLong( reader.readLine() );
-            }
-        } finally {
-            if ( reader != null )
-                reader.close();
-        }
-        return lastId;
-    }
-
     /**
      * Persist all plan data.
      *
@@ -258,7 +220,7 @@ public class PlanDao extends Memory {
             takeSnapshot( exporter );
             getJournalFile().delete();
             journal.reset();
-            updateLastIdRecord();
+            writeLastAssignedId();
         }
     }
 
@@ -296,7 +258,7 @@ public class PlanDao extends Memory {
         try {
             out = new FileOutputStream( getJournalFile() );
             exporter.export( getJournal(), out );
-            updateLastIdRecord();
+            writeLastAssignedId();
         } finally {
             if ( out != null )
                 out.close();
@@ -323,17 +285,34 @@ public class PlanDao extends Memory {
         }
     }
 
-    private void updateLastIdRecord() throws IOException {
-        long lastId = idGenerator.getLastAssignedId( getPlan() );
-        getLastIdFile().delete();
+    private void writeLastAssignedId() throws IOException {
+        File idFile = getLastIdFile();
+
+        idFile.delete();
         PrintWriter out = null;
         try {
-            out = new PrintWriter( new FileOutputStream( getLastIdFile() ) );
-            out.print( lastId );
+            out = new PrintWriter( new FileOutputStream( idFile ) );
+            out.print( idGenerator.getLastAssignedId( plan ) );
         } finally {
             if ( out != null )
                 out.close();
         }
+    }
+
+    private long readLastAssignedId() throws IOException {
+        BufferedReader reader = null;
+        Long lastId = 0L;
+        try {
+            File lastIdFile = getLastIdFile();
+            if ( lastIdFile.length() > 0L ) {
+                reader = new BufferedReader( new FileReader( lastIdFile ) );
+                lastId = Long.parseLong( reader.readLine() );
+            }
+        } finally {
+            if ( reader != null )
+                reader.close();
+        }
+        return lastId;
     }
 
     private File getLastIdFile() throws IOException {
@@ -498,5 +477,62 @@ public class PlanDao extends Memory {
             domain = list( clazz );
 
         return domain;
+    }
+
+    /**
+     * Define all immutable entities (not plan dependent).
+     * @param media predefined media
+     */
+    public void defineImmutableEntities( List<TransmissionMedium> media ) {
+        idGenerator.setLastAssignedId( IMMUTABLE_RANGE, plan );
+        Actor.createImmutables( this );
+        Event.createImmutables( this );
+        Organization.createImmutables( this );
+        Place.createImmutables( this );
+        Phase.createImmutables( this );
+        Role.createImmutables( this );
+        TransmissionMedium.createImmutables( media, this );
+        Participation.createImmutables( this );
+
+        // Make sure that there is one participation per user
+        if ( userDetailsService != null )
+            for ( String username : userDetailsService.getUsernames( plan.getUri() ) ) {
+                Participation p = findOrCreate( Participation.class, username, null );
+                p.setActual();
+            }
+    }
+
+    /**
+     * Import persisted plan.
+     * @param importExportFactory the factory
+     * @param builtInMedia prebuilt media
+     */
+    public void importPlan(
+            ImportExportFactory importExportFactory, List<TransmissionMedium> builtInMedia ) {
+
+        try {
+            // set last id to start of mutable range
+            idGenerator.setLastAssignedId( readLastAssignedId(), plan );
+            Importer importer = importExportFactory.createImporter( this );
+
+            File dataFile = getDataFile();
+            if ( dataFile.length() > 0L ) {
+                LOG.info( "Importing snapshot for plan {} from {}", plan, dataFile.getAbsolutePath() );
+                FileInputStream in = null;
+                try {
+                    in = new FileInputStream( dataFile );
+                    importer.importPlan( in );
+                } finally {
+                    if ( in != null )
+                        in.close();
+                }
+
+                journal = loadJournal( importer );
+            }
+        } catch ( IOException e ) {
+            String msg = MessageFormat.format( "Unable to import plan {0}", plan.getName() );
+            LOG.error( msg, e );
+            throw new RuntimeException( msg, e );
+        }
     }
 }

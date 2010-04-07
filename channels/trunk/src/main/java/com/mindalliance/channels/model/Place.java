@@ -1,10 +1,11 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.GeoService;
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -108,27 +109,27 @@ public class Place extends ModelEntity implements GeoLocatable {
     /**
      * Create immutable places.
      *
-     * @param queryService a query service
+     * @param dao a query service
      */
-    public static void createImmutables( QueryService queryService ) {
+    public static void createImmutables( PlanDao dao ) {
         // Unknown place
-        UNKNOWN = queryService.findOrCreate( Place.class, UnknownPlaceName );
+        UNKNOWN = dao.findOrCreate( Place.class, UnknownPlaceName, null );
         UNKNOWN.makeImmutable();
         // Administrative area types
-        Place administrativeArea = queryService.findOrCreateType( Place.class, ADMINISTRATIVE_AREA );
+        Place administrativeArea = dao.findOrCreateType( Place.class, ADMINISTRATIVE_AREA, null );
         administrativeArea.makeImmutable();
-        Country = queryService.findOrCreateType( Place.class, COUNTRY );
+        Country = dao.findOrCreateType( Place.class, COUNTRY, null );
         Country.addTag( administrativeArea );
         Country.makeImmutable();
-        State = queryService.findOrCreateType( Place.class, STATE );
+        State = dao.findOrCreateType( Place.class, STATE, null );
         State.addTag( administrativeArea );
         State.setWithin( Country );
         State.makeImmutable();
-        County = queryService.findOrCreateType( Place.class, COUNTY );
+        County = dao.findOrCreateType( Place.class, COUNTY, null );
         County.addTag( administrativeArea );
         County.setWithin( State );
         County.makeImmutable();
-        City = queryService.findOrCreateType( Place.class, CITY );
+        City = dao.findOrCreateType( Place.class, CITY, null );
         City.addTag( administrativeArea );
         City.setWithin( County );
         City.makeImmutable();

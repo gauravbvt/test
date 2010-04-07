@@ -1,7 +1,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.DiagramFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

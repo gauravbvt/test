@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.RedirectFlow;
 import com.mindalliance.channels.command.commands.SatisfyNeed;

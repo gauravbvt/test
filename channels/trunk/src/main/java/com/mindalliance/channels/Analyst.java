@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.List;
 

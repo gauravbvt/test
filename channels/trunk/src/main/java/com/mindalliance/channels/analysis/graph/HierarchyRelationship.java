@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Hierarchical;
 
 /**

@@ -2,7 +2,7 @@ package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Part;

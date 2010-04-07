@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -76,7 +76,7 @@ public class TransferJobs extends AbstractCommand {
                     "jobs",
                     job,
                     UpdateObject.Action.Add
-            ));            
+            ));
         }
         return subCommands;
     }

@@ -1,9 +1,9 @@
 package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.SurveyService;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;

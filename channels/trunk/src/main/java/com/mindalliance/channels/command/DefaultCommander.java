@@ -6,19 +6,15 @@ import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.QueryService;
-import com.mindalliance.channels.command.commands.CreateEntityIfNew;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.User;
-import com.mindalliance.channels.dao.FileUserDetailsService;
+import com.mindalliance.channels.dao.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -578,34 +574,26 @@ public class DefaultCommander extends AbstractService implements Commander {
     }
 
     public void initialize() {
-        this.replayJournal();
+        replayJournal( planManager.getImportExportFactory() );
         queryService.getAttachmentManager().removeUnattached( queryService, getPlan() );
         analyst.onStart();
     }
 
-    public void createRequisiteModelObjects( FileUserDetailsService userDetailsService )
-            throws CommandException {
-
-        // Make sure that there is one participation per user
-        for ( String username : userDetailsService.getAllPlanUsernames() ) {
-            if ( planManager.getParticipant( getPlan(), username ) != null )
-                doCommand( new CreateEntityIfNew(
-                        Participation.class, username, ModelEntity.Kind.Actual ) );
-        }
-    }
-
     /**
      * Replay journaled commands for current plan.
+     * @param exportFactory
      */
-    public void replayJournal() {
-        Plan plan = getPlan();
+    public void replayJournal( ImportExportFactory exportFactory ) {
+        Plan plan = planDao.getPlan();
+
         try {
             if ( plan.isDevelopment() ) {
                 replay( planDao.getJournal() );
                 LOG.info( "Replayed journal for plan {}", plan );
-                planDao.save( planManager.getImportExportFactory().createExporter( planDao ) );
-                createRequisiteModelObjects( planManager.getUserDetailsService() );
+
+                planDao.save( exportFactory.createExporter( planDao ) );
             }
+
         } catch ( IOException e ) {
             LOG.error( MessageFormat.format( "Unable to save plan {0}", plan ), e );
         } catch ( CommandException e ) {

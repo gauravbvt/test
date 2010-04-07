@@ -3,10 +3,10 @@ package com.mindalliance.channels.command;
 import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.geo;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import org.geonames.InsufficientStyleException;
 import org.geonames.Toponym;
 

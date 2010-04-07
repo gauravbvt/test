@@ -3,44 +3,62 @@
 
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.pages.PlanPage;
-import com.mindalliance.channels.pages.playbook.MainPage;
-import com.mindalliance.channels.pages.reports.PlanReportPage;
+import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.ModelObject;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestExecutionListeners;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Test sample models.
+ * Test ACME plan.
  */
 @TestExecutionListeners( AbstractChannelsTest.InstallSamplesListener.class )
-public class AcmeTest extends AbstractChannelsTest {
+public class AcmeTest extends WalkthroughTest {
+
+    @Autowired
+    private Analyst analyst;
+
+    private PlanDao planDao;
 
     public AcmeTest() {
         super( "guest", "mindalliance.com/channels/plans/acme" );
     }
 
-    @Override
     @Before
-    public void setUp() throws IOException {
-        super.setUp();
+    public void init() {
+        planDao = getCommander().getPlanDao();
     }
 
     @Test
-    public void testPlan() {
-        assertRendered( "plan", PlanPage.class );
-    }
+    public void verifyIssues() {
+        Map<String,List<Issue>> issueMap = new HashMap<String, List<Issue>>();
+        for ( ModelObject modelObject : planDao.list( ModelObject.class ) )
+            for ( Issue issue : analyst.listIssues( modelObject, true, false ) ) {
+                String kind = issue.getKind();
+                List<Issue> kindList = issueMap.get( kind );
+                if ( kindList == null ) {
+                    kindList = new ArrayList<Issue>();
+                    issueMap.put( kind, kindList );
+                }
+                kindList.add( issue );
+            }
 
-    @Test
-    public void testPlaybook() {
-        assertRendered( "playbooks", MainPage.class );
-    }
-
-    @Test
-    public void testReport() {
-        assertRendered( "report", PlanReportPage.class );
-    }
-
+        assertEquals( 8, issueMap.size() );
+        assertEquals( 4, issueMap.get( "UnverifiedPostalCode" ).size() );
+        assertEquals( 1, issueMap.get( "ActorNotInOneOrganization" ).size() );
+        assertEquals( 2, issueMap.get( "CommitmentWithoutRequiredAgreement" ).size() );
+        assertEquals( 1, issueMap.get( "SinglePointOfFailure" ).size() );
+        assertEquals( 1, issueMap.get( "user" ).size() );
+        assertEquals( 1, issueMap.get( "SegmentNeverEnds" ).size() );
+        assertEquals( 2, issueMap.get( "GeonameButNoLocation" ).size() );
+        assertEquals( 1, issueMap.get( "UnconfirmedJob" ).size() );
+     }
 }

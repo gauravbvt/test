@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.ModelObject;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.CacheException;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class ResultCache {
 
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger LOG = LoggerFactory.getLogger( ResultCache.class );
 
     /**
      * The manager for the internal cache.
@@ -48,8 +49,8 @@ public class ResultCache {
     public void cache( MethodInvocation invocation, Object result ) {
         String key = getKey( invocation );
         int count = cache.getSize();
-        if ( log.isTraceEnabled() )
-            log.trace( MessageFormat.format( "Caching result {0} of {1}", count, key ) );
+        if ( LOG.isTraceEnabled() )
+            LOG.trace( MessageFormat.format( "Caching result {0} of {1}", count, key ) );
         Object cachedResult;
         if ( result instanceof List ) {
             cachedResult = Collections.unmodifiableList( (List) result );
@@ -67,11 +68,23 @@ public class ResultCache {
      */
     public Element getCached( MethodInvocation invocation ) {
         String key = getKey( invocation );
-        Element element = getCache().get( key );
-        if ( log.isTraceEnabled() && element != null )
-            log.trace( MessageFormat.format( "Returning cached value for {0}", key ) );
-        if ( log.isTraceEnabled()  && element == null)
-            log.trace( MessageFormat.format( "No cached value for {0}", key ) );
+        Element element = null;
+        try {
+            element = getCache().get( key );
+
+        } catch ( NullPointerException e ) {
+            LOG.error( "Reading key " + key, e );
+        } catch ( IllegalStateException e ) {
+            LOG.error( "Reading key " + key, e );
+        } catch ( CacheException e ) {
+            LOG.error( "Reading key " + key, e );
+        }
+
+        if ( LOG.isTraceEnabled() && element != null )
+            LOG.trace( "Returning cached value for {}", key );
+        if ( LOG.isTraceEnabled() && element == null )
+            LOG.trace( "No cached value for {}", key );
+
         return element;
     }
 
@@ -88,7 +101,7 @@ public class ResultCache {
      * Forget all cached results.
      */
     public void forgetAll() {
-        log.info( "***Clearing cache" );
+        LOG.info( "***Clearing cache" );
         getCache().removeAll();
     }
 
@@ -108,11 +121,14 @@ public class ResultCache {
         return cache;
     }
 
-    private String getKey( MethodInvocation methodInvocation ) {
+    private static String getKey( MethodInvocation methodInvocation ) {
         String targetMethodName = methodInvocation.getMethod().getName();
-        Object[] methodArgs = methodInvocation.getArguments();
 
-        if ( methodArgs != null ) {
+        Object[] methodArgs = methodInvocation.getArguments();
+        if ( methodArgs == null ) {
+            return targetMethodName;
+
+        } else {
             StringBuilder key = new StringBuilder( targetMethodName );
             key.append( '(' );
             for ( int i = 0; i < methodArgs.length; i++ ) {
@@ -120,13 +136,12 @@ public class ResultCache {
                     key.append( ',' );
                 key.append( argumentToString( methodArgs[i] ) );
             }
-            key.append( ')' );
+
             // Add plan uri to key
-            key.append( " in " );
+            key.append( ") in " );
             key.append( PlanManager.plan().getUri() );
             return key.toString();
-        } else
-            return targetMethodName;
+        }
     }
 
     private static String argumentToString( Object arg ) {

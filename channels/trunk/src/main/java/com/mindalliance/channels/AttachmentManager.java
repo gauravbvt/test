@@ -2,6 +2,7 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 import java.io.File;

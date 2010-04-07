@@ -116,7 +116,7 @@ public class DefaultDetective implements Detective {
         for ( IssueDetector detector : issueDetectors ) {
             List<Issue> detectedIssues = detector.detectIssues( modelObject );
             if ( detectedIssues != null )
-                issues.addAll( detector.detectIssues( modelObject ) );
+                issues.addAll( detectedIssues );
         }
         return issues;
     }

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.LockManager;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;

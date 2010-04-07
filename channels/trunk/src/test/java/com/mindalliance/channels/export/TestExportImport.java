@@ -84,7 +84,7 @@ public class TestExportImport extends AbstractChannelsTest {
 
     private void compare( String xml, String otherXml ) throws IOException {
         // for now just check if same number of lines
-        assertSame( "same number of lines", countLines( xml ), countLines( otherXml ) );
+        assertEquals( "same number of lines", countLines( xml ), countLines( otherXml ) );
     }
 
     private int countLines( String text ) throws IOException {

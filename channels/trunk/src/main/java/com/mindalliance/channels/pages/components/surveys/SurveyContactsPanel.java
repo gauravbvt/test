@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.surveys;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Actor;
@@ -219,7 +219,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
                     contacts,
                     TransformerUtils.invokerTransformer( "getUsername" ) );
             List<String> others = (List<String>) CollectionUtils.subtract(
-                    queryService.getUserDetailsService().getAllPlanUsernames(),
+                    queryService.getUserDetailsService().getUsernames( getPlan().getUri() ),
                     surveyed );
             for ( String other : others ) {
                 contacts.add( new Contact( other ) );

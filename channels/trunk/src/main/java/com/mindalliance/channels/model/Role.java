@@ -1,7 +1,8 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +36,13 @@ public class Role extends ModelEntity {
     /**
      * Create immutables.
      *
-     * @param queryService a query service
+     * @param dao a query service
      */
-    public static void createImmutables( QueryService queryService ) {
-        UNKNOWN = queryService.findOrCreate( Role.class, UnknownName );
+    public static void createImmutables( PlanDao dao ) {
+        UNKNOWN = dao.findOrCreate( Role.class, UnknownName, null );
         UNKNOWN.makeImmutable();
     }
-    
+
     /**
      * Whether the role is to be played by a system actor.
      * @return a boolean
@@ -82,6 +83,6 @@ public class Role extends ModelEntity {
     public boolean isIconized() {
         return true;
     }
-    
-    
+
+
 }

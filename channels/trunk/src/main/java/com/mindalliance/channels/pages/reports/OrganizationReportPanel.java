@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -94,7 +94,7 @@ public class OrganizationReportPanel extends Panel {
             final ResourceSpec spec = p.resourceSpec();
             if ( spec.isOrganization() )
                 spec.setActor( Actor.UNKNOWN );
-            // Find all actors directly employed by  the organization and playing the part 
+            // Find all actors directly employed by  the organization and playing the part
             List<Actor> actorList = (List<Actor>)CollectionUtils.select(
                     queryService.findAllActualActors( spec ),
                     new Predicate() {

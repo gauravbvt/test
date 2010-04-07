@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis.detectors;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Commitment;

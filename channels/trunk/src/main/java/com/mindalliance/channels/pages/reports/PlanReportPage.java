@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;

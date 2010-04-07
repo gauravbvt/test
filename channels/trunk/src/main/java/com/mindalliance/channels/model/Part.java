@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.util.Matcher;
@@ -119,7 +119,7 @@ public class Part extends Node implements GeoLocatable {
      */
     public String getTypeName() {
         return "task";
-    }    
+    }
 
     public String getTask() {
         return task;

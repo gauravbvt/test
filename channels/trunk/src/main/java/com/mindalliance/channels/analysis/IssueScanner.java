@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.Scanner;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Flow;
@@ -167,6 +167,7 @@ public class IssueScanner implements Scanner {
         /**
          * Run thread, aborting as soon as possible if scan terminated.
          */
+        @Override
         public void run() {
             try {
                 long startTime = System.currentTimeMillis();
@@ -191,8 +192,8 @@ public class IssueScanner implements Scanner {
                         scanIssues( flow );
                     }
                 }
-                if ( !active ) return;
-                queryService.findAllIssues( analyst );
+//                if ( !active ) return;
+//                queryService.findAllIssues( analyst );
                 if ( !active ) return;
                 queryService.findAllUnwaivedIssues( analyst );
                 if ( !active ) return;
@@ -207,10 +208,13 @@ public class IssueScanner implements Scanner {
                 analyst.countTestFailures( getPlan(), Issue.COMPLETENESS );
                 if ( !active ) return;
                 analyst.countTestFailures( getPlan(), Issue.ROBUSTNESS );
+
                 long endTime = System.currentTimeMillis();
                 LOG.info( "Issue sweep completed on " + getPlan() + " in " + ( endTime - startTime ) + " msecs" );
+
             } catch ( Throwable e ) {
                 LOG.debug( "Deamon failed", e );
+                terminate();
             }
         }
 

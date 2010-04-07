@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
@@ -224,7 +224,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private List<ParticipationWrapper> getAllParticipationWrappers() {
         QueryService queryService = getQueryService();
         List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
-        for ( String username : queryService.getUserDetailsService().getAllPlanUsernames() ) {
+        for ( String username : queryService.getUserDetailsService().getUsernames( getPlan().getUri() ) ) {
             Participation participation = queryService.findOrCreate( Participation.class, username );
             ParticipationWrapper wrapper = new ParticipationWrapper( username );
             wrapper.setParticipation( participation );

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.PageParameters;

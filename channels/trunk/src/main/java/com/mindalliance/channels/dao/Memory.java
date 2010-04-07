@@ -221,36 +221,32 @@ public abstract class Memory implements Dao {
      * {@inheritDoc}
      */
     public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id ) {
-        if ( name == null || name.isEmpty() )
-            return null;
         T result = null;
-        if ( id != null ) {
-            try {
-                result = find( clazz, id );
-            } catch ( NotFoundException ignored ) {
-                // do nothing - reference not yet imported
-            }
-        }
-        if ( result == null ) {
-            // Try finding one with the name but already created at a different id during import
-            // because of "forward entity reference"
-            // (e.g. an event was imported that references a location as its scope
-            // before the location is imported)
-            result = find( clazz, name );
-        }
-        if ( result == null ) {
-            // Create new entity with name
-            try {
-                result = clazz.newInstance();
-                result.setName( name );
-                add( result, id );
 
-            } catch ( InstantiationException e ) {
-                throw new RuntimeException( e );
-            } catch ( IllegalAccessException e ) {
-                throw new RuntimeException( e );
-            }
+        if ( name != null && !name.isEmpty() ) {
+
+            result = find( clazz, name );
+            if ( result == null && id != null )
+                try {
+                    result = find( clazz, id );
+                } catch ( NotFoundException ignored ) {
+                    // fall through and create new
+                }
+
+            if ( result == null )
+                try {
+                    // Create new entity with name
+                    result = clazz.newInstance();
+                    result.setName( name );
+                    add( result, id );
+
+                } catch ( InstantiationException e ) {
+                    throw new RuntimeException( e );
+                } catch ( IllegalAccessException e ) {
+                    throw new RuntimeException( e );
+                }
         }
+
         return result;
     }
 

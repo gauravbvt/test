@@ -2,7 +2,7 @@ package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;

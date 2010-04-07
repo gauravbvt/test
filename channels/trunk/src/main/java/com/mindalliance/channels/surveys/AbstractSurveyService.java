@@ -2,16 +2,16 @@ package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.FileUserDetailsService;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.FileUtils;

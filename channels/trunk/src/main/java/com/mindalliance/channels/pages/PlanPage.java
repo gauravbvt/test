@@ -1,13 +1,14 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Channels;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.Commander;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
@@ -18,7 +19,6 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
@@ -1621,7 +1621,7 @@ public final class PlanPage extends WebPage implements Updatable {
      * @return a list of plans
      */
     public List<Plan> getPlannablePlans() {
-        return getUser().getPlannablePlans( getPlanManager() );
+        return getPlanManager().getPlannablePlans( getUser() );
     }
 
     private User getUser() {

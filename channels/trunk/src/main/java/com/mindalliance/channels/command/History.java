@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.dao.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;

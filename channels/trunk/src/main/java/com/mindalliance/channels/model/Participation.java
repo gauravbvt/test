@@ -1,9 +1,8 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.QueryService;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.query.DefaultQueryService;
-
-import java.util.List;
+import com.mindalliance.channels.query.QueryService;
 
 /**
  * A participation represents a Channels user who is also an actor.
@@ -42,8 +41,8 @@ public class Participation extends AbstractUnicastChannelable {
     public Participation() {
     }
 
-    public static void createImmutables( List<TransmissionMedium> builtInMedia, QueryService queryService ) {
-        UNKNOWN = queryService.findOrCreateType( Participation.class, UnknownName );
+    public static void createImmutables( PlanDao dao ) {
+        UNKNOWN = dao.findOrCreateType( Participation.class, UnknownName, null );
         UNKNOWN.makeImmutable();
     }
 

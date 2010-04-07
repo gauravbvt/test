@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.User;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;

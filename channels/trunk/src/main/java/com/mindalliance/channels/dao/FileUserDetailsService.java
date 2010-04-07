@@ -1,10 +1,5 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.User;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.PredicateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -12,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,11 +14,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.StringTokenizer;
 
 /**
  * A user details service that keeps in sync with changes to the underlying user definition file.
@@ -32,14 +27,14 @@ import java.util.StringTokenizer;
 public class FileUserDetailsService implements UserDetailsService {
 
     /**
-     * The plan manager.
+     * The logger.
      */
-    private final PlanManager planManager;
+    private static final Logger LOG = LoggerFactory.getLogger( FileUserDetailsService.class );
 
     /**
      * Users, indexed by username.
      */
-    private Map<String, User> details = new HashMap<String, User>();
+    private Map<String, User> users;
 
     /**
      * The actual user definitions (file name).
@@ -67,14 +62,21 @@ public class FileUserDetailsService implements UserDetailsService {
      */
     private long lastModified;
 
-    /**
-     * The logger.
-     */
-    private final Logger logger = LoggerFactory.getLogger( getClass() );
 
     //---------------------------------------------
-    public FileUserDetailsService( PlanManager planManager ) {
-        this.planManager = planManager;
+    public FileUserDetailsService() {
+    }
+
+    private synchronized Map<String, User> readUsers() {
+        try {
+            if ( userFile == null || !userFile.exists() || userFile.lastModified() > lastModified )
+                load();
+
+            return users;
+
+        } catch ( IOException e ) {
+            throw new RuntimeException( "Unable to get user details", e );
+        }
     }
 
     /**
@@ -83,167 +85,58 @@ public class FileUserDetailsService implements UserDetailsService {
      * @param username the user name.
      * @return the details
      */
-    public synchronized UserDetails loadUserByUsername( String username ) {
-        try {
-            if ( userFile == null || !userFile.exists() || userFile.lastModified() > lastModified )
-                readUserDefinitions();
+    public UserDetails loadUserByUsername( String username ) {
+        User user = readUsers().get( username );
+        if ( user == null )
+            throw new UsernameNotFoundException(
+                MessageFormat.format( "Unknown username: {0}", username ) );
 
-            User user = details.get( username );
-            if ( user == null )
-                throw new UsernameNotFoundException(
-                    MessageFormat.format( "Unknown username: {0}", username ) );
-
-            return user;
-
-        } catch ( IOException e ) {
-            String msg = "Unable to get modification date";
-            logger.error( msg, e );
-            throw new RuntimeException( msg, e );
-        }
+        return user;
     }
 
-    private synchronized void readUserDefinitions() throws IOException {
-        Properties properties = new Properties();
+    private synchronized void load() throws IOException {
         InputStream inputStream = null;
         try {
             inputStream = findInputStream();
+
+            Properties properties = new Properties();
             properties.load( inputStream );
-            details = readDetails( properties );
+            users = readDetails( properties );
+
+            // Save default definitions to current definitions, if need be
+            if ( userFile != null && !userFile.exists() )
+                save();
+
+            lastModified = userFile == null ? System.currentTimeMillis() : userFile.lastModified();
+
         } finally {
             if ( inputStream != null )
                 inputStream.close();
         }
-        if ( userFile != null && !userFile.exists() )
-            writeUserDefinitions();
-
-        lastModified = userFile == null ? System.currentTimeMillis() : userFile.lastModified();
     }
 
-    private Map<String, User> readDetails( Properties properties ) {
+    private static Map<String, User> readDetails( Properties properties ) {
         Map<String, User> result = new HashMap<String, User>();
         for ( String username : properties.stringPropertyNames() ) {
             String values = properties.getProperty( username );
-            StringTokenizer tokens = new StringTokenizer( values, "," );
-            User user = new User( username );
-            user.setPassword( tokens.nextToken() );
-            user.setFullName( tokens.nextToken() );
-            user.setEmail( tokens.nextToken() );
-            while ( tokens.hasMoreTokens() ) {
-                String token = tokens.nextToken();
-                if ( token.startsWith( "[" ) )
-                    parsePlanAccess( token, user );
-                else {
-                    // admin role or default role for all accessible plans
-                    if ( token.equals( User.ROLE_ADMIN ) ) {
-                        for ( Plan plan : getPlanManager().getPlans() ) {
-                            user.setPlanAccess( plan.getUri(), true );
-                            planManager.addUser( user );
-                        }
-                    }
-                    user.addRole( token );
-                }
-            }
-            user.setPlan( getDefaultPlan( user ) );
-            result.put( username, user );
+            result.put( username, new User( new UserInfo( username, values ) ) );
         }
         return result;
     }
 
-    // e.g. [mindalliance.com/channels/plans/sci|ROLE_PLANNER]
-    // e.g. [mindalliance.com/channels/plans/sci]
-    private void parsePlanAccess( String string, User user ) {
-        assert string.endsWith( "]" );
-        String planAccess = string.substring( 1, string.length() - 1 );
-        StringTokenizer tokens = new StringTokenizer( planAccess, "|" );
-        String uri = tokens.nextToken();
-        boolean planner = false;
-        if ( tokens.hasMoreTokens() ) {
-            planner = tokens.nextToken().equals( User.ROLE_PLANNER );
-        }
-        user.setPlanAccess( uri, planner );
-        planManager.addUser( user );
-    }
-
-    /**
-     * Get a plan the uer can edit, else one the user can read, else the default plan.
-     * @param user a user
-     * @return a plan, or null if none
-     */
-    public Plan getDefaultPlan( User user ) {
-        List<Plan> plans = findPlannablePlans( user );
-        if ( plans.isEmpty() ) {
-            plans = findReadablePlans( user );
-            if ( plans.isEmpty() ) {
-                logger.warn( "No default plan for user " + user.getUsername() );
-                return null;
-            }
-        }
-
-        return plans.get( 0 );
-    }
-
-    /**
-     * Find all development plans a user can edit.
-     * @param user  a user
-     * @return  a list of versioned plans
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Plan> findPlannablePlans( final User user ) {
-        List<Plan> plans = planManager.getPlans();
-        return (List<Plan>)CollectionUtils.select(
-                plans,
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        Plan plan = (Plan) object;
-                        return plan.isDevelopment() && user.isPlanner( plan );
-                    }
-                }
-        );
-    }
-
-    /**
-     * Find all production plans a user can read.
-     * @param user  a user
-     * @return  a list of versioned plans
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Plan> findReadablePlans( final User user ) {
-        List<Plan> plans = planManager.getPlans();
-        return (List<Plan>)CollectionUtils.select(
-                plans,
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        Plan plan = (Plan)object;
-                        return plan.isProduction() && user.isParticipant( plan );
-                    }
-                }
-        );
-    }
-
-/*
-    private Plan getPlan( String planId, String username ) {
-        try {
-            return planManager.get( Long.parseLong( planId ) );
-        } catch ( NotFoundException ignored ) {
-            logger.warn( "Using default plan for user " + username );
-            return planManager.getCurrentPlan();
-        }
-    }
-*/
-
     private InputStream findInputStream() throws IOException {
         InputStream inputStream;
         if ( userFile != null && userFile.exists() ) {
-            logger.debug( "Reading user definitions from {}", userFile.getAbsolutePath() );
+            LOG.debug( "Reading user definitions from {}", userFile.getAbsolutePath() );
             inputStream = new FileInputStream( userFile );
 
         } else if ( defaultDefinitions != null && defaultDefinitions.exists() ) {
-            logger.debug( "Reading default user definitions from {}", defaultDefinitions.getURI() );
+            LOG.debug( "Reading default user definitions from {}", defaultDefinitions.getURI() );
             inputStream = defaultDefinitions.getInputStream();
-        } else {
-            logger.warn( "No user readable user definitions" );
-            inputStream = new ByteArrayInputStream( new byte[0] );
-        }
+
+        } else
+            throw new IllegalStateException( "No user readable user definitions" );
+
         return inputStream;
     }
 
@@ -252,10 +145,10 @@ public class FileUserDetailsService implements UserDetailsService {
      *
      * @throws IOException on write errors
      */
-    public synchronized void writeUserDefinitions() throws IOException {
+    public synchronized void save() throws IOException {
         Properties props = new Properties();
-        for ( User d : details.values() )
-            props.setProperty( d.getUsername(), d.propertyString() );
+        for ( User d : users.values() )
+            props.setProperty( d.getUsername(), d.getUserInfo().toString() );
 
         FileOutputStream stream = null;
         try {
@@ -265,7 +158,7 @@ public class FileUserDetailsService implements UserDetailsService {
             if ( stream != null )
                 stream.close();
         }
-        logger.debug( "Wrote user definitions to {}", userFile.getAbsolutePath() );
+        LOG.debug( "Wrote user definitions to {}", userFile.getAbsolutePath() );
     }
 
     public synchronized Resource getDefaultDefinitions() {
@@ -299,55 +192,73 @@ public class FileUserDetailsService implements UserDetailsService {
     }
 
     /**
-     * Return the service's planManager.
-     * @return the planManager
-     */
-    public PlanManager getPlanManager() {
-        return planManager;
-    }
-
-    /**
      * Get user by username.
      *
      * @param userName a string
      * @return a user or null
      */
     public User getUserNamed( String userName ) {
-        return details.get( userName );
+        return readUsers().get( userName );
     }
 
-    public List<User> getAllUsers() {
-        return new ArrayList<User>( details.values() );
+    public List<User> getUsers() {
+        return new ArrayList<User>( readUsers().values() );
     }
 
     /**
-     * Get all user who are planners for the current plan.
+     * Get all user who are planners for a given plan.
      *
+     * @param uri the plan uri
      * @return a list of users
      */
-    @SuppressWarnings( "unchecked" )
-    public List<User> getAllPlanners() {
-        return (List<User>) CollectionUtils.select(
-                getAllUsers(),
-                PredicateUtils.invokerPredicate( "isPlanner" )
-        );
+    public List<User> getPlanners( String uri ) {
+        Collection<User> userList = readUsers().values();
+        List<User> result = new ArrayList<User>( userList.size() );
+
+        for ( User user : userList )
+            if ( user.isPlanner( uri ) )
+                result.add( user );
+
+        return result;
     }
 
     /**
-     * Get all usernames for current plan.
+     * Get all usernames for a given plan.
      *
+     * @param uri the plan uri
      * @return a list of strings
      */
-    @SuppressWarnings( "unchecked" )
-    public List<String> getAllPlanUsernames() {
-        return (List<String>) CollectionUtils.select(
-                new ArrayList<String>( details.keySet() ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        User user = getUserNamed( (String) object );
-                        return user.isParticipant( User.current().getPlan() );
-                    }
-                }
-        );
+    public List<String> getUsernames( String uri ) {
+        Collection<User> userList = readUsers().values();
+        List<String> result = new ArrayList<String>( userList.size() );
+        for ( User user : userList )
+            if ( user.isParticipant( uri ) )
+                result.add( user.getUsername() );
+
+        return result;
+    }
+
+    /**
+     * Get a sorted list of all user names.
+     * @return a list
+     */
+    public List<String> getUsernames() {
+        List<String> result = new ArrayList<String>( readUsers().keySet() );
+        Collections.sort( result );
+        return result;
+    }
+
+    /**
+     * Get all users (regulars and planners) of a given plan.
+     * @param uri the plan's uri
+     * @return the list
+     */
+    public List<User> getUsers( String uri ) {
+        Collection<User> collection = readUsers().values();
+        List<User> result = new ArrayList<User>( collection.size() );
+        for ( User user : collection )
+            if ( user.isParticipant( uri ) )
+                result.add( user );
+        return result;
     }
 }
