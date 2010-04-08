@@ -21,6 +21,7 @@ import java.util.List;
  * User: jf
  * Date: Feb 11, 2009
  * Time: 3:12:42 PM
+ *
  * @param <Vertex> a vertex class
  * @param <Edge> an edge class
  */
@@ -58,8 +59,8 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
     /**
      * Instantiates a flow map diagram.
      *
-     * @param segment a segment
-     * @param node     a selected node
+     * @param segment     a segment
+     * @param node        a selected node
      * @param diagramSize width and height as array of doubles
      * @param orientation a string
      * @return a flow map diagram
@@ -72,14 +73,15 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
 
     /**
      * Instantiates a plan map diagram.
+     *
      * @param groupByPhase whetner to group segment by phases
      * @param groupByEvent whether to group segments by events addressed
-     * @param group phase or event grouping segments
-     * @param segments list of segments
-     * @param sgRel selected segment relationship
-     * @param segment selected segment
-     * @param diagramSize width and height as array of doubles
-     * @param orientation a string
+     * @param group        phase or event grouping segments
+     * @param segments     list of segments
+     * @param sgRel        selected segment relationship
+     * @param segment      selected segment
+     * @param diagramSize  width and height as array of doubles
+     * @param orientation  a string
      * @return a plan map diagram
      */
     Diagram newPlanMapDiagram(
@@ -94,13 +96,14 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
 
     /**
      * Instantiates an entity network diagram.
-     * @param entity the entity at the center of the diagram
+     *
+     * @param entity            the entity at the center of the diagram
      * @param selectedEntityRel an edge selected
-     * @param diagramSize width and height as array of doubles
-     * @param orientation a string
+     * @param diagramSize       width and height as array of doubles
+     * @param orientation       a string
      * @return an entity network diagram
      */
-    <T extends ModelEntity>Diagram newEntityNetworkDiagram(
+    <T extends ModelEntity> Diagram newEntityNetworkDiagram(
             T entity,
             EntityRelationship<T> selectedEntityRel,
             double[] diagramSize,
@@ -108,24 +111,41 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
 
     /**
      * Instantiates a hierarchy diagram.
+     *
      * @param hierarchical a hierarchical object
-     * @param diagramSize width and height as array of doubles
-     * @param orientation a string
+     * @param diagramSize  width and height as array of doubles
+     * @param orientation  a string
      * @return a hierarchy diagram
-      */
+     */
     Diagram newHierarchyDiagram( Hierarchical hierarchical, double[] diagramSize, String orientation );
 
     /**
      * Instantiates an essential flow map diagram.
+     *
      * @param segmentObject a segment object
-     * @param assumeFails whether alternate flows are assumed to fail
-     * @param diagramSize width and height as array of doubles
-     * @param orientation a string
-     * @return  a critical flow map diagram
+     * @param assumeFails   whether alternate flows are assumed to fail
+     * @param diagramSize   width and height as array of doubles
+     * @param orientation   a string
+     * @return a critical flow map diagram
      */
     Diagram newEssentialFlowMapDiagram(
             SegmentObject segmentObject,
             boolean assumeFails,
+            double[] diagramSize,
+            String orientation );
+
+    /**
+     * Instantiates an entities network diagram.
+     *
+     * @param entities           entities to show networked
+     * @param selectedEntityRel selected releationship
+     * @param diagramSize    width and height as array of doubles
+     * @param orientation    a string
+     * @return an entities network diagram
+     */
+    <T extends ModelEntity> Diagram newEntitiesNetworkDiagram(
+            List<T> entities,
+            EntityRelationship<T> selectedEntityRel,
             double[] diagramSize,
             String orientation );
 
@@ -145,6 +165,7 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
 
     /**
      * Get query service.
+     *
      * @return a query service
      */
     QueryService getQueryService();

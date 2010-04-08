@@ -14,6 +14,7 @@ import com.mindalliance.channels.pages.playbook.ContactPage;
 import com.mindalliance.channels.pages.playbook.PlaybookPage;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.playbook.VCardPage;
+import com.mindalliance.channels.pages.png.EntitiesNetworkPage;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
 import com.mindalliance.channels.pages.png.EssentialFlowMapPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
@@ -129,6 +130,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "segment.png", FlowMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan.png", PlanMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "network.png", EntityNetworkPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "entities.png", EntitiesNetworkPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "hierarchy.png", HierarchyPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "geomap.html", GeoMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "essential.png", EssentialFlowMapPage.class ) );

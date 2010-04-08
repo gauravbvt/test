@@ -46,6 +46,10 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      * Issues aspect.
      */
     public static final String ISSUES = "issues";
+    /**
+     * DOM identifier prefix for resizeble diagrams.
+     */
+    private static final String PREFIX_DOM_IDENTIFIER = ".entity";
 
     public EntityPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         this( id, model, expansions, DETAILS );
@@ -185,23 +189,23 @@ public class EntityPanel extends AbstractMultiAspectPanel {
 
     private Component getEntityNetworkPanel() {
         if ( getObject() instanceof Actor ) {
-            return new EntityNetworkPanel<Actor>(
+            return new EntityNetworkingPanel<Actor>(
                     "aspect",
                     new PropertyModel<Actor>( this, "object" ),
                     getExpansions(),
-                    ".entity .picture" );
+                    PREFIX_DOM_IDENTIFIER );
         } else if ( getObject() instanceof Role ) {
-            return new EntityNetworkPanel<Role>(
+            return new EntityNetworkingPanel<Role>(
                     "aspect",
                     new PropertyModel<Role>( this, "object" ),
                     getExpansions(),
-                    ".entity .picture" );
+                    PREFIX_DOM_IDENTIFIER );
         } else if ( getObject() instanceof Organization ) {
-            return new EntityNetworkPanel<Organization>(
+            return new EntityNetworkingPanel<Organization>(
                     "aspect",
                     new PropertyModel<Organization>( this, "object" ),
                     getExpansions(),
-                    ".entity .picture" );
+                    PREFIX_DOM_IDENTIFIER );
         } else {
             return new Label( "aspect", "Under construction" );
         }

@@ -44,18 +44,11 @@ import java.util.Set;
  * Time: 2:28:58 PM
  */
 public class OrganizationDetailsPanel extends EntityDetailsPanel {
-    /**
-     * Dom identifier.
-     */
-    private static final String OrgChartDomIdentifier = ".entity .orgchart";
+
     /**
      * Actual parent name field.
      */
     private TextField actualParentField;
-    /**
-     * Actual or type parent name field.
-     */
-    private EntityReferencePanel parentReferenceField;
     /**
      * Location name field.
      */
@@ -72,6 +65,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      * Whether agreements are required for each sharing commitment from the organization.
      */
     CheckBox agreementsRequiredCheckBox;
+    /**
+     * Prefix DOM identifier for org chart element.
+     */
+    private static final String PREFIX_DOM_IDENTIFIER = ".entity";
 
     public OrganizationDetailsPanel(
             String id,
@@ -241,7 +238,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                             id,
                             new PropertyModel<Hierarchical>( OrganizationDetailsPanel.this, "organization" ),
                             getExpansions(),
-                            OrgChartDomIdentifier );
+                            PREFIX_DOM_IDENTIFIER);
                 }
             } );
             tabs.add( new AbstractTab( new Model<String>( "Agreements" ) ) {

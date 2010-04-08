@@ -100,7 +100,7 @@ public class User implements UserDetails {
         if ( plan != null ) {
             String uri = plan.getUri();
             if ( userInfo.isPlanner( uri ) )
-                    result.add( new GrantedAuthorityImpl( UserInfo.ROLE_PLANNER ) );
+                result.add( new GrantedAuthorityImpl( UserInfo.ROLE_PLANNER ) );
             if ( userInfo.isUser( uri ) )
                 result.add( new GrantedAuthorityImpl( UserInfo.ROLE_USER ) );
         }
@@ -112,7 +112,7 @@ public class User implements UserDetails {
      * Indicates whether the user's account has expired. An expired account cannot be authenticated.
      *
      * @return <code>true</code> if the user's account is valid (ie non-expired), <code>false</code>
-     * if no longer valid (ie expired)
+     *         if no longer valid (ie expired)
      */
     public boolean isAccountNonExpired() {
         return true;
@@ -132,7 +132,7 @@ public class User implements UserDetails {
      * authentication.
      *
      * @return <code>true</code> if the user's credentials are valid (ie non-expired),
-     * <code>false</code> if no longer valid (ie expired)
+     *         <code>false</code> if no longer valid (ie expired)
      */
     public boolean isCredentialsNonExpired() {
         return true;
@@ -196,7 +196,7 @@ public class User implements UserDetails {
 
         User user = (User) obj;
         return anonymous == user.isAnonymous()
-            && getUsername().equals( user.getUsername() );
+                && getUsername().equals( user.getUsername() );
     }
 
     /**
@@ -229,8 +229,9 @@ public class User implements UserDetails {
 
     /**
      * Test for a given role string in an authentication object.
+     *
      * @param authentication the authentication
-     * @param role the role
+     * @param role           the role
      * @return true is role is included
      */
     public static boolean containsRole( Authentication authentication, String role ) {
@@ -243,13 +244,24 @@ public class User implements UserDetails {
 
     /**
      * Return a string describing the most privileged role of the user.
+     *
      * @param planUri the plan uri
-     * @return  a String
+     * @return a String
      */
     public String getRole( String planUri ) {
-        return userInfo.isAdmin()            ? "Admin"
-             : userInfo.isPlanner( planUri ) ? "Planner"
-             : userInfo.isUser( planUri )    ? "Playbook user"
-                                             : "Unauthorized";
+        return userInfo.isAdmin() ? "Admin"
+                : userInfo.isPlanner( planUri ) ? "Planner"
+                : ( planUri != null && userInfo.isUser( planUri ) ) ? "Playbook user"
+                : "Unauthorized";
+    }
+
+    /**
+     * Get uri of user's current plan.
+     *
+     * @return a string or null
+     */
+    public String getPlanUri() {
+        Plan plan = getPlan();
+        return plan != null ? plan.getUri() : null;
     }
 }

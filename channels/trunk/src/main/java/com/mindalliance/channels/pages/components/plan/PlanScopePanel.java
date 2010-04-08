@@ -18,7 +18,6 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
-import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -61,7 +60,6 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     private CheckBox uninvolvedCheckBox;
     private CheckBox expectedCheckBox;
     private WebMarkupContainer organizationContainer;
-    private GeomapLinkPanel geomapLink;
     private String newInvolvedName;
     private TextField addInvolvedField;
     private Link involveLink;
@@ -73,7 +71,6 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        addGeomapLink();
         addInvolvement();
         addExpectation();
         addToScope();
@@ -81,16 +78,6 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         addScopeIndex();
     }
 
-    private void addGeomapLink() {
-        geomapLink = new GeomapLinkPanel(
-                "geomapLink",
-                new Model<String>( getIndexTitle() + " (and with known locations)" ),
-                getIndexedOrganizations(),
-                new Model<String>( "Locate organizations on a map" ) );
-        geomapLink.setOutputMarkupId( true );
-        makeVisible( geomapLink, !getIndexedOrganizations().isEmpty() );
-        addOrReplace( geomapLink );
-    }
 
     private void addInvolvement() {
         // Involved only
@@ -102,8 +89,6 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                 addScopeIndex();
                 target.addComponent( scopeIndexPanel );
                 updateCheckBoxes( target );
-                addGeomapLink();
-                target.addComponent( geomapLink );
             }
         } );
         involvedCheckBox.setOutputMarkupId( true );
@@ -117,8 +102,6 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                 addScopeIndex();
                 target.addComponent( scopeIndexPanel );
                 updateCheckBoxes( target );
-                addGeomapLink();
-                target.addComponent( geomapLink );
             }
         } );
         uninvolvedCheckBox.setOutputMarkupId( true );
@@ -135,8 +118,6 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                 addScopeIndex();
                 target.addComponent( scopeIndexPanel );
                 updateCheckBoxes( target );
-                addGeomapLink();
-                target.addComponent( geomapLink );
             }
         } );
         expectedCheckBox.setOutputMarkupId( true );
@@ -181,8 +162,6 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                 target.addComponent( organizationContainer );
                 addScopeIndex();
                 target.addComponent( scopeIndexPanel );
-                addGeomapLink();
-                target.addComponent( geomapLink );
                 target.addComponent( addInvolvedField );
                 // update( target, new Change( Change.Type.Updated, getPlan(), "organizations" ) );
             }
@@ -424,23 +403,6 @@ public class PlanScopePanel extends AbstractCommandablePanel {
 
     public void setNewInvolvedName( String newInvolvedName ) {
         this.newInvolvedName = newInvolvedName;
-    }
-
-    private String getIndexTitle() {
-        if ( !involvedOnly && !uninvolvedOnly && !expectedOnly )
-            return "All organizations in scope";
-        StringBuilder sb = new StringBuilder();
-        sb.append( "Organizations" );
-        if ( involvedOnly ) sb.append( " with tasks" );
-        else if ( uninvolvedOnly ) sb.append( " without tasks" );
-        if ( expectedOnly ) {
-            if ( uninvolvedOnly ) {
-                sb.append( " but who are expected to" );
-            } else {
-                sb.append( " as expected" );
-            }
-        }
-        return sb.toString();
     }
 
     @SuppressWarnings( "unchecked" )

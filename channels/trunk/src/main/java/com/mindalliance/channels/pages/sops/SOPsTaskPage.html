@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <h2>
+        <span wicket:id="name">Task name</span> - Task
+    </h2>
+    <div class="instructions section-header">[Instructions header panel]</div>
+    <div class="text" wicket:id="description">[description]</div>
+    <table>
+      <tr>
+          <td>
+              <div class="resource section-header">Executed as</div>
+              <div wicket:id="executed-as">[resource spec panel]</div>
+          </td>
+          <td>
+              <span class="location section-header">Location</span>
+              <span class="text" wicket:id="location">Train Station</span>
+          </td>
+      </tr>
+        <tr>
+            <td>
+                <span wicket:id="timing-header">Timing</span>
+                <span class="text" wicket:id="timing">Normally takes 1 hour and 15 minutes</span>
+            </td>
+            <td>
+                <span wicket:id="executed-as-header">[Instructions header panel]</span>
+                <span class="text" wicket:id="executed-as">Train Station Manager for Public transit Authority</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+        </tr>
+    </table>
+</wicket:extend>
+</body>
+</html>

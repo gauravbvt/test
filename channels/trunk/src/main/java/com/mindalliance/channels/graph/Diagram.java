@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Date: Feb 11, 2009
  * Time: 4:30:22 PM
  */
-public interface Diagram extends Serializable {
+public interface  Diagram extends Serializable {
     /**
      * Constrain size of diagram.
      *

@@ -78,7 +78,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * Organizations in scope.
      */
-    public static final String SCOPE = "organizations";
+    public static final String ORGANIZATIONS = "organizations";
 
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -170,8 +170,8 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanIncidentsPanel();
         } else if ( aspect.equals( CLASSIFICATIONS ) ) {
             return getPlanClassificationsPanel();
-        }  else if ( aspect.equals( SCOPE ) ) {
-            return getPlanScopePanel();
+        }  else if ( aspect.equals( ORGANIZATIONS ) ) {
+            return getPlanOrganizationsPanel();
         } else if ( aspect.equals( WHOSWHO ) ) {
             return getPlanWhoswhoPanel();
         } else if ( aspect.equals( ISSUES ) ) {
@@ -206,8 +206,8 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
         return new PlanEventsPanel( "aspect", getModel(), getExpansions() );
     }
 
-    private Component getPlanScopePanel() {
-        return new PlanScopePanel( "aspect", getModel(), getExpansions() );
+    private Component getPlanOrganizationsPanel() {
+        return new PlanOrganizationsPanel( "aspect", getModel(), getExpansions() );
     }
 
     private Component getPlanIndexPanel() {

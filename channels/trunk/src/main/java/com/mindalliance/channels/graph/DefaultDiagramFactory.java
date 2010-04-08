@@ -2,9 +2,9 @@ package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.AbstractService;
 import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.graph.diagrams.EntitiesNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.FailureImpactsDiagram;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
@@ -15,6 +15,7 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -28,6 +29,7 @@ import java.util.List;
  * User: jf
  * Date: Feb 11, 2009
  * Time: 3:15:10 PM
+ *
  * @param <V> a vertex class
  * @param <E> an edge class
  */
@@ -88,7 +90,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             Node node,
             double[] diagramSize,
             String orientation ) {
-        LOG.debug("Making flow map on " + segment + "/" + node);
+        LOG.debug( "Making flow map on " + segment + "/" + node );
         return new FlowMapDiagram( segment, node, diagramSize, orientation );
     }
 
@@ -98,13 +100,13 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             EntityRelationship selectedEntityRel,
             double[] diagramSize,
             String orientation ) {
-        LOG.debug("Making entity network diagram on " + entity);
+        LOG.debug( "Making entity network diagram on " + entity );
         return new EntityNetworkDiagram( entity, selectedEntityRel, diagramSize, orientation );
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     @SuppressWarnings( "unchecked" )
     // TODO - why can't I say:  List<Segment> segments ?   -- ? extends...
     public Diagram newPlanMapDiagram(
@@ -132,7 +134,7 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             Hierarchical hierarchical,
             double[] diagramSize,
             String orientation ) {
-        LOG.debug("Making hierarchy diagram on " + hierarchical.getName() );
+        LOG.debug( "Making hierarchy diagram on " + hierarchical.getName() );
         return new HierarchyDiagram( hierarchical, diagramSize, orientation );
     }
 
@@ -141,9 +143,17 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
             boolean assumeFails,
             double[] diagramSize,
             String orientation ) {
-        LOG.debug("Making critical flow map diagram" );
+        LOG.debug( "Making critical flow map diagram" );
         return new FailureImpactsDiagram( segmentObject, assumeFails, diagramSize, orientation );
     }
 
+    public Diagram newEntitiesNetworkDiagram(
+            List entities,
+            EntityRelationship selectedEntityRel,
+            double[] diagramSize,
+            String orientation ) {
+        LOG.debug( "Making entities network diagram" );
+        return new EntitiesNetworkDiagram( entities, selectedEntityRel, diagramSize, orientation );
+    }
 
 }

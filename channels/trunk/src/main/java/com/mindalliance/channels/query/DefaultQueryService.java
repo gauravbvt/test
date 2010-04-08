@@ -2434,7 +2434,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public String findUserRole( String userName ) {
         User user = userDetailsService.getUserNamed( userName );
         if ( user != null ) {
-            return user.getRole( user.getPlan().getUri() );
+            return user.getRole( user.getPlanUri() );
         } else {
             return null;
         }
