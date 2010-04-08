@@ -130,6 +130,9 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
                 orientation );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Diagram newHierarchyDiagram(
             Hierarchical hierarchical,
             double[] diagramSize,
@@ -138,6 +141,9 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
         return new HierarchyDiagram( hierarchical, diagramSize, orientation );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Diagram newEssentialFlowMapDiagram(
             SegmentObject segmentObject,
             boolean assumeFails,
@@ -147,13 +153,17 @@ public class DefaultDiagramFactory<V, E> extends AbstractService implements Diag
         return new FailureImpactsDiagram( segmentObject, assumeFails, diagramSize, orientation );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Diagram newEntitiesNetworkDiagram(
-            List entities,
+            Class entityClass,
+            Segment segment,
             EntityRelationship selectedEntityRel,
             double[] diagramSize,
-            String orientation ) {
+            String orientation) {
         LOG.debug( "Making entities network diagram" );
-        return new EntitiesNetworkDiagram( entities, selectedEntityRel, diagramSize, orientation );
+        return new EntitiesNetworkDiagram( entityClass, segment, selectedEntityRel, diagramSize, orientation );
     }
 
 }

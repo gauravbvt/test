@@ -9,6 +9,7 @@ import com.mindalliance.channels.pages.components.FilterableEntityFlowsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -64,7 +65,8 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
     private void addEntityFlowsPanel() {
         entityFlowPanel = new FilterableEntityFlowsPanel<T>(
                 "entity-flows",
-                getEntityDomain(),
+                (Class<T>)getEntity().getClass(),
+                null,
                 getExpansions(),
                 selectedEntity,
                 selectedEntityRel
@@ -73,8 +75,40 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
         addOrReplace( entityFlowPanel );
     }
 
+    public List<EntityRelationship<T>> getEntityRelationships() {
+        boolean cartesianProduct = false;
+        List<EntityRelationship<T>> entityRels = new ArrayList<EntityRelationship<T>>();
+        if ( selectedEntityRel != null ) {
+            entityRels.add( selectedEntityRel );
+        } else {
+            List<T> entityDomain = getEntityDomain();
+            List<T> entities = new ArrayList<T>();
+            if ( selectedEntity != null ) {
+                entities.add( selectedEntity );
+            } else {
+                entities.addAll( entityDomain );
+                cartesianProduct = true;
+            }
+            for ( T entity : entities ) {
+                for ( T other : entityDomain ) {
+                    if ( entity != other ) {
+                        EntityRelationship<T> sendRel =
+                                getQueryService().findEntityRelationship( entity, other );
+                        if ( sendRel != null ) entityRels.add( sendRel );
+                        if ( !cartesianProduct ) {
+                            EntityRelationship<T> receiveRel =
+                                    getQueryService().findEntityRelationship( other, entity );
+                            if ( receiveRel != null ) entityRels.add( receiveRel );
+                        }
+                    }
+                }
+            }
+        }
+        return entityRels;
+    }
+
     @SuppressWarnings( "unchecked" )
-    private List<T> getEntityDomain() {
+    public List<T> getEntityDomain() {
         return (List<T>) getQueryService().listActualEntities( getEntity().getClass() );
     }
 

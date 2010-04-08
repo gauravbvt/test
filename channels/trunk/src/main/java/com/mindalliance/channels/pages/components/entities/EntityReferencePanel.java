@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.beanutils.PropertyUtils;

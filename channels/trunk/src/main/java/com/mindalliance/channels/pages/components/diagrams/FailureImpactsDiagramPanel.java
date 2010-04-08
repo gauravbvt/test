@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
@@ -21,12 +21,12 @@ import org.slf4j.LoggerFactory;
  * Date: Jan 15, 2010
  * Time: 11:24:11 AM
  */
-public class FailreImpactsDiagramPanel extends AbstractDiagramPanel {
+public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
 
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( FailreImpactsDiagramPanel.class );
+    private static final Logger LOG = LoggerFactory.getLogger( FailureImpactsDiagramPanel.class );
     /**
      * Segment object model.
      */
@@ -36,7 +36,7 @@ public class FailreImpactsDiagramPanel extends AbstractDiagramPanel {
      */
     private boolean assumeFails;
 
-    public FailreImpactsDiagramPanel(
+    public FailureImpactsDiagramPanel(
             String id,
             IModel<SegmentObject> model,
             boolean assumeFails,

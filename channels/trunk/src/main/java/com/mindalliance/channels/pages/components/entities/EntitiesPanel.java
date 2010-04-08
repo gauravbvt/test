@@ -3,12 +3,12 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.FilterableEntityFlowsPanel;
 import com.mindalliance.channels.pages.components.plan.EntitiesNetworkPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.List;
 import java.util.Set;
@@ -23,7 +23,8 @@ import java.util.Set;
  */
 public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel {
 
-    private PropertyModel<List<T>> entitiesModel;
+    private Class<T> entityClass;
+    private Segment segment;
     private String prefixDomIdentifier;
     private EntityRelationship<T> selectedEntityRel;
     private EntitiesNetworkPanel<T> entitiesNetworkPanel;
@@ -31,11 +32,13 @@ public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel
 
     public EntitiesPanel(
             String id,
-            PropertyModel<List<T>> entitiesModel,
+            Class<T> entityClass,
+            Segment segment,
             Set<Long> expansions,
             String prefixDomIdentifier) {
         super( id, null, expansions);
-        this.entitiesModel = entitiesModel;
+        this.entityClass = entityClass;
+        this.segment = segment;
         this.prefixDomIdentifier = prefixDomIdentifier;
         init();
     }
@@ -48,7 +51,8 @@ public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel
     private void addEntitiesNetworkPanel() {
         entitiesNetworkPanel = new EntitiesNetworkPanel<T>(
                 "entities-network",
-                entitiesModel,
+                entityClass,
+                segment,
                 selectedEntityRel,
                 getExpansions(),
                 prefixDomIdentifier
@@ -60,7 +64,8 @@ public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel
     private void addEntityFlowsPanel() {
         entityFlowPanel = new FilterableEntityFlowsPanel<T>(
                 "entity-flows",
-                entitiesModel.getObject(),
+                entityClass,
+                segment,
                 getExpansions(),
                 null,
                 selectedEntityRel

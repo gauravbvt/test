@@ -62,7 +62,16 @@ public class SegmentShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Goals" ),
                 goalsLink ) );
-
+        // Organizations
+        Link orgsLink = new AjaxFallbackLink( "link" ) {
+             public void onClick( AjaxRequestTarget target ) {
+                 changeAspectTo( target, SegmentEditPanel.ORGANIZATIONS );
+             }
+         };
+         menuItems.add( new LinkMenuItem(
+                 "menuItem",
+                 new Model<String>( "Organizations" ),
+                 orgsLink ) );
         // Map
         List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
         Iterator<Part> parts = getSegment().parts();

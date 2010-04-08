@@ -25,9 +25,13 @@ import java.util.Set;
 public class SegmentEditPanel extends AbstractMultiAspectPanel {
 
     /**
-     * Incidents aspect.
+     * Goals aspect.
      */
     public static final String GOALS = "goals";
+    /**
+     * Organizations aspect.
+     */
+    public static final String ORGANIZATIONS = "organizations";
 
     public SegmentEditPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -79,6 +83,8 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
             return getSegmentDetailsPanel();
         } else if ( aspect.equals( GOALS ) ) {
             return getSegmentGoalsPanel();
+        } else if ( aspect.equals( ORGANIZATIONS ) ) {
+            return getSegmentOrganizationsPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -92,6 +98,13 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
     private Component getSegmentGoalsPanel() {
         return new GoalListPanel(
                 "aspect", 
+                new PropertyModel<Segment>(this, "segment"),
+                getExpansions() );
+    }
+
+    private Component getSegmentOrganizationsPanel() {
+        return new SegmentOrganizationsPanel(
+                "aspect",
                 new PropertyModel<Segment>(this, "segment"),
                 getExpansions() );
     }

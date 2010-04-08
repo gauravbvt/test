@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
@@ -49,14 +50,13 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
      * Selected entity relationship.
      */
     private EntityRelationship<T> selectedEntityRel;
+    private Class<T> entityClass;
+    private Segment segment;
     /**
      * Selected entity.
      */
     private T selectedEntity;
-    /**
-     * Model of entities domain.
-     */
-    private List<T> entitiesDomain;
+
     /**
      * Filter on flow information.
      */
@@ -77,13 +77,15 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
 
     public FilterableEntityFlowsPanel(
             String id,
-            List<T> entitiesDomain,
+            Class<T> entityClass,
+            Segment segment,
             Set<Long> expansions,
             T selectedEntity,
             EntityRelationship<T> selectedEntityRel
             ) {
         super( id, null, expansions );
-        this.entitiesDomain = entitiesDomain;
+        this.entityClass = entityClass;
+        this.segment = segment;
         this.selectedEntity = selectedEntity;
         this.selectedEntityRel = selectedEntityRel;
         init();
@@ -243,36 +245,35 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
         return actorFlows;
     }
 
-    private List<EntityRelationship> getEntityRelationships() {
-        boolean cartesianProduct = false;
-        List<EntityRelationship> entityRels = new ArrayList<EntityRelationship>();
+    private List<EntityRelationship<T>> getEntityRelationships() {
+        List<EntityRelationship<T>> rels = new ArrayList<EntityRelationship<T>>();
         if ( selectedEntityRel != null ) {
-            entityRels.add( selectedEntityRel );
+            rels.add( selectedEntityRel );
         } else {
-            List<T> entities = new ArrayList<T>();
-            if ( selectedEntity != null ) {
-                entities.add( selectedEntity );
-            } else {
-                entities.addAll( getEntities() );
-                cartesianProduct = true;
-            }
-            for ( T entity : entities ) {
-                for ( T other : getEntities() ) {
-                    if ( entity != other ) {
-                        EntityRelationship<T> sendRel =
-                                getQueryService().findEntityRelationship( entity, other );
-                        if ( sendRel != null ) entityRels.add( sendRel );
-                        if ( !cartesianProduct ) {
-                            EntityRelationship<T> receiveRel =
-                                    getQueryService().findEntityRelationship( other, entity );
-                            if ( receiveRel != null ) entityRels.add( receiveRel );
-                        }
+            rels.addAll( getEntityRels() );
+        }
+        return rels;
+    }
+
+    private List<EntityRelationship<T>> getEntityRels() {
+        List<EntityRelationship<T>> entityRels = new ArrayList<EntityRelationship<T>>();
+        List<T> entities = getEntities();
+        for ( T entity : entities ) {
+            for ( T other : entities ) {
+                if ( entity != other ) {
+                    EntityRelationship<T> entityRel;
+                    if (segment != null) {
+                    entityRel = getQueryService().findEntityRelationship( entity, other, segment );
+                    } else {
+                        entityRel = getQueryService().findEntityRelationship( entity, other );
                     }
+                    if ( entityRel != null ) entityRels.add( entityRel );
                 }
             }
         }
         return entityRels;
     }
+
 
     @SuppressWarnings( "unchecked" )
     private List<ActorFlow> getActorFlowsInRelationship( final EntityRelationship entityRelationship ) {
@@ -337,8 +338,20 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
         return selectedEntity;
     }
 
+    @SuppressWarnings("unchecked")
     private List<T> getEntities() {
-        return entitiesDomain;
+        if ( segment != null ) {
+            return getQueryService().listActualEntitiesTaskedInSegment( entityClass, segment );
+        } else {
+            return (List<T>) CollectionUtils.select(
+                    getQueryService().listActualEntities( entityClass ),
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return !( (ModelEntity) object ).isUnknown();
+                        }
+                    }
+            );
+        }
     }
 
     public class ActorFlow implements Serializable {

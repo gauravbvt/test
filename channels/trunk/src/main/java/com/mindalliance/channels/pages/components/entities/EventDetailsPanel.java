@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Event;
@@ -12,8 +11,8 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.pages.components.EntityReferencePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;

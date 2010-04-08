@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Plan;
@@ -14,7 +15,6 @@ import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,9 +74,8 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
             public Panel getPanel( String id ) {
                 return new EntitiesPanel<Organization>(
                         id,
-                        new PropertyModel<List<Organization>>(
-                                PlanOrganizationsPanel.this,
-                                "actualOrganizations" ),
+                        Organization.class,
+                        null,
                         getExpansions(),
                         PREFIX_DOM_IDENTIFIER );
             }
@@ -84,6 +83,11 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
         return tabs;
     }
 
+    /**
+     * Get network's domain.
+     *
+     * @return a list or organizations
+     */
     @SuppressWarnings( "unchecked" )
     public List<Organization> getActualOrganizations() {
         return (List<Organization>) CollectionUtils.select(
@@ -94,6 +98,26 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
                     }
                 }
         );
+    }
+
+    /**
+     * Get relationships defining the network.
+     *
+     * @return a list of (sharing flow) relationships between organizations
+     */
+    public List<EntityRelationship<Organization>> getOrganizationRelationships() {
+        List<EntityRelationship<Organization>> orgRels = new ArrayList<EntityRelationship<Organization>>();
+        List<Organization> orgs = getActualOrganizations();
+        for ( Organization org : orgs ) {
+            for ( Organization other : orgs ) {
+                if ( org != other ) {
+                    EntityRelationship<Organization> sendRel =
+                            getQueryService().findEntityRelationship( org, other );
+                    if ( sendRel != null ) orgRels.add( sendRel );
+                }
+            }
+        }
+        return orgRels;
     }
 
 }

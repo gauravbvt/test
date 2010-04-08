@@ -9,7 +9,6 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.PlaceReference;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.pages.components.EntityReferencePanel;
 import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;

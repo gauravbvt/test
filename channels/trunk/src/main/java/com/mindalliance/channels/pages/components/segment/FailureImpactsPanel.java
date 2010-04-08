@@ -6,7 +6,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
-import com.mindalliance.channels.pages.components.diagrams.FailreImpactsDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.FailureImpactsDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.RequestCycle;
@@ -71,7 +71,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     /**
      * Essential flows diagram panel.
      */
-    private FailreImpactsDiagramPanel failureImpactsDiagramPanel;
+    private FailureImpactsDiagramPanel failureImpactsDiagramPanel;
     /**
      * Failures table panel.
      */
@@ -173,7 +173,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         double[] dim = flowDiagramDim[0] <= 0.0 || flowDiagramDim[1] <= 0.0 ? null : flowDiagramDim;
         Settings settings = new Settings( DOM_IDENTIFIER, null, dim, true, true );
 
-        failureImpactsDiagramPanel = new FailreImpactsDiagramPanel(
+        failureImpactsDiagramPanel = new FailureImpactsDiagramPanel(
                 "essentialFlowMap",
                 new Model<SegmentObject>( getSegmentObject() ),
                 assumeFails,

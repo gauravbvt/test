@@ -1,9 +1,10 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,6 +26,23 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
     private List<Flow> flows = new ArrayList<Flow>();
 
     public EntityRelationship() {
+    }
+
+    /**
+     * Create entity relationship from its synthetic id.
+     *
+     * @param id           a long
+     * @param queryService a query service
+     * @return an entity relationship
+     * @throws com.mindalliance.channels.dao.NotFoundException if id not valid
+     */
+    public static EntityRelationship fromId( long id, QueryService queryService ) throws NotFoundException {
+        EntityRelationship entityRel = new EntityRelationship();
+        entityRel.setId( id, queryService );
+        if ( entityRel.isValid() )
+            return entityRel;
+        else
+            throw new NotFoundException();
     }
 
     public EntityRelationship( T fromEntity, T toEntity ) {

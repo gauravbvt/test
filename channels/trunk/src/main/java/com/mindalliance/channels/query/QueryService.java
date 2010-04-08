@@ -76,7 +76,8 @@ public interface QueryService extends Service {
      * @param id    the id
      * @param <T>   a subclass of modelObject
      * @return the object
-     * @throws com.mindalliance.channels.dao.NotFoundException when not found
+     * @throws com.mindalliance.channels.dao.NotFoundException
+     *          when not found
      */
     <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
 
@@ -602,6 +603,26 @@ public interface QueryService extends Service {
      * @return an entity relationship or null if no link exists
      */
     <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity );
+
+    /**
+     * Find any relationship between an entity and an other within a segment.
+     * A relationship is one or more flow from the entity to the other.
+     *
+     * @param fromEntity an entity
+     * @param toEntity   an entity
+     * @param segment    a segment
+     * @return an entity relationship or null if no link exists
+     */
+    <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity, Segment segment );
+
+    /**
+     * Find all actual entities of a given class that are involved in the execution of tasks in a segment.
+     *
+     * @param entityClass a model entity class
+     * @param segment     a segment
+     * @return a list of model entities
+     */
+    <T extends ModelEntity> List<T> listActualEntitiesTaskedInSegment( Class<T> entityClass, Segment segment );
 
     /**
      * Find all confirmed jobs with resource spec
@@ -1332,4 +1353,6 @@ public interface QueryService extends Service {
      * @return a file user details service
      */
     FileUserDetailsService getUserDetailsService();
+
+
 }

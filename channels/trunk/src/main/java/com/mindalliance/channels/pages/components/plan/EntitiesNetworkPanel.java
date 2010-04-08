@@ -2,12 +2,11 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.components.AbstractResizableDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.EntitiesNetworkDiagramPanel;
-import org.apache.wicket.model.IModel;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,10 +25,8 @@ public class EntitiesNetworkPanel<T extends ModelEntity> extends AbstractResizab
      * Entities network diagram panel.
      */
     private EntitiesNetworkDiagramPanel entitiesNetworkDiagramPanel;
-    /**
-     * Organizatons to show networked.
-     */
-    private IModel<List<T>> entitiesModel;
+    private Class<T> entityClass;
+    private Segment segment;
     /**
      * Selected entity relationship.
      */
@@ -37,12 +34,14 @@ public class EntitiesNetworkPanel<T extends ModelEntity> extends AbstractResizab
 
     public EntitiesNetworkPanel(
             String id,
-            IModel<List<T>> entitiesModel,
+            Class<T> entityClass,
+            Segment segment,
             EntityRelationship<T> selectedEntityRel,
             Set<Long> expansions,
             String prefixDomIdentifier) {
         super( id, expansions, prefixDomIdentifier );
-        this.entitiesModel = entitiesModel;
+        this.entityClass = entityClass;
+        this.segment = segment;
         this.selectedEntityRel = selectedEntityRel;
         init();
     }
@@ -54,7 +53,8 @@ public class EntitiesNetworkPanel<T extends ModelEntity> extends AbstractResizab
         if ( getDiagramSize()[0] <= 0.0 || getDiagramSize()[1] <= 0.0 ) {
             entitiesNetworkDiagramPanel = new EntitiesNetworkDiagramPanel<T>(
                     "diagram",
-                    entitiesModel,
+                    entityClass,
+                    segment,
                     selectedEntityRel,
                     null,
                     getDomIdentifier()
@@ -62,7 +62,8 @@ public class EntitiesNetworkPanel<T extends ModelEntity> extends AbstractResizab
         } else {
             entitiesNetworkDiagramPanel = new EntitiesNetworkDiagramPanel<T>(
                     "diagram",
-                    entitiesModel,
+                    entityClass,
+                    segment,
                     selectedEntityRel,
                     getDiagramSize(),
                     getDomIdentifier()

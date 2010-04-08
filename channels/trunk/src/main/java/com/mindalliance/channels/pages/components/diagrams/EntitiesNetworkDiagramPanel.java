@@ -6,13 +6,10 @@ import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -27,34 +24,35 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( EntitiesNetworkDiagramPanel.class );
+    private Class<T> entityClass;
+    private Segment segment;
     /**
      * Selected organization relationship.
      */
     private EntityRelationship<? extends ModelEntity> selectedEntityRel;
-    /**
-     * Model of entities to show networked.
-     */
-    private IModel<List<T>> entitiesModel;
 
     public EntitiesNetworkDiagramPanel(
             String id,
-            IModel<List<T>> entitiesModel,
+            Class<T> entityClass,
+            Segment segment,
             EntityRelationship<T> selectedEntityRel,
             double[] diagramSize,
             String domIdentifier ) {
-        this( id, entitiesModel, selectedEntityRel, diagramSize, null, true, domIdentifier );
+        this( id, entityClass, segment, selectedEntityRel, diagramSize, null, true, domIdentifier );
     }
 
     public EntitiesNetworkDiagramPanel(
             String id,
-            IModel<List<T>> entitiesModel,
+            Class<T> entityClass,
+            Segment segment,
             EntityRelationship<T> selectedEntityRel,
             double[] diagramSize,
             String orientation,
             boolean withImageMap,
             String domIdentifier ) {
         super( id, new Settings( domIdentifier, orientation, diagramSize, true, withImageMap ) );
-        this.entitiesModel = entitiesModel;
+        this.entityClass = entityClass;
+        this.segment = segment;
         this.selectedEntityRel = selectedEntityRel;
         init();
     }
@@ -65,16 +63,19 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
 
     protected Diagram makeDiagram() {
         return getDiagramFactory().newEntitiesNetworkDiagram(
-                entitiesModel.getObject(),
+                entityClass,
+                segment,
                 selectedEntityRel,
                 getDiagramSize(),
-                getOrientation() );
+                getOrientation());
     }
 
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/entities.png?ids=" );
-        sb.append( getOrganizationIds() );
+        sb.append( "/entities.png?class=" );
+        sb.append( entityClass.getName() );
+        sb.append( "&segment=" );
+        sb.append( segment == null ? "NONE" : segment.getId() );
         sb.append( "&connection=" );
         sb.append( selectedEntityRel == null ? "NONE" : selectedEntityRel.getId() );
         double[] diagramSize = getDiagramSize();
@@ -88,16 +89,6 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
         if ( orientation != null ) {
             sb.append( "&orientation=" );
             sb.append( orientation );
-        }
-        return sb.toString();
-    }
-
-    private String getOrganizationIds() {
-        StringBuilder sb = new StringBuilder();
-        Iterator<T> iter = entitiesModel.getObject().iterator();
-        while ( iter.hasNext() ) {
-            sb.append( iter.next().getId() );
-            if ( iter.hasNext() ) sb.append( ',' );
         }
         return sb.toString();
     }

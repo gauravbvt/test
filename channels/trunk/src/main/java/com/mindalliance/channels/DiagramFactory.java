@@ -137,17 +137,19 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
     /**
      * Instantiates an entities network diagram.
      *
-     * @param entities           entities to show networked
-     * @param selectedEntityRel selected releationship
+     * @param entityClass entity class
+     * @param segment a segment or null
+     *@param selectedEntityRel selected releationship
      * @param diagramSize    width and height as array of doubles
-     * @param orientation    a string
+     * @param orientation    a string @return an entities network diagram
      * @return an entities network diagram
      */
-    <T extends ModelEntity> Diagram newEntitiesNetworkDiagram(
-            List<T> entities,
-            EntityRelationship<T> selectedEntityRel,
+    Diagram newEntitiesNetworkDiagram(
+            Class entityClass,
+            Segment segment,
+            EntityRelationship selectedEntityRel,
             double[] diagramSize,
-            String orientation );
+            String orientation);
 
     /**
      * Gets the preset graph renderer.

@@ -256,7 +256,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     public boolean evaluate( Object object ) {
                         ModelEntity entity = (ModelEntity) object;
                         return entity.isImmutable() && !entity.isUnknown()
-                               || isReferenced( entity );
+                                || isReferenced( entity );
                     }
                 } );
     }
@@ -338,7 +338,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
         // If entity can only be a type, find or create a type.
         if ( !ModelEntity.canBeActualOrType( clazz )
-             && ModelEntity.defaultKindFor( clazz ).equals( ModelEntity.Kind.Type ) )
+                && ModelEntity.defaultKindFor( clazz ).equals( ModelEntity.Kind.Type ) )
             result = findOrCreateType( clazz, name, id );
 
         else if ( ModelEntity.getUniversalType( name, clazz ) == null ) {
@@ -916,7 +916,58 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             entityRel.setFlows( entityFlows );
             return entityRel;
         }
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship(
+            T fromEntity,
+            T toEntity,
+            Segment segment ) {
+        List<Flow> entityFlows = new ArrayList<Flow>();
+        Iterator<Flow> flows = segment.flows();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
+                Part sourcePart = (Part) flow.getSource();
+                Part targetPart = (Part) flow.getTarget();
+                if ( isExecutedBy( sourcePart, fromEntity )
+                        && isExecutedBy( targetPart, toEntity ) ) {
+                    entityFlows.add( flow );
+                }
+            }
+        }
+        if ( entityFlows.isEmpty() ) {
+            return null;
+        } else {
+            EntityRelationship<T> entityRel = new EntityRelationship<T>( fromEntity, toEntity );
+            entityRel.setFlows( entityFlows );
+            return entityRel;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> List<T> listActualEntitiesTaskedInSegment( Class<T> entityClass, Segment segment ) {
+        List<T> entities = this.listActualEntities( entityClass );
+        Set<T> result = new HashSet<T>();
+        for ( T entity : entities ) {
+            Iterator<Flow> flows = segment.flows();
+            while ( flows.hasNext() ) {
+                Flow flow = flows.next();
+                if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
+                    Part sourcePart = (Part) flow.getSource();
+                    Part targetPart = (Part) flow.getTarget();
+                    if ( isExecutedBy( sourcePart, entity )
+                            || isExecutedBy( targetPart, entity ) ) {
+                        result.add( entity );
+                    }
+                }
+            }
+        }
+        return new ArrayList<T>( result );
     }
 
     private boolean isExecutedBy( Part part, ModelEntity entity ) {
@@ -2228,7 +2279,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         } );
 
         return !superiors.isEmpty()
-            && ( superiors.contains( other ) || superior != null );
+                && ( superiors.contains( other ) || superior != null );
     }
 
     /**
@@ -2244,9 +2295,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public boolean likelyRelated( String text, String otherText ) {
         return Matcher.matches( text, otherText )
-               || isSemanticMatch( StringUtils.uncapitalize( text ),
-                                   StringUtils.uncapitalize( otherText ),
-                                   Proximity.HIGH );
+                || isSemanticMatch( StringUtils.uncapitalize( text ),
+                StringUtils.uncapitalize( otherText ),
+                Proximity.HIGH );
     }
 
     /**

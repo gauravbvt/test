@@ -1,10 +1,10 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,8 +66,8 @@ public class Relationship<T extends Identifiable> implements Identifiable {
         String s = Long.toString( id );
         String toId = s.substring( s.length() - 9 );
         String fromId = s.substring( 0, s.length() - 9 );
-        fromIdentifiable = (Long.valueOf( fromId ) * -1) + SEED;
-        toIdentifiable = (Long.valueOf( toId ) * -1) + SEED;
+        fromIdentifiable = ( Long.valueOf( fromId ) * -1 ) + SEED;
+        toIdentifiable = ( Long.valueOf( toId ) * -1 ) + SEED;
     }
 
     public String getName() {
@@ -145,5 +145,15 @@ public class Relationship<T extends Identifiable> implements Identifiable {
     public int hashCode() {
         return Long.valueOf( getId() ).hashCode();
     }
+
+    /**
+     * Whether botth related identifiables are not null..
+     *
+     * @return a boolean
+     */
+    protected boolean isValid() {
+        return fromIdentifiable != null && toIdentifiable != null;
+    }
+
 
 }

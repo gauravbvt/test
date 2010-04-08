@@ -7,9 +7,14 @@ import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,25 +27,32 @@ import java.util.List;
  */
 public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRelationship> {
 
-    private List<ModelEntity> entities;
+    private Class entityClass;
+    private Segment segment;
     private EntityRelationship selectedEntityRel;
 
     public EntitiesNetworkDiagram(
-            List<ModelEntity> entities,
+            Class entityClass,
+            Segment segment,
             EntityRelationship selectedEntityRel,
             double[] diagramSize,
             String orientation ) {
         super( diagramSize, orientation );
-        this.entities = entities;
+        this.entityClass = entityClass;
+        this.segment = segment;
         this.selectedEntityRel = selectedEntityRel;
     }
 
     public void render( String outputFormat, OutputStream outputStream ) {
+        QueryService queryService = getDiagramFactory().getQueryService();
         DiagramFactory<ModelEntity, EntityRelationship> diagramFactory = getDiagramFactory();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder<ModelEntity, EntityRelationship> entitiesNetworkGraphBuilder =
-                new EntitiesNetworkGraphBuilder( entities, getDiagramFactory().getQueryService() );
+                new EntitiesNetworkGraphBuilder(
+                        getEntities( queryService ),
+                        getEntityRels( queryService ),
+                        getDiagramFactory().getQueryService() );
         Graph<ModelEntity, EntityRelationship> graph =
                 entitiesNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer =
@@ -66,4 +78,41 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
                 outputStream
         );
     }
+
+    @SuppressWarnings( "unchecked" )
+    private List<ModelEntity> getEntities( QueryService queryService ) {
+        if ( segment != null ) {
+            return queryService.listActualEntitiesTaskedInSegment( entityClass, segment );
+        } else {
+            return (List<ModelEntity>) CollectionUtils.select(
+                    queryService.listActualEntities( entityClass ),
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return !( (ModelEntity) object ).isUnknown();
+                        }
+                    }
+            );
+        }
+    }
+
+    private List<EntityRelationship> getEntityRels( QueryService queryService ) {
+        List<EntityRelationship> entityRels = new ArrayList<EntityRelationship>();
+        List<ModelEntity> entities = getEntities( queryService );
+        for ( ModelEntity entity : entities ) {
+            for ( ModelEntity other : entities ) {
+                if ( entity != other ) {
+                    EntityRelationship<ModelEntity> entityRel;
+                    if ( segment != null ) {
+                        entityRel = queryService.findEntityRelationship( entity, other, segment );
+                    } else {
+                        entityRel = queryService.findEntityRelationship( entity, other );
+                    }
+                    if ( entityRel != null ) entityRels.add( entityRel );
+                }
+            }
+        }
+        return entityRels;
+    }
+
+
 }
