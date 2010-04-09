@@ -1,6 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.AttachmentManager;
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.PlanDao;

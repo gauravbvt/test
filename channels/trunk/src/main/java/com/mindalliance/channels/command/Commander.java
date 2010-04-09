@@ -1,9 +1,6 @@
-package com.mindalliance.channels;
+package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Identifiable;
@@ -22,7 +19,7 @@ import java.util.Map;
  * Date: Feb 28, 2009
  * Time: 2:20:10 PM
  */
-public interface Commander extends Service {
+public interface Commander {
     /**
      * Whether the command could be executed right now.
      * The user is authorized and all required locks could be taken.

@@ -1,7 +1,6 @@
 package com.mindalliance.channels.geo;
 
-import com.mindalliance.channels.AbstractService;
-import com.mindalliance.channels.GeoService;
+import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.model.Place;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -38,7 +37,7 @@ import java.util.List;
  * Date: Jun 19, 2009
  * Time: 1:30:08 PM
  */
-public class DefaultGeoService extends AbstractService implements GeoService, InitializingBean {
+public class DefaultGeoService implements GeoService, InitializingBean {
 
     /**
      * Logger.

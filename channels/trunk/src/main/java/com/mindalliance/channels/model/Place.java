@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.GeoService;
+import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.geo.GeoLocatable;

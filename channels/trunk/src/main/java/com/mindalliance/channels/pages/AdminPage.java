@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.reports.PlanReportPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -22,9 +22,14 @@ import java.util.List;
  */
 public class AdminPage extends WebPage {
 
+    /** Wicket sometimes serializes pages... */
+    private static final long serialVersionUID = -7349549537563793567L;
+
+    /** Current user. */
     @SpringBean
     private User user;
 
+    /** The plan manager. */
     @SpringBean
     private PlanManager planManager;
 
@@ -33,25 +38,23 @@ public class AdminPage extends WebPage {
      * can be called/ created from anywhere.
      */
     public AdminPage() {
-        add( new Label( "user", user.getUsername() ) );
-        addPlanSwitcher();
-        add( new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ) );
-        add( new BookmarkablePageLink<PlanReportPage>( "report", PlanReportPage.class ) );
-        add( new BookmarkablePageLink<PlanReportPage>( "playbook", TaskPlaybook.class ) );
-    }
+        add(
+            new Label( "user", user.getUsername() ),
+            new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ),
+            new BookmarkablePageLink<PlanReportPage>( "report", PlanReportPage.class ),
+            new BookmarkablePageLink<PlanReportPage>( "playbook", TaskPlaybook.class ),
+            new DropDownChoice<Plan>(
+                        "plan-sel",
+                        new PropertyModel<Plan>( this, "plan" ),
+                        new PropertyModel<List<? extends Plan>>( planManager, "plans" ) )
 
-    private void addPlanSwitcher() {
-        DropDownChoice planDropDownChoice = new DropDownChoice<Plan>(
-                "plan-sel",
-                new PropertyModel<Plan>( this, "plan" ),
-                new PropertyModel<List<? extends Plan>>( this, "allPlans" ) );
-        planDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                // Do nothing
-            }
-        } );
-        add( planDropDownChoice );
+                    .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                        @Override
+                        protected void onUpdate( AjaxRequestTarget target ) {
+                            // Do nothing
+                        }
+                    } )
+        );
     }
 
     /**
@@ -59,27 +62,17 @@ public class AdminPage extends WebPage {
       *
       * @return a plan
       */
-     public Plan getPlan() {
-         return user.getPlan();
-     }
-
-     /**
-      * Switch the user's current plan.
-      *
-      * @param plan a plan
-      */
-     public void setPlan( Plan plan ) {
-         user.setPlan( plan );
-     }
-
-    /**
-     * Get all plans that the current can modify.
-     *
-     * @return a list of plans
-     */
-    public List<Plan> getAllPlans() {
-        return planManager.getPlans();
+    public Plan getPlan() {
+        return user.getPlan();
     }
 
+    /**
+     * Switch the user's current plan.
+     *
+     * @param plan a plan
+     */
+    public void setPlan( Plan plan ) {
+        user.setPlan( plan );
+    }
 
 }

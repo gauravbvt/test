@@ -1,9 +1,6 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.AbstractService;
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Detective;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
@@ -12,6 +9,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -31,7 +29,7 @@ import java.util.Set;
  * Date: Nov 26, 2008
  * Time: 10:07:27 AM
  */
-public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycle {
+public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener {
 
     /**
      * Description separator.
@@ -77,10 +75,12 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
     }
 
     public void start() {
+        queryService.getPlanManager().addListener( this );
         running = true;
     }
 
     public void stop() {
+        queryService.getPlanManager().removeListener( this );
         issueScanner.terminate();
     }
 
@@ -106,6 +106,28 @@ public class DefaultAnalyst extends AbstractService implements Analyst, Lifecycl
         stop();
     }
 
+    /**
+     * A plan is about to be put in production.
+     * @param devPlan the development plan
+     */
+    public void aboutToProductize( Plan devPlan ) {
+        onStop();
+    }
+
+    /**
+     * A new development plan was created.
+     * @param devPlan the new plan.
+     */
+    public void created( Plan devPlan ) {
+        onStart();
+    }
+
+    /**
+     * A new plan was put in production.
+     * @param plan the new plan
+     */
+    public void productized( Plan plan ) {
+    }
 
     /**
      * {@inheritDoc}

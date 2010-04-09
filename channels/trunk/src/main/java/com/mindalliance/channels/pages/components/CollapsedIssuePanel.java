@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.SurveyService;
+import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.commands.UpdateObject;

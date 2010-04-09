@@ -1,8 +1,7 @@
 package com.mindalliance.channels.export;
 
-import com.mindalliance.channels.AbstractService;
-import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.dao.Importer;
+import com.mindalliance.channels.export.Exporter;
+import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Segment;
@@ -21,7 +20,7 @@ import java.util.Map;
 /**
  * Import/Export segments using serialization.
  */
-public class Serializer extends AbstractService implements Importer, Exporter {
+public class Serializer implements Importer, Exporter {
 
     private static final String IMPORT_FAILED = "Import failed";
 

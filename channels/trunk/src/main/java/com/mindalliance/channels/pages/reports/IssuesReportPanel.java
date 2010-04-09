@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.AttributeModifier;

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
@@ -251,5 +251,5 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             setAspectShown( target, DETAILS );
         super.updateWith( target, change, updated );
     }
-    
+
 }

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.LockManager;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.commands.HelloCommand;
 import com.mindalliance.channels.model.Segment;
 import static org.junit.Assert.*;

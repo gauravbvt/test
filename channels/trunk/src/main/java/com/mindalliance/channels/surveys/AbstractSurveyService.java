@@ -1,9 +1,9 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.SurveyService;
+import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.FileUserDetailsService;

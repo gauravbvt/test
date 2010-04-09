@@ -5,9 +5,10 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.commands.AddProducer;
 import com.mindalliance.channels.command.commands.RemoveProducer;
+import com.mindalliance.channels.dao.FileUserDetailsService;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -22,6 +23,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,10 +47,14 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
      * The logger.
      */
     private final Logger LOG = LoggerFactory.getLogger( PlanVersionsPanel.class );
+
     /**
      * Date format.
      */
     private SimpleDateFormat dateFormat;
+
+    @SpringBean
+    private FileUserDetailsService userDetailsService;
 
     public PlanVersionsPanel(
             String id,
@@ -137,11 +143,10 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
     }
 
     public List<Vote> getVotes() {
-        List<User> planners = getPlanManager().getPlanners( getPlan().getUri() );
         List<Vote> votes = new ArrayList<Vote>();
-        for ( User planner : planners ) {
+        for ( User planner : userDetailsService.getPlanners( getPlan().getUri() ) )
             votes.add( new Vote( planner ) );
-        }
+
         return votes;
     }
 

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.surveys;
 
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.SurveyService;
+import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Identifiable;

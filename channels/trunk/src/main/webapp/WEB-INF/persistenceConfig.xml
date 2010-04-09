@@ -49,15 +49,15 @@
         <!-- Temporary caching refreshed when model is changed -->
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.query.QueryService.*(..))"
                      advice-ref="cacheSet"/>
-        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.Detective.*(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.analysis.Detective.*(..))"
                      advice-ref="cacheSet"/>
-        <aop:advisor pointcut="execution(String com.mindalliance.channels.Analyst.*(..))"
+        <aop:advisor pointcut="execution(String com.mindalliance.channels.analysis.Analyst.*(..))"
                      advice-ref="cacheSet"/>
-        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.Analyst.*(..))"
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.analysis.Analyst.*(..))"
                      advice-ref="cacheSet"/>
-        <aop:advisor pointcut="execution(Integer com.mindalliance.channels.Analyst.*(..))"
+        <aop:advisor pointcut="execution(Integer com.mindalliance.channels.analysis.Analyst.*(..))"
                      advice-ref="cacheSet"/>
-        <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.DiagramFactory.*(..))"
+        <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.graph.DiagramFactory.*(..))"
                      advice-ref="cacheSet"/>
 
         <!-- Temporary caching trigger -->
@@ -65,25 +65,25 @@
                      advice-ref="cacheClear"/>
 
         <!-- Permanent caching -->
-        <aop:advisor pointcut="execution(String com.mindalliance.channels.GeoService.getGeoCoding(..))"
+        <aop:advisor pointcut="execution(String com.mindalliance.channels.geo.GeoService.getGeoCoding(..))"
                      advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.GeoService.findNearbyPostalCodes(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.geo.GeoService.findNearbyPostalCodes(..))"
                      advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.GeoService.verifyPostalCode(..))"
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.geo.GeoService.verifyPostalCode(..))"
                      advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.GeoService.isPostalCodeInGeoLocation(..))"
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.geo.GeoService.isPostalCodeInGeoLocation(..))"
                      advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.GeoService.isLikelyGeoname(..))"
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.geo.GeoService.isLikelyGeoname(..))"
                       advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.GeoService.findGeoLocations(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.geo.GeoService.findGeoLocations(..))"
                        advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.SemanticMatcher.matches(..))"
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.nlp.SemanticMatcher.matches(..))"
                      advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(com.mindalliance.channels.nlp.Proximity com.mindalliance.channels.SemanticMatcher.semanticProximity(..))"
+        <aop:advisor pointcut="execution(com.mindalliance.channels.nlp.Proximity com.mindalliance.channels.nlp.SemanticMatcher.semanticProximity(..))"
                       advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(Double com.mindalliance.channels.SemanticMatcher.assessSimilarity(..))"
+        <aop:advisor pointcut="execution(Double com.mindalliance.channels.nlp.SemanticMatcher.assessSimilarity(..))"
                        advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(net.didion.jwnl.data.IndexWord com.mindalliance.channels.SemanticMatcher.lookupBaseForm(..))"
+        <aop:advisor pointcut="execution(net.didion.jwnl.data.IndexWord com.mindalliance.channels.nlp.SemanticMatcher.lookupBaseForm(..))"
                        advice-ref="permSet"/>
     </aop:config>
 

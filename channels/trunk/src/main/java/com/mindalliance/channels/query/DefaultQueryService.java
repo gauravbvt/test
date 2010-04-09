@@ -1,9 +1,9 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.ImagingService;
-import com.mindalliance.channels.SemanticMatcher;
+import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.Attachment;
@@ -146,7 +146,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public PlanDao getDao() {
         try {
-            return planManager.getDao( planManager.getCurrentPlan() );
+            return planManager.getDao( PlanManager.plan() );
         } catch ( NotFoundException e ) {
             LOG.error( "No plan found", e );
             throw new RuntimeException( e );
@@ -652,7 +652,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         } else {
             boolean hasReference = false;
             Iterator classes = ModelObject.referencingClasses().iterator();
-            if ( planManager.getCurrentPlan().references( mo ) ) return true;
+            if ( PlanManager.plan().references( mo ) ) return true;
             while ( !hasReference && classes.hasNext() ) {
                 List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
                 hasReference = CollectionUtils.exists(
@@ -1698,7 +1698,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     private boolean doFindIfSegmentStarted( Segment segment, Set<ModelObject> visited ) {
-        if ( planManager.getCurrentPlan().isIncident( segment.getEvent() ) ) return true;
+        if ( PlanManager.plan().isIncident( segment.getEvent() ) ) return true;
         if ( visited.contains( segment ) ) return false;
         visited.add( segment );
         boolean started = false;
@@ -1723,7 +1723,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public List<Event> findPlannedEvents() {
-        Plan plan = planManager.getCurrentPlan();
+        Plan plan = PlanManager.plan();
         List<Event> plannedEvents = new ArrayList<Event>();
         for ( Event event : listReferencedEntities( Event.class ) ) {
             if ( !plan.isIncident( event ) ) plannedEvents.add( event );
@@ -2359,7 +2359,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Plan getCurrentPlan() {
-        return planManager.getCurrentPlan();
+        return PlanManager.plan();
     }
 
     private Level getPartPriority( Part part, List<Part> visited ) {
@@ -2654,7 +2654,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Boolean isInvolvementExpected( Organization organization ) {
-        return planManager.getCurrentPlan().getOrganizations().contains( organization );
+        return PlanManager.plan().getOrganizations().contains( organization );
     }
 
     /**

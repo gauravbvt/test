@@ -1,7 +1,6 @@
 package com.mindalliance.channels.imaging;
 
-import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.ImagingService;
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.ModelObject;
 import org.slf4j.Logger;

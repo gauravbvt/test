@@ -1,9 +1,7 @@
-package com.mindalliance.channels;
+package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
@@ -25,7 +23,7 @@ import java.util.List;
  * @param <Vertex> a vertex class
  * @param <Edge> an edge class
  */
-public interface DiagramFactory<Vertex, Edge> extends Service {
+public interface DiagramFactory<Vertex, Edge> {
 
     /**
      * The PNG format
@@ -139,17 +137,17 @@ public interface DiagramFactory<Vertex, Edge> extends Service {
      *
      * @param entityClass entity class
      * @param segment a segment or null
-     *@param selectedEntityRel selected releationship
+     * @param selectedEntityRel selected releationship
      * @param diagramSize    width and height as array of doubles
-     * @param orientation    a string @return an entities network diagram
+     * @param orientation    a string
      * @return an entities network diagram
      */
-    Diagram newEntitiesNetworkDiagram(
+    <T extends ModelEntity> Diagram newEntitiesNetworkDiagram(
             Class entityClass,
             Segment segment,
-            EntityRelationship selectedEntityRel,
+            EntityRelationship<T> selectedEntityRel,
             double[] diagramSize,
-            String orientation);
+            String orientation );
 
     /**
      * Gets the preset graph renderer.

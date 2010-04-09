@@ -6,6 +6,8 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.query.DefaultQueryService;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.LockManager;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.IRequestCodingStrategy;
@@ -189,14 +191,17 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     }
 
     public Commander getCommander() {
-        Plan plan = PlanManager.plan();
+        User user = User.current();
+        assertNotNull( "No current user", user );
+        Plan plan = user.getPlan();
         assertNotNull( "No plan defined for user", plan );
         return wicketApplication.getCommander( plan );
     }
 
     public LockManager getLockManager() {
-        Plan plan = PlanManager.plan();
-        assertNotNull( "No plan defined for user", plan );
+        User user = User.current();
+        assertNotNull( "No current user", user );
+        Plan plan = user.getPlan();
         return wicketApplication.getLockManager( plan );
     }
 

@@ -1,16 +1,16 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.analysis.IssueScanner;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.export.Exporter;
+import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
-import org.apache.commons.collections.TransformerUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +53,8 @@ public class PlanManager {
      */
     private String base = System.getProperty( "user.home" );
 
+    private Listeners listeners = new Listeners();
+
     /**
      * Name of the plans property file.
      */
@@ -82,7 +84,7 @@ public class PlanManager {
             Collections.synchronizedMap( new HashMap<String, List<String>>() );
 
     /**
-     * The plan importer.
+     * The plan importer/exporter factory.
      */
     private ImportExportFactory importExportFactory;
 
@@ -127,6 +129,7 @@ public class PlanManager {
 
     private FileUserDetailsService userDetailsService;
 
+    //------------------------------------------
     /**
      * Required for AOP decorations.
      */
@@ -136,6 +139,14 @@ public class PlanManager {
     public PlanManager( ImportExportFactory importExportFactory, IdGenerator idGenerator ) {
         this.importExportFactory = importExportFactory;
         this.idGenerator = idGenerator;
+    }
+
+    public void addListener( Listener listener ) {
+        listeners.addListener( listener );
+    }
+
+    public void removeListener( Listener listener ) {
+        listeners.removeListener( listener );
     }
 
     public void setPlanDefinitionsFileName( String fileName ) {
@@ -271,7 +282,7 @@ public class PlanManager {
      *
      * @throws IOException on write errors
      */
-    public synchronized void writePlanDefinitions() throws IOException {
+    private synchronized void writePlanDefinitions() throws IOException {
         Properties props = new Properties();
         for ( Plan plan : getPlans() ) {
             props.setProperty( plan.getUri(), plan.getName() + '|' + plan.getClient() );
@@ -304,17 +315,32 @@ public class PlanManager {
     }
 
     /**
+     * Get all plan names.
+     * @return names of all plans
+     */
+    public List<String> getPlanNames() {
+        List<Plan> planList = getPlans();
+        List<String> answer = new ArrayList<String>( planList.size() );
+        for ( Plan plan : planList )
+            answer.add( plan.getName() );
+
+        return answer;
+    }
+
+    /**
      * Tests if a plan name is already taken.
      *
      * @param name a string
      * @return a boolean
      */
     public boolean isPlanNameTaken( String name ) {
-        for ( PlanDao object : planIndex.values() )
-            if ( name.equals( object.getPlan().getName() ) )
-                return true;
+        synchronized ( planIndex ) {
+            for ( PlanDao object : planIndex.values() )
+                if ( name.equals( object.getPlan().getName() ) )
+                    return true;
 
-        return false;
+            return false;
+        }
     }
 
     public ImportExportFactory getImportExportFactory() {
@@ -376,19 +402,6 @@ public class PlanManager {
     }
 
     /**
-     * Get the plan of the current user, or a default plan if current user does not have a plan.
-     * @return a plan
-     *         // todo Insecure... Refactor and fix elsewhere.
-     */
-    public Plan getCurrentPlan() {
-        Plan plan = plan();
-        if ( plan == null )
-            plan = getPlans().get( 0 );
-
-        return plan;
-    }
-
-    /**
      * Get current plan from current thread.
      *
      * @return a plan
@@ -410,6 +423,7 @@ public class PlanManager {
         PlanDao dao = createDao( createPlan( DEFAULT_URI, 1, Plan.Status.DEVELOPMENT ) );
         dao.validate();
         registerPlanDao( dao );
+        listeners.fireCreated( dao.getPlan() );
         return dao;
     }
 
@@ -455,6 +469,7 @@ public class PlanManager {
 
             registerPlanDao( dao );
             dao.validate();
+            listeners.fireCreated( dao.getPlan() );
         }
 
         if ( plansFile != null && !plansFile.exists() ) {
@@ -541,11 +556,11 @@ public class PlanManager {
     /**
      * Import segment from browsed file.
      *
+     * @param plan
      * @param inputStream where the segment lies
      * @return a segment, or null if not successful
      */
-    public Segment importSegment( InputStream inputStream ) {
-        Plan plan = plan();
+    public Segment importSegment( Plan plan, InputStream inputStream ) {
         Segment imported = null;
 
         // Import and switch to segment
@@ -611,14 +626,15 @@ public class PlanManager {
      * Substitute the new production plan as the current plan for each user where applicable.
      *
      * @param oldDevPlan   a plan
-     * @param analyst      issue analyst
      */
-    private void moveToProduction( Plan oldDevPlan, Analyst analyst ) {
+    public void moveToProduction( Plan oldDevPlan ) {
         if ( !oldDevPlan.isDevelopment() )
             throw new IllegalStateException(
                     "Plan " + oldDevPlan + " is not a development version" );
+
         // Stop issue scanning
-        analyst.onStop();
+        listeners.fireAboutToProductize( oldDevPlan );
+
         // Create development plan from copy of old dev plan
         Plan newDevPlan = makeNewDevPlan( oldDevPlan );
         // Substitute current plans of users as appropriate
@@ -644,8 +660,9 @@ public class PlanManager {
         // Mark loaded development version of plan as production
         oldDevPlan.setProduction();
         oldDevPlan.setWhenVersioned( new Date() );
+
         // Restart issue scanning
-        analyst.onStart();
+        listeners.fireCreated( newDevPlan );
     }
 
     /**
@@ -708,7 +725,7 @@ public class PlanManager {
             newDevPlan.setName( oldDevPlan.getName() );
             newDevPlan.setClient( oldDevPlan.getClient() );
             PlanDao dao = createDao( newDevPlan );
-            dao.importPlan( this.getImportExportFactory(), getBuiltInMedia() );
+            dao.importPlan( importExportFactory, getBuiltInMedia() );
             registerPlanDao( dao );
             newDevPlan.removeAllProducers();
             dao.save( importExportFactory.createExporter( dao ) );
@@ -739,24 +756,9 @@ public class PlanManager {
             }
         } );
         if ( unanimous ) {
-            Analyst analyst = Channels.instance().getAnalyst();
-            moveToProduction( plan, analyst );
+            moveToProduction( plan );
         }
         return unanimous;
-    }
-
-    public List<User> getPlanners( String uri ) {
-        List<User> planners = new ArrayList<User>();
-        for ( User user : userDetailsService.getUsers() ) {
-            if ( user.isPlanner( uri ) ) {
-                planners.add( user );
-            }
-        }
-        return planners;
-    }
-
-    public void removeProducer( String producer, Plan plan ) {
-        plan.removeProducer( producer );
     }
 
     /**
@@ -791,16 +793,6 @@ public class PlanManager {
     public synchronized boolean isOutOfSync( User user, String uri ) {
         List<String> usernames = outOfSyncUsers.get( uri );
         return usernames != null && usernames.contains( user.getUsername() );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    /**
-     * Get All plan names.
-     */
-    public List<String> getPlanNames() {
-        return (List<String>) CollectionUtils.collect( getPlans(),
-                                                       TransformerUtils.invokerTransformer(
-                                                               "getName" ) );
     }
 
     /**
@@ -854,5 +846,73 @@ public class PlanManager {
 
         LOG.warn( "No default plan for user {}", user.getUsername() );
         return null;
+    }
+
+    //=============================================================
+    /**
+     * A listener to important plan management business.
+     */
+    public interface Listener {
+
+        /**
+         * A plan is about to be put in production.
+         * @param devPlan the development plan
+         */
+        void aboutToProductize( Plan devPlan );
+
+        /**
+         * A new plan was put in production.
+         * @param plan the new plan
+         */
+        void productized( Plan plan );
+
+        /**
+         * A new development plan was created.
+         * @param devPlan the new plan.
+         */
+        void created( Plan devPlan );
+    }
+
+    //=============================================================
+    /**
+     * Listener event management.
+     */
+    private static final class Listeners {
+
+        /** Whoever cares about plan manager events. */
+        private final List<Listener> listeners =
+                Collections.synchronizedList( new ArrayList<Listener>() );
+
+        private Listeners() {
+        }
+
+        public void addListener( Listener listener ) {
+            listeners.add( listener );
+        }
+
+        public void removeListener( Listener listener ) {
+            listeners.remove( listener );
+        }
+
+        public void fireAboutToProductize( Plan plan ) {
+            synchronized ( listeners ) {
+                for ( Listener listener : listeners )
+                    listener.aboutToProductize( plan );
+            }
+        }
+
+        public void fireProductized( Plan plan ) {
+            synchronized ( listeners ) {
+                for ( Listener listener : listeners )
+                    listener.productized( plan );
+            }
+        }
+
+        public void fireCreated( Plan plan ) {
+            synchronized ( listeners ) {
+                for ( Listener listener : listeners )
+                    listener.created( plan );
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.AttachmentManager;
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;

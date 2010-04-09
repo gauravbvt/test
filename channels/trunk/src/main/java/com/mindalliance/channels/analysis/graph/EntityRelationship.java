@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelEntity;

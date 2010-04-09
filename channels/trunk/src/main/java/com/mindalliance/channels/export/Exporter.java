@@ -1,6 +1,7 @@
-package com.mindalliance.channels.dao;
+package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.dao.Journal;
 
 import java.io.IOException;
 import java.io.OutputStream;

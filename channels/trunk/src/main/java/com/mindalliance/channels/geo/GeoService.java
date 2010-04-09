@@ -1,4 +1,4 @@
-package com.mindalliance.channels;
+package com.mindalliance.channels.geo;
 
 import com.mindalliance.channels.geo.GeoLocation;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * Date: Jun 19, 2009
  * Time: 1:46:02 PM
  */
-public interface GeoService extends Service {
+public interface GeoService {
 
     /**
      * Find geolocations given a name.

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;

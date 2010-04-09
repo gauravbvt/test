@@ -1,6 +1,6 @@
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.command.CommandException;

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Goal;

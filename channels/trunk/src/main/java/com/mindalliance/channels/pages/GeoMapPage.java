@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.GeoService;
+import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;

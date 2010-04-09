@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;

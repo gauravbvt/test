@@ -1,6 +1,5 @@
-package com.mindalliance.channels;
+package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.analysis.IssueScanner;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
@@ -17,7 +16,7 @@ import java.util.List;
  * Date: Nov 26, 2008
  * Time: 9:29:14 AM
  */
-public interface Analyst extends Service {
+public interface Analyst {
 
     /**
      * Whether to include issues that are property-specific.

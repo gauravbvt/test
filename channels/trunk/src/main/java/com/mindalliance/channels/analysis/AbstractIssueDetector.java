@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.GeoService;
+import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;

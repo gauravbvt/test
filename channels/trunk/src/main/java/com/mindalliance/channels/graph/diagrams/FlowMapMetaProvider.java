@@ -1,7 +1,7 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;

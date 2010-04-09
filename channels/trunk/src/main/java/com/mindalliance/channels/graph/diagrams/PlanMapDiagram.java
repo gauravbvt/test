@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.analysis.graph.PlanMapGraphBuilder;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;

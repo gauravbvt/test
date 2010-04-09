@@ -1,4 +1,4 @@
-package com.mindalliance.channels;
+package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.model.Plan;

@@ -250,9 +250,9 @@ public class User implements UserDetails {
      */
     public String getRole( String planUri ) {
         return userInfo.isAdmin() ? "Admin"
-                : userInfo.isPlanner( planUri ) ? "Planner"
-                : ( planUri != null && userInfo.isUser( planUri ) ) ? "Playbook user"
-                : "Unauthorized";
+             : userInfo.isPlanner( planUri ) ? "Planner"
+             : userInfo.isUser( planUri ) ? "Playbook user"
+             : "Unauthorized";
     }
 
     /**
@@ -261,7 +261,6 @@ public class User implements UserDetails {
      * @return a string or null
      */
     public String getPlanUri() {
-        Plan plan = getPlan();
         return plan != null ? plan.getUri() : null;
     }
 }

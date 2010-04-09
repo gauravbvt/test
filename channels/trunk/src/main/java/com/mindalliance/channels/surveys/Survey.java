@@ -1,6 +1,6 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.SurveyService;
+import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;

@@ -1,23 +1,24 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.AbstractService;
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.LockManager;
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.LockManager;
+import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.export.Exporter;
+import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.ImportExportFactory;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,8 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.io.IOException;
-import java.text.MessageFormat;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -36,7 +35,7 @@ import java.text.MessageFormat;
  * Date: Mar 3, 2009
  * Time: 1:47:58 PM
  */
-public class DefaultCommander extends AbstractService implements Commander {
+public class DefaultCommander implements Commander {
 
     /**
      * Logger.

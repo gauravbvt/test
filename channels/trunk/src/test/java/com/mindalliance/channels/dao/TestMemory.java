@@ -1,8 +1,6 @@
 package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.dao.DuplicateKeyException;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Segment;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -24,7 +22,7 @@ public class TestMemory extends AbstractChannelsTest {
     public void setUp() throws IOException {
         super.setUp();
         try {
-            planDao = planManager.getDao( PlanManager.plan() );
+            planDao = planManager.getDao( User.current().getPlan() );
         } catch ( NotFoundException e ) {
             fail( "No plan for guest" );
         }

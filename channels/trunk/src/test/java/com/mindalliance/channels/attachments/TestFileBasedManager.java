@@ -1,6 +1,7 @@
 package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.dao.User;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.upload.FileItem;
@@ -42,8 +43,7 @@ public class TestFileBasedManager extends AbstractChannelsTest {
 
     @Test
     public void testUpload() {
-        Attachment attachment = mgr.upload(
-                planManager.getCurrentPlan(),
+        Attachment attachment = mgr.upload( User.current().getPlan(),
                 Attachment.Type.Reference,
                 upload
         );

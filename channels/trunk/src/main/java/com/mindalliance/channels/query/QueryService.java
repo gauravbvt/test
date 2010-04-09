@@ -1,8 +1,7 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.Service;
+import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.Attachment;
@@ -46,7 +45,7 @@ import java.util.List;
 /**
  * Data query interface.
  */
-public interface QueryService extends Service {
+public interface QueryService {
 
     /**
      * Get the persistence store accessor.

@@ -1,10 +1,10 @@
 package com.mindalliance.channels.export;
 
-import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.dao.Importer;
+import com.mindalliance.channels.export.Exporter;
+import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.ImportExportFactory;
+import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Segment;
 

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.surveys;
 
-import com.mindalliance.channels.SurveyService;
+import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;

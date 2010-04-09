@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.Detective;
+import com.mindalliance.channels.analysis.Detective;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.commons.collections.CollectionUtils;

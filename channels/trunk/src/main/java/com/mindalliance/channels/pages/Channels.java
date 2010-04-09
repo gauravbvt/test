@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.Analyst;
-import com.mindalliance.channels.Commander;
-import com.mindalliance.channels.DiagramFactory;
-import com.mindalliance.channels.GeoService;
-import com.mindalliance.channels.LockManager;
-import com.mindalliance.channels.dao.ImportExportFactory;
+import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.LockManager;
+import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.geo.GeoService;
+import com.mindalliance.channels.export.ImportExportFactory;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;

@@ -1,4 +1,4 @@
-package com.mindalliance.channels;
+package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
@@ -13,7 +13,7 @@ import java.util.List;
  * Date: Sep 25, 2009
  * Time: 10:22:27 AM
  */
-public interface Detective extends Service {
+public interface Detective {
 
     /**
      * Detect all waived issues on a model object .

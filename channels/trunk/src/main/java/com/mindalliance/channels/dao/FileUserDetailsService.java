@@ -94,7 +94,7 @@ public class FileUserDetailsService implements UserDetailsService {
         return user;
     }
 
-    private synchronized void load() throws IOException {
+    private void load() throws IOException {
         InputStream inputStream = null;
         try {
             inputStream = findInputStream();

@@ -1,14 +1,13 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.AbstractService;
-import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.dao.Importer;
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.AbstractCommand;
+import com.mindalliance.channels.export.Exporter;
 import com.mindalliance.channels.dao.IdGenerator;
+import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.export.Importer;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
@@ -63,7 +62,7 @@ import java.util.Set;
  * Date: Dec 16, 2008
  * Time: 9:12:25 PM
  */
-public class XmlStreamer extends AbstractService implements ImportExportFactory {
+public class XmlStreamer implements ImportExportFactory {
 
     /**
      * Class logger.

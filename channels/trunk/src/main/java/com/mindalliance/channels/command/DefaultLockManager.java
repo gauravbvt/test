@@ -1,12 +1,11 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.AbstractService;
-import com.mindalliance.channels.LockManager;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +24,7 @@ import java.util.Map;
  * Date: Mar 3, 2009
  * Time: 9:33:48 AM
  */
-public class DefaultLockManager extends AbstractService implements LockManager {
+public class DefaultLockManager implements LockManager {
     /**
      * Logger.
      */

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -38,7 +38,7 @@ public class RemoveProducer extends AbstractCommand {
         String producer = (String) get( "producer" );
         Plan plan = PlanManager.plan();
         PlanManager planManager = commander.getQueryService().getPlanManager();
-        planManager.removeProducer( producer, plan );
+        plan.removeProducer( producer );
         return new Change( Change.Type.Updated, plan, "producers" );
     }
 

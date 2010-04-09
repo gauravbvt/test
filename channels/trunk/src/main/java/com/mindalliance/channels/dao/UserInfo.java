@@ -147,7 +147,8 @@ public final class UserInfo implements Serializable {
      * @return true if user is authorized for that plan
      */
     public boolean isUser( String uri ) {
-        return !globalAccess.isEmpty() || planAccess.containsKey( uri );
+        return uri != null
+            && ( !globalAccess.isEmpty() || planAccess.containsKey( uri ) );
     }
 
     /**
@@ -158,7 +159,7 @@ public final class UserInfo implements Serializable {
     public boolean isPlanner( String uri ) {
         return globalAccess.contains( ROLE_ADMIN )
             || globalAccess.contains( ROLE_PLANNER )
-            || ROLE_PLANNER.equals( planAccess.get( uri ) );
+            || uri != null && ROLE_PLANNER.equals( planAccess.get( uri ) );
     }
 
     public boolean isAdmin() {

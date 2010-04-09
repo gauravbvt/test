@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.analysis.graph.EntitiesNetworkGraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;

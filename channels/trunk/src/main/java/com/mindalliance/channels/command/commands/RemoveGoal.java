@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.Commander;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;

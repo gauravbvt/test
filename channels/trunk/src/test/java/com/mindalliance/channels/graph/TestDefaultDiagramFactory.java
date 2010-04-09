@@ -1,7 +1,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
 import static org.junit.Assert.*;

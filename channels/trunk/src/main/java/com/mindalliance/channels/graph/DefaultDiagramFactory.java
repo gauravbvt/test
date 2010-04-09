@@ -1,7 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.AbstractService;
-import com.mindalliance.channels.DiagramFactory;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.diagrams.EntitiesNetworkDiagram;
@@ -33,7 +32,7 @@ import java.util.List;
  * @param <V> a vertex class
  * @param <E> an edge class
  */
-public class DefaultDiagramFactory<V, E> extends AbstractService implements DiagramFactory {
+public class DefaultDiagramFactory<V, E> implements DiagramFactory {
 
     /**
      * Logger.

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.AttachmentManager;
-import com.mindalliance.channels.ImagingService;
+import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AttachDocument;

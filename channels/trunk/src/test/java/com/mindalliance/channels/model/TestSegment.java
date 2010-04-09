@@ -3,15 +3,9 @@ package com.mindalliance.channels.model;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +32,7 @@ public class TestSegment extends AbstractChannelsTest {
     public void setUp() throws IOException {
         super.setUp();
         try {
-            planDao = planManager.getDao( PlanManager.plan() );
+            planDao = planManager.getDao( User.current().getPlan() );
         } catch ( NotFoundException ignored ) {
             fail();
         }

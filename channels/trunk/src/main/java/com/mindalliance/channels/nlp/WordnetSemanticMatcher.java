@@ -1,6 +1,6 @@
 package com.mindalliance.channels.nlp;
 
-import com.mindalliance.channels.SemanticMatcher;
+import com.mindalliance.channels.nlp.SemanticMatcher;
 import jwsl.SimilarityAssessor;
 import jwsl.WordNotFoundException;
 import net.didion.jwnl.JWNL;

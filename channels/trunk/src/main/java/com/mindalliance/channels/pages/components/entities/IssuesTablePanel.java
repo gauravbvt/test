@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;

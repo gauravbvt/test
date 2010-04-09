@@ -1,8 +1,8 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.Analyst;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.Scanner;
+import com.mindalliance.channels.analysis.Scanner;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
