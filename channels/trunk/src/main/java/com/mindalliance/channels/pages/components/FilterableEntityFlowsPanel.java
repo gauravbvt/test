@@ -82,7 +82,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
             Set<Long> expansions,
             T selectedEntity,
             EntityRelationship<T> selectedEntityRel
-            ) {
+    ) {
         super( id, null, expansions );
         this.entityClass = entityClass;
         this.segment = segment;
@@ -167,7 +167,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
                     + getEntity().getName()
                     + "\"";
         } else {
-            return "All network flows" ;
+            return "All network flows";
         }
     }
 
@@ -262,8 +262,8 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
             for ( T other : entities ) {
                 if ( entity != other ) {
                     EntityRelationship<T> entityRel;
-                    if (segment != null) {
-                    entityRel = getQueryService().findEntityRelationship( entity, other, segment );
+                    if ( segment != null ) {
+                        entityRel = getQueryService().findEntityRelationship( entity, other, segment );
                     } else {
                         entityRel = getQueryService().findEntityRelationship( entity, other );
                     }
@@ -338,7 +338,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
         return selectedEntity;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<T> getEntities() {
         if ( segment != null ) {
             return getQueryService().listActualEntitiesTaskedInSegment( entityClass, segment );

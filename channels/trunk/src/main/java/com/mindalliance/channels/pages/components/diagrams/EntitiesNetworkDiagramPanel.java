@@ -144,7 +144,7 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
             int scrollLeft,
             AjaxRequestTarget target ) {
         EntityRelationship<T> entityRelationship = new EntityRelationship<T>();
-        entityRelationship.setId( Long.valueOf( edgeId ), getQueryService() );
+        entityRelationship.setId( Long.valueOf( edgeId ), segment, getQueryService() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, entityRelationship );
         change.setScript( js );

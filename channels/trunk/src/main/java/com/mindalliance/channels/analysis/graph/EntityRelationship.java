@@ -4,6 +4,7 @@ import com.mindalliance.channels.Analyst;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
@@ -50,11 +51,19 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
     }
 
 
-    public void setId( long id, QueryService queryService ) {
+    public void setId( long id, Segment segment, QueryService queryService ) {
         super.setId( id, queryService );
-        EntityRelationship entityRel = queryService.findEntityRelationship(
+        EntityRelationship entityRel;
+        if ( segment == null ) {
+        entityRel = queryService.findEntityRelationship(
                 getFromEntity( queryService ),
                 getToEntity( queryService ) );
+        } else {
+            entityRel = queryService.findEntityRelationship(
+                    getFromEntity( queryService ),
+                    getToEntity( queryService ),
+                    segment );
+        }
         if ( entityRel != null ) flows = entityRel.getFlows();
     }
 
