@@ -177,7 +177,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
                     new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
         }
         partActionsMenu.setOutputMarkupId( true );
-        partActionsMenu.setVisible( getPlan().isDevelopment() && isExpanded( getPart() ) );
+        makeVisible( partActionsMenu, getPlan().isDevelopment() && isExpanded( getPart() ) );
         addOrReplace( partActionsMenu );
     }
 

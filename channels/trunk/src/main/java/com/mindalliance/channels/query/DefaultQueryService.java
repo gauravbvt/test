@@ -1,17 +1,16 @@
 package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.imaging.ImagingService;
-import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Assignment;
@@ -45,6 +44,7 @@ import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
+import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.Play;
@@ -970,16 +970,29 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<T>( result );
     }
 
-    private boolean isExecutedBy( Part part, ModelEntity entity ) {
-        ResourceSpec partSpec = part.resourceSpec();
-        if ( entity instanceof Actor && entity.isActual() ) {
-            List<Actor> allPlayers = findAllActualActors( partSpec );
-            if ( allPlayers.isEmpty() )
-                return entity.isUnknown();
-            else
-                return allPlayers.contains( (Actor) entity );
+    private boolean isExecutedBy( Part part, final ModelEntity entity ) {
+        if ( entity.isActual() ) {
+            List<Assignment> assignments = findAllAssignments( part, false );
+            return CollectionUtils.exists(
+                    assignments,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            Assignment assignment = (Assignment) object;
+                            return assignment.hasEntity( entity );
+                        }
+                    }
+            );
         } else {
-            return partSpec.hasEntityOrBroader( entity );
+            ResourceSpec partSpec = part.resourceSpec();
+            /*if ( entity instanceof Actor && entity.isActual() ) {
+                List<Actor> allPlayers = findAllActualActors( partSpec );
+                if ( allPlayers.isEmpty() )
+                    return entity.isUnknown();
+                else
+                    return allPlayers.contains( (Actor) entity );
+            } else {*/
+                return partSpec.hasEntityOrBroader( entity );
+ //           }
         }
     }
 
@@ -1020,8 +1033,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             } );
             while ( actorSpecs.hasNext() ) {
                 ResourceSpec actorResourceSpec = actorSpecs.next();
-                if ( actorResourceSpec.narrowsOrEquals( resourceSpec ) )
-                    actors.add( actorResourceSpec.getActor() );
+                if ( actorResourceSpec.narrowsOrEquals( resourceSpec ) ) {
+                    Actor actor = actorResourceSpec.getActor();
+                    if ( !actor.isUnknown() && !actor.isArchetype() ) actors.add( actor );
+                }
             }
         }
 

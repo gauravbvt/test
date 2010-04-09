@@ -1,8 +1,8 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.query.QueryService;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -120,5 +120,18 @@ public class Assignment implements Serializable, GeoLocatable {
      */
     public Channelable getChannelable() {
         return getActor().isUnknown() ? getOrganization() : getActor();
+    }
+
+    /**
+     * Whether an entity is used in defining the assignment.
+     *
+     * @param entity a model entity
+     * @return a boolean
+     */
+    public boolean hasEntity( ModelEntity entity ) {
+        return ModelObject.areIdentical( getActor(), entity  )
+                || ModelObject.areIdentical( getRole(), entity )
+                || ModelObject.areIdentical( getOrganization(), entity )
+                || ModelObject.areIdentical( getJurisdiction(), entity );
     }
 }

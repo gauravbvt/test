@@ -472,7 +472,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         return getActor().isArchetype();
     }
 
-    public void seArchetype( boolean val ) {
+    public void setArchetype( boolean val ) {
         doCommand( new UpdatePlanObject( getActor(), "archetype", val ) );
     }
 

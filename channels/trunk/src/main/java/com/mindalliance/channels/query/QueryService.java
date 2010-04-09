@@ -1,10 +1,10 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.Dao;
 import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.NotFoundException;
@@ -432,7 +432,7 @@ public interface QueryService {
     List<Flow> findAllFlowsContacting( ResourceSpec resourceSpec );
 
     /**
-     * Find all known, actual (non-type) actors that belong to a resource spec
+     * Find all known and non-archetype, actual (non-type) actors that belong to a resource spec.
      *
      * @param resourceSpec a resource spec
      * @return a list of actors
@@ -440,7 +440,7 @@ public interface QueryService {
     List<Actor> findAllActualActors( ResourceSpec resourceSpec );
 
     /**
-     * Make a replicate of the flow
+     * Make a replicate of the flow.
      *
      * @param flow   the flow to replicate
      * @param isSend whether to replicate as send or receive
@@ -675,6 +675,7 @@ public interface QueryService {
      *
      * @param segment      a plan segment
      * @param resourceSpec a resource spec
+     * @param exactMatch   a boolean
      * @return a list of parts
      */
     List<Part> findAllParts( Segment segment, ResourceSpec resourceSpec, boolean exactMatch );
