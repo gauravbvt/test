@@ -1,10 +1,25 @@
 <export>
-  <plan id="1" uri="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/03/08 8:53:01 EST">
+  <plan id="1" uri="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/04/09 19:58:23 EDT">
     <whenVersioned>2010/02/09 11:46:28 EST</whenVersioned>
-    <lastId>972</lastId>
+    <lastId>2664</lastId>
     <name>Rail Security</name>
     <client>EastWest Institute Workshop</client>
     <description>Information sharing for an IED attack on a public transit system.</description>
+    <classification>
+      <system>Public Agency</system>
+      <name>Sensitive</name>
+      <level>0</level>
+    </classification>
+    <classification>
+      <system>Public Agency</system>
+      <name>Confidential</name>
+      <level>-1</level>
+    </classification>
+    <classification>
+      <system>Public Agency</system>
+      <name>Restricted</name>
+      <level>-2</level>
+    </classification>
     <medium id="31" kind="Type" name="Seat drop">
       <description>Printed communiques put on passenger seats</description>
       <addressPattern></addressPattern>
@@ -190,60 +205,6 @@
         <address>a.green@mta.com</address>
       </channel>
     </actor>
-    <actor id="300" kind="Actual" name="Steven Wang">
-      <description></description>
-      <attachments>
-        <attachment type="Image">uploads/steven_wang.jpeg</attachment>
-      </attachments>
-      <channel>
-        <medium id="-983" kind="Type">Pager</medium>
-        <address>515-667-0111</address>
-      </channel>
-      <channel>
-        <medium id="-984" kind="Type">Cell</medium>
-        <address>515-655-9981</address>
-      </channel>
-      <channel>
-        <medium id="-981" kind="Type">Email</medium>
-        <address>s.wang@mta.com</address>
-      </channel>
-    </actor>
-    <actor id="301" kind="Actual" name="Melinda Keyes">
-      <description></description>
-      <attachments>
-        <attachment type="Image">uploads/melinda_keyes.jpeg</attachment>
-      </attachments>
-      <channel>
-        <medium id="-983" kind="Type">Pager</medium>
-        <address>515-354-8765</address>
-      </channel>
-      <channel>
-        <medium id="-984" kind="Type">Cell</medium>
-        <address>515-223-2223</address>
-      </channel>
-      <channel>
-        <medium id="-981" kind="Type">Email</medium>
-        <address>m.keyes@mta.com</address>
-      </channel>
-    </actor>
-    <actor id="302" kind="Actual" name="Robert Wiseman">
-      <description></description>
-      <attachments>
-        <attachment type="Image">uploads/robert_wiseman.jpeg</attachment>
-      </attachments>
-      <channel>
-        <medium id="-983" kind="Type">Pager</medium>
-        <address>515-665-9878</address>
-      </channel>
-      <channel>
-        <medium id="-984" kind="Type">Cell</medium>
-        <address>515-665-2223</address>
-      </channel>
-      <channel>
-        <medium id="-981" kind="Type">Email</medium>
-        <address>r.wiseman@mta.com</address>
-      </channel>
-    </actor>
     <actor id="303" kind="Actual" name="Zabrina Lewis">
       <description></description>
       <attachments>
@@ -265,60 +226,6 @@
     <actor id="73" kind="Type" name="Senior Command Staff">
       <description></description>
     </actor>
-    <actor id="327" kind="Actual" name="Brenda Graham">
-      <description></description>
-      <attachments>
-        <attachment type="Image">uploads/brenda_graham.jpeg</attachment>
-      </attachments>
-      <channel>
-        <medium id="-983" kind="Type">Pager</medium>
-        <address>515-777-3345</address>
-      </channel>
-      <channel>
-        <medium id="-984" kind="Type">Cell</medium>
-        <address>515-777-6667</address>
-      </channel>
-      <channel>
-        <medium id="209" kind="Type">Secure radio</medium>
-        <address></address>
-      </channel>
-    </actor>
-    <actor id="335" kind="Actual" name="Kevin Brady">
-      <description></description>
-      <attachments>
-        <attachment type="Image">uploads/kevin_brady.jpeg</attachment>
-      </attachments>
-      <channel>
-        <medium id="-983" kind="Type">Pager</medium>
-        <address>515-335-4454</address>
-      </channel>
-      <channel>
-        <medium id="-984" kind="Type">Cell</medium>
-        <address>515-335-0999</address>
-      </channel>
-      <channel>
-        <medium id="209" kind="Type">Secure radio</medium>
-        <address></address>
-      </channel>
-    </actor>
-    <actor id="332" kind="Actual" name="Bob Woodford">
-      <description></description>
-      <attachments>
-        <attachment type="Image">uploads/bob_woodford.jpeg</attachment>
-      </attachments>
-      <channel>
-        <medium id="-983" kind="Type">Pager</medium>
-        <address>515-655-1212</address>
-      </channel>
-      <channel>
-        <medium id="-984" kind="Type">Cell</medium>
-        <address>515-655-0990</address>
-      </channel>
-      <channel>
-        <medium id="209" kind="Type">Secure radio</medium>
-        <address></address>
-      </channel>
-    </actor>
     <actor id="331" kind="Actual" name="Johann Strauss">
       <description></description>
       <attachments>
@@ -337,19 +244,31 @@
         <address>j.straus@sta.com</address>
       </channel>
     </actor>
-    <actor id="329" kind="Actual" name="Jeff Sinclair">
+    <actor id="2587" kind="Actual" name="A special ops">
       <description></description>
-      <attachments>
-        <attachment type="Image">uploads/jeff_sinclair.jpeg</attachment>
-      </attachments>
+      <archetype>true</archetype>
       <channel>
-        <medium id="-983" kind="Type">Pager</medium>
-        <address>515-866-9344</address>
+        <medium id="209" kind="Type">Secure radio</medium>
+        <address></address>
       </channel>
+    </actor>
+    <actor id="2586" kind="Actual" name="A transit police">
+      <description></description>
+      <archetype>true</archetype>
       <channel>
-        <medium id="-984" kind="Type">Cell</medium>
-        <address>515-866-6677</address>
+        <medium id="209" kind="Type">Secure radio</medium>
+        <address></address>
       </channel>
+    </actor>
+    <actor id="2633" kind="Actual" name="A train conductor">
+      <description></description>
+      <channel>
+        <medium id="209" kind="Type">Secure radio</medium>
+        <address></address>
+      </channel>
+    </actor>
+    <actor id="2634" kind="Actual" name="A bus driver">
+      <description></description>
       <channel>
         <medium id="209" kind="Type">Secure radio</medium>
         <address></address>
@@ -474,6 +393,10 @@
       <description>A bus terminal</description>
       <tag id="110" kind="Type">Transit system node</tag>
     </place>
+    <organization id="9" kind="Type" name="Public Transit Agency">
+      <description></description>
+      <mission></mission>
+    </organization>
     <organization id="282" kind="Actual" name="Metropolis Transit Authority">
       <description></description>
       <tag id="9" kind="Type">Public Transit Agency</tag>
@@ -487,48 +410,17 @@
         <address>800-464-3344</address>
       </channel>
       <job>
-        <actor id="283">John Drummond</actor>
-        <role id="12">Chief of Security</role>
-        <title>Head of Security</title>
-      </job>
-      <job>
         <actor id="285">Linda S. Beckett</actor>
         <role id="60">Public Relations Officer</role>
         <title>Director Public Relations</title>
       </job>
-      <job>
-        <actor id="286">Amanda Nevin</actor>
-        <role id="287">Chief of Transit Police</role>
-        <title>Police Chief</title>
-      </job>
-      <job>
-        <actor id="327">Brenda Graham</actor>
-        <role id="211">Transit Police Officer</role>
-        <title>Police Officer</title>
-      </job>
-      <job>
-        <actor id="329">Jeff Sinclair</actor>
-        <role id="211">Transit Police Officer</role>
-        <title>Police Officer</title>
-      </job>
-      <job>
-        <actor id="332">Bob Woodford</actor>
-        <role id="126">Special Ops Officer</role>
-        <title>Police Officer</title>
-      </job>
-      <job>
-        <actor id="335">Kevin Brady</actor>
-        <role id="126">Special Ops Officer</role>
-        <title>Police Officer</title>
-      </job>
-    </organization>
-    <organization id="9" kind="Type" name="Public Transit Agency">
-      <description></description>
-      <mission></mission>
     </organization>
     <organization id="284" kind="Actual" name="Metropolis Transit Operations">
       <description></description>
       <tag id="16" kind="Type">Transit Operations</tag>
+      <attachments>
+        <attachment type="Image">uploads/operations.jpeg</attachment>
+      </attachments>
       <parent id="282" kind="Actual">Metropolis Transit Authority</parent>
       <mission></mission>
       <job>
@@ -556,22 +448,7 @@
         <title>Terminal Manager</title>
       </job>
       <job>
-        <actor id="300">Steven Wang</actor>
-        <role id="161">Train Conductor</role>
-        <title>Conductor</title>
-      </job>
-      <job>
-        <actor id="301">Melinda Keyes</actor>
-        <role id="161">Train Conductor</role>
-        <title>Conductor</title>
-      </job>
-      <job>
         <actor id="303">Zabrina Lewis</actor>
-        <role id="58">Bus Driver</role>
-        <title>Driver</title>
-      </job>
-      <job>
-        <actor id="302">Robert Wiseman</actor>
         <role id="58">Bus Driver</role>
         <title>Driver</title>
       </job>
@@ -586,6 +463,16 @@
         <role id="173">Train Dispatcher</role>
         <jurisdiction id="294">Riverside Station</jurisdiction>
         <title>Dispatcher</title>
+      </job>
+      <job>
+        <actor id="2633">A train conductor</actor>
+        <role id="161">Train Conductor</role>
+        <title>Conductor</title>
+      </job>
+      <job>
+        <actor id="2634">A bus driver</actor>
+        <role id="58">Bus Driver</role>
+        <title>Driver</title>
       </job>
     </organization>
     <organization id="16" kind="Type" name="Transit Operations">
@@ -608,6 +495,9 @@
     <organization id="330" kind="Actual" name="Smallville Transit Authority">
       <description>The Smallville Transit Authority</description>
       <tag id="82" kind="Type">Regional Public Transit Authority</tag>
+      <attachments>
+        <attachment type="Image">uploads/sta.jpeg</attachment>
+      </attachments>
       <actorsRequired>true</actorsRequired>
       <mission></mission>
       <channel>
@@ -623,6 +513,46 @@
     <organization id="90" kind="Type" name="Law Enforcement">
       <description></description>
       <mission></mission>
+    </organization>
+    <organization id="2585" kind="Type" name="Public Transit Security">
+      <description></description>
+      <mission></mission>
+    </organization>
+    <organization id="2584" kind="Actual" name="Metropolis Transit Security">
+      <description>Security arm of the Metropolis Transit Authority.</description>
+      <tag id="2585" kind="Type">Public Transit Security</tag>
+      <attachments>
+        <attachment type="Image">uploads/security.jpeg</attachment>
+      </attachments>
+      <parent id="282" kind="Actual">Metropolis Transit Authority</parent>
+      <mission>To serve and protect all users and employees of the Metropolis Transit Authority.</mission>
+      <channel>
+        <medium id="-986" kind="Type">Landline</medium>
+        <address>800-234-5678</address>
+      </channel>
+      <job>
+        <actor id="286">Amanda Nevin</actor>
+        <role id="287">Chief of Transit Police</role>
+        <title>Police Chief</title>
+        <supervisor id="283">John Drummond</supervisor>
+      </job>
+      <job>
+        <actor id="283">John Drummond</actor>
+        <role id="12">Chief of Security</role>
+        <title>Head of Security</title>
+      </job>
+      <job>
+        <actor id="2586">A transit police</actor>
+        <role id="211">Transit Police Officer</role>
+        <title>Police Officer</title>
+        <supervisor id="286">Amanda Nevin</supervisor>
+      </job>
+      <job>
+        <actor id="2587">A special ops</actor>
+        <role id="126">Special Ops Officer</role>
+        <title>Police Officer</title>
+        <supervisor id="286">Amanda Nevin</supervisor>
+      </job>
     </organization>
     <organization id="241" kind="Type" name="Local Police Department">
       <description></description>
@@ -658,6 +588,50 @@
       <description></description>
       <timing>Concurrent</timing>
     </phase>
+    <participation id="2559" kind="Actual" name="rcarry">
+      <description></description>
+      <user>rcarry</user>
+    </participation>
+    <participation id="2567" kind="Actual" name="lburns">
+      <description></description>
+      <user>lburns</user>
+    </participation>
+    <participation id="2562" kind="Actual" name="howard">
+      <description></description>
+      <user>howard</user>
+    </participation>
+    <participation id="2563" kind="Actual" name="guest">
+      <description></description>
+      <user>guest</user>
+    </participation>
+    <participation id="2568" kind="Actual" name="psanchez">
+      <description></description>
+      <user>psanchez</user>
+    </participation>
+    <participation id="-970" kind="Actual" name="jf">
+      <description></description>
+      <user>jf</user>
+    </participation>
+    <participation id="-969" kind="Actual" name="mitzi">
+      <description></description>
+      <user>mitzi</user>
+    </participation>
+    <participation id="-968" kind="Actual" name="mike">
+      <description></description>
+      <user>mike</user>
+    </participation>
+    <participation id="-967" kind="Actual" name="david">
+      <description></description>
+      <user>david</user>
+    </participation>
+    <participation id="-966" kind="Actual" name="romit">
+      <description></description>
+      <user>romit</user>
+    </participation>
+    <participation id="-965" kind="Actual" name="denis">
+      <description></description>
+      <user>denis</user>
+    </participation>
     <incident id="2">Attack suspected</incident>
     <incident id="8">Bomb threat</incident>
     <incident id="96">Terror attack</incident>
@@ -670,7 +644,8 @@
     <organization-involved id="282">Metropolis Transit Authority</organization-involved>
     <organization-involved id="284">Metropolis Transit Operations</organization-involved>
     <organization-involved id="330">Smallville Transit Authority</organization-involved>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/03/08 8:53:01 EST" id="4" name="IED threat warning">
+    <organization-involved id="2584">Metropolis Transit Security</organization-involved>
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/04/09 19:58:23 EDT" id="4" name="IED threat warning">
       <description>The IED attack warning is disseminated within the rail transit system.</description>
       <trigger-event id="8">Bomb threat</trigger-event>
       <phase id="3">Responding</phase>
@@ -799,6 +774,7 @@
         <target>
           <connector id="78"/>
         </target>
+        <description></description>
         <eoi>
           <content>Nature of threat</content>
           <sourceCodes></sourceCodes>
@@ -823,6 +799,7 @@
         <target>
           <part id="59"/>
         </target>
+        <description></description>
         <eoi>
           <content>Nature of the threat</content>
           <sourceCodes></sourceCodes>
@@ -854,6 +831,7 @@
         <target>
           <part id="43"/>
         </target>
+        <description></description>
         <eoi>
           <content>Nature of the threat</content>
           <sourceCodes></sourceCodes>
@@ -885,6 +863,7 @@
         <target>
           <part id="34"/>
         </target>
+        <description></description>
         <eoi>
           <content>Type of security threat</content>
           <sourceCodes></sourceCodes>
@@ -912,6 +891,7 @@
         <target>
           <part id="72"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-983" kind="Type">Pager</medium>
           <address></address>
@@ -938,6 +918,7 @@
         <target>
           <part id="18"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-983" kind="Type">Pager</medium>
           <address></address>
@@ -964,6 +945,7 @@
         <target>
           <part id="88"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -986,6 +968,7 @@
         <target>
           <part id="81"/>
         </target>
+        <description></description>
         <eoi>
           <content>Details of response plan</content>
           <sourceCodes></sourceCodes>
@@ -1018,6 +1001,7 @@
         <target>
           <connector id="162"/>
         </target>
+        <description></description>
         <eoi>
           <content>Description of suspect</content>
           <sourceCodes></sourceCodes>
@@ -1057,6 +1041,7 @@
         <target>
           <connector id="164"/>
         </target>
+        <description></description>
         <eoi>
           <content>Description of baggage</content>
           <sourceCodes></sourceCodes>
@@ -1099,6 +1084,7 @@
         <detection-waivers>
           <detection>BroadcastOnlyChannels</detection>
         </detection-waivers>
+        <description></description>
         <eoi>
           <content>Tips phone number</content>
           <sourceCodes></sourceCodes>
@@ -1131,6 +1117,7 @@
         <target>
           <connector id="154"/>
         </target>
+        <description></description>
         <eoi>
           <content>Description of suspect</content>
           <sourceCodes></sourceCodes>
@@ -1165,6 +1152,7 @@
         <target>
           <connector id="156"/>
         </target>
+        <description></description>
         <eoi>
           <content>Description of baggage</content>
           <sourceCodes></sourceCodes>
@@ -1199,6 +1187,7 @@
         <target>
           <part id="25"/>
         </target>
+        <description></description>
         <eoi>
           <content>Tips phone number</content>
           <sourceCodes></sourceCodes>
@@ -1231,6 +1220,7 @@
         <target>
           <connector id="324"/>
         </target>
+        <description></description>
         <eoi>
           <content>General nature of threat</content>
           <sourceCodes></sourceCodes>
@@ -1255,6 +1245,7 @@
         <target>
           <part id="61"/>
         </target>
+        <description></description>
         <eoi>
           <content>Tips phone number</content>
           <sourceCodes></sourceCodes>
@@ -1288,6 +1279,7 @@
         <target>
           <part id="158"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-983" kind="Type">Pager</medium>
           <address></address>
@@ -1314,6 +1306,7 @@
         <target>
           <part id="55"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-983" kind="Type">Pager</medium>
           <address></address>
@@ -1336,6 +1329,7 @@
         <target>
           <part id="5"/>
         </target>
+        <description></description>
         <eoi>
           <content>Description of suspect</content>
           <sourceCodes></sourceCodes>
@@ -1358,7 +1352,7 @@
         <maxDelay>immediately</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/03/08 8:53:01 EST" id="107" name="Local response plan activated">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/04/09 19:58:23 EDT" id="107" name="Local response plan activated">
       <description>Train station or bus terminal executes its threat response plan</description>
       <trigger-event id="8">Bomb threat</trigger-event>
       <phase id="3">Responding</phase>
@@ -1414,6 +1408,7 @@
         <target>
           <part id="132"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-983" kind="Type">Pager</medium>
           <address></address>
@@ -1436,6 +1431,7 @@
         <target>
           <part id="121"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -1465,6 +1461,7 @@
         <target>
           <part id="108"/>
         </target>
+        <description></description>
         <eoi>
           <content>Nature of threat</content>
           <sourceCodes></sourceCodes>
@@ -1497,6 +1494,7 @@
         <target>
           <connector id="144"/>
         </target>
+        <description></description>
         <eoi>
           <content>Description of baggage</content>
           <sourceCodes></sourceCodes>
@@ -1526,6 +1524,7 @@
         <target>
           <connector id="146"/>
         </target>
+        <description></description>
         <eoi>
           <content>Identity of suspect</content>
           <sourceCodes></sourceCodes>
@@ -1557,6 +1556,7 @@
         <target>
           <part id="138"/>
         </target>
+        <description></description>
         <eoi>
           <content>Nature of threat</content>
           <sourceCodes></sourceCodes>
@@ -1589,6 +1589,7 @@
         <target>
           <connector id="142"/>
         </target>
+        <description></description>
         <eoi>
           <content>Suspect description</content>
           <sourceCodes></sourceCodes>
@@ -1612,7 +1613,7 @@
         <maxDelay>1 minute</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/03/08 8:53:01 EST" id="150" name="IED attack suspected">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/04/09 19:58:23 EDT" id="150" name="IED attack suspected">
       <description>A suspicious activity is reported</description>
       <trigger-event id="2">Attack suspected</trigger-event>
       <phase id="3">Responding</phase>
@@ -1624,15 +1625,6 @@
         <endsWithSegment>false</endsWithSegment>
         <description></description>
       </goal>
-      <part id="214">
-        <task>Assisting law enforcement</task>
-        <role id="161" kind="Type">Train Conductor</role>
-        <organization id="9" kind="Type">Public Transit Agency</organization>
-        <location id="36" kind="Type">Rail station</location>
-        <startsWithSegment>false</startsWithSegment>
-        <terminatesEvent>false</terminatesEvent>
-        <asTeam>false</asTeam>
-      </part>
       <part id="247">
         <task>Coordinating threat response</task>
         <role id="504" kind="Type">Station Manager</role>
@@ -1708,24 +1700,6 @@
         <goal intent="mitigate" category="Health">Public Transit Agency</goal>
         <asTeam>false</asTeam>
       </part>
-      <flow id="217" name="Detailed suspicious activity report">
-        <source>
-          <part id="214"/>
-        </source>
-        <target>
-          <part id="202"/>
-        </target>
-        <channel>
-          <medium id="-974" kind="Type">Face to face</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>Triggers</significanceToSource>
-        <significanceToTarget>Useful</significanceToTarget>
-        <askedFor>true</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>2 minutes</maxDelay>
-      </flow>
       <flow id="261" name="Evacuate station">
         <source>
           <part id="247"/>
@@ -1733,10 +1707,16 @@
         <target>
           <part id="222"/>
         </target>
+        <description></description>
         <eoi>
           <content>Nature of threat</content>
           <sourceCodes></sourceCodes>
           <specialHandlingCodes></specialHandlingCodes>
+          <classification>
+            <system>Public Agency</system>
+            <name>Restricted</name>
+            <level>-2</level>
+          </classification>
         </eoi>
         <channel>
           <medium id="-972" kind="Type">PA System</medium>
@@ -1764,6 +1744,7 @@
         <target>
           <part id="262"/>
         </target>
+        <description></description>
         <eoi>
           <content>Nature of threat</content>
           <sourceCodes></sourceCodes>
@@ -1791,6 +1772,7 @@
         <target>
           <part id="250"/>
         </target>
+        <description></description>
         <eoi>
           <content>Nature of threat</content>
           <sourceCodes></sourceCodes>
@@ -1818,6 +1800,7 @@
         <target>
           <part id="239"/>
         </target>
+        <description></description>
         <eoi>
           <content>Nature of threat</content>
           <sourceCodes></sourceCodes>
@@ -1841,6 +1824,7 @@
         <target>
           <part id="247"/>
         </target>
+        <description></description>
         <eoi>
           <content>Nature of threat</content>
           <sourceCodes></sourceCodes>
@@ -1868,6 +1852,7 @@
         <target>
           <part id="235"/>
         </target>
+        <description></description>
         <eoi>
           <content>Location of safe parking area</content>
           <sourceCodes></sourceCodes>
@@ -1898,6 +1883,7 @@
         <target>
           <part id="151"/>
         </target>
+        <description></description>
         <eoi>
           <content>Suspect description</content>
           <sourceCodes></sourceCodes>
@@ -1915,6 +1901,10 @@
         </eoi>
         <channel>
           <medium id="209" kind="Type">Secure radio</medium>
+          <address></address>
+        </channel>
+        <channel>
+          <medium id="-984" kind="Type">Cell</medium>
           <address></address>
         </channel>
         <all>false</all>
@@ -1938,6 +1928,7 @@
         <target>
           <part id="151"/>
         </target>
+        <description></description>
         <eoi>
           <content>Description of suspect</content>
           <sourceCodes></sourceCodes>
@@ -1984,6 +1975,7 @@
         <target>
           <part id="151"/>
         </target>
+        <description></description>
         <eoi>
           <content>Description of baggage</content>
           <sourceCodes></sourceCodes>
@@ -2042,6 +2034,7 @@
         <target>
           <part id="151"/>
         </target>
+        <description></description>
         <eoi>
           <content>Description of baggage</content>
           <sourceCodes></sourceCodes>
@@ -2083,6 +2076,7 @@
         <target>
           <part id="151"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -2101,6 +2095,7 @@
         <target>
           <part id="247"/>
         </target>
+        <description></description>
         <channel>
           <medium id="209" kind="Type">Secure radio</medium>
           <address></address>
@@ -2127,6 +2122,7 @@
         <target>
           <part id="151"/>
         </target>
+        <description></description>
         <channel>
           <medium id="209" kind="Type">Secure radio</medium>
           <address></address>
@@ -2138,48 +2134,14 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>4 minutes</maxDelay>
       </flow>
-      <flow id="197" name="Suspicious activity">
+      <flow id="1354" name="Suspicious activity">
         <source>
-          <connector id="196"/>
+          <connector id="1372"/>
         </source>
         <target>
           <part id="151"/>
         </target>
-        <eoi>
-          <content>Car</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <eoi>
-          <content>Suspect description</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <eoi>
-          <content>Description of suspect</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <eoi>
-          <content>Location</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <eoi>
-          <content>Seat number</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <eoi>
-          <content>Cause for suspicion</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <eoi>
-          <content>Train identifier</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
+        <description></description>
         <channel>
           <medium id="209" kind="Type">Secure radio</medium>
           <address></address>
@@ -2198,6 +2160,7 @@
         <target>
           <part id="151"/>
         </target>
+        <description></description>
         <eoi>
           <content>Description of baggage</content>
           <sourceCodes></sourceCodes>
