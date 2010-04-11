@@ -981,7 +981,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                             return assignment.hasEntity( entity );
                         }
                     }
-            );
+            ) || part.resourceSpec().hasEntity( entity );
         } else {
             ResourceSpec partSpec = part.resourceSpec();
             /*if ( entity instanceof Actor && entity.isActual() ) {
