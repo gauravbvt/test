@@ -7,11 +7,8 @@
         lang="en">
 <body>
 <wicket:extend>
-    <h2>
-        <span wicket:id="name">Task name</span> - Task
-    </h2>
     <div class="instructions section-header">[Instructions header panel]</div>
-    <div class="text" wicket:id="description">[description]</div>
+    <div class="text" wicket:id="instructions">instructions</div>
     <table>
       <tr>
           <td>
@@ -25,23 +22,32 @@
       </tr>
         <tr>
             <td>
-                <span wicket:id="timing-header">Timing</span>
+                <span class="timing section-header" wicket:id="timing-header">Timing</span>
                 <span class="text" wicket:id="timing">Normally takes 1 hour and 15 minutes</span>
             </td>
             <td>
-                <span wicket:id="executed-as-header">[Instructions header panel]</span>
-                <span class="text" wicket:id="executed-as">Train Station Manager for Public transit Authority</span>
+                <span class="repeat section-header" wicket:id="repeat-header">Repeat</span>
+                <span class="text" wicket:id="repeat">Yes, repeats about every 2 hours</span>
             </td>
         </tr>
         <tr>
             <td>
-
+                <span class="documentation section-header" wicket:id="documentation-header">Documentation</span>
+                <ul wicket:id="documents">
+                    <li><a wicket:id="document-link" href="#">document</a></li>
+                </ul>
             </td>
             <td>
-
+                <span class="policies section-header" wicket:id="policies-header">Policies</span>
+                <ul wicket:id="policies">
+                    <li><a wicket:id="policy-link" href="#">policy</a></li>
+                </ul>
             </td>
         </tr>
     </table>
+    <span wicket:id="sends">[sends panel]</span>
+    <span wicket:id="receives">[receives panel]</span>
+    <span wicket:id="impacts">[impacts panel]</span>
 </wicket:extend>
 </body>
 </html>

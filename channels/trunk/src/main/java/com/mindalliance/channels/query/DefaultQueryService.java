@@ -973,15 +973,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     private boolean isExecutedBy( Part part, final ModelEntity entity ) {
         if ( entity.isActual() ) {
             List<Assignment> assignments = findAllAssignments( part, false );
-            return CollectionUtils.exists(
-                    assignments,
-                    new Predicate() {
-                        public boolean evaluate( Object object ) {
-                            Assignment assignment = (Assignment) object;
-                            return assignment.hasEntity( entity );
-                        }
-                    }
-            ) || part.resourceSpec().hasEntity( entity );
+            return part.resourceSpec().hasEntity( entity )
+                    ||
+                    CollectionUtils.exists(
+                            assignments,
+                            new Predicate() {
+                                public boolean evaluate( Object object ) {
+                                    Assignment assignment = (Assignment) object;
+                                    return assignment.hasEntity( entity );
+                                }
+                            }
+                    );
         } else {
             ResourceSpec partSpec = part.resourceSpec();
             /*if ( entity instanceof Actor && entity.isActual() ) {
@@ -991,8 +993,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 else
                     return allPlayers.contains( (Actor) entity );
             } else {*/
-                return partSpec.hasEntityOrBroader( entity );
- //           }
+            return partSpec.hasEntityOrBroader( entity );
+            //           }
         }
     }
 
