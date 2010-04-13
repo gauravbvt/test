@@ -1,8 +1,9 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.dao.Memory;
 import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -953,9 +954,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * {@inheritDoc}
      */
-    public List<Flow> getEssentialFlows( boolean assumeFails ) {
+    public List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService ) {
         if ( isEssential( assumeFails ) ) {
-            return new ArrayList<Flow>( getTarget().getEssentialFlows( assumeFails ) );
+            return new ArrayList<Flow>( getTarget().getEssentialFlows( assumeFails, queryService ) );
         } else {
             return new ArrayList<Flow>();
         }

@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -29,6 +30,8 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
      * Whether all alternates to downstream sharing flows are presumed to also fail.
      */
     boolean assumeFails;
+
+    private QueryService queryService;
 
     public FailureImpactsGraphBuilder( SegmentObject segmentObject, boolean assumeFails ) {
         this.segmentObject = segmentObject;
@@ -58,7 +61,7 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
             DirectedGraph<Node, Flow> graph,
             SegmentObject segmentObject,
             boolean assumeFails ) {
-        List<Flow> essentialFlows = segmentObject.getEssentialFlows( assumeFails );
+        List<Flow> essentialFlows = segmentObject.getEssentialFlows( assumeFails, queryService );
         if ( segmentObject instanceof Flow ) {
             essentialFlows.add( (Flow) segmentObject );
         } else {
@@ -71,5 +74,13 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
             graph.addVertex( target );
             graph.addEdge( source, target, flow );
         }
+    }
+
+    public QueryService getQueryService() {
+        return queryService;
+    }
+
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
     }
 }

@@ -1,8 +1,6 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.graph.DiagramFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,13 +34,21 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
      */
     private String imageMap = null;
 
+    private DiagramFactory<V,E> diagramFactory;
+
+    private Analyst analyst;
+
     public AbstractDiagram( double[] diagramSize, String orientation ) {
         this.diagramSize = diagramSize;
         this.orientation = orientation;
     }
 
     public Analyst getAnalyst() {
-        return Channels.instance().getAnalyst();
+        return analyst;
+    }
+
+    public void setAnalyst( Analyst analyst ) {
+        this.analyst = analyst;
     }
 
     /**
@@ -66,7 +72,11 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
      */
     @SuppressWarnings( "unchecked" )
     public DiagramFactory<V, E> getDiagramFactory() {
-        return Channels.instance().getDiagramFactory();
+        return diagramFactory;
+    }
+
+    public void setDiagramFactory( DiagramFactory<V, E> diagramFactory ) {
+        this.diagramFactory = diagramFactory;
     }
 
     /**

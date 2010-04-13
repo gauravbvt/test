@@ -3,7 +3,7 @@ package com.mindalliance.channels.query;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.Dao;
 import com.mindalliance.channels.dao.FileUserDetailsService;
@@ -920,20 +920,6 @@ public interface QueryService {
     List<Part> findPartsStartingWithEventIn( Segment segment );
 
     /**
-     * Find all attachments.
-     *
-     * @return a list of attachments.
-     */
-    List<Attachment> findAllAttachments();
-
-    /**
-     * Find urls of all attachments.
-     *
-     * @return a list of strings
-     */
-    List<String> findAllAttached();
-
-    /**
      * Find all model objects.
      *
      * @return a list of model objects
@@ -954,14 +940,6 @@ public interface QueryService {
      * @return a list of strings
      */
     List<String> findAllGeonames();
-
-    /**
-     * Find all places directly or indirectly within a given place.
-     *
-     * @param place a place
-     * @return a list of places
-     */
-    List<Place> findAllPlacesWithin( Place place );
 
     /**
      * Find all model objects located inside a given place.

@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Place;
@@ -16,6 +16,7 @@ import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
@@ -404,7 +405,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     @SuppressWarnings( "unchecked" )
     public List<String> getIndexedNames() {
-        List<Place> places = getQueryService().findAllPlacesWithin( getPlace() );
+        List<Place> places = findAllPlacesWithin( getQueryService(), getPlace() );
         return (List<String>) CollectionUtils.collect(
                 places,
                 new Transformer() {
@@ -423,7 +424,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     @SuppressWarnings( "unchecked" )
     public List<Place> getPlacesWithin() {
         List<Place> placesWithin = getPlace().isActual()
-                ? getQueryService().findAllPlacesWithin( getPlace() )
+                ? findAllPlacesWithin( ( getQueryService() ), getPlace() )
                 : (List<Place>) getQueryService().findAllNarrowingOrEqualTo( getPlace() );
         return (List<Place>) CollectionUtils.select(
                 placesWithin,
@@ -547,6 +548,26 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         }
         updatePlace( "within", newPlace );
         getCommander().cleanup( Place.class, oldName );
+    }
+
+    /**
+     * Find all places directly or indirectly within a given place.
+     *
+     * @param queryService the query service
+     * @param place a place
+     * @return a list of places
+     */
+    public static List<Place> findAllPlacesWithin( QueryService queryService, Place place ) {
+        List<Place> places = queryService.listActualEntities( Place.class );
+        List<Place> result = new ArrayList<Place>( places.size() );
+        GeoLocation geoLocation = place.geoLocate();
+
+        for ( Place p : places ) {
+            if ( !p.equals( place ) &&
+                 ( p.isInside( place ) || place.isRegion() && p.isGeoLocatedIn( geoLocation ) ) )
+                result.add( p );
+        }
+        return result;
     }
 
     private class GeoLocationPanel extends AbstractUpdatablePanel {

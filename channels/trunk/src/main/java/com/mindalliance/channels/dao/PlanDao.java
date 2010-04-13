@@ -15,10 +15,7 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.export.Exporter;
-import com.mindalliance.channels.export.Importer;
-import com.mindalliance.channels.export.ImportExportFactory;
-import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.iterators.IteratorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -417,8 +414,7 @@ public class PlanDao extends Memory {
             Class<? extends ModelEntity> clazz = (Class<? extends ModelEntity>) classes[i];
             iterators[i] = listReferencedEntities( clazz, referencers ).iterator();
         }
-
-        return (Iterator<ModelEntity>) IteratorUtils.chainedIterator( iterators );
+        return (Iterator<ModelEntity>) new IteratorChain( iterators );
     }
 
     private <T extends ModelEntity> List<T> listReferencedEntities(

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export;
 
-import com.mindalliance.channels.export.Exporter;
-import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Segment;
@@ -108,14 +108,6 @@ public class Serializer implements Importer, Exporter {
         // TODO
         return null;
     }
-
-    public void reconnectExternalFlows(
-            Map<Connector,
-            List<ConnectionSpecification>> proxyConnectors,
-            boolean importingPlan ) {
-        //Todo
-    }
-
 
     /**
      * {@inheritDoc}

@@ -1,9 +1,13 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Attachment;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +39,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * An attachment manager that keeps uploaded files in a directory.
@@ -364,12 +372,12 @@ public class FileBasedManager implements AttachmentManager {
     /**
      * {@inheritDoc }
      *
-     * @param service
-     * @param plan
+     * @param planDao
      */
-    public synchronized void removeUnattached( QueryService service, Plan plan ) {
-        List<String> attachedUrls = service.findAllAttached();
-        File[] files = getUploadDirectory( plan ).listFiles();
+    public synchronized void removeUnattached( PlanDao planDao ) {
+        List<String> attachedUrls = findAllAttached( planDao );
+        Plan plan1 = planDao.getPlan();
+        File[] files = getUploadDirectory( plan1 ).listFiles();
         if ( files != null ) {
             List<File> uploadedFiles = Arrays.asList( files );
             for ( File file : uploadedFiles ) {
@@ -380,12 +388,43 @@ public class FileBasedManager implements AttachmentManager {
                     if ( !attachedUrls.contains( url ) ) {
                         LOG.warn( "Removing unattached " + url );
                         file.delete();
-                        getDocumentMap( plan ).remove( url );
+                        getDocumentMap( plan1 ).remove( url );
                     }
                 }
             }
-            save( plan );
+            save( plan1 );
         }
+    }
+
+    /**
+     * Find urls of all attachments.
+     *
+     * @return a list of strings
+     * @param planDao the plan's dao
+     */
+    private static List<String> findAllAttached( PlanDao planDao ) {
+
+        List<ModelObject> allModelObjects = new ArrayList<ModelObject>();
+        allModelObjects.addAll( planDao.list( ModelObject.class ) );
+        for ( Segment segment : planDao.list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
+            while ( parts.hasNext() ) {
+                allModelObjects.add( parts.next() );
+            }
+            Iterator<Flow> flows = segment.flows();
+            while ( flows.hasNext() ) {
+                allModelObjects.add( flows.next() );
+            }
+        }
+        List<Attachment> allAttachments = new ArrayList<Attachment>();
+        for ( ModelObject mo : allModelObjects )
+            allAttachments.addAll( mo.getAttachments() );
+
+        Set<String> allAttachedUrls = new HashSet<String>();
+        for ( Attachment attachment : allAttachments )
+            allAttachedUrls.add( attachment.getUrl() );
+
+        return new ArrayList<String>( allAttachedUrls );
     }
 
     /**

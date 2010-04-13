@@ -1,11 +1,10 @@
 package com.mindalliance.channels.export;
 
-import com.mindalliance.channels.export.Exporter;
-import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.ImportExportFactory;
+import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.export.ImportExportFactory;
-import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Segment;
 
 import java.io.FileInputStream;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -127,17 +125,6 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
      */
     public Map<String, Object> loadSegment( InputStream inputStream ) throws IOException {
         return new HashMap<String,Object>();
-    }
-
-    /**
-     * Reconnect external flows given proxy connectors and idMap
-     *
-     * @param proxyConnectors a map of proxy connectors
-     * (external connectors stand-ins) with specs of external connectors
-     * @param loadingPlan is a plan being loaded
-     */
-    public void reconnectExternalFlows(
-            Map<Connector, List<ConnectionSpecification>> proxyConnectors, boolean loadingPlan ) {
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;

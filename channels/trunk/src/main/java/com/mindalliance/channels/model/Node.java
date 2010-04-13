@@ -2,6 +2,7 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.iterators.IteratorChain;
 
 import java.text.Collator;
@@ -245,7 +246,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
     /**
      * {@inheritDoc}
      */
-    public List<Flow> getEssentialFlows( boolean ssumeFails ) {
+    public List<Flow> getEssentialFlows( boolean ssumeFails, QueryService queryService ) {
         return new ArrayList<Flow>();
     }
 

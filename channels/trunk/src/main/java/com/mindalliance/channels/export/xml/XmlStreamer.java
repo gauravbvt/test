@@ -2,10 +2,10 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.AbstractCommand;
-import com.mindalliance.channels.export.Exporter;
+import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.dao.IdGenerator;
-import com.mindalliance.channels.export.ImportExportFactory;
-import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.dao.ImportExportFactory;
+import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.export.ConnectionSpecification;
@@ -336,7 +336,7 @@ public class XmlStreamer implements ImportExportFactory {
         /**
          * {@inheritDoc}
          */
-        public void reconnectExternalFlows(
+        private void reconnectExternalFlows(
                 Map<Connector, List<ConnectionSpecification>> proxyConnectors, boolean loadingPlan ) {
 
             Set<Connector> toDelete = new HashSet<Connector>();

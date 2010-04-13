@@ -1,9 +1,8 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.analysis.graph.FailureImpactsGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
-import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
@@ -45,7 +44,8 @@ public class FailureImpactsDiagram extends AbstractDiagram<Node, Flow> {
         DiagramFactory<Node, Flow> diagramFactory = getDiagramFactory();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        GraphBuilder graphBuilder = new FailureImpactsGraphBuilder( segmentObject, assumeFails );
+        FailureImpactsGraphBuilder graphBuilder = new FailureImpactsGraphBuilder( segmentObject, assumeFails );
+        graphBuilder.setQueryService( diagramFactory.getQueryService() );
         Graph<Node, Flow> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Flow> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();

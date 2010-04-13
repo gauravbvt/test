@@ -2,9 +2,9 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.analysis.IssueScanner;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.export.Exporter;
-import com.mindalliance.channels.export.ImportExportFactory;
-import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.ImportExportFactory;
+import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;

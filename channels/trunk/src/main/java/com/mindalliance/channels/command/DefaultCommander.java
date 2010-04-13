@@ -1,10 +1,8 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.export.Exporter;
-import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
@@ -574,7 +572,7 @@ public class DefaultCommander implements Commander {
 
     public void initialize() {
         replayJournal( planManager.getImportExportFactory() );
-        queryService.getAttachmentManager().removeUnattached( queryService, getPlan() );
+        queryService.getAttachmentManager().removeUnattached( planDao );
         analyst.onStart();
     }
 

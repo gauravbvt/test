@@ -2,7 +2,7 @@ package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Actor;
@@ -443,39 +443,6 @@ public final class ChannelsUtils {
         attributes.remove( "all" );
         if ( flow.isAskedFor() ) attributes.remove( "channels" );
         return needState;
-    }
-
-    /**
-     * Make a duplicate of the flow
-     *
-     * @param flow      a flow to duplicate
-     * @param isSend whether to replicate as send or receive
-     * @param priorId   Long or null
-     * @return a created flow
-     */
-    public static Flow duplicate( Flow flow, boolean isSend, Long priorId ) {
-        Flow duplicate;
-        if ( isSend ) {
-            Node source = flow.getSource();
-            Segment segment = flow.getSource().getSegment();
-            QueryService queryService = segment.getQueryService();
-            duplicate = queryService.connect(
-                    source,
-                    queryService.createConnector( segment ),
-                    flow.getName(),
-                    priorId );
-        } else {
-            Node target = flow.getTarget();
-            Segment segment = target.getSegment();
-            QueryService queryService = segment.getQueryService();
-            duplicate = queryService.connect(
-                    queryService.createConnector( segment ),
-                    target,
-                    flow.getName(),
-                    priorId );
-        }
-        duplicate.initFrom( flow );
-        return duplicate;
     }
 
     /**

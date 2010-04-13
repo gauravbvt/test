@@ -378,15 +378,6 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @param queryService
-     */
-    public void beforeRemove( QueryService queryService ) {
-        super.beforeRemove( queryService );
-    }
-
-    /**
      * Test if this part is considered belonging to an organization.
      *
      * @param o the organization
@@ -858,8 +849,8 @@ public class Part extends Node implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    public List<Flow> getEssentialFlows( boolean assumeFails ) {
-        return getSegment().getQueryService().findEssentialFlowsFrom( this, assumeFails );
+    public List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService ) {
+        return queryService.findEssentialFlowsFrom( this, assumeFails );
     }
 
     /**

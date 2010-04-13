@@ -1,7 +1,7 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
@@ -40,7 +40,7 @@ public class BitBucket implements AttachmentManager {
     /**
       * {@inheritDoc}
       */
-    public void removeUnattached( QueryService service, Plan plan ) {
+    public void removeUnattached( PlanDao planDao ) {
         // Do nothing
     }
 

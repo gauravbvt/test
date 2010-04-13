@@ -8,7 +8,8 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.util.ChannelsUtils;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.query.QueryService;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -46,7 +47,8 @@ public class DuplicateFlow extends AbstractCommand {
             Flow flow = segment.findFlow( (Long) get( "flow" ) );
             if ( flow == null ) throw new NotFoundException();
             boolean isSend = (Boolean) get( "send" );
-            duplicate = ChannelsUtils.duplicate( flow, isSend, (Long) get( "duplicate" ) );
+            duplicate = duplicate( commander.getQueryService(),
+                                   flow, isSend, (Long) get( "duplicate" ) );
             set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {
@@ -95,4 +97,36 @@ public class DuplicateFlow extends AbstractCommand {
         else return "Duplicate flow";
     }
 
+    /**
+     * Make a duplicate of the flow
+     *
+     * @param queryService
+     * @param flow      a flow to duplicate
+     * @param isSend whether to replicate as send or receive
+     * @param priorId   Long or null
+     * @return a created flow
+     */
+    public static Flow duplicate(
+            QueryService queryService, Flow flow, boolean isSend, Long priorId ) {
+        Flow duplicate;
+        if ( isSend ) {
+            Node source = flow.getSource();
+            Segment segment = source.getSegment();
+            duplicate = queryService.connect(
+                    source,
+                    queryService.createConnector( segment ),
+                    flow.getName(),
+                    priorId );
+        } else {
+            Node target = flow.getTarget();
+            Segment segment = target.getSegment();
+            duplicate = queryService.connect(
+                    queryService.createConnector( segment ),
+                    target,
+                    flow.getName(),
+                    priorId );
+        }
+        duplicate.initFrom( flow );
+        return duplicate;
+    }
 }

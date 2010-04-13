@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.query.QueryService;
+
 import java.util.List;
 
 /**
@@ -22,9 +24,10 @@ public interface SegmentObject extends Identifiable {
      * Get the essential downstream sharing flows.
      *
      * @param assumeFails assume alternate downstream flows fail
+     * @param queryService
      * @return a list of flows.
      */
-    List<Flow> getEssentialFlows( boolean assumeFails );
+    List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService );
 
     String getTitle();
 }

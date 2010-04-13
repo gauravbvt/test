@@ -1,13 +1,13 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.export.Importer;
+import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.model.Segment;
 
 import java.util.List;

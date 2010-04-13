@@ -1,6 +1,7 @@
 package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.dao.User;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;

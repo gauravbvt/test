@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;

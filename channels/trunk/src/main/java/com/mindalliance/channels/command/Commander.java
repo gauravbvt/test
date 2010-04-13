@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.export.Exporter;
+import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Identifiable;

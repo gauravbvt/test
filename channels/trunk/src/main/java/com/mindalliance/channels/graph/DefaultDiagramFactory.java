@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.diagrams.EntitiesNetworkDiagram;
@@ -38,18 +38,23 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultDiagramFactory.class );
+
     /**
      * A GraphRenderer for nodes and flows
      */
     private GraphRenderer<V, E> graphRenderer;
+
     /**
      * Path to image directory
      */
     private Resource imageDirectory;
+
     /**
      * Query service.
      */
     private QueryService queryService;
+
+    private Analyst analyst;
 
     public DefaultDiagramFactory() {
     }
@@ -73,12 +78,26 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
         this.imageDirectory = imageDirectory;
     }
 
+    public Analyst getAnalyst() {
+        return analyst;
+    }
+
+    public void setAnalyst( Analyst analyst ) {
+        this.analyst = analyst;
+    }
+
     public QueryService getQueryService() {
         return queryService;
     }
 
     public void setQueryService( QueryService queryService ) {
         this.queryService = queryService;
+    }
+
+    @SuppressWarnings( { "unchecked" } )
+    private void init( AbstractDiagram<?,?> diagram ) {
+        diagram.setAnalyst( analyst );
+        diagram.setDiagramFactory( this );
     }
 
     /**
@@ -90,9 +109,10 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             double[] diagramSize,
             String orientation ) {
         LOG.debug( "Making flow map on " + segment + "/" + node );
-        return new FlowMapDiagram( segment, node, diagramSize, orientation );
+        FlowMapDiagram mapDiagram = new FlowMapDiagram( segment, node, diagramSize, orientation );
+        init( mapDiagram );
+        return mapDiagram;
     }
-
 
     public Diagram newEntityNetworkDiagram(
             ModelEntity entity,
@@ -100,7 +120,10 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             double[] diagramSize,
             String orientation ) {
         LOG.debug( "Making entity network diagram on " + entity );
-        return new EntityNetworkDiagram( entity, selectedEntityRel, diagramSize, orientation );
+        EntityNetworkDiagram diagram =
+                new EntityNetworkDiagram( entity, selectedEntityRel, diagramSize, orientation );
+        init( diagram );
+        return diagram;
     }
 
     /**
@@ -118,15 +141,16 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             double[] diagramSize,
             String orientation ) {
         LOG.debug( "Making plan diagram" );
-        return new PlanMapDiagram(
-                segments,
-                groupByPhase,
-                groupByEvent,
-                group,
-                segment,
-                scRel,
-                diagramSize,
-                orientation );
+        PlanMapDiagram diagram = new PlanMapDiagram( segments,
+                                                     groupByPhase,
+                                                     groupByEvent,
+                                                     group,
+                                                     segment,
+                                                     scRel,
+                                                     diagramSize,
+                                                     orientation );
+        init( diagram );
+        return diagram;
     }
 
     /**
@@ -137,7 +161,9 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             double[] diagramSize,
             String orientation ) {
         LOG.debug( "Making hierarchy diagram on " + hierarchical.getName() );
-        return new HierarchyDiagram( hierarchical, diagramSize, orientation );
+        HierarchyDiagram diagram = new HierarchyDiagram( hierarchical, diagramSize, orientation );
+        init( diagram );
+        return diagram;
     }
 
     /**
@@ -149,7 +175,10 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             double[] diagramSize,
             String orientation ) {
         LOG.debug( "Making critical flow map diagram" );
-        return new FailureImpactsDiagram( segmentObject, assumeFails, diagramSize, orientation );
+        FailureImpactsDiagram diagram =
+                new FailureImpactsDiagram( segmentObject, assumeFails, diagramSize, orientation );
+        init( diagram );
+        return diagram;
     }
 
     /**
@@ -162,7 +191,13 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             double[] diagramSize,
             String orientation) {
         LOG.debug( "Making entities network diagram" );
-        return new EntitiesNetworkDiagram( entityClass, segment, selectedEntityRel, diagramSize, orientation );
+        EntitiesNetworkDiagram diagram = new EntitiesNetworkDiagram( entityClass,
+                                                                     segment,
+                                                                     selectedEntityRel,
+                                                                     diagramSize,
+                                                                     orientation );
+        init( diagram );        
+        return diagram;
     }
 
 }

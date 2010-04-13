@@ -3,7 +3,6 @@ package com.mindalliance.channels.query;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.attachments.Attachment;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.NotFoundException;
@@ -45,7 +44,6 @@ import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.nlp.SemanticMatcher;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
@@ -102,6 +100,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     private FileUserDetailsService userDetailsService;
 
+    private Analyst analyst;
+
     //=============================================
 
     public DefaultQueryService( PlanManager planManager, AttachmentManager attachmentManager ) {
@@ -125,6 +125,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
         this.semanticMatcher = semanticMatcher;
+    }
+
+    public Analyst getAnalyst() {
+        return analyst;
+    }
+
+    public void setAnalyst( Analyst analyst ) {
+        this.analyst = analyst;
     }
 
     public ImagingService getImagingService() {
@@ -817,7 +825,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific ) {
-        Analyst analyst = Channels.instance().getAnalyst();
         return analyst.findAllIssuesFor( resourceSpec, specific );
     }
 
@@ -2037,28 +2044,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Attachment> findAllAttachments() {
-        List<Attachment> allAttachments = new ArrayList<Attachment>();
-        for ( ModelObject mo : findAllModelObjects() ) {
-            allAttachments.addAll( mo.getAttachments() );
-        }
-        return allAttachments;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<String> findAllAttached() {
-        Set<String> allAttachedUrls = new HashSet<String>();
-        for ( Attachment attachment : findAllAttachments() ) {
-            allAttachedUrls.add( attachment.getUrl() );
-        }
-        return new ArrayList<String>( allAttachedUrls );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public List<ModelObject> findAllModelObjects() {
         List<ModelObject> allModelObjects = new ArrayList<ModelObject>();
         allModelObjects.addAll( list( ModelObject.class ) );
@@ -2074,7 +2059,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return allModelObjects;
     }
-
 
     /**
      * {@inheritDoc}
@@ -2103,24 +2087,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 geonames.add( geoname );
         }
         return new ArrayList<String>( geonames );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Place> findAllPlacesWithin( final Place place ) {
-        return (List<Place>) CollectionUtils.select(
-                listActualEntities( Place.class ),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        Place other = (Place) obj;
-                        return
-                                !other.equals( place )
-                                        && ( other.isInside( place )
-                                        || place.isRegion() && other.isGeoLocatedIn( place.geoLocate() ) );
-                    }
-                } );
     }
 
     /**

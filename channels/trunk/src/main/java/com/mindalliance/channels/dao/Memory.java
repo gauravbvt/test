@@ -80,7 +80,7 @@ public abstract class Memory implements Dao {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( { "unchecked" } )
     public <T extends ModelObject> List<T> list( final Class<T> clazz ) {
         synchronized ( indexMap ) {
             return (List<T>) CollectionUtils.select( indexMap.values(), new Predicate() {

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.attachments.Attachment;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.PlanDao;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 import java.io.File;
@@ -43,10 +43,9 @@ public interface AttachmentManager {
     /**
      * Remove unattached documents.
      *
-     * @param service the service to use for finding objects
-     * @param plan
+     * @param planDao
      */
-    void removeUnattached( QueryService service, Plan plan );
+    void removeUnattached( PlanDao planDao );
 
     /**
      * Get upload directory.

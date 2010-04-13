@@ -5,7 +5,7 @@ import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.geo.GeoService;
-import com.mindalliance.channels.export.ImportExportFactory;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
