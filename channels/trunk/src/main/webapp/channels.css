@@ -98,7 +98,6 @@ div.section-content {
 }
 
 div.zoom {
-    opacity: .5;
     top: 5px;
     left: 5px;
     position: inherit;
@@ -237,8 +236,8 @@ input[type="text"].address {
 
 input[type="text"].invalid-address {
     width: 12em;
-    background-color: bisque;
-    border: 1px inset gray;
+    background-color: #ffe4c4;
+    border: 1px inset #808080;
 }
 
 .float {
@@ -275,7 +274,7 @@ div.issue-details table {
 }
 
 input.error, div.issues {
-    background-color: bisque;
+    background-color: #ffe4c4;
 }
 
 span.error, li.error {
@@ -581,7 +580,7 @@ h1 a, div.caption a {
 
 /** Backgrounds & borders */
 html {
-    background: #C3D9FF;
+    background: #c3d9ff;
 }
 
 div.header {
@@ -684,7 +683,7 @@ th.wicket_orderUp a {
 }
 
 div.section th {
-    color: black;
+    color: #000000;
     font-weight: bold;
     text-align: left;
     text-decoration: underline;
@@ -695,7 +694,7 @@ div.form th {
 }
 
 .profile thead a, .profile thead a:link, .profile thead a:visited {
-    color: black;
+    color: #000000;
 }
 
 .italic {
@@ -734,7 +733,7 @@ li.doc_PolicyCant {
 
 div.wicket-aa-container {
     background: white;
-    border: 1px outset gray;
+    border: 1px outset #808080;
     margin: 2px;
 }
 
@@ -752,7 +751,7 @@ div.wicket-aa ul li {
 }
 
 div.wicket-aa ul li:hover {
-    background: #C3D9FF;
+    background: #c3d9ff;
 }
 
 .menubar .dropmenu {
@@ -769,7 +768,7 @@ div.wicket-aa ul li:hover {
     top: 1.2em;
     right: 0;
     background-color: #e6e6e6;
-    color: black;
+    color: #000000;
     list-style: none;
     margin: 0;
     padding: 3px;
@@ -777,7 +776,7 @@ div.wicket-aa ul li:hover {
 }
 
 .menubar .dropmenu:hover {
-    background-color: #bbb;
+    background-color: #bbbbbb;
 }
 
 .menubar .dropmenu ul li {
@@ -796,7 +795,7 @@ div.wicket-aa ul li:hover {
 
 .menubar .dropmenu li span.disabled {
     font-style: oblique;
-    color: gray;
+    color: #808080;
 }
 
 .menubar .dropmenu:hover ul {
@@ -804,11 +803,11 @@ div.wicket-aa ul li:hover {
 }
 
 .menubar .dropmenu ul li:hover {
-    background-color: #ccf;
+    background-color: #ccccff;
 }
 
 div.import-dialog {
-    background: #C3D9FF;
+    background: #c3d9ff;
     border: 1px outset #c3dede;
     padding: 5px;
     position: absolute;
@@ -865,7 +864,7 @@ div.aspect {
 }
 
 .aspect tr.even {
-    background-color: #FDFDFD;
+    background-color: #fdfdfd;
 }
 
 .aspect tr.odd {
@@ -904,12 +903,12 @@ div.tabpanel div.tab-row a {
     padding: 5px 15px 4px 6px;
     text-decoration: none;
     font-weight: bold;
-    color: #765;
+    color: #776655;
     white-space: nowrap;
 }
 
 div.tabpanel div.tab-row a:hover {
-    color: #333;
+    color: #333333;
 }
 
 div.tabpanel div.tab-row li.selected {
@@ -918,7 +917,7 @@ div.tabpanel div.tab-row li.selected {
 
 div.tabpanel div.tab-row li.selected a {
     background-image: url( "images/tabs/right_on.gif" );
-    color: #333;
+    color: #333333;
     padding-bottom: 5px;
 }
 
@@ -947,8 +946,8 @@ ul.ranges li:first-child:before {
 }
 
 ul.ranges li a.selected {
-    background-color: #C3D9FF;
-    color: black;
+    background-color: #c3d9ff;
+    color: #000000;
 }
 
 span.spinner {
@@ -960,7 +959,6 @@ span.spinner img {
 }
 
 img.filter {
-    opacity: .35;
     cursor: pointer;
 }
 
