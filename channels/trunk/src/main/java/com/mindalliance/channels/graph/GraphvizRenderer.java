@@ -132,7 +132,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      */
     private void doRender( String dot, String format,
                            OutputStream output ) throws DiagramException {
-        String command = getDotPath() + "/" + algo + " -T" + format;
+        String command = getDotPath() + System.getProperty( "file.separator" ) + algo + " -T" + format;
         Process p = null;
         int exitValue;
         Timer timer = new Timer();
