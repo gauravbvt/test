@@ -365,7 +365,7 @@ thead tr {
 #header div {
     background: transparent url('images/logo.png') no-repeat 0 0;
     padding-left: 58px;
-    min-height: 40px;
+    min-height: 85px;
 }
 
 td.in, td.out {

@@ -1,9 +1,11 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Participation;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
@@ -20,6 +22,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
@@ -37,6 +40,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     private static final String ACTOR_PARM = "1";
     private static final String ISSUES_PARM = "issues";
     private static final String ALL = "all";
+
 
     /**
      * Default value for "All segments" selection.
@@ -69,6 +73,9 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     private boolean showingIssues = true;
 
     @SpringBean
+    private PlanManager planManager;
+
+    @SpringBean
     private QueryService queryService;
 
     public SelectorPanel( String id, PageParameters parameters ) {
@@ -83,6 +90,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                 super.onSubmit();
             }
         };
+        addPlanSwitcher( form );
         form.add( new DropDownChoice<Segment>( "segment", getSegmentChoices( queryService ),
                 new IChoiceRenderer<Segment>() {
                     public Object getDisplayValue( Segment object ) {
@@ -117,6 +125,49 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         }
         add( form );
     }
+
+    private void addPlanSwitcher( Form form) {
+        WebMarkupContainer switchPlanContainer = new WebMarkupContainer( "switch-plan" );
+        switchPlanContainer.setVisible( getPlannablePlans().size() > 1 );
+        form.add( switchPlanContainer );
+        DropDownChoice<Plan> planDropDownChoice = new DropDownChoice<Plan>( "plan-sel",
+                                                                            new PropertyModel<Plan>(
+                                                                                    this,
+                                                                                    "plan" ),
+                                                                            new PropertyModel<List<? extends Plan>>(
+                                                                                    this,
+                                                                                    "plannablePlans" ) );
+        planDropDownChoice.add( newOnChange( "onchange" ) );
+        switchPlanContainer.add( planDropDownChoice );
+    }
+
+    /**
+     * Get all plans that the current can modify.
+     *
+     * @return a list of plans
+     */
+    public List<Plan> getPlannablePlans() {
+        return planManager.getPlannablePlans( User.current() );
+    }
+
+    /**
+     * Return current plan.
+     *
+     * @return a plan
+     */
+    public Plan getPlan() {
+        return User.current().getPlan();
+    }
+
+    /**
+     * Switch the user's current plan.
+     *
+     * @param plan a plan
+     */
+    public void setPlan( Plan plan ) {
+        User.current().setPlan( plan );
+    }
+
 
     private IBehavior newOnChange( String event ) {
         return new AjaxFormComponentUpdatingBehavior( event ) {

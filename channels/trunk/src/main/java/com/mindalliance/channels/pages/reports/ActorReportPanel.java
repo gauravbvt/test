@@ -22,7 +22,7 @@ public class ActorReportPanel extends Panel {
     private QueryService queryService;
 
     public ActorReportPanel(
-            String id, Segment segment, ResourceSpec spec, final boolean showingIssues ) {
+            String id, Segment segment, final ResourceSpec spec, final boolean showingIssues ) {
 
         super( id );
         setRenderBodyOnly( true );
@@ -33,8 +33,11 @@ public class ActorReportPanel extends Panel {
                      getParts( segment, spec ) ) {
                     @Override
                     protected void populateItem( ListItem<Part> item ) {
-                        item.add( new PartReportPanel( "part",                            // NON-NLS
-                                                       item.getModel(), showingIssues ) );
+                        item.add( new PartReportPanel(
+                                "part",
+                                item.getModel(),
+                                spec.getOrganization(),
+                                showingIssues ) );
                         item.add( new AttributeModifier( "class", true,
                             new Model<String>( item.getIndex() % 2 == 0 ?
                                                "task even" : "task odd" ) ) );
