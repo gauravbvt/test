@@ -3,12 +3,12 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
-import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.geo.GeoService;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.playbook.ContactPage;
 import com.mindalliance.channels.pages.playbook.PlaybookPage;
@@ -20,7 +20,7 @@ import com.mindalliance.channels.pages.png.EssentialFlowMapPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.HierarchyPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
-import com.mindalliance.channels.pages.reports.PlanReportPage;
+import com.mindalliance.channels.pages.reports.SOPsReportPage;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -115,7 +115,7 @@ public class Channels extends WebApplication
         getMarkupSettings().setStripWicketTags( true );
 
         String[] parameterNames = { PlaybookPage.ACTOR_PARM, PlaybookPage.PART_PARM };
-        mount( new MixedParamUrlCodingStrategy( "report", PlanReportPage.class, parameterNames ) );
+        mount( new MixedParamUrlCodingStrategy( "report", SOPsReportPage.class, parameterNames ) );
 
         mount( new IndexedParamUrlCodingStrategy( "playbooks", TaskPlaybook.class ) );
         mount( new IndexedParamUrlCodingStrategy( "vcards", VCardPage.class ) );
@@ -166,7 +166,7 @@ public class Channels extends WebApplication
         Plan plan = user.getPlan();
         return user.isAdmin()                  ? AdminPage.class
              : user.isPlanner( plan.getUri() ) ? PlanPage.class
-                                               : PlanReportPage.class ;
+                                               : SOPsReportPage.class ;
     }
 
     public QueryService getQueryService() {

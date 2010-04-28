@@ -177,6 +177,15 @@ public class User implements UserDetails {
     }
 
     /**
+     * Whether user is planner for current plan.
+     *
+     * @return a boolean
+     */
+    public boolean isPlanner() {
+        return isPlanner( getPlan().getUri() );
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -250,9 +259,9 @@ public class User implements UserDetails {
      */
     public String getRole( String planUri ) {
         return userInfo.isAdmin() ? "Admin"
-             : userInfo.isPlanner( planUri ) ? "Planner"
-             : userInfo.isUser( planUri ) ? "Playbook user"
-             : "Unauthorized";
+                : userInfo.isPlanner( planUri ) ? "Planner"
+                : userInfo.isUser( planUri ) ? "Playbook user"
+                : "Unauthorized";
     }
 
     /**

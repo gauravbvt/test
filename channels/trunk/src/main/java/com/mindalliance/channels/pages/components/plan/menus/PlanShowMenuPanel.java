@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.plan.menus;
 
-import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
@@ -9,8 +8,8 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import com.mindalliance.channels.pages.playbook.TaskPlaybook;
-import com.mindalliance.channels.pages.reports.PlanReportPage;
+import com.mindalliance.channels.pages.reports.SOPsReportPage;
+import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -139,7 +138,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                         surveyLink ) );
             }
         }
-        BookmarkablePageLink reportLink = new BookmarkablePageLink( "link", PlanReportPage.class );
+        BookmarkablePageLink reportLink = new BookmarkablePageLink( "link", SOPsReportPage.class );
      //   reportLink.add( new AttributeModifier( "target", true, new Model<String>( "report" ) ) );
         reportLink.setPopupSettings( new PopupSettings(
                PopupSettings.RESIZABLE |
@@ -147,11 +146,11 @@ public class PlanShowMenuPanel extends MenuPanel {
                         PopupSettings.MENU_BAR ) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
-                new Model<String>( "Info sharing procedures" ),
+                new Model<String>( "SOPs" ),
                 reportLink ) );
 
-        BookmarkablePageLink playbooksLink = new BookmarkablePageLink<PlanReportPage>( "link", TaskPlaybook.class );
-  //      playbooksLink.add( new AttributeModifier( "target", true, new Model<String>( "playbooks" ) ) );
+/*
+        BookmarkablePageLink playbooksLink = new BookmarkablePageLink<SOPsReportPage>( "link", TaskPlaybook.class );
         playbooksLink.setPopupSettings( new PopupSettings(
                PopupSettings.RESIZABLE |
                         PopupSettings.SCROLLBARS |
@@ -160,6 +159,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Playbooks" ),
                 playbooksLink ) );
+*/
 
         if ( User.current().isAdmin() ) {
             BookmarkablePageLink adminLink = new BookmarkablePageLink( "link", AdminPage.class );

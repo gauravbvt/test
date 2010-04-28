@@ -1,16 +1,14 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.dao.Memory;
+import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -40,12 +38,7 @@ public class Segment extends ModelObject {
      */
     public static final String DEFAULT_DESCRIPTION = "No description";
 
-    private static final long serialVersionUID = -595829017311913002L;
-
-    /**
-     * Class logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( Segment.class );
+    // private static final long serialVersionUID = -595829017311913002L;
 
     /**
      * Initial node capacity.
@@ -230,13 +223,12 @@ public class Segment extends ModelObject {
      * Remove a node from this segment.
      * Quietly succeeds if node is not part of the segment
      *
-     * @param node the node to remove.
+     * @param node    the node to remove.
      * @param planDao the dao
      */
     public void removeNode( Node node, Memory planDao ) {
         if ( nodeIndex.containsKey( node.getId() )
-                && ( node.isConnector() || hasMoreThanOnePart() ) )
-        {
+                && ( node.isConnector() || hasMoreThanOnePart() ) ) {
             Iterator<Flow> ins = node.receives();
             while ( ins.hasNext() ) {
                 ins.next().disconnect( planDao );
@@ -283,6 +275,7 @@ public class Segment extends ModelObject {
     /**
      * Remove any connections to the outside world
      * (essentially, anything connected to an input or output connector).
+     *
      * @param planDao
      */
     public void disconnect( Memory planDao ) {
@@ -298,7 +291,7 @@ public class Segment extends ModelObject {
      *
      * @return an iterator on connectors having sends
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -313,7 +306,7 @@ public class Segment extends ModelObject {
      *
      * @return an iterator on parts
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -328,7 +321,7 @@ public class Segment extends ModelObject {
      *
      * @return an iterator on connectors having receives
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -385,7 +378,7 @@ public class Segment extends ModelObject {
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isIn( organization ) && part.getActor() == null && part.getRole() == null )
+            if ( part.isInOrganization( organization ) && part.getActor() == null && part.getRole() == null )
                 partsForRole.add( part );
         }
         return partsForRole;
@@ -396,15 +389,18 @@ public class Segment extends ModelObject {
      *
      * @param organization the organization, possibly Organization.UNKNOWN
      * @param role         the role, possibly Role.UNKNOWN
+     * @param jurisdiction
      * @return the appropriate parts
      */
-    public List<Part> findParts( Organization organization, Role role ) {
+    public List<Part> findParts( Organization organization, Role role, Place jurisdiction ) {
         List<Part> partsForRole = new ArrayList<Part>();
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isIn( organization ) && part.isPlayedBy( role ) )
-                partsForRole.add( part );
+            if ( part.isInOrganization( organization )
+                    && part.isPlayedBy( role )
+                    && ( jurisdiction == null || part.isInJurisdiction( jurisdiction ) ) )
+            partsForRole.add( part );
         }
         return partsForRole;
     }
@@ -422,7 +418,7 @@ public class Segment extends ModelObject {
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isIn( organization ) ) {
+            if ( part.isInOrganization( organization ) ) {
                 if ( part.getRole() == null ) {
                     hasUnknown = true;
                 } else {
@@ -557,6 +553,11 @@ public class Segment extends ModelObject {
         sb.append( phase.getPreposition() );
         sb.append( ' ' );
         sb.append( StringUtils.uncapitalize( event.getName() ) );
+        if ( eventLevel != null ) {
+            sb.append( " (" );
+            sb.append( eventLevel.getLabel() );
+            sb.append( ')' );
+        }
         return sb.toString();
     }
 
@@ -586,10 +587,10 @@ public class Segment extends ModelObject {
         else {
             Segment partSegment = part.getSegment();
             return part.isTerminatesEventPhase()
-                   && partSegment.getPhase().isConcurrent()
-                   && event.equals( partSegment.getEvent() )
-                   && phase.isPostEvent() ?
-                      "terminates event \"" + event.getName().toLowerCase() + '\"'
+                    && partSegment.getPhase().isConcurrent()
+                    && event.equals( partSegment.getEvent() )
+                    && phase.isPostEvent() ?
+                    "terminates event \"" + event.getName().toLowerCase() + '\"'
                     : "";
         }
     }
@@ -615,10 +616,10 @@ public class Segment extends ModelObject {
     public String terminationCause( Part part ) {
         Event initiator = part.getInitiatedEvent();
         return equals( part.getSegment() ) && part.isTerminatesEventPhase() ?
-                    "terminates " + getPhaseEventTitle().toLowerCase()
-             : event.equals( initiator ) && getPhase().isPreEvent() ?
-                    "causes event \"" + initiator.getName().toLowerCase() + '\"'
-             : "";
+                "terminates " + getPhaseEventTitle().toLowerCase()
+                : event.equals( initiator ) && getPhase().isPreEvent() ?
+                "causes event \"" + initiator.getName().toLowerCase() + '\"'
+                : "";
     }
 
     /**
@@ -734,7 +735,7 @@ public class Segment extends ModelObject {
             }
         }
 
-        @SuppressWarnings( { "unchecked" } )
+        @SuppressWarnings( {"unchecked"} )
         private void setIterators( Node node ) {
             sendIterator = node.sends();
             reqIterator = (Iterator<Flow>) new FilterIterator(
@@ -795,13 +796,13 @@ public class Segment extends ModelObject {
     @Override
     public boolean references( final ModelObject mo ) {
         return ModelObject.areIdentical( phase, mo )
-            || ModelObject.areIdentical( event, mo )
-            || CollectionUtils.exists(
-                    goals,
-                    new Predicate() {
-                        public boolean evaluate( Object object ) {
-                            return ( (Goal) object ).references( mo );
-                        }
-                    } );
+                || ModelObject.areIdentical( event, mo )
+                || CollectionUtils.exists(
+                goals,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ( (Goal) object ).references( mo );
+                    }
+                } );
     }
 }

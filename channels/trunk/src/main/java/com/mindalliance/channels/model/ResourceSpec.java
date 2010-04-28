@@ -58,6 +58,20 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
         }
     }
 
+    public ResourceSpec( Assignment assignment ) {
+        actor = assignment.getActor();
+        role = assignment.getRole();
+        jurisdiction = assignment.getJurisdiction();
+        organization = assignment.getOrganization();
+    }
+
+    public ResourceSpec( Employment employment ) {
+        actor = employment.getActor();
+        role = employment.getRole();
+        jurisdiction = employment.getJurisdiction();
+        organization = employment.getOrganization();
+    }
+
     private void fromPart( Part part ) {
         if ( part != null ) {
             actor = part.getActor();
@@ -407,9 +421,10 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
                 && organization != null && organization.isActual();
     }
 
-   /**
+    /**
      * Whether this resource spec references the entity ot an entity that broadens it.
-     * @param entity   an entity
+     *
+     * @param entity an entity
      * @return a boolean
      */
     public boolean hasEntityOrBroader( ModelEntity entity ) {

@@ -7,7 +7,7 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.playbook.MainPage;
-import com.mindalliance.channels.pages.reports.PlanReportPage;
+import com.mindalliance.channels.pages.reports.SOPsReportPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +37,7 @@ public abstract class WalkthroughTest extends AbstractChannelsTest {
 
     @Test
     public void testReport() {
-        assertRendered( "report", PlanReportPage.class );
+        assertRendered( "report", SOPsReportPage.class );
     }
 
     @SuppressWarnings( { "unchecked" } )

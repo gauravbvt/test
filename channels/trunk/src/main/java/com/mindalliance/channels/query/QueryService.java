@@ -4,7 +4,6 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.Dao;
 import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.NotFoundException;
@@ -29,6 +28,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
@@ -499,7 +499,7 @@ public interface QueryService {
      * @param role         the role, possibly Role.UNKNOWN
      * @return a sorted list of actors
      */
-    List<Actor> findActors( Organization organization, Role role );
+    List<Actor> findActualActors( Organization organization, Role role );
 
     /**
      * Find all roles in given organization and across all plan segment.
@@ -524,16 +524,6 @@ public interface QueryService {
      * @return list of actors in plan that applies
      */
     List<Actor> findRelevantActors( Part part, Flow flow );
-
-    /**
-     * Find actors in given organization and role in a given plan segment.
-     *
-     * @param organization the organization, possibly Organization.UNKNOWN
-     * @param role         the role, possibly Role.UNKNOWN
-     * @param segment      the plan segment
-     * @return a sorted list of actors
-     */
-    List<Actor> findActors( Organization organization, Role role, Segment segment );
 
     /**
      * Find all jobs of an actor in an organization or all organizations
@@ -785,7 +775,7 @@ public interface QueryService {
      * @param segment the plan segment
      * @return a sorted list of actors.
      */
-    List<Actor> findActors( Segment segment );
+    List<Actor> findActualActors( Segment segment );
 
     /**
      * Find all actor last names.
@@ -802,7 +792,7 @@ public interface QueryService {
     List<Employment> findAllEmploymentsWithKnownActors();
 
     /**
-     * FInd all employments in acutal or type or organization.
+     * FInd all employments in actual or type or organization.
      *
      * @param organization an organization
      * @return a list of employments
@@ -1205,6 +1195,15 @@ public interface QueryService {
     List<Assignment> findAllAssignments( Actor actor );
 
     /**
+     * Find all assignments for an actor for a segment..
+     *
+     * @param actor   an actor
+     * @param segment segment
+     * @return a list of assignments
+     */
+    List<Assignment> findAllAssignments( Actor actor, Segment segment );
+
+    /**
      * Find all commitments implied by a sharing flow.
      *
      * @param flow a flow
@@ -1282,14 +1281,6 @@ public interface QueryService {
     List<Part> findFailureImpacts( SegmentObject segmentObject, boolean assumeFails );
 
     /**
-     * Find all actual organizations involved in a segment.
-     *
-     * @param segment a plan segment
-     * @return a list of actual organizations
-     */
-    List<Organization> findAllInvolvedOrganizations( Segment segment );
-
-    /**
      * Find all actual entities matching an entity type.
      *
      * @param entityClass a class of enities
@@ -1332,5 +1323,11 @@ public interface QueryService {
      */
     FileUserDetailsService getUserDetailsService();
 
-
+    /**
+     * Find the participation by a user.
+     *
+     * @param username a user name
+     * @return a participation or null
+     */
+    Participation findParticipation( String username );
 }

@@ -1088,7 +1088,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
             if ( role == null && actor == null && jurisdiction == null ) {
                 for ( Role r : findRolesIn( organization ) )
-                    for ( Actor a : findActors( organization, r, segment ) ) {
+                    for ( Actor a : findActualActors( organization, r ) ) {
                         ResourceSpec s = new ResourceSpec( spec );
                         if ( Actor.UNKNOWN.equals( a ) )
                             s.setRole( r );
@@ -1340,7 +1340,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Actor> findActors( Organization organization, Role role ) {
+    public List<Actor> findActualActors( Organization organization, Role role ) {
         ResourceSpec resourceSpec = new ResourceSpec();
         resourceSpec.setRole( role );
         resourceSpec.setOrganization( organization );
@@ -1355,8 +1355,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 boolean sameRole = Role.UNKNOWN.equals( role ) ?
                         spec.getRole() == null
                         : role.equals( spec.getRole() );
-                if ( sameOrg && sameRole )
-                    actors.add( spec.getActor() );
+                if ( sameOrg && sameRole ) {
+                    Actor actor = spec.getActor();
+                    if ( actor.isActual() )
+                        actors.add( spec.getActor() );
+                }
             }
         }
 
@@ -1419,10 +1422,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return toSortedList( actors );
     }
 
-    /**
+/*
+    */
+/**
      * {@inheritDoc}
      */
-    public List<Actor> findActors( Organization organization, Role role, Segment segment ) {
+/*
+    public List<Actor> findActualActors( Organization organization, Role role, Segment segment ) {
+        return findActualActors( organization, role, null, segment );
+    }
+
+    */
+/**
+     * {@inheritDoc}
+     */
+/*
+    public List<Actor> findActualActors( Organization organization, Role role, Place jurisdiction, Segment segment ) {
         Set<Actor> actors = new HashSet<Actor>();
         boolean noActorRoleFound = false;
 
@@ -1435,17 +1450,23 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             boolean sameRole = Role.UNKNOWN.equals( role ) ?
                     part.getRole() == null
                     : role.equals( part.getRole() );
-
-            if ( sameOrg && sameRole ) {
-                if ( part.getActor() != null )
+            boolean sameJurisdiction = jurisdiction == null ||
+                    Place.UNKNOWN.equals( jurisdiction )
+                    ? part.getJurisdiction() == null
+                    : jurisdiction.equals( part.getJurisdiction() );
+            if ( sameOrg && sameRole && sameJurisdiction ) {
+                Actor actor = part.getActor();
+                if ( actor != null && actor.isActual() )
                     actors.add( part.getActor() );
                 else
                     noActorRoleFound = true;
             }
         }
-        return noActorRoleFound ? findActors( organization, role )
+        return noActorRoleFound ? findActualActors( organization, role )
                 : toSortedList( actors );
     }
+
+*/
 
     /**
      * {@inheritDoc}
@@ -1617,7 +1638,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Part> findAllParts( Segment segment, ResourceSpec resourceSpec, boolean exactMatch ) {
         Set<Part> list = new HashSet<Part>();
-        visitParts( list, resourceSpec, segment, exactMatch );
+        Set<Segment> segments;
+        if ( segment == null ) {
+            segments = getCurrentPlan().getSegments();
+        } else {
+            segments = new HashSet<Segment>();
+            segments.add( segment );
+        }
+        for ( Segment seg : segments ) {
+            for ( Iterator<Part> parts = seg.parts(); parts.hasNext(); ) {
+                Part part = parts.next();
+                if ( resourceSpec.matches( part.resourceSpec(), exactMatch ) ) {
+                    list.add( part );
+                }
+            }
+        }
+        // visitParts( list, resourceSpec, segment, exactMatch );
         return toSortedList( list );
     }
 
@@ -1789,7 +1825,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Actor> findActors( Segment segment ) {
+    public List<Actor> findActualActors( Segment segment ) {
         Set<Actor> actors = new HashSet<Actor>();
         for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); ) {
             Part p = pi.next();
@@ -2691,6 +2727,23 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Assignment>( assignments );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Assignment> findAllAssignments( Actor actor, Segment segment ) {
+        Set<Assignment> assignments = new HashSet<Assignment>();
+        List<Employment> employments = findAllEmploymentsForActor( actor );
+        List<Part> parts = (List<Part>) IteratorUtils.toList( segment.parts() );
+        for ( Employment employment : employments ) {
+            for ( Part part : parts ) {
+                if ( employment.playsPart( part ) )
+                    assignments.add( new Assignment( employment, part ) );
+            }
+        }
+        return new ArrayList<Assignment>( assignments );
+    }
+
     private List<Employment> findAllEmploymentsWithUnknownActors() {
         Set<Employment> employments = new HashSet<Employment>();
         for ( Part p : findAllParts() ) {
@@ -2962,34 +3015,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return flows;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Organization> findAllInvolvedOrganizations( Segment segment ) {
-        Set<Organization> organizations = new HashSet<Organization>();
-        Iterator<Part> parts = segment.parts();
-        boolean hasUnknown = false;
-        while ( parts.hasNext() ) {
-            Part part = parts.next();
-            Organization organization = part.getOrganization();
-            if ( organization != null ) {
-                if ( organization.isActual() ) {
-                    organizations.add( organization );
-                } else {
-                    organizations.addAll( findAllActualEntitiesMatching( Organization.class, organization ) );
-                }
-            } else {
-                hasUnknown = true;
-            }
-
-        }
-        List<Organization> results = new ArrayList<Organization>( organizations );
-        Collections.sort( results );
-        if ( hasUnknown )
-            results.add( Organization.UNKNOWN );
-        return results;
-    }
-
     @SuppressWarnings( "unchecked" )
     /**
      * {@inheritDoc}
@@ -3066,6 +3091,20 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public FileUserDetailsService getUserDetailsService() {
         return userDetailsService;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Participation findParticipation( final String username ) {
+        return (Participation) CollectionUtils.find(
+                getDao().list( Participation.class ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ( (Participation) object ).getUsername().equals( username );
+                    }
+                }
+        );
     }
 }
 

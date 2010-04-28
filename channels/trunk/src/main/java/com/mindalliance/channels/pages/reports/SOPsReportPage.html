@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns:wicket="http://wicket.apache.org/"
+        lang="en">
+<head>
+    <title wicket:id="title">[Title]</title>
+    <link rel="stylesheet" href="playbook.css" type="text/css" title="Playbook">
+</head>
+
+<body>
+<div id="top">
+    <div id="header">
+        <div>
+            <div id="nav" wicket:id="selector">(Report selector)</div>
+            <h1 wicket:id="plan-name">plan name</h1>
+
+            <h1 wicket:id="actor-name">John Doe</h1>
+
+            <h3 class="client" wicket:id="plan-client">client</h3>
+
+            <h3 class="date" wicket:id="date">date</h3>
+        </div>
+    </div>
+    <div id="contents">
+        <div id="plan">
+            <a class="plan-map-link" wicket:id="plan-map-link" href="#">(Zoom)</a>
+
+            <div class="flow-map" wicket:id="planMap">[flow diagram panel]</div>
+
+            <span class="description" wicket:id="plan-description">description</span>
+            <span wicket:id="sg-list-container">
+                <br/><br/> This plan is based on the following plan segments:
+                <ul>
+                    <li wicket:id="sg-list"><a wicket:id="sc-link">A plan segment</a></li>
+                </ul>
+            </span>
+        </div>
+        <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
+
+        <div wicket:id="documents">[documents report panel]</div>
+        <div wicket:id="issues">[issues report panel]</div>
+        <div class="segment" wicket:id="segments">
+            <span wicket:id="segment">[segment report panel]</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

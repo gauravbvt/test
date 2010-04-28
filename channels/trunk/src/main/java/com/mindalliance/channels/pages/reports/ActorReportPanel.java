@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -34,7 +34,7 @@ public class ActorReportPanel extends Panel {
                     @Override
                     protected void populateItem( ListItem<Part> item ) {
                         item.add( new PartReportPanel( "part",                            // NON-NLS
-                                                       item.getModel(), true, showingIssues ) );
+                                                       item.getModel(), showingIssues ) );
                         item.add( new AttributeModifier( "class", true,
                             new Model<String>( item.getIndex() % 2 == 0 ?
                                                "task even" : "task odd" ) ) );

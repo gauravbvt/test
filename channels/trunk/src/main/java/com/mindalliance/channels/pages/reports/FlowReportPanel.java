@@ -1,16 +1,18 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -51,9 +53,16 @@ public class FlowReportPanel extends Panel {
      * The part from which perspective the flow is reported on
      */
     private Part part;
+    private Organization organization;
 
-    public FlowReportPanel( String id, Model<Flow> model, Part part, boolean showingIssues ) {
+    public FlowReportPanel(
+            String id,
+            Model<Flow> model,
+            Part part,
+            Organization organization,
+            boolean showingIssues ) {
         super( id, model );
+        this.organization = organization;
         setRenderBodyOnly( true );
         flow = model.getObject();
         this.part = part;
@@ -63,48 +72,52 @@ public class FlowReportPanel extends Panel {
     private void init( boolean showingIssues, boolean isSource ) {
         boolean hasDescription = !flow.getDescription().isEmpty();
         boolean hasEois = !flow.getEois().isEmpty();
-        boolean showContacts = !isSource &&  flow.isAskedFor()
-                             || isSource && !flow.isAskedFor();
+        boolean showContacts = organization.isActual() && !isSource && flow.isAskedFor()
+                || isSource && !flow.isAskedFor();
 
         Set<TransmissionMedium> unicasts = flow.getUnicasts();
         Collection<Channel> broadcasts = flow.getBroadcasts();
         final List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
 
         add( new Label( "information",
-                        isSource ? flow.getSendTitle() : flow.getReceiveTitle() )
+                isSource ? flow.getSendTitle() : flow.getReceiveTitle() )
                 .add( new AttributeModifier( "class", true,
-                        new Model<String>( flow.isRequired() ? "required-information"
-                                                             : "information" ) ) ),
-             newUrgency(),
-             new Label( "start-stop", getSignificance() ),
-             new WebMarkupContainer( "eoi-lead" ).setVisible( hasEois ),
-             new WebMarkupContainer( "eoi" )
-                     .add( new Label( "eoi-item", flow.getEoisSummary() ) )
-                     .setVisible( hasEois ),
+                new Model<String>( flow.isRequired() ? "required-information"
+                        : "information" ) ) ),
+                newUrgency(),
+                new Label( "start-stop-critical", getSignificance() ),
+                new WebMarkupContainer( "eois-container" )
+                        .add( new ListView<ElementOfInformation>( "eois", flow.getEois() ) {
+                            protected void populateItem( ListItem<ElementOfInformation> item ) {
+                                ElementOfInformation eoi = item.getModel().getObject();
+                                item.add( new Label( "eoi", eoi.toString() ) );
+                            }
+                        } )
+                        .setVisible( hasEois ),
+                new DocumentsReportPanel( "documents", new Model<ModelObject>( flow ) ),
+                new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) )
+                        .setVisible( showingIssues ),
+                new Label( "instructions", flow.getDescription() ).setVisible( hasDescription ),
+                new ChannelsBannerPanel( "channels",
+                        new ResourceSpec( flow.getContactedPart() ), unicasts, broadcasts )
+                        .setVisible( showContacts && !flow.getChannels().isEmpty() && actors.isEmpty() ),
 
-             new IssuesReportPanel( "issues", new Model<ModelObject>( flow ) )
-                .setVisible( showingIssues ),
-             new Label( "instructions", flow.getDescription() ).setVisible(  hasDescription ),
-             new ChannelsBannerPanel( "channels",
-                            new ResourceSpec( flow.getContactedPart() ), unicasts, broadcasts )
-                .setVisible( showContacts && !flow.getChannels().isEmpty() && actors.isEmpty() ),
-
-             new WebMarkupContainer( "actors-div" )
-                .add( new ListView<LocalizedActor>( "actors", actors ) {
-                    @Override
-                    protected void populateItem( ListItem<LocalizedActor> item ) {
-                        LocalizedActor localizedActor = item.getModel().getObject();
-                        item.add( new ActorBannerPanel( "actor",
-                                localizedActor.getOtherSegment( part.getSegment() ),
-                                localizedActor.getActorSpec(),
-                                true,
-                                localizedActor.getUnicasts(),
-                                localizedActor.getBroadcasts() ) );
-                    }
-                }
-                    .add( new AttributeModifier( "class", true,
-                         new Model<String>( flow.isAll() ? "all-actors" : "any-actor" ) ) ) )
-                    .setVisible( showContacts && !actors.isEmpty() ) );
+                new WebMarkupContainer( "actors-div" )
+                        .add( new ListView<LocalizedActor>( "actors", actors ) {
+                            @Override
+                            protected void populateItem( ListItem<LocalizedActor> item ) {
+                                LocalizedActor localizedActor = item.getModel().getObject();
+                                item.add( new ActorBannerPanel( "actor",
+                                        localizedActor.getOtherSegment( part.getSegment() ),
+                                        localizedActor.getActorSpec(),
+                                        true,
+                                        localizedActor.getUnicasts(),
+                                        localizedActor.getBroadcasts() ) );
+                            }
+                        }
+                                .add( new AttributeModifier( "class", true,
+                                new Model<String>( flow.isAll() ? "all-actors" : "any-actor" ) ) ) )
+                        .setVisible( showContacts && !actors.isEmpty() ) );
 
     }
 
@@ -117,9 +130,13 @@ public class FlowReportPanel extends Panel {
 
     private String getSignificance() {
         Flow.Significance significance = part.getSignificance( flow );
-        return significance.equals( Flow.Significance.Triggers )   ? "Starts this task."
-             : significance.equals( Flow.Significance.Terminates ) ? "Ends this task."
-                                                                   : "";
+        return significance.equals( Flow.Significance.Triggers )
+                ? "Starts this task."
+                : significance.equals( Flow.Significance.Terminates )
+                ? "Ends this task."
+                : significance.equals( Flow.Significance.Critical )
+                ? "Critical to this task."
+                : "";
     }
 
     private static List<LocalizedActor> findActors(
@@ -158,16 +175,24 @@ public class FlowReportPanel extends Panel {
      */
     public static final class LocalizedActor implements Serializable, Comparable<LocalizedActor> {
 
-        /** Unicast media used to contact the actor. */
+        /**
+         * Unicast media used to contact the actor.
+         */
         private Set<TransmissionMedium> unicasts;
 
-        /** Broadcast channels used to contact the actor. */
+        /**
+         * Broadcast channels used to contact the actor.
+         */
         private Collection<Channel> broadcasts;
 
-        /** The actor. */
+        /**
+         * The actor.
+         */
         private final Actor actor;
 
-        /** The part. */
+        /**
+         * The part.
+         */
         private final Part part;
 
         private LocalizedActor( Actor actor, Part part,
@@ -215,7 +240,8 @@ public class FlowReportPanel extends Panel {
 
         /**
          * Compares this object with the specified object for order.
-         * @param   o the object to be compared.
+         *
+         * @param o the object to be compared.
          * @return a negative integer, zero, or a positive integer as this object
          *         is less than, equal to, or greater than the specified object.
          */

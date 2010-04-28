@@ -1,8 +1,8 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -383,9 +383,21 @@ public class Part extends Node implements GeoLocatable {
      * @param o the organization
      * @return true if belonging
      */
-    public boolean isIn( Organization o ) {
+    public boolean isInOrganization( Organization o ) {
         return organization == null ? Organization.UNKNOWN == o
                 : o.narrowsOrEquals( organization );
+    }
+
+    /**
+     * Test if this part is considered belonging to an organization.
+     *
+     * @param j the jurisdiction
+     * @return true if belonging
+     */
+    public boolean isInJurisdiction( Place j ) {
+        return jurisdiction == null
+                ? Place.UNKNOWN == j
+                : j.narrowsOrEquals( jurisdiction );
     }
 
     /**

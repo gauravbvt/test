@@ -3,14 +3,14 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.pages.playbook.TaskPlaybook;
-import com.mindalliance.channels.pages.reports.PlanReportPage;
+import com.mindalliance.channels.pages.reports.SOPsReportPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -41,8 +41,7 @@ public class AdminPage extends WebPage {
         add(
             new Label( "user", user.getUsername() ),
             new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ),
-            new BookmarkablePageLink<PlanReportPage>( "report", PlanReportPage.class ),
-            new BookmarkablePageLink<PlanReportPage>( "playbook", TaskPlaybook.class ),
+            // new BookmarkablePageLink<SOPsReportPage>( "playbook", TaskPlaybook.class ),
             new DropDownChoice<Plan>(
                         "plan-sel",
                         new PropertyModel<Plan>( this, "plan" ),
@@ -55,6 +54,14 @@ public class AdminPage extends WebPage {
                         }
                     } )
         );
+        BookmarkablePageLink SOPsLink = new BookmarkablePageLink<SOPsReportPage>( "report", SOPsReportPage.class );
+        SOPsLink.setPopupSettings( new PopupSettings(
+               PopupSettings.RESIZABLE |
+                        PopupSettings.SCROLLBARS |
+                        PopupSettings.MENU_BAR ) );
+        add( SOPsLink );
+
+
     }
 
     /**

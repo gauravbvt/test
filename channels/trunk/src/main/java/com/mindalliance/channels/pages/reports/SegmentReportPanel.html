@@ -8,11 +8,13 @@
 <body>
 <wicket:panel>
     <div class="section-head">
-        <h2><a wicket:id="name" name="">name</a></h2>
+        <h2>Segment: <a wicket:id="name" name="">name</a></h2>
         <h3 wicket:id="event">Responding to some event</h3>
     </div>
     <p class="description">
         <span wicket:id="description">description</span>
+    </p>
+    <p>
         <span wicket:id="goal-lead">
             This plan segment has the following goals:
         </span>
@@ -22,6 +24,7 @@
     </ul>
     <a class="flow-map-link" wicket:id="flow-link" href="#">(Zoom)</a>
     <div class="flow-map" wicket:id="flowMap">[flow diagram panel]</div>
+    <div wicket:id="documents">[documents report panel]</div>
     <div wicket:id="issues">[issues report panel]</div>
     <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
 

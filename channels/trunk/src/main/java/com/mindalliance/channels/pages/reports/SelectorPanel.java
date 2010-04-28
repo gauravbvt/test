@@ -1,15 +1,19 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -34,22 +38,34 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     private static final String ISSUES_PARM = "issues";
     private static final String ALL = "all";
 
-    /** Default value for "All segments" selection. */
+    /**
+     * Default value for "All segments" selection.
+     */
     private static final Segment ALL_SEGMENTS = new Segment();
 
-    /** Localized sorter-upper. */
+    /**
+     * Localized sorter-upper.
+     */
     private static final Collator SORTER = Collator.getInstance();
 
-    /** The selected segment (or AllSegments) */
+    /**
+     * The selected segment (or AllSegments)
+     */
     private Segment segment = ALL_SEGMENTS;
 
-    /** The selected actor (or Actor.UNKNOWN) */
+    /**
+     * The selected actor (or Actor.UNKNOWN)
+     */
     private Actor actor = Actor.UNKNOWN;
 
-    /** True when parameter combination would produce a not-empty report. */
+    /**
+     * True when parameter combination would produce a not-empty report.
+     */
     private boolean valid = true;
 
-    /** True when issues are shown. */
+    /**
+     * True when issues are shown.
+     */
     private boolean showingIssues = true;
 
     @SpringBean
@@ -60,41 +76,46 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
 
         setDefaultModel( new CompoundPropertyModel<Object>( this ) );
         setParameters( queryService, parameters );
-
-        add( new Form( "form" ) {
+        Form form = new Form( "form" ) {
             @Override
             protected void onSubmit() {
                 redirect();
                 super.onSubmit();
             }
-        }
-            .add( new DropDownChoice<Segment>( "segment", getSegmentChoices( queryService ),
-                    new IChoiceRenderer<Segment>() {
-                        public Object getDisplayValue( Segment object ) {
-                            return ALL_SEGMENTS.equals( object ) ? "All"
-                                                                  : object.getName();
-                        }
+        };
+        form.add( new DropDownChoice<Segment>( "segment", getSegmentChoices( queryService ),
+                new IChoiceRenderer<Segment>() {
+                    public Object getDisplayValue( Segment object ) {
+                        return ALL_SEGMENTS.equals( object ) ? "All"
+                                : object.getName();
+                    }
 
-                        public String getIdValue( Segment object, int index ) {
-                            return ALL_SEGMENTS.equals( object ) ? ALL
-                                                                 : Long.toString( object.getId() );
-                        }
-                    } ).add( newOnChange( "onchange" ) ),
-
-                 new DropDownChoice<Actor>( "actor", getActorsChoices( queryService ),
-                                            new IChoiceRenderer<Actor>() {
+                    public String getIdValue( Segment object, int index ) {
+                        return ALL_SEGMENTS.equals( object ) ? ALL
+                                : Long.toString( object.getId() );
+                    }
+                } ).add( newOnChange( "onchange" ) ) );
+        WebMarkupContainer showIssuesContainer = new WebMarkupContainer( "issues" );
+        showIssuesContainer.setVisible( isUserPlanner() );
+        form.add( showIssuesContainer );
+        showIssuesContainer.add( new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) );
+        if ( isUserPlanner() ) {
+            form.add( new DropDownChoice<Actor>( "actor", getActorsChoices( queryService ),
+                    new IChoiceRenderer<Actor>() {
                         public Object getDisplayValue( Actor object ) {
                             return object.equals( Actor.UNKNOWN ) ? "All"
-                                                                  : object.getNormalizedName();
+                                    : object.getNormalizedName();
                         }
 
                         public String getIdValue( Actor object, int index ) {
                             return object.equals( Actor.UNKNOWN ) ? ALL
-                                                                  : Long.toString( object.getId() );
+                                    : Long.toString( object.getId() );
                         }
-                    } ).add( newOnChange( "onchange" ) ),
-
-                 new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) ) );
+                    } ).add( newOnChange( "onchange" ) ) );
+        } else {
+            form.add( new Label( "actor", "" ) );
+        }
+        add( form );
     }
 
     private IBehavior newOnChange( String event ) {
@@ -142,7 +163,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         if ( isAllActors() ) {
             result = new ArrayList<Actor>(
                     isAllSegments() ? queryService.list( Actor.class )
-                            : queryService.findActors( segment ) );
+                            : queryService.findActualActors( segment ) );
             Collections.sort( result );
         } else {
             result = new ArrayList<Actor>();
@@ -155,7 +176,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
      * Set segment and actor fields given parameters.
      *
      * @param queryService for parameter resolution
-     * @param parameters the parameters
+     * @param parameters   the parameters
      */
     public final void setParameters( QueryService queryService, PageParameters parameters ) {
         setValid( true );
@@ -170,16 +191,24 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                 setValid( false );
             }
         }
-
-        String actorId = parameters.getString( ACTOR_PARM, ALL );
-        if ( !ALL.equals( actorId ) ) {
-            try {
-                long id = Long.parseLong( actorId );
-                setActor( queryService.find( Actor.class, id ) );
-            } catch ( NumberFormatException ignored ) {
-                setValid( false );
-            } catch ( NotFoundException ignored ) {
-                setValid( false );
+        if ( isUserPlanner() ) {
+            String actorId = parameters.getString( ACTOR_PARM, ALL );
+            if ( !ALL.equals( actorId ) ) {
+                try {
+                    long id = Long.parseLong( actorId );
+                    setActor( queryService.find( Actor.class, id ) );
+                } catch ( NumberFormatException ignored ) {
+                    setValid( false );
+                } catch ( NotFoundException ignored ) {
+                    setValid( false );
+                }
+            }
+        } else {
+            Participation participation = queryService.findParticipation( User.current().getUsername() );
+            if ( participation == null ) {
+                setActor( Actor.UNKNOWN );
+            } else {
+                setActor( participation.getActor() );
             }
         }
 
@@ -187,8 +216,14 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
             setShowingIssues( parameters.getAsBoolean( ISSUES_PARM, true ) );
     }
 
+    private boolean isUserPlanner() {
+        User user = User.current();
+        return user.isPlanner( user.getPlanUri() );
+    }
+
     /**
      * Build a new parameter container for the current selections.
+     *
      * @return the parameters
      */
     public PageParameters getParameters() {
@@ -212,7 +247,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     private List<Segment> getSegmentChoices( QueryService service ) {
         List<Segment> result = new ArrayList<Segment>(
                 isAllActors() ? service.list( Segment.class )
-                              : service.findSegments( actor ) );
+                        : service.findSegments( actor ) );
         Collections.sort( result );
         result.add( 0, ALL_SEGMENTS );
         return result;
@@ -220,8 +255,8 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
 
     private List<Actor> getActorsChoices( QueryService service ) {
         List<Actor> result = new ArrayList<Actor>(
-                isAllSegments() ? service.list( Actor.class )
-                                 : service.findActors( segment ) );
+                isAllSegments() ? service.listActualEntities( Actor.class )
+                        : service.findActualActors( segment ) );
         Collections.sort(
                 result,
                 new Comparator<Actor>() {
@@ -244,7 +279,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     public Segment getSegment() {
         return segment;
     }
-
+    
     public void setSegment( Segment segment ) {
         this.segment = segment;
     }
@@ -266,7 +301,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     }
 
     public boolean isShowingIssues() {
-        return showingIssues;
+        return isUserPlanner() && showingIssues;
     }
 
     public void setShowingIssues( boolean showingIssues ) {
@@ -275,6 +310,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
 
     /**
      * Add something to the page header.
+     *
      * @param response the header
      */
     public void renderHead( IHeaderResponse response ) {

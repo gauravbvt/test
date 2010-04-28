@@ -13,6 +13,11 @@ h2 {
     font-size: 17px;
 }
 
+h3.big {
+    font-size: 15px;
+    font-weight: bold;
+}
+
 #contents, h3, h5, #grid, th, td {
     font-size: 12px;
 }
@@ -25,7 +30,7 @@ h2 {
     font-size: 10.5px;
 }
 
-p.task-name, span.unicast, span.urgent, th {
+p.task-name, .required-information, span.unicast, span.urgent, th {
     font-weight: bold;
 }
 
@@ -308,6 +313,8 @@ div.issues p {
     padding: 0;
 }
 
+}
+
 /* Color and graphics ------------------------------------ */
 body, #contents {
     background: white;
@@ -332,6 +339,16 @@ p.notice {
 
 div.issues {
     color: darkred;
+}
+
+.policycant {
+    color: darkred;
+    font-weight:bold;
+}
+
+.policymust {
+    color: darkgreen;
+    font-weight:bold;
 }
 
 ul.contacts, ul.channels-only {

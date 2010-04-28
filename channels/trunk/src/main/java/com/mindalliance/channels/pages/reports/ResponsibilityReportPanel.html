@@ -10,24 +10,31 @@
     <div class="header">
         <div>
             <div class="section-head">
-                <h4 wicket:id="name">name</h4>
-                <ul>
-                    <li wicket:id="org" class="organization">(organization)</li>
-                    <li wicket:id="sg-name" class="segment">(segment)</li>
-                </ul>
+                <h3 class="big">Role: <span wicket:id="name">name </span></h3>
                 <p class="description" wicket:id="description">description</p>
             </div>
-            <ul class="contacts">
+            <ul wicket:id="tags-container">
+                 <li wicket:id="tags">
+                     Tag: <span wicket:id="tag">tag</span>
+                 </li>
+             </ul>
+            <ul wicket:id="contacts-container" class="contacts">
+                <li wicket:id="others">Others</li>
                  <li class="contact" wicket:id="actors">
                     <span wicket:id="actor">[actor report panel]</span>
                 </li>
             </ul>
+
         </div>
     </div>
-
+    <div wicket:id="documents">[documents report panel]</div>
+    <div wicket:id="issues">[issues report panel]</div>
     <table class="tasks">
         <thead>
-            <tr><th><h4>Tasks</h4></th><th><h4>Communications</h4></th></tr>
+            <tr>
+                <th><h4>Tasks (<span wicket:id="seg-name">seg</span>)</h4></th>
+                <th><h4>Communications</h4></th>
+            </tr>
         </thead>
         <tbody>
             <tr class="task" wicket:id="parts">

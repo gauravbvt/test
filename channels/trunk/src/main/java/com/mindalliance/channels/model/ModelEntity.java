@@ -129,7 +129,11 @@ public abstract class ModelEntity extends ModelObject {
      * @return a boolean
      */
     public static boolean compatible( ModelEntity entity, ModelEntity other ) {
-        if ( entity == null || other == null || entity.isUnknown() || other.isUnknown() ) return true;
+        if ( entity == null
+                || other == null
+         //       || entity.isUnknown()
+         //       || other.isUnknown()
+                ) return true;
         if ( entity.narrowsOrEquals( other ) ) return true;
         return false;
     }
