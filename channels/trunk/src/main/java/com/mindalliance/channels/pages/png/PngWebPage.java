@@ -1,15 +1,17 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +32,11 @@ public abstract class PngWebPage extends WebPage {
 
     private PageParameters parameters;
 
+    @SpringBean
+    private Analyst analyst;
+
+    @SpringBean
+    private DiagramFactory diagramFactory;
 
     public PngWebPage( PageParameters parameters ) {
         super( parameters );
@@ -115,7 +122,7 @@ public abstract class PngWebPage extends WebPage {
             if ( resp instanceof WebResponse )
                 setHeaders( (WebResponse) resp );
             LOG.debug( "Rendering PNG" );
-            diagram.render( DiagramFactory.PNG, getResponse().getOutputStream() );
+            diagram.render( DiagramFactory.PNG, getResponse().getOutputStream(), analyst, diagramFactory );
         } catch ( DiagramException e ) {
             LOG.error( "Error while generating diagram", e );
             // Don't do anything else --> empty png

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
@@ -46,8 +47,11 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public void render( String outputFormat, OutputStream outputStream ) {
-        DiagramFactory<Node, Flow> diagramFactory = getDiagramFactory();
+    public void render(
+            String outputFormat,
+            OutputStream outputStream,
+            Analyst analyst,
+            DiagramFactory diagramFactory ) {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder flowMapGraphBuilder =
@@ -62,7 +66,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
                 segment,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                getAnalyst() );
+                analyst );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }

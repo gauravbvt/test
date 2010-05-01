@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.pages.components.SegmentLink;
+import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;
 import org.apache.wicket.AttributeModifier;
@@ -71,11 +71,12 @@ public class ConnectedFlowList extends Panel {
         protected void populateItem( Item<ExternalFlow> item ) {
             final ExternalFlow flow = item.getModelObject();
             final Node target = input ? flow.getSource() : flow.getTarget();
-            final SegmentLink link = new SegmentLink( "part",                           // NON-NLS
-                    new Model<Node>( target ), flow );
-            link.add( new Label( "part-label", target.getName() ) );                      // NON-NLS
+            final ModelObjectLink link = new ModelObjectLink(
+                    "part",
+                    new Model<Node>( target ),
+                    new Model<String>( target.getName() ) );
             item.add( link );
-            item.add( new Label( "segment", target.getSegment().getName() ) );          // NON-NLS
+            item.add( new Label( "segment", target.getSegment().getName() ) );
 
             String c = Channel.toString( flow.getChannels() );
             final boolean needsChannel = input && flow.isAskedFor()
@@ -85,7 +86,7 @@ public class ConnectedFlowList extends Panel {
             } else {
                 c = "";
             }
-            item.add( new Label( "channels", c ) );                                        // NON-NLS
+            item.add( new Label( "channels", c ) );
         }
 
         /**
@@ -94,7 +95,7 @@ public class ConnectedFlowList extends Panel {
          * @param component the component
          * @param object    the object of the issues
          * @param property  the property of concern. If null, get issues of object
-         * todo refactor this here and there
+         *                  todo refactor this here and there
          */
         protected void addIssues( Component component, ModelObject object, String property ) {
             Analyst analyst = getAnalyst();

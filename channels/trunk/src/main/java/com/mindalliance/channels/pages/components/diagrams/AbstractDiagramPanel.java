@@ -1,7 +1,9 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.diagrams.DiagramAjaxBehavior;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
@@ -12,6 +14,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +49,13 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      */
     private StringBuilder imageMapHolder;
 
+    @SpringBean
+    private Analyst analyst;
+
+
+    @SpringBean
+    private DiagramFactory diagramFactory;
+
     protected AbstractDiagramPanel( String id, Settings settings ) {
         super( id );
         this.settings = settings;
@@ -73,7 +83,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     protected void init() {
         diagram = makeDiagram();
         if ( isWithImageMap() ) {
-            imageMapHolder = createMapHolder();
+            imageMapHolder = createMapHolder( analyst, diagramFactory );
             if ( isUsingAjax() )
                 add( new DiagramAjaxBehavior( imageMapHolder, getDomIdentifier() ) {
                     @Override
@@ -189,9 +199,9 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         return scroll;
     }
 
-    private StringBuilder createMapHolder() {
+    private StringBuilder createMapHolder( Analyst analyst, DiagramFactory diagramFactory ) {
         StringBuilder builder = new StringBuilder();
-        String imageMap = diagram.makeImageMap();
+        String imageMap = diagram.makeImageMap( analyst, diagramFactory );
         // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
         imageMap = imageMap.replace( "id=\"G\"", "" );
         imageMap = imageMap.replace( "name=\"G\"", "name=\"" + getContainerId() + "\"" );

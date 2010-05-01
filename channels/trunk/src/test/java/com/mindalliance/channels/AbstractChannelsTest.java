@@ -1,13 +1,14 @@
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.query.DefaultQueryService;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.LockManager;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.IRequestCodingStrategy;
@@ -398,5 +399,9 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         public void beforeTestClass( TestContext testContext ) {
             installSamples();
         }
+    }
+
+    protected Analyst getAnalyst() {
+        return queryService.getAnalyst();
     }
 }

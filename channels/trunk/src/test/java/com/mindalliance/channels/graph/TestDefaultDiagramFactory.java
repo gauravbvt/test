@@ -1,10 +1,11 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import java.io.BufferedOutputStream;
@@ -39,7 +40,11 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DiagramFactory diagramFactory = wicketApplication.getDiagramFactory();
             Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, selectedNode, null, null );
-            flowDiagram.render( DiagramFactory.SVG, new BufferedOutputStream( baos ) );
+            flowDiagram.render(
+                    DiagramFactory.SVG,
+                    new BufferedOutputStream( baos ),
+                    getAnalyst(),
+                    diagramFactory);
             String svg = baos.toString();
             assertFalse( svg.isEmpty() );
             assertTrue( svg.startsWith( "<?xml" ) );
@@ -55,7 +60,11 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
                 FileOutputStream fileOut = new FileOutputStream( "target/" + segment.getName() + ".png" );
                 DiagramFactory diagramFactory = wicketApplication.getDiagramFactory();
                 Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, selectedNode, null, null );
-                flowDiagram.render( DiagramFactory.PNG, fileOut );
+                flowDiagram.render(
+                        DiagramFactory.PNG,
+                        fileOut,
+                        getAnalyst(),
+                        wicketApplication.getDiagramFactory() );
                 fileOut.flush();
                 fileOut.close();
                 assertTrue( new File( "target/" + segment.getName() + ".png" ).length() > 0 );
@@ -73,7 +82,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
         for ( Segment segment : segments ) {
             DiagramFactory diagramFactory = wicketApplication.getDiagramFactory();
             Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, segment.getDefaultPart(), null, null );
-            String map = flowDiagram.makeImageMap();
+            String map = flowDiagram.makeImageMap( getAnalyst(), wicketApplication.getDiagramFactory() );
             System.out.print( map );
             assertFalse( map.isEmpty() );
             assertTrue( map.startsWith( "<map" ) );

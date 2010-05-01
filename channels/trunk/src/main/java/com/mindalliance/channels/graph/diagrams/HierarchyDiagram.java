@@ -1,9 +1,10 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.HierarchyGraphBuilder;
 import com.mindalliance.channels.analysis.graph.HierarchyRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.Hierarchical;
@@ -28,12 +29,15 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
         this.hierarchical = hierarchical;
     }
 
-    public void render( String outputFormat, OutputStream outputStream ) {
-        DiagramFactory diagramFactory = getDiagramFactory();
+    public void render(
+            String outputFormat,
+            OutputStream outputStream,
+            Analyst analyst,
+            DiagramFactory diagramFactory) {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder<Hierarchical, HierarchyRelationship> hierarchyGraphBuilder =
-                new HierarchyGraphBuilder( hierarchical, getDiagramFactory().getQueryService() );
+                new HierarchyGraphBuilder( hierarchical, diagramFactory.getQueryService() );
         Graph<Hierarchical, HierarchyRelationship> graph =
                 hierarchyGraphBuilder.buildDirectedGraph();
         GraphRenderer<Hierarchical, HierarchyRelationship> graphRenderer =
@@ -43,7 +47,7 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
         HierarchyMetaProvider metaProvider = new HierarchyMetaProvider(
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                getAnalyst() );
+                analyst );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }

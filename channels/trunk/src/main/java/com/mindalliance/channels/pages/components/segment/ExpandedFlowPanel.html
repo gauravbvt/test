@@ -47,26 +47,13 @@
                 </td>
             </tr>
             <tr>
-                <th align="right"><label wicket:id="other-label"><a wicket:id="other-details" href="#"><span
-                        wicket:id="type">Target</span></a>:</label></th>
-                <td><label wicket:id="all-label"><input wicket:id="all" type="checkbox"> Every </label><select
-                        wicket:id="other">
-                    <option>
-                        Joe Smith monitoring evacuation
-                    </option>
-
-                    <option>
-                        Start Building Evacuation
-                    </option>
-
-                    <option>
-                        Tenant noticing fire
-                    </option>
-                </select>
+                <th align="right"><a wicket:id="other-link" href="#">To</a>:</th>
+                <td><label wicket:id="all-label"><input wicket:id="all" type="checkbox"> Every </label><span
+                        wicket:id="other">[other node selector]</span>
                 </td>
             </tr>
 
-            <tr wicket:id="others"></tr>
+            <tr wicket:id="others">[other node selector]</tr>
 
             <tr wicket:id="channel-row">
                 <th align="right"><span wicket:id="channel-title">Channels:</span></th>

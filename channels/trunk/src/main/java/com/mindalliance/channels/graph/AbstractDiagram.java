@@ -34,21 +34,11 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
      */
     private String imageMap = null;
 
-    private DiagramFactory<V,E> diagramFactory;
-
-    private Analyst analyst;
+    // private DiagramFactory<V,E> diagramFactory;
 
     public AbstractDiagram( double[] diagramSize, String orientation ) {
         this.diagramSize = diagramSize;
         this.orientation = orientation;
-    }
-
-    public Analyst getAnalyst() {
-        return analyst;
-    }
-
-    public void setAnalyst( Analyst analyst ) {
-        this.analyst = analyst;
     }
 
     /**
@@ -70,18 +60,6 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( "unchecked" )
-    public DiagramFactory<V, E> getDiagramFactory() {
-        return diagramFactory;
-    }
-
-    public void setDiagramFactory( DiagramFactory<V, E> diagramFactory ) {
-        this.diagramFactory = diagramFactory;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public String getOrientation() {
         return orientation;
     }
@@ -96,11 +74,11 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
     /**
      * {@inheritDoc}
      */
-    public String makeImageMap() {
+    public String makeImageMap( Analyst analyst, DiagramFactory diagramFactory ) {
         if ( imageMap == null ) {
             LOG.debug( "Making image map for " + this.getClass().getSimpleName() );
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            render( DiagramFactory.IMAGE_MAP, new BufferedOutputStream( baos ) );
+            render( DiagramFactory.IMAGE_MAP, new BufferedOutputStream( baos ), analyst, diagramFactory );
             // System.out.println( "*** Image map generated at " + System.currentTimeMillis() );
             imageMap = baos.toString();
             // System.out.println( imageMap );

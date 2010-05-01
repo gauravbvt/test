@@ -1,9 +1,10 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntitiesNetworkGraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.ModelEntity;
@@ -43,16 +44,18 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
         this.selectedEntityRel = selectedEntityRel;
     }
 
-    public void render( String outputFormat, OutputStream outputStream ) {
-        QueryService queryService = getDiagramFactory().getQueryService();
-        DiagramFactory<ModelEntity, EntityRelationship> diagramFactory = getDiagramFactory();
+    public void render( String outputFormat,
+                        OutputStream outputStream,
+                        Analyst analyst,
+                        DiagramFactory diagramFactory ) {
+        QueryService queryService = diagramFactory.getQueryService();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder<ModelEntity, EntityRelationship> entitiesNetworkGraphBuilder =
                 new EntitiesNetworkGraphBuilder(
                         getEntities( queryService ),
                         getEntityRels( queryService ),
-                        getDiagramFactory().getQueryService() );
+                        diagramFactory.getQueryService() );
         Graph<ModelEntity, EntityRelationship> graph =
                 entitiesNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer =
@@ -64,7 +67,7 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
         EntityNetworkMetaProvider metaProvider = new EntityNetworkMetaProvider(
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                getAnalyst() );
+                analyst );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }

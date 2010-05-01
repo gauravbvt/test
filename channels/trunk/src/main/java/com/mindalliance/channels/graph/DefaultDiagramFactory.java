@@ -94,12 +94,6 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
         this.queryService = queryService;
     }
 
-    @SuppressWarnings( { "unchecked" } )
-    private void init( AbstractDiagram<?,?> diagram ) {
-        diagram.setAnalyst( analyst );
-        diagram.setDiagramFactory( this );
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -110,7 +104,6 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             String orientation ) {
         LOG.debug( "Making flow map on " + segment + "/" + node );
         FlowMapDiagram mapDiagram = new FlowMapDiagram( segment, node, diagramSize, orientation );
-        init( mapDiagram );
         return mapDiagram;
     }
 
@@ -122,7 +115,6 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
         LOG.debug( "Making entity network diagram on " + entity );
         EntityNetworkDiagram diagram =
                 new EntityNetworkDiagram( entity, selectedEntityRel, diagramSize, orientation );
-        init( diagram );
         return diagram;
     }
 
@@ -149,7 +141,6 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
                                                      scRel,
                                                      diagramSize,
                                                      orientation );
-        init( diagram );
         return diagram;
     }
 
@@ -162,7 +153,6 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             String orientation ) {
         LOG.debug( "Making hierarchy diagram on " + hierarchical.getName() );
         HierarchyDiagram diagram = new HierarchyDiagram( hierarchical, diagramSize, orientation );
-        init( diagram );
         return diagram;
     }
 
@@ -177,7 +167,6 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
         LOG.debug( "Making critical flow map diagram" );
         FailureImpactsDiagram diagram =
                 new FailureImpactsDiagram( segmentObject, assumeFails, diagramSize, orientation );
-        init( diagram );
         return diagram;
     }
 
@@ -196,7 +185,6 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
                                                                      selectedEntityRel,
                                                                      diagramSize,
                                                                      orientation );
-        init( diagram );        
         return diagram;
     }
 

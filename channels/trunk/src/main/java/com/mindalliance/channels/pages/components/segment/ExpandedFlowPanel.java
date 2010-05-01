@@ -1,8 +1,6 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.RedirectFlow;
 import com.mindalliance.channels.command.commands.SatisfyNeed;
@@ -15,12 +13,13 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
-import com.mindalliance.channels.pages.components.SegmentLink;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -87,7 +86,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     /**
      * Choice of other node in flow.
      */
-    private DropDownChoice<Node> otherChoice;
+    private OtherNodeSelectorPanel otherChoice;
     /**
      * The channel field.
      */
@@ -450,7 +449,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param component the component
      * @return the label component
      */
-    protected final FormComponentLabel addLabeled( String id, FormComponent<?> component ) {
+    private FormComponentLabel addLabeled( String id, FormComponent<?> component ) {
         component.setOutputMarkupId( true );
         FormComponentLabel result = new FormComponentLabel( id, component );
         add( result );
@@ -466,7 +465,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param object    the object of the issues
      * @param property  the property of concern. If null, get issues of object
      */
-    protected void addIssuesAnnotation(
+    private void addIssuesAnnotation(
             FormComponent<?> component,
             ModelObject object,
             String property ) {
@@ -496,23 +495,26 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     /**
      * Add the target/source dropdown. Fill with getOtherNodes(); select with getOther().
      */
+/*
     protected final void addOtherField() {
         final Flow oldFlow = getFlow();
         otherChoice = new DropDownChoice<Node>(
-                "other",                                                                  // NON-NLS
-                new PropertyModel<Node>( this, "other" ),                                 // NON-NLS
-                new PropertyModel<List<? extends Node>>( this, "otherNodes" ),            // NON-NLS
+                "other",
+                new PropertyModel<Node>( this, "other" ),
+                new PropertyModel<List<? extends Node>>( this, "otherNodes" ),            
                 new IChoiceRenderer<Node>() {
-                    public Object getDisplayValue( Node object ) {
-                        Node node = getOther();
+                    public Object getDisplayValue( Node nodeToDisplay ) {
+                        Node otherNode = getOther();
                         boolean tbd =
-                                object.equals( node ) && node.isConnector() && node.getSegment().equals(
+                                nodeToDisplay.equals( otherNode )
+                                        && otherNode.isConnector()
+                                        && otherNode.getSegment().equals(
                                         getNode().getSegment() );
                         return tbd
                                 ? "* to be determined *"
-                                : object.isConnector() && object.getSegment().equals( getFlow().getSegment() )
-                                ? ( (Connector) object ).getInnerFlow().getLocalPart().toString()
-                                : object.toString();
+                                : nodeToDisplay.isConnector() && nodeToDisplay.getSegment().equals( getFlow().getSegment() )
+                                ? ( (Connector) nodeToDisplay ).getInnerFlow().getLocalPart().toString()
+                                : nodeToDisplay.toString();
                     }
 
                     public String getIdValue( Node object, int index ) {
@@ -546,13 +548,213 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         add( otherLabel );
         add( otherChoice );
     }
+*/
+    private void addOtherField() {
+        ModelObjectLink otherLink = new ModelObjectLink( "other-link",
+                new PropertyModel<Part>( this, "otherPart" ),
+                new Model<String>( isSend() ? "To" : "From" ) );
+        otherLink.setOutputMarkupId( true );
+        addOrReplace( otherLink );
 
+        otherChoice = new OtherNodeSelectorPanel(
+                "other",
+                new PropertyModel<Node>( this, "node" ),
+                new PropertyModel<Node>( this, "other" ),
+                new PropertyModel<List<Node>>( this, "firstChoices" ),
+                new PropertyModel<List<Node>>( this, "secondChoices" )
+        );
+        otherChoice.setOutputMarkupId( true );
+        addOrReplace( otherChoice );
+    }
 
     /**
      * @return the node on this side of the flow
      */
-    public final Node getNode() {
+    public Node getNode() {
         return isSend() ? getFlow().getSource() : getFlow().getTarget();
+    }
+
+    /**
+     * Get the node at the other side of this flow: the source if receive, the target if
+     * send.
+     *
+     * @return the other side of this flow.
+     */
+    public final Node getOther() {
+        Flow f = getFlow();
+        return f.isInternal()
+                ? isSend()
+                ? f.getTarget()
+                : f.getSource()
+                : ( (ExternalFlow) f ).getConnector();
+    }
+
+    /**
+     * Get list of obvious candidates: parts in segment with synonymous capability/need, implied or explicit.
+     *
+     * @return a list of nodes
+     */
+    public List<Node> getFirstChoices() {
+        Set<Node> firstChoices = new HashSet<Node>();
+        // find non-redundant connectors of matching needs or capabilities.
+        for ( Connector connector : findRelatedLocalConnectors() ) {
+            if ( !isRedundant( connector ) )
+                firstChoices.add( connector );
+        }
+        // Find related external connectors
+        for ( Connector connector : findRelatedExternalConnectors() ) {
+            if ( !isRedundant( connector ) )
+                firstChoices.add( connector );
+        }
+        // Find all parts involved in related sharing but without related need or capability
+        for ( Part part : findRelatedParts() ) {
+            if ( !isRedundant( part ) )
+                firstChoices.add( part );
+        }
+        return new ArrayList<Node>( firstChoices );
+    }
+
+    private List<Connector> findRelatedLocalConnectors() {
+        Node node = getNode();
+        Segment segment = node.getSegment();
+        Set<Connector> result = new HashSet<Connector>();
+        Iterator<Node> nodes = segment.nodes();
+        while ( nodes.hasNext() ) {
+            Node n = nodes.next();
+            if ( !node.equals( n ) ) {
+                if ( n.isConnector() ) {
+                    Connector connector = (Connector) n;
+                    Flow connectorFlow = connector.getInnerFlow();
+                    if ( isEmptyOrEquivalent( connectorFlow ) ) {
+                        if ( isSend() ) {
+                            if ( connector.isSource()
+                                    && !connectorFlow.getTarget().equals( node ) )
+                                result.add( connector );
+                        } else {
+                            if ( connector.isTarget()
+                                    && !connectorFlow.getSource().equals( node ) )
+                                result.add( connector );
+                        }
+                    }
+                }
+            }
+        }
+        return new ArrayList<Connector>( result );
+    }
+
+    private List<Connector> findRelatedExternalConnectors() {
+        Node node = getNode();
+        Node other = getOther();
+        Segment segment = node.getSegment();
+        Set<Connector> result = new HashSet<Connector>();
+        QueryService queryService = getQueryService();
+        for ( Segment s : queryService.list( Segment.class ) ) {
+            if ( !segment.equals( s ) ) {
+                Iterator<Connector> c = isSend() ? s.inputs() : s.outputs();
+                while ( c.hasNext() ) {
+                    Connector connector = c.next();
+                    Flow connectorFlow = connector.getInnerFlow();
+                    if ( isEmptyOrEquivalent( connectorFlow ) ) {
+                        if ( other.equals( connector )
+                                || ( !node.isConnectedTo( isSend(), connector, getFlow().getName() ) ) )
+                            result.add( connector );
+                    }
+                }
+            }
+        }
+        return new ArrayList<Connector>( result );
+    }
+
+    private List<Part> findRelatedParts() {
+        Node node = getNode();
+        List<Part> relatedParts = new ArrayList<Part>();
+        String info = getFlow().getName();
+        for ( Iterator<Part> parts = node.getSegment().parts(); parts.hasNext(); ) {
+            Part part = parts.next();
+            if ( isSend() ) {
+                if ( part.receivesNamed( info ).hasNext() )
+                    relatedParts.add( part );
+            } else {
+                if ( part.sendsNamed( info ).hasNext() )
+                    relatedParts.add( part );
+            }
+        }
+        return relatedParts;
+    }
+
+    // Is there's already a flow for the node with the part that has the need or capability composed of the connector?
+    private boolean isRedundant( Connector connector ) {
+        // Local connector
+        if ( connector.getSegment().equals( getNode().getSegment() ) ) {
+            Part connectingPart = connector.getInnerFlow().getLocalPart();
+            return getNode().isConnectedTo( isSend(), connectingPart, getFlow().getName() );
+            // external connector
+        } else if ( getFlow().hasConnector() ) {
+            // Tested connector is from another segment -> would lead to an external flow
+            Flow flow = getFlow();
+            // only a target connector (externalized connector)  registers the external flows
+            // external flows are to a part which is itself the target of an internal flow
+            // with another (internalized) connector as source
+            Connector externalizedConnector = (Connector) ( isSend() ? flow.getTarget() : connector );
+            final Connector internalizedConnector = (Connector) (
+                    isSend()
+                            ? connector :
+                            flow.isExternal()
+                                    ? ( (ExternalFlow) flow ).getConnector()
+                                    : flow.getSource() );
+            return CollectionUtils.exists(
+                    IteratorUtils.toList( externalizedConnector.externalFlows() ),
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            ExternalFlow externalFlow = (ExternalFlow) object;
+                            return externalFlow.getPart()
+                                    .equals( internalizedConnector.getInnerFlow().getContactedPart() );
+                        }
+                    }
+            );
+        } else {
+            return false;
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private boolean isRedundant( Part part ) {
+        String info = getFlow().getName();
+        // redundant if part has a matching need or capability
+        List<Flow> needsOrCapabilities = isSend()
+                ? IteratorUtils.toList( part.receivesNamed( info ) )
+                : IteratorUtils.toList( part.sendsNamed( info ) );
+        return CollectionUtils.exists(
+                needsOrCapabilities,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return !( (Flow) object ).isSharing();
+                    }
+                }
+        );
+    }
+
+    /**
+     * Get list of all non-redundant, local parts that are not redundant.
+     *
+     * @return a list of parts
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Node> getSecondChoices() {
+        final List<Part> relatedParts = findRelatedParts();
+        final Node node = getNode();
+        final Node other = getOther();
+        return (List<Node>) CollectionUtils.select(
+                IteratorUtils.toList( node.getSegment().parts() ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Part part = (Part) object;
+                        return !part.equals( node )
+                                && !part.equals( other )
+                                && !relatedParts.contains( part );
+                    }
+                }
+        );
     }
 
     /**
@@ -652,38 +854,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
         return new ArrayList<Node>( result );
     }
-
-    private boolean isRedundant( Connector connector ) {
-        if ( connector.getSegment().equals( getNode().getSegment() ) ) {
-            Part connectingPart = connector.getInnerFlow().getLocalPart();
-            return getNode().isConnectedTo( isSend(), connectingPart, getFlow().getName() );
-        } else if ( getFlow().hasConnector() ) {
-            // Tested connector is from another segment -> would lead to an external flow
-            Flow flow = getFlow();
-            // only a target connector (externalized connector)  registers the external flows
-            // external flows are to a part which is itself the target of an internal flow
-            // with another (internalized) connector as source
-            Connector externalizedConnector = (Connector) ( isSend() ? flow.getTarget() : connector );
-            final Connector internalizedConnector = (Connector) (
-                    isSend()
-                            ? connector :
-                            flow.isExternal()
-                                    ? ( (ExternalFlow) flow ).getConnector()
-                                    : flow.getSource() );
-            return CollectionUtils.exists(
-                    IteratorUtils.toList( externalizedConnector.externalFlows() ),
-                    new Predicate() {
-                        public boolean evaluate( Object object ) {
-                            ExternalFlow externalFlow = (ExternalFlow) object;
-                            return externalFlow.getPart().equals( internalizedConnector.getInnerFlow().getContactedPart() );
-                        }
-                    }
-            );
-        } else {
-            return false;
-        }
-    }
-
 /*
     private boolean hasPartFlowWithSameName( Node n ) {
         String name = getFlow().getName();
@@ -730,18 +900,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         return result;
     }
 
-    /**
-     * Get the node at the other side of this flow: the source if receive, the target if
-     * send.
-     *
-     * @return the other side of this flow.
-     */
-    public final Node getOther() {
-        Flow f = getFlow();
-        return f.isInternal() ?
-                isSend() ? f.getTarget() : f.getSource() :
-                ( (ExternalFlow) f ).getConnector();
-    }
 
     /**
      * Set the node at the other side of this flow by connecting "through" a connector
@@ -762,6 +920,20 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         Flow newFlow = (Flow) change.getSubject();
         // requestLockOn( newFlow );
         setFlow( newFlow );
+    }
+
+    /**
+     * Get other part connected to.
+     *
+     * @return a part
+     */
+    public Part getOtherPart() {
+        Node other = getOther();
+        if ( other.isConnector() ) {
+            return ( (Connector) other ).getInnerFlow().getLocalPart();
+        } else {
+            return (Part) other;
+        }
     }
 
     /**
@@ -911,15 +1083,37 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
+    public void changed(Change change) {
+        // ignore selection of other node - don't propagate selection
+        if ( !(change.isSelected()
+                && change.getSubject() instanceof Node
+                && change.isForProperty( "other" ) )) {
+            super.changed( change );
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isUpdated() ) {
+        if ( change.isSelected()
+                && change.getSubject() instanceof Node
+                && change.isForProperty( "other" ) ) {
+            Flow oldFlow = getFlow();
+            setOther( (Node) change.getSubject() );
             adjustFields( getFlow() );
-            target.addComponent( this );
+            update( target, new Change( Change.Type.Updated, getNode() ) );
+            if ( !getFlow().equals( oldFlow ) ) {
+                update( target, new Change( Change.Type.Collapsed, oldFlow ) );
+                update( target, new Change( Change.Type.Expanded, getFlow() ) );
+            }
+        } else {
+            if ( change.isUpdated() ) {
+                adjustFields( getFlow() );
+                target.addComponent( this );
+            }
+            super.updateWith( target, change, updated );            
         }
-        super.updateWith( target, change, updated );
     }
 
 }

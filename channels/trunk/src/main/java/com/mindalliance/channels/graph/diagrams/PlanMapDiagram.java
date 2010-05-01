@@ -1,14 +1,15 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.PlanMapGraphBuilder;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.springframework.core.io.Resource;
 
@@ -74,14 +75,17 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
     }
 
     /** {@inheritDoc} */
-    public void render( String outputFormat, OutputStream outputStream ) {
-        DiagramFactory<Segment, SegmentRelationship> factory = getDiagramFactory();
-        GraphRenderer<Segment, SegmentRelationship> renderer = factory.getGraphRenderer();
+    public void render(
+            String outputFormat,
+            OutputStream outputStream,
+            Analyst analyst,
+            DiagramFactory diagramFactory ) {
+        GraphRenderer<Segment, SegmentRelationship> renderer = diagramFactory.getGraphRenderer();
 
         renderer.highlight( selectedSegment, selectedSgRel );
         renderer.render(
-                createGraph( factory.getQueryService() ),
-                createExporter( outputFormat, factory.getImageDirectory() ), outputFormat,
+                createGraph( diagramFactory.getQueryService() ),
+                createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst ), outputFormat,
                 outputStream );
     }
 
@@ -101,10 +105,10 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
         this.uRLProvider = uRLProvider;
     }
 
-    private PlanMapDOTExporter createExporter( String outputFormat, Resource imageDirectory ) {
+    private PlanMapDOTExporter createExporter( String outputFormat, Resource imageDirectory, Analyst analyst ) {
 
         PlanMapMetaProvider metaProvider =
-            new PlanMapMetaProvider( segments, outputFormat, imageDirectory, getAnalyst() );
+            new PlanMapMetaProvider( segments, outputFormat, imageDirectory, analyst );
         metaProvider.setGroupByPhase( groupByPhase );
         metaProvider.setGroupByEvent( groupByEvent );
         metaProvider.setSelectedGroup( selectedGroup );

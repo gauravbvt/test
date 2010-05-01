@@ -1,9 +1,10 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityNetworkGraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.ModelEntity;
@@ -37,13 +38,16 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
         this.selectedEntityRel = selectedEntityRel;
     }
 
-    public void render( String outputFormat, OutputStream outputStream ) {
-        List<? extends ModelEntity> entities = getEntitiesOfSameKind();
-        DiagramFactory<ModelEntity, EntityRelationship> diagramFactory = getDiagramFactory();
+    public void render(
+            String outputFormat,
+            OutputStream outputStream,
+            Analyst analyst,
+            DiagramFactory diagramFactory ) {
+        List<? extends ModelEntity> entities = getEntitiesOfSameKind( diagramFactory );
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder<ModelEntity, EntityRelationship> entityNetworkGraphBuilder =
-                new EntityNetworkGraphBuilder( entity, entities, getDiagramFactory().getQueryService() );
+                new EntityNetworkGraphBuilder( entity, entities, diagramFactory.getQueryService() );
         Graph<ModelEntity, EntityRelationship> graph =
                 entityNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer =
@@ -56,7 +60,7 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
         EntityNetworkMetaProvider metaProvider = new EntityNetworkMetaProvider(
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                getAnalyst() );
+                analyst );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }
@@ -72,9 +76,10 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<? extends ModelEntity> getEntitiesOfSameKind() {
+    private List<? extends ModelEntity> getEntitiesOfSameKind(
+                        DiagramFactory<ModelEntity, EntityRelationship> diagramFactory) {
         return (List<? extends ModelEntity>) CollectionUtils.select(
-                getDiagramFactory().getQueryService().listEntitiesWithUnknown( entity.getClass() ),
+                diagramFactory.getQueryService().listEntitiesWithUnknown( entity.getClass() ),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         return entity.getKind().equals( ((ModelEntity)object).getKind() );

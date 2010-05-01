@@ -1,5 +1,7 @@
 package com.mindalliance.channels.graph;
 
+import com.mindalliance.channels.analysis.Analyst;
+
 import java.io.OutputStream;
 import java.io.Serializable;
 
@@ -10,7 +12,7 @@ import java.io.Serializable;
  * Date: Feb 11, 2009
  * Time: 4:30:22 PM
  */
-public interface  Diagram extends Serializable {
+public interface  Diagram<V,E> extends Serializable {
     /**
      * Constrain size of diagram.
      *
@@ -31,15 +33,23 @@ public interface  Diagram extends Serializable {
      *
      * @param outputFormat the name of the format
      * @param outputStream the output stream
+     * @param analyst an analyst
+     * @param diagramFactory   a diagram factory
      * @throws DiagramException raised if diagram generation fails
      */
-    void render( String outputFormat, OutputStream outputStream );
+    void render( 
+            String outputFormat,
+            OutputStream outputStream,
+            Analyst analyst,
+            DiagramFactory<V,E> diagramFactory );
 
     /**
      * Produce image map
      *
+     * @param analyst an analyst
+     * @param diagramFactory  a diagram factory
      * @return a String
      * @throws DiagramException if fails
      */
-    String makeImageMap();
+    String makeImageMap( Analyst analyst, DiagramFactory<V,E> diagramFactory );
 }
