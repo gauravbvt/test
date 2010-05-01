@@ -1026,5 +1026,9 @@ input[disabled] {
     color: #555555;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 
 

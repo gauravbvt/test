@@ -20,6 +20,7 @@ import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -152,6 +153,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Goals achieved by part.
      */
     private Component taskGoalsPanel;
+    /**
+     * Part summary.
+     */
+    private Label summaryLabel;
 
 
     //====================================
@@ -160,6 +165,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         super.setOutputMarkupPlaceholderTag( false );
         setOutputMarkupId( true );
         this.model = model;
+        addSummaryLabel();
         addPartDescription();
         addTaskField();
         addEntityFields();
@@ -172,11 +178,23 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         adjustFields();
     }
 
+    private void addSummaryLabel() {
+        summaryLabel = new Label( "partSummary", new PropertyModel( getPart(), "summary" ) );
+        summaryLabel.setOutputMarkupId( true );
+        summaryLabel.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Collapsed, getPart() ) );
+            }
+        } );
+        addOrReplace( summaryLabel );
+    }
+
+
     private void addPartDescription() {
         partDescription = new TextArea<String>( "description",                            // NON-NLS
                 new PropertyModel<String>( this, "description" ) );
-        partDescription.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
+        partDescription.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "description" ) );
             }
         } );
@@ -820,6 +838,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         if ( !change.isNone() ) {
             if ( change.isUpdated() ) {
                 String property = change.getProperty();
+                addSummaryLabel();
+                target.addComponent( summaryLabel );
                 for ( EntityReferencePanel entityReferencePanel : entityFields ) {
                     entityReferencePanel.updateIssues();
                     target.addComponent( entityReferencePanel );

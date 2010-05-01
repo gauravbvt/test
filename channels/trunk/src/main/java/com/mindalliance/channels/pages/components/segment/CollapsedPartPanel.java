@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -50,6 +51,11 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
     private void addSummaryLabel() {
         summaryLabel = new Label( "partSummary", new PropertyModel( getPart(), "summary" ) );
         summaryLabel.setOutputMarkupId( true );
+        summaryLabel.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getPart() ) );
+            }
+        } );
         addOrReplace( summaryLabel );
     }
 

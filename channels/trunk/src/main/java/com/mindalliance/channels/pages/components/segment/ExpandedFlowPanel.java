@@ -26,6 +26,7 @@ import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -421,6 +422,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                                 : getFlow().getReceiveTitle();
                     }
                 } );
+        titleLabel.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Collapsed, getFlow() ) );
+            }
+        } );
         titleLabel.setOutputMarkupId( true );
         add( titleLabel );
         addFlowActionMenu();

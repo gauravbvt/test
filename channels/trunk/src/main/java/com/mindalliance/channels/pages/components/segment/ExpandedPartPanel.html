@@ -7,6 +7,15 @@
         lang="en">
 <body>
 <wicket:panel>
+<table>
+    <tr>
+        <td align="left" class="pointer">
+        <span class="summary" wicket:id="partSummary">
+            Part summary
+        </span>
+        </td>
+    </tr>
+</table>
 <table summary="Part description">
     <tr>
         <th align="right"><label for="task">Name:</label></th>
@@ -22,7 +31,7 @@
         <th align="right">
             <label for="actor"><span wicket:id="actor-link" href="#">Agent</span>:</label>
         </th>
-        <td><span id="actor" wicket:id="actor" >[entity reference panel]</span></td>
+        <td><span id="actor" wicket:id="actor">[entity reference panel]</span></td>
     </tr>
     <tr>
         <th align="right">
@@ -46,12 +55,12 @@
     <tr>
         <th align="right"><label for="asTeam">Execution:</label>
         </th>
-         <td>
+        <td>
              <span class="timing">
                 <input id="asTeam" type="checkbox" wicket:id="asTeam"/>
                 Assignees execute task as a team
              </span>
-         </td>
+        </td>
     </tr>
     <tr>
         <th align="right">

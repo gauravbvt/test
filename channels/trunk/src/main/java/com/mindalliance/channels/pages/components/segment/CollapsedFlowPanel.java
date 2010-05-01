@@ -1,10 +1,13 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -29,12 +32,16 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addLabel() {
-        Label label = new Label( "title",                                                 // NON-NLS
+        Label label = new Label( "title",
                 new PropertyModel( getFlow(),
-                        isSend() ? "sendTitle" : "receiveTitle" ) );                // NON-NLS
-
+                        isSend() ? "sendTitle" : "receiveTitle" ) );
+        label.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getFlow() ) );
+            }
+        } );
         final String c = Channel.toString( getFlow().getEffectiveChannels() );
-        Label channel = new Label( "channels", new AbstractReadOnlyModel() {              // NON-NLS
+        Label channel = new Label( "channels", new AbstractReadOnlyModel() {
 
             @Override
             public Object getObject() {
