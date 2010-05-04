@@ -12,6 +12,6 @@ import org.springframework.test.context.TestExecutionListeners;
 public class DemoTest extends WalkthroughTest {
 
     public DemoTest() {
-        super( "guest", "mindalliance.com/channels/plans/railsec" );
+        super( "guest", "mindalliance.com/channels/plans/demo" );
     }
 }

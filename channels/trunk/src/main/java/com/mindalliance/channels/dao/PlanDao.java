@@ -1,6 +1,5 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
@@ -38,6 +37,11 @@ import java.util.Set;
  * Wrapper for per-plan dao-related operations.
  */
 public class PlanDao extends Memory {
+
+    /**
+     * Lowest id for mutable model objects.
+     */
+    public static final long IMMUTABLE_RANGE = -1000L;
 
     /**
      * Name of persisted data file.
@@ -83,12 +87,7 @@ public class PlanDao extends Memory {
     /** Interval of commands at which snapshots are taken. */
     private int snapshotThreshold = 10;
 
-    private FileUserDetailsService userDetailsService;
-
-    /**
-     * Lowest id for mutable model objects.
-     */
-    public static final long IMMUTABLE_RANGE = -1000L;
+    private UserService userService;
 
     //-------------------------------------
     PlanDao( Plan plan, File baseDirectory, IdGenerator idGenerator ) {
@@ -122,12 +121,12 @@ public class PlanDao extends Memory {
         return idGenerator;
     }
 
-    public FileUserDetailsService getUserDetailsService() {
-        return userDetailsService;
+    public UserService getUserDetailsService() {
+        return userService;
     }
 
-    public void setUserDetailsService( FileUserDetailsService userDetailsService ) {
-        this.userDetailsService = userDetailsService;
+    public void setUserDetailsService( UserService userService ) {
+        this.userService = userService;
     }
 
     /**
@@ -252,7 +251,7 @@ public class PlanDao extends Memory {
      * @param exporter the persistence mechanism
      * @throws IOException on errors
      */
-    private void saveJournal( Exporter exporter ) throws IOException {
+    void saveJournal( Exporter exporter ) throws IOException {
         getJournalFile().delete();
         FileOutputStream out = null;
         try {
@@ -262,26 +261,6 @@ public class PlanDao extends Memory {
         } finally {
             if ( out != null )
                 out.close();
-        }
-    }
-
-    /**
-     * Callback after a command was executed.
-     * Update snapshot if needed.
-     *
-     * @param command  the command
-     * @param exporter the exporter to use
-     */
-    public synchronized void onAfterCommand( Command command, Exporter exporter ) {
-        try {
-            if ( command.forcesSnapshot() || journal.size() >= snapshotThreshold )
-                save( exporter );
-            else {
-                journal.addCommand( command );
-                saveJournal( exporter );
-            }
-        } catch ( IOException e ) {
-            throw new RuntimeException( "Failed to save journal", e );
         }
     }
 
@@ -356,7 +335,7 @@ public class PlanDao extends Memory {
     /**
      * Add default phase to plan.
      */
-    public void addDefaultPhase() {
+    private void addDefaultPhase() {
         Phase phase = findOrCreate( Phase.class, Plan.DEFAULT_PHASE_NAME, null );
         phase.setActual();
         phase.setTiming( Plan.DEFAULT_PHASE_TIMING );
@@ -437,7 +416,7 @@ public class PlanDao extends Memory {
             // Participations are not referenced per se but are not obsolete if they name a
             // registered user.
             Participation participation = (Participation) mo;
-            User user = userDetailsService.getUserNamed( participation.getUsername() );
+            User user = userService.getUserNamed( participation.getUsername() );
             return user != null;
 
         } else if ( plan.references( mo ) )
@@ -494,8 +473,8 @@ public class PlanDao extends Memory {
         Participation.createImmutables( this );
 
         // Make sure that there is one participation per user
-        if ( userDetailsService != null )
-            for ( String username : userDetailsService.getUsernames( plan.getUri() ) ) {
+        if ( userService != null )
+            for ( String username : userService.getUsernames( plan.getUri() ) ) {
                 Participation p = findOrCreate( Participation.class, username, null );
                 p.setActual();
             }

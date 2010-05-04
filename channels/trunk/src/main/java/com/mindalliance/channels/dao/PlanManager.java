@@ -2,9 +2,6 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.analysis.IssueScanner;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.dao.ImportExportFactory;
-import com.mindalliance.channels.dao.Importer;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
@@ -16,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.annotation.Secured;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -127,7 +125,7 @@ public class PlanManager {
      */
     private List<TransmissionMedium> builtInMedia = new ArrayList<TransmissionMedium>();
 
-    private FileUserDetailsService userDetailsService;
+    private UserService userService;
 
     //------------------------------------------
     /**
@@ -170,12 +168,12 @@ public class PlanManager {
         this.importDirectory = importDirectory;
     }
 
-    public FileUserDetailsService getUserDetailsService() {
-        return userDetailsService;
+    public UserService getUserService() {
+        return userService;
     }
 
-    public void setUserDetailsService( FileUserDetailsService userDetailsService ) {
-        this.userDetailsService = userDetailsService;
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
     }
 
     public synchronized String getBase() {
@@ -393,9 +391,20 @@ public class PlanManager {
         // TODO implement proper listener/callback mechanism
         if ( command.isMemorable() )
             try {
-                PlanDao w = getDao( plan );
-                Exporter exporter = importExportFactory.createExporter( w );
-                w.onAfterCommand( command, exporter );
+                PlanDao dao = getDao( plan );
+                Exporter exporter = importExportFactory.createExporter( dao );
+                synchronized ( dao ) {
+                    Journal journal = dao.getJournal();
+                    if ( command.forcesSnapshot() || journal.size() >= dao.getSnapshotThreshold() )
+                        dao.save( exporter );
+                    else {
+                        journal.addCommand( command );
+                        dao.saveJournal( exporter );
+                    }
+                }
+
+            } catch ( IOException e ) {
+                throw new RuntimeException( "Failed to save journal", e );
             } catch ( NotFoundException e ) {
                 throw new RuntimeException( "Failed to save journal", e );
             }
@@ -443,7 +452,7 @@ public class PlanManager {
         try {
             PlanDao dao = new PlanDao( plan, getDataDirectory().getFile(), idGenerator );
             dao.setSnapshotThreshold( snapshotThreshold );
-            dao.setUserDetailsService( userDetailsService );
+            dao.setUserDetailsService( userService );
             dao.defineImmutableEntities( builtInMedia );
             dao.add( plan, plan.getId() );
 
@@ -482,8 +491,8 @@ public class PlanManager {
         }
 
         // Assign default plan to users
-        if ( userDetailsService != null )
-            for ( User user : userDetailsService.getUsers() )
+        if ( userService != null )
+            for ( User user : userService.getUsers() )
                 user.setPlan( getDefaultPlan( user ) );
 
     }
@@ -638,7 +647,7 @@ public class PlanManager {
         // Create development plan from copy of old dev plan
         Plan newDevPlan = makeNewDevPlan( oldDevPlan );
         // Substitute current plans of users as appropriate
-        for ( User user : userDetailsService.getUsers() ) {
+        for ( User user : userService.getUsers() ) {
             Plan userPlan = user.getPlan();
             if ( userPlan != null && userPlan.getUri().equals( oldDevPlan.getUri() ) ) {
                 if ( userPlan.isDevelopment() ) {
@@ -749,7 +758,7 @@ public class PlanManager {
     public boolean addProducer( String producer, final Plan plan ) {
         plan.addProducer( producer );
         final List<String> producers = plan.getProducers();
-        boolean unanimous = !CollectionUtils.exists( userDetailsService.getUsers(), new Predicate() {
+        boolean unanimous = !CollectionUtils.exists( userService.getUsers(), new Predicate() {
             public boolean evaluate( Object object ) {
                 User user = (User) object;
                 return user.isPlanner( plan.getUri() ) && !producers.contains( user.getUsername() );
@@ -767,7 +776,7 @@ public class PlanManager {
      * @param uri the plan's uri
      */
     public synchronized void setResyncRequired( String uri ) {
-        outOfSyncUsers.put( uri, userDetailsService.getUsernames() );
+        outOfSyncUsers.put( uri, userService.getUsernames() );
     }
 
     /**
@@ -846,6 +855,24 @@ public class PlanManager {
 
         LOG.warn( "No default plan for user {}", user.getUsername() );
         return null;
+    }
+
+    /**
+     * Set the permissions for a user.
+     *
+     * @param user the user
+     * @param role either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null for none
+     * @param uri either a plan uri or null for all.
+     */
+    @Secured( "ROLE_ADMIN" )
+    public void setAuthorities( User user, String role, String uri ) {
+        user.getUserInfo().setAuthorities( role, uri, getPlans() );
+        user.setPlan( uri != null ? getDefaultPlan( user ) : null );
+        try {
+            userService.save();
+        } catch ( IOException e ) {
+            LOG.error( "Unable to save user definitions", e );
+        }
     }
 
     //=============================================================

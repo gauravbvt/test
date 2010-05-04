@@ -3,9 +3,9 @@ package com.mindalliance.channels;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
-import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.query.DefaultQueryService;
@@ -98,7 +98,7 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     protected WicketTester tester;
 
     @Autowired
-    private FileUserDetailsService userDetailsService;
+    private UserService userService;
 
     private IRequestCodingStrategy rcs;
 
@@ -172,7 +172,7 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
      */
     protected void login( String username ) {
         SecurityContext context = SecurityContextHolder.getContext();
-        UserDetails details = userDetailsService.loadUserByUsername( username );
+        UserDetails details = userService.loadUserByUsername( username );
         TestingAuthenticationToken auth = new TestingAuthenticationToken(
                 details, "",  (List<GrantedAuthority>) details.getAuthorities() );
         auth.setAuthenticated( true );

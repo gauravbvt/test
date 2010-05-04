@@ -23,7 +23,7 @@
     <bean name="plan" class="com.mindalliance.channels.model.Plan" factory-bean="user" factory-method="getPlan"
           scope="session" />
 
-    <bean id="userDetailsService" class="com.mindalliance.channels.dao.FileUserDetailsService">
+    <bean id="userService" class="com.mindalliance.channels.dao.FileUserDetailsService">
         <property name="base" value="${channels.home}"/>
         <property name="userDefinitions" value="users.properties"/>
         <property name="defaultDefinitions" value="/WEB-INF/users.properties"/>
@@ -53,7 +53,7 @@
     </sec:http>
 
     <sec:authentication-manager alias="authenticationManager">
-        <sec:authentication-provider user-service-ref="userDetailsService">
+        <sec:authentication-provider user-service-ref="userService">
             <sec:password-encoder hash="md5"/>
         </sec:authentication-provider>
     </sec:authentication-manager>

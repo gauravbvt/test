@@ -45,10 +45,10 @@ public abstract class WalkthroughTest extends AbstractChannelsTest {
     public void testAdmin() {
         assertRendered( "admin", AdminPage.class );
 
-        Label label = (Label) tester.getComponentFromLastRenderedPage( "user" );
+        Label label = (Label) tester.getComponentFromLastRenderedPage( "loggedUser" );
         assertEquals( "guest", label.getDefaultModelObjectAsString() );
 
-        DropDownChoice<Plan> dropdown = (DropDownChoice<Plan>) tester.getComponentFromLastRenderedPage( "plan-sel" );
+        DropDownChoice<Plan> dropdown = (DropDownChoice<Plan>) tester.getComponentFromLastRenderedPage( "users:plan-sel" );
         User user = User.current();
 
         assertEquals( user.getPlan(), dropdown.getModelObject() );

@@ -57,24 +57,6 @@ public abstract class Memory implements Dao {
      */
     public abstract IdGenerator getIdGenerator();
 
-    /**
-     * {@inheritDoc}
-     */
-    public void flush() {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void afterInitialize() {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void onDestroy() {
-    }
-
     /// CRUD
 
     /**

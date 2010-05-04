@@ -122,6 +122,7 @@ public class Channels extends WebApplication
         mount( new IndexedParamUrlCodingStrategy( "contacts", ContactPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan", PlanPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "admin", AdminPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "nosops.html", NoAccessPage.class ) );
 
         mount( new IndexedParamUrlCodingStrategy( "uploads", UploadPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "login.html", LoginPage.class ) );
@@ -164,7 +165,12 @@ public class Channels extends WebApplication
     public Class<? extends WebPage> getHomePage() {
         User user = User.current();
         Plan plan = user.getPlan();
+        if ( plan == null ) {
+            plan = planManager.getDefaultPlan( user );
+            user.setPlan( plan );
+        }
         return user.isAdmin()                  ? AdminPage.class
+             : plan == null                    ? NoAccessPage.class
              : user.isPlanner( plan.getUri() ) ? PlanPage.class
                                                : SOPsReportPage.class ;
     }

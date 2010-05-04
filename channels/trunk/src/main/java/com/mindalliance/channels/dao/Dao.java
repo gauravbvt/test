@@ -1,6 +1,5 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.InternalFlow;
@@ -123,21 +122,6 @@ public interface Dao {
      * @return the object or null if not found
      */
     <T extends ModelObject> T find( Class<T> clazz, String name );
-
-    /**
-     * Commit changes to persistent store.
-     */
-    void flush();
-
-    /**
-     * Called after right after initialization.
-     */
-    void afterInitialize();
-
-    /**
-     * Called when application is terminated.
-     */
-    void onDestroy();
 
     /**
      * Find an existing or create a new model object.

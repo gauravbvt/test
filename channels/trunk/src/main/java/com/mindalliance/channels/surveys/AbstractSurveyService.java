@@ -6,8 +6,8 @@ import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.analysis.DetectedIssue;
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
@@ -67,7 +67,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
      */
     private QueryService queryService;
 
-    private FileUserDetailsService userDetailsService;
+    private UserService userService;
     /**
      * Default email address for survey help.
      */
@@ -123,8 +123,8 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         this.queryService = queryService;
     }
 
-    public void setUserDetailsService( FileUserDetailsService userDetailsService ) {
-        this.userDetailsService = userDetailsService;
+    public void setUserDetailsService( UserService userService ) {
+        this.userService = userService;
     }
 
     public void setAnalyst( Analyst analyst ) {
@@ -501,7 +501,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     }
 
     protected String getIssuerName( Survey survey ) {
-        User user = userDetailsService.getUserNamed( survey.getUserName() );
+        User user = userService.getUserNamed( survey.getUserName() );
         if ( user == null )
             return "unknown user";
         else
@@ -512,7 +512,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         StringBuilder sb = new StringBuilder();
         List<String> names = new ArrayList<String>();
         for ( Contact contact : survey.getContacts() ) {
-            User user = userDetailsService.getUserNamed( contact.getUsername() );
+            User user = userService.getUserNamed( contact.getUsername() );
             if ( user != null ) {
                 names.add( user.getNormalizedFullName() );
             }
@@ -585,7 +585,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     }
 
     protected User getUser( String username ) {
-        return userDetailsService.getUserNamed( username );
+        return userService.getUserNamed( username );
     }
 
     protected String getStringResource( String name ) {

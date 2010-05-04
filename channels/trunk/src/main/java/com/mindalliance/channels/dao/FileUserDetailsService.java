@@ -3,6 +3,7 @@ package com.mindalliance.channels.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,11 +21,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Comparator;
 
 /**
  * A user details service that keeps in sync with changes to the underlying user definition file.
  */
-public class FileUserDetailsService implements UserDetailsService {
+public class FileUserDetailsService implements UserDetailsService, UserService {
 
     /**
      * The logger.
@@ -79,19 +81,19 @@ public class FileUserDetailsService implements UserDetailsService {
         }
     }
 
-    /**
-     * Load user details for a given username.
-     *
-     * @param username the user name.
-     * @return the details
-     */
-    public UserDetails loadUserByUsername( String username ) {
-        User user = readUsers().get( username );
-        if ( user == null )
-            throw new UsernameNotFoundException(
-                MessageFormat.format( "Unknown username: {0}", username ) );
+    @Secured( "ROLE_ADMIN" )
+    public synchronized User createUser( String name ) throws DuplicateKeyException {
+        if ( users.containsKey( name ) )
+            throw new DuplicateKeyException();
 
+        User user = new User( new UserInfo( name, "x,User,user@example.com" ) );
+        users.put( name, user );
         return user;
+    }
+
+    @Secured( "ROLE_ADMIN" )
+    public synchronized void deleteUser( User user ) {
+        users.remove( user.getUsername() );
     }
 
     private void load() throws IOException {
@@ -113,6 +115,21 @@ public class FileUserDetailsService implements UserDetailsService {
             if ( inputStream != null )
                 inputStream.close();
         }
+    }
+
+    /**
+     * Load user details for a given username.
+     *
+     * @param username the user name.
+     * @return the details
+     */
+    public UserDetails loadUserByUsername( String username ) {
+        User user = readUsers().get( username );
+        if ( user == null )
+            throw new UsernameNotFoundException(
+                MessageFormat.format( "Unknown username: {0}", username ) );
+
+        return user;
     }
 
     private static Map<String, User> readDetails( Properties properties ) {
@@ -201,8 +218,15 @@ public class FileUserDetailsService implements UserDetailsService {
         return readUsers().get( userName );
     }
 
+    /** {@inheritDoc} */
     public List<User> getUsers() {
-        return new ArrayList<User>( readUsers().values() );
+        List<User> result = new ArrayList<User>( readUsers().values() );
+        Collections.sort( result, new Comparator<User>() {
+            public int compare( User o1, User o2 ) {
+                return o1.getUsername().compareTo( o2.getUsername() );
+            }
+        } );
+        return result;
     }
 
     /**

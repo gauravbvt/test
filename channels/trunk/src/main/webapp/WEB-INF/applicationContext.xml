@@ -30,12 +30,12 @@ CONFIGURATION NOTES:
 
     <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager" lazy-init="true">
         <property name="base" value="${channels.home}"/>
-        <property name="importDirectory" value="file:${channels.home}/import"/>
+        <property name="importDirectory" value="file:${channels.home}${file.separator}import"/>
         <property name="planDefinitionsFileName" value="plans.properties"/>
         <property name="defaultPlanDefinitions" value="/WEB-INF/plans.properties"/>
         <property name="surveysFileName" value="surveys"/>
         <property name="uploadsDirName" value="uploads"/>
-        <property name="dataDirectory" value="file:${channels.home}/data"/>
+        <property name="dataDirectory" value="file:${channels.home}${file.separator}data"/>
         <property name="snapshotThreshold" value="10"/>
         <property name="builtInMedia">
             <list value-type="java.util.ArrayList">
@@ -78,7 +78,7 @@ CONFIGURATION NOTES:
           init-method="start" destroy-method="stop"/>
 
     <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
-        <property name="iconDirectory" value="file:${channels.home}/icons"/>
+        <property name="iconDirectory" value="file:${channels.home}${file.separator}icons"/>
         <property name="iconPath" value="icons/"/>
     </bean>
 

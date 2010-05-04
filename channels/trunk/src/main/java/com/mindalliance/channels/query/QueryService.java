@@ -5,9 +5,9 @@ import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.Dao;
-import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Assignment;
@@ -447,11 +447,6 @@ public interface QueryService {
      * @return a created flow
      */
     Flow replicate( Flow flow, boolean isSend );
-
-    /**
-     * Commit changes to persistent store.
-     */
-    void flush();
 
     /**
      * Find all jobs for an organization that are implied by parts but not confirmed.
@@ -1321,7 +1316,7 @@ public interface QueryService {
      *
      * @return a file user details service
      */
-    FileUserDetailsService getUserDetailsService();
+    UserService getUserService();
 
     /**
      * Find the participation by a user.

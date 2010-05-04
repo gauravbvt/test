@@ -97,13 +97,11 @@ public class User implements UserDetails {
         if ( userInfo.isAdmin() )
             result.add( new GrantedAuthorityImpl( UserInfo.ROLE_ADMIN ) );
 
-        if ( plan != null ) {
-            String uri = plan.getUri();
-            if ( userInfo.isPlanner( uri ) )
-                result.add( new GrantedAuthorityImpl( UserInfo.ROLE_PLANNER ) );
-            if ( userInfo.isUser( uri ) )
-                result.add( new GrantedAuthorityImpl( UserInfo.ROLE_USER ) );
-        }
+        String uri = plan == null ? null : plan.getUri();
+        if ( userInfo.isPlanner( uri ) )
+            result.add( new GrantedAuthorityImpl( UserInfo.ROLE_PLANNER ) );
+        if ( userInfo.isUser( uri ) )
+            result.add( new GrantedAuthorityImpl( UserInfo.ROLE_USER ) );
 
         return Collections.unmodifiableList( result );
     }

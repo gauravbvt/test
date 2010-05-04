@@ -2,11 +2,11 @@
 // All rights reserved.
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.model.Plan;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -39,7 +39,7 @@ public final class UserInfo implements Serializable {
     /** The username. */
     private String username;
 
-    /** The passwrod. */
+    /** The password. */
     private String password;
 
     /** The fullName. */
@@ -51,8 +51,8 @@ public final class UserInfo implements Serializable {
     /** The user's access (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN), indexed by plan uri. */
     private Map<String,String> planAccess = new HashMap<String, String>();
 
-    /** The user's global access role (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN). */
-    private List<String> globalAccess = new ArrayList<String>();
+    /** The user's global access role (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN|null). */
+    private String globalAccess;
 
 
     //---------------------------------
@@ -79,7 +79,7 @@ public final class UserInfo implements Serializable {
 
             } else if ( token.equals( ROLE_ADMIN ) || token.equals( ROLE_PLANNER )
                                                    || token.equals( ROLE_USER ) )
-                globalAccess.add( token );
+                globalAccess = token;
 
             else
                 LoggerFactory.getLogger( getClass() ).warn(
@@ -93,16 +93,9 @@ public final class UserInfo implements Serializable {
      * Remove redundant declarations.
      */
     private void simplify() {
-        if ( globalAccess.contains( ROLE_ADMIN ) ) {
-            globalAccess.remove( ROLE_PLANNER );
-            globalAccess.remove( ROLE_USER );
+        if ( ROLE_ADMIN.equals( globalAccess ) || ROLE_PLANNER.equals( globalAccess ) ) {
             planAccess.clear();
-
-        } else if ( globalAccess.contains( ROLE_PLANNER ) ) {
-            globalAccess.remove( ROLE_USER );
-            planAccess.clear();
-
-        } else if ( globalAccess.contains( ROLE_USER ) )
+        } else if ( ROLE_USER.equals( globalAccess ) )
             for ( String uri : new HashSet<String>( planAccess.keySet() ) )
                 if ( ROLE_USER.equals( planAccess.get( uri ) ) )
                     planAccess.remove( uri );
@@ -142,13 +135,33 @@ public final class UserInfo implements Serializable {
     }
 
     /**
+     * Test if this user is a user of all plans.
+     * @return true if so
+     */
+    public boolean isUser() {
+        return ROLE_USER.equals( globalAccess ) || isPlanner();
+    }
+
+    /**
+     * Test if this user is a planner for all plans.
+     * @return true if so
+     */
+    public boolean isPlanner() {
+        return ROLE_PLANNER.equals( globalAccess ) || isAdmin();
+    }
+
+    public boolean isAdmin() {
+        return ROLE_ADMIN.equals( globalAccess );
+    }
+
+    /**
      * Test if this user can access the given plan uri.
      * @param uri the plan uri
      * @return true if user is authorized for that plan
      */
     public boolean isUser( String uri ) {
-        return uri != null
-            && ( !globalAccess.isEmpty() || planAccess.containsKey( uri ) );
+        return globalAccess != null
+            || uri != null && planAccess.containsKey( uri );
     }
 
     /**
@@ -157,13 +170,9 @@ public final class UserInfo implements Serializable {
      * @return true if user is a planner for that plan
      */
     public boolean isPlanner( String uri ) {
-        return globalAccess.contains( ROLE_ADMIN )
-            || globalAccess.contains( ROLE_PLANNER )
+        return isAdmin()
+            || isPlanner()
             || uri != null && ROLE_PLANNER.equals( planAccess.get( uri ) );
-    }
-
-    public boolean isAdmin() {
-        return globalAccess.contains( ROLE_ADMIN );
     }
 
     /**
@@ -171,7 +180,7 @@ public final class UserInfo implements Serializable {
      * @return true if the user is authorized for at least a plan
      */
     public boolean isEnabled() {
-        return !globalAccess.isEmpty() || !planAccess.isEmpty();
+        return globalAccess != null || !planAccess.isEmpty();
     }
 
     /**
@@ -196,11 +205,76 @@ public final class UserInfo implements Serializable {
             }
             buffer.append( ']' );
         }
-        for ( String access : globalAccess ) {
+        if ( globalAccess != null ) {
             buffer.append( ',' );
-            buffer.append( access );
+            buffer.append( globalAccess );
         }
 
         return buffer.toString();
+    }
+
+    /**
+     * Give a role to this user for all plans.
+     * @param role either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null.
+     * Setting to null removes all authorities.
+     */
+    private void grantGlobalAccess( String role ) {
+        globalAccess = null;
+
+        if ( ROLE_USER.equals( role ) ) {
+            globalAccess = role;
+            for ( String uri : new HashSet<String>( planAccess.keySet() ) )
+                if ( ROLE_USER.equals( planAccess.get( uri ) ) )
+                    planAccess.remove( uri );
+
+        } else {
+            planAccess.clear();
+            if ( ROLE_ADMIN.equals( role ) || ROLE_PLANNER.equals( role ) )
+                globalAccess = role;
+        }
+    }
+
+    /**
+     * Grant proper authorities to a plan.
+     * @see PlanManager#setAuthorities
+     *
+     * @param role either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null for none
+     * @param uri the plan's uri or null for all
+     * @param planList available plans
+     */
+    void setAuthorities( String role, String uri, List<Plan> planList ) {
+        if ( uri == null || ROLE_ADMIN.equals( role ) )
+            grantGlobalAccess( role );
+
+        else if ( ROLE_PLANNER.equals( role ) ) {
+            if ( isPlanner() )
+                grantOthers( planList, ROLE_PLANNER );
+            else
+                planAccess.put( uri, ROLE_PLANNER );
+
+        } else if ( ROLE_USER.equals( role ) ) {
+            if ( isUser() )
+                grantOthers( planList, ROLE_USER );
+            else
+                planAccess.put( uri, ROLE_USER );
+
+        } else {
+            // role == null or other string
+            if ( isPlanner() )
+                grantOthers( planList, ROLE_PLANNER );
+            else if ( isUser() )
+                grantOthers( planList, ROLE_USER );
+            planAccess.remove( uri );
+        }
+    }
+
+    private void grantOthers( List<Plan> planList, String role ) {
+        for ( Plan plan : planList ) {
+            String uri = plan.getUri();
+            if ( !planAccess.containsKey( uri ) )
+                planAccess.put( uri, role );
+        }
+
+        globalAccess = null;
     }
 }

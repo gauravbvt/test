@@ -1,10 +1,11 @@
 package com.mindalliance.channels.dao;
 
-import junit.framework.TestCase;
 import org.apache.wicket.util.file.File;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * ...
  */
-public class TestFileUserDetailsService extends TestCase {
+public class TestFileUserDetailsService {
 
     private FileUserDetailsService service;
 
@@ -23,12 +24,12 @@ public class TestFileUserDetailsService extends TestCase {
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
      */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         service = new FileUserDetailsService();
     }
 
+    @Test
     public void testNoData() {
         try {
             service.loadUserByUsername( "bob" );
@@ -38,6 +39,7 @@ public class TestFileUserDetailsService extends TestCase {
         }
     }
 
+    @Test
     public void testDefaultData() {
         service.setDefaultDefinitions( new FileSystemResource( "src/main/webapp/WEB-INF/users.properties" ) );
         String user = "denis";
@@ -51,13 +53,13 @@ public class TestFileUserDetailsService extends TestCase {
         assertTrue( details.isCredentialsNonExpired() );
 
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) details.getAuthorities();
-        assertEquals( 1, authorities.size() );
+        assertEquals( 3, authorities.size() );
         assertEquals( "ROLE_ADMIN", authorities.get(0).getAuthority() );
 
         assertNull( details.getPlan() );
     }
 
-
+    @Test
     public void testUserData() {
         service.setBase( System.getProperty( "user.dir" ) );
         service.setUserDefinitions( "src/main/webapp/WEB-INF/users.properties" );
@@ -72,12 +74,13 @@ public class TestFileUserDetailsService extends TestCase {
         assertTrue( details.isCredentialsNonExpired() );
 
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) details.getAuthorities();
-        assertEquals( 1, authorities.size() );
+        assertEquals( 3, authorities.size() );
         assertEquals( "ROLE_ADMIN", authorities.get(0).getAuthority() );
 
         assertNull( details.getPlan() );
     }
 
+    @Test
     public void testInitialCopy() throws IOException {
         service.setDefaultDefinitions( new FileSystemResource( "src/main/webapp/WEB-INF/users.properties" ) );
         service.setBase( System.getProperty( "user.dir" ) );
@@ -90,6 +93,7 @@ public class TestFileUserDetailsService extends TestCase {
 
     }
 
+    @Test
     public void testJf() {
         service.setDefaultDefinitions( new FileSystemResource( "src/main/webapp/WEB-INF/users.properties" ) );
         service.setBase( System.getProperty( "user.dir" ) );

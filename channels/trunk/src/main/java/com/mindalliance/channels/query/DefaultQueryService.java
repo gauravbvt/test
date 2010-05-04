@@ -4,11 +4,11 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.dao.FileUserDetailsService;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Agreement;
@@ -98,7 +98,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * File user details service.
      */
-    private FileUserDetailsService userDetailsService;
+    private UserService userService;
 
     private Analyst analyst;
 
@@ -143,8 +143,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         this.imagingService = imagingService;
     }
 
-    public void setUserDetailsService( FileUserDetailsService userDetailsService ) {
-        this.userDetailsService = userDetailsService;
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
     }
 
     /**
@@ -163,13 +163,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     public AttachmentManager getAttachmentManager() {
         return attachmentManager;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void flush() {
-        getDao().flush();
     }
 
     /**
@@ -2469,7 +2462,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( "unchecked" )
     public List<String> findAllPlanners() {
         return (List<String>) CollectionUtils.collect(
-                userDetailsService.getPlanners( PlanManager.plan().getUri() ),
+                userService.getPlanners( PlanManager.plan().getUri() ),
                 TransformerUtils.invokerTransformer( "getUsername" )
         );
     }
@@ -2478,7 +2471,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public String findUserFullName( String userName ) {
-        User user = userDetailsService.getUserNamed( userName );
+        User user = userService.getUserNamed( userName );
         if ( user != null ) {
             return user.getFullName();
         } else {
@@ -2490,7 +2483,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public String findUserEmail( String userName ) {
-        User user = userDetailsService.getUserNamed( userName );
+        User user = userService.getUserNamed( userName );
         if ( user != null ) {
             return user.getEmail();
         } else {
@@ -2502,7 +2495,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public String findUserRole( String userName ) {
-        User user = userDetailsService.getUserNamed( userName );
+        User user = userService.getUserNamed( userName );
         if ( user != null ) {
             return user.getRole( user.getPlanUri() );
         } else {
@@ -2514,7 +2507,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public String findUserNormalizedFullName( String userName ) {
-        User user = userDetailsService.getUserNamed( userName );
+        User user = userService.getUserNamed( userName );
         if ( user != null ) {
             return user.getNormalizedFullName();
         } else {
@@ -3089,8 +3082,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public FileUserDetailsService getUserDetailsService() {
-        return userDetailsService;
+    public UserService getUserService() {
+        return userService;
     }
 
     /**
