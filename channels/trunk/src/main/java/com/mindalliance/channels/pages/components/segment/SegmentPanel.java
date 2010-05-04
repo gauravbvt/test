@@ -41,6 +41,19 @@ import java.util.Set;
  * Time: 8:52:20 AM
  */
 public class SegmentPanel extends AbstractCommandablePanel {
+    /**
+     * Flow map panel DOM id.
+     */
+    static private final String FLOWMAP_DOM_ID = "#graph";
+
+    /**
+     * Part panel DOM id.
+     */
+    static private final String PART_DOM_ID = "#part";
+    /**
+     * Expected screen resolution.
+     */
+    static private double DPI = 96.0;
 
     /**
      * Flow diagram panel.
@@ -88,9 +101,9 @@ public class SegmentPanel extends AbstractCommandablePanel {
      */
     private double[] flowDiagramDim = new double[2];
     /**
-     * Diagram container dom identifier.
+     * Whether the flow map was resized to fit.
      */
-    private static final String DOM_IDENTIFIER = "#graph";
+    private boolean resizedToFit = false;
 
     public SegmentPanel(
             String id,
@@ -105,7 +118,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
 
     private void init() {
         setOutputMarkupId( true );
-        addFlowSizing();
+        addFlowViewControls();
         addFlowDiagram();
         addPartMenuBar();
         addPartPanel();
@@ -181,13 +194,13 @@ public class SegmentPanel extends AbstractCommandablePanel {
         addOrReplace( partActionsMenu );
     }
 
-    private void addFlowSizing() {
+    private void addFlowViewControls() {
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                String domIdentifier = DOM_IDENTIFIER;
+                String domIdentifier = FLOWMAP_DOM_ID;
                 String script = "wicketAjaxGet('"
                         + getCallbackUrl( true )
                         + "&width='+$('" + domIdentifier + "').width()+'"
@@ -202,23 +215,18 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 RequestCycle requestCycle = RequestCycle.get();
                 String swidth = requestCycle.getRequest().getParameter( "width" );
                 String sheight = requestCycle.getRequest().getParameter( "height" );
-                flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / 96.0;
-                flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
+                if ( !resizedToFit ) {
+                    flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
+                    flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
+                } else {
+                    flowDiagramDim = new double[2];
+                }
+                resizedToFit = !resizedToFit;
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
             }
         } );
         add( reduceToFit );
-        WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
-        fullSize.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                flowDiagramDim = new double[2];
-                addFlowDiagram();
-                target.addComponent( flowMapDiagramPanel );
-            }
-        } );
-        add( fullSize );
         WebMarkupContainer fullscreen = new WebMarkupContainer( "maximized" );
         fullscreen.add( new AjaxEventBehavior( "onclick" ) {
             @Override
@@ -237,11 +245,26 @@ public class SegmentPanel extends AbstractCommandablePanel {
         } );
         add( legend );
 
+        WebMarkupContainer shrinkExpand = new WebMarkupContainer( "minimized" );
+        /*final String script =
+        "if ( __channels_flowmap_minimized__==undefined) {__channels_flowmap_minimized__ = false;}"
+        + " if (__channels_flowmap_minimized__) { alert(\"minimized\"); bottom = \"49.5%\"; top = \"50.5%\"; }"
+        + " else { alert(\"NOT minimized\"); bottom = \"90%\"; top = \"10%\"; } "
+        + "$(\"#graph\").css(\"bottom\",bottom); $(\"#part\").css(\"top\",top);"
+        + "__channels_flowmap_minimized__ = !__channels_flowmap_minimized__;";*/
+        final String script = "if (! __channels_flowmap_minimized__) "
+                + " {__graph_bottom = \"90%\"; __part_top = \"10%\"; }"
+                + " else {__graph_bottom = \"49.5%\"; __part_top = \"50.5%\";}"
+                + " $(\"" + FLOWMAP_DOM_ID + "\").css(\"bottom\",__graph_bottom); "
+                + " $(\"" + PART_DOM_ID + "\").css(\"top\",__part_top);"
+                + " __channels_flowmap_minimized__ = !__channels_flowmap_minimized__;";
+        shrinkExpand.add( new AttributeModifier( "onClick", true, new Model<String>( script ) ) );
+        add( shrinkExpand );
     }
 
     private void addFlowDiagram() {
         double[] dim = flowDiagramDim[0] <= 0.0 || flowDiagramDim[1] <= 0.0 ? null : flowDiagramDim;
-        Settings settings = new Settings( DOM_IDENTIFIER, null, dim, true, true );
+        Settings settings = new Settings( FLOWMAP_DOM_ID, null, dim, true, true );
 
         flowMapDiagramPanel =
                 new FlowMapDiagramPanel( "flow-map", segmentModel, partModel, settings );

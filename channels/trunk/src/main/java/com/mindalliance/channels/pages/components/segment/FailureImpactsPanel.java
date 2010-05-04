@@ -40,6 +40,10 @@ import java.util.Set;
  * Time: 8:40:48 PM
  */
 public class FailureImpactsPanel extends FloatingCommandablePanel {
+    /**
+     * Expected screen resolution.
+     */
+    static private double DPI = 96.0;
 
     /**
      * Pad top on move.
@@ -88,6 +92,12 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
      */
     private static final String DOM_IDENTIFIER = ".aspect .picture";
 
+    /**
+     * Whether the flow map was resized to fit.
+     */
+    private boolean resizedToFit = false;
+
+
     public FailureImpactsPanel( String id, IModel<SegmentObject> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
@@ -97,7 +107,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         addTitle();
         addDoneButton();
         addAssumeFail();
-        addEssentialSizing();
+        addFlowViewingControls();
         addEssentialFlowMap();
         addFailedTasks();
     }
@@ -130,7 +140,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         add( assumeFailsCheckBox );
     }
 
-    private void addEssentialSizing() {
+    private void addFlowViewingControls() {
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
             @Override
@@ -151,23 +161,18 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                 RequestCycle requestCycle = RequestCycle.get();
                 String swidth = requestCycle.getRequest().getParameter( "width" );
                 String sheight = requestCycle.getRequest().getParameter( "height" );
-                flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / 96.0;
-                flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
+                if ( !resizedToFit ) {
+                    flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
+                    flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
+                } else {
+                    flowDiagramDim = new double[2];
+                }
+                resizedToFit = !resizedToFit;
                 addEssentialFlowMap();
                 target.addComponent( failureImpactsDiagramPanel );
             }
         } );
         add( reduceToFit );
-        WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
-        fullSize.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                flowDiagramDim = new double[2];
-                addEssentialFlowMap();
-                target.addComponent( failureImpactsDiagramPanel );
-            }
-        } );
-        add( fullSize );
         WebMarkupContainer legend = new WebMarkupContainer( "legend" );
         legend.add( new AjaxEventBehavior( "onclick" ) {
             @Override

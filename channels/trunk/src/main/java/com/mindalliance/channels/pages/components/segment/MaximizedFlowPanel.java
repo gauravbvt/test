@@ -25,6 +25,10 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class MaximizedFlowPanel extends AbstractUpdatablePanel {
     /**
+     * Expected screen resolution.
+     */
+    static private double DPI = 96.0;
+    /**
      * Part model.
      */
     private IModel<Part> partModel;
@@ -38,6 +42,10 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
      * None if any is 0.
      */
     private double[] flowDiagramDim = new double[2];
+    /**
+     * Whether the flow map was resized to fit.
+     */
+    private boolean resizedToFit = false;
 
     public MaximizedFlowPanel( String id, IModel<Part> partModel) {
         super( id );
@@ -46,11 +54,11 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        addFlowSizing();
+        addFlowViewControls();
         addFlowDiagram();
     }
 
-    private void addFlowSizing() {
+    private void addFlowViewControls() {
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
             @Override
@@ -71,23 +79,18 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
                 RequestCycle requestCycle = RequestCycle.get();
                 String swidth = requestCycle.getRequest().getParameter( "width" );
                 String sheight = requestCycle.getRequest().getParameter( "height" );
-                flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / 96.0;
-                flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
+                if ( !resizedToFit ) {
+                    flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
+                    flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
+                } else {
+                    flowDiagramDim = new double[2];
+                }
+                resizedToFit = !resizedToFit;
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
             }
         } );
         add( reduceToFit );
-        WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
-        fullSize.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                flowDiagramDim = new double[2];
-                addFlowDiagram();
-                target.addComponent( flowMapDiagramPanel );
-            }
-        } );
-        add( fullSize );
         WebMarkupContainer minimize = new WebMarkupContainer( "minimized" );
         minimize.add( new AjaxEventBehavior( "onclick" ) {
             @Override

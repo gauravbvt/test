@@ -48,6 +48,7 @@ import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -251,9 +252,9 @@ public final class PlanPage extends WebPage implements Updatable {
     // private String entityAspect = EntityPanel.DETAILS;
 
     /**
-     * Refresh button container.
+     * Refresh button.
      */
-    private WebMarkupContainer refreshNeededContainer;
+    private Component refreshNeededComponent;
 
     /**
      * Go back button container.
@@ -498,16 +499,14 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addRefresh() {
-        refreshNeededContainer = new WebMarkupContainer( "refresh-needed" );
-        refreshNeededContainer.setOutputMarkupId( true );
-        refreshNeededContainer.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
+        refreshNeededComponent = new AjaxFallbackLink( "refresh-needed" ) {
+            public void onClick( AjaxRequestTarget target ) {
                 reacquireLocks();
                 lastRefreshed = System.currentTimeMillis();
                 refreshAll( target );
             }
-        } );
+        };
+        refreshNeededComponent.setOutputMarkupId( true );
         // Put timer on form since it is never updated or replaced
         form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
             @Override
@@ -515,7 +514,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 doTimedUpdate( target );
             }
         } );
-        form.add( refreshNeededContainer );
+        form.add( refreshNeededComponent );
         updateRefreshNotice();
     }
 
@@ -552,14 +551,14 @@ public final class PlanPage extends WebPage implements Updatable {
             refreshAll( target );
         } else {
             updateRefreshNotice();
-            target.addComponent( refreshNeededContainer );
+            target.addComponent( refreshNeededComponent );
         }
     }
 
     private void updateRefreshNotice() {
         String reasonsToRefresh = getReasonsToRefresh();
-        makeVisible( refreshNeededContainer, !reasonsToRefresh.isEmpty() );
-        refreshNeededContainer.add( new AttributeModifier( "title", true, new Model<String>(
+        makeVisible( refreshNeededComponent, !reasonsToRefresh.isEmpty() );
+        refreshNeededComponent.add( new AttributeModifier( "title", true, new Model<String>(
                 "Refresh:" + reasonsToRefresh ) ) );
     }
 
@@ -1462,7 +1461,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void updateRefresh( AjaxRequestTarget target ) {
         updateRefreshNotice();
-        target.addComponent( refreshNeededContainer );
+        target.addComponent( refreshNeededComponent );
     }
 
     private void updateHeaders( AjaxRequestTarget target ) {

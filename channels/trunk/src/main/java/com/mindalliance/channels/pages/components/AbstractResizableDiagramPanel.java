@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -20,6 +19,10 @@ import java.util.Set;
  */
 abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePanel {
     /**
+     * Expected screen resolution.
+     */
+    static private double DPI = 96.0;
+    /**
      * Width, height dimension contraints on the  diagram.
      * In inches.
      * None if any is 0.
@@ -33,6 +36,11 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
      * Prefix dom identifier (to make combination unique in page).
      */
     private String prefixDomIdentifier;
+    /**
+     * Whether the flow map was resized to fit.
+     */
+    private boolean resizedToFit = false;
+
 
     public AbstractResizableDiagramPanel(
             String id,
@@ -75,22 +83,18 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
                 RequestCycle requestCycle = RequestCycle.get();
                 String swidth = requestCycle.getRequest().getParameter( "width" );
                 String sheight = requestCycle.getRequest().getParameter( "height" );
-                diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / 96.0;
-                diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
+                if ( !resizedToFit ) {
+                    diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
+                    diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
+                } else {
+                    diagramSize = new double[2];
+                }
+                resizedToFit = !resizedToFit;
                 addDiagramPanel();
                 target.addComponent( getDiagramPanel() );
             }
         } );
         add( reduceToFit );
-        WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
-        fullSize.add( new AjaxEventBehavior( "onclick" ) {
-            protected void onEvent( AjaxRequestTarget target ) {
-                diagramSize = new double[2];
-                addDiagramPanel();
-                target.addComponent( getDiagramPanel() );
-            }
-        } );
-        add( fullSize );
     }
 
     /**

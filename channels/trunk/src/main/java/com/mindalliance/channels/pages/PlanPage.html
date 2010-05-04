@@ -41,6 +41,8 @@
                 var kc = e.keyCode;
                 return channels_keypress(kc, t, e.target);
             }
+        // supports minimizing/restoring flow map panel
+        var  __channels_flowmap_minimized__ = false;
     </script>
     <!--[if IE 7]><link rel="stylesheet" type="text/css" href="channels-ie.css" /><![endif]-->
 </head>
@@ -64,10 +66,7 @@
 
             <span class="menuitem" wicket:id="planShowMenu">[show menu]</span>
             <span class="menuitem" wicket:id="planActionsMenu">[action menu]</span>
-
-            <span class="refresh" wicket:id="refresh-needed">
-                <img src="images/refresh_needed.png" alt="Refresh needed"/>
-            </span>
+            <input wicket:id="refresh-needed" type="button" value="Refresh"/>
             <span id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
         </span>
 
