@@ -17,7 +17,6 @@ import java.lang.reflect.InvocationTargetException;
  * Time: 8:09:56 AM
  */
 public class Change implements Serializable {
-
     /**
      * A kind of change.
      */
@@ -81,7 +80,15 @@ public class Change implements Serializable {
         /**
          * Minimized.
          */
-        Minimized
+        Minimized,
+        /**
+         * Explained.
+         */
+        Explained,
+        /**
+         * Not explained.
+         */
+        Unexplained
 
     }
 
@@ -403,6 +410,15 @@ public class Change implements Serializable {
         return type == Type.Minimized;
     }
 
+    public boolean isExplained() {
+        return type == Type.Explained;
+    }
+
+    public boolean isUnexplained() {
+        return type == Type.Unexplained;
+    }
+
+    
     /**
      * Whether change is to a given property.
      *

@@ -228,6 +228,15 @@ public class SegmentPanel extends AbstractCommandablePanel {
         } );
         add( fullscreen );
 
+        WebMarkupContainer legend = new WebMarkupContainer( "legend" );
+        legend.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Explained, getSegment(), "legend" ) );
+            }
+        } );
+        add( legend );
+
     }
 
     private void addFlowDiagram() {

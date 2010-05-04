@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
@@ -167,6 +168,18 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
             }
         } );
         add( fullSize );
+        WebMarkupContainer legend = new WebMarkupContainer( "legend" );
+        legend.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Explained, getSegment(), "legend" ) );
+            }
+        } );
+        add( legend );
+    }
+
+    private Segment getSegment() {
+        return ((SegmentObject)getModel().getObject()).getSegment();
     }
 
     private void addEssentialFlowMap() {
