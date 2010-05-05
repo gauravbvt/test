@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
  * Actor, role, organization (any two), and jurisdiction may be null.
@@ -484,5 +486,40 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
                     return job;
 
         return null;
+    }
+
+    /**
+     * Make display string with no max length.
+     *
+     * @return a string
+     */
+    public String displayString() {
+        return displayString( Integer.MAX_VALUE );
+    }
+
+    /**
+     * Make display string with max length.
+     *
+     * @param maxLength an int
+     * @return a string
+     */
+    public String displayString( int maxLength ) {
+        StringBuilder sb = new StringBuilder();
+        if ( !isAnyActor() ) {
+            sb.append( actor.getName() );
+        } else {
+            if ( !isAnyRole() ) {
+                sb.append( role.getName() );
+            }
+            if ( !isAnyOrganization() ) {
+                if (sb.length() > 0 ) sb.append( ", " );
+                sb.append( organization.getName() );
+            }
+            if ( !isAnyJurisdiction() ) {
+                if (sb.length() > 0 ) sb.append( ", " );
+                sb.append( jurisdiction.getName() );
+            }
+        }
+        return StringUtils.abbreviate( sb.toString(), maxLength );
     }
 }

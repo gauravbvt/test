@@ -25,15 +25,32 @@ public class Connector extends Node {
     }
 
     /** {@inheritDoc} */
+    public String displayString() {
+        return displayString( Integer.MAX_VALUE );
+    }
+
+    public String displayString( int maxItemLength ) {
+        boolean isInput = isSource();
+        if ( hasInnerFlow() ) {
+            Flow inner = getInnerFlow();
+            Part part  = (Part) ( isInput ? inner.getTarget() :  inner.getSource() );
+            return MessageFormat.format( "{0} - {1}",
+                                         part.displayString( maxItemLength ),
+                                         part.getSegment().displayString( maxItemLength ) );
+        } else
+            return "(Not connected)";
+    }
+
+    /** {@inheritDoc} */
     public String getTitle() {
         boolean isInput = isSource();
         if ( hasInnerFlow() ) {
             Flow inner = getInnerFlow();
             Part part  = (Part) ( isInput ? inner.getTarget() :  inner.getSource() );
-            return MessageFormat.format( isInput ? "{0} to {1} (in {2})" : "{0} from {1} (in {2})",
+            return MessageFormat.format( isInput ? "{0} to {1} in {2}" : "{0} from {1} in {2}",
                                          inner.getName(),
-                                         part.getName(),
-                                         part.getSegment() );
+                                         part.displayString(),
+                                         part.getSegment().getPhaseEventTitle() );
         } else
             return "(Not connected)";
     }

@@ -569,6 +569,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 new PropertyModel<List<Node>>( this, "firstChoices" ),
                 new PropertyModel<List<Node>>( this, "secondChoices" )
         );
+        otherChoice.add( new AttributeModifier(
+                "title",
+                true,
+                new Model<String>( getOtherPart().displayString() ) ) );
         otherChoice.setOutputMarkupId( true );
         addOrReplace( otherChoice );
     }
@@ -1089,11 +1093,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
-    public void changed(Change change) {
+    public void changed( Change change ) {
         // ignore selection of other node - don't propagate selection
-        if ( !(change.isSelected()
+        if ( !( change.isSelected()
                 && change.getSubject() instanceof Node
-                && change.isForProperty( "other" ) )) {
+                && change.isForProperty( "other" ) ) ) {
             super.changed( change );
         }
     }
@@ -1118,7 +1122,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 adjustFields( getFlow() );
                 target.addComponent( this );
             }
-            super.updateWith( target, change, updated );            
+            super.updateWith( target, change, updated );
         }
     }
 

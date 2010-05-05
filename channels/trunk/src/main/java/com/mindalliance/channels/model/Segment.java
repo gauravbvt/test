@@ -400,7 +400,7 @@ public class Segment extends ModelObject {
             if ( part.isInOrganization( organization )
                     && part.isPlayedBy( role )
                     && ( jurisdiction == null || part.isInJurisdiction( jurisdiction ) ) )
-            partsForRole.add( part );
+                partsForRole.add( part );
         }
         return partsForRole;
     }
@@ -699,6 +699,16 @@ public class Segment extends ModelObject {
                     }
                 }
         );
+    }
+
+    /**
+     * Display string with maximum length.
+     *
+     * @param maxLength an int
+     * @return a string
+     */
+    public String displayString( int maxLength ) {
+        return StringUtils.abbreviate( getName(), maxLength );
     }
 
 

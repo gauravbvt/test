@@ -8,6 +8,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 
 import java.text.MessageFormat;
@@ -449,6 +450,21 @@ public class Part extends Node implements GeoLocatable {
     public boolean isUndefined() {
         return super.isUndefined()
                 && isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String displayString() {
+        return displayString( Integer.MAX_VALUE );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String displayString( int maxItemLength ) {
+        return resourceSpec().displayString( maxItemLength )
+                + " (" + StringUtils.abbreviate( getTask(), maxItemLength ) + ")";
     }
 
     /**

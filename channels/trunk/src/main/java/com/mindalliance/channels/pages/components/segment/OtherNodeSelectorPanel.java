@@ -35,6 +35,10 @@ import java.util.List;
 public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
 
     /**
+     *   Maximum display length for task name.
+     */
+    static final private int MAX_ITEM_DISPLAY_LENGTH = 25;
+    /**
      * To indicate other than first choice part.
      */
     static final private String OTHER = "Other...";
@@ -90,8 +94,17 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
 
     private void init() {
         unknownOtherNode = new Part() {
+            /** {@inheritDoc} */
             public String toString() {
                 return "Enter a task name";
+            }
+            /** {@inheritDoc} */
+            public String displayString() {
+                return toString();
+            }
+            /** {@inheritDoc} */
+            public String displayString( int maxItemLength ) {
+                return displayString();
             }
         };
         selectedOtherNode = otherNodeModel.getObject();
@@ -106,7 +119,7 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
                 new PropertyModel<List<Node>>( this, "firstChoiceNodes" ),
                 new IChoiceRenderer<Node>() {
                     public Object getDisplayValue( Node otherNode ) {
-                        return displayString( otherNode );
+                        return shortDisplayString( otherNode );
                     }
 
                     public String getIdValue( Node object, int index ) {
@@ -135,11 +148,21 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
     private String displayString( Node node ) {
         return node.equals( unknownOtherNode )
                 ? OTHER
-                : node.isPart()
-                ? ( (Part) node ).getTask() + " (by " + ( (Part) node ).resourceSpec().toString() + ")"
-                : node.getSegment().equals( nodeModel.getObject().getSegment() )
+                : isTBD( node )
                 ? TBD
-                : node.toString();
+                : node.displayString();
+    }
+
+    private String shortDisplayString( Node node ) {
+        return node.equals( unknownOtherNode )
+                ? OTHER
+                : isTBD( node )
+                ? TBD
+                : node.displayString( MAX_ITEM_DISPLAY_LENGTH );
+    }
+
+    private boolean isTBD( Node node ) {
+        return node.isConnector() && node.getSegment().equals( nodeModel.getObject().getSegment());
     }
 
     @SuppressWarnings("unchecked")

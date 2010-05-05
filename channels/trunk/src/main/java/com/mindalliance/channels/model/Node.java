@@ -1,8 +1,8 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.iterators.IteratorChain;
 
 import java.text.Collator;
@@ -350,5 +350,16 @@ public abstract class Node extends ModelObject implements SegmentObject {
         return super.isUndefined() && receives.isEmpty() && sends.isEmpty();
     }
 
+    /**
+     * Make display string.
+     * @return  a string
+     */
+    abstract public String displayString();
 
+    /**
+     * Make abbreviated  string.
+     * @param maxItemLength an int
+     * @return  a string
+     */
+    abstract public String displayString( int maxItemLength );
 }
