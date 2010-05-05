@@ -8,7 +8,7 @@
 <head>
     <title>Channels - Administration</title>
     <link rel="stylesheet" href="playbook.css" type="text/css">
-    <link rel="stylesheet" href="iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
+    <link rel="stylesheet" href="iPhone.css" type="text/css" media="only screen and (max-device-width: 480px)">
 </head>
 <body>
 <div id="top">
@@ -24,39 +24,40 @@
         </div>
     </div>
 
-    <div id="contents"><form action="" wicket:id="users">
-        <ul>
-            <li><label>Plan:
+    <div id="contents">
+        <form action="" wicket:id="users">
+            <label>Plan:
                 <select wicket:id="plan-sel" name="plan">
                     <option>Some plan</option>
                 </select></label>
-            </li>
-            <li><a wicket:id="report">Show report</a></li>
-            <li><a wicket:id="plan">Edit</a></li>
-            <li>
-                <table>
-                    <thead>
-                        <tr>
-                            <th rowspan="2">User</th>
-                            <th rowspan="2">Full Name</th>
-                            <th rowspan="2">Email</th>
-                            <th rowspan="2">Password</th>
-                            <th colspan="4">All Plans</th>
-                            <th colspan="3">This Plan</th>
-                            <th rowspan="2">Delete</th>
-                        </tr>
-                        <tr>
-                            <th>Admin</th>
-                            <th>Planner</th>
-                            <th>User</th>
-                            <th>Disabled</th>
-                            <th>Planner</th>
-                            <th>User</th>
-                            <th>N/A</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr wicket:id="item">
+            <ul>
+                <li><a wicket:id="report">Show SOPs</a></li>
+                <li><a wicket:id="plan">Modify plan</a></li>
+            </ul>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">User</th>
+                        <th rowspan="2">Full Name</th>
+                        <th rowspan="2">Email</th>
+                        <th rowspan="2">Password</th>
+                        <th colspan="4">All Plans</th>
+                        <th colspan="3">This Plan</th>
+                        <th rowspan="2">Delete</th>
+                    </tr>
+                    <tr>
+                        <th>Admin</th>
+                        <th>Planner</th>
+                        <th>User</th>
+                        <th>Disabled</th>
+                        <th>Planner</th>
+                        <th>User</th>
+                        <th>N/A</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr wicket:id="item">
                             <span wicket:id="group">
                                 <td align="left"><span wicket:id="username">Name</span></td>
                                 <td align="left"><input type="text" wicket:id="fullName"/></td>
@@ -71,19 +72,17 @@
                                 <td align="center"><input type="radio" wicket:id="localDisabled"/></td>
                                 <td align="center"><input type="checkbox" wicket:id="delete"/></td>
                             </span>
-                        </tr>
-                        <tr>
-                            <td align="right">New:</td>
-                            <td align="left"><input type="text" wicket:id="new"></td>
-                            <td colspan="9" align="right"><input type="submit" value="Submit" name="Submit"/></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-            </li>
-        </ul>
-        <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
-    </form></div>
+                    </tr>
+                    <tr>
+                        <td align="right">New:</td>
+                        <td align="left"><input type="text" wicket:id="new"></td>
+                        <td colspan="9" align="right"><input type="submit" value="Submit" name="Submit"/></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
+        </form>
+    </div>
     <!-- Users -->
 
     <!-- Plans -->
