@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.commands.RedirectFlow;
 import com.mindalliance.channels.command.commands.SatisfyNeed;
 import com.mindalliance.channels.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
@@ -43,6 +44,8 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -182,11 +185,36 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         };
         add( editEOIsLink );
+        ListView<String> eoisList = new ListView<String>(
+                "eois",
+                new PropertyModel<List<String>>( this, "eoiSummaries" ) ) {
+            protected void populateItem( ListItem<String> item ) {
+                item.add( new Label( "summary", item.getModelObject() ) );
+            }
+        };
+/*
         TextArea<String> eoisDescriptionField = new TextArea<String>(
                 "eois",
                 new PropertyModel<String>( getFlow(), "eoisSummary" ) );
         eoisDescriptionField.setEnabled( false );
-        add( eoisDescriptionField );                              // NON-NLS
+*/
+        add( eoisList );
+    }
+
+    /**
+     * Get list of eois as strings.
+     *
+     * @return a list of strings
+     */
+    public List<String> getEoiSummaries() {
+        List<String> eoiStrings = new ArrayList<String>();
+        for ( ElementOfInformation eoi : getFlow().getEois() ) {
+            eoiStrings.add( eoi.toString() );
+        }
+        if ( eoiStrings.isEmpty() ) {
+            eoiStrings.add( "(none)" );
+        }
+        return eoiStrings;
     }
 
     /**

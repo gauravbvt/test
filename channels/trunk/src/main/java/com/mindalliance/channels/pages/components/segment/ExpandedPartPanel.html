@@ -64,7 +64,7 @@
     </tr>
     <tr>
         <th align="right">
-            <label for="initiatedEvent">Causes <span wicket:id="initiatedEvent-link" href="#">event</span>:</label>
+            <label for="initiatedEvent">Causes <span wicket:id="initiatedEvent-link">event</span>:</label>
         </th>
         <td><input type="text" size="40" id="initiatedEvent" wicket:id="initiatedEvent" value=""></td>
     </tr>
@@ -91,9 +91,11 @@
         </td>
     </tr>
     <tr>
-        <th align="right"><label for="goals">Goals:</label></th>
+        <th align="right">
+            <a wicket:id="segment-goals-link" href="#" title="To the segment's goals">Goals:</a>
+        </th>
         <td>
-            <span id="goals" wicket:id="goals">[task goals panel]</span>
+            <span wicket:id="goals">[task goals panel]</span>
         </td>
     </tr>
     <tr>

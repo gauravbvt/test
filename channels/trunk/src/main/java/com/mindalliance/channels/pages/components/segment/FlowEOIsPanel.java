@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -90,6 +91,16 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         addHeaders();
         addAboutFlow();
         addEOIs();
+        addLinkToClassifications();
+    }
+
+    private void addLinkToClassifications() {
+        AjaxFallbackLink classificationsLink = new AjaxFallbackLink( "classifications" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.AspectViewed, getPlan(), PlanEditPanel.CLASSIFICATIONS ) );
+            }
+        };
+        add( classificationsLink );
     }
 
     private void addDoneButton() {

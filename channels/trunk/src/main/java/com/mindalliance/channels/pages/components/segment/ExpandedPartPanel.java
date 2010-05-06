@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -471,6 +472,17 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         }
         taskGoalsPanel.setOutputMarkupId( true );
         addOrReplace( taskGoalsPanel );
+        AjaxFallbackLink segmentGoalsLink = new AjaxFallbackLink( "segment-goals-link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                update(
+                        target,
+                        new Change(
+                                Change.Type.AspectViewed,
+                                getPart().getSegment(),
+                                SegmentEditPanel.GOALS ) );
+            }
+        };
+        add( segmentGoalsLink );
     }
 
     //====================================

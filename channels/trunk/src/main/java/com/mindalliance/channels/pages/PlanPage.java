@@ -1207,6 +1207,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 aspectsShown = new ArrayList<String>();
             if ( !aspectsShown.contains( aspect ) )
                 aspectsShown.add( aspect );
+            expand( identifiable );
             aspects.put( identifiable.getId(), aspectsShown );
         }
     }
