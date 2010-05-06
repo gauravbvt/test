@@ -93,7 +93,7 @@ public class ResponsibilityReportPanel extends Panel {
         contactsContainers.add( new WebMarkupContainer( "others" ).setVisible( actor != null ) );
         contactsContainers.add( new ListView<Actor>(
                 "actors", actors
-                 ) {
+        ) {
             @Override
             protected void populateItem( ListItem<Actor> item ) {
                 Actor actor = item.getModelObject();
@@ -104,7 +104,12 @@ public class ResponsibilityReportPanel extends Panel {
                     spec.setRole( role );
                 if ( !actor.equals( Actor.UNKNOWN ) )
                     spec.setActor( actor );
-                item.add( new ActorBannerPanel( "actor", segment, spec, false ) );
+                item.add( new ActorBannerPanel(
+                        "actor",
+                        segment,
+                        spec,
+                        false,
+                        "../../" ) );
             }
         } );
     }
@@ -134,7 +139,7 @@ public class ResponsibilityReportPanel extends Panel {
             if ( actors.isEmpty() )
                 actors.add( Actor.UNKNOWN );
         } else {
-                actors.remove( actor );
+            actors.remove( actor );
         }
         return actors;
     }
@@ -146,9 +151,9 @@ public class ResponsibilityReportPanel extends Panel {
             spec.setOrganization( organization );
             spec.setRole( role );
             spec.setJurisdiction( jurisdiction );
-            for (Employment employment : queryService.findAllEmploymentsIn( organization ) ) {
+            for ( Employment employment : queryService.findAllEmploymentsIn( organization ) ) {
                 ResourceSpec employmentSpec = new ResourceSpec( employment );
-                if ( employmentSpec.narrowsOrEquals( spec )) {
+                if ( employmentSpec.narrowsOrEquals( spec ) ) {
                     actors.add( employment.getActor() );
                 }
             }

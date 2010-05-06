@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="section-head">
+        <h2>
+            <img class="photo" wicket:id="pic" src="" alt="Picture" width="48" align="middle">
+            <span wicket:id="org-title">Organization</span>:
+            <a wicket:id="name" name="">name</a>
+        </h2>
+
+        <h3 wicket:id="mission">To serve and protect</h3>
+    </div>
+    <ul wicket:id="tags-container">
+        <li wicket:id="tags">
+            Tag: <span wicket:id="tag">tag</span>
+        </li>
+    </ul>
+    <div wicket:id="documents">[documents report panel]</div>
+    <div wicket:id="issues">[issues report panel]</div>
+</wicket:panel>
+</body>
+</html>

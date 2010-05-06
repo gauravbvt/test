@@ -75,6 +75,21 @@ public class Attachment implements Serializable, Comparable<Attachment> {
         this.type = type;
     }
 
+    /**
+     * Add prefix to url if relative.
+     *
+     * @param url    a string
+     * @param prefix a string
+     * @return a string
+     */
+    public static String addPrefixIfRelative( String url, String prefix ) {
+        String result = url;
+        if ( !url.toLowerCase().startsWith( "http" ) ) {
+            result = prefix + url;
+        }
+        return result;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -129,12 +144,11 @@ public class Attachment implements Serializable, Comparable<Attachment> {
      * negative integer, zero, or a positive integer as this object is less
      * than, equal to, or greater than the specified object.
      *
-     * @param   o the object to be compared.
+     * @param o the object to be compared.
      * @return a negative integer, zero, or a positive integer as this object
-     *		is less than, equal to, or greater than the specified object.
-     *
+     *         is less than, equal to, or greater than the specified object.
      * @throws ClassCastException if the specified object's type prevents it
-     *         from being compared to this object.
+     *                            from being compared to this object.
      */
     public int compareTo( Attachment o ) {
         return url.compareTo( o.getUrl() );

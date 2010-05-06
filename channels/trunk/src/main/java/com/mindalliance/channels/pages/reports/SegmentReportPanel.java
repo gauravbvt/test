@@ -49,34 +49,39 @@ public class SegmentReportPanel extends Panel {
     @SpringBean
     private QueryService queryService;
 
+    private Organization organization;
+
     public SegmentReportPanel(
             String id,
             IModel<Segment> model,
+            final Organization organization,
             final Actor actor,
             final boolean showingIssues ) {
         super( id, model );
+        this.organization = organization;
         setRenderBodyOnly( true );
         segment = model.getObject();
 
         addSegmentPage( segment, showingIssues );
-
+        List<Organization> involvedOrgs = findAllInvolvedOrganizations( segment, actor );
         add( new ListView<Organization>(
                 "organizations",
-                findAllInvolvedOrganizations( segment, actor ) ) {
+                involvedOrgs ) {
 
             @Override
             protected void populateItem( ListItem<Organization> item ) {
-                Organization organization = item.getModelObject();
+                Organization org = item.getModelObject();
                 item.add( new AttributeModifier(
                         "class",
                         true,
                         new Model<String>(
-                                organization.getParent() == null
+                                org.getParent() == null
                                         ? "top organization"
                                         : "sub organization" ) ) );
                 item.add( new OrganizationReportPanel(
                         "organization",
-                        organization,
+                        org,
+                        organization == null,
                         segment,
                         actor,
                         showingIssues ) );
@@ -85,10 +90,16 @@ public class SegmentReportPanel extends Panel {
     }
 
     private List<Organization> findAllInvolvedOrganizations( Segment segment, Actor actor ) {
-        if ( actor == null ) {
-            return findAllInvolvedOrganizations( segment );
+        if ( organization != null ) {
+            List<Organization> orgs = new ArrayList<Organization>();
+            orgs.add( organization );
+            return orgs;
         } else {
-            return findAllAssignedOrganizations( segment, actor );
+            if ( actor == null ) {
+                return findAllInvolvedOrganizations( segment );
+            } else {
+                return findAllAssignedOrganizations( segment, actor );
+            }
         }
     }
 
@@ -200,16 +211,15 @@ public class SegmentReportPanel extends Panel {
     }
 
 
-
     private void addFlowDiagram( Segment s ) {
         if ( User.current().isPlanner() ) {
-        add (new FlowMapDiagramPanel( "flowMap",
-                new Model<Segment>( s ),
-                null,
-                //size,
-                new Settings( null, DiagramFactory.LEFT_RIGHT, null, true, false ) ));
+            add( new FlowMapDiagramPanel( "flowMap",
+                    new Model<Segment>( s ),
+                    null,
+                    //size,
+                    new Settings( null, DiagramFactory.LEFT_RIGHT, null, true, false ) ) );
         } else {
-            add (new Label( "flowMap", ""));
+            add( new Label( "flowMap", "" ) );
         }
     }
 

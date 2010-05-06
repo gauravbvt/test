@@ -440,6 +440,13 @@ public interface QueryService {
     List<Actor> findAllActualActors( ResourceSpec resourceSpec );
 
     /**
+     * Find all known,, actual (non-type) organizations that belong to a resource spec.
+     *
+     * @param resourceSpec a resource spec
+     * @return a list of organizations
+     */
+    List<Organization> findAllActualOrganizations( ResourceSpec resourceSpec );
+    /**
      * Make a replicate of the flow.
      *
      * @param flow   the flow to replicate
@@ -771,6 +778,14 @@ public interface QueryService {
      * @return a sorted list of actors.
      */
     List<Actor> findActualActors( Segment segment );
+
+    /**
+     * Find all organizations participating in a plan segment.
+     *
+     * @param segment the plan segment
+     * @return a sorted list of organizations.
+     */
+    List<Organization> findActualOrganizations( Segment segment );
 
     /**
      * Find all actor last names.

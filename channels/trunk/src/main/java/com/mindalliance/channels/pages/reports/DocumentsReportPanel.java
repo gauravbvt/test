@@ -54,7 +54,8 @@ public class DocumentsReportPanel extends Panel {
                 Attachment attachment = item.getModelObject();
                 item.add( new Label( "document-type", attachment.getType().getLabel() ) );
                 item.add( new ExternalLink( "document-link",
-                        attachment.getUrl(), attachmentManager.getLabel( getPlan(), attachment ) ) );
+                        Attachment.addPrefixIfRelative( attachment.getUrl(), "../" ), 
+                        attachmentManager.getLabel( getPlan(), attachment ) ) );
                 String styleClass = attachment.getType().name().toLowerCase();
                 item.add( new AttributeModifier( "class", true,
                         new Model<String>( styleClass ) ) );

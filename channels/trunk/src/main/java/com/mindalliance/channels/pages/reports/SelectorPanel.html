@@ -14,11 +14,18 @@
                     <option>Some plan</option>
                 </select></label>
             </li>
-            <li>Plan segment: <select name="0" wicket:id="segment">
-                <option>* all *</option>
-            </select> Agent: <select name="1" wicket:id="actor">
-                <option>* all *</option>
-            </select></li>
+            <li>
+                Plan segment: <select name="0" wicket:id="segment">
+                <option>* all *</option></select>
+            </li>
+            <li>
+                Organization: <select name="1" wicket:id="organization">
+                     <option>* all *</option>
+                 </select>
+                Agent: <select name="1" wicket:id="actor">
+                    <option>* all *</option>
+                </select>
+            </li>
             <li wicket:id="issues"><label>Show issues: <input wicket:id="showingIssues" type="checkbox"></label><span id="apply"> <input type="submit" value="Apply"></span>
         <script type="text/javascript">
             document.getElementById('apply').style.display = 'none';

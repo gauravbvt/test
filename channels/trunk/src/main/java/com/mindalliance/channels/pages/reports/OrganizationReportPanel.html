@@ -7,18 +7,8 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="section-head">
-        <h2><span wicket:id="org-title">Organization</span>: <a wicket:id="name" name="">name</a></h2>
-        <h3 wicket:id="mission">To serve and protect</h3>
-    </div>
-    <ul wicket:id="tags-container">
-         <li wicket:id="tags">
-             Tag: <span wicket:id="tag">tag</span>
-         </li>
-     </ul>
-    <div wicket:id="documents">[documents report panel]</div>
-    <div wicket:id="issues">[issues report panel]</div>    
-    <!-- class= "top organization" or "sub organization" -->
+    <span wicket:id="org-details">[organization header panel]</span>
+    <p class="big-notice" wicket:id="no-procedure">No info sharing procedures</p>    
     <div class="actor" wicket:id="sections">
         <div wicket:id="section">[responsibility report panel]</div>
     </div>

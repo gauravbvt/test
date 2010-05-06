@@ -112,7 +112,8 @@ public class FlowReportPanel extends Panel {
                                         localizedActor.getActorSpec(),
                                         true,
                                         localizedActor.getUnicasts(),
-                                        localizedActor.getBroadcasts() ) );
+                                        localizedActor.getBroadcasts(),
+                                        "../../") );
                             }
                         }
                                 .add( new AttributeModifier( "class", true,

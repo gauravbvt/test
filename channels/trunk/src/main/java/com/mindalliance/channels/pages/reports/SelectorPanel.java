@@ -4,10 +4,13 @@ import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -36,8 +39,9 @@ import java.util.List;
  */
 public class SelectorPanel extends Panel implements IHeaderContributor {
 
-    private static final String SEGMENT_PARM = "0";
-    private static final String ACTOR_PARM = "1";
+    private static final String SEGMENT_PARM = "segment";
+    private static final String ACTOR_PARM = "agent";
+    private static final String ORGANIZATION_PARM = "org";
     private static final String ISSUES_PARM = "issues";
     private static final String ALL = "all";
 
@@ -61,6 +65,10 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
      * The selected actor (or Actor.UNKNOWN)
      */
     private Actor actor = Actor.UNKNOWN;
+    /**
+     * The selected organization (or Organization.UNKNOWN)
+     */
+    private Organization organization = Organization.UNKNOWN;
 
     /**
      * True when parameter combination would produce a not-empty report.
@@ -108,7 +116,23 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         form.add( showIssuesContainer );
         showIssuesContainer.add( new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) );
         if ( isUserPlanner() ) {
-            form.add( new DropDownChoice<Actor>( "actor", getActorsChoices( queryService ),
+            form.add( new DropDownChoice<Organization>(
+                    "organization",
+                    getOrganizationChoices( queryService ),
+                    new IChoiceRenderer<Organization>() {
+                        public Object getDisplayValue( Organization object ) {
+                            return object.equals( Organization.UNKNOWN ) ? "All"
+                                    : object.getName();
+                        }
+
+                        public String getIdValue( Organization object, int index ) {
+                            return object.equals( Organization.UNKNOWN ) ? ALL
+                                    : Long.toString( object.getId() );
+                        }
+                    } ).add( newOnChange( "onchange" ) ) );
+            form.add( new DropDownChoice<Actor>(
+                    "actor",
+                    getActorChoices( queryService ),
                     new IChoiceRenderer<Actor>() {
                         public Object getDisplayValue( Actor object ) {
                             return object.equals( Actor.UNKNOWN ) ? "All"
@@ -122,21 +146,22 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                     } ).add( newOnChange( "onchange" ) ) );
         } else {
             form.add( new Label( "actor", "" ) );
+            form.add( new Label( "organization", "" ) );
         }
         add( form );
     }
 
-    private void addPlanSwitcher( Form form) {
+    private void addPlanSwitcher( Form form ) {
         WebMarkupContainer switchPlanContainer = new WebMarkupContainer( "switch-plan" );
         switchPlanContainer.setVisible( getPlannablePlans().size() > 1 );
         form.add( switchPlanContainer );
         DropDownChoice<Plan> planDropDownChoice = new DropDownChoice<Plan>( "plan-sel",
-                                                                            new PropertyModel<Plan>(
-                                                                                    this,
-                                                                                    "plan" ),
-                                                                            new PropertyModel<List<? extends Plan>>(
-                                                                                    this,
-                                                                                    "plannablePlans" ) );
+                new PropertyModel<Plan>(
+                        this,
+                        "plan" ),
+                new PropertyModel<List<? extends Plan>>(
+                        this,
+                        "plannablePlans" ) );
         planDropDownChoice.add( newOnChange( "onchange" ) );
         switchPlanContainer.add( planDropDownChoice );
     }
@@ -213,14 +238,15 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
 
         if ( isAllActors() ) {
             result = new ArrayList<Actor>(
-                    isAllSegments() ? queryService.list( Actor.class )
+                    isAllSegments()
+                            ? queryService.list( Actor.class )
                             : queryService.findActualActors( segment ) );
             Collections.sort( result );
         } else {
             result = new ArrayList<Actor>();
             result.add( actor );
         }
-        return result;
+         return result;
     }
 
     /**
@@ -254,6 +280,22 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                     setValid( false );
                 }
             }
+            String orgId = parameters.getString( ORGANIZATION_PARM, ALL );
+            if ( !ALL.equals( orgId ) ) {
+                try {
+                    long id = Long.parseLong( orgId );
+                    setOrganization( queryService.find( Organization.class, id ) );
+                } catch ( NumberFormatException ignored ) {
+                    setValid( false );
+                } catch ( NotFoundException ignored ) {
+                    setValid( false );
+                }
+            }
+            if ( !isAllActors() && !isAllOrganizations() ) {
+                if ( !isEmployee( getActor(), getOrganization() ) ) {
+                    setActor( Actor.UNKNOWN );
+                }
+            }
         } else {
             Participation participation = queryService.findParticipation( User.current().getUsername() );
             if ( participation == null ) {
@@ -261,6 +303,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
             } else {
                 setActor( participation.getActor() );
             }
+            setOrganization( Organization.UNKNOWN );
         }
 
         if ( parameters.containsKey( ISSUES_PARM ) )
@@ -280,15 +323,14 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     public PageParameters getParameters() {
         PageParameters result = new PageParameters();
 
-        if ( isAllActors() ) {
-            if ( !isAllSegments() )
-                result.put( SEGMENT_PARM, Long.toString( segment.getId() ) );
-
-        } else {
-            result.put( SEGMENT_PARM, isAllSegments() ? ALL : Long.toString( segment.getId() ) );
+        if ( !isAllSegments() )
+            result.put( SEGMENT_PARM, Long.toString( segment.getId() ) );
+        if ( !isAllActors() ) {
             result.put( ACTOR_PARM, Long.toString( actor.getId() ) );
         }
-
+        if ( !isAllOrganizations() ) {
+            result.put( ORGANIZATION_PARM, Long.toString( organization.getId() ) );
+        }
         if ( !showingIssues )
             result.put( ISSUES_PARM, Boolean.toString( showingIssues ) );
 
@@ -304,7 +346,8 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         return result;
     }
 
-    private List<Actor> getActorsChoices( QueryService service ) {
+    @SuppressWarnings("unchecked")
+    private List<Actor> getActorChoices( QueryService service ) {
         List<Actor> result = new ArrayList<Actor>(
                 isAllSegments() ? service.listActualEntities( Actor.class )
                         : service.findActualActors( segment ) );
@@ -315,7 +358,36 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                         return SORTER.compare( o1.getNormalizedName(), o2.getNormalizedName() );
                     }
                 } );
+        if ( !isAllOrganizations() ) {
+             result = (List<Actor>) CollectionUtils.select(
+                     result,
+                     new Predicate() {
+                         public boolean evaluate( Object object ) {
+                             return isEmployee( (Actor) object , getOrganization() );
+                         }
+                     }
+             );
+         }
         result.add( 0, Actor.UNKNOWN );
+        return result;
+    }
+
+    private boolean isEmployee( Actor act, Organization org) {
+        return queryService.findEmployers( act ).contains( org );
+    }
+
+    private List<Organization> getOrganizationChoices( QueryService service ) {
+        List<Organization> result = new ArrayList<Organization>(
+                isAllSegments() ? service.listActualEntities( Organization.class )
+                        : service.findActualOrganizations( segment ) );
+        Collections.sort(
+                result,
+                new Comparator<Organization>() {
+                    public int compare( Organization o1, Organization o2 ) {
+                        return SORTER.compare( o1.getName(), o2.getName() );
+                    }
+                } );
+        result.add( 0, Organization.UNKNOWN );
         return result;
     }
 
@@ -327,10 +399,18 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         this.actor = actor;
     }
 
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization( Organization organization ) {
+        this.organization = organization;
+    }
+
     public Segment getSegment() {
         return segment;
     }
-    
+
     public void setSegment( Segment segment ) {
         this.segment = segment;
     }
@@ -345,6 +425,10 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
 
     public boolean isAllActors() {
         return actor.equals( Actor.UNKNOWN );
+    }
+
+    public boolean isAllOrganizations() {
+        return organization.equals( Organization.UNKNOWN );
     }
 
     public boolean isAllSegments() {

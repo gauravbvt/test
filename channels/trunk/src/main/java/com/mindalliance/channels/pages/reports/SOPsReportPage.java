@@ -6,7 +6,9 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
@@ -40,11 +42,6 @@ import java.util.List;
  * Time: 5:13:56 PM
  */
 public class SOPsReportPage extends WebPage {
-
-    /**
-     * The parameter that specifies all segments.
-     */
-    private static final String ALL = "all";
 
     /**
      * Plan manager.
@@ -90,6 +87,7 @@ public class SOPsReportPage extends WebPage {
                         MessageFormat.format( "Report: {0}", plan.getName() ) ),
                 new Label( "plan-name", plan.getName() ),
                 new Label( "actor-name", getActorName() ).setVisible( !selector.isAllActors() ),
+                new Label( "organization-name", getOrganizationName() ).setVisible( !selector.isAllOrganizations() ),
                 new Label( "plan-client", plan.getClient() )
                         .setVisible( !plan.getClient().isEmpty() ),
                 new Label( "plan-description", getPlanDescription() )
@@ -106,16 +104,40 @@ public class SOPsReportPage extends WebPage {
                     protected void populateItem( ListItem<Segment> item ) {
                         item.add( new SegmentReportPanel( "segment",
                                 item.getModel(),
+                                selector.isAllOrganizations() ? null : selector.getOrganization(),
                                 selector.isAllActors() ? null : selector.getActor(),
                                 selector.isShowingIssues() ) );
                     }
                 },
 
-                new WebMarkupContainer( "plan-map-link" ).setVisible( User.current().isPlanner(  ) )
+                new WebMarkupContainer( "plan-map-link" ).setVisible( User.current().isPlanner() )
                         .add( new AttributeModifier( "href", true, new Model<String>( getPlanMapLink() ) ) )
                         .add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) )
         );
-        if ( User.current().isPlanner(  ) ) {
+        if ( selector.isAllOrganizations() ) {
+            add( new Label( "org-details", "" ).setVisible( false ) );
+        } else {
+            add( new OrganizationHeaderPanel(
+                    "org-details",
+                    selector.getOrganization(),
+                    selector.isShowingIssues() ) );
+
+        }
+        if ( selector.isAllActors() ) {
+            add( new Label( "actor-details", "" ).setVisible( false ) );
+        } else {
+            ResourceSpec actorSpec = ResourceSpec.with( selector.getActor() );
+            if ( !selector.isAllOrganizations() )
+                actorSpec.setOrganization( selector.getOrganization() );
+            add( new ActorBannerPanel(
+                    "actor-details",
+                    selector.getSegment(),
+                    actorSpec,
+                    false,
+                    "../"
+            ) );
+        }
+        if ( User.current().isPlanner() ) {
             addDiagramPanel( segments );
         } else {
             add( new Label( "planMap", "" ) );
@@ -149,6 +171,11 @@ public class SOPsReportPage extends WebPage {
     private String getActorName() {
         Actor actor = selector.getActor();
         return actor == null ? "" : actor.getName();
+    }
+
+    private String getOrganizationName() {
+        Organization organization = selector.getOrganization();
+        return organization == null ? "" : organization.getName();
     }
 
     private String getPlanMapLink() {

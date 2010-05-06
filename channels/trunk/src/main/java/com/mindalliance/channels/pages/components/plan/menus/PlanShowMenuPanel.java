@@ -146,7 +146,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                         PopupSettings.MENU_BAR ) );
         menuItems.add( new LinkMenuItem(
                 "menuItem",
-                new Model<String>( "SOPs" ),
+                new Model<String>( "Info Sharing Procedures" ),
                 reportLink ) );
 
 /*

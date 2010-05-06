@@ -65,6 +65,10 @@ h2 {
     margin-bottom: 9px;
 }
 
+.segment {
+    margin-top: 40px;
+}
+
 #header div {
     padding-top: 4px;
     padding-bottom: 4px;
@@ -337,6 +341,11 @@ p.notice {
     color: #c4d5b6;
 }
 
+p.big-notice {
+    font-weight: bold;
+    font-size: large;
+}
+
 div.issues {
     color: darkred;
 }
@@ -371,7 +380,7 @@ thead tr {
 #header div.report-header {
     background: transparent url('images/logo.png') no-repeat 0 0;
     padding-left: 58px;
-    min-height: 85px;
+    min-height: 105px;
 }
 
 td.in, td.out {

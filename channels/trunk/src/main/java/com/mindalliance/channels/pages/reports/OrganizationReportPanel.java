@@ -2,8 +2,6 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
@@ -12,12 +10,10 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
@@ -55,6 +51,7 @@ public class OrganizationReportPanel extends Panel {
     public OrganizationReportPanel(
             String id,
             Organization organization,
+            boolean manyOrganizations,
             Segment segment,
             final Actor actor,
             final boolean showingIssues ) {
@@ -64,21 +61,16 @@ public class OrganizationReportPanel extends Panel {
         this.actor = actor;
         this.organization = organization;
         this.segment = segment;
-        add( new Label( "org-title", getOrgTitle() ) );
-        add( new Label( "name", organization.getName() ) );
-        add( new Label( "mission", organization.getMission() ) );
-        add( new WebMarkupContainer( "tags-container" )
-                .add( new ListView<ModelEntity>( "tags", organization.getTags() ) {
-                    protected void populateItem( ListItem<ModelEntity> item ) {
-                        ModelEntity tag = item.getModel().getObject();
-                        item.add( new Label( "tag", tag.getName() ) );
-                    }
-                } )
-                .setVisible( !organization.getTags().isEmpty() ) );
-        add( new DocumentsReportPanel( "documents", new Model<ModelObject>( organization ) ) );
-        add( new IssuesReportPanel( "issues", new Model<ModelObject>( organization ) )
-                .setVisible( showingIssues )
-        );
+        OrganizationHeaderPanel orgDetails = new OrganizationHeaderPanel(
+                "org-details",
+                organization,
+                showingIssues);
+        add( orgDetails );
+        orgDetails.setVisible( manyOrganizations );
+        List<ResourceSpec> responsibilities = getResponsibilities();
+        add( new Label(
+                "no-procedure",
+                "No information sharing procedures" ).setVisible( responsibilities.isEmpty() ) );
         add( new ListView<ResourceSpec>(
                 "sections",
                 getResponsibilities() ) {
@@ -92,12 +84,6 @@ public class OrganizationReportPanel extends Panel {
                         showingIssues ).setRenderBodyOnly( true ) );
             }
         } );
-    }
-
-    private String getOrgTitle() {
-        return organization.isActual()
-                ? "Organization"
-                : "Organizations of type";
     }
 
     private List<ResourceSpec> getResponsibilities() {
@@ -119,11 +105,11 @@ public class OrganizationReportPanel extends Panel {
                                 return organization.equals( assignment.getOrganization() );
                             }
                         } );
-        List<ResourceSpec> specs = new ArrayList<ResourceSpec>();
+        Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
         for ( Assignment assignment : assignments ) {
             specs.add( new ResourceSpec( assignment ) );
         }
-        return specs;
+        return new ArrayList<ResourceSpec>(specs);
     }
 
     private List<ResourceSpec> findAllResponsibilities() {
@@ -148,69 +134,4 @@ public class OrganizationReportPanel extends Panel {
         return new ArrayList<ResourceSpec>( specs );
     }
 
-/*    @SuppressWarnings( "unchecked" )
-    private List<ResourceSpec> getSpecs() {
-        Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
-        for ( Part p : queryService.findAllParts( segment, ResourceSpec.with( organization ), false ) ) {
-            final ResourceSpec spec = p.resourceSpec();
-            if ( spec.isOrganization() )
-                spec.setActor( Actor.UNKNOWN );
-            // Find all actors directly employed by  the organization and playing the part
-            List<Actor> actorList = (List<Actor>) CollectionUtils.select(
-                    queryService.findAllActualActors( spec ),
-                    new Predicate() {
-                        public boolean evaluate( Object object ) {
-                            return !queryService.findAllJobs( organization, (Actor) object ).isEmpty();
-                        }
-                    }
-            );
-            if ( actor == null ) {
-                if ( actorList.isEmpty() )
-                    specs.add( spec );
-                else
-                    for ( Actor a1 : actorList ) {
-                        ResourceSpec rs = new ResourceSpec( spec );
-                        rs.setActor( a1 );
-                        rs.setOrganization( organization );
-                        specs.add( rs );
-                    }
-
-            } else if ( actorList.contains( actor ) ) {
-                ResourceSpec rs = new ResourceSpec( spec );
-                rs.setActor( actor );
-                rs.setOrganization( organization );
-                specs.add( rs );
-            }
-        }
-
-        List<ResourceSpec> result = new ArrayList<ResourceSpec>( removeNarrowed( specs ) );
-        Collections.sort( result, new Comparator<ResourceSpec>() {
-            public int compare( ResourceSpec o1, ResourceSpec o2 ) {
-                return o1.toString().compareTo( o2.toString() );
-            }
-        } );
-        return result;
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private Collection<ResourceSpec> removeNarrowed( final Collection<ResourceSpec> specs ) {
-        return CollectionUtils.select(
-                specs,
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        final ResourceSpec spec = (ResourceSpec) object;
-                        return !CollectionUtils.exists(
-                                specs,
-                                new Predicate() {
-                                    public boolean evaluate( Object object ) {
-                                        ResourceSpec otherSpec = (ResourceSpec) object;
-                                        return spec != otherSpec
-                                                && otherSpec.compatibleWith( spec );
-                                    }
-                                }
-                        );
-                    }
-                }
-        );
-    }*/
 }

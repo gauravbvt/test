@@ -1045,6 +1045,34 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Actor>( actors );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( {"unchecked"} )
+    public List<Organization> findAllActualOrganizations( ResourceSpec resourceSpec ) {
+        Set<Organization> organizations = new HashSet<Organization>();
+        // If the resource spec is anyone, then return no organization,
+        // else it would return every organization known to the app
+        if ( !resourceSpec.isAnyone() ) {
+            Iterator<ResourceSpec> specs = findAllResourceSpecs().iterator();
+            Iterator<ResourceSpec> orgSpecs = new FilterIterator( specs, new Predicate() {
+                public boolean evaluate( Object object ) {
+                    Organization organization = ( (ResourceSpec) object ).getOrganization();
+                    return organization != null && organization.isActual();
+                }
+            } );
+            while ( orgSpecs.hasNext() ) {
+                ResourceSpec orgResourceSpec = orgSpecs.next();
+                if ( orgResourceSpec.narrowsOrEquals( resourceSpec ) ) {
+                    Organization organization = orgResourceSpec.getOrganization();
+                    if ( !organization.isUnknown() ) organizations.add( organization );
+                }
+            }
+        }
+
+        return new ArrayList<Organization>( organizations );
+    }
+
     private void visitParts( Set<Part> visited, ResourceSpec spec, Segment segment, boolean exactMatch ) {
         // Add matches
         for ( Segment s : getSegments( segment ) )
@@ -1826,6 +1854,18 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
 
         List<Actor> result = new ArrayList<Actor>( actors );
+        Collections.sort( result );
+        return result;
+    }
+
+    public List<Organization> findActualOrganizations( Segment segment ) {
+        Set<Organization> organizations = new HashSet<Organization>();
+        for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); ) {
+            Part p = pi.next();
+            organizations.addAll( findAllActualOrganizations( p.resourceSpec() ) );
+        }
+
+        List<Organization> result = new ArrayList<Organization>( organizations );
         Collections.sort( result );
         return result;
     }
