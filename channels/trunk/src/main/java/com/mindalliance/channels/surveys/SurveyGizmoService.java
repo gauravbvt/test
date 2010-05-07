@@ -233,13 +233,13 @@ public class SurveyGizmoService extends AbstractSurveyService {
             String value = xpathExtract( response, surveyPath + "/status/text()" );
             data.setStatus( surveyStatus( value ) );
             value = xpathExtract( response, surveyPath + "/count_inprogress/text()" );
-            data.setCountInProgress( Integer.parseInt( value ) );
+            data.setCountInProgress( Integer.parseInt( value.trim() ) );
             value = xpathExtract( response, surveyPath + "/count_complete/text()" );
-            data.setCountCompleted( Integer.parseInt( value ) );
+            data.setCountCompleted( Integer.parseInt( value.trim() ) );
             value = xpathExtract( response, surveyPath + "/count_partial/text()" );
-            data.setCountPartial( Integer.parseInt( value ) );
+            data.setCountPartial( Integer.parseInt( value.trim() ) );
             value = xpathExtract( response, surveyPath + "/count_abandoned/text()" );
-            data.setCountAbandoned( Integer.parseInt( value ) );
+            data.setCountAbandoned( Integer.parseInt( value.trim() ) );
             value = xpathExtract( response, surveyPath + "/link_preview/text()" );
             data.setPreviewLink( value );
             value = xpathExtract( response, surveyPath + "/publish_link/text()" );

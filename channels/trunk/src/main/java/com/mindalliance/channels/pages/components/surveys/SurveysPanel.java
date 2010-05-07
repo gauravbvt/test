@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.surveys;
 
-import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
@@ -12,12 +11,14 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.surveys.Survey;
+import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -194,12 +195,22 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
 
 
     private void init() {
+        addDoneButton();
         addStatusAndRelevanceFilters();
         addTableTitle();
         addSurveysTable();
         addSurveyContainer();
     }
 
+    private void addDoneButton() {
+        AjaxFallbackLink doneLink = new AjaxFallbackLink( "done" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                close( target );
+            }
+        };
+        add( doneLink );
+    }
+    
     private void addStatusAndRelevanceFilters() {
         addFilterCheckBox();
         addStatusChoices();

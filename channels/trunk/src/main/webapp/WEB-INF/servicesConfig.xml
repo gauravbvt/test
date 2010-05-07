@@ -45,6 +45,7 @@
         <property name="surveysFile" value="surveys"/>
         <property name="templatesDir" value="${channels.home}/templates"/>
         <property name="templatesSource" value="WEB-INF/templates"/>
+        <property name="userDetailsService" ref="userService"/>
     </bean>
 
 
