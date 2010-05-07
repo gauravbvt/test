@@ -868,11 +868,6 @@ public class PlanManager {
     public void setAuthorities( User user, String role, String uri ) {
         user.getUserInfo().setAuthorities( role, uri, getPlans() );
         user.setPlan( uri != null ? getDefaultPlan( user ) : null );
-        try {
-            userService.save();
-        } catch ( IOException e ) {
-            LOG.error( "Unable to save user definitions", e );
-        }
     }
 
     //=============================================================

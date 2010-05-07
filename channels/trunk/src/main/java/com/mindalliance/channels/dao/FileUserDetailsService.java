@@ -175,6 +175,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
             if ( stream != null )
                 stream.close();
         }
+        lastModified = System.currentTimeMillis();
         LOG.debug( "Wrote user definitions to {}", userFile.getAbsolutePath() );
     }
 

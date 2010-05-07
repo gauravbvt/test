@@ -98,7 +98,7 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     protected WicketTester tester;
 
     @Autowired
-    private UserService userService;
+    protected UserService userService;
 
     private IRequestCodingStrategy rcs;
 

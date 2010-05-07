@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Default page for administrators.
@@ -40,6 +41,9 @@ public class AdminPage extends WebPage {
 
     /** Wicket sometimes serializes pages... */
     private static final long serialVersionUID = -7349549537563793567L;
+
+    /** Ye olde logger. */
+    private static final Logger LOG = LoggerFactory.getLogger( AdminPage.class );
 
     /** Current user. */
     @SpringBean
@@ -53,7 +57,9 @@ public class AdminPage extends WebPage {
     @SpringBean
     private UserService userService;
 
-    private static final Logger LOG = LoggerFactory.getLogger( AdminPage.class );
+    private ListView<User> userList;
+
+    private List<User> toDelete = new ArrayList<User>();
 
     /**
      * Constructor. Having this constructor public means that your page is 'bookmarkable' and hence
@@ -61,6 +67,18 @@ public class AdminPage extends WebPage {
      */
     public AdminPage() {
         setStatelessHint( true );
+
+        userList = new ListView<User>( "item",
+                                       new PropertyModel<List<User>>( userService, "users" ) ) {
+            private static final long serialVersionUID = 2266583072592123487L;
+
+            @Override
+            protected void populateItem( ListItem<User> item ) {
+                item.add( createUserRow( new PropertyModel<String>( AdminPage.this, "plan.uri" ),
+                                         item ) );
+            }
+        };
+
         add(
             new Label( "loggedUser", user.getUsername() ),
             new Form<Void>( "users" ) {
@@ -69,6 +87,15 @@ public class AdminPage extends WebPage {
                     @Override
                     protected void onSubmit() {
                         super.onSubmit();
+                        for ( User u : toDelete ) {
+                            planManager.setAuthorities( u, null, null );
+                            userService.deleteUser( u );
+                        }
+                        if ( !toDelete.isEmpty() ) {
+                            toDelete.clear();
+                            userList.removeAll();
+                        }
+
                         try {
                             userService.save();
                         } catch ( IOException e ) {
@@ -91,18 +118,7 @@ public class AdminPage extends WebPage {
 
                 new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ),
 
-                new ListView<User>( "item",
-                        new PropertyModel<List<User>>( userService, "users" ) ) {
-                        private static final long serialVersionUID = 2266583072592123487L;
-
-                        @Override
-                        protected void populateItem( ListItem<User> item ) {
-                            item.add( createUserRow(
-                                    new PropertyModel<String>( AdminPage.this, "plan.uri" ),
-                                    item ) );
-                        }
-                    }
-                        .setReuseItems( true ),
+                userList.setReuseItems( true ),
 
                 new TextField<String>( "new", new Model<String>( null ) ) {
                         private static final long serialVersionUID = -4399667115289497468L;
@@ -115,6 +131,7 @@ public class AdminPage extends WebPage {
                                 userService.createUser( object );
                                 setModelObject( null );
                             }
+                            userList.removeAll();
                         }
                     },
 
@@ -146,6 +163,14 @@ public class AdminPage extends WebPage {
         IModel<User> userModel = item.getModel();
         return new RadioGroup<Access>( "group", new RadioModel( userModel, uriModel ) ).add(
 
+            new Radio<Access>( "admin", new Model<Access>( Access.Admin ) ),
+            new Radio<Access>( "planner", new Model<Access>( Access.Planner ) ),
+            new Radio<Access>( "user", new Model<Access>( Access.User ) ),
+            new Radio<Access>( "disabled", new Model<Access>( Access.Disabled ) ),
+            new Radio<Access>( "localPlanner", new Model<Access>( Access.LPlanner ) ),
+            new Radio<Access>( "localUser", new Model<Access>( Access.LUser ) ),
+            new Radio<Access>( "localDisabled", new Model<Access>( Access.LDisabled ) ),
+
             new Label( "username", new PropertyModel<String>( userModel, "username" ) ),
             new TextField<String>( "fullName",
                                    new PropertyModel<String>( userModel, "userInfo.fullName" ) ),
@@ -164,20 +189,12 @@ public class AdminPage extends WebPage {
             }
                     .setRequired( false ),
 
-            new Radio<Access>( "admin", new Model<Access>( Access.Admin ) ),
-            new Radio<Access>( "planner", new Model<Access>( Access.Planner ) ),
-            new Radio<Access>( "user", new Model<Access>( Access.User ) ),
-            new Radio<Access>( "disabled", new Model<Access>( Access.Disabled ) ),
-            new Radio<Access>( "localPlanner", new Model<Access>( Access.LPlanner ) ),
-            new Radio<Access>( "localUser", new Model<Access>( Access.LUser ) ),
-            new Radio<Access>( "localDisabled", new Model<Access>( Access.LDisabled ) ),
-
             new CheckBox( "delete", new Model<Boolean>( false ) ) {
                 private static final long serialVersionUID = 7493342739960682828L;
 
                 @Override
                 protected void onModelChanged() {
-                    userService.deleteUser( item.getModelObject() );
+                    toDelete.add( item.getModelObject() );
                 }
             } );
     }
