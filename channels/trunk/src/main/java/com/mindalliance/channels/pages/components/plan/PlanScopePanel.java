@@ -62,7 +62,6 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     private WebMarkupContainer organizationContainer;
     private String newInvolvedName;
     private TextField addInvolvedField;
-    private Link involveLink;
 
 
     public PlanScopePanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
@@ -147,27 +146,17 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         };
         addInvolvedField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                // involveLink.setEnabled( newInvolvedName != null && !newInvolvedName.isEmpty() );
-                target.addComponent( involveLink );
-            }
-        } );
-        add( addInvolvedField );
-        involveLink = new AjaxFallbackLink( "involveLink" ) {
-            public void onClick( AjaxRequestTarget target ) {
                 involveNewOrganization();
                 newInvolvedName = null;
-                // involveLink.setEnabled( false );
-                target.addComponent( involveLink );
                 addSelectedOrganization();
                 target.addComponent( organizationContainer );
                 addScopeIndex();
                 target.addComponent( scopeIndexPanel );
                 target.addComponent( addInvolvedField );
-                // update( target, new Change( Change.Type.Updated, getPlan(), "organizations" ) );
             }
-        };
-        involveLink.setOutputMarkupId( true );
-        add( involveLink );
+        } );
+        add( addInvolvedField );
+
     }
 
     @SuppressWarnings( "unchecked" )

@@ -1,14 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.List;
 
@@ -61,7 +61,9 @@ public abstract class UpdateObject extends AbstractCommand {
             final String property,
             final Object value,
             final Action action ) {
-        needLockOn( identifiable );
+        if ( identifiable instanceof ModelObject
+                && ( (ModelObject) identifiable ).isLockable() )
+            needLockOn( identifiable );
         set( "action", action.toString() );
         set( "object", identifiable.getId() );
         set( "property", property );

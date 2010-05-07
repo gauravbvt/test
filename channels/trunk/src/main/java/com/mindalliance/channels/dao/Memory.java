@@ -168,6 +168,7 @@ public abstract class Memory implements Dao {
     }
 
     private ModelObject find( long id ) throws NotFoundException {
+        if ( getPlan().getId() == id ) return getPlan();
         ModelObject result = indexMap.get( id );
         if ( result == null ) {
             Iterator<Segment> iterator = list( Segment.class ).iterator();
