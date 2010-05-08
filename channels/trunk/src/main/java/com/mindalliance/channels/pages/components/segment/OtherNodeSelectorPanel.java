@@ -37,7 +37,7 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
     /**
      *   Maximum display length for task name.
      */
-    static final private int MAX_ITEM_DISPLAY_LENGTH = 25;
+    static final private int MAX_ITEM_DISPLAY_LENGTH = 35;
     /**
      * To indicate other than first choice part.
      */
@@ -83,7 +83,7 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
                                    IModel<Node> nodeModel,
                                    IModel<Node> otherNodeModel,
                                    IModel<List<Node>> firstChoiceNodes,
-                                   IModel<List<Node>> secondChoiceNodes ) {
+                                   IModel<List<Node>> secondChoiceNodes) {
         super( id );
         this.nodeModel = nodeModel;
         this.otherNodeModel = otherNodeModel;

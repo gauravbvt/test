@@ -1407,7 +1407,10 @@ public final class PlanPage extends WebPage implements Updatable {
                 }
             } else if ( change.isCollapsed() && changes.get( change.getSubject() ) != null ) {
                 refreshAll( target );
-            } else {
+            } if ( change.getSubject() instanceof Flow && change.isSelected() ) {
+                segmentPanel.resizePartPanels( target );
+            }
+            else {
                 refresh( target, change, updated );
             }
         }
@@ -1894,5 +1897,5 @@ public final class PlanPage extends WebPage implements Updatable {
             return true;
         }
     }
-}
+} 
 

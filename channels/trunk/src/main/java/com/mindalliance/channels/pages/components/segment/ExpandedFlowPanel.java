@@ -526,63 +526,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
-    /**
-     * Add the target/source dropdown. Fill with getOtherNodes(); select with getOther().
-     */
-/*
-    protected final void addOtherField() {
-        final Flow oldFlow = getFlow();
-        otherChoice = new DropDownChoice<Node>(
-                "other",
-                new PropertyModel<Node>( this, "other" ),
-                new PropertyModel<List<? extends Node>>( this, "otherNodes" ),            
-                new IChoiceRenderer<Node>() {
-                    public Object getDisplayValue( Node nodeToDisplay ) {
-                        Node otherNode = getOther();
-                        boolean tbd =
-                                nodeToDisplay.equals( otherNode )
-                                        && otherNode.isConnector()
-                                        && otherNode.getSegment().equals(
-                                        getNode().getSegment() );
-                        return tbd
-                                ? "* to be determined *"
-                                : nodeToDisplay.isConnector() && nodeToDisplay.getSegment().equals( getFlow().getSegment() )
-                                ? ( (Connector) nodeToDisplay ).getInnerFlow().getLocalPart().toString()
-                                : nodeToDisplay.toString();
-                    }
-
-                    public String getIdValue( Node object, int index ) {
-                        return Long.toString( object.getId() );
-                    }
-                } );
-
-        otherChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                adjustFields( getFlow() );
-                update( target, new Change( Change.Type.Updated, getFlow(), "other" ) );
-                if ( !getFlow().equals( oldFlow ) ) {
-                    update( target, new Change( Change.Type.Collapsed, oldFlow ) );
-                    update( target, new Change( Change.Type.Expanded, getFlow() ) );
-                }
-            }
-        } );
-
-        // TODO fix flow expansion of target when other has changed (fixed?)
-        SegmentLink details = new SegmentLink( "other-details",
-                new PropertyModel<Node>( this, "other" ),
-                getFlow() );
-        details.add(
-                new Label( "type",
-                        new Model<String>( isSend() ? "To" : "From" ) ) );
-        FormComponentLabel otherLabel =
-                new FormComponentLabel( "other-label", otherChoice );
-        otherLabel.add( details );
-        add( otherLabel );
-        add( otherChoice );
-    }
-*/
     private void addOtherField() {
         ModelObjectLink otherLink = new ModelObjectLink( "other-link",
                 new PropertyModel<Part>( this, "otherPart" ),
@@ -595,8 +538,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 new PropertyModel<Node>( this, "node" ),
                 new PropertyModel<Node>( this, "other" ),
                 new PropertyModel<List<Node>>( this, "firstChoices" ),
-                new PropertyModel<List<Node>>( this, "secondChoices" )
-        );
+                new PropertyModel<List<Node>>( this, "secondChoices" ) );
         otherChoice.add( new AttributeModifier(
                 "title",
                 true,

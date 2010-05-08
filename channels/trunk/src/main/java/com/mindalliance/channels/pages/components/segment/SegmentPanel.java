@@ -350,16 +350,18 @@ public class SegmentPanel extends AbstractCommandablePanel {
             }
             if ( identifiable instanceof SegmentObject
                     && ( change.isExpanded() || change.isCollapsed() ) ) {
-                addPartPanel();
-                adjustPartPanelSizes( target );
-                target.addComponent( partPanel );
-                /*target.addComponent( receivesFlowPanel );
-                target.addComponent( sendsFlowPanel );*/
+                resizePartPanels( target );
                 stopUpdates = true;
             }
             refreshMenus( target );
             if ( !stopUpdates ) super.updateWith( target, change, updated );
         }
+    }
+
+    public void resizePartPanels( AjaxRequestTarget target ) {
+        addPartPanel();
+        adjustPartPanelSizes( target );
+        target.addComponent( partPanel );
     }
 
     /**
@@ -387,39 +389,23 @@ public class SegmentPanel extends AbstractCommandablePanel {
                     && ( (Issue) identifiable ).getAbout().getId() == getSegment().getId() ) {
                 expandSegmentEditPanel( target );
             }
-            adjustComponents();
-            adjustPartPanelSizes( target );
             refreshMenus( target );
-            addPartPanel();
-            target.addComponent( partPanel );
             receivesFlowPanel.refresh( target );
             sendsFlowPanel.refresh( target );
             if ( change.isModified() || change.isSelected() ) {
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
             }
+            addPartPanel();
+            target.addComponent( partPanel );
+            adjustComponents();
         }
     }
 
     private void adjustPartPanelSizes( AjaxRequestTarget target ) {
-        final Set<Long> expansions = getExpansions();
-        boolean partExpanded = expansions.contains( getPart().getId() );
-        boolean receiveExpanded = CollectionUtils.exists(
-                IteratorUtils.toList( getPart().receives() ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return expansions.contains((( Flow )object).getId());
-                    }
-                }
-        );
-        boolean sendExpanded = CollectionUtils.exists(
-                IteratorUtils.toList( getPart().sends() ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return expansions.contains((( Flow )object).getId());
-                    }
-                }
-        );
+        boolean partExpanded = isPartExpanded();
+        boolean receiveExpanded = isReceiveExpanded();
+        boolean sendExpanded = isSendExpanded();
         String pl = "0";
         String pr = "66.66%";
         String rl = " 33.33%";
@@ -453,6 +439,32 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 +".css(\"left\",\"" + sl + "\")"
                 + ".css(\"right\",\"" + sr + "\");";
         target.prependJavascript( script );
+    }
+
+    private boolean isPartExpanded() {
+       return getExpansions().contains( getPart().getId() );
+    }
+
+    private boolean isReceiveExpanded() {
+       return CollectionUtils.exists(
+                IteratorUtils.toList( getPart().receives() ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return getExpansions().contains((( Flow )object).getId());
+                    }
+                }
+        );
+    }
+
+    private boolean isSendExpanded() {
+       return CollectionUtils.exists(
+                IteratorUtils.toList( getPart().sends() ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return getExpansions().contains((( Flow )object).getId());
+                    }
+                }
+        );
     }
 
     private void adjustComponents() {
