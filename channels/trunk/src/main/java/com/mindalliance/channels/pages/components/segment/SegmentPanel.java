@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.commands.AddPart;
 import com.mindalliance.channels.command.commands.UpdateSegmentObject;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Part;
@@ -15,6 +16,9 @@ import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.segment.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.segment.menus.PartShowMenuPanel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
@@ -104,6 +108,18 @@ public class SegmentPanel extends AbstractCommandablePanel {
      * Whether the flow map was resized to fit.
      */
     private boolean resizedToFit = false;
+    /**
+     * Part panel css identifier.
+     */
+    private static final String PART_PANEL_ID = ".part-header";
+    /**
+     * Receives panel css identifier.
+     */
+    private static final String RECEIVE_PANEL_ID = ".receives";
+    /**
+     * Sends panel css identifier.
+     */
+    private static final String SEND_PANEL_ID = ".sends";
 
     public SegmentPanel(
             String id,
@@ -122,19 +138,30 @@ public class SegmentPanel extends AbstractCommandablePanel {
         addFlowDiagram();
         addPartMenuBar();
         addPartPanel();
+        addReceivesFlowPanel();
+        addSendsFlowPanel();
+        adjustComponents();
+    }
+
+    private void addReceivesFlowPanel() {
         receivesFlowPanel = new FlowListPanel(
                 "receives",
                 partModel,
                 false,
                 getExpansions() );
-        add( receivesFlowPanel );
+        receivesFlowPanel.setOutputMarkupId( true );
+        addOrReplace( receivesFlowPanel );
+
+    }
+
+    private void addSendsFlowPanel() {
         sendsFlowPanel = new FlowListPanel(
                 "sends",
                 partModel,
                 true,
                 getExpansions() );
-        add( sendsFlowPanel );
-        adjustComponents();
+        sendsFlowPanel.setOutputMarkupId( true );
+        addOrReplace( sendsFlowPanel );
     }
 
     private void addPartPanel() {
@@ -246,12 +273,6 @@ public class SegmentPanel extends AbstractCommandablePanel {
         add( legend );
 
         WebMarkupContainer shrinkExpand = new WebMarkupContainer( "minimized" );
-        /*final String script =
-        "if ( __channels_flowmap_minimized__==undefined) {__channels_flowmap_minimized__ = false;}"
-        + " if (__channels_flowmap_minimized__) { alert(\"minimized\"); bottom = \"49.5%\"; top = \"50.5%\"; }"
-        + " else { alert(\"NOT minimized\"); bottom = \"90%\"; top = \"10%\"; } "
-        + "$(\"#graph\").css(\"bottom\",bottom); $(\"#part\").css(\"top\",top);"
-        + "__channels_flowmap_minimized__ = !__channels_flowmap_minimized__;";*/
         final String script = "if (! __channels_flowmap_minimized__) "
                 + " {__graph_bottom = \"90%\"; __part_top = \"10%\"; }"
                 + " else {__graph_bottom = \"49.5%\"; __part_top = \"50.5%\";}"
@@ -317,11 +338,6 @@ public class SegmentPanel extends AbstractCommandablePanel {
                     receivesFlowPanel.refresh( target );
                     sendsFlowPanel.refresh( target );
                 }
-                if ( change.isExpanded() || change.isCollapsed() ) {
-                    addPartPanel();
-                    target.addComponent( partPanel );
-                    stopUpdates = true;
-                }
             }
             if ( identifiable instanceof Issue || identifiable instanceof SegmentObject ) {
                 if ( !( change.isUpdated() && isExpanded( change.getSubject() ) ) && !( change.isDisplay() ) ) {
@@ -331,6 +347,15 @@ public class SegmentPanel extends AbstractCommandablePanel {
             if ( change.isExists() && change.getSubject() instanceof Issue ) {
                 addPartPanel();
                 target.addComponent( partPanel );
+            }
+            if ( identifiable instanceof SegmentObject
+                    && ( change.isExpanded() || change.isCollapsed() ) ) {
+                addPartPanel();
+                adjustPartPanelSizes( target );
+                target.addComponent( partPanel );
+                /*target.addComponent( receivesFlowPanel );
+                target.addComponent( sendsFlowPanel );*/
+                stopUpdates = true;
             }
             refreshMenus( target );
             if ( !stopUpdates ) super.updateWith( target, change, updated );
@@ -363,6 +388,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 expandSegmentEditPanel( target );
             }
             adjustComponents();
+            adjustPartPanelSizes( target );
             refreshMenus( target );
             addPartPanel();
             target.addComponent( partPanel );
@@ -373,6 +399,60 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 target.addComponent( flowMapDiagramPanel );
             }
         }
+    }
+
+    private void adjustPartPanelSizes( AjaxRequestTarget target ) {
+        final Set<Long> expansions = getExpansions();
+        boolean partExpanded = expansions.contains( getPart().getId() );
+        boolean receiveExpanded = CollectionUtils.exists(
+                IteratorUtils.toList( getPart().receives() ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return expansions.contains((( Flow )object).getId());
+                    }
+                }
+        );
+        boolean sendExpanded = CollectionUtils.exists(
+                IteratorUtils.toList( getPart().sends() ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return expansions.contains((( Flow )object).getId());
+                    }
+                }
+        );
+        String pl = "0";
+        String pr = "66.66%";
+        String rl = " 33.33%";
+        String rr = "33.33%";
+        String sl = "66.66%";
+        String sr = "0";
+        if ( partExpanded ) {
+            if ( !receiveExpanded && !sendExpanded ) {
+                pr = "50%"; rl = "50%"; rr = "25%"; sl = "75%";
+             } else if ( receiveExpanded && !sendExpanded ) {
+                pr = "60%"; rl = "40%"; rr = "20%"; sl = "80%";
+            }  else if ( !receiveExpanded && sendExpanded ) {
+                pr = "60%"; rl = "40%"; rr = "40%"; sl = "60%";
+            }
+        } else {
+            if ( receiveExpanded && !sendExpanded ) {
+                pr = "75%"; rl = "25%"; rr = "25%"; sl = "75%";
+            } else if ( !receiveExpanded && sendExpanded ) {
+                pr = "75%"; rl = "25%"; rr = "50%"; sl = "50%";
+            } else if ( receiveExpanded && sendExpanded ) {
+                pr = "80%"; rl = "20%"; rr = "40%"; sl = "60%";
+            }
+        }
+        final String script = "$(\"" + PART_PANEL_ID + "\")"
+                +".css(\"left\",\"" + pl + "\")"
+                + ".css(\"right\",\"" + pr + "\");"
+                + "$(\"" + RECEIVE_PANEL_ID + "\")"
+                +".css(\"left\",\"" + rl + "\")"
+                + ".css(\"right\",\"" + rr + "\");"
+                + "$(\"" + SEND_PANEL_ID + "\")"
+                +".css(\"left\",\"" + sl + "\")"
+                + ".css(\"right\",\"" + sr + "\");";
+        target.prependJavascript( script );
     }
 
     private void adjustComponents() {

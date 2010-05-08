@@ -1496,7 +1496,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void refreshChildren(
-            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+          AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         refreshPlanEditPanel( target, change, updated );
         refreshSegmentEditPanel( target, change, updated );
         refreshEntityPanel( target, change, updated );
@@ -1511,7 +1511,7 @@ public final class PlanPage extends WebPage implements Updatable {
     private void refreshSegmentPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( identifiable instanceof Part && ( change.isSelected() || change.isDisplay() ) ) {
+        if ( identifiable instanceof SegmentObject && ( change.isSelected() || change.isDisplay() ) ) {
             segmentPanel.doRefresh( target, change );
             target.addComponent( segmentPanel );
         } else {

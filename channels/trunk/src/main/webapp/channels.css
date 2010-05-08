@@ -120,25 +120,25 @@ div.section-title {
     position: relative;
 }
 
-#receives, #sends, #part-header {
+.receives, .sends, .part-header {
     position: absolute;
     top: 0;
     bottom: 0;
 }
 
-#part-header {
+.part-header {
     left: 0;
     right: 66.66%;
     margin-right: 4px;
 }
 
-#receives {
+.receives {
     left: 33.33%;
     right: 33.33%;
     margin-right: 2px;
 }
 
-#sends {
+.sends {
     left: 66.66%;
     right: 0;
     margin-left: 2px;
@@ -427,17 +427,17 @@ ol {
     padding: 2px 0 0 1.5em;
 }
 
-#receives ol, #sends ol {
+.receives ol, .sends ol {
     width: 95%;
 }
 
-#receives ol > li, #sends ol > li {
+.receives ol > li, .sends ol > li {
     position: relative;
     margin: 0 0 0.6em 0;
     line-height: 1.2em;
 }
 
-#receives ol > li span, #sends ol > li span {
+.receives ol > li span, .sends ol > li span {
 }
 
 ol.channels {
@@ -505,7 +505,7 @@ ul.attach ul.menu {
     vertical-align: baseline;
 }
 
-#receives span.menubar, #sends span.menubar, .issues span.menubar {
+.receives span.menubar, .sends span.menubar, .issues span.menubar {
     float: right;
     position: static;
 }
@@ -647,11 +647,11 @@ div.header {
     background: white;
 }
 
-#part-header, #receives, #sends, div.section, #graph, div.aspect {
+.part-header, .receives, .sends, div.section, #graph, div.aspect {
     border: 1px inset #c3dede;
 }
 
-#part-header, #receives, #sends, div.section, div.aspect {
+.part-header, .receives, .sends, div.section, div.aspect {
     background: #f6f6f6;
     padding: 5px;
 }
@@ -661,7 +661,7 @@ td.link.notify, td.link.answer {
     padding-left: 25px;
 }
 
-#receives h3 span {
+.receives h3 span {
     background: transparent url( 'images/arrow_left_blue.png' ) no-repeat 100% 50%;
     padding-right: 25px;
 }
@@ -671,7 +671,7 @@ td.link.ask, td.link.receive {
     padding-left: 25px;
 }
 
-#sends h3 span {
+.sends h3 span {
     background: transparent url( 'images/arrow_right_blue.png' ) no-repeat 100% 50%;
     padding-right: 25px;
 }
