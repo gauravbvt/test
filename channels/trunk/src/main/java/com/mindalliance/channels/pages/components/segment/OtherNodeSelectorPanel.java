@@ -62,7 +62,7 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
      * Parts to be shown in a drop down.
      */
     private IModel<List<Node>> firstChoiceNodes;
-    /**
+    /**                                                                                                                                                                                       acced
      * Parts to be offerred as auto-complete candidates.
      */
     private IModel<List<Node>> secondChoiceNodes;
