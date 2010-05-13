@@ -43,6 +43,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     private static final String ACTOR_PARM = "agent";
     private static final String ORGANIZATION_PARM = "org";
     private static final String ISSUES_PARM = "issues";
+    private static final String DIAGRAMS_PARM = "diagrams";
     private static final String ALL = "all";
 
 
@@ -78,7 +79,12 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
     /**
      * True when issues are shown.
      */
-    private boolean showingIssues = true;
+    private boolean showingIssues = false;
+
+    /**
+     * True when issues are shown.
+     */
+    private boolean showingDiagrams = false;
 
     @SpringBean
     private PlanManager planManager;
@@ -111,10 +117,11 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                                 : Long.toString( object.getId() );
                     }
                 } ).add( newOnChange( "onchange" ) ) );
-        WebMarkupContainer showIssuesContainer = new WebMarkupContainer( "issues" );
-        showIssuesContainer.setVisible( isUserPlanner() );
-        form.add( showIssuesContainer );
-        showIssuesContainer.add( new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) );
+        WebMarkupContainer showOptionalsContainer = new WebMarkupContainer( "optionals" );
+        showOptionalsContainer.setVisible( isUserPlanner() );
+        form.add( showOptionalsContainer );
+        showOptionalsContainer.add( new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) );
+        showOptionalsContainer.add( new CheckBox( "showingDiagrams" ).add( newOnChange( "onclick" ) ) );
         if ( isUserPlanner() ) {
             form.add( new DropDownChoice<Organization>(
                     "organization",
@@ -246,7 +253,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
             result = new ArrayList<Actor>();
             result.add( actor );
         }
-         return result;
+        return result;
     }
 
     /**
@@ -308,6 +315,9 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
 
         if ( parameters.containsKey( ISSUES_PARM ) )
             setShowingIssues( parameters.getAsBoolean( ISSUES_PARM, true ) );
+
+        if ( parameters.containsKey( DIAGRAMS_PARM ) )
+            setShowingDiagrams( parameters.getAsBoolean( DIAGRAMS_PARM, true ) );
     }
 
     private boolean isUserPlanner() {
@@ -331,9 +341,10 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         if ( !isAllOrganizations() ) {
             result.put( ORGANIZATION_PARM, Long.toString( organization.getId() ) );
         }
-        if ( !showingIssues )
+        if ( showingIssues )
             result.put( ISSUES_PARM, Boolean.toString( showingIssues ) );
-
+        if ( showingDiagrams )
+            result.put( DIAGRAMS_PARM, Boolean.toString( showingDiagrams ) );
         return result;
     }
 
@@ -346,7 +357,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<Actor> getActorChoices( QueryService service ) {
         List<Actor> result = new ArrayList<Actor>(
                 isAllSegments() ? service.listActualEntities( Actor.class )
@@ -359,20 +370,20 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                     }
                 } );
         if ( !isAllOrganizations() ) {
-             result = (List<Actor>) CollectionUtils.select(
-                     result,
-                     new Predicate() {
-                         public boolean evaluate( Object object ) {
-                             return isEmployee( (Actor) object , getOrganization() );
-                         }
-                     }
-             );
-         }
+            result = (List<Actor>) CollectionUtils.select(
+                    result,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return isEmployee( (Actor) object, getOrganization() );
+                        }
+                    }
+            );
+        }
         result.add( 0, Actor.UNKNOWN );
         return result;
     }
 
-    private boolean isEmployee( Actor act, Organization org) {
+    private boolean isEmployee( Actor act, Organization org ) {
         return queryService.findEmployers( act ).contains( org );
     }
 
@@ -380,6 +391,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         List<Organization> result = new ArrayList<Organization>(
                 isAllSegments() ? service.listActualEntities( Organization.class )
                         : service.findActualOrganizations( segment ) );
+        result.remove( Organization.UNKNOWN );
         Collections.sort(
                 result,
                 new Comparator<Organization>() {
@@ -441,6 +453,14 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
 
     public void setShowingIssues( boolean showingIssues ) {
         this.showingIssues = showingIssues;
+    }
+
+    public boolean isShowingDiagrams() {
+        return showingDiagrams;
+    }
+
+    public void setShowingDiagrams( boolean showingDiagrams ) {
+        this.showingDiagrams = showingDiagrams;
     }
 
     /**

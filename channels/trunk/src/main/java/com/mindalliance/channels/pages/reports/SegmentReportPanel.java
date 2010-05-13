@@ -50,20 +50,26 @@ public class SegmentReportPanel extends Panel {
     private QueryService queryService;
 
     private Organization organization;
+    private boolean showingDiagrams;
 
     public SegmentReportPanel(
             String id,
             IModel<Segment> model,
             final Organization organization,
             final Actor actor,
-            final boolean showingIssues ) {
+            final boolean showingIssues,
+            final boolean showingDiagrams) {
         super( id, model );
         this.organization = organization;
+        this.showingDiagrams = showingDiagrams;
         setRenderBodyOnly( true );
         segment = model.getObject();
 
         addSegmentPage( segment, showingIssues );
         List<Organization> involvedOrgs = findAllInvolvedOrganizations( segment, actor );
+        add( new Label(
+                "no-procedure",
+                "No information sharing procedures" ).setVisible( involvedOrgs.isEmpty() ) );        
         add( new ListView<Organization>(
                 "organizations",
                 involvedOrgs ) {
@@ -207,12 +213,13 @@ public class SegmentReportPanel extends Panel {
         flowMapLink.setVisible( User.current().isPlanner() );
         flowMapLink.add( new AttributeModifier( "href", true, new Model<String>( getFlowMapLink( s ) ) ) );
         flowMapLink.add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) );
+        flowMapLink.setVisible( showingDiagrams );
         add( flowMapLink );
     }
 
 
     private void addFlowDiagram( Segment s ) {
-        if ( User.current().isPlanner() ) {
+        if ( User.current().isPlanner() && showingDiagrams ) {
             add( new FlowMapDiagramPanel( "flowMap",
                     new Model<Segment>( s ),
                     null,

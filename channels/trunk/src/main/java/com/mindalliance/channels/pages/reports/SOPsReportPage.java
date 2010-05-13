@@ -15,6 +15,7 @@ import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -106,13 +107,15 @@ public class SOPsReportPage extends WebPage {
                                 item.getModel(),
                                 selector.isAllOrganizations() ? null : selector.getOrganization(),
                                 selector.isAllActors() ? null : selector.getActor(),
-                                selector.isShowingIssues() ) );
+                                selector.isShowingIssues(),
+                                selector.isShowingDiagrams()) );
                     }
                 },
 
                 new WebMarkupContainer( "plan-map-link" ).setVisible( User.current().isPlanner() )
                         .add( new AttributeModifier( "href", true, new Model<String>( getPlanMapLink() ) ) )
                         .add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) )
+                        .setVisible( selector.isShowingDiagrams() )
         );
         if ( selector.isAllOrganizations() ) {
             add( new Label( "org-details", "" ).setVisible( false ) );
@@ -156,15 +159,21 @@ public class SOPsReportPage extends WebPage {
     }
 
     private void addDiagramPanel( List<Segment> segments ) {
+        Component diagramPanel;
         double[] size = {478L, 400L};
-        PlanMapDiagramPanel diagramPanel = new PlanMapDiagramPanel( "planMap",
-                new Model<ArrayList<Segment>>( (ArrayList<Segment>) segments ),
-                false, // group segments by phase
-                true, // group segments by event
-                null,  // selected phase or event
-                selector.isAllSegments() ? null : selector.getSegment(),
-                null,
-                new Settings( "#plan-map", DiagramFactory.LEFT_RIGHT, size, false, false ) );
+        if ( User.current().isPlanner() && selector.isShowingDiagrams() ) {
+            diagramPanel = new PlanMapDiagramPanel( "planMap",
+                    new Model<ArrayList<Segment>>( (ArrayList<Segment>) segments ),
+                    false, // group segments by phase
+                    true, // group segments by event
+                    null,  // selected phase or event
+                    selector.isAllSegments() ? null : selector.getSegment(),
+                    null,
+                    new Settings( "#plan-map", DiagramFactory.LEFT_RIGHT, size, false, false ) );
+        } else {
+            diagramPanel = new Label( "planMap", "" );
+            diagramPanel.setVisible( false );
+        }
         add( diagramPanel );
     }
 
