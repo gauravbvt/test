@@ -112,7 +112,7 @@ public class SOPsReportPage extends WebPage {
 
                 new WebMarkupContainer( "plan-map-link" ).setVisible( User.current().isPlanner() )
                         .add( new AttributeModifier( "href", true, new Model<String>( getPlanMapLink() ) ) )
-                        .add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) )
+                        .add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) )
         );
         if ( selector.isAllOrganizations() ) {
             add( new Label( "org-details", "" ).setVisible( false ) );

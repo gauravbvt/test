@@ -19,6 +19,7 @@ import com.mindalliance.channels.pages.components.segment.menus.PartShowMenuPane
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
@@ -109,6 +110,10 @@ public class SegmentPanel extends AbstractCommandablePanel {
      */
     private boolean resizedToFit = false;
     /**
+     * Captures the current part panel sizes
+     */
+    private String partPanelSizes;
+    /**
      * Part panel css identifier.
      */
     private static final String PART_PANEL_ID = ".part-header";
@@ -133,6 +138,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
+        partPanelSizes =  StringUtils.join( getPartPanelSizes(), ',' );
         setOutputMarkupId( true );
         addFlowViewControls();
         addFlowDiagram();
@@ -359,9 +365,14 @@ public class SegmentPanel extends AbstractCommandablePanel {
     }
 
     public void resizePartPanels( AjaxRequestTarget target ) {
-        addPartPanel();
-        adjustPartPanelSizes( target );
-        target.addComponent( partPanel );
+        String[] sizes = getPartPanelSizes();
+        String newSizes = StringUtils.join( sizes, ',' );
+        if ( !newSizes.equals( partPanelSizes ) ) {
+            addPartPanel();
+            adjustPartPanelSizes( target, sizes );
+            target.addComponent( partPanel );
+            partPanelSizes = newSizes;
+        }
     }
 
     /**
@@ -402,7 +413,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
         }
     }
 
-    private void adjustPartPanelSizes( AjaxRequestTarget target ) {
+    private String[] getPartPanelSizes() {
+        String[] sizes = new String[6];
         boolean partExpanded = isPartExpanded();
         boolean receiveExpanded = isReceiveExpanded();
         boolean sendExpanded = isSendExpanded();
@@ -414,54 +426,88 @@ public class SegmentPanel extends AbstractCommandablePanel {
         String sr = "0";
         if ( partExpanded ) {
             if ( !receiveExpanded && !sendExpanded ) {
-                pr = "50%"; rl = "50%"; rr = "25%"; sl = "75%";
-             } else if ( receiveExpanded && !sendExpanded ) {
-                pr = "60%"; rl = "40%"; rr = "20%"; sl = "80%";
-            }  else if ( !receiveExpanded && sendExpanded ) {
-                pr = "60%"; rl = "40%"; rr = "40%"; sl = "60%";
+                pr = "50%";
+                rl = "50%";
+                rr = "25%";
+                sl = "75%";
+            } else if ( receiveExpanded && !sendExpanded ) {
+                pr = "60%";
+                rl = "40%";
+                rr = "20%";
+                sl = "80%";
+            } else if ( !receiveExpanded && sendExpanded ) {
+                pr = "60%";
+                rl = "40%";
+                rr = "40%";
+                sl = "60%";
             }
         } else {
             if ( receiveExpanded && !sendExpanded ) {
-                pr = "75%"; rl = "25%"; rr = "25%"; sl = "75%";
+                pr = "75%";
+                rl = "25%";
+                rr = "25%";
+                sl = "75%";
             } else if ( !receiveExpanded && sendExpanded ) {
-                pr = "75%"; rl = "25%"; rr = "50%"; sl = "50%";
+                pr = "75%";
+                rl = "25%";
+                rr = "50%";
+                sl = "50%";
             } else if ( receiveExpanded && sendExpanded ) {
-                pr = "80%"; rl = "20%"; rr = "40%"; sl = "60%";
+                pr = "80%";
+                rl = "20%";
+                rr = "40%";
+                sl = "60%";
             }
         }
+        sizes[0] = pl;
+        sizes[1] = pr;
+        sizes[2] = rl;
+        sizes[3] = rr;
+        sizes[4] = sl;
+        sizes[5] = sr;
+        return sizes;
+    }
+
+    private void adjustPartPanelSizes( AjaxRequestTarget target, String[] sizes ) {
+        String pl = sizes[0];
+        String pr = sizes[1];
+        String rl = sizes[2];
+        String rr = sizes[3];
+        String sl = sizes[4];
+        String sr = sizes[5];
         final String script = "$(\"" + PART_PANEL_ID + "\")"
-                +".css(\"left\",\"" + pl + "\")"
+                + ".css(\"left\",\"" + pl + "\")"
                 + ".css(\"right\",\"" + pr + "\");"
                 + "$(\"" + RECEIVE_PANEL_ID + "\")"
-                +".css(\"left\",\"" + rl + "\")"
+                + ".css(\"left\",\"" + rl + "\")"
                 + ".css(\"right\",\"" + rr + "\");"
                 + "$(\"" + SEND_PANEL_ID + "\")"
-                +".css(\"left\",\"" + sl + "\")"
+                + ".css(\"left\",\"" + sl + "\")"
                 + ".css(\"right\",\"" + sr + "\");";
         target.prependJavascript( script );
     }
 
     private boolean isPartExpanded() {
-       return getExpansions().contains( getPart().getId() );
+        return getExpansions().contains( getPart().getId() );
     }
 
     private boolean isReceiveExpanded() {
-       return CollectionUtils.exists(
+        return CollectionUtils.exists(
                 IteratorUtils.toList( getPart().receives() ),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        return getExpansions().contains((( Flow )object).getId());
+                        return getExpansions().contains( ( (Flow) object ).getId() );
                     }
                 }
         );
     }
 
     private boolean isSendExpanded() {
-       return CollectionUtils.exists(
+        return CollectionUtils.exists(
                 IteratorUtils.toList( getPart().sends() ),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        return getExpansions().contains((( Flow )object).getId());
+                        return getExpansions().contains( ( (Flow) object ).getId() );
                     }
                 }
         );

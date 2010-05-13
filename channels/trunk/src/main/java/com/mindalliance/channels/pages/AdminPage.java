@@ -6,6 +6,7 @@ import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.reports.SOPsReportPage;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -19,19 +20,18 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Default page for administrators.
@@ -39,21 +39,31 @@ import java.util.ArrayList;
  */
 public class AdminPage extends WebPage {
 
-    /** Wicket sometimes serializes pages... */
+    /**
+     * Wicket sometimes serializes pages...
+     */
     private static final long serialVersionUID = -7349549537563793567L;
 
-    /** Ye olde logger. */
+    /**
+     * Ye olde logger.
+     */
     private static final Logger LOG = LoggerFactory.getLogger( AdminPage.class );
 
-    /** Current user. */
+    /**
+     * Current user.
+     */
     @SpringBean
     private User user;
 
-    /** The plan manager. */
+    /**
+     * The plan manager.
+     */
     @SpringBean
     private PlanManager planManager;
 
-    /** The user service. */
+    /**
+     * The user service.
+     */
     @SpringBean
     private UserService userService;
 
@@ -69,19 +79,19 @@ public class AdminPage extends WebPage {
         setStatelessHint( true );
 
         userList = new ListView<User>( "item",
-                                       new PropertyModel<List<User>>( userService, "users" ) ) {
+                new PropertyModel<List<User>>( userService, "users" ) ) {
             private static final long serialVersionUID = 2266583072592123487L;
 
             @Override
             protected void populateItem( ListItem<User> item ) {
                 item.add( createUserRow( new PropertyModel<String>( AdminPage.this, "plan.uri" ),
-                                         item ) );
+                        item ) );
             }
         };
 
         add(
-            new Label( "loggedUser", user.getUsername() ),
-            new Form<Void>( "users" ) {
+                new Label( "loggedUser", user.getUsername() ),
+                new Form<Void>( "users" ) {
                     private static final long serialVersionUID = -8235938747896846652L;
 
                     @Override
@@ -103,49 +113,51 @@ public class AdminPage extends WebPage {
                         }
                     }
                 }
-                .add(
-                new DropDownChoice<Plan>( "plan-sel",
-                                  new PropertyModel<Plan>( this, "plan" ),
-                                  new PropertyModel<List<? extends Plan>>( planManager, "plans" ) )
-                    .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                        private static final long serialVersionUID = -5466916152047216396L;
+                        .add(
+                        new DropDownChoice<Plan>( "plan-sel",
+                                new PropertyModel<Plan>( this, "plan" ),
+                                new PropertyModel<List<? extends Plan>>( planManager, "plans" ) )
+                                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                            private static final long serialVersionUID = -5466916152047216396L;
 
-                        @Override
-                        protected void onUpdate( AjaxRequestTarget target ) {
-                            target.addComponent( get( "users" ) );
-                        }
-                    } ),
-
-                new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ),
-
-                userList.setReuseItems( true ),
-
-                new TextField<String>( "new", new Model<String>( null ) ) {
-                        private static final long serialVersionUID = -4399667115289497468L;
-
-                        @Override
-                        protected void onModelChanged() {
-                            super.onModelChanged();
-                            String object = getModelObject();
-                            if ( object != null ) {
-                                userService.createUser( object );
-                                setModelObject( null );
+                            @Override
+                            protected void onUpdate( AjaxRequestTarget target ) {
+                                target.addComponent( get( "users" ) );
                             }
-                            userList.removeAll();
-                        }
-                    },
+                        } ),
 
-                new BookmarkablePageLink<SOPsReportPage>( "report", SOPsReportPage.class )
-                    .setPopupSettings( new PopupSettings(
-                        PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS
-                                                | PopupSettings.MENU_BAR ) ) ) );
+                        new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ),
+
+                        userList.setReuseItems( true ),
+
+                        new TextField<String>( "new", new Model<String>( null ) ) {
+                            private static final long serialVersionUID = -4399667115289497468L;
+
+                            @Override
+                            protected void onModelChanged() {
+                                super.onModelChanged();
+                                String object = getModelObject();
+                                if ( object != null ) {
+                                    userService.createUser( object );
+                                    setModelObject( null );
+                                }
+                                userList.removeAll();
+                            }
+                        },
+
+                        new BookmarkablePageLink<SOPsReportPage>( "report", SOPsReportPage.class )
+                                .add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) )
+                ) );
+        /*.setPopupSettings( new PopupSettings(
+PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS
+   | PopupSettings.MENU_BAR ) ) ) );*/
     }
 
     /**
-      * Return current plan.
-      *
-      * @return a plan
-      */
+     * Return current plan.
+     *
+     * @return a plan
+     */
     public Plan getPlan() {
         return user.getPlan();
     }
@@ -163,44 +175,48 @@ public class AdminPage extends WebPage {
         IModel<User> userModel = item.getModel();
         return new RadioGroup<Access>( "group", new RadioModel( userModel, uriModel ) ).add(
 
-            new Radio<Access>( "admin", new Model<Access>( Access.Admin ) ),
-            new Radio<Access>( "planner", new Model<Access>( Access.Planner ) ),
-            new Radio<Access>( "user", new Model<Access>( Access.User ) ),
-            new Radio<Access>( "disabled", new Model<Access>( Access.Disabled ) ),
-            new Radio<Access>( "localPlanner", new Model<Access>( Access.LPlanner ) ),
-            new Radio<Access>( "localUser", new Model<Access>( Access.LUser ) ),
-            new Radio<Access>( "localDisabled", new Model<Access>( Access.LDisabled ) ),
+                new Radio<Access>( "admin", new Model<Access>( Access.Admin ) ),
+                new Radio<Access>( "planner", new Model<Access>( Access.Planner ) ),
+                new Radio<Access>( "user", new Model<Access>( Access.User ) ),
+                new Radio<Access>( "disabled", new Model<Access>( Access.Disabled ) ),
+                new Radio<Access>( "localPlanner", new Model<Access>( Access.LPlanner ) ),
+                new Radio<Access>( "localUser", new Model<Access>( Access.LUser ) ),
+                new Radio<Access>( "localDisabled", new Model<Access>( Access.LDisabled ) ),
 
-            new Label( "username", new PropertyModel<String>( userModel, "username" ) ),
-            new TextField<String>( "fullName",
-                                   new PropertyModel<String>( userModel, "userInfo.fullName" ) ),
-            new TextField<String>( "email",
-                                   new PropertyModel<String>( userModel, "userInfo.email" ) ),
+                new Label( "username", new PropertyModel<String>( userModel, "username" ) ),
+                new TextField<String>( "fullName",
+                        new PropertyModel<String>( userModel, "userInfo.fullName" ) ),
+                new TextField<String>( "email",
+                        new PropertyModel<String>( userModel, "userInfo.email" ) ),
 
-            new PasswordTextField( "password", new Model<String>( null ) ) {
-                private static final long serialVersionUID = 2037327143613490877L;
+                new PasswordTextField( "password", new Model<String>( null ) ) {
+                    private static final long serialVersionUID = 2037327143613490877L;
 
-                @Override
-                protected void onModelChanged() {
-                    String pwd = getModelObject();
-                    if ( pwd != null && !pwd.trim().isEmpty() )
-                        item.getModelObject().getUserInfo().setPassword( pwd );
+                    @Override
+                    protected void onModelChanged() {
+                        String pwd = getModelObject();
+                        if ( pwd != null && !pwd.trim().isEmpty() )
+                            item.getModelObject().getUserInfo().setPassword( pwd );
+                    }
                 }
-            }
-                    .setRequired( false ),
+                        .setRequired( false ),
 
-            new CheckBox( "delete", new Model<Boolean>( false ) ) {
-                private static final long serialVersionUID = 7493342739960682828L;
+                new CheckBox( "delete", new Model<Boolean>( false ) ) {
+                    private static final long serialVersionUID = 7493342739960682828L;
 
-                @Override
-                protected void onModelChanged() {
-                    toDelete.add( item.getModelObject() );
-                }
-            } );
+                    @Override
+                    protected void onModelChanged() {
+                        toDelete.add( item.getModelObject() );
+                    }
+                } );
     }
 
     //==================================================================
-    enum Access { Admin,Planner,User,Disabled,LPlanner,LUser,LDisabled };
+    enum Access {
+        Admin, Planner, User, Disabled, LPlanner, LUser, LDisabled
+    }
+
+    ;
 
     //==================================================================
     /**
@@ -232,40 +248,40 @@ public class AdminPage extends WebPage {
         }
 
         private Access getObject( UserInfo info ) {
-            return info.isAdmin()             ? Access.Admin
-                 : info.isPlanner()           ? Access.Planner
-                 : info.isUser()              ? Access.User
-                 : !info.isEnabled()          ? Access.Disabled
-                 : info.isPlanner( getUri() ) ? Access.LPlanner
-                 : info.isUser( getUri() )    ? Access.LUser
-                                              : Access.LDisabled;
+            return info.isAdmin() ? Access.Admin
+                    : info.isPlanner() ? Access.Planner
+                    : info.isUser() ? Access.User
+                    : !info.isEnabled() ? Access.Disabled
+                    : info.isPlanner( getUri() ) ? Access.LPlanner
+                    : info.isUser( getUri() ) ? Access.LUser
+                    : Access.LDisabled;
         }
 
         public void setObject( Access object ) {
             User rowUser = userModel.getObject();
             switch ( object ) {
-            case Admin:
-                planManager.setAuthorities( rowUser, UserInfo.ROLE_ADMIN, null );
-                break;
-            case Planner:
-                planManager.setAuthorities( rowUser, UserInfo.ROLE_PLANNER, null );
-                break;
-            case User:
-                planManager.setAuthorities( rowUser, UserInfo.ROLE_USER, null );
-                break;
-            case LPlanner:
-                planManager.setAuthorities( rowUser, UserInfo.ROLE_PLANNER, getUri() );
-                break;
-            case LUser:
-                planManager.setAuthorities( rowUser, UserInfo.ROLE_USER, getUri() );
-                break;
-            case LDisabled:
-                planManager.setAuthorities( rowUser, null, getUri() );
-                break;
-            case Disabled:
-            default:
-                planManager.setAuthorities( rowUser, null, null );
-                break;
+                case Admin:
+                    planManager.setAuthorities( rowUser, UserInfo.ROLE_ADMIN, null );
+                    break;
+                case Planner:
+                    planManager.setAuthorities( rowUser, UserInfo.ROLE_PLANNER, null );
+                    break;
+                case User:
+                    planManager.setAuthorities( rowUser, UserInfo.ROLE_USER, null );
+                    break;
+                case LPlanner:
+                    planManager.setAuthorities( rowUser, UserInfo.ROLE_PLANNER, getUri() );
+                    break;
+                case LUser:
+                    planManager.setAuthorities( rowUser, UserInfo.ROLE_USER, getUri() );
+                    break;
+                case LDisabled:
+                    planManager.setAuthorities( rowUser, null, getUri() );
+                    break;
+                case Disabled:
+                default:
+                    planManager.setAuthorities( rowUser, null, null );
+                    break;
             }
         }
     }

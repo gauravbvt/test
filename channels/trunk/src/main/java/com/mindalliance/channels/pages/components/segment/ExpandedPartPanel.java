@@ -194,8 +194,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addPartDescription() {
         partDescription = new TextArea<String>( "description",                            // NON-NLS
                 new PropertyModel<String>( this, "description" ) );
-        partDescription.add( new AjaxEventBehavior( "onclick" ) {
-            protected void onEvent( AjaxRequestTarget target ) {
+        partDescription.add( new AjaxFormComponentUpdatingBehavior( "onchange") {
+            protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "description" ) );
             }
         } );

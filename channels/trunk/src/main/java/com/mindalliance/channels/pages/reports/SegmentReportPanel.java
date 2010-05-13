@@ -206,7 +206,7 @@ public class SegmentReportPanel extends Panel {
         WebMarkupContainer flowMapLink = new WebMarkupContainer( "flow-link" );
         flowMapLink.setVisible( User.current().isPlanner() );
         flowMapLink.add( new AttributeModifier( "href", true, new Model<String>( getFlowMapLink( s ) ) ) );
-        flowMapLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
+        flowMapLink.add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) );
         add( flowMapLink );
     }
 

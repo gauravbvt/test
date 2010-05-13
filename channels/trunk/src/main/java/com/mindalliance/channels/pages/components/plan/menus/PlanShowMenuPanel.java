@@ -10,12 +10,12 @@ import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.reports.SOPsReportPage;
 import com.mindalliance.channels.surveys.SurveyService;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -139,11 +139,11 @@ public class PlanShowMenuPanel extends MenuPanel {
             }
         }
         BookmarkablePageLink reportLink = new BookmarkablePageLink( "link", SOPsReportPage.class );
-     //   reportLink.add( new AttributeModifier( "target", true, new Model<String>( "report" ) ) );
-        reportLink.setPopupSettings( new PopupSettings(
+        reportLink.add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) );
+        /*reportLink.setPopupSettings( new PopupSettings(
                PopupSettings.RESIZABLE |
                         PopupSettings.SCROLLBARS |
-                        PopupSettings.MENU_BAR ) );
+                        PopupSettings.MENU_BAR ) );*/
         menuItems.add( new LinkMenuItem(
                 "menuItem",
                 new Model<String>( "Info Sharing Procedures" ),
