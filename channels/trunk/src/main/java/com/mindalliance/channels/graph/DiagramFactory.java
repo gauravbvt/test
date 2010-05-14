@@ -70,6 +70,23 @@ public interface DiagramFactory<Vertex, Edge> {
             String orientation );
 
     /**
+     * Instantiates a flow map diagram.
+     *
+     * @param segment     a segment
+     * @param node        a selected node
+     * @param diagramSize width and height as array of doubles
+     * @param orientation a string
+     * @param showingGoals whether to show goals
+     * @return a flow map diagram
+     */
+    Diagram newFlowMapDiagram(
+            Segment segment,
+            Node node,
+            double[] diagramSize,
+            String orientation,
+            boolean showingGoals );
+
+    /**
      * Instantiates a plan map diagram.
      *
      * @param groupByPhase whetner to group segment by phases

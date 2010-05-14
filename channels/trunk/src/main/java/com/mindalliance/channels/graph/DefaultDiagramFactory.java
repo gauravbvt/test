@@ -102,12 +102,23 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             Node node,
             double[] diagramSize,
             String orientation ) {
-        LOG.debug( "Making flow map on " + segment + "/" + node );
-        FlowMapDiagram mapDiagram = new FlowMapDiagram( segment, node, diagramSize, orientation );
-        return mapDiagram;
+        return newFlowMapDiagram( segment, node, diagramSize, orientation, false );
     }
 
-    public Diagram newEntityNetworkDiagram(
+    /**
+     * {@inheritDoc}
+     */
+    public Diagram newFlowMapDiagram(
+            Segment segment,
+            Node node,
+            double[] diagramSize,
+            String orientation,
+            boolean showingGoals) {
+        LOG.debug( "Making flow map on " + segment + "/" + node );
+        return new FlowMapDiagram( segment, node, diagramSize, orientation, showingGoals );
+    }
+
+      public Diagram newEntityNetworkDiagram(
             ModelEntity entity,
             EntityRelationship selectedEntityRel,
             double[] diagramSize,
@@ -117,6 +128,8 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
                 new EntityNetworkDiagram( entity, selectedEntityRel, diagramSize, orientation );
         return diagram;
     }
+
+
 
     /**
      * {@inheritDoc}

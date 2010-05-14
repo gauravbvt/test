@@ -16,7 +16,7 @@ import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.playbook.VCardPage;
 import com.mindalliance.channels.pages.png.EntitiesNetworkPage;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
-import com.mindalliance.channels.pages.png.EssentialFlowMapPage;
+import com.mindalliance.channels.pages.png.FailureImpactsPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.HierarchyPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
@@ -134,7 +134,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "entities.png", EntitiesNetworkPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "hierarchy.png", HierarchyPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "geomap.html", GeoMapPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "essential.png", EssentialFlowMapPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "essential.png", FailureImpactsPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );

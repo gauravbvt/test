@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
@@ -32,12 +32,24 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      * Selected node. Null if none selected.
      */
     private IModel<Part> partModel;
+    private boolean showingGoals;
 
-    public FlowMapDiagramPanel( String id, IModel<Segment> segmentModel, IModel<Part> partModel,
+    public FlowMapDiagramPanel( String id,
+                                IModel<Segment> segmentModel,
+                                IModel<Part> partModel,
                                 Settings settings ) {
+        this( id, segmentModel, partModel, settings, false );
+    }
+
+    public FlowMapDiagramPanel( String id,
+                                IModel<Segment> segmentModel,
+                                IModel<Part> partModel,
+                                Settings settings,
+                                boolean showingGoals) {
         super( id, settings );
         this.segmentModel = segmentModel;
         this.partModel = partModel;
+        this.showingGoals = showingGoals;
         init();
     }
 
@@ -58,7 +70,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                 getSegment(),
                 getPart(),
                 getDiagramSize(),
-                getOrientation() );
+                getOrientation(),
+                showingGoals );
     }
 
     /**
@@ -87,6 +100,11 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             sb.append( "&orientation=" );
             sb.append( orientation );
         }
+        if ( showingGoals ) {
+            sb.append( "&showingGoals=" );
+            sb.append( showingGoals );
+        }
+
         return sb.toString();
     }
 

@@ -31,15 +31,29 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
      * A selected node.
      */
     private Node selectedNode;
+    /**
+     * Whether to show goals.
+     */
+    private boolean showingGoals;
 
     public FlowMapDiagram(
             Segment segment,
             Node selectedNode,
             double[] diagramSize,
             String orientation ) {
+        this( segment, selectedNode, diagramSize, orientation, false );
+    }
+
+    public FlowMapDiagram(
+            Segment segment,
+            Node selectedNode,
+            double[] diagramSize,
+            String orientation,
+            boolean showingGoals ) {
         super( diagramSize, orientation );
         this.segment = segment;
         this.selectedNode = selectedNode;
+        this.showingGoals = showingGoals;
     }
 
 
@@ -66,7 +80,8 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
                 segment,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                analyst );
+                analyst,
+                showingGoals );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }

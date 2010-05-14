@@ -1,10 +1,10 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
@@ -77,13 +77,30 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
      * Segment in context.
      */
     private ModelObject context;
+    /**
+     * Whether to show goals.
+     */
+    private boolean showingGoals;
 
     public FlowMapMetaProvider( ModelObject modelObject,
                                 String outputFormat,
                                 Resource imageDirectory,
                                 Analyst analyst ) {
+        this( modelObject, outputFormat, imageDirectory, analyst, false );
+    }
+
+    public FlowMapMetaProvider( ModelObject modelObject,
+                                String outputFormat,
+                                Resource imageDirectory,
+                                Analyst analyst,
+                                boolean showingGoals ) {
         super( outputFormat, imageDirectory, analyst );
         this.context = modelObject;
+        this.showingGoals = showingGoals;
+    }
+
+    public boolean isShowingGoals() {
+        return showingGoals;
     }
 
     /**

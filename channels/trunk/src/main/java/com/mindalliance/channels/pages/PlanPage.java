@@ -373,7 +373,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 redirectHere();
             }
         };
-        addMaximizedFlowPanel();
+        addMaximizedFlowPanel( new Change( Change.Type.None ) );
         addHeader();
         addRefresh();
         addGoBackAndForward();
@@ -401,10 +401,12 @@ public final class PlanPage extends WebPage implements Updatable {
         rememberState();
     }
 
-    private void addMaximizedFlowPanel() {
+    private void addMaximizedFlowPanel( Change change ) {
         if ( flowMaximized ) {
-            maximizedFlowPanel = new MaximizedFlowPanel( "maximized-flow",
-                    new PropertyModel<Part>( this, "part" ) );
+            maximizedFlowPanel = new MaximizedFlowPanel(
+                    "maximized-flow",
+                    new PropertyModel<Part>( this, "part"),
+                    change.isForProperty( "showGoals" ) );
         } else {
             maximizedFlowPanel = new Label( "maximized-flow" );
         }
@@ -1442,7 +1444,7 @@ public final class PlanPage extends WebPage implements Updatable {
      * {@inheritDoc}
      */
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        updateMaximizedFlow( target );
+        updateMaximizedFlow( target, change );
         updateFlowLegend( target );
         updateHeaders( target );
         refreshPlanMenus( target );
@@ -1453,8 +1455,9 @@ public final class PlanPage extends WebPage implements Updatable {
         getCommander().clearTimeOut();
     }
 
-    private void updateMaximizedFlow( AjaxRequestTarget target ) {
-        addMaximizedFlowPanel();
+    private void updateMaximizedFlow( AjaxRequestTarget target, Change change ) {
+        addMaximizedFlowPanel( change );
+        if ( !flowMaximized ) segmentPanel.updateFlowMapOnMinimize( target, change );
         target.addComponent( maximizedFlowPanel );
     }
 

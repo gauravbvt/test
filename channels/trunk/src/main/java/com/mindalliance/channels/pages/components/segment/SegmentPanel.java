@@ -110,6 +110,10 @@ public class SegmentPanel extends AbstractCommandablePanel {
      */
     private boolean resizedToFit = false;
     /**
+     * Whether to show goals in flow map.
+     */
+    private boolean showingGoals = false;
+    /**
      * Captures the current part panel sizes
      */
     private String partPanelSizes;
@@ -138,7 +142,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        partPanelSizes =  StringUtils.join( getPartPanelSizes(), ',' );
+        partPanelSizes = StringUtils.join( getPartPanelSizes(), ',' );
         setOutputMarkupId( true );
         addFlowViewControls();
         addFlowDiagram();
@@ -264,10 +268,21 @@ public class SegmentPanel extends AbstractCommandablePanel {
         fullscreen.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Maximized, getSegment() ) );
+                update( target, new Change( Change.Type.Maximized, getSegment(), showingGoals ? "showGoals" : "" ) );
             }
         } );
         add( fullscreen );
+
+        WebMarkupContainer showGoals = new WebMarkupContainer( "showGoals" );
+        showGoals.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                showingGoals = !showingGoals;
+                addFlowDiagram();
+                target.addComponent( flowMapDiagramPanel );
+            }
+        } );
+        add( showGoals );
 
         WebMarkupContainer legend = new WebMarkupContainer( "legend" );
         legend.add( new AjaxEventBehavior( "onclick" ) {
@@ -294,7 +309,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
         Settings settings = new Settings( FLOWMAP_DOM_ID, null, dim, true, true );
 
         flowMapDiagramPanel =
-                new FlowMapDiagramPanel( "flow-map", segmentModel, partModel, settings );
+                new FlowMapDiagramPanel( "flow-map", segmentModel, partModel, settings, showingGoals );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
     }
@@ -537,5 +552,17 @@ public class SegmentPanel extends AbstractCommandablePanel {
         target.addComponent( partActionsMenu );
         receivesFlowPanel.refreshMenus( target );
         sendsFlowPanel.refreshMenus( target );
+    }
+
+    /**
+     * Update flow map diagram on "minimize".
+     *
+     * @param target an ajax request target
+     * @param change a change
+     */
+    public void updateFlowMapOnMinimize( AjaxRequestTarget target, Change change ) {
+        showingGoals = change.isForProperty( "showGoals" );
+        addFlowDiagram();
+        target.addComponent( flowMapDiagramPanel );
     }
 }

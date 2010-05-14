@@ -5,6 +5,7 @@ import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
@@ -80,7 +81,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
      * {@inheritDoc}
      */
     protected void exportVertices( PrintWriter out, Graph<Node, Flow> g ) {
-        AbstractMetaProvider<Node, Flow> metaProvider = (AbstractMetaProvider<Node, Flow>) getMetaProvider();
+        FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
         if ( !( initiators.isEmpty() && autoStarters.isEmpty() ) ) exportStart( out, metaProvider );
         Map<Segment, Set<Node>> segmentNodes = new HashMap<Segment, Set<Node>>();
         for ( Node node : g.vertexSet() ) {
@@ -111,8 +112,10 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
                 printoutVertices( out, segmentNodes.get( segment ) );
+                if ( metaProvider.isShowingGoals() ) exportGoals( out, metaProvider, g, segment );
                 out.println( "}" );
             } else {
+                if ( metaProvider.isShowingGoals() ) exportGoals( out, metaProvider, g, segment );
                 printoutVertices( out, segmentNodes.get( segment ) );
             }
         }
@@ -168,10 +171,12 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     protected void exportEdges( PrintWriter out, Graph<Node, Flow> g ) {
+        FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
         if ( !initiators.isEmpty() ) exportInitiations( out, g );
         if ( !autoStarters.isEmpty() ) exportAutoStarts( out, g );
         super.exportEdges( out, g );
         if ( !terminators.isEmpty() ) exportTerminations( out, g );
+        if ( metaProvider.isShowingGoals() ) exportGoalEdges( out, g );
     }
 
     private void exportInitiations( PrintWriter out, Graph<Node, Flow> g ) {
@@ -240,5 +245,152 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private Segment getSegment() {
         return (Segment) getMetaProvider().getContext();
     }
+
+    private void exportGoals(
+            PrintWriter out,
+            AbstractMetaProvider<Node, Flow> metaProvider,
+            Graph<Node, Flow> g,
+            Segment segment ) {
+        for ( Node node : g.vertexSet() ) {
+            Part part = (Part) node;
+                if ( part.getSegment().equals( segment ) )
+                    for ( Goal goal : part.getGoals() ) {
+                        exportGoal( getGoalVertexId( part, goal ), goal, out, metaProvider );
+                    }
+        }
+        if ( getTerminatedSegments().contains( segment ) ) {
+            for ( Goal goal : segment.getGoals() ) {
+                if ( goal.isEndsWithSegment() ) {
+                    exportGoal( getGoalVertexId( segment, goal ), goal, out, metaProvider );
+                }
+            }
+        }
+    }
+
+    private void exportGoal(
+            String riskVertexId,
+            Goal goal,
+            PrintWriter out,
+            AbstractMetaProvider<Node, Flow> metaProvider ) {
+        List<DOTAttribute> attributes = DOTAttribute.emptyList();
+        attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
+        attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
+        attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
+        attributes.add( new DOTAttribute( "labelloc", "b" ) );
+        String label = sanitize( goal.getFailureLabel( "|" ).replaceAll( "\\|", "\\\\n" ) );
+        attributes.add( new DOTAttribute( "label", label ) );
+        attributes.add( new DOTAttribute( "shape", "none" ) );
+        attributes.add( new DOTAttribute( "tooltip", goal.getFullTitle() ) );
+        String dirName;
+        try {
+            dirName = metaProvider.getImageDirectory().getFile().getAbsolutePath();
+        } catch ( IOException e ) {
+            throw new RuntimeException( "Unable to get image directory location", e );
+        }
+        attributes.add( new DOTAttribute( "image", dirName + "/" + getGoalIcon( goal ) ) );
+        out.print( getIndent() );
+        out.print( riskVertexId );
+        out.print( "[" );
+        out.print( asElementAttributes( attributes ) );
+        out.println( "];" );
+    }
+
+    private String getGoalIcon( Goal goal ) {
+        if ( goal.isRiskMitigation() ) {
+            switch ( goal.getLevel() ) {
+                case Low:
+                    return "risk_minor.png";
+                case Medium:
+                    return "risk_major.png";
+                case High:
+                    return "risk_severe.png";
+                case Highest:
+                    return "risk_extreme.png";
+                default:
+                    throw new RuntimeException( "Unknown risk level" );
+            }
+        } else {
+            switch ( goal.getLevel() ) {
+                case Low:
+                    return "gain_low.png";
+                case Medium:
+                    return "gain_medium.png";
+                case High:
+                    return "gain_high.png";
+                case Highest:
+                    return "gain_highest.png";
+                default:
+                    throw new RuntimeException( "Unknown gain level" );
+            }
+        }
+    }
+
+    private String getGoalVertexId( Part part, Goal goal ) {
+        return "goal" + +part.getGoals().indexOf( goal ) + "_" + part.getId();
+    }
+
+    private String getGoalVertexId( Segment segment, Goal goal ) {
+        return "goal" + segment.getGoals().indexOf( goal ) + "_" + segment.getId();
+    }
+
+    private void exportGoalEdges( PrintWriter out, Graph<Node, Flow> g ) {
+        for ( Node node : g.vertexSet() ) {
+            Part part = (Part) node;
+           for ( Goal goal : part.getGoals() ) {
+                    exportGoalEdge( part, goal, out, g );
+                }
+        }
+            for ( Goal goal : getSegment().getGoals() ) {
+                if ( goal.isEndsWithSegment() ) {
+                    exportStopGoalEdge( goal, out, g );
+                }
+            }
+    }
+
+    private void exportGoalEdge( Part part, Goal goal, PrintWriter out, Graph<Node, Flow> g ) {
+        List<DOTAttribute> attributes = getNonFlowEdgeAttributes();
+        attributes.add( new DOTAttribute( "label", goal.isRiskMitigation() ? "mitigates" : "achieves" ) );
+        String goalId = getGoalVertexId( part, goal );
+        String partId = getMetaProvider().getVertexIDProvider().getVertexName( part );
+        out.print( getIndent() + partId + getArrow( g ) + goalId );
+        out.print( "[" );
+        if ( !attributes.isEmpty() ) {
+            out.print( asElementAttributes( attributes ) );
+        }
+        out.println( "];" );
+    }
+
+    private void exportStopGoalEdge( Goal goal, PrintWriter out, Graph<Node, Flow> g ) {
+        List<DOTAttribute> attributes = getNonFlowEdgeAttributes();
+        attributes.add( new DOTAttribute( "label", "terminates" ) );
+        String goalId = getGoalVertexId( getSegment(), goal );
+        out.print( getIndent() + STOP + getArrow( g ) + goalId );
+        out.print( "[" );
+        if ( !attributes.isEmpty() ) {
+            out.print( asElementAttributes( attributes ) );
+        }
+        out.println( "];" );
+    }
+
+    private Set<Segment> getTerminatedSegments() {
+        Set<Segment> segments = new HashSet<Segment>();
+        for ( Part part : terminators ) {
+            segments.add( part.getSegment() );
+        }
+        return segments;
+    }
+
+    private List<DOTAttribute> getNonFlowEdgeAttributes() {
+        List<DOTAttribute> list = DOTAttribute.emptyList();
+        list.add( new DOTAttribute( "color", "gray" ) );
+        list.add( new DOTAttribute( "arrowhead", "none" ) );
+        list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
+        list.add( new DOTAttribute( "fontsize", AbstractMetaProvider.EDGE_FONT_SIZE ) );
+        list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
+        list.add( new DOTAttribute( "len", "1.5" ) );
+        list.add( new DOTAttribute( "weight", "2.0" ) );
+        return list;
+    }
+
 
 }

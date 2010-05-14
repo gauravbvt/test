@@ -33,6 +33,10 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
      */
     private IModel<Part> partModel;
     /**
+     * Whether to show goals.
+     */
+    private boolean showingGoals;
+    /**
      * Flow diagram panel.
      */
     private FlowMapDiagramPanel flowMapDiagramPanel;
@@ -47,9 +51,10 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
      */
     private boolean resizedToFit = false;
 
-    public MaximizedFlowPanel( String id, IModel<Part> partModel) {
+    public MaximizedFlowPanel( String id, IModel<Part> partModel, boolean showingGoals ) {
         super( id );
         this.partModel = partModel;
+        this.showingGoals = showingGoals;
         init();
     }
 
@@ -59,6 +64,17 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
     }
 
     private void addFlowViewControls() {
+        WebMarkupContainer showGoals = new WebMarkupContainer( "showGoals" );
+        showGoals.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                showingGoals = !showingGoals;
+                addFlowDiagram();
+                target.addComponent( flowMapDiagramPanel );
+            }
+        } );
+        add( showGoals );
+
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
             @Override
@@ -95,7 +111,10 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
         minimize.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Minimized, getSegment() ) );
+                update( target, new Change(
+                        Change.Type.Minimized,
+                        getSegment(),
+                        showingGoals ? "showGoals" : "" ) );
             }
         } );
         add( minimize );
@@ -117,15 +136,17 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
         flowMapDiagramPanel =
                 new FlowMapDiagramPanel(
                         "flow-map",
-                        new PropertyModel<Segment>( this, "segment"),
+                        new PropertyModel<Segment>( this, "segment" ),
                         partModel,
-                        settings );
+                        settings,
+                        showingGoals );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
     }
 
     /**
      * The part currently selected.
+     *
      * @return a part
      */
     public Part getPart() {
@@ -134,6 +155,7 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
 
     /**
      * The segment displayed.
+     *
      * @return a segment
      */
     public Segment getSegment() {

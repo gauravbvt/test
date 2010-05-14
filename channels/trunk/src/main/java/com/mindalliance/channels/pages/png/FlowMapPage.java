@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 
@@ -28,6 +28,10 @@ public class FlowMapPage extends PngWebPage {
      * The segment to diagram.
      */
     private Segment segment;
+    /**
+     * Whether to show goals.
+     */
+    private boolean showingGoals;
 
     public FlowMapPage( PageParameters parameters ) {
         super( parameters );
@@ -47,13 +51,14 @@ public class FlowMapPage extends PngWebPage {
                     redirectTo( segment );
             }
         }
+        showingGoals = parameters.containsKey( "showingGoals" ) && parameters.getBoolean( "showingGoals" );
     }
 
     /**
      * {@inheritDoc}
      */
     protected Diagram makeDiagram( double[] diagramSize, String orientation ) throws DiagramException {
-        return getDiagramFactory().newFlowMapDiagram( segment, node, diagramSize, orientation );
+        return getDiagramFactory().newFlowMapDiagram( segment, node, diagramSize, orientation, showingGoals );
     }
 
 
@@ -67,9 +72,10 @@ public class FlowMapPage extends PngWebPage {
         setResponsePage(
                 new RedirectPage(
                         MessageFormat.format(
-                                "?segment={0,number,0}&node={1,number,0}",
+                                "?segment={0,number,0}&node={1,number,0}&showingGoals={2}",
                                 sid,
-                                nid ) ) );   // NON-NLS
+                                nid,
+                                showingGoals ) ) );  
     }
 
 }
