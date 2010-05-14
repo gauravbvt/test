@@ -717,7 +717,7 @@ li.doc_Policy {
 
 li.doc_Image {
     padding-left: 20px;
-    background: transparent url( 'images/palette.png' ) no-repeat 0;
+    background: transparent url( 'images/picture.png' ) no-repeat 0;
 }
 
 li.doc_MOU {
@@ -1033,6 +1033,18 @@ input[disabled] {
 .pointer {
     cursor: pointer;
 }
+
+.mediaRefs ul {
+    margin: 0;
+    position: absolute;
+    top: 2px;
+}
+
+.mediaRefs li {
+    display: inline;
+    list-style: none;
+}
+
 
 
 

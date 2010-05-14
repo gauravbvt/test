@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.imaging.ImagingService;
-import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AttachDocument;
 import com.mindalliance.channels.command.commands.CopyAttachment;
 import com.mindalliance.channels.command.commands.DetachDocument;
+import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -256,7 +256,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 doCommand( new DetachDocument(
                         getAttachee(),
                         attachment ) );
-                if ( attachment.isImage() ) {
+                if ( attachment.isPicture() ) {
                     imagingService.deiconize( getAttachee() );
                 }
                 refresh( target );
@@ -388,7 +388,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private void postProcess( Attachment attachment ) {
         ModelObject attachee = getAttachee();
-        if ( attachment.isImage() && attachee.isIconized() ) {
+        if ( attachment.isPicture() && attachee.isIconized() ) {
             imagingService.iconize( attachment.getUrl(), attachee );
         }
     }

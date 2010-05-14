@@ -1,8 +1,9 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.model.Attachment;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
 
 import java.text.Collator;
@@ -87,6 +88,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
 
     /**
      * Whether the model object is immutable.
+     *
      * @return a boolean
      */
     public boolean isImmutable() {
@@ -386,5 +388,22 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     public boolean references( ModelObject mo ) {
         // default
         return false;
+    }
+
+    /**
+     * Get all media reference attachments.
+     *
+     * @return a list of attachments
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Attachment> getMediaReferences( final AttachmentManager attachmentManager ) {
+        return (List<Attachment>) CollectionUtils.select(
+                getAttachments(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ( (Attachment) object ).isMediaReference( attachmentManager );
+                    }
+                }
+        );
     }
 }

@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.MediaReferencesPanel;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.segment.menus.PartActionsMenuPanel;
@@ -129,6 +130,10 @@ public class SegmentPanel extends AbstractCommandablePanel {
      * Sends panel css identifier.
      */
     private static final String SEND_PANEL_ID = ".sends";
+    /**
+     * Quick access panel to part's media references.
+     */
+    private MediaReferencesPanel partMediaPanel;
 
     public SegmentPanel(
             String id,
@@ -147,10 +152,21 @@ public class SegmentPanel extends AbstractCommandablePanel {
         addFlowViewControls();
         addFlowDiagram();
         addPartMenuBar();
+        addPartMediaPanel();
         addPartPanel();
         addReceivesFlowPanel();
         addSendsFlowPanel();
         adjustComponents();
+    }
+
+    private void addPartMediaPanel() {
+        partMediaPanel = new MediaReferencesPanel(
+                "partMedia",
+                partModel,
+                getExpansions()
+        );
+        partMediaPanel.setOutputMarkupId( true );
+        addOrReplace( partMediaPanel );
     }
 
     private void addReceivesFlowPanel() {
@@ -356,6 +372,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
             Identifiable identifiable = change.getSubject();
             if ( identifiable == getPart() ) {
                 if ( change.isUpdated() ) {
+                    addPartMediaPanel();
+                    target.addComponent( partMediaPanel );
                     receivesFlowPanel.refresh( target );
                     sendsFlowPanel.refresh( target );
                 }
@@ -422,6 +440,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
             }
+            addPartMediaPanel();
+            target.addComponent( partMediaPanel );
             addPartPanel();
             target.addComponent( partPanel );
             adjustComponents();

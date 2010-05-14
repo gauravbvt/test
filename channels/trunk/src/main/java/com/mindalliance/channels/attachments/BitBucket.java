@@ -59,4 +59,18 @@ public class BitBucket implements AttachmentManager {
         return null;
     }
 
+    /**
+      * {@inheritDoc}
+      */
+    public boolean hasVideoContent( String url ) {
+        return false;
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+    public boolean hasImageContent( String url ) {
+        return false;
+    }
+
 }

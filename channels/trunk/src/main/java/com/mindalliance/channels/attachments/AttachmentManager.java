@@ -1,8 +1,8 @@
 package com.mindalliance.channels.attachments;
 
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.dao.PlanDao;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 import java.io.File;
@@ -15,7 +15,7 @@ public interface AttachmentManager {
     /**
      * URL points to a document.
      *
-     * @param plan
+     * @param plan  a plan
      * @param url a url
      * @return a boolean
      */
@@ -24,7 +24,7 @@ public interface AttachmentManager {
     /**
      * Upload a file and get an attachment.
      *
-     * @param plan
+     * @param plan a plan
      * @param selectedType a type of attachment
      * @param upload       a file upload
      * @return an attachment or null if failed
@@ -34,7 +34,7 @@ public interface AttachmentManager {
     /**
      * Get display label for an attachment.
      *
-     * @param plan
+     * @param plan   a plan
      * @param attachment an attachment
      * @return a string
      */
@@ -43,7 +43,7 @@ public interface AttachmentManager {
     /**
      * Remove unattached documents.
      *
-     * @param planDao
+     * @param planDao   a plan dao
      */
     void removeUnattached( PlanDao planDao );
 
@@ -61,4 +61,18 @@ public interface AttachmentManager {
       * @return a string
       */
     String getUploadPath();
+
+    /**
+     * Whether url points to a video.
+     * @param url a string
+     * @return a boolean
+     */
+    boolean hasVideoContent( String url );
+
+    /**
+     * Whether url points to an image.
+     * @param url a string
+     * @return a boolean
+     */
+    boolean hasImageContent( String url );
 }

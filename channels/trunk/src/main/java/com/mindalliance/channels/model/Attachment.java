@@ -1,6 +1,8 @@
 package com.mindalliance.channels.model;
 
 
+import com.mindalliance.channels.attachments.AttachmentManager;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
 
@@ -13,7 +15,6 @@ import java.text.MessageFormat;
  * Time: 2:42:35 PM
  */
 public class Attachment implements Serializable, Comparable<Attachment> {
-
     /**
      * The specific kind of document.
      */
@@ -28,9 +29,9 @@ public class Attachment implements Serializable, Comparable<Attachment> {
          */
         Policy( "Policy" ),
         /**
-         * An image.
+         * A photo or icon.
          */
-        Image( "Image" ),
+        Image( "Picture" ),
         /**
          * A policy document that mandates whatever the document is attached to.
          */
@@ -112,8 +113,38 @@ public class Attachment implements Serializable, Comparable<Attachment> {
      *
      * @return a boolean
      */
-    public boolean isImage() {
+    public boolean isPicture() {
         return type == Type.Image;
+    }
+
+    /**
+     * Whether the attchment is an image or video reference.
+     *
+     * @param attachmentManager an attachment manager
+     * @return a boolean
+     */
+    public boolean isMediaReference( AttachmentManager attachmentManager ) {
+        return isImageReference( attachmentManager ) || isVideoReference( attachmentManager );
+    }
+
+    /**
+     * Whether the attachment is a reference movie.
+     *
+     * @param attachmentManager an attachment manager
+     * @return a boolean
+     */
+    public boolean isVideoReference( AttachmentManager attachmentManager ) {
+        return type == Type.Reference && attachmentManager.hasVideoContent( getUrl() );
+    }
+
+    /**
+     * Whether the attachment is a reference image.
+     *
+     * @param attachmentManager an attachment manager
+     * @return a boolean
+     */
+    public boolean isImageReference( AttachmentManager attachmentManager ) {
+        return type == Type.Reference && attachmentManager.hasImageContent( getUrl() );
     }
 
     /**

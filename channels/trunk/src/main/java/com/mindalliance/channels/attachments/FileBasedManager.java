@@ -1,13 +1,13 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Segment;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -33,16 +33,16 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Set;
-import java.util.HashSet;
 
 /**
  * An attachment manager that keeps uploaded files in a directory.
@@ -95,13 +95,60 @@ public class FileBasedManager implements AttachmentManager {
      * List of documents, indexed by url.
      */
     private Map<String, FileDocument> documentMap;
-
+    /**
+     * Comma-separated video file extensions.
+     */
+    private String videoExtensions = "";
+    /**
+     * Comma-separated image file extensions.
+     */
+    private String imageExtensions = "";
+    /**
+     * List of video-hosting domains.
+     */
+    private List<String> videoDomains = new ArrayList<String>();
+    /**
+     * List of image-hosting domains.
+     */
+    private List<String> imageDomains = new ArrayList<String>();
 
     public FileBasedManager() {
     }
 
     public void setPlanManager( PlanManager planManager ) {
         this.planManager = planManager;
+    }
+
+    public String getVideoExtensions() {
+        return videoExtensions;
+    }
+
+    public void setVideoExtensions( String videoExtensions ) {
+        this.videoExtensions = videoExtensions;
+    }
+
+    public String getImageExtensions() {
+        return imageExtensions;
+    }
+
+    public void setImageExtensions( String imageExtensions ) {
+        this.imageExtensions = imageExtensions;
+    }
+
+    public List<String> getVideoDomains() {
+        return videoDomains;
+    }
+
+    public void setVideoDomains( List<String> videoDomains ) {
+        this.videoDomains = videoDomains;
+    }
+
+    public List<String> getImageDomains() {
+        return imageDomains;
+    }
+
+    public void setImageDomains( List<String> imageDomains ) {
+        this.imageDomains = imageDomains;
     }
 
     private synchronized Map<String, FileDocument> getDocumentMap( Plan plan ) {
@@ -137,7 +184,7 @@ public class FileBasedManager implements AttachmentManager {
                         return prior.isFile()
                                 // > 0 -> must not be the exact same file, but a duplicate
                                 && document.getFile().getName().
-                                        indexOf( prior.getFile().getName() ) > 0
+                                indexOf( prior.getFile().getName() ) > 0
                                 && document.getDigest().equals( prior.getDigest() );
                     }
                 } );
@@ -151,6 +198,48 @@ public class FileBasedManager implements AttachmentManager {
 
     public String getUploadPath() {
         return uploadPath;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean hasVideoContent( String url ) {
+        String lc_url = url.toLowerCase();
+        return hasExtension( lc_url, getVideoExtensions() ) || hasDomain( lc_url, getVideoDomains() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean hasImageContent( String url ) {
+        String lc_url = url.toLowerCase();
+        return hasExtension( lc_url, getImageExtensions() ) || hasDomain( lc_url, getImageDomains() );
+    }
+
+    private boolean hasDomain( final String url, List<String> domains ) {
+        return CollectionUtils.exists(
+                domains,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        try {
+                            return new URL( url ).getHost().contains( ( (String) object ).toLowerCase().trim() );
+                        } catch ( MalformedURLException e ) {
+                            return false;
+                        }
+                    }
+                }
+        );
+    }
+
+    private boolean hasExtension( final String url, String extensions ) {
+        return CollectionUtils.exists(
+                Arrays.asList( StringUtils.split( extensions, ',' ) ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return url.endsWith( ( (String) object ).trim() );
+                    }
+                }
+        );
     }
 
     public void setUploadPath( String uploadPath ) {
@@ -399,8 +488,8 @@ public class FileBasedManager implements AttachmentManager {
     /**
      * Find urls of all attachments.
      *
-     * @return a list of strings
      * @param planDao the plan's dao
+     * @return a list of strings
      */
     private static List<String> findAllAttached( PlanDao planDao ) {
 
@@ -435,7 +524,7 @@ public class FileBasedManager implements AttachmentManager {
      */
     public File getUploadDirectory( Plan plan ) {
         File uploadsDir = new File(
-                        planManager.getPlanVersionDirectory( plan ) + File.separator + uploadPath );
+                planManager.getPlanVersionDirectory( plan ) + File.separator + uploadPath );
         if ( !uploadsDir.exists() ) {
             uploadsDir.mkdir();
             LOG.info( "Created upload directory: {}", uploadsDir.getAbsolutePath() );
