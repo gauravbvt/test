@@ -252,11 +252,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             Graph<Node, Flow> g,
             Segment segment ) {
         for ( Node node : g.vertexSet() ) {
-            Part part = (Part) node;
+            if ( node.isPart() ) {
+                Part part = (Part) node;
                 if ( part.getSegment().equals( segment ) )
                     for ( Goal goal : part.getGoals() ) {
                         exportGoal( getGoalVertexId( part, goal ), goal, out, metaProvider );
                     }
+            }
         }
         if ( getTerminatedSegments().contains( segment ) ) {
             for ( Goal goal : segment.getGoals() ) {
@@ -335,16 +337,20 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private void exportGoalEdges( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Node node : g.vertexSet() ) {
-            Part part = (Part) node;
-           for ( Goal goal : part.getGoals() ) {
+            if ( node.isPart() ) {
+                Part part = (Part) node;
+                for ( Goal goal : part.getGoals() ) {
                     exportGoalEdge( part, goal, out, g );
                 }
+            }
         }
+        if ( !terminators.isEmpty() ) {
             for ( Goal goal : getSegment().getGoals() ) {
                 if ( goal.isEndsWithSegment() ) {
                     exportStopGoalEdge( goal, out, g );
                 }
             }
+        }
     }
 
     private void exportGoalEdge( Part part, Goal goal, PrintWriter out, Graph<Node, Flow> g ) {
