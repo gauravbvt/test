@@ -150,6 +150,10 @@ div.segment div.flow-map, table.tasks {
     position: relative;
 }
 
+div.top-organization, div.sub-organization, div.responsibilities {
+    padding-top: 10px;
+}
+
 p.description {
     clear: none;
 }
@@ -478,6 +482,10 @@ body#login div#login-submit {
 
 body#login div#login-submit input {
 	padding:5px 10px;
+}
+
+tr.task>td {
+    border-bottom: 1px solid gray;
 }
 
 

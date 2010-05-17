@@ -1,11 +1,11 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.ModelObject;
 
 import java.util.Map;
@@ -76,7 +76,8 @@ public class PasteAttachment extends AbstractCommand {
     private Attachment getAttachmentFromCopy( Map<String, Object> copy ) {
         return new Attachment(
                 (String) copy.get( "url" ),
-                Attachment.Type.valueOf( (String) copy.get( "type" ) ) );
+                Attachment.Type.valueOf( (String) copy.get( "type" ) ),
+                (String) copy.get( "name" ) );
     }
 
     /**

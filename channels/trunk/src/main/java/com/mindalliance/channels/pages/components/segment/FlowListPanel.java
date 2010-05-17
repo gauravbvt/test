@@ -5,10 +5,8 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.commands.AddCapability;
 import com.mindalliance.channels.command.commands.AddNeed;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -137,9 +135,12 @@ public class FlowListPanel extends AbstractCommandablePanel {
         this.sends = sends;
     }
 
-    /**
+/*
+    */
+/**
      * {@inheritDoc}
      */
+/*
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
         if ( identifiable instanceof Flow ) {
@@ -147,6 +148,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
         }
         super.updateWith( target, change, updated );
     }
+*/
 
     /**
      * Refresh list of flows.

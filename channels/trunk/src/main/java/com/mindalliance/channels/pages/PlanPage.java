@@ -405,7 +405,7 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( flowMaximized ) {
             maximizedFlowPanel = new MaximizedFlowPanel(
                     "maximized-flow",
-                    new PropertyModel<Part>( this, "part"),
+                    new PropertyModel<Part>( this, "part" ),
                     change.isForProperty( "showGoals" ) );
         } else {
             maximizedFlowPanel = new Label( "maximized-flow" );
@@ -415,17 +415,17 @@ public final class PlanPage extends WebPage implements Updatable {
         form.addOrReplace( maximizedFlowPanel );
     }
 
-    private void addFlowLegendPanel()  {
-            if ( !flowsExplained ) {
-                flowLegendPanel = new Label( "flow-legend", "" );
-                flowLegendPanel.setOutputMarkupId( true );
-                makeVisible( flowLegendPanel, false );
-            } else {
-                flowLegendPanel = new FlowLegendPanel(
-                        "flow-legend",
-                        new Model<Segment>( getSegment() ) );
-            }
-            form.addOrReplace( flowLegendPanel );
+    private void addFlowLegendPanel() {
+        if ( !flowsExplained ) {
+            flowLegendPanel = new Label( "flow-legend", "" );
+            flowLegendPanel.setOutputMarkupId( true );
+            makeVisible( flowLegendPanel, false );
+        } else {
+            flowLegendPanel = new FlowLegendPanel(
+                    "flow-legend",
+                    new Model<Segment>( getSegment() ) );
+        }
+        form.addOrReplace( flowLegendPanel );
     }
 
 
@@ -1302,6 +1302,7 @@ public final class PlanPage extends WebPage implements Updatable {
      * {@inheritDoc}
      */
     public void changed( Change change ) {
+        getCommander().clearTimeOut();
         if ( change.isNone() )
             return;
         Identifiable identifiable = change.getSubject();
@@ -1409,10 +1410,12 @@ public final class PlanPage extends WebPage implements Updatable {
                 }
             } else if ( change.isCollapsed() && changes.get( change.getSubject() ) != null ) {
                 refreshAll( target );
-            } if ( change.getSubject() instanceof Flow && change.isSelected() ) {
-                segmentPanel.resizePartPanels( target );
             }
-            else {
+            if ( change.getSubject() instanceof Flow && change.isSelected() ) {
+                segmentPanel.resizePartPanels( target );
+            } else if ( change.isCopied() ) {
+                refreshAllMenus( target );
+            } else {
                 refresh( target, change, updated );
             }
         }
@@ -1452,7 +1455,11 @@ public final class PlanPage extends WebPage implements Updatable {
         updateRefresh( target );
         updateSelectors( target, change );
         refreshChildren( target, change, updated );
-        getCommander().clearTimeOut();
+    }
+
+    private void refreshAllMenus( AjaxRequestTarget target ) {
+        refreshPlanMenus( target );
+        refreshChildrenMenus( target );
     }
 
     private void updateMaximizedFlow( AjaxRequestTarget target, Change change ) {
@@ -1502,7 +1509,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void refreshChildren(
-          AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         refreshPlanEditPanel( target, change, updated );
         refreshSegmentEditPanel( target, change, updated );
         refreshEntityPanel( target, change, updated );
@@ -1514,12 +1521,23 @@ public final class PlanPage extends WebPage implements Updatable {
         refreshFailureImpactsPanel( target, change, updated );
     }
 
+    private void refreshChildrenMenus( AjaxRequestTarget target ) {
+        if ( planEditPanel instanceof PlanEditPanel )
+            ( (PlanEditPanel) planEditPanel ).refreshMenus( target );
+        if ( segmentEditPanel instanceof SegmentEditPanel )
+            ( (SegmentEditPanel) segmentEditPanel ).refreshMenus( target );
+        if ( entityPanel instanceof EntityPanel )
+            ( (EntityPanel) entityPanel ).refreshMenus( target );
+        segmentPanel.refreshMenus( target );
+    }
+
     private void refreshSegmentPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();
-        if ( identifiable instanceof SegmentObject && ( change.isSelected() || change.isDisplay() ) ) {
+        if ( identifiable instanceof SegmentObject
+                && ( change.isSelected() || change.isDisplay() || change.isExists() ) ) {
             segmentPanel.doRefresh( target, change );
-            target.addComponent( segmentPanel );
+            // target.addComponent( segmentPanel );
         } else {
             segmentPanel.refresh( target, change, updated, getAspectShown( getSegment() ) );
         }

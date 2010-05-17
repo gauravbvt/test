@@ -374,6 +374,9 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 if ( change.isUpdated() ) {
                     addPartMediaPanel();
                     target.addComponent( partMediaPanel );
+                    if ( partPanel instanceof ExpandedPartPanel ) {
+                        ( (ExpandedPartPanel) partPanel ).refresh( target, change, updated );
+                    }
                     receivesFlowPanel.refresh( target );
                     sendsFlowPanel.refresh( target );
                 }
@@ -400,12 +403,10 @@ public class SegmentPanel extends AbstractCommandablePanel {
     public void resizePartPanels( AjaxRequestTarget target ) {
         String[] sizes = getPartPanelSizes();
         String newSizes = StringUtils.join( sizes, ',' );
-        if ( !newSizes.equals( partPanelSizes ) ) {
-            addPartPanel();
-            adjustPartPanelSizes( target, sizes );
-            target.addComponent( partPanel );
-            partPanelSizes = newSizes;
-        }
+        addPartPanel();
+        adjustPartPanelSizes( target, sizes );
+        target.addComponent( partPanel );
+        partPanelSizes = newSizes;
     }
 
     /**
@@ -434,16 +435,15 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 expandSegmentEditPanel( target );
             }
             refreshMenus( target );
-            receivesFlowPanel.refresh( target );
-            sendsFlowPanel.refresh( target );
+            // receivesFlowPanel.refresh( target );
+            // sendsFlowPanel.refresh( target );
             if ( change.isModified() || change.isSelected() ) {
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
             }
             addPartMediaPanel();
             target.addComponent( partMediaPanel );
-            addPartPanel();
-            target.addComponent( partPanel );
+            resizePartPanels( target );
             adjustComponents();
         }
     }

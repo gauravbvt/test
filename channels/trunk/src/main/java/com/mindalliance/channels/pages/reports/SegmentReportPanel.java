@@ -82,8 +82,8 @@ public class SegmentReportPanel extends Panel {
                         true,
                         new Model<String>(
                                 org.getParent() == null
-                                        ? "top organization"
-                                        : "sub organization" ) ) );
+                                        ? "top-organization"
+                                        : "sub-organization" ) ) );
                 item.add( new OrganizationReportPanel(
                         "organization",
                         org,

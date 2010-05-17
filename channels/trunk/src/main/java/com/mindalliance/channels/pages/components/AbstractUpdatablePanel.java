@@ -1,18 +1,18 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.command.LockManager;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -215,7 +215,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated, String aspect ) {
         if ( !updated.contains( this ) && !change.isNone() ) {
             refresh( target, change, aspect );
-            target.addComponent( this );
+         //   target.addComponent( this );
         }
     }
 

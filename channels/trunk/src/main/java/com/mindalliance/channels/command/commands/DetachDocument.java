@@ -1,11 +1,11 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.ModelObject;
 
 /**
@@ -26,6 +26,7 @@ public class DetachDocument extends AbstractCommand {
         set( "attachee", modelObject.getId() );
         set( "url", attachment.getUrl() );
         set( "type", attachment.getType().name() );
+        set( "name", attachment.getName() );
     }
 
     /**
@@ -66,8 +67,10 @@ public class DetachDocument extends AbstractCommand {
 
     private Attachment getAttachment() {
         return new Attachment(
-                (String)get("url"),
-                Attachment.Type.valueOf( (String)get( "type") ));
+                (String) get( "url" ),
+                Attachment.Type.valueOf( (String) get( "type" ) ),
+                (String) get( "name" )
+        );
     }
 
 }

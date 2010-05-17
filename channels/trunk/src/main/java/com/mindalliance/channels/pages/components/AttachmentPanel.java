@@ -42,13 +42,13 @@ import java.util.List;
 public class AttachmentPanel extends AbstractCommandablePanel {
 
     /**
-     * Class logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( AttachmentPanel.class );
-    /**
      * Submit link.
      */
     private SubmitLink submit;
+    /**
+     * The name of the attachment.
+     */
+    private String name;
 
     /**
      * Available attachment kind. Each kind should have a corresponding field.
@@ -90,6 +90,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private Kind kind = Kind.File;
 
     /**
+     *  The input field for the attachment's name.
+     */
+    private TextField nameField;
+
+    /**
      * The selected type for the upload.
      */
     private Attachment.Type selectedType = Attachment.Type.Reference;
@@ -116,6 +121,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         add( controlsContainer );
         addTypeChoice();
         addKindSelector();
+        addNameField();
         addUploadField();
         addUrlField();
         addSubmit();
@@ -147,6 +153,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private void refresh( AjaxRequestTarget target ) {
         adjustFields();
+        target.addComponent( nameField );
         target.addComponent( controlsContainer );
         target.addComponent( uploadField );
         target.addComponent( urlField );
@@ -170,6 +177,25 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             }
         } );
         controlsContainer.add( urlField );
+    }
+
+    private void addNameField() {
+        nameField = new TextField<String>(
+                "name",
+                new PropertyModel<String>( this, "name" )        
+        );
+        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+             @Override
+             protected void onUpdate( AjaxRequestTarget target ) {
+                 /*refresh( target );
+                 update( target, new Change(
+                         Change.Type.Updated,
+                         getAttachee(),
+                         "attachmentTickets"
+                 ) );*/
+             }
+         } );
+         controlsContainer.add( nameField );
     }
 
     private void addUploadField() {
@@ -229,7 +255,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 item.add( new AttributeModifier(
                         "class", true, new Model<String>( a.getType().getStyle() ) ) );
                 item.add( new AttributeModifier(
-                        "title", true, new Model<String>( a.getType().getLabel() ) ) );
+                        "title",
+                        true,
+                        new Model<String>(
+                                a.getType().getLabel() + " - " + a.getUrl()
+                        ) ) );
             }
         };
         attachmentsContainer.add( attachmentList );
@@ -274,8 +304,8 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private void addKindSelector() {
         RadioChoice<Kind> kindSelector = new RadioChoice<Kind>(
-                "radios",                                                                 // NON-NLS
-                new PropertyModel<Kind>( this, "kind" ),                                  // NON-NLS
+                "radios",
+                new PropertyModel<Kind>( this, "kind" ),                                  
                 Arrays.asList( Kind.values() ),
                 new IChoiceRenderer<Kind>() {
                     public Object getDisplayValue( Kind object ) {
@@ -325,13 +355,21 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             ModelObject mo = getAttachee();
             LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", mo );
             Attachment attachment = attachmentManager.upload(
-                    getPlan(), getSelectedType(), upload );
+                    getPlan(), getSelectedType(), getName(), upload );
             // Only add non-redundant attachment.
             if ( attachment != null ) {
                 doCommand( new AttachDocument( mo, attachment ) );
                 postProcess( attachment );
             }
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName( String value ) {
+        name = value;
     }
 
     public Attachment.Type getSelectedType() {
@@ -369,10 +407,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             // URL url;
             try {
                 new URL( value );
-                Attachment attachment = new Attachment( value, getSelectedType() );
+                Attachment attachment = new Attachment( value, getSelectedType(), getName() );
                 doCommand( new AttachDocument( mo, attachment ) );
                 postProcess( attachment );
                 this.url = null;
+                this.name = "";
             } catch ( MalformedURLException e ) {
                 logger.warn( "Invalid URL: " + value );
                 if ( value.indexOf( "://" ) < 0 ) {

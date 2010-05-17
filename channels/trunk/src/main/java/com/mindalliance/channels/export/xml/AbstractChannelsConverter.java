@@ -2,9 +2,9 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.export.ConnectionSpecification;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
@@ -14,6 +14,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.apache.commons.collections.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -202,7 +203,8 @@ public abstract class AbstractChannelsConverter implements Converter {
             for ( Attachment attachment : modelObject.getAttachments() ) {
                 writer.startNode( "attachment" );
                 writer.addAttribute( "type", attachment.getType().name() );
-                writer.setValue( attachment.getUrl() );
+                writer.addAttribute( "url", attachment.getUrl() );
+                writer.setValue( attachment.getName() );
                 writer.endNode();
             }
             writer.endNode();
@@ -222,9 +224,19 @@ public abstract class AbstractChannelsConverter implements Converter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "attachment" ) ) {
                 Attachment.Type type = Attachment.Type.valueOf( reader.getAttribute( "type" ) );
-                String url = reader.getValue();
+                String name;
+                String url;
+                if ( IteratorUtils.toList( reader.getAttributeNames() ).contains( "url" )) {
+                    // new format
+                    url = reader.getAttribute( "url" );
+                    name = reader.getValue();
+                } else {
+                    // old format
+                    url = reader.getValue();
+                    name = "";
+                }
                 if ( attachmentManager.exists( getPlan(), url ) ) {
-                    modelObject.addAttachment( new Attachment( url, type ) );
+                    modelObject.addAttachment( new Attachment( url, type, name ) );
                 } else {
                     LOG.warn( "Dropping attachment to {} (not found)", url );
                 }

@@ -1,11 +1,10 @@
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ElementOfInformation;
@@ -23,6 +22,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -282,6 +282,7 @@ public final class ChannelsUtils {
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "type", attachment.getType().name() );
         state.put( "url", attachment.getUrl() );
+        state.put( "name", attachment.getName() );
         return state;
     }
 

@@ -314,7 +314,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     public boolean hasImage() {
         return CollectionUtils.exists(
                 getAttachments(),
-                PredicateUtils.invokerPredicate( "isImage" )
+                PredicateUtils.invokerPredicate( "isPicture" )
         );
     }
 
@@ -326,7 +326,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     public String getImageUrl() {
         Attachment attachment = (Attachment) CollectionUtils.find(
                 getAttachments(),
-                PredicateUtils.invokerPredicate( "isImage" )
+                PredicateUtils.invokerPredicate( "isPicture" )
         );
         if ( attachment != null ) {
             return attachment.getUrl();

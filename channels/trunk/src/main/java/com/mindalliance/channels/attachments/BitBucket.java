@@ -26,7 +26,7 @@ public class BitBucket implements AttachmentManager {
       * {@inheritDoc}
       */
     public Attachment upload(
-            Plan plan, Attachment.Type selectedType, FileUpload upload ) {
+            Plan plan, Attachment.Type selectedType, String name, FileUpload upload ) {
         return null;
     }
 

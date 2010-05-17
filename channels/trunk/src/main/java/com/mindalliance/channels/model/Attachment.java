@@ -71,9 +71,16 @@ public class Attachment implements Serializable, Comparable<Attachment> {
      */
     private Type type;
 
+    private String name = "";
+
     public Attachment( String url, Type type ) {
+        this( url, type, "" );
+    }
+
+    public Attachment( String url, Type type, String name ) {
         this.url = url;
         this.type = type;
+        this.name = name;
     }
 
     /**
@@ -97,6 +104,14 @@ public class Attachment implements Serializable, Comparable<Attachment> {
 
     public Type getType() {
         return type;
+    }
+
+    public String getName() {
+        return name == null ? "" : name;
+    }
+
+    public void setName( String name ) {
+        this.name = name;
     }
 
     /**

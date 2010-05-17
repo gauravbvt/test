@@ -69,9 +69,9 @@ public class MediaReferencesPanel extends AbstractUpdatablePanel {
                 icon.add(  new AttributeModifier(
                         "src",  true, new Model<String>( src ) ) );
                 icon.add(  new AttributeModifier(
-                        "alt",  true, new Model<String>(attachment.getUrl() ) ) );
+                        "alt",  true, new Model<String>( title ) ) );
                 icon.add(  new AttributeModifier(
-                        "title",  true, new Model<String>( title ) ) );
+                        "title",  true, new Model<String>( attachmentManager.getLabel( getPlan(), attachment ) ) ) );
                 link.add( icon );
             }
         };

@@ -26,10 +26,11 @@ public interface AttachmentManager {
      *
      * @param plan a plan
      * @param selectedType a type of attachment
+     * @param name  a name for the attachment
      * @param upload       a file upload
      * @return an attachment or null if failed
      */
-    Attachment upload( Plan plan, Attachment.Type selectedType, FileUpload upload );
+    Attachment upload( Plan plan, Attachment.Type selectedType, String name, FileUpload upload );
 
     /**
      * Get display label for an attachment.

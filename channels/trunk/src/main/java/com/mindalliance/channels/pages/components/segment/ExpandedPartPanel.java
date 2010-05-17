@@ -158,6 +158,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Part summary.
      */
     private Label summaryLabel;
+    /**
+     * Attachments panel.
+     */
+    private AttachmentPanel attachmentsPanel;
 
 
     //====================================
@@ -244,8 +248,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     private void addAttachments() {
-        AttachmentPanel attachments = new AttachmentPanel( "attachments", model );
-        add( attachments );
+        attachmentsPanel = new AttachmentPanel( "attachments", model );
+        add( attachmentsPanel );
     }
 
     private void adjustFields() {
@@ -482,7 +486,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                                 SegmentEditPanel.GOALS ) );
             }
         };
-        add( segmentGoalsLink );
+        segmentGoalsLink.setOutputMarkupId( true );
+        addOrReplace( segmentGoalsLink );
     }
 
     //====================================
@@ -840,9 +845,16 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         target.addComponent( partDescription );
         // todo - remove
         target.addComponent( partIssuesPanel );
+        target.addComponent( attachmentsPanel );
         target.addComponent( this );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        refresh( target );
+    }
     /**
      * {@inheritDoc}
      */
@@ -865,7 +877,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 }
                 target.addComponent( initiatedEventField );
             }
-            if ( !change.isDisplay() ) {
+            if ( !change.isDisplay() && !change.isCopied() ) {
                 makeVisible( target, partIssuesPanel,
                         getAnalyst().hasIssues( getPart(), false ) );
                 target.addComponent( partIssuesPanel );

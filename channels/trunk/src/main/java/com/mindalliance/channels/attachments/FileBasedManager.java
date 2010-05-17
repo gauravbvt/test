@@ -399,7 +399,10 @@ public class FileBasedManager implements AttachmentManager {
      * {@inheritDoc}
      */
     public Attachment upload(
-            Plan plan, Attachment.Type selectedType, FileUpload upload ) {
+            Plan plan,
+            Attachment.Type selectedType,
+            String name,
+            FileUpload upload ) {
 
         String fileName = upload.getClientFileName();
         //String escaped = escape( fileName );
@@ -432,6 +435,7 @@ public class FileBasedManager implements AttachmentManager {
                 FileDocument actual = resolve( plan, fileDocument );
                 getDocumentMap( plan ).put( actual.getUrl(), actual );
                 attachment = new Attachment( actual.getUrl(), selectedType );
+                attachment.setName( name );
                 save( plan );
             }
 
@@ -455,7 +459,11 @@ public class FileBasedManager implements AttachmentManager {
      */
     public String getLabel( Plan plan, Attachment attachment ) {
         FileDocument fileDocument = getDocumentMap( plan ).get( attachment.getUrl() );
-        return fileDocument == null ? attachment.getUrl() : fileDocument.getFile().getName();
+        return !attachment.getName().isEmpty()
+                ? attachment.getName()
+                :fileDocument == null
+                ? attachment.getUrl()
+                : fileDocument.getFile().getName();
     }
 
     /**
@@ -470,10 +478,10 @@ public class FileBasedManager implements AttachmentManager {
         if ( files != null ) {
             List<File> uploadedFiles = Arrays.asList( files );
             for ( File file : uploadedFiles ) {
-                String name = file.getName();
-                if ( !( name.equals( "readme.txt" )
-                        || name.equals( digestsMapFile ) ) ) {
-                    String url = uploadPath + name;
+                String fileName = file.getName();
+                if ( !( fileName.equals( "readme.txt" )
+                        || fileName.equals( digestsMapFile ) ) ) {
+                    String url = uploadPath + fileName;
                     if ( !attachedUrls.contains( url ) ) {
                         LOG.warn( "Removing unattached " + url );
                         file.delete();
