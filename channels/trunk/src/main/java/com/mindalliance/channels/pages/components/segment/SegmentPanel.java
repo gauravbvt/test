@@ -393,7 +393,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
             if ( identifiable instanceof SegmentObject
                     && ( change.isExpanded() || change.isCollapsed() ) ) {
                 resizePartPanels( target );
-                stopUpdates = true;
+                stopUpdates = change.isExpanded();
             }
             refreshMenus( target );
             if ( !stopUpdates ) super.updateWith( target, change, updated );

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -35,7 +36,7 @@ import java.util.List;
 public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
 
     /**
-     *   Maximum display length for task name.
+     * Maximum display length for task name.
      */
     static final private int MAX_ITEM_DISPLAY_LENGTH = 35;
     /**
@@ -58,11 +59,14 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
      * The "other" node previously selected.
      */
     private IModel<Node> otherNodeModel;
+    /** Flow name model. */
+    private IModel<String> flowNameModel;
     /**
      * Parts to be shown in a drop down.
      */
     private IModel<List<Node>> firstChoiceNodes;
-    /**                                                                                                                                                                                       acced
+    /**
+     * acced
      * Parts to be offerred as auto-complete candidates.
      */
     private IModel<List<Node>> secondChoiceNodes;
@@ -82,11 +86,13 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
     public OtherNodeSelectorPanel( String id,
                                    IModel<Node> nodeModel,
                                    IModel<Node> otherNodeModel,
+                                   IModel<String> flowNameModel,
                                    IModel<List<Node>> firstChoiceNodes,
-                                   IModel<List<Node>> secondChoiceNodes) {
+                                   IModel<List<Node>> secondChoiceNodes ) {
         super( id );
         this.nodeModel = nodeModel;
         this.otherNodeModel = otherNodeModel;
+        this.flowNameModel = flowNameModel;
         this.firstChoiceNodes = firstChoiceNodes;
         this.secondChoiceNodes = secondChoiceNodes;
         init();
@@ -98,10 +104,12 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
             public String toString() {
                 return "Enter a task name";
             }
+
             /** {@inheritDoc} */
             public String displayString() {
                 return toString();
             }
+
             /** {@inheritDoc} */
             public String displayString( int maxItemLength ) {
                 return displayString();
@@ -158,14 +166,18 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
                 ? OTHER
                 : isTBD( node )
                 ? TBD
+                : flowNameModel.getObject().isEmpty()
+                ? node.fullDisplayString( MAX_ITEM_DISPLAY_LENGTH )
                 : node.displayString( MAX_ITEM_DISPLAY_LENGTH );
     }
 
     private boolean isTBD( Node node ) {
-        return node.isConnector() && node.getSegment().equals( nodeModel.getObject().getSegment());
+        return node.isConnector()
+                && node.getSegment().equals( nodeModel.getObject().getSegment() )
+                && ( (Connector) node ).getInnerFlow().getLocalPart().equals( nodeModel.getObject() );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private void addSecondChoiceInput() {
         secondChoice = new WebMarkupContainer( "secondChoice" );
         secondChoice.setOutputMarkupId( true );

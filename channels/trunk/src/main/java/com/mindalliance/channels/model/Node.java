@@ -362,4 +362,11 @@ public abstract class Node extends ModelObject implements SegmentObject {
      * @return  a string
      */
     abstract public String displayString( int maxItemLength );
+
+    /**
+     * Make abbreviated  string including info name if connector..
+     * @param maxItemLength an int
+     * @return  a string
+     */
+    abstract public String fullDisplayString( int maxItemLength );
 }

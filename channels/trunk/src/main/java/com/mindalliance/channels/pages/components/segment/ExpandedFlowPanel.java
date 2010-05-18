@@ -134,6 +134,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Issues panel.
      */
     private IssuesPanel issuesPanel;
+    /**
+     * Link to other linked part
+     */
+    private ModelObjectLink otherLink;
 
     protected ExpandedFlowPanel(
             String id,
@@ -261,6 +265,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssuesAnnotation( nameField, getFlow(), "name" );
                 target.addComponent( nameField );
+                addOtherField();
+                target.addComponent( otherLink );
+                target.addComponent( otherChoice );
                 update( target, new Change( Change.Type.Updated, getFlow(), "name" ) );
             }
         } );
@@ -527,7 +534,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addOtherField() {
-        ModelObjectLink otherLink = new ModelObjectLink( "other-link",
+        otherLink = new ModelObjectLink( "other-link",
                 new PropertyModel<Part>( this, "otherPart" ),
                 new Model<String>( isSend() ? "To" : "From" ) );
         otherLink.setOutputMarkupId( true );
@@ -537,6 +544,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 "other",
                 new PropertyModel<Node>( this, "node" ),
                 new PropertyModel<Node>( this, "other" ),
+                new PropertyModel<String>( this, "name" ),
                 new PropertyModel<List<Node>>( this, "firstChoices" ),
                 new PropertyModel<List<Node>>( this, "secondChoices" ) );
         otherChoice.add( new AttributeModifier(
@@ -647,7 +655,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     private List<Part> findRelatedParts() {
         Node node = getNode();
-        List<Part> relatedParts = new ArrayList<Part>();
+        Set<Part> relatedParts = new HashSet<Part>();
         String info = getFlow().getName();
         for ( Iterator<Part> parts = node.getSegment().parts(); parts.hasNext(); ) {
             Part part = parts.next();
@@ -659,7 +667,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     relatedParts.add( part );
             }
         }
-        return relatedParts;
+        return new ArrayList<Part>( relatedParts );
     }
 
     // Is there's already a flow for the node with the part that has the need or capability composed of the connector?

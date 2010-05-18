@@ -468,6 +468,13 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public String fullDisplayString( int maxItemLength ) {
+        return displayString( maxItemLength );
+    }
+
+    /**
      * Whether a flow triggers this part.
      *
      * @return a boolean

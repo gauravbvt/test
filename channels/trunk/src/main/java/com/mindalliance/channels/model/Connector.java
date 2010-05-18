@@ -1,6 +1,7 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.dao.Memory;
+import org.apache.commons.lang.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -29,12 +30,27 @@ public class Connector extends Node {
         return displayString( Integer.MAX_VALUE );
     }
 
+    /** {@inheritDoc} */
     public String displayString( int maxItemLength ) {
         boolean isInput = isSource();
         if ( hasInnerFlow() ) {
             Flow inner = getInnerFlow();
             Part part  = (Part) ( isInput ? inner.getTarget() :  inner.getSource() );
             return MessageFormat.format( "{0} - {1}",
+                                         part.displayString( maxItemLength ),
+                                         part.getSegment().displayString( maxItemLength ) );
+        } else
+            return "(Not connected)";
+    }
+
+    /** {@inheritDoc} */
+    public String fullDisplayString( int maxItemLength ) {
+        boolean isInput = isSource();
+        if ( hasInnerFlow() ) {
+            Flow inner = getInnerFlow();
+            Part part  = (Part) ( isInput ? inner.getTarget() :  inner.getSource() );
+            return MessageFormat.format( "\"{0}\" - {1} - {2}",
+                                         StringUtils.abbreviate( inner.getName(), maxItemLength ),
                                          part.displayString( maxItemLength ),
                                          part.getSegment().displayString( maxItemLength ) );
         } else

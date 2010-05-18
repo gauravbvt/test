@@ -225,7 +225,7 @@ public class Goal implements Serializable, Mappable {
     }
 
     /**
-     * Return a title label for the risk.
+     * Return a failure label for the goals.
      *
      * @param sep the separator string
      * @return a string
@@ -236,6 +236,19 @@ public class Goal implements Serializable, Mappable {
         label += sep + organization.getName();
         return label;
     }
+
+    /**
+      * Return a success label for the goals.
+      *
+      * @param sep the separator string
+      * @return a string
+      */
+     public String getSuccessLabel( String sep ) {
+         String label = category.getName( positive );
+         label +=  isRiskMitigation() ? " mitigated by " : " achieved by ";
+         label += sep + organization.getName();
+         return label;
+     }
 
     /**
      * Get full label for goal.
