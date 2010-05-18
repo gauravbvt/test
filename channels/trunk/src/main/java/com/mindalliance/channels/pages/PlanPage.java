@@ -503,6 +503,7 @@ public final class PlanPage extends WebPage implements Updatable {
     private void addRefresh() {
         refreshNeededComponent = new AjaxFallbackLink( "refresh-needed" ) {
             public void onClick( AjaxRequestTarget target ) {
+                getCommander().clearTimeOut();
                 reacquireLocks();
                 lastRefreshed = System.currentTimeMillis();
                 refreshAll( target );
