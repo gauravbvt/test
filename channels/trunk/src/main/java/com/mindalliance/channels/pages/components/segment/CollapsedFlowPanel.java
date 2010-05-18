@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.components.MediaReferencesPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -20,14 +21,20 @@ import java.text.MessageFormat;
  * A collapsed flow.
  */
 public class CollapsedFlowPanel extends AbstractFlowPanel {
+    /**
+     * Flow model.
+     */
+    private IModel<Flow> flowModel;
 
     public CollapsedFlowPanel( String id, IModel<Flow> flowModel, boolean isSend ) {
         super( id, flowModel, isSend, true );
+        this.flowModel = flowModel;
         init();
     }
 
     private void init() {
         addLabel();
+        addFlowMediaPanel();
         addFlowActionMenu();
     }
 
@@ -73,6 +80,18 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
 
         add( label );
     }
+
+    private void addFlowMediaPanel() {
+        MediaReferencesPanel flowMediaPanel = new MediaReferencesPanel(
+                "flowMedia",
+                flowModel,
+                getExpansions()
+        );
+        flowMediaPanel.setOutputMarkupId( true );
+        addOrReplace( flowMediaPanel );
+    }
+
+
 
 
 }

@@ -1034,13 +1034,18 @@ input[disabled] {
     cursor: pointer;
 }
 
-.mediaRefs ul {
+.partMediaRefs ul {
     margin: 0;
     position: absolute;
     top: 2px;
 }
 
-.mediaRefs li {
+.flowMediaRefs ul {
+    display: inline;
+    padding-left: 5px;
+}
+
+.partMediaRefs li, .flowMediaRefs li {
     display: inline;
     list-style: none;
 }

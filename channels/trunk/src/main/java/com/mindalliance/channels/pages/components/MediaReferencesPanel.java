@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.model.Attachment;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -35,16 +35,16 @@ public class MediaReferencesPanel extends AbstractUpdatablePanel {
     /**
      * Part model.
      */
-    private IModel<Part> partModel;
+    private IModel<? extends ModelObject> moModel;
 
-    public MediaReferencesPanel( String id, IModel<Part> partModel, Set<Long> expansions ) {
-        super( id, partModel, expansions );
-        this.partModel = partModel;
+    public MediaReferencesPanel( String id, IModel<? extends ModelObject> moModel, Set<Long> expansions ) {
+        super( id, moModel, expansions );
+        this.moModel = moModel;
         init();
     }
 
     private void init() {
-        List<Attachment> mediaRefs = partModel.getObject().getMediaReferences( attachmentManager );
+        List<Attachment> mediaRefs = moModel.getObject().getMediaReferences( attachmentManager );
         boolean tooMany = mediaRefs.size() > MAX_SIZE;
         if ( tooMany ) mediaRefs = mediaRefs.subList( 0, MAX_SIZE );
         WebMarkupContainer mediaRefsContainer = new WebMarkupContainer( "mediaRefsList" );

@@ -1,16 +1,16 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
@@ -80,7 +80,8 @@ public class SatisfyNeed extends AbstractCommand {
                 toNode = need.getTarget();
             }
             Long priorId = (Long) get( "satisfy" );
-            newFlow = queryService.connect( fromNode, toNode, need.getName(), priorId );
+            String name = need.getName().isEmpty() ? capability.getName() : need.getName();
+            newFlow = queryService.connect( fromNode, toNode, name, priorId );
             newFlow.setEois( ChannelsUtils.copyEois( capability ) );
             newFlow.setSignificanceToSource( capability.getSignificanceToSource() );
             newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
