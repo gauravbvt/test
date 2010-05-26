@@ -138,7 +138,7 @@ public class Place extends ModelEntity implements GeoLocatable {
      */
     @Override
     public List<ModelEntity> getImplicitTags() {
-        List<ModelEntity> implicitTags = new ArrayList<ModelEntity>( );
+        List<ModelEntity> implicitTags = new ArrayList<ModelEntity>();
         if ( isRegion() ) {
             if ( geoLocation.isCity() ) implicitTags.add( City );
             else if ( geoLocation.isCounty() ) implicitTags.add( County );
@@ -224,33 +224,33 @@ public class Place extends ModelEntity implements GeoLocatable {
     @Override
     public boolean valid() {
         return !circularWithin( new HashSet<Place>() )
-                && !circularReference( );
+                && !circularReference();
     }
 
     /**
      * Whether a place is not specified as contained or containing another, or tagged only with absolute places.
      *
-     * @return  a boolean
+     * @return a boolean
      */
     public boolean isAbsolute() {
         return !isReferencing( mustContain )
                 && !isReferencing( mustBeContainedIn )
                 && ( within == null || within.isAbsolute() )
                 && !CollectionUtils.exists(
-                        getAllTags(),
-                        new Predicate() {
-                            public boolean evaluate( Object object ) {
-                                return !( (Place) object ).isAbsolute();
-                            }
-                        }
+                getAllTags(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return !( (Place) object ).isAbsolute();
+                    }
+                }
         );
     }
 
     private boolean isReferencing( PlaceReference ref ) {
-        return ref != null && ref.getReferencedPlace() != null;
+        return ref != null && ( ref.isPlanReferenced() || ref.getReferencedPlace() != null );
     }
 
-     private boolean circularReference() {
+    private boolean circularReference() {
         return circularMustContain( new HashSet<Place>() )
                 || circularMustBeContainedIn( new HashSet<Place>() );
     }
@@ -267,7 +267,7 @@ public class Place extends ModelEntity implements GeoLocatable {
                 }
                 circular = contained.circularMustContain( visited );
             }
-             return circular;
+            return circular;
         } else {
             return true;
         }
@@ -277,7 +277,7 @@ public class Place extends ModelEntity implements GeoLocatable {
         if ( !visited.contains( this ) ) {
             visited.add( this );
             boolean circular = false;
-            if ( mustBeContainedIn != null && mustBeContainedIn.getReferencedPlace() != null) {
+            if ( mustBeContainedIn != null && mustBeContainedIn.getReferencedPlace() != null ) {
                 Place containedIn = mustBeContainedIn.getReferencedPlace();
                 if ( mustBeContainedIn.isPlanReferenced() ) {
                     if ( !containedIn.isAbsolute() ) return false;

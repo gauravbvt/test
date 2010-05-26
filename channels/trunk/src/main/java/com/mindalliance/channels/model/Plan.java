@@ -418,7 +418,8 @@ public class Plan extends ModelObject {
      * {@inheritDoc}
      */
     public boolean references( final ModelObject mo ) {
-        return
+        return  ModelObject.areIdentical( locale, mo )
+                ||
                 CollectionUtils.exists(
                                 segments,
                                 new Predicate() {
