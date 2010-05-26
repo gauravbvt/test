@@ -106,7 +106,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
         final List<String> choices = getQueryService().findAllEntityNames( Place.class );
         scopePanel = new EntityReferencePanel<Place>(
                 "scopePanel",
-                new Model<Event>(getEvent()),
+                new Model<Event>( getEvent() ),
                 choices,
                 "scope",
                 Place.class

@@ -338,7 +338,7 @@ public class GeoLocation implements Serializable {
      * @return a boolean
      */
     public boolean isCountry() {
-        return country != null && state == null && county == null && city == null;
+        return isSet( country ) && !isSet( state ) && !isSet( county ) && !isSet( city );
     }
 
     /**
@@ -347,7 +347,7 @@ public class GeoLocation implements Serializable {
      * @return a boolean
      */
     public boolean isState() {
-        return state != null && county == null && city == null;
+        return isSet( state ) && !isSet( county ) && !isSet( city );
     }
 
     /**
@@ -356,7 +356,7 @@ public class GeoLocation implements Serializable {
      * @return a boolean
      */
     public boolean isCounty() {
-        return county != null && city == null;
+        return isSet( county ) && !isSet( city );
     }
 
     /**
@@ -365,7 +365,11 @@ public class GeoLocation implements Serializable {
      * @return a boolean
      */
     public boolean isCity() {
-        return city != null;
+        return isSet( city );
+    }
+
+    private boolean isSet( String name ) {
+        return name != null && !name.trim().isEmpty();
     }
 
 }

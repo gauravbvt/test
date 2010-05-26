@@ -96,7 +96,10 @@ public class Plan extends ModelObject {
      * Classifications supported.
      */
     private List<Classification> classifications = new ArrayList<Classification>();
-
+    /**
+     * The plan's locale.
+     */
+    private Place locale;
 
     //-----------------------------
     public Plan() {
@@ -141,6 +144,14 @@ public class Plan extends ModelObject {
 
     public void setStatus( Status status ) {
         this.status = status;
+    }
+
+    public Place getLocale() {
+        return locale;
+    }
+
+    public void setLocale( Place locale ) {
+        this.locale = locale;
     }
 
     /**

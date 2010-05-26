@@ -73,21 +73,13 @@ public class PlaceConverter extends EntityConverter {
             writer.endNode();
         }
         if ( place.getMustBeContainedIn().isSet() ) {
-            PlaceReference placeRef = place.getMustBeContainedIn();
             writer.startNode( "mustBeContainedIn" );
-            writer.addAttribute( "eventOrPlace", placeRef.isEventReferenced() ? "event" : "place" );
-            writer.addAttribute( "kind", placeRef.getReference().getKind().name() );
-            writer.addAttribute( "id", Long.toString( placeRef.getReference().getId() ) );
-            writer.setValue( placeRef.getReference().getName() );
+            writePlaceReference( writer, place.getMustBeContainedIn() );
             writer.endNode();
-        }
+         }
         if ( place.getMustContain().isSet() ) {
-            PlaceReference placeRef = place.getMustContain();
             writer.startNode( "mustContain" );
-            writer.addAttribute( "eventOrPlace", placeRef.isEventReferenced() ? "event" : "place" );
-            writer.addAttribute( "kind", placeRef.getReference().getKind().name() );
-            writer.addAttribute( "id", Long.toString( placeRef.getReference().getId() ) );
-            writer.setValue( placeRef.getReference().getName() );
+            writePlaceReference( writer, place.getMustContain() );
             writer.endNode();
         }
         if ( place.getGeoLocations() != null ) {
@@ -96,6 +88,21 @@ public class PlaceConverter extends EntityConverter {
                 context.convertAnother( geoLoc );
                 writer.endNode();
             }
+        }
+    }
+
+    private void writePlaceReference( HierarchicalStreamWriter writer, PlaceReference placeRef ) {
+        writer.addAttribute(
+                "ref",
+                placeRef.isPlanReferenced()
+                        ? "plan"
+                        : placeRef.isEventReferenced()
+                        ? "event"
+                        : "place" );
+        if ( !placeRef.isPlanReferenced() ) {
+            writer.addAttribute( "kind", placeRef.getReference().getKind().name() );
+            writer.addAttribute( "id", Long.toString( placeRef.getReference().getId() ) );
+            writer.setValue( placeRef.getReference().getName() );
         }
     }
 
@@ -118,40 +125,37 @@ public class PlaceConverter extends EntityConverter {
         } else if ( nodeName.equals( "geoname" ) ) {
             place.setGeoname( reader.getValue() );
         } else if ( nodeName.equals( "mustBeContainedIn" ) ) {
-            String eventOrPlace = reader.getAttribute( "eventOrPlace" );
-            ModelEntity.Kind kind = ModelEntity.Kind.valueOf( reader.getAttribute( "kind" ) );
-            String id = reader.getAttribute( "id" );
-            String name = reader.getValue();
-            PlaceReference placeRef = new PlaceReference();
-            if ( eventOrPlace.equals( "event" ) ) {
-                placeRef.setEvent( findOrCreateType( Event.class, name, id ) );
-            } else {
-                if ( kind == ModelEntity.Kind.Actual )
-                    placeRef.setPlace( findOrCreate( Place.class, name, id ) );
-                else
-                    placeRef.setPlace( findOrCreateType( Place.class, name, id ) );
-            }
-            place.setMustBeContainedIn( placeRef );
+            place.setMustBeContainedIn( readPlaceReference( reader));
         } else if ( nodeName.equals( "mustContain" ) ) {
-            String eventOrPlace = reader.getAttribute( "eventOrPlace" );
-            ModelEntity.Kind kind = ModelEntity.Kind.valueOf( reader.getAttribute( "kind" ) );
-            String id = reader.getAttribute( "id" );
-            String name = reader.getValue();
-            PlaceReference placeRef = new PlaceReference();
-            if ( eventOrPlace.equals( "event" ) ) {
-                placeRef.setEvent( findOrCreateType( Event.class, name, id ) );
-            } else {
-                if ( kind == ModelEntity.Kind.Actual )
-                    placeRef.setPlace( findOrCreate( Place.class, name, id ) );
-                else
-                    placeRef.setPlace( findOrCreateType( Place.class, name, id ) );
-            }
-            place.setMustContain( placeRef );
+             place.setMustContain( readPlaceReference( reader ) );
         } else if ( nodeName.equals( "geoLocation" ) ) {
             place.setGeoLocation( (GeoLocation) context.convertAnother( place, GeoLocation.class ) );
         } else if ( nodeName.equals( "alternateGeoLocation" ) ) {
             place.addGeoLocation( (GeoLocation) context.convertAnother( place, GeoLocation.class ) );
         }
     }
+
+    private PlaceReference readPlaceReference( HierarchicalStreamReader reader ) {
+        PlaceReference placeRef = new PlaceReference();
+        String ref = reader.getAttribute( "ref" );
+        if ( ref == null ) ref = reader.getAttribute( "eventOrPlace" );   // todo - remove when conversion completed
+        if ( ref.equals( "plan" ) ) {
+            placeRef.setPlanReferenced( true );
+        } else {
+            ModelEntity.Kind kind = ModelEntity.Kind.valueOf( reader.getAttribute( "kind" ) );
+            String id = reader.getAttribute( "id" );
+            String name = reader.getValue();
+            if ( ref.equals( "event" ) ) {
+                placeRef.setEvent( findOrCreateType( Event.class, name, id ) );
+            } else {
+                if ( kind == ModelEntity.Kind.Actual )
+                    placeRef.setPlace( findOrCreate( Place.class, name, id ) );
+                else
+                    placeRef.setPlace( findOrCreateType( Place.class, name, id ) );
+            }
+        }
+        return placeRef;
+    }
+
 
 }

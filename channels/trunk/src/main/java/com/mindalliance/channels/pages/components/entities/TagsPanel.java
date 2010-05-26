@@ -223,7 +223,12 @@ public class TagsPanel extends AbstractCommandablePanel {
         public boolean isInherited() {
             return tag != null
                     && !getEntity().getTags().contains( tag )
+                    && !isImplicit()
                     && getEntity().hasTag( tag );
+        }
+
+        public boolean isImplicit() {
+            return getEntity().getAllImplicitTags().contains( tag );
         }
 
         public boolean isUniversal() {
@@ -239,6 +244,8 @@ public class TagsPanel extends AbstractCommandablePanel {
         public String getTitle() {
             if ( isUniversal() ) {
                 return "Default type";
+            } else if ( isImplicit() ) {
+                return "Implicit";
             } else if ( isInherited() ) {
                 return getEntity().inheritancePathTo( tag );
             } else {
@@ -251,7 +258,7 @@ public class TagsPanel extends AbstractCommandablePanel {
             if ( name != null && !name.isEmpty() ) {
                 tag = doSafeFindOrCreateType( getEntity().getClass(), name );
                 if ( tag != null ) {
-                            doCommand( new UpdatePlanObject(
+                    doCommand( new UpdatePlanObject(
                             getEntity(),
                             "tags",
                             tag,
@@ -272,7 +279,7 @@ public class TagsPanel extends AbstractCommandablePanel {
         }
 
         public boolean isRemovable() {
-            return !isMarkedForCreation() && !isInherited() && !isUniversal();
+            return !isMarkedForCreation() && !isImplicit() && !isInherited() && !isUniversal();
         }
     }
 }

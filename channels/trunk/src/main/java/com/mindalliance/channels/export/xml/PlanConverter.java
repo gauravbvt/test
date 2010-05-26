@@ -1,6 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Event;
@@ -13,7 +14,6 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -138,6 +138,14 @@ public class PlanConverter extends AbstractChannelsConverter {
         }
         // Export plan issues
         exportUserIssues( plan, writer, context );
+        Place locale = plan.getLocale();
+        if ( locale != null && !locale.getName().trim().isEmpty() ) {
+            writer.startNode( "locale" );
+            writer.addAttribute( "id", Long.toString( locale.getId() ) );
+            writer.addAttribute( "kind", locale.getKind().name() );
+            writer.setValue( locale.getName() );
+            writer.endNode();
+        }
     }
 
     /**
@@ -190,7 +198,7 @@ public class PlanConverter extends AbstractChannelsConverter {
                 context.convertAnother( plan, Classification.class );
             } else if ( nodeName.equals( "phase" ) ) {
                 context.convertAnother( plan, Phase.class );
-            }  else if ( nodeName.equals( "medium" ) ) {
+            } else if ( nodeName.equals( "medium" ) ) {
                 context.convertAnother( plan, TransmissionMedium.class );
             } else if ( nodeName.equals( "incident" ) ) {
                 String eventId = reader.getAttribute( "id" );
@@ -203,7 +211,7 @@ public class PlanConverter extends AbstractChannelsConverter {
                 Phase phase = findOrCreate( Phase.class, name, phaseId );
                 plan.addPhase( phase );
                 // Organizations involved
-            }  else if ( nodeName.equals( "organization-involved" ) ) {
+            } else if ( nodeName.equals( "organization-involved" ) ) {
                 String orgId = reader.getAttribute( "id" );
                 Organization organization = findOrCreate( Organization.class, reader.getValue(), orgId );
                 plan.addOrganization( organization );
@@ -219,6 +227,17 @@ public class PlanConverter extends AbstractChannelsConverter {
                 importAttachments( plan, reader );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( plan, UserIssue.class );
+            } else if ( nodeName.equals( "locale" ) ) {
+                String placeId = reader.getAttribute( "id" );
+                String kindName = reader.getAttribute( "kind" );
+                String name = reader.getValue();
+                Place locale = this.getEntity(
+                        Place.class,
+                        name,
+                        Long.getLong(  placeId ),
+                        ModelEntity.Kind.valueOf( kindName ), 
+                        context);
+                plan.setLocale( locale );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }

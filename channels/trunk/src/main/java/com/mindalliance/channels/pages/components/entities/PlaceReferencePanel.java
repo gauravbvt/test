@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.PlaceReference;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -33,8 +34,10 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
      * Name of property set to a PlaceReference.
      */
     private String property;
+    private boolean planReferenced = false;
     private boolean placeReferenced = false;
     private boolean eventReferenced = false;
+    private CheckBox planCheckBox;
     private CheckBox eventCheckBox;
     private CheckBox placeCheckBox;
     private DropDownChoice eventChoice;
@@ -48,10 +51,12 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     private void init() {
+        planReferenced = getPlaceReference().isPlanReferenced();
         placeReferenced = getPlaceReference().isPlaceReferenced();
         eventReferenced = getPlaceReference().isEventReferenced();
         assert !( placeReferenced && eventReferenced );
         this.setOutputMarkupId( true );
+        addPlanCheckBox();
         addEventCheckBox();
         addPlaceCheckBox();
         addEventLink();
@@ -61,12 +66,32 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         adjustFields();
     }
 
+    private void addPlanCheckBox() {
+        planCheckBox = new CheckBox( "plan-locale", new PropertyModel<Boolean>( this, "planReferenced" ) );
+        planCheckBox.setOutputMarkupId( true );
+        planCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                adjustFields();
+                target.addComponent( eventCheckBox );
+                target.addComponent( eventChoice );
+                target.addComponent( placeCheckBox );
+                target.addComponent( entityReferencePanel );
+                if ( reset ) {
+                    reset = false;
+                    update( target, new Change( Change.Type.Updated, getEntity(), property ) );
+                }
+            }
+        } );
+        add( planCheckBox );
+    }
+
     private void addEventCheckBox() {
         eventCheckBox = new CheckBox( "event", new PropertyModel<Boolean>( this, "eventReferenced" ) );
         eventCheckBox.setOutputMarkupId( true );
         eventCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
+                target.addComponent( planCheckBox );
                 target.addComponent( eventChoice );
                 target.addComponent( placeCheckBox );
                 target.addComponent( entityReferencePanel );
@@ -85,6 +110,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         placeCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
+                target.addComponent( planCheckBox );
                 target.addComponent( eventCheckBox );
                 target.addComponent( eventChoice );
                 target.addComponent( entityReferencePanel );
@@ -145,6 +171,15 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     private void adjustFields() {
+        boolean editable =
+                getPlan().isDevelopment()
+                        && getLockManager().isLockedByUser( getEntity() )
+                        && !ModelObject.areIdentical( getPlan().getLocale(), getEntity() );
+        if ( !editable ) {
+            planCheckBox.setEnabled( false );
+            eventCheckBox.setEnabled( false );
+            placeCheckBox.setEnabled( false );
+        }
         eventChoice.setEnabled( eventCheckBox.isEnabled() && isEventReferenced() );
         entityReferencePanel.enable( placeCheckBox.isEnabled() && isPlaceReferenced() );
     }
@@ -154,16 +189,34 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         target.addComponent( this );
     }
 
+    public boolean isPlanReferenced() {
+        return planReferenced;
+    }
+
+    public void setPlanReferenced( boolean val ) {
+        planReferenced = val;
+        if ( val ) {
+            placeReferenced = false;
+            eventReferenced = false;
+            getPlaceReference().setPlanReferenced( val );
+            doCommand( new UpdatePlanObject( getEntity(), property, getPlaceReference() ) );
+        } else {
+            resetPlaceReference();
+        }
+    }
+
     public boolean isEventReferenced() {
         return eventReferenced;
     }
 
     public void setEventReferenced( boolean val ) {
         eventReferenced = val;
-        if ( val )
+        if ( val ) {
+            planReferenced = false;
             placeReferenced = false;
-        else
+        } else {
             resetPlaceReference();
+        }
     }
 
     public boolean isPlaceReferenced() {
@@ -172,10 +225,12 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
 
     public void setPlaceReferenced( boolean val ) {
         placeReferenced = val;
-        if ( val )
+        if ( val ) {
+            planReferenced = false;
             eventReferenced = false;
-        else
+        } else {
             resetPlaceReference();
+        }
     }
 
     private void resetPlaceReference() {
@@ -205,6 +260,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     public void enable( boolean enabled ) {
+        planCheckBox.setEnabled( enabled );
         eventCheckBox.setEnabled( enabled );
         placeCheckBox.setEnabled( enabled );
         adjustFields();

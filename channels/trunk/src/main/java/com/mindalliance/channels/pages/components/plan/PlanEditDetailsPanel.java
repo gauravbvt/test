@@ -5,12 +5,16 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Phase;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
+import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -34,6 +38,10 @@ import java.util.Set;
  */
 public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     /**
+     * Entity reference panel for scope of event (a place).
+     */
+    private EntityReferencePanel<Place> scopePanel;
+    /**
      * Issues panel.
      */
     private IssuesPanel issuesPanel;
@@ -46,6 +54,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     private void init() {
         addIdentityFields();
         addPhaseListPanel();
+        addScopePanel();
         addIssuesPanel();
         add( new AttachmentPanel( "attachments", new Model<ModelObject>( getPlan() ) ) );
         adjustComponents();
@@ -78,6 +87,21 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
         add( descriptionField );
     }
 
+    private void addScopePanel() {
+        add(
+                new ModelObjectLink( "locale-link",
+                        new PropertyModel<Organization>( getPlan(), "locale" ),
+                        new Model<String>( "Locale" ) ) );
+        final List<String> choices = getQueryService().findAllEntityNames( Place.class );
+        scopePanel = new EntityReferencePanel<Place>(
+                "localePanel",
+                new Model<Plan>( getPlan() ),
+                choices,
+                "locale",
+                Place.class
+        );
+        add( scopePanel );
+    }
     private void addIssuesPanel() {
         issuesPanel = new IssuesPanel(
                 "issues",

@@ -187,6 +187,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowOverUndersecuredMedium"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.BroadcastOnlyChannels"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.IncorrectMediumDelegation"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PlanLocaleIsRelative"/>
             </list>
         </property>
     </bean>

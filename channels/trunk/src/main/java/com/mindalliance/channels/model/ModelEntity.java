@@ -131,8 +131,8 @@ public abstract class ModelEntity extends ModelObject {
     public static boolean compatible( ModelEntity entity, ModelEntity other ) {
         if ( entity == null
                 || other == null
-         //       || entity.isUnknown()
-         //       || other.isUnknown()
+            //       || entity.isUnknown()
+            //       || other.isUnknown()
                 ) return true;
         if ( entity.narrowsOrEquals( other ) ) return true;
         return false;
@@ -307,11 +307,20 @@ public abstract class ModelEntity extends ModelObject {
 
     private boolean hasTagSafe( ModelEntity entity, Set<ModelEntity> visited ) {
         if ( getTags().contains( entity ) ) return true;
+        if ( getImplicitTags().contains( entity ) ) return true;
         visited.add( this );
         for ( ModelEntity tag : getTags() ) {
             if ( !visited.contains( tag ) && tag.hasTagSafe( entity, visited ) ) return true;
         }
         return false;
+    }
+
+    /**
+     *   Get the list of implicit tags.
+     * @return  a list of model entities
+     */
+    public List<ModelEntity> getImplicitTags() {
+        return new ArrayList<ModelEntity>();
     }
 
     /**
@@ -394,6 +403,7 @@ public abstract class ModelEntity extends ModelObject {
         if ( !getClass().isAssignableFrom( other.getClass() ) ) return false;
         // same entity
         if ( equals( other ) ) return true;
+        if ( !valid() || !other.valid() ) return false;
         if ( overrideNarrows( other ) ) return true;
         // a type of entity can't narrow an actual entity
         // and an actual entity can't narrow a different actual entity
@@ -416,6 +426,15 @@ public abstract class ModelEntity extends ModelObject {
                 }
         ).isEmpty();
         return meetsInheritedTests;
+    }
+
+    /**
+     * Whether the model object can be meaningfully and safely compared to another.
+     *
+     * @return a boolean
+     */
+    public boolean valid() {
+        return true; // default
     }
 
     /**
@@ -465,16 +484,38 @@ public abstract class ModelEntity extends ModelObject {
         return safeAllTags( new HashSet<ModelEntity>() );
     }
 
+    /**
+     * Transitively find all implicit tags, avoiding circularities.
+     *
+     * @return a list of model entities
+     */
+    public List<ModelEntity> getAllImplicitTags() {
+        return safeAllImplicitTags( new HashSet<ModelEntity>() );
+    }
+
     private List<ModelEntity> safeAllTags( Set<ModelEntity> visited ) {
         List<ModelEntity> allTags = new ArrayList<ModelEntity>();
         if ( !visited.contains( this ) ) {
             allTags.addAll( getTags() );
+            allTags.addAll( getImplicitTags() );
             visited.add( this );
             for ( ModelEntity tag : getTags() ) {
                 allTags.addAll( tag.safeAllTags( visited ) );
             }
         }
         return allTags;
+    }
+
+    private List<ModelEntity> safeAllImplicitTags( Set<ModelEntity> visited ) {
+        List<ModelEntity> allImplicitTags = new ArrayList<ModelEntity>();
+        if ( !visited.contains( this ) ) {
+            allImplicitTags.addAll( getImplicitTags() );
+            visited.add( this );
+            for ( ModelEntity tag : getTags() ) {
+                allImplicitTags.addAll( tag.safeAllImplicitTags( visited ) );
+            }
+        }
+        return allImplicitTags;
     }
 
     /**
