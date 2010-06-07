@@ -46,7 +46,7 @@ public class IssuesReportPanel extends Panel {
             protected void populateItem( ListItem<Issue> item ) {
                 Issue issue = item.getModelObject();
                 item.add( new Label( "reported-by", issue.getReportedBy() ) );
-                item.add( new Label( "description", issue.getDescription() ) );
+                item.add( new Label( "description", issue.getDescription() ).setVisible( !issue.getDescription().isEmpty() ) );
                 item.add( new Label( "suggestion", issue.getRemediation() ) );
                 String styleClass = issue.getSeverity().getNegativeLabel().toLowerCase();
                 item.add( new AttributeModifier( "class", true,

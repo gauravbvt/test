@@ -184,7 +184,9 @@ public class SOPsReportPage extends WebPage {
 
     private String getOrganizationName() {
         Organization organization = selector.getOrganization();
-        return organization == null ? "" : organization.getName();
+        String name = organization == null ? "" : organization.getName();
+        if ( !selector.getActor().isUnknown() ) name = name + ",";
+        return name;
     }
 
     private String getPlanMapLink() {

@@ -41,6 +41,13 @@ import java.util.Set;
  */
 public class SegmentReportPanel extends Panel {
 
+    private static final double[] SIZE = new double[2];
+
+    static {
+        SIZE[0] = 10.0;
+        SIZE[1] = 10.0;
+    }
+
     /**
      * A segment
      */
@@ -183,7 +190,9 @@ public class SegmentReportPanel extends Panel {
                 .add( new AttributeModifier( "name", true,
                 new Model<String>( String.valueOf( s.getId() ) ) ) ),
 
-                new Label( "description", getSegmentDesc( s ) ).setRenderBodyOnly( true ),
+                new Label( "description", getSegmentDesc( s ) )
+                        .setRenderBodyOnly( true )
+                        .setVisible( !getSegmentDesc( s ).isEmpty() ),
 
                 new Label( "event", s.getPhaseEventTitle() ).setVisible( s.getEvent() != null ),
 
@@ -224,7 +233,7 @@ public class SegmentReportPanel extends Panel {
                     new Model<Segment>( s ),
                     null,
                     //size,
-                    new Settings( null, DiagramFactory.LEFT_RIGHT, null, true, false ) ) );
+                    new Settings( null, DiagramFactory.LEFT_RIGHT, SIZE, true, false ) ) );
         } else {
             add( new Label( "flowMap", "" ) );
         }

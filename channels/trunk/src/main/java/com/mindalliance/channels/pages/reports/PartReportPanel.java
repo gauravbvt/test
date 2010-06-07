@@ -57,7 +57,7 @@ public class PartReportPanel extends Panel {
         List<Goal> goalList = part.getGoals();
 
         add( new Label( "task", uppercasedName( part.getTask() ) ),
-                new Label( "description", part.getDescription() )
+                new Label( "description", part.getDescription() ).setVisible( !part.getDescription().isEmpty() )
                         .setVisible( !part.getDescription().isEmpty() ),
                 new WebMarkupContainer( "as-team" ).setVisible( part.isAsTeam() ),
                 new Label( "location", getLocation( part.getLocation() ) ),

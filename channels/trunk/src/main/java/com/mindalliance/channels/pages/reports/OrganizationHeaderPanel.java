@@ -63,7 +63,7 @@ public class OrganizationHeaderPanel extends Panel {
     private String getPictureUrl( ModelObject modelObject ) {
         String url = modelObject.getImageUrl();
         url = url == null ? "images/organization.building.png" : url;
-        return Attachment.addPrefixIfRelative( url, "../" ) ;
+        return Attachment.addPrefixIfRelative( url, "../" );
     }
 
 }
