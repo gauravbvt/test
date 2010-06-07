@@ -5,30 +5,39 @@
         lang="en">
 <head>
     <title wicket:id="title">[Title]</title>
-    <link rel="stylesheet" href="playbook.css" type="text/css" title="Playbook">
+    <link rel="stylesheet" href="report.css" type="text/css" title="Playbook" media="all">
+    <link rel="stylesheet" href="report-print.css" type="text/css" title="Playbook" media="print">
 </head>
 
 <body>
 <div id="top">
     <div id="header">
         <div class="report-header">
-            <div id="nav" wicket:id="selector">(Report selector)</div>
-            <h1 wicket:id="plan-name">plan name</h1>
-            <h1 wicket:id="organization-name">ACME</h1>
-            <h1 wicket:id="actor-name">John Doe</h1>
-            <h3 class="client" wicket:id="plan-client">client</h3>
-            <h3 class="date" wicket:id="date">date</h3>
+			<div class="headerlogo">
+				<div class="headertext">
+		            <h1 wicket:id="plan-name">plan name</h1>
+		            <span wicket:id="organization-name" class="orgname">ACME</span>
+		            <span wicket:id="actor-name" class="actname">John Doe</span>
+		            <h3 class="client" wicket:id="plan-client">client</h3>
+		            <h3 class="date" wicket:id="date">date</h3>
+				</div>
+			</div>
+			<div class="headermenu">
+	            <div id="nav" wicket:id="selector">(Report selector)</div>
+			</div>
         </div>
     </div>
     <div id="contents">
         <div id="plan">
-            <a class="plan-map-link" wicket:id="plan-map-link" href="#">(Zoom)</a>
+            <div class="plandesc">
+				<span class="description" wicket:id="plan-description">description</span>
+			</div>
 
             <div class="flow-map" wicket:id="planMap">[flow diagram panel]</div>
+            <a class="plan-map-link" wicket:id="plan-map-link" href="#">+ Zoom</a>
 
-            <span class="description" wicket:id="plan-description">description</span>
             <span wicket:id="sg-list-container">
-                <br/><br/> This plan is based on the following plan segments:
+                <span>Plan segments:</span>
                 <ul>
                     <li wicket:id="sg-list"><a wicket:id="sc-link">A plan segment</a></li>
                 </ul>

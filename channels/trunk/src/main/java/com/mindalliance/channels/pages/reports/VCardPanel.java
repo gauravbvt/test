@@ -80,8 +80,8 @@ public class VCardPanel extends Panel {
     }
 
     public String getDefaultPictureUrl() {
-        return prefix + ( spec.isActor() ?  "images/actor.png"
-                        : spec.isOrganization()? "images/organization.png"
+        return prefix + ( spec.isActor() ?  "images/actor.user.png"
+                        : spec.isOrganization()? "images/organization.building.png"
                         : spec.isRole()? "images/role.png"
                         : "images/system.png" );
     }

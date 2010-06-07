@@ -9,16 +9,16 @@
 <wicket:panel>
     <div class="section-head">
         <h2>
-            <img class="photo" wicket:id="pic" src="" alt="Picture" width="48" align="middle">
-            <span wicket:id="org-title">Organization</span>:
+            <img class="photo" wicket:id="pic" src="" alt="Picture" height="32" align="top">
+            &nbsp;<span wicket:id="org-title">Organization</span>:
             <a wicket:id="name" name="">name</a>
         </h2>
 
         <h3 wicket:id="mission">To serve and protect</h3>
     </div>
-    <ul wicket:id="tags-container">
+    <ul wicket:id="tags-container" class="tagscont">
         <li wicket:id="tags">
-            Tag: <span wicket:id="tag">tag</span>
+            <span class="tagtitle">Tag: </span><span wicket:id="tag">tag</span>
         </li>
     </ul>
     <div wicket:id="documents">[documents report panel]</div>

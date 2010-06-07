@@ -38,7 +38,7 @@ public class OrganizationHeaderPanel extends Panel {
                 "src", new Model<String>( getPictureUrl( organization ) ) ),
                 new AttributeModifier(
                         "alt", new Model<String>( organization.getName() ) ) ) );
-        add( new Label( "mission", organization.getMission() ) );
+        add( new Label( "mission", organization.getMission() ).setVisible( !organization.getMission().isEmpty() ) );
         add( new WebMarkupContainer( "tags-container" )
                 .add( new ListView<ModelEntity>( "tags", organization.getTags() ) {
                     protected void populateItem( ListItem<ModelEntity> item ) {
@@ -62,7 +62,7 @@ public class OrganizationHeaderPanel extends Panel {
 
     private String getPictureUrl( ModelObject modelObject ) {
         String url = modelObject.getImageUrl();
-        url = url == null ? "images/organization.png" : url;
+        url = url == null ? "images/organization.building.png" : url;
         return Attachment.addPrefixIfRelative( url, "../" ) ;
     }
 

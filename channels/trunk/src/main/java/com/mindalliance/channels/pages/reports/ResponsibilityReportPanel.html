@@ -13,9 +13,9 @@
                 <h3 class="big">Role: <span wicket:id="name">name </span></h3>
                 <p class="description" wicket:id="description">description</p>
             </div>
-            <ul wicket:id="tags-container">
+            <ul wicket:id="tags-container" class="tagscont">
                  <li wicket:id="tags">
-                     Tag: <span wicket:id="tag">tag</span>
+                     <span class="tagtitle">Tag: </span><span wicket:id="tag">tag</span>
                  </li>
              </ul>
             <ul wicket:id="contacts-container" class="contacts">
@@ -32,8 +32,8 @@
     <table class="tasks">
         <thead>
             <tr>
-                <th><h4>Tasks (<span wicket:id="seg-name">seg</span>)</h4></th>
-                <th><h4>Communications</h4></th>
+                <th><h4 class="tasks"><img align="top" width="16" alt="Tasks" src="../images/tasks.cog.png" class="photo">&nbsp;&nbsp;Tasks (<span wicket:id="seg-name">seg</span>)</h4></th>
+                <th><h4 class="comm"><img align="top" width="16" alt="Tasks" src="../images/comm.comments.png" class="photo">&nbsp;&nbsp;Communications</h4></th>
             </tr>
         </thead>
         <tbody>

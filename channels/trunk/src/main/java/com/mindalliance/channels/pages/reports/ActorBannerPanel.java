@@ -69,7 +69,7 @@ public class ActorBannerPanel extends Panel {
 
     private String getPictureUrl( ModelObject modelObject ) {
         String url = modelObject.getImageUrl();
-        url = url == null ? "images/actor.png" : url;
+        url = url == null ? "images/actor.user.png" : url;
         return Attachment.addPrefixIfRelative( url, prefix ) ;
     }
 

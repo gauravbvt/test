@@ -9,14 +9,14 @@
 <wicket:panel>
     <!-- class="send-notification | send-answer | receive-notification | receive-answer" -->
 
-    <p>
+    <p class="flowtitle">
         <span wicket:id="information">information</span> <!-- class= "information" or "required-information" -->
         (<span wicket:id="urgency">(max delay)</span>).
         <span wicket:id="start-stop-critical">Starts/stops/critical to this task.</span>
     </p>
     <ul wicket:id="eois-container">
         <li wicket:id="eois">
-            Element: <span wicket:id="eoi">eoi</span>
+            <span class="elementtitle">Element: </span><span class="eoi" wicket:id="eoi">eoi</span>
         </li>
     </ul>
     <p class="description">

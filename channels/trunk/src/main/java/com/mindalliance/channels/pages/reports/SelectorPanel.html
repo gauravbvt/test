@@ -22,19 +22,21 @@
                 Organization: <select name="1" wicket:id="organization">
                      <option>* all *</option>
                  </select>
-                &nbsp;Agent: <select name="1" wicket:id="actor">
+                &nbsp;&nbsp;Agent: <select name="1" wicket:id="actor">
                     <option>* all *</option>
                 </select>
             </li>
             <li wicket:id="optionals">
-                <label>Show issues: <input wicket:id="showingIssues" type="checkbox"></label>
-                &nbsp;<label>Show diagrams: <input wicket:id="showingDiagrams" type="checkbox"></label>
+                <label><input wicket:id="showingIssues" type="checkbox">&nbsp;Show issues</label>
+                &nbsp;&nbsp;&nbsp;&nbsp;<label><input wicket:id="showingDiagrams" type="checkbox">&nbsp;Show diagrams</label>
                 <span id="apply"> <input type="submit" value="Apply"></span>
                 <script type="text/javascript">
                     document.getElementById('apply').style.display = 'none';
                 </script>
             </li>
-            <li><a href="/logout">Logout</a></li>
+			<li>
+				<a href="/logout">Logout</a>
+			</li>
         </ul>
     </form>
 </wicket:panel>
