@@ -13,7 +13,7 @@ a.toplink,
 a.flow-map-link,
 a.plan-map-link { display: none; }
 
-div.flow-map img { border: 5px solid #E8E8E8; }
+div.flow-map { border: 5px solid #E8E8E8; }
 
 div#contents { background: #FFFFFF; }
 

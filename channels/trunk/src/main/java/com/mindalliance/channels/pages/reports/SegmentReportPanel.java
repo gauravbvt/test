@@ -44,7 +44,7 @@ public class SegmentReportPanel extends Panel {
     private static final double[] SIZE = new double[2];
 
     static {
-        SIZE[0] = 10.0;
+        SIZE[0] = 10.1;
         SIZE[1] = 10.0;
     }
 

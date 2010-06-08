@@ -26,12 +26,13 @@ a {
 div.report-header {
 	width: 1000px;
 	float: left;
-	background: url(../images/header-bg-report.png) #c3d9ff no-repeat; 
+	background: url(../images/header-bg-repeat-report.png) #c3d9ff repeat-y; 
 	border: 1px solid #cccccc; }
 
 div.headerlogo {
 	width: 530px;
-	float: left; }
+	float: left;
+	background: url(../images/header-bg-report.png) #c3d9ff no-repeat; }
 
 div.headertext { padding-left: 60px; }
 
@@ -46,7 +47,7 @@ div.headertext { padding-left: 60px; }
 		font-family: Arial, Helvetica, sans-serif;
 		font-weight: bold;
 		font-size: 14px;
-		padding: 5px 10px 0 0;
+		padding: 5px 3px 0 0;
 		display: inline; }
 
 	div.headertext h3 {
@@ -76,6 +77,9 @@ div.headermenu {
 			display: block; }
 
 			div.headermenu ul li select { font-size: 10px; }
+
+			div.headermenu ul li label input { vertical-align: -2px }
+
 
 div#contents {
 	float: left;
@@ -234,7 +238,13 @@ p.description {
 
 div.flow-map {
 	float: left;
-	line-height: 0; }
+	line-height: 0;
+	border-top: 5px solid #E8E8E8;
+	border-left: 5px solid #E8E8E8;
+	border-right: 5px solid #E8E8E8;
+	text-align:center;
+	background:#ffffff;
+	width:970px; }
 
 div.top-organization { float: left; }
 
@@ -562,10 +572,7 @@ a.toplink {
 	background: url('images/backtotop.png') 0 4px no-repeat; }
 
 div.flow-map img {
-	width: 970px;
-	border-top: 5px solid #E8E8E8;
-	border-left: 5px solid #E8E8E8;
-	border-right: 5px solid #E8E8E8;
+	max-width: 970px;
 	border-bottom: none;
 	cursor: pointer; }
 
@@ -583,3 +590,8 @@ a.plan-map-link {
 	float: left;
 	margin-bottom: 10px; }
 
+a.logout {
+	padding:0 3px 0 7px;
+	border-left:1px solid #666666;
+	margin-left:5px;
+}
