@@ -462,49 +462,49 @@ ul.flows > li.receive-notification > p.description { padding: 0; }
 
 ul.flows li.receive-notification,
 ul.flows li.send-answer {
-	background: url('images/arrow_left_blue.png') no-repeat 10px 3px;
+	background: url('images/arrow_left_green.bullet.png') no-repeat 10px 3px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.receive-notification.trigger,
 ul.flows li.send-answer.trigger {
-	background: url('images/left_plus.png') no-repeat 10px 2px;
+	background: url('images/left_plus.bullet.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.receive-notification.trigger.terminate,
 ul.flows li.send-answer.trigger.terminate {
-	background: url('images/left_both.png') no-repeat 10px 2px;
+	background: url('images/left_both.bullet.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.receive-notification.terminate,
 ul.flows li.send-answer.terminate {
-	background: url('images/left_box.png') no-repeat 10px 2px;
+	background: url('images/left_box.bullet.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.send-notification,
 ul.flows li.receive-answer {
-	background: url('images/arrow_right_blue.png') no-repeat 10px 3px;
+	background: url('images/arrow_right_green.bullet.png') no-repeat 10px 3px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.send-notification.trigger,
 ul.flows li.receive-answer.trigger {
-	background: url('images/right_plus.png') no-repeat 10px 2px;
+	background: url('images/right_plus.bullet.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.send-notification.trigger.terminate,
 ul.flows li.receive-answer.trigger.terminate {
-	background: url('images/right_both.png') no-repeat 10px 2px;
+	background: url('images/right_both.bullet.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.send-notification.terminate,
 ul.flows li.receive-answer.terminate {
-	background: url('images/right_box.png') no-repeat 10px 2px;
+	background: url('images/right_box.bullet.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
