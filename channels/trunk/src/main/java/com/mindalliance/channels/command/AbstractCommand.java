@@ -1,6 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
@@ -107,7 +106,7 @@ public abstract class AbstractCommand implements Command {
         if ( value instanceof ModelObjectRef ) {
             ModelObjectRef moRef = (ModelObjectRef) value;
             try {
-                value = moRef.resolve( commander );
+                value = moRef.resolve( commander.getQueryService() );
             } catch ( NotFoundException e ) {
                 throw new CommandException( " Can't dereference " + moRef, e );
             }

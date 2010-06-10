@@ -1,8 +1,8 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
@@ -44,7 +44,7 @@ public class TestAddAndRemoveNeedAndCapability extends AbstractChannelsTest {
     public void testAddRemoveNeed() throws Exception {
         Commander commander = getCommander();
         Change change = commander.doCommand( new AddNeed( part ) );
-        Flow need = (Flow) change.getSubject();
+        Flow need = (Flow) change.getSubject( commander.getQueryService() );
         assertTrue( change.isAdded() );
         assertSame( part, need.getTarget() );
         assertSame( 1, countNeeds( part ) );
@@ -61,7 +61,7 @@ public class TestAddAndRemoveNeedAndCapability extends AbstractChannelsTest {
         Commander commander = getCommander();
         Change change = commander.doCommand( new AddCapability( part ) );
         assertTrue( change.isAdded() );
-        Flow capability = (Flow) change.getSubject();
+        Flow capability = (Flow) change.getSubject( commander.getQueryService() );
         assertSame( part, capability.getSource() );
         assertSame( 1, countCapabilities( part ) );
         assertTrue( commander.canUndo() );

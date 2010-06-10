@@ -905,7 +905,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } else {
             change = doCommand( new RedirectFlow( getFlow(), other, isSend() ) );
         }
-        Flow newFlow = (Flow) change.getSubject();
+        Flow newFlow = (Flow) change.getSubject( getQueryService() );
         // requestLockOn( newFlow );
         setFlow( newFlow );
     }
@@ -1074,7 +1074,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     public void changed( Change change ) {
         // ignore selection of other node - don't propagate selection
         if ( !( change.isSelected()
-                && change.getSubject() instanceof Node
+                && change.isForInstanceOf( Node.class )
                 && change.isForProperty( "other" ) ) ) {
             super.changed( change );
         }
@@ -1085,10 +1085,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected()
-                && change.getSubject() instanceof Node
+                && change.isForInstanceOf( Node.class )
                 && change.isForProperty( "other" ) ) {
             Flow oldFlow = getFlow();
-            setOther( (Node) change.getSubject() );
+            setOther( (Node) change.getSubject( getQueryService() ) );
             adjustFields( getFlow() );
             update( target, new Change( Change.Type.Updated, getNode() ) );
             if ( !getFlow().equals( oldFlow ) ) {

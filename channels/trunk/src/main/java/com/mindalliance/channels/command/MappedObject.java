@@ -1,6 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -26,7 +25,7 @@ public class MappedObject implements Serializable {
     /**
      * Map representation.
      */
-    private Map<String,Object> map = new HashMap<String,Object>();
+    private Map<String, Object> map = new HashMap<String, Object>();
 
     public MappedObject( Class clazz ) {
         className = clazz.getName();
@@ -34,12 +33,13 @@ public class MappedObject implements Serializable {
 
     /**
      * Convert property to a safely serializable map entry.
-     * @param name a string
+     *
+     * @param name  a string
      * @param value an object
      */
     public void set( String name, Object value ) {
         if ( value instanceof ModelObject ) {
-            map.put( name, new ModelObjectRef( (ModelObject) value));
+            map.put( name, new ModelObjectRef( (ModelObject) value ) );
         } else {
             map.put( name, value );
         }
@@ -47,6 +47,7 @@ public class MappedObject implements Serializable {
 
     /**
      * Reconstitute mapped object.
+     *
      * @param commander a commander
      * @return an object
      * @throws CommandException if conversion from map fails
@@ -54,29 +55,30 @@ public class MappedObject implements Serializable {
     public Object fromMap( Commander commander ) throws CommandException {
         try {
             Object object = Class.forName( className ).newInstance();
-            for (String name : map.keySet() ) {
-                Object value = map.get(name);
+            for ( String name : map.keySet() ) {
+                Object value = map.get( name );
                 if ( value instanceof ModelObjectRef ) {
-                    PropertyUtils.setSimpleProperty( object, name,  ((ModelObjectRef)value).resolve( commander ));
+                    PropertyUtils.setSimpleProperty(
+                            object,
+                            name,
+                            ( (ModelObjectRef) value ).resolve( commander.getQueryService() ) );
                 } else {
                     PropertyUtils.setSimpleProperty( object, name, value );
                 }
             }
             return object;
         } catch ( ClassNotFoundException e ) {
-            throw new CommandException("Failed to convert from map.", e);
+            throw new CommandException( "Failed to convert from map.", e );
         } catch ( IllegalAccessException e ) {
-            throw new CommandException("Failed to convert from map.", e);
+            throw new CommandException( "Failed to convert from map.", e );
         } catch ( InvocationTargetException e ) {
-            throw new CommandException("Failed to convert from map.", e);
+            throw new CommandException( "Failed to convert from map.", e );
         } catch ( NoSuchMethodException e ) {
-            throw new CommandException("Failed to convert from map.", e);
+            throw new CommandException( "Failed to convert from map.", e );
         } catch ( NotFoundException e ) {
-            throw new CommandException("Failed to convert from map.", e);
-        } catch ( CommandException e ) {
-            throw new CommandException("Failed to convert from map.", e);
+            throw new CommandException( "Failed to convert from map.", e );
         } catch ( InstantiationException e ) {
-            throw new CommandException("Failed to convert from map.", e);
+            throw new CommandException( "Failed to convert from map.", e );
         }
     }
 }

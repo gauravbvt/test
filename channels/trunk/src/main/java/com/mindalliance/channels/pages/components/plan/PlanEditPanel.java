@@ -247,7 +247,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      */
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.getSubject() instanceof Issue )
+        if ( change.isForInstanceOf( Issue.class ) )
             setAspectShown( target, DETAILS );
         super.updateWith( target, change, updated );
     }

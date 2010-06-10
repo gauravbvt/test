@@ -34,6 +34,7 @@ import java.util.Set;
  * Time: 12:37:10 PM
  */
 public class EntityPanel extends AbstractMultiAspectPanel {
+
     /**
      * Network aspect.
      */
@@ -247,7 +248,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      */
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        getCommander().requestLockOn( change.getSubject() );
+        getCommander().requestLockOn( change.getSubject( getQueryService() ) );
         super.refresh( target, change, aspect );
     }
 
@@ -259,7 +260,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
             addShowMenu();
             target.addComponent( getShowMenu() );
         }
-        if ( change.isExists() && change.getSubject() instanceof Issue ) {
+        if ( change.isExists() && change.isForInstanceOf( Issue.class ) ) {
             setAspectShown(target, DETAILS);
         }
         super.updateWith( target, change, updated );

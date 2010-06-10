@@ -18,6 +18,7 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -323,10 +324,11 @@ public class PlanScopePanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     public void changed( Change change ) {
-        if ( change.isExpanded() && change.getSubject() instanceof Organization ) {
+        if ( change.isExpanded() && change.isForInstanceOf( Organization.class ) ) {
+            QueryService queryService = getQueryService();
             if ( selectedOrganization == null
-                    || !selectedOrganization.equals( change.getSubject() ) ) {
-                selectedOrganization = (Organization) change.getSubject();
+                    || !selectedOrganization.equals( change.getSubject( queryService ) ) ) {
+                selectedOrganization = (Organization) change.getSubject( queryService );
                 change.setType( Change.Type.Selected );
             } else {
                 super.changed( change );
@@ -340,7 +342,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isSelected() && change.getSubject() instanceof Organization ) {
+        if ( change.isSelected() && change.isForInstanceOf( Organization.class ) ) {
             addSelectedOrganization();
             target.addComponent( organizationContainer );
         } else {

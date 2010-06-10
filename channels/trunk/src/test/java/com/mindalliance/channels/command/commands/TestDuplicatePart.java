@@ -46,7 +46,7 @@ public class TestDuplicatePart extends AbstractChannelsTest {
         assertTrue( getCommander().canDo( duplicatePart ) );
         Change change = getCommander().doCommand( duplicatePart );
         assertTrue( change.isAdded() );
-        Part duplicate = (Part) change.getSubject();
+        Part duplicate = (Part) change.getSubject( getCommander().getQueryService() );
         assertTrue( duplicate.getName().equals( part.getName() ) );
         assertTrue( countParts() == count + 1 );
         assertTrue( getCommander().canUndo() );

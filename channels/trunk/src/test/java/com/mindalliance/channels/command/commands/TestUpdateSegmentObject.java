@@ -1,11 +1,13 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -40,19 +42,19 @@ public class TestUpdateSegmentObject extends AbstractChannelsTest {
         String description = part.getDescription();
         Change change = commander.doCommand( command );
         assertTrue( change.isUpdated() );
-        assertEquals( "ipso lorem etc.", change.getChangedPropertyValue() );
+        assertEquals( "ipso lorem etc.", change.getChangedPropertyValue( queryService ) );
         String newDescription = part.getDescription();
         assertFalse( description.equals( newDescription ) );
         assertTrue( commander.canUndo() );
         change = commander.undo();
         assertTrue( change.isUpdated() );
-        assertEquals( description, change.getChangedPropertyValue() );
+        assertEquals( description, change.getChangedPropertyValue( queryService ) );
         newDescription = part.getDescription();
         assertEquals( description, newDescription );
         assertTrue( commander.canRedo() );
         change = commander.redo();
         assertTrue( change.isUpdated() );
-        assertEquals( "ipso lorem etc.", change.getChangedPropertyValue() );
+        assertEquals( "ipso lorem etc.", change.getChangedPropertyValue( queryService ) );
         newDescription = part.getDescription();
         assertFalse( description.equals( newDescription ) );
     }

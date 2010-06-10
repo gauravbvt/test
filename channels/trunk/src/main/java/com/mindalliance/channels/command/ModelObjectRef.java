@@ -1,9 +1,10 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.query.QueryService;
 
 import java.io.Serializable;
 
@@ -15,6 +16,7 @@ import java.io.Serializable;
  * Date: Apr 8, 2009
  * Time: 7:34:16 PM
  */
+// TODO - rename IdentifiableRef - move to util
 public class ModelObjectRef implements Serializable {
     /**
      * A model object's id.
@@ -32,14 +34,23 @@ public class ModelObjectRef implements Serializable {
      * Kind of entity
      */
     private String entityKind;
+    /* *
+      * The identifiable itself if not a model object.
+     */
+    private Identifiable identifiable;
 
-    public ModelObjectRef( ModelObject mo ) {
-        if ( mo.isEntity() ) {
-            entityName = mo.getName();
-            entityKind = ( (ModelEntity) mo ).getKind().name();
+    public ModelObjectRef( Identifiable identifiable ) {
+        if ( identifiable instanceof ModelEntity ) {
+            entityName = identifiable.getName();
+            entityKind = ( (ModelEntity) identifiable ).getKind().name();
         }
-        id = mo.getId();
-        className = mo.getClass().getName();
+        id = identifiable.getId();
+        className = identifiable.getClass().getName();
+        // Store identifiable if not a model object.
+        // TODO - hack: a referenced identifiable should always be, ugh, referenced to be later resolved from id if still exists.
+        if ( !( identifiable instanceof ModelObject ) ) {
+            this.identifiable = identifiable;
+        }
     }
 
     public long getId() {
@@ -51,15 +62,15 @@ public class ModelObjectRef implements Serializable {
     }
 
     /**
-     * Get model object class given class name.
+     * Get identifiable class given class name.
      *
      * @return a class
      * @throws NotFoundException if class not found
      */
     @SuppressWarnings( "unchecked" )
-    public Class<? extends ModelObject> getModelObjectClass() throws NotFoundException {
+    public Class<? extends Identifiable> getIdentifiableClass() throws NotFoundException {
         try {
-            return (Class<? extends ModelObject>) Class.forName( className );
+            return (Class<? extends Identifiable>) Class.forName( className );
         } catch ( ClassNotFoundException e ) {
             throw new NotFoundException();
         }
@@ -73,37 +84,50 @@ public class ModelObjectRef implements Serializable {
     }
 
     /**
-     * Resolve the reference to a model object
+     * Resolve the reference to a model object, fails otherwise.
      *
-     * @param commander a commander
+     * @param queryService a query service
      * @return a model object
      * @throws NotFoundException if not found
-     * @throws com.mindalliance.channels.command.CommandException
-     *                           if commander fails to resolve
      */
     @SuppressWarnings( "unchecked" )
-    public ModelObject resolve( Commander commander ) throws NotFoundException, CommandException {
-        ModelObject mo;
-        if ( entityName == null ) {
-            mo = commander.resolve( getModelObjectClass(), id );
+    public Identifiable resolve( QueryService queryService ) throws NotFoundException {
+        if ( identifiable != null ) {
+            return identifiable;
         } else {
-            if ( ModelEntity.class.isAssignableFrom( getModelObjectClass() ) ) {
-                if ( entityKind.equals( ModelEntity.Kind.Actual.name() ) ) {
-                    mo = commander.getQueryService().findOrCreate(
-                            (Class<ModelEntity>) getModelObjectClass(),
-                            entityName,
-                            id );
-                }
-                else {
-                    mo = commander.getQueryService().findOrCreateType(
-                            (Class<ModelEntity>) getModelObjectClass(),
-                            entityName,
-                            id );
-                }
+            Identifiable mo;
+            Class<? extends Identifiable> clazz = getIdentifiableClass();
+            assert ModelObject.class.isAssignableFrom( clazz );
+            if ( entityName == null ) {
+                mo = queryService.find( (Class<? extends ModelObject>) clazz, id );
             } else {
-                throw new NotFoundException();
+                assert ModelEntity.class.isAssignableFrom( clazz );
+                if ( entityKind.equals( ModelEntity.Kind.Actual.name() ) ) {
+                    mo = queryService.findOrCreate(
+                            (Class<ModelEntity>) getIdentifiableClass(),
+                            entityName,
+                            id );
+                } else {
+                    mo = queryService.findOrCreateType(
+                            (Class<ModelEntity>) getIdentifiableClass(),
+                            entityName,
+                            id );
+                }
             }
+            return mo;
         }
-        return mo;
     }
+
+    /**
+     * Whether change is of an instance of a given class.
+     *
+     * @param clazz a class extending Identifiable
+     * @return a boolean
+     */
+    public boolean isForInstanceOf
+            ( Class<? extends Identifiable> clazz ) {
+        return clazz.isAssignableFrom( getIdentifiableClass() );
+    }
+
+
 }

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ElementOfInformation;
@@ -89,7 +89,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
 
         Change change = commander.doCommand( command );
         assertTrue( change.isRecomposed() );
-        assertTrue( change.getSubject() instanceof Segment );
+        assertTrue( change.getSubject( getCommander().getQueryService() ) instanceof Segment );
         assertNull( findFlow() );
         assertSame( 2, countFlows() );
         assertTrue( commander.canUndo() );

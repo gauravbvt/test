@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
@@ -116,7 +116,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         return (T) doCommand( new CreateEntityIfNew(
                 clazz,
                 name,
-                ModelEntity.Kind.Actual ) ).getSubject();
+                ModelEntity.Kind.Actual ) ).getSubject( getQueryService() );
     }
 
     /**
@@ -131,7 +131,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         return (T) doCommand( new CreateEntityIfNew(
                 clazz,
                 name,
-                ModelEntity.Kind.Type ) ).getSubject();
+                ModelEntity.Kind.Type ) ).getSubject( getQueryService() );
     }
 
     /**

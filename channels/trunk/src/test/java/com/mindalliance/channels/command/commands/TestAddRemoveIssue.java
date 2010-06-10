@@ -2,9 +2,9 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Segment;
@@ -52,7 +52,7 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
 
         Change change = commander.doCommand( addIssue );
         assertTrue( change.isAdded() );
-        UserIssue issue = (UserIssue) change.getSubject();
+        UserIssue issue = (UserIssue) change.getSubject( commander.getQueryService() );
         assertSame( count + 1, countIssues( segment ) );
 
         issue.setDescription( "fubar" );

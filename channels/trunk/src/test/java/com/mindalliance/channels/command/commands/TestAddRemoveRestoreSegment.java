@@ -5,7 +5,9 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.model.Segment;
 import org.junit.After;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import java.util.List;
@@ -33,7 +35,7 @@ public class TestAddRemoveRestoreSegment extends AbstractChannelsTest {
         assertTrue( getCommander().canDo( command ) );
         Change change = getCommander().doCommand( command );
         assertTrue( change.isAdded() );
-        segment = (Segment) change.getSubject();
+        segment = (Segment) change.getSubject( getCommander().getQueryService() );
         assertSame( count + 1, countSegments() );
         assertFalse( getCommander().canUndo() );
     }

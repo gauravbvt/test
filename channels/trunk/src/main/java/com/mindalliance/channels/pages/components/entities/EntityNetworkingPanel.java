@@ -121,11 +121,11 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
      */
     public void changed( Change change ) {
         if ( change.isSelected() ) {
-            if ( change.getSubject() instanceof ModelEntity ) {
+            if ( change.isForInstanceOf( ModelEntity.class ) ) {
                 change.setType( Change.Type.Expanded );
                 super.changed( change );
-            } else if ( change.getSubject() instanceof EntityRelationship ) {
-                selectedEntityRel = (EntityRelationship<T>) change.getSubject();
+            } else if ( change.isForInstanceOf( EntityRelationship.class ) ) {
+                selectedEntityRel = (EntityRelationship<T>) change.getSubject( getQueryService() );
                 selectedEntity = null;
             } else {
                 selectedEntityRel = null;
@@ -141,7 +141,7 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
-            if ( change.getSubject() instanceof ModelEntity ) {
+            if ( change.isForInstanceOf( ModelEntity.class ) ) {
                 super.updateWith( target, change, updated );
             } else {
                 addEntityNetworkPanel();

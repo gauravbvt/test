@@ -50,7 +50,7 @@ public class TestAddRemovePart extends AbstractChannelsTest {
         assertTrue( getCommander().canDo( removePart ) );
         Change change = getCommander().doCommand( removePart );
         assertTrue( change.isRecomposed() );
-        assertTrue( change.getSubject() instanceof Segment );
+        assertTrue( change.getSubject( getCommander().getQueryService() ) instanceof Segment );
         assertSame( 1, countParts() );
         assertSame( 1, countFlows() );
 

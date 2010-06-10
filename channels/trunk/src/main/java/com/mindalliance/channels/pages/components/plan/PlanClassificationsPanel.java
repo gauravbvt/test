@@ -92,8 +92,8 @@ public class PlanClassificationsPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     public void changed( Change change ) {
-        if ( change.isSelected() && change.getSubject() instanceof Classification ) {
-            selectedClassification = (Classification) change.getSubject();
+        if ( change.isSelected() && change.isForInstanceOf( Classification.class ) ) {
+            selectedClassification = (Classification) change.getSubject( getQueryService() );
         } else {
             super.changed( change );
         }
@@ -103,7 +103,7 @@ public class PlanClassificationsPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isSelected() && change.getSubject() instanceof Classification ) {
+        if ( change.isSelected() && change.isForInstanceOf( Classification.class ) ) {
             addClassificationIndex();
             adjustFields();
             target.addComponent( indexContainer );

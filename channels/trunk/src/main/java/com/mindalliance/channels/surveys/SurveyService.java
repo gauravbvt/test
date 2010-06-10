@@ -1,10 +1,6 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.surveys.Survey;
-import com.mindalliance.channels.surveys.SurveyData;
-import com.mindalliance.channels.surveys.SurveyException;
 
 import java.util.List;
 
@@ -16,7 +12,7 @@ import java.util.List;
  * Date: Aug 21, 2009
  * Time: 11:00:51 AM
  */
-public interface SurveyService extends Identifiable {
+public interface SurveyService {
 
     /**
      * Create a new survey in current plan on an issue, or get current, not closed one.

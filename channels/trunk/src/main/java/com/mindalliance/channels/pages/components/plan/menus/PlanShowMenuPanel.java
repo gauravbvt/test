@@ -9,6 +9,7 @@ import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.reports.SOPsReportPage;
+import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -111,12 +112,12 @@ public class PlanShowMenuPanel extends MenuPanel {
         }
         if ( getPlan().isDevelopment() ) {
             Link surveyLink;
-            if ( getExpansions().contains( surveyService.getId() ) ) {
+            if ( getExpansions().contains( Survey.UNKNOWN.getId() ) ) {
                 surveyLink =
                         new AjaxFallbackLink( "link" ) {
                             @Override
                             public void onClick( AjaxRequestTarget target ) {
-                                update( target, new Change( Change.Type.Collapsed, surveyService ) );
+                                update( target, new Change( Change.Type.Collapsed, Survey.UNKNOWN ) );
                             }
                         };
                 menuItems.add( new LinkMenuItem(
@@ -129,7 +130,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                         new AjaxFallbackLink( "link" ) {
                             @Override
                             public void onClick( AjaxRequestTarget target ) {
-                                update( target, new Change( Change.Type.Expanded, surveyService ) );
+                                update( target, new Change( Change.Type.Expanded, Survey.UNKNOWN ) );
                             }
                         };
                 menuItems.add( new LinkMenuItem(

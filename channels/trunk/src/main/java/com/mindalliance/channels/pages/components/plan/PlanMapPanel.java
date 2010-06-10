@@ -462,7 +462,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     @Override
     public void changed( Change change ) {
         if ( change.isSelected() ) {
-            Identifiable changed = change.getSubject();
+            Identifiable changed = change.getSubject( getQueryService() );
             if ( changed instanceof Plan ) {
                 selectedGroup = null;
                 selectedSegment = null;
@@ -497,7 +497,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
         if ( change.isSelected() ) {
             refresh( target );
             // Don't percolate update on selection unless a part was selected.
-            if ( change.getSubject() instanceof Part ) {
+            if ( change.isForInstanceOf( Part.class ) ) {
                 super.updateWith( target, change, updated );
             } else {
                 if ( change.getScript() != null ) {

@@ -1,11 +1,11 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class CopyAttachment extends AbstractCommand {
         Map<String, Object> copy = new HashMap<String, Object>();
         copy.putAll( getArguments() );
         commander.setCopy( copy );
-        return new Change( Change.Type.None, null );
+        return new Change( Change.Type.None );
     }
 
     /**

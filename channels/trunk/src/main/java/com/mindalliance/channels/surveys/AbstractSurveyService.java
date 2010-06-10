@@ -1,10 +1,8 @@
 package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
@@ -12,6 +10,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.FileUtils;
@@ -103,10 +102,6 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     private String surveysFile = "surveys";
 
     private boolean templatesCopyAttempted = false;
-    /**
-     * Static, unique id for survey service.
-     */
-    private static final long SURVEY_SERVICE_ID = -10;
 
     public AbstractSurveyService() {
     }
@@ -618,13 +613,6 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
             LOG.error( "Failed to process template", e );
             throw new SurveyException( "Failed to process template", e );
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public long getId() {
-        return SURVEY_SERVICE_ID;
     }
 
     /**

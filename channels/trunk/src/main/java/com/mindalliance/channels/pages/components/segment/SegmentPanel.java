@@ -369,7 +369,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         boolean stopUpdates = false;
         if ( !change.isNone() ) {
-            Identifiable identifiable = change.getSubject();
+            Identifiable identifiable = change.getSubject( getQueryService() );
             if ( identifiable == getPart() ) {
                 if ( change.isUpdated() ) {
                     addPartMediaPanel();
@@ -382,11 +382,11 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 }
             }
             if ( identifiable instanceof Issue || identifiable instanceof SegmentObject ) {
-                if ( !( change.isUpdated() && isExpanded( change.getSubject() ) ) && !( change.isDisplay() ) ) {
+                if ( !( change.isUpdated() && isExpanded( identifiable ) ) && !( change.isDisplay() ) ) {
                     target.addComponent( flowMapDiagramPanel );
                 }
             }
-            if ( change.isExists() && change.getSubject() instanceof Issue ) {
+            if ( change.isExists() && identifiable instanceof Issue ) {
                 addPartPanel();
                 target.addComponent( partPanel );
             }
@@ -423,7 +423,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        Identifiable identifiable = change.getSubject();
+        Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isModified()
                 || ( change.isDisplay()
                 && identifiable instanceof SegmentObject )

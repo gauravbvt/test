@@ -119,7 +119,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     /**
      * Selected survey.
      */
-    private Survey selectedSurvey;
+    private Survey selectedSurvey = Survey.UNKNOWN;
     /**
      * Survey container.
      */
@@ -145,9 +145,11 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         init();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     protected void close( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, surveyService );
+        Change change = new Change( Change.Type.Collapsed, Survey.UNKNOWN );
         update( target, change );
     }
 
@@ -210,7 +212,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         };
         add( doneLink );
     }
-    
+
     private void addStatusAndRelevanceFilters() {
         addFilterCheckBox();
         addStatusChoices();
@@ -398,12 +400,12 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     }
 
     private void updateVisibility() {
-        makeVisible( surveyContainer, selectedSurvey != null );
+        makeVisible( surveyContainer, !selectedSurvey.isUnknown() );
     }
 
     private void addSurveyPanel() {
         Component surveyPanel;
-        if ( selectedSurvey != null ) {
+        if ( !selectedSurvey.isUnknown() ) {
             surveyPanel = new SurveyPanel(
                     "survey",
                     new Model<Survey>( selectedSurvey )
@@ -415,35 +417,41 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     }
 
     public void changed( Change change ) {
-        if ( change.getSubject() instanceof Survey ) {
+        if ( change.isForInstanceOf( Survey.class ) ) {
             if ( change.isExpanded() ) {
-                selectedSurvey = (Survey) change.getSubject();
+                selectedSurvey = (Survey) change.getSubject( getQueryService() );
             }
-        } else {
-            super.changed( change );
+            if ( change.isCollapsed() ) {
+                selectedSurvey = Survey.UNKNOWN;
+            }
         }
+        super.changed( change );
     }
 
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.getSubject() instanceof Survey ) {
+        if ( change.isForInstanceOf( Survey.class ) ) {
             if ( change.isUpdated() ) {
                 addSurveysTable();
                 target.addComponent( surveysTable );
             }
-            if ( selectedSurvey != null ) {
+            if ( !selectedSurvey.isUnknown() ) {
                 addSurveyPanel();
                 updateVisibility();
                 target.addComponent( surveyContainer );
-            }
+            } else {
+                super.updateWith( target, change, updated );
+            }           
         } else {
             super.updateWith( target, change, updated );
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void refresh( AjaxRequestTarget target, Change change, String Aspect ) {
-        if ( change.getSubject() instanceof Survey ) {
+        if ( change.isForInstanceOf( Survey.class ) ) {
             addSurveysTable();
             target.addComponent( surveysTable );
         }

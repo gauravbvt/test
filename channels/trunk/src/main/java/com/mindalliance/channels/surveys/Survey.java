@@ -1,6 +1,5 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
@@ -36,9 +35,23 @@ public class Survey implements Identifiable, Serializable {
     private static final int MAX_TITLE_LENGTH = 80;
 
     /**
+     * Unknown survey.
+     */
+    public static Survey UNKNOWN;
+    /**
+     * Unknown survey id.
+     */
+    public static final long UNKNOWN_ID = Long.MIN_VALUE;
+
+    static {
+        UNKNOWN = new Survey();
+        UNKNOWN.setId( UNKNOWN_ID );
+    }
+
+    /**
      * The status of a survey.
      */
-    public enum Status {
+    public enum Status implements Serializable {
         Created( "Created" ),
         In_design( "New" ),
         Launched( "Launched" ),
@@ -53,6 +66,10 @@ public class Survey implements Identifiable, Serializable {
         public String getLabel() {
             return label;
         }
+    }
+
+    public boolean isUnknown() {
+        return id == UNKNOWN_ID;
     }
 
     /**
@@ -280,36 +297,40 @@ public class Survey implements Identifiable, Serializable {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append( id );
-        sb.append( ',' );
-        sb.append( status.name() );
-        sb.append( ',' );
-        sb.append( userName );
-        sb.append( ',' );
-        sb.append( issuer );
-        sb.append( ',' );
-        sb.append( dateFormat.format( creationDate ) );
-        sb.append( ',' );
-        if ( launchDate != null )
-            sb.append( dateFormat.format( launchDate ) );
-        else
-            sb.append( "0" );
-        sb.append( ',' );
-        if ( closedDate != null )
-            sb.append( dateFormat.format( closedDate ) );
-        else
-            sb.append( "0" );
-        sb.append( ',' );
+        if ( isUnknown() ) {
+            sb.append( "(unknown)" );
+        } else {
+            sb.append( id );
+            sb.append( ',' );
+            sb.append( status.name() );
+            sb.append( ',' );
+            sb.append( userName );
+            sb.append( ',' );
+            sb.append( issuer );
+            sb.append( ',' );
+            sb.append( dateFormat.format( creationDate ) );
+            sb.append( ',' );
+            if ( launchDate != null )
+                sb.append( dateFormat.format( launchDate ) );
+            else
+                sb.append( "0" );
+            sb.append( ',' );
+            if ( closedDate != null )
+                sb.append( dateFormat.format( closedDate ) );
+            else
+                sb.append( "0" );
+            sb.append( ',' );
 
-        for ( Contact contact : contacts ) {
-            sb.append( contact.toString() );
-            sb.append( ':' );
-        }
-        sb.append( ',' );
-        try {
-            sb.append( URLEncoder.encode( issueSpec.toString(), "UTF-8" ) );
-        } catch ( UnsupportedEncodingException e ) {
-            throw new RuntimeException( " Failed to encode" );
+            for ( Contact contact : contacts ) {
+                sb.append( contact.toString() );
+                sb.append( ':' );
+            }
+            sb.append( ',' );
+            try {
+                sb.append( URLEncoder.encode( issueSpec.toString(), "UTF-8" ) );
+            } catch ( UnsupportedEncodingException e ) {
+                throw new RuntimeException( " Failed to encode" );
+            }
         }
         return sb.toString();
     }

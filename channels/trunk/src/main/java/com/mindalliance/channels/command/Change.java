@@ -1,6 +1,9 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
  * Time: 8:09:56 AM
  */
 public class Change implements Serializable {
+
     /**
      * A kind of change.
      */
@@ -103,9 +107,9 @@ public class Change implements Serializable {
      */
     private Type type = Type.Unknown;
     /**
-     * The changed indeitifiable.
+     * Reference to the changed model object.
      */
-    private Identifiable subject;
+    private ModelObjectRef identifiableRef;
     /**
      * The property which value was changed, null if N/A.
      */
@@ -132,16 +136,16 @@ public class Change implements Serializable {
 
     public Change( Type type, Identifiable subject, String property ) {
         this.type = type;
-        this.subject = subject;
+        identifiableRef = new ModelObjectRef( subject );
         this.property = property;
     }
 
-    public Identifiable getSubject() {
-        return subject;
+    public Identifiable getSubject( QueryService queryService ) throws NotFoundException {
+        return identifiableRef == null ? null : identifiableRef.resolve( queryService );
     }
 
-    public void setSubject( Identifiable subject ) {
-        this.subject = subject;
+    public void setSubject( ModelObject subject ) {
+        identifiableRef = new ModelObjectRef( subject );
     }
 
     public Type getType() {
@@ -177,15 +181,27 @@ public class Change implements Serializable {
     }
 
     /**
+     * Whether change is of an instance of a given class.
+     *
+     * @param clazz a class extending Identifiable
+     * @return a boolean
+     */
+    public boolean isForInstanceOf( Class<? extends Identifiable> clazz ) {
+        return identifiableRef != null && identifiableRef.isForInstanceOf( clazz );
+    }
+
+
+    /**
      * Gets the updated property value or null if N/A.
      *
+     * @param queryService a queryService
      * @return an object
      */
-    public Object getChangedPropertyValue() {
+    public Object getChangedPropertyValue( QueryService queryService ) {
         Object value = null;
         if ( type == Type.Updated ) {
             try {
-                value = PropertyUtils.getProperty( getSubject(), property );
+                value = PropertyUtils.getProperty( getSubject( queryService ), property );
             } catch ( IllegalAccessException e ) {
                 throw new RuntimeException( e );
             } catch ( InvocationTargetException e ) {
@@ -418,7 +434,7 @@ public class Change implements Serializable {
         return type == Type.Unexplained;
     }
 
-    
+
     /**
      * Whether change is to a given property.
      *
@@ -436,7 +452,7 @@ public class Change implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append( type.name() );
         sb.append( " " );
-        sb.append( subject == null ? "" : subject.toString() );
+        sb.append( identifiableRef == null ? "" : identifiableRef.toString() );
         sb.append( property == null ? "" : ( " (" + property + ")" ) );
         return sb.toString();
     }

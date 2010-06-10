@@ -1,6 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.command.Commander;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +159,7 @@ public class MultiCommand extends AbstractCommand {
             try {
                 LOG.info( "--- sub-command --" );
                 Change change = commander.doCommand( command ); // TODO -- command journaled here
-                for ( Link link : links ) link.process( command, change.getSubject() ); // without benefit of link processing
+                for ( Link link : links ) link.process( command, change.getSubject( commander.getQueryService() ) ); // without benefit of link processing
                 executed.add( command );
             }
             catch ( CommandException e ) {
