@@ -65,7 +65,7 @@ public class SegmentReportPanel extends Panel {
             final Organization organization,
             final Actor actor,
             final boolean showingIssues,
-            final boolean showingDiagrams) {
+            final boolean showingDiagrams ) {
         super( id, model );
         this.organization = organization;
         this.showingDiagrams = showingDiagrams;
@@ -76,7 +76,7 @@ public class SegmentReportPanel extends Panel {
         List<Organization> involvedOrgs = findAllInvolvedOrganizations( segment, actor );
         add( new Label(
                 "no-procedure",
-                "No information sharing procedures" ).setVisible( involvedOrgs.isEmpty() ) );        
+                "No information sharing procedures" ).setVisible( involvedOrgs.isEmpty() ) );
         add( new ListView<Organization>(
                 "organizations",
                 involvedOrgs ) {
@@ -235,7 +235,7 @@ public class SegmentReportPanel extends Panel {
                     //size,
                     new Settings( null, DiagramFactory.LEFT_RIGHT, SIZE, true, false ) ) );
         } else {
-            add( new Label( "flowMap", "" ) );
+            add( new Label( "flowMap", "" ).setVisible( false ) );
         }
     }
 
