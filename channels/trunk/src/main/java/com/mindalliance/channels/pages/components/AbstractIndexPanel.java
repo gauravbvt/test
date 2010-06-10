@@ -689,7 +689,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 protected void populateItem( ListItem<ModelObject> item ) {
                     ModelObjectLink moLink = new ModelObjectLink(
                             "moLink",
-                            new Model<ModelObject>( getIndexedModelObject() ),
+                            new Model<ModelObject>( item.getModelObject() ),
                             new Model<String>( getRank( item.getModelObject() ) ),
                             getKind() );
                     item.add( moLink );

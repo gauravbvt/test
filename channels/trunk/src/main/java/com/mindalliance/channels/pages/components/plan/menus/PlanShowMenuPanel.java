@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
+import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.pages.reports.SOPsReportPage;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
@@ -169,6 +170,18 @@ public class PlanShowMenuPanel extends MenuPanel {
                     new Model<String>( "Admin page" ),
                     adminLink ) );
         }
+        // Index
+        Link indexLink = new AjaxFallbackLink( "link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, plan, PlanEditPanel.INDEX ) );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Index" ),
+                indexLink ) );
+        
         return menuItems;
     }
 

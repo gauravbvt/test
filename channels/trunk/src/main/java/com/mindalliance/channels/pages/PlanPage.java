@@ -1309,8 +1309,12 @@ public final class PlanPage extends WebPage implements Updatable {
             Identifiable identifiable = change.getSubject( queryService );
             if ( change.isCollapsed() || change.isRemoved() )
                 collapse( identifiable );
-            else if ( change.isExpanded() || change.isAdded() )
+            else if ( change.isExpanded() || change.isAdded() ) {
                 expand( identifiable );
+                if ( change.getProperty() != null ) {
+                    viewAspect( identifiable, change.getProperty() );
+                }
+            }
             else if ( change.isAspectViewed() ) {
                 if ( identifiable instanceof Flow ) {
                     Flow otherFlowViewed = getModelObjectViewed( Flow.class, change.getProperty() );
@@ -1408,6 +1412,7 @@ public final class PlanPage extends WebPage implements Updatable {
             } else if ( change.isCollapsed() && changes.get( identifiable ) != null ) {
                 refreshAll( target );
             } else if ( identifiable instanceof Flow && change.isSelected() ) {
+                refreshSegmentPanel( target, change, updated );
                 segmentPanel.resizePartPanels( target );
             } else if ( change.isCopied() ) {
                 refreshAllMenus( target );
