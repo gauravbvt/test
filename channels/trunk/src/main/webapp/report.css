@@ -121,26 +121,33 @@ div#plan span span {
 div#plan span ul {
 	display: block;
 	background: #eeeeee;
-	border-left: 1px solid #cccccc;
-	border-right: 1px solid #cccccc;
+	border-left: 1px solid #999999;
+	border-right: 1px solid #999999;
+	border-bottom: 1px solid #999999;
 	list-style: none;
 	width: 200px; }
 
 	div#plan span ul li {
 		display: block;
-		background: #e8e8e8;
-		border-bottom: 1px solid #cccccc;
 		list-style: none;
 		width: 200px;
-		height: 25px;
+		height: 26px;
 		color: #333333; }
 
 		div#plan span ul li a {
+			background: #e8e8e8;
+			border-top: 1px solid #cccccc;
 			color: #333333;
 			text-decoration: none;
 			padding: 5px 5px 0 5px;
 			display: block;
+			width: 190px;
+			height: 20px;
 			float: left; }
+
+		div#plan span ul li a:hover {
+			color: #000000;
+			background:#DCDDDE; }
 
 p.notice {
 	font-size: 10px;
@@ -157,39 +164,58 @@ div.segment {
 div.section-head h2 {
 	float: left;
 	width: 970px;
-	background: #e8e8e8;
-	border-bottom: 1px solid #999999;
-	border-top: 1px solid #999999;
+	background: #C7C8CA;
+	border-bottom: 1px solid #333333;
+	border-top: 1px solid #333333;
 	height: 30px;
 	color: #333333;
-	font-size: 14px;
-	padding: 14px 0 0 10px;
-	margin: 10px 0 0 0; }
+	font-size: 16px;
+	padding: 10px 0 0 10px;
+	margin: 10px 0; }
 
 div.section-head.segment h2 {
 	float: left;
 	width: 970px;
-	background: #c9cbcc;
+	background: #BCBEC0;
 	border-bottom: 1px solid #000000;
 	border-top: 1px solid #000000;
-	height: 30px;
+	height: 37px;
 	color: #000000;
-	font-size: 14px;
-	padding: 14px 0 0 10px;
-	margin: 20px 0 0 0; }
+	font-size: 18px;
+	padding: 13px 0 0 10px;
+	margin: 20px 0 10px 0; }
 
-div.section-head h2 img.photo { margin-top: -8px; }
+div.section-head.segment h2 img.photo { margin-top: -4px; }
+
+div.section-head h2 img.photo { margin-top: -2px; }
+
+div.section-head.segment h2 a { color:#000000; }
+
+div.section-head h2 a { color:#333333; }
 
 div.section-head h3 {
 	float: left;
 	width: 970px;
 	background: #e8e8e8;
-	border-bottom: 1px solid #999999;
 	height: 18px;
 	color: #333333;
 	font-size: 12px;
 	padding: 2px 0 0 10px;
-	margin: 10px 0; }
+	margin: 0 0 10px 0; }
+
+div.section-head h3.role {
+	float: left;
+	width: 970px;
+	background: #D1D3D4;
+	border-bottom: 1px solid #666666;
+	border-top: 1px solid #666666;
+	height: 23px;
+	color: #333333;
+	font-size: 14px;
+	padding: 7px 0 0 10px;
+	margin: 5px 0 10px 0;
+	text-align:left; }
+
 
 table.tasks {
 	border-collapse: collapse;
@@ -208,26 +234,26 @@ table.tasks {
 	table.tasks h4.tasks {
 		float: left;
 		width: 380px;
-		background: #DADADA;
+		background: #DCDDDE;
 		border-bottom: 1px solid #999999;
 		border-top: 1px solid #999999;
-		height: 21px;
+		height: 19px;
 		color: #333333;
 		font-size: 12px;
-		padding: 6px 0 0 10px;
+		padding: 4px 0 0 10px;
 		margin: 10px 0 0 0;
 		text-align: left; }
 
 	table.tasks h4.comm {
 		float: left;
 		width: 580px;
-		background: #DADADA;
+		background: #DCDDDE;
 		border-bottom: 1px solid #999999;
 		border-top: 1px solid #999999;
-		height: 21px;
+		height: 19px;
 		color: #333333;
 		font-size: 12px;
-		padding: 6px 0 0 10px;
+		padding: 4px 0 0 10px;
 		margin: 10px 0 0 0;
 		text-align: left; }
 
@@ -312,7 +338,7 @@ ul.flows li ul.contacts {
 			width: 555px;
 			border-collapse: collapse;
 			float: left;
-			margin-bottom: 15px; }
+			margin:0 0 15px 0; }
 
 			ul.flows li ul.contacts li.contact table.banner img {  }
 
@@ -419,7 +445,8 @@ div.issues {
 ul.details li ul,
 ul.tagscont,
 div#contents > div.segment > div.top-organization > div > ul,
-div#contents > div.segment > div.top-organization > div > div > ul {
+div#contents > div.segment > div.top-organization > div > div > ul,
+div#contents div.doccont > ul {
 	list-style: none;
 	padding-left: 10px;
 	clear: both; }
@@ -429,12 +456,15 @@ ul.details li ul li ul { padding-top: 7px; }
 ul.details li ul li,
 ul.tagscont li,
 div#contents > div.segment > div.top-organization > div > ul > li.image,
-div#contents > div.segment > div.top-organization > div > div > ul > li.image {
+div#contents > div.segment > div.top-organization > div > div > ul > li.image,
+div#contents div.doccont > ul > li.image {
 	padding: 0 0 7px 15px;
 	background: url('images/bullet_black.png') no-repeat 0 5px;
 	line-height: 18px; }
 
 li.channel { float: none; }
+
+div.doccont { clear:both; }
 
 ul.flows li p {
 	display: block;
@@ -563,13 +593,22 @@ div#contents > div.issues > ul { padding: 10px 0 10px 10px; }
 
 span.reported-by { font-style: italic; }
 
-a.toplink {
+div.section-head h2 a.toplink {
 	font-size: 11px;
 	color: #666666;
 	text-decoration: none;
 	float: right;
-	padding: 0 13px 0 13px;
-	background: url('images/backtotop.png') 0 4px no-repeat; }
+	padding: 4px 13px 0 13px;
+	background: url('images/backtotop.png') 0 8px no-repeat; }
+
+div.section-head h2 a.toplink:hover {
+	font-size: 11px;
+	color: #333333;
+	text-decoration: none;
+	float: right;
+	padding: 4px 13px 0 13px;
+	background: url('images/backtotop.png') 0 8px no-repeat; }
+
 
 div.flow-map img {
 	max-width: 970px;
@@ -589,6 +628,21 @@ a.plan-map-link {
 	width: 970px;
 	float: left;
 	margin-bottom: 10px; }
+
+a.flow-map-link:hover,
+a.plan-map-link:hover {
+	background: #E8E8E8;
+	color: #333333;
+	width: 970px;
+	display: block;
+	font-weight: bold;
+	height: 20px;
+	padding: 5px 10px 0 0;
+	text-align: right;
+	width: 970px;
+	float: left;
+	margin-bottom: 10px; }
+
 
 a.logout {
 	padding:0 3px 0 7px;

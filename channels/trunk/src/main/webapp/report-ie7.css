@@ -1,0 +1,25 @@
+div.section-head h2 a.toplink,
+div.section-head h2 a.toplink:hover { margin-top:-27px; }
+
+
+ul.details li ul {
+	list-style: none;
+	width:340px; }
+
+ul.details li ul li {
+	list-style:none;
+	width:320px; }
+
+p.description {	float:none; }
+
+div.receives-container,
+div.sends-container { width: 590px; }
+
+ul.flows li.send-notification,
+ul.flows li.send-answer,
+ul.flows li.receive-notification,
+ul.flows li.receive-answer { float:left; }
+
+ul.channels-only { width:545px; }
+
+ul.flows li ul li { width:530px; }
