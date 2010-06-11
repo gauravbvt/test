@@ -121,28 +121,25 @@ div#plan span span {
 div#plan span ul {
 	display: block;
 	background: #eeeeee;
-	border-left: 1px solid #999999;
-	border-right: 1px solid #999999;
-	border-bottom: 1px solid #999999;
-	list-style: none;
-	width: 200px; }
+	list-style: none; }
 
 	div#plan span ul li {
 		display: block;
 		list-style: none;
-		width: 200px;
-		height: 26px;
 		color: #333333; }
 
 		div#plan span ul li a {
 			background: #e8e8e8;
-			border-top: 1px solid #cccccc;
+			border-bottom: 1px solid #999999;
+			border-left:1px solid #999999;
+			border-right:1px solid #999999;
 			color: #333333;
 			text-decoration: none;
-			padding: 5px 5px 0 5px;
+			padding-left: 5px;
 			display: block;
-			width: 190px;
-			height: 20px;
+			width: 195px;
+			height: 25px;
+			line-height:25px;
 			float: left; }
 
 		div#plan span ul li a:hover {
@@ -257,8 +254,7 @@ table.tasks {
 		margin: 10px 0 0 0;
 		text-align: left; }
 
-p.description {
-	float: left;
+p.description, p.big-notice {
 	line-height: 18px;
 	padding: 0 10px; }
 
@@ -292,7 +288,6 @@ li.contacts {
 table.banner {
 	width: 980px;
 	border-collapse: collapse;
-	float: left;
 	margin: 10px 0 5px 0; }
 
 	table.banner img {
@@ -363,6 +358,7 @@ ul.flows li ul.contacts {
 					float: left;
 					padding: 0 0 0 10px;
 					font-size: 11px;
+					overflow:hidden;
 					font-weight: bold;
 					color: #333333; }
 
@@ -416,6 +412,10 @@ ul.flows li ul {
 	ul.flows li ul li {
 		padding: 0 0 7px 15px;
 		background: url('images/bullet_black.png') no-repeat 0 5px; }
+
+ul.flows li ul.channels-only {
+	clear:both;
+}
 
 div.issues {
 	color: #c30000;

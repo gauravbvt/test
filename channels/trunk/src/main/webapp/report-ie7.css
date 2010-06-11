@@ -1,6 +1,10 @@
+html {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
 div.section-head h2 a.toplink,
 div.section-head h2 a.toplink:hover { margin-top:-27px; }
-
 
 ul.details li ul {
 	list-style: none;
@@ -9,8 +13,6 @@ ul.details li ul {
 ul.details li ul li {
 	list-style:none;
 	width:320px; }
-
-p.description {	float:none; }
 
 div.receives-container,
 div.sends-container { width: 590px; }
@@ -23,3 +25,19 @@ ul.flows li.receive-answer { float:left; }
 ul.channels-only { width:545px; }
 
 ul.flows li ul li { width:530px; }
+
+ul.flows li ul.contacts li.contact table.banner {
+	clear:both;
+	float:none; }
+	
+div#contents > div.segment > div.top-organization > div > ul > li.image,
+div#contents div.doccont > ul > li.image {
+	width:955px; }
+
+div.section-head h3 {
+	float:none;
+}
+
+ul.tagscont { float:none; }
+
+div.segment > div.top-organization > div.issues { width:980px; }
