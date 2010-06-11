@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -41,7 +42,9 @@ public class IssuesReportPanel extends Panel {
 
     private void init() {
         List<Issue> issues = analyst.listUnwaivedIssues( modelObject, true );
-        add( new ListView<Issue>( "issues", issues ) {
+        WebMarkupContainer issuesContainer = new WebMarkupContainer( "issuesContainer" );
+        add( issuesContainer );
+        issuesContainer.add( new ListView<Issue>( "issues", issues ) {
             @Override
             protected void populateItem( ListItem<Issue> item ) {
                 Issue issue = item.getModelObject();
@@ -53,8 +56,7 @@ public class IssuesReportPanel extends Panel {
                                                      new Model<String>( styleClass ) ) );
             }
         } );
-
         if ( issues.isEmpty() )
-            setVisible( false );
+            issuesContainer.setVisible( false );
     }
 }
