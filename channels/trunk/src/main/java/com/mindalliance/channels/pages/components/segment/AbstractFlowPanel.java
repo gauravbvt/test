@@ -1,6 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.segment.menus.FlowActionsMenuPanel;
 import org.apache.wicket.Component;
@@ -93,5 +95,52 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
         addOrReplace( flowActionMenu );
     }
 
+    protected boolean hasIssues() {
+        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
+        return analyst.hasIssues( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+    }
+
+    protected String getErrorSummary() {
+        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
+        return analyst.getIssuesSummary( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+    }
+
+    protected String getCssClasses( boolean hasIssues, String summary ) {
+        String flowType = getFlowTypeCssClass();
+        String errorType = getFlowErrorCssClass( hasIssues, summary );
+        return "pointer " + flowType + ( errorType.isEmpty() ? "" : ( " " + errorType ) );
+    }
+
+    protected String getFlowErrorCssClass( boolean hasIssues, String summary ) {
+        if ( !summary.isEmpty() ) {
+            return "error";
+        } else {
+            if ( hasIssues ) {
+                return "waived";
+            } else {
+                return "";
+            }
+        }
+    }
+
+    /**
+     * Return flow css class.
+     *
+     * @return a string
+     */
+    protected String getFlowTypeCssClass() {
+        Flow flow = getFlow();
+        if ( isSend() ) {
+            return flow.isCapability()
+                    ? "capability"
+                    : "sharing";
+        } else {
+            return flow.isNeed()
+                    ? "need"
+                    : "sharing";
+        }
+
+    }
+    
 
 }

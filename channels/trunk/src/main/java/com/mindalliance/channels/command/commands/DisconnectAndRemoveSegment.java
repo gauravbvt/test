@@ -1,10 +1,10 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
@@ -38,7 +38,7 @@ public class DisconnectAndRemoveSegment extends AbstractCommand {
     }
 
     public String getName() {
-        return "remove plan segment";
+        return "remove this segment";
     }
 
     public Change execute( Commander commander ) throws CommandException {

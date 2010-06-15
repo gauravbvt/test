@@ -1,10 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.MediaReferencesPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -42,6 +40,20 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
         Label label = new Label( "title",
                 new PropertyModel( getFlow(),
                         isSend() ? "sendTitle" : "receiveTitle" ) );
+        // Add style classes
+        String summary = getErrorSummary();
+        boolean hasIssues = hasIssues();
+        if ( !summary.isEmpty() ) {
+            label.add(
+                    new AttributeModifier( "title", true, new Model<String>( summary ) ) );
+        } else {
+            if ( hasIssues ) {
+                // All waived issues
+                label.add(
+                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+            }
+        }
+        label.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses( hasIssues, summary ) ) ) );
         label.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getFlow() ) );
@@ -58,26 +70,6 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
         } );
         makeVisible( channel, c != null && !c.isEmpty() );
         add( channel );
-
-        // Add style mods from analyst.
-        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        String summary = analyst.getIssuesSummary( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        boolean hasIssues = analyst.hasIssues( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        if ( !summary.isEmpty() ) {
-            label.add(
-                    new AttributeModifier( "class", true, new Model<String>( "error" ) ) );
-            label.add(
-                    new AttributeModifier( "title", true, new Model<String>( summary ) ) );
-        } else {
-            if ( hasIssues ) {
-                // All waived issues
-                label.add(
-                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
-                label.add(
-                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
-            }
-        }
-
         add( label );
     }
 
@@ -90,8 +82,6 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
         flowMediaPanel.setOutputMarkupId( true );
         addOrReplace( flowMediaPanel );
     }
-
-
 
 
 }

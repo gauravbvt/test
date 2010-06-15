@@ -1050,6 +1050,10 @@ input[disabled] {
     list-style: none;
 }
 
+.capability, .need {
+    font-style: italic;
+}
+
 
 
 

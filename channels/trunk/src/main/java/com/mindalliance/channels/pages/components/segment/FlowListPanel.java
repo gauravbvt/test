@@ -73,7 +73,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
         };
         newLink.setVisible( getPlan().isDevelopment() );
         add( newLink );
-        newLink.add( new Label( "addFlow", sends ? "Add send" : "Add receive" ) );
+        newLink.add( new Label( "addFlow", sends ? "Add info sent" : "Add info received" ) );
         addFlowsDiv();
     }
 
@@ -120,7 +120,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
      * @return the title of this panel.
      */
     public String getTitle() {
-        return isSends() ? "Send" : "Receive";
+        return isSends() ? "Sends" : "Receives";
     }
 
     public final Node getNode() {

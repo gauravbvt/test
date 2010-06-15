@@ -23,6 +23,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -49,13 +50,37 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
      * Segment model.
      */
     private IModel<Segment> segmentModel;
+    /**
+     * Where to move selected parts.
+     */
     private Segment destinationSegment;
+    /**
+     * Select all/none link.
+     */
     private AjaxFallbackLink<String> allOrNoneLink;
+    /**
+     * All/none label.
+     */
     private Label allOrNoneLabel;
+    /**
+     * Move button.
+     */
     private AjaxFallbackLink<String> moveButton;
+    /**
+     * Paged, filterable, sortable table of parts to select.
+     */
     private MovablePartsTable movablePartsTable;
+    /**
+     * Selected parts to move.
+     */
     private List<Part> selectedParts;
+    /**
+     * Destination segment drop down.
+     */
     private DropDownChoice<Segment> destinationSegmentSelector;
+    /**
+     * Homw many parts to show per page in table.
+     */
     private static final int PAGE_SIZE = 10;
 
     public SegmentPartMoverPanel( String id, PropertyModel<Segment> segmentModel, Set<Long> expansions ) {
@@ -107,6 +132,11 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
         return movablePartsSize == 0 || movablePartsSize > selectedParts.size();
     }
 
+    /**
+     * Get content of all/none label.
+     *
+     * @return a string
+     */
     public String getAllOrNone() {
         return isSelectAll() ? "Select all" : "Select none";
     }
@@ -139,7 +169,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
     }
 
     private void addMoveButton() {
-        moveButton = new AjaxFallbackLink<String>( "move", new PropertyModel<String>( this, "moveButtonValue" ) ) {
+        moveButton = new AjaxFallbackLink<String>( "move", new Model<String>( "Move tasks" ) ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = moveSelectedParts();
                 if ( !change.isNone() ) {
@@ -157,12 +187,6 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
         add( moveButton );
     }
 
-    public String getMoveButtonValue() {
-        return "Move"
-                + ( destinationSegment != null
-                ? " to " + destinationSegment.getName()
-                : "" );
-    }
 
     private Change moveSelectedParts() {
         Change change;
@@ -178,6 +202,11 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
         return change;
     }
 
+    /**
+     * Get list of movable parts in current segment.
+     *
+     * @return a list of parts
+     */
     public List<MovablePart> getMovableParts() {
         List<MovablePart> movableParts = new ArrayList<MovablePart>();
         Iterator<Part> parts = getSegment().parts();
@@ -205,10 +234,18 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
         this.destinationSegment = destinationSegment;
     }
 
+    /**
+     * Get current segment.
+     *
+     * @return a segment
+     */
     public Segment getSegment() {
         return segmentModel.getObject();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void update( AjaxRequestTarget target, Object object, String action ) {
         if ( object instanceof MovablePart ) {
             if ( action.equals( "selected" ) ) {
@@ -261,6 +298,11 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
             this.selected = selected;
         }
 
+        /**
+         * Get label for a task's goals.
+         *
+         * @return a string
+         */
         public String getGoals() {
             StringBuilder sb = new StringBuilder();
             Iterator<Goal> goals = part.getGoalsAchieved().iterator();

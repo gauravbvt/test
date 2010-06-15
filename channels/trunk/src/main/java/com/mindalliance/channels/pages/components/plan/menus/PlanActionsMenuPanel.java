@@ -65,10 +65,10 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
             };
             menuItems.add( new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "Move tasks" ),
+                    new Model<String>( "Move tasks to segment..." ),
                     indexLink ) );
 
-            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import plan segment" ),
+            menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import a segment..." ),
                     new AjaxFallbackLink( "link" ) {
                         @Override
                         public void onClick( AjaxRequestTarget target ) {
@@ -77,7 +77,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                     } ) );
         }
         // Export
-        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export plan segment" ),
+        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export this segment..." ),
                 new BookmarkablePageLink(
                         "link",
                         ExportPage.class,
