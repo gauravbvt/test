@@ -28,7 +28,10 @@ abstract public class AbstractFilterableTablePanel extends AbstractTablePanel im
 
     public AbstractFilterableTablePanel( String id ) {
         super( id );
-        setOutputMarkupId( true );
+    }
+
+    public AbstractFilterableTablePanel( String id, int pageSize ) {
+        super( id, null, pageSize, null );
     }
 
     public AbstractFilterableTablePanel(

@@ -190,6 +190,22 @@ public class Change implements Serializable {
         return identifiableRef != null && identifiableRef.isForInstanceOf( clazz );
     }
 
+    /**
+     * Get id of what has changed.
+     * @return  a long
+     */
+    public long  getId() {
+        return identifiableRef == null ? Long.MIN_VALUE : identifiableRef.getId();
+    }
+
+    /**
+     * Get name of class of what changed.
+     * @return  a string
+     */
+    public String getClassName() {
+        return identifiableRef != null ? identifiableRef.getClassName() : null;
+    }
+
 
     /**
      * Gets the updated property value or null if N/A.

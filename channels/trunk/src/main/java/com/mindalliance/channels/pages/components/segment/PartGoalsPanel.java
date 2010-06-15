@@ -33,9 +33,9 @@ import java.util.Set;
  * Date: May 11, 2009
  * Time: 6:24:53 AM
  */
-public class TaskGoalsPanel extends AbstractCommandablePanel {
+public class PartGoalsPanel extends AbstractCommandablePanel {
 
-    public TaskGoalsPanel(
+    public PartGoalsPanel(
             String id,
             IModel<? extends Identifiable> model,
             Set<Long> expansions ) {

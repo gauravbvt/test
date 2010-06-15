@@ -94,7 +94,7 @@ public abstract class AbstractCommand implements Command {
      */
     public Object get( String key ) {
         Object value = arguments.get( key );
-        assert !( value instanceof ModelObjectRef || value instanceof ModelObject );
+        assert ! (value instanceof ModelObject);
         return value;
     }
 
@@ -176,6 +176,12 @@ public abstract class AbstractCommand implements Command {
      */
     protected void ignoreLock( Long id ) {
         lockingSet.remove( id );
+    }
+
+    protected void ignoreLocksOn( List<? extends Identifiable> identifiables ) {
+        for ( Identifiable identifiable : identifiables ) {
+            ignoreLock( identifiable.getId() );
+        }
     }
 
     /**

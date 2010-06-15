@@ -569,7 +569,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public Flow connect( Node source, Node target, String name, Long id ) {
         Flow result;
-
         if ( Flow.isInternal( source, target ) ) {
             result = getDao().createInternalFlow( source, target, name, id );
             source.addSend( result );

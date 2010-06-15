@@ -971,4 +971,34 @@ public class Part extends Node implements GeoLocatable {
         }
         return new ArrayList<Goal>( goals );
     }
+
+    /**
+     * Find a need for given info.
+     *
+     * @param info a string
+     * @return a flow or null
+     */
+    public Flow findNeed( String info ) {
+        Iterator<Flow> candidates = receivesNamed( info );
+        while ( candidates.hasNext() ) {
+            Flow candidate = candidates.next();
+            if ( candidate.isNeed() ) return candidate;
+        }
+        return null;
+    }
+
+    /**
+     * Find a capability for given info.
+     *
+     * @param info a string
+     * @return a flow or null
+     */
+    public Flow findCapability( String info ) {
+        Iterator<Flow> candidates = sendsNamed( info );
+        while ( candidates.hasNext() ) {
+            Flow candidate = candidates.next();
+            if ( candidate.isCapability() ) return candidate;
+        }
+        return null;
+    }
 }

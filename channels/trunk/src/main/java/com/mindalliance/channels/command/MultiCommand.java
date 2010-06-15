@@ -1,5 +1,7 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,23 +78,32 @@ public class MultiCommand extends AbstractCommand {
          * Process result from command if applicable.
          *
          * @param command a command
-         * @param result  an object
+         * @param change  a change
+         * @param queryService  a query service
          */
-        private void process( Command command, Object result ) {
-            if ( result != null && command == sourceCommand ) {
-                Object value;
+        private void process( Command command, Change change, QueryService queryService ) {
+            if ( command == sourceCommand ) {
+                Object result = null;
                 try {
-                    value = resultProperty != null
-                            ? PropertyUtils.getProperty( result, resultProperty )
-                            : result;
-                } catch ( IllegalAccessException e ) {
-                    throw new RuntimeException( e );
-                } catch ( InvocationTargetException e ) {
-                    throw new RuntimeException( e );
-                } catch ( NoSuchMethodException e ) {
-                    throw new RuntimeException( e );
+                result = change.getSubject( queryService );
+                } catch ( NotFoundException e) {
+                    throw new RuntimeException( "Linking error: subject of change not found", e );
                 }
-                sinkCommand.set( argumentName, value );
+                if ( result != null ) {
+                    Object value;
+                    try {
+                        value = resultProperty != null
+                                ? PropertyUtils.getProperty( result, resultProperty )
+                                : result;
+                    } catch ( IllegalAccessException e ) {
+                        throw new RuntimeException( e );
+                    } catch ( InvocationTargetException e ) {
+                        throw new RuntimeException( e );
+                    } catch ( NoSuchMethodException e ) {
+                        throw new RuntimeException( e );
+                    }
+                    sinkCommand.set( argumentName, value );
+                }
             }
         }
     }
@@ -155,11 +166,14 @@ public class MultiCommand extends AbstractCommand {
      * {@inheritDoc}
      */
     public Change execute( Commander commander ) throws CommandException {
+        QueryService queryService = commander.getQueryService();
         for ( Command command : commands ) {
             try {
                 LOG.info( "--- sub-command --" );
                 Change change = commander.doCommand( command ); // TODO -- command journaled here
-                for ( Link link : links ) link.process( command, change.getSubject( commander.getQueryService() ) ); // without benefit of link processing
+                for ( Link link : links ) {
+                    link.process( command, change, queryService ); // without benefit of link processing
+                }
                 executed.add( command );
             }
             catch ( CommandException e ) {

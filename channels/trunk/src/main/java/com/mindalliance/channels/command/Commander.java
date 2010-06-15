@@ -221,17 +221,17 @@ public interface Commander {
     String getLastModifier();
 
     /**
-      * Keep current user alive.
-      *
-      * @param userName a string
+     * Keep current user alive.
+     *
+     * @param userName     a string
      * @param refreshDelay a number of seconds between pings
-      */
-     void keepAlive( String userName, int refreshDelay );
+     */
+    void keepAlive( String userName, int refreshDelay );
 
     /**
      * Remove locks from any user who is no longer live.
      */
-     void processDeaths();
+    void processDeaths();
 
     /**
      * Check for and process user inactivity timeouts.
@@ -324,17 +324,19 @@ public interface Commander {
 
     /**
      * Whether the current user us out of sync with plan versions.
+     *
      * @return a boolean
      */
     boolean isOutOfSync();
 
     /**
-     *  Signal that the current user is in sync with the plan versions.
+     * Signal that the current user is in sync with the plan versions.
      */
     void resynced();
 
     /**
      * Get a proper exporter.
+     *
      * @return an exporter
      */
     Exporter getExporter();
@@ -347,4 +349,12 @@ public interface Commander {
     PlanDao getPlanDao();
 
     void setPlanDao( PlanDao planDao );
+
+    /**
+     * Whether instances of class of given name can be locked.
+     *
+     * @param className a string
+     * @return a boolean
+     */
+    boolean isLockable( String className );
 }

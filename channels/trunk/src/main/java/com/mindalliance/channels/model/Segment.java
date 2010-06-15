@@ -712,6 +712,7 @@ public class Segment extends ModelObject {
     }
 
 
+
     //=================================================
     /**
      * An iterator that walks through all flow in the segment.

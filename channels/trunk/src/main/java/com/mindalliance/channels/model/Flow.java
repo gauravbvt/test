@@ -1,9 +1,8 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -785,7 +784,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isNeed() {
-        return getSource().isConnector();
+        return isInternal() && getSource().isConnector();
     }
 
     /**
@@ -794,7 +793,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isCapability() {
-        return getTarget().isConnector();
+        return isInternal() && getTarget().isConnector();
     }
 
     /**

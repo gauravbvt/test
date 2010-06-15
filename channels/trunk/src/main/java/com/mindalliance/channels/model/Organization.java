@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
@@ -81,15 +80,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
         UNKNOWN = dao.findOrCreate( Organization.class, UnknownName, null );
         UNKNOWN.setActual();
         UNKNOWN.makeImmutable();
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isEntity() {
-        return true;
     }
 
     /**

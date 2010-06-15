@@ -5,6 +5,8 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.query.QueryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
@@ -16,8 +18,14 @@ import java.io.Serializable;
  * Date: Apr 8, 2009
  * Time: 7:34:16 PM
  */
-// TODO - rename IdentifiableRef - move to util
+// TODO -  move to util
 public class ModelObjectRef implements Serializable {
+
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( ModelObjectRef.class );
+
     /**
      * A model object's id.
      */
@@ -91,30 +99,35 @@ public class ModelObjectRef implements Serializable {
      * @throws NotFoundException if not found
      */
     @SuppressWarnings( "unchecked" )
-    public Identifiable resolve( QueryService queryService ) throws NotFoundException {
+    public Identifiable resolve( QueryService queryService ) {
         if ( identifiable != null ) {
             return identifiable;
         } else {
-            Identifiable mo;
-            Class<? extends Identifiable> clazz = getIdentifiableClass();
-            assert ModelObject.class.isAssignableFrom( clazz );
-            if ( entityName == null ) {
-                mo = queryService.find( (Class<? extends ModelObject>) clazz, id );
-            } else {
-                assert ModelEntity.class.isAssignableFrom( clazz );
-                if ( entityKind.equals( ModelEntity.Kind.Actual.name() ) ) {
-                    mo = queryService.findOrCreate(
-                            (Class<ModelEntity>) getIdentifiableClass(),
-                            entityName,
-                            id );
+            try {
+                Identifiable mo;
+                Class<? extends Identifiable> clazz = getIdentifiableClass();
+                assert ModelObject.class.isAssignableFrom( clazz );
+                if ( entityName == null ) {
+                    mo = queryService.find( (Class<? extends ModelObject>) clazz, id );
                 } else {
-                    mo = queryService.findOrCreateType(
-                            (Class<ModelEntity>) getIdentifiableClass(),
-                            entityName,
-                            id );
+                    assert ModelEntity.class.isAssignableFrom( clazz );
+                    if ( entityKind.equals( ModelEntity.Kind.Actual.name() ) ) {
+                        mo = queryService.findOrCreate(
+                                (Class<ModelEntity>) getIdentifiableClass(),
+                                entityName,
+                                id );
+                    } else {
+                        mo = queryService.findOrCreateType(
+                                (Class<ModelEntity>) getIdentifiableClass(),
+                                entityName,
+                                id );
+                    }
                 }
+                return mo;
+            } catch ( NotFoundException e ) {
+                LOG.warn( className + " not found at " + id);
+                return null;
             }
-            return mo;
         }
     }
 

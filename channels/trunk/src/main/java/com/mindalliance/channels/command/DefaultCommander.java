@@ -11,6 +11,7 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -568,6 +569,21 @@ public class DefaultCommander implements Commander {
 
     public void setPlanDao( PlanDao planDao ) {
         this.planDao = planDao;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isLockable( String className ) {
+        if ( className == null ) return false;
+        try {
+            Class clazz = Class.forName( className );
+            return Identifiable.class.isAssignableFrom( clazz ) &&
+                    !Plan.class.isAssignableFrom( clazz ) &&
+                    !Segment.class.isAssignableFrom( clazz );
+        } catch ( ClassNotFoundException e ) {
+            throw new IllegalArgumentException( "Class not found", e);
+        }
     }
 
     public void initialize() {

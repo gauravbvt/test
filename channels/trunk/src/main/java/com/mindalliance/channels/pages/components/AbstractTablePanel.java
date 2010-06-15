@@ -385,6 +385,27 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
+    protected AbstractColumn<T> makeCheckBoxColumn(
+            String name,
+            final String stateProperty,
+            final String enabledProperty,
+            final Updatable updatable
+    ) {
+        return new AbstractColumn<T>( new Model<String>( name ) ) {
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      final IModel<T> model ) {
+                Component cellContent = new BinaryCheckBoxPanel<T>(
+                        id,
+                        model,
+                        stateProperty,
+                        enabledProperty,
+                        updatable );
+                cellItem.add( cellContent );
+            }
+        };
+    }
+
     /**
      * Make a column with a link that expands the bean for the row.
      *
@@ -567,7 +588,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 }
             };
             add( link );
-            link.add( new Label("label", new Model<String>( label )));
+            link.add( new Label( "label", new Model<String>( label ) ) );
         }
     }
 
@@ -599,6 +620,21 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             } );
             checkBox.setEnabled( enabled );
             add( checkBox );
+        }
+
+        public BinaryCheckBoxPanel(
+                String id,
+                IModel<T> model,
+                final String stateProperty,
+                final String enabledProperty,
+                final Updatable updatable ) {
+            this(
+                    id,
+                    model,
+                    stateProperty,
+                    (Boolean) ChannelsUtils.getProperty( model.getObject(), enabledProperty, false ),
+                    updatable
+            );
         }
 
         public boolean getChecked() {

@@ -469,7 +469,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         if ( getPart().getSegment().getGoals().isEmpty() ) {
             taskGoalsPanel = new Label( "goals", new Model<String>( "(No goals)" ) );
         } else {
-            taskGoalsPanel = new TaskGoalsPanel(
+            taskGoalsPanel = new PartGoalsPanel(
                     "goals",
                     new PropertyModel<Part>( this, "part" ),
                     getExpansions() );

@@ -123,12 +123,19 @@ public class Goal implements Serializable, Mappable {
         return toString();
     }
 
+    public String getShortLabel() {
+        return ( isGain() ? "Make " : "Mitigate " )
+                +( level != null ? getLevelLabel().toLowerCase() : "" ) + " "
+                + ( category != null ? category.getGroup().toLowerCase() : "" )
+                + ( isPositive() ? " gain" : " risk")
+                + ( category != null ? " of " + category.getName( positive ) : "" ).toLowerCase();
+    }
+
     /**
      * {inheritDoc}
      */
     @Override
     public String toString() {
-
         return ( isGain() ? "Make " : "Mitigate " )
                 + ( level != null ? getLevelLabel().toLowerCase() : "" ) + " "
                 + ( category != null ? category.getGroup().toLowerCase() : "" )

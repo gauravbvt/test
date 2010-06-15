@@ -297,7 +297,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Cumulated change to an expanded identifiable.
      */
-    private Map<Identifiable, Change> changes = new HashMap<Identifiable, Change>();
+    private Map<Long, Change> changes = new HashMap<Long, Change>();
 
     /**
      * Query service.
@@ -1170,56 +1170,72 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void expand( Identifiable identifiable ) {
+        expand( new Change( Change.Type.None, identifiable ) );
+    }
+
+    private void expand( Change change ) {
         // Never lock a segment or plan, or anything in a production plan
-        if ( getPlan().isDevelopment() && identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isLockable() ) {
-            getCommander().requestLockOn( identifiable );
+        if ( getPlan().isDevelopment() && change.isForInstanceOf( ModelObject.class )
+                && getCommander().isLockable( change.getClassName() ) ) {
+            getCommander().requestLockOn( change.getId() );
         }
-        if ( identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isEntity() ) {
+        if ( change.isForInstanceOf( ModelEntity.class ) ) {
             // ModelObject entity = (ModelObject) identifiable;
             ModelObject previous = findExpandedEntity();
             if ( previous != null ) {
                 /*String previousAspect = getAspectShown( previous );
                 viewAspect( entity, previousAspect );*/
-                collapse( previous );
+                collapse( new Change( Change.Type.None, previous ) );
             }
         }
-        expansions.add( identifiable.getId() );
+        expansions.add( change.getId() );
     }
 
-    private boolean isExpanded( Identifiable identifiable ) {
-        return expansions.contains( identifiable.getId() );
+    private boolean isExpanded( long id ) {
+        return expansions.contains( id );
     }
 
     private void collapse( Identifiable identifiable ) {
-        getCommander().releaseAnyLockOn( identifiable );
-        expansions.remove( identifiable.getId() );
+        collapse( new Change( Change.Type.None, identifiable ) );
+    }
+
+    private void collapse( Change change ) {
+        getCommander().releaseAnyLockOn( change.getId() );
+        expansions.remove( change.getId() );
         // Close aspects of collapsed object
-        if ( identifiable instanceof Flow ) {
-            closeAspect( identifiable, "eois" );
-        } else if ( !( identifiable instanceof Part ) )
-            closeAspect( identifiable, null );
+        if ( change.isForInstanceOf( Flow.class ) ) {
+            closeAspect( change, "eois" );
+        } else if ( !( change.isForInstanceOf( Part.class ) ) )
+            closeAspect( change, null );
     }
 
     private void viewAspect( Identifiable identifiable, String aspect ) {
+        viewAspect( new Change( Change.Type.None, identifiable ), aspect );
+    }
+
+    private void viewAspect( Change change, String aspect ) {
         if ( aspect == null || aspect.isEmpty() ) {
-            aspects.remove( identifiable.getId() );
+            aspects.remove( change.getId() );
         } else {
-            List<String> aspectsShown = aspects.get( identifiable.getId() );
+            List<String> aspectsShown = aspects.get( change.getId() );
             if ( aspectsShown == null )
                 aspectsShown = new ArrayList<String>();
             if ( !aspectsShown.contains( aspect ) )
                 aspectsShown.add( aspect );
-            expand( identifiable );
-            aspects.put( identifiable.getId(), aspectsShown );
+            expand( change );
+            aspects.put( change.getId(), aspectsShown );
         }
     }
 
     private void closeAspect( Identifiable identifiable, String aspect ) {
+        closeAspect( new Change( Change.Type.None, identifiable ), aspect );
+    }
+
+    private void closeAspect( Change change, String aspect ) {
         if ( aspect == null || aspect.isEmpty() ) {
-            aspects.remove( identifiable.getId() );
+            aspects.remove( change.getId() );
         } else {
-            List<String> aspectsShown = aspects.get( identifiable.getId() );
+            List<String> aspectsShown = aspects.get( change.getId() );
             if ( aspectsShown != null ) {
                 aspectsShown.remove( aspect );
             }
@@ -1306,28 +1322,26 @@ public final class PlanPage extends WebPage implements Updatable {
         getCommander().clearTimeOut();
         if ( change.isNone() )
             return;
-            Identifiable identifiable = change.getSubject( queryService );
-            if ( change.isCollapsed() || change.isRemoved() )
-                collapse( identifiable );
-            else if ( change.isExpanded() || change.isAdded() ) {
-                expand( identifiable );
-                if ( change.getProperty() != null ) {
-                    viewAspect( identifiable, change.getProperty() );
-                }
+        if ( change.isCollapsed() || change.isRemoved() )
+            collapse( change );
+        else if ( change.isExpanded() || change.isAdded() ) {
+            expand( change );
+            if ( change.getProperty() != null ) {
+                viewAspect( change, change.getProperty() );
             }
-            else if ( change.isAspectViewed() ) {
-                if ( identifiable instanceof Flow ) {
-                    Flow otherFlowViewed = getModelObjectViewed( Flow.class, change.getProperty() );
-                    if ( otherFlowViewed != null )
-                        closeAspect( otherFlowViewed, change.getProperty() );
-                }
-                viewAspect( identifiable, change.getProperty() );
-            } else if ( change.isAspectClosed() )
-                closeAspect( identifiable, change.getProperty() );
-            else if ( change.isAspectReplaced() ) {
-                closeAspect( identifiable, null );
-                viewAspect( identifiable, change.getProperty() );
+        } else if ( change.isAspectViewed() ) {
+            if ( change.isForInstanceOf( Flow.class ) ) {
+                Flow otherFlowViewed = getModelObjectViewed( Flow.class, change.getProperty() );
+                if ( otherFlowViewed != null )
+                    closeAspect( otherFlowViewed, change.getProperty() );
             }
+            viewAspect( change, change.getProperty() );
+        } else if ( change.isAspectClosed() )
+            closeAspect( change, change.getProperty() );
+        else if ( change.isAspectReplaced() ) {
+            closeAspect( change, null );
+            viewAspect( change, change.getProperty() );
+        }
         if ( change.isForInstanceOf( Segment.class ) ) {
             Segment changedSegment = (Segment) change.getSubject( queryService );
             if ( change.isExists() ) {
@@ -1360,7 +1374,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 setPart( changedPart );
                 flowMaximized = false;
                 if ( change.isAdded() )
-                    expand( identifiable );
+                    expand( change );
             } else if ( change.isRemoved() ) {
                 collapse( getPart() );
                 collapsePartObjects();
@@ -1395,23 +1409,22 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( !change.isNone() ) {
-            Identifiable identifiable = change.getSubject( queryService );
             if ( change.isForInstanceOf( Plan.class ) && change.isSelected() ) {
                 redirectToPlan();
             } else if ( change.isUndoing() || change.isUnknown() || change.isRecomposed()
                     || change.isAdded() && change.isForInstanceOf( Part.class ) ) {
                 refresh( target, change, new ArrayList<Updatable>() );
-            } else if ( change.isUpdated() && isExpanded( identifiable ) ) {
-                Change accumulatedChange = changes.get( identifiable );
+            } else if ( change.isUpdated() && isExpanded( change.getId() ) ) {
+                Change accumulatedChange = changes.get( change.getId() );
                 if ( accumulatedChange == null ) {
-                    changes.put( identifiable, change );
+                    changes.put( change.getId(), change );
                 } else {
                     // more than one property changed
                     change.setProperty( "?" );
                 }
-            } else if ( change.isCollapsed() && changes.get( identifiable ) != null ) {
+            } else if ( change.isCollapsed() && changes.get( change.getId() ) != null ) {
                 refreshAll( target );
-            } else if ( identifiable instanceof Flow && change.isSelected() ) {
+            } else if ( change.isForInstanceOf( Flow.class ) && change.isSelected() ) {
                 refreshSegmentPanel( target, change, updated );
                 segmentPanel.resizePartPanels( target );
             } else if ( change.isCopied() ) {
@@ -1643,7 +1656,7 @@ public final class PlanPage extends WebPage implements Updatable {
         Identifiable identifiable = change.getSubject( queryService );
         if ( change.isUnknown() || change.isDisplay() && identifiable instanceof Survey ) {
             Survey expandedSurvey = (Survey) identifiable;
-            Survey viewedSurvey = ( expandedSurvey == null || expandedSurvey.isUnknown() ) 
+            Survey viewedSurvey = ( expandedSurvey == null || expandedSurvey.isUnknown() )
                     ? Survey.UNKNOWN
                     : expandedSurvey;
             addSurveysPanel( viewedSurvey );
