@@ -14,11 +14,13 @@ import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -48,6 +50,8 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
      */
     private IModel<Segment> segmentModel;
     private Segment destinationSegment;
+    private AjaxFallbackLink<String> allOrNoneLink;
+    private Label allOrNoneLabel;
     private AjaxFallbackLink<String> moveButton;
     private MovablePartsTable movablePartsTable;
     private List<Part> selectedParts;
@@ -63,9 +67,48 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
 
     private void init() {
         addDestinationSegmentSelector();
+        addSelectAllOrNone();
         addMovablePartsTable();
         addMoveButton();
         adjustFields();
+    }
+
+    private void addSelectAllOrNone() {
+        allOrNoneLink = new AjaxFallbackLink<String>( "selectAllOrNone" ) {
+            @SuppressWarnings( "unchecked" )
+            public void onClick( AjaxRequestTarget target ) {
+                if ( isSelectAll() ) {
+                    selectedParts = (List<Part>) CollectionUtils.collect(
+                            movablePartsTable.getFilteredMovableParts(),
+                            new Transformer() {
+                                public Object transform( Object input ) {
+                                    return ( (MovablePart) input ).getPart();
+                                }
+                            } );
+                } else {
+                    selectedParts = new ArrayList<Part>();
+                }
+                adjustFields();
+                addMovablePartsTable();
+                target.addComponent( movablePartsTable );
+                target.addComponent( allOrNoneLabel );
+                target.addComponent( allOrNoneLink );
+                target.addComponent( moveButton );
+            }
+        };
+        add( allOrNoneLink );
+        allOrNoneLabel = new Label( "allOrNone", new PropertyModel<String>( this, "allOrNone" ) );
+        allOrNoneLabel.setOutputMarkupId( true );
+        allOrNoneLink.add( allOrNoneLabel );
+    }
+
+    private boolean isSelectAll() {
+        int movablePartsSize = movablePartsTable.getFilteredMovableParts().size();
+        return movablePartsSize == 0 || movablePartsSize > selectedParts.size();
+    }
+
+    public String getAllOrNone() {
+        return isSelectAll() ? "Select all" : "Select none";
     }
 
     private void addDestinationSegmentSelector() {
@@ -151,6 +194,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
 
     private void adjustFields() {
         moveButton.setEnabled( destinationSegment != null && !selectedParts.isEmpty() );
+        makeVisible( allOrNoneLink, !movablePartsTable.getFilteredMovableParts().isEmpty() );
     }
 
     public Segment getDestinationSegment() {
@@ -169,7 +213,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
         if ( object instanceof MovablePart ) {
             if ( action.equals( "selected" ) ) {
                 Part selectedPart = ( (MovablePart) object ).getPart();
-                if ( selectedParts.contains( selectedPart) ) {
+                if ( selectedParts.contains( selectedPart ) ) {
                     selectedParts.remove( selectedPart );
                 } else {
                     selectedParts.add( selectedPart );

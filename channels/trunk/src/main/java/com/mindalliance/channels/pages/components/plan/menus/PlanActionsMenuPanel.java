@@ -8,18 +8,20 @@ import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.DisconnectAndRemoveSegment;
 import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.PastePart;
-import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.ExportPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
+import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.target.basic.RedirectRequestTarget;
@@ -54,6 +56,18 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         List<Component> menuItems = super.getMenuItems();
         // Import
         if ( getPlan().isDevelopment() ) {
+            // Move tasks
+            Link indexLink = new AjaxFallbackLink( "link" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Expanded, getSegment(), SegmentEditPanel.MOVER ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Move tasks" ),
+                    indexLink ) );
+
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import plan segment" ),
                     new AjaxFallbackLink( "link" ) {
                         @Override

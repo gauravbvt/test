@@ -73,7 +73,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
         };
         newLink.setVisible( getPlan().isDevelopment() );
         add( newLink );
-        newLink.add( new Label( "addFlow", sends ? "Add capability" : "Add need" ) );
+        newLink.add( new Label( "addFlow", sends ? "Add send" : "Add receive" ) );
         addFlowsDiv();
     }
 
