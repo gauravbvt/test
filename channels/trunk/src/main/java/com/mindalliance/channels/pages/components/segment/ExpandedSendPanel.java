@@ -15,8 +15,8 @@ import java.util.Set;
  */
 public class ExpandedSendPanel extends ExpandedFlowPanel {
 
-    public ExpandedSendPanel( String id, IModel<Flow> model, Set<Long> expansions ) {
-        super( id, model, true, expansions );
+    public ExpandedSendPanel( String id, IModel<Flow> model, Set<Long> expansions, int index ) {
+        super( id, model, true, expansions, index );
     }
 
     /** {@inheritDoc} */

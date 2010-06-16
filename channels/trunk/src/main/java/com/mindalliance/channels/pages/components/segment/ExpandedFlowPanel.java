@@ -46,7 +46,6 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -143,8 +142,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             String id,
             IModel<Flow> model,
             boolean send,
-            Set<Long> expansions ) {
-        super( id, model, send, false, expansions );
+            Set<Long> expansions,
+            int index ) {
+        super( id, model, send, false, expansions, index );
         init();
     }
 
@@ -449,35 +449,28 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addHeader() {
-        Label titleLabel = new Label( "title",
-                new AbstractReadOnlyModel<String>() {
-                    @Override
-                    public String getObject() {
-                        return isSend() ? getFlow().getSendTitle()
-                                : getFlow().getReceiveTitle();
-                    }
-                } );
+        FlowTitlePanel titlePanel = new FlowTitlePanel( "title", getFlow() ,isSend() );
         // Add style classes
         String summary = getErrorSummary();
         boolean hasIssues = hasIssues();
         if ( !summary.isEmpty() ) {
-            titleLabel.add(
+            titlePanel.add(
                     new AttributeModifier( "title", true, new Model<String>( summary ) ) );
         } else {
             if ( hasIssues ) {
                 // All waived issues
-                titleLabel.add(
+                titlePanel.add(
                         new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
             }
         }
-        titleLabel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses( hasIssues, summary ) ) ) );
-        titleLabel.add( new AjaxEventBehavior( "onclick" ) {
+        titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses( hasIssues, summary ) ) ) );
+        titlePanel.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Collapsed, getFlow() ) );
             }
         } );
-        titleLabel.setOutputMarkupId( true );
-        add( titleLabel );
+        titlePanel.setOutputMarkupId( true );
+        add( titlePanel );
         addFlowActionMenu();
     }
 

@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -90,16 +91,27 @@ public class FlowListPanel extends AbstractCommandablePanel {
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
                 long flowId = flow.getId();
+                AbstractFlowPanel flowPanel;
                 if ( expansions.contains( flowId ) ) {
-                    ExpandedFlowPanel flowPanel = areSends ?
-                            new ExpandedSendPanel( "flow", new Model<Flow>( flow ), expansions )
-                            : new ExpandedReceivePanel( "flow", new Model<Flow>( flow ), expansions );
-                    item.add( flowPanel );
+                    flowPanel = areSends ?
+                            new ExpandedSendPanel(
+                                    "flow",
+                                    new Model<Flow>( flow ),
+                                    expansions,
+                                    item.getIndex() )
+                            : new ExpandedReceivePanel( "flow", new Model<Flow>( flow ), expansions, item.getIndex() );
                 } else {
-                    CollapsedFlowPanel flowPanel =
-                            new CollapsedFlowPanel( "flow", new Model<Flow>( flow ), areSends );
-                    item.add( flowPanel );
+                    flowPanel = new CollapsedFlowPanel(
+                            "flow",
+                            new Model<Flow>( flow ),
+                            areSends,
+                            item.getIndex() );
                 }
+                flowPanel.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>( ( item.getIndex() % 2 == 0 ? "even" : "odd" ) ) ) );
+                item.add( flowPanel );
             }
         };
     }
@@ -138,8 +150,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
 /*
     */
 /**
-     * {@inheritDoc}
-     */
+ * {@inheritDoc}
+ */
 /*
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject();

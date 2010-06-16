@@ -34,9 +34,10 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
      */
     private boolean send;
     private boolean collapsed;
+    private int index;
 
-    public AbstractFlowPanel( String id, IModel<Flow> flowModel, boolean isSend, boolean collapsed) {
-        this( id, flowModel, isSend, collapsed, null);
+    public AbstractFlowPanel( String id, IModel<Flow> flowModel, boolean isSend, boolean collapsed, int index) {
+        this( id, flowModel, isSend, collapsed, null, index);
         
     }
     public AbstractFlowPanel(
@@ -44,11 +45,13 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
             IModel<Flow> flowModel,
             boolean send,
             boolean collapsed,
-            Set<Long> expansions ) {
+            Set<Long> expansions,
+            int index) {
         super( id, flowModel, expansions );
         this.flowModel = flowModel;
         this.send = send;
         this.collapsed = collapsed;
+        this.index = index;
     }
 
     public Flow getFlow() {
@@ -82,6 +85,14 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
         return collapsed;
     }
 
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex( int index ) {
+        this.index = index;
+    }
+
     /**
      * Add flow action menu.
      */
@@ -109,6 +120,10 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
         String flowType = getFlowTypeCssClass();
         String errorType = getFlowErrorCssClass( hasIssues, summary );
         return "pointer " + flowType + ( errorType.isEmpty() ? "" : ( " " + errorType ) );
+    }
+
+    protected String getRowTypeCssClass() {
+        return index % 2 == 0 ? "evenFlow" : "oddFlow";
     }
 
     protected String getFlowErrorCssClass( boolean hasIssues, String summary ) {

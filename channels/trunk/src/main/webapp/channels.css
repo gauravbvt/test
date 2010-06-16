@@ -422,25 +422,14 @@ ul.menu, div.caption, span.menubar, ul.ranges {
     position: absolute;
 }
 
-ol {
-    margin: 0;
-    padding: 2px 0 0 1.5em;
-}
-
-.receives ol, .sends ol {
-    width: 95%;
-}
-
-.receives ol > li, .sends ol > li {
+.receives .flow > div, .sends .flow > div {
     position: relative;
-    margin: 0 0 0.6em 0;
+    padding: 5px 5px 0.6em 5px;
     line-height: 1.2em;
 }
 
-.receives ol > li span, .sends ol > li span {
-}
-
-ol.channels {
+.receives .section-content, .sends .section-content {
+    width: 98%;
 }
 
 ol.channels li {
@@ -514,7 +503,7 @@ h2 ul.menu, h3 ul.menu {
     margin: 2px 5px 0 0;
 }
 
-ol > li > ul.menu {
+ul > li > ul.menu {
     margin: 1px 0 0 5px;
     position: static;
     float: right;
@@ -1052,6 +1041,14 @@ input[disabled] {
 
 .capability, .need {
     font-style: italic;
+}
+
+.flow .even {
+    background: #E0E0E0;
+}
+
+.flow .info {
+    font-weight: bold;
 }
 
 

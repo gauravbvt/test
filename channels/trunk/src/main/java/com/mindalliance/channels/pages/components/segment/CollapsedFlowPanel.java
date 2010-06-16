@@ -11,7 +11,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.text.MessageFormat;
 
@@ -24,37 +23,35 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
      */
     private IModel<Flow> flowModel;
 
-    public CollapsedFlowPanel( String id, IModel<Flow> flowModel, boolean isSend ) {
-        super( id, flowModel, isSend, true );
+    public CollapsedFlowPanel( String id, IModel<Flow> flowModel, boolean isSend, int index ) {
+        super( id, flowModel, isSend, true, index );
         this.flowModel = flowModel;
         init();
     }
 
     private void init() {
-        addLabel();
+        addFlowTitlePanel();
         addFlowMediaPanel();
         addFlowActionMenu();
     }
 
-    private void addLabel() {
-        Label label = new Label( "title",
-                new PropertyModel( getFlow(),
-                        isSend() ? "sendTitle" : "receiveTitle" ) );
+    private void addFlowTitlePanel() {
+        FlowTitlePanel titlePanel = new FlowTitlePanel( "title", getFlow() ,isSend() );
         // Add style classes
         String summary = getErrorSummary();
         boolean hasIssues = hasIssues();
         if ( !summary.isEmpty() ) {
-            label.add(
+            titlePanel.add(
                     new AttributeModifier( "title", true, new Model<String>( summary ) ) );
         } else {
             if ( hasIssues ) {
                 // All waived issues
-                label.add(
+                titlePanel.add(
                         new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
             }
         }
-        label.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses( hasIssues, summary ) ) ) );
-        label.add( new AjaxEventBehavior( "onclick" ) {
+        titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses( hasIssues, summary ) ) ) );
+        titlePanel.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getFlow() ) );
             }
@@ -70,7 +67,7 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
         } );
         makeVisible( channel, c != null && !c.isEmpty() );
         add( channel );
-        add( label );
+        add( titlePanel );
     }
 
     private void addFlowMediaPanel() {

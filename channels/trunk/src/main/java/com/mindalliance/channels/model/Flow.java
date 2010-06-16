@@ -258,7 +258,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.significanceToTarget = significanceToTarget;
     }
 
-    private String getShortName( Node node, boolean qualified ) {
+    public String getShortName( Node node, boolean qualified ) {
         String result = "somebody";
 
         if ( node != null ) {
@@ -322,13 +322,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
-    private static String getOrganizationString( Part part ) {
+    public static String getOrganizationString( Part part ) {
         Organization organization = part.getOrganization();
         return organization == null || part.getRole() == null && part.getActor() == null ? ""
                 : MessageFormat.format( " in {0}", organization.getLabel() );
     }
 
-    private static String getJurisdictionString( Part part ) {
+    public static String getJurisdictionString( Part part ) {
         Place place = part.getJurisdiction();
         return place == null ? ""
                 : MessageFormat.format( " for {0}", place );

@@ -15,8 +15,8 @@ import java.util.Set;
  */
 public class ExpandedReceivePanel extends ExpandedFlowPanel {
 
-    public ExpandedReceivePanel( String id, IModel<Flow> model, Set<Long> expansions ) {
-        super( id, model, false, expansions );
+    public ExpandedReceivePanel( String id, IModel<Flow> model, Set<Long> expansions, int index ) {
+        super( id, model, false, expansions, index );
     }
 
     /** {@inheritDoc} */
