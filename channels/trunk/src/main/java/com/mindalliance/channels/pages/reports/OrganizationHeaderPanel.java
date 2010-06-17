@@ -1,9 +1,11 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.ResourceSpec;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -11,6 +13,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+
+import java.util.ArrayList;
 
 /**
  * Organization header panel.
@@ -47,6 +51,14 @@ public class OrganizationHeaderPanel extends Panel {
                     }
                 } )
                 .setVisible( !organization.getTags().isEmpty() ) );
+        WebMarkupContainer banner = new WebMarkupContainer( "banner" );
+        banner.setVisible( !organization.isUnknown() );
+        add( banner );
+        banner.add( new ChannelsBannerPanel(
+                "channels",
+                ResourceSpec.with( organization ),
+                null,
+                new ArrayList<Channel>() ) );
         add( new DocumentsReportPanel( "documents", new Model<ModelObject>( organization ) ) );
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( organization ) )
                 .setVisible( showingIssues )

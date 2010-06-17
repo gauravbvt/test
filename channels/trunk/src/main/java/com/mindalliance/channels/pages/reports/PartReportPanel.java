@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -18,6 +19,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +34,9 @@ import java.util.List;
  * Time: 9:35:15 PM
  */
 public class PartReportPanel extends Panel {
+
+    @SpringBean
+    private QueryService queryService;
 
     /**
      * A part.
@@ -55,7 +60,6 @@ public class PartReportPanel extends Panel {
 
     private void init( final boolean showingIssues ) {
         List<Goal> goalList = part.getGoals();
-
         add( new Label( "task", uppercasedName( part.getTask() ) ),
                 new Label( "description", part.getDescription() ).setVisible( !part.getDescription().isEmpty() ),
                 new WebMarkupContainer( "as-team" ).setVisible( part.isAsTeam() ),
@@ -70,7 +74,7 @@ public class PartReportPanel extends Panel {
                                         new Label( "risk-desc", goal.getDescription() ) );
                             }
                         } ).setVisible( !goalList.isEmpty() ),
-                new DocumentsReportPanel( "documents", new Model<ModelObject>( part ) ),
+                 new DocumentsReportPanel( "documents", new Model<ModelObject>( part ) ),
                 new IssuesReportPanel( "issues", new Model<ModelObject>( part ) )
                         .setVisible( showingIssues ) );
 

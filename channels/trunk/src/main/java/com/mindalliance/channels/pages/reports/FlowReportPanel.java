@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -78,7 +79,12 @@ public class FlowReportPanel extends Panel {
         Set<TransmissionMedium> unicasts = flow.getUnicasts();
         Collection<Channel> broadcasts = flow.getBroadcasts();
         final List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
-
+        List<Goal> impactList;
+        if ( isSource && flow.getTarget().isPart() && flow.isEssential( false ) ) {
+            impactList = queryService.findAllGoalsImpactedByFailure( (Part)flow.getTarget() );
+        } else {
+            impactList = new ArrayList<Goal>();
+        }        
         add( new Label( "information",
                 isSource ? flow.getSendTitle() : flow.getReceiveTitle() )
                 .add( new AttributeModifier( "class", true,
@@ -101,6 +107,19 @@ public class FlowReportPanel extends Panel {
                 new ChannelsBannerPanel( "channels",
                         new ResourceSpec( flow.getContactedPart() ), unicasts, broadcasts )
                         .setVisible( showContacts && !flow.getChannels().isEmpty() && actors.isEmpty() ),
+
+                new WebMarkupContainer( "cascading-failures" )
+                         .add( new ListView<Goal>( "impacts", impactList ) {
+                             @Override
+                             protected void populateItem( ListItem<Goal> item ) {
+                                 Goal goal = item.getModelObject();
+                                 item.add( new Label( "impact", goal.getFailureLabel("") ));
+                                 item.add( new AttributeModifier(
+                                         "class",
+                                         true,
+                                         new Model<String>(goal.getSeverityLabel().toLowerCase() ) ) );
+                             }
+                         } ).setVisible( !impactList.isEmpty() ),
 
                 new WebMarkupContainer( "actors-div" )
                         .add( new ListView<LocalizedActor>( "actors", actors ) {

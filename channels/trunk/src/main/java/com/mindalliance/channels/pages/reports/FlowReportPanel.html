@@ -16,12 +16,20 @@
     </p>
     <ul wicket:id="eois-container">
         <li wicket:id="eois">
-            <span class="elementtitle">Element: </span><span class="eoi" wicket:id="eoi">eoi</span>
+            <span class="attribute-title">Element: </span><span class="eoi" wicket:id="eoi">eoi</span>
         </li>
     </ul>
     <p class="description" wicket:id="instructions">Instructions</p>
 
     <ul class="channels-only" wicket:id="channels">[channels report panel]</ul>
+    <ul>
+        <li wicket:id="cascading-failures"><span class="attribute-title">Impacts of not sharing</span>
+            <ul>
+                <!-- CSS class set to minor, major sever or extreme -->
+                <li wicket:id="impacts"><span wicket:id="impact">Severe bodily harm</span></li>
+            </ul>
+        </li>
+    </ul>
 
     <!-- actors at the other end of external flow -->
     <ul class="contacts" wicket:id="actors-div">

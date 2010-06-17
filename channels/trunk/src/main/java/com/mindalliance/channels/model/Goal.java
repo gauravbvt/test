@@ -1,6 +1,8 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.command.MappedObject;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -266,6 +268,24 @@ public class Goal implements Serializable, Mappable {
         String label = isRiskMitigation() ? "Mitigates risk of " : "Achieves ";
         label += getFullTitle();
         return label;
+    }
+
+    /**
+     * Whether this goal is broadly implied by a list of goals.
+     * @param goals a list of goals
+     * @return a boolean
+     */
+    public boolean isImpliedIn( List<Goal> goals ) {
+        return CollectionUtils.exists(
+                goals,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Goal other = (Goal)object;
+                        return Goal.this.getCategory().equals( other.getCategory() )
+                                && Goal.this.getLevel().compareTo( other.getLevel() ) <= 0;
+                    }
+                }
+        );
     }
 
 

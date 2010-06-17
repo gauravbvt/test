@@ -47,7 +47,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
             IModel<? extends Flow> model,
             boolean isSend,
             boolean isCollapsed ) {
-        super( s, "Menu", model, null );
+        super( s, "More", model, null );
         this.isSend = isSend;
         this.isCollapsed = isCollapsed;
         doInit();

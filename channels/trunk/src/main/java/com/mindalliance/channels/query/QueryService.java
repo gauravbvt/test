@@ -446,6 +446,7 @@ public interface QueryService {
      * @return a list of organizations
      */
     List<Organization> findAllActualOrganizations( ResourceSpec resourceSpec );
+
     /**
      * Make a replicate of the flow.
      *
@@ -1040,6 +1041,14 @@ public interface QueryService {
      * @return an issue level
      */
     Level computeSharingPriority( Flow flow );
+
+    /**
+     * Find all goals impacted by the failure of a part.
+     *
+     * @param part a part
+     * @return a list of goals
+     */
+    List<Goal> findAllGoalsImpactedByFailure( Part part );
 
     /**
      * Get current plan.

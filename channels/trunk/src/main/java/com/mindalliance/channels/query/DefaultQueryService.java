@@ -2424,9 +2424,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     private Level getPartPriority( Part part, List<Part> visited ) {
         visited.add( part );
         Level max = Level.Low;
-        for ( Goal risk : part.getMitigations() ) {
-            if ( risk.getLevel().getOrdinal() > max.getOrdinal() )
-                max = risk.getLevel();
+        for ( Goal goal : part.getGoals() ) {
+            if ( goal.getLevel().getOrdinal() > max.getOrdinal() )
+                max = goal.getLevel();
         }
         for ( Flow flow : part.requiredSends() ) {
             if ( flow.getTarget().isPart() ) {
@@ -2440,6 +2440,36 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return max;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Goal> findAllGoalsImpactedByFailure( Part part ) {
+        return findAllGoalsImpactedByFailure( part, new ArrayList<Part>() );
+    }
+
+    private List<Goal> findAllGoalsImpactedByFailure( Part part, List<Part> visited ) {
+        List<Goal> goals = new ArrayList<Goal>();
+        visited.add( part );
+        for ( Goal goal : part.getGoals() ) {
+            if ( !goal.isImpliedIn( goals) )
+                goals.add( goal );
+        }
+        for ( Flow flow : part.requiredSends() ) {
+            if ( flow.getTarget().isPart() ) {
+                Part target = (Part) flow.getTarget();
+                if ( !visited.contains( target ) ) {
+                    List<Goal> flowGoals = findAllGoalsImpactedByFailure( target, visited );
+                    for ( Goal flowGoal : flowGoals ) {
+                       if ( !flowGoal.isImpliedIn( goals) )
+                           goals.add( flowGoal );
+                    }
+                }
+            }
+        }
+        return goals;
+    }
+
 
     /**
      * {@inheritDoc}

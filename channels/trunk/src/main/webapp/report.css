@@ -310,7 +310,7 @@ td.name {
 	border-bottom: 1px solid #999999;
 	border-top: 1px solid #999999; }
 
-td.channelscont {
+td.channels-cont {
 	width: 780px;
 	padding-top: 3px;
 	background: #F6F6F6;
@@ -343,11 +343,11 @@ ul.flows li ul.contacts {
 
 		ul.flows li ul.contacts li.contact td.name { width: 119px; }
 
-		ul.flows li ul.contacts li.contact td.channelscont { width: 375px; }
+		ul.flows li ul.contacts li.contact td.channels-cont { width: 375px; }
 
-			ul.flows li ul.contacts li.contact td.channelscont ul.channels { padding: 0; }
+			ul.flows li ul.contacts li.contact td.channels-cont ul.channels { padding: 0; }
 
-				ul.flows li ul.contacts li.contact td.channelscont ul.channels li.channel {
+				ul.flows li ul.contacts li.contact td.channels-cont ul.channels li.channel {
 					height: 25px;
 					line-height: 25px;
 					width: 172px;
@@ -576,11 +576,7 @@ ul.flows li p.section-head {
 
 span.eoi { line-height: 18px; }
 
-span.elementtitle,
-span.locationtitle,
-span.goalstitle,
-span.tagtitle,
-span.linktitle {
+span.attribute-title {
 	line-height: 18px;
 	font-weight: bold;
 	color: #333333; }
