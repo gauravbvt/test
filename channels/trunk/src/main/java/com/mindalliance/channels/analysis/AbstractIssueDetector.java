@@ -2,13 +2,13 @@ package com.mindalliance.channels.analysis;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.geo.GeoService;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -178,9 +178,8 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      * @param flow a sharing flow
      * @return an issue level
      */
-    protected Level getFailureSeverity( Flow flow ) {
-        assert flow.isSharing();
-        return getQueryService().getPartPriority( (Part) flow.getTarget() );
+    protected Level getSharingFailureSeverity( Flow flow ) {
+        return getQueryService().computeSharingPriority( flow );
     }
 
     /**
@@ -188,8 +187,8 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      * @param part a part
      * @return an issue level
      */
-    protected Level getFailureSeverity( Part part ) {
-        return getQueryService().getPartPriority( part );
+    protected Level getTaskFailureSeverity( Part part ) {
+        return getQueryService().computePartPriority( part );
     }
 
 }

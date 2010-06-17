@@ -5,9 +5,11 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.commands.AddCapability;
 import com.mindalliance.channels.command.commands.AddNeed;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -19,8 +21,12 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +35,9 @@ import java.util.Set;
  * A list of flows from a node, either receives or sends.
  */
 public class FlowListPanel extends AbstractCommandablePanel {
+
+    @SpringBean
+    QueryService queryService;
 
     /**
      * The node for which flows are listed.
@@ -125,6 +134,20 @@ public class FlowListPanel extends AbstractCommandablePanel {
         List<Flow> flows = new ArrayList<Flow>();
         Iterator<Flow> iterator = sends ? getNode().sends() : getNode().receives();
         while ( iterator.hasNext() ) flows.add( iterator.next() );
+        Collections.sort( flows, new Comparator<Flow>() {
+            public int compare( Flow flow, Flow other ) {
+                if ( flow.isSharing() && !other.isSharing() ) return -1;
+                if ( other.isSharing() && !flow.isSharing() ) return 1;
+                if ( !flow.isSharing() ) {
+                    return Collator.getInstance().compare( flow.getTitle(), other.getTitle() );
+                } else {
+                    Level impact = queryService.computeSharingPriority( flow );
+                    Level otherImpact = queryService.computeSharingPriority( other );
+                    // reverse order
+                    return otherImpact.compareTo( impact );
+                }
+            }
+        } );
         return flows;
     }
 

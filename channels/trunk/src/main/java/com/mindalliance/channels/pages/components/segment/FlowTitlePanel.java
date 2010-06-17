@@ -1,11 +1,16 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.query.QueryService;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.MessageFormat;
 
@@ -19,6 +24,9 @@ import java.text.MessageFormat;
  */
 public class FlowTitlePanel extends Panel {
 
+    @SpringBean
+    private QueryService queryService;
+
     private Flow flow;
     private boolean isSend;
 
@@ -30,6 +38,33 @@ public class FlowTitlePanel extends Panel {
     }
 
     private void init() {
+        addPriorityImage();
+        addTitleLabels();
+    }
+
+    private void addPriorityImage() {
+        WebMarkupContainer priorityImage = new WebMarkupContainer( "priority" );
+        String src;
+        String title;
+        String alt;
+        if ( flow.isSharing() ) {
+            Level priority = queryService.computeSharingPriority( flow );
+            String label =  priority.getNegativeLabel().toLowerCase();
+            src = "images/bullet_" + label + ".png";
+            title = "Impact of failure is " + label;
+            alt = label;
+        } else {
+            src = "images/bullet_unknown.png";
+            title = "";
+            alt = "No impact failure";
+        }
+        priorityImage.add( new AttributeModifier( "src", true, new Model<String>( src ) ) );
+        priorityImage.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
+        priorityImage.add( new AttributeModifier( "alt", true, new Model<String>( alt ) ) );
+        add( priorityImage );
+    }
+
+    private void addTitleLabels() {
         Label preLabel = new Label( "pre", new Model<String>( getPre() ) );
         add( preLabel );
         Label infoLabel = new Label( "info", new Model<String>( getInfo() ) );
@@ -62,8 +97,8 @@ public class FlowTitlePanel extends Panel {
             Node source = flow.getSource();
             if ( source.isConnector() ) {
                 return flow.isAskedFor()
-                                ? "Needs to ask for"
-                                : "Needs to be notified of";
+                        ? "Needs to ask for"
+                        : "Needs to be notified of";
             } else {
                 Part part = (Part) source;
                 if ( flow.isAskedFor() )

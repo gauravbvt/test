@@ -55,7 +55,7 @@ public class UntimelyCriticalSharing extends AbstractIssueDetector {
                                     + "\"\nor obtain a more timely sharing commitment for "
                                     + "\"" + criticalNeed.getName() + "\""
                     );
-                    issue.setSeverity( getQueryService().getPartPriority( target ) );
+                    issue.setSeverity( getQueryService().computePartPriority( target ) );
                     issues.add( issue );
                 }
             }

@@ -1026,12 +1026,20 @@ public interface QueryService {
     List<Part> findAnonymousPartsMatching( Part part );
 
     /**
-     * Calculate how important a part is in terms of the risks it mitigates directly or indirectly.
+     * Calculate how important a part is in terms of the goals it helps achieve directly or indirectly.
      *
      * @param part a part
      * @return an issue level
      */
-    Level getPartPriority( Part part );
+    Level computePartPriority( Part part );
+
+    /**
+     * Calculate how important a flow is in terms of the goals it helps achieve directly or indirectly.
+     *
+     * @param flow a flow
+     * @return an issue level
+     */
+    Level computeSharingPriority( Flow flow );
 
     /**
      * Get current plan.

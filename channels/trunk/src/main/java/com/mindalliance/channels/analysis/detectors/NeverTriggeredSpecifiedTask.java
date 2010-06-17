@@ -31,7 +31,7 @@ public class NeverTriggeredSpecifiedTask extends AbstractIssueDetector {
             issue.setDescription( "This task, which does not start with the plan segment, is never triggered." );
             issue.setRemediation( "Start this task with the plan segment\n"
                     + "or have an incoming flow trigger it" );
-            issue.setSeverity( getQueryService().getPartPriority( part ) );
+            issue.setSeverity( getQueryService().computePartPriority( part ) );
             issues.add( issue );
         }
         return issues;

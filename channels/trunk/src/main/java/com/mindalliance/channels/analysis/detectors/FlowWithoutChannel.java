@@ -65,7 +65,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
 
     private Level getSeverity( Flow flow ) {
         if ( flow.isSharing() ) {
-            return getFailureSeverity( flow );
+            return getSharingFailureSeverity( flow );
         } else {
             return Level.Low;
         }

@@ -1,11 +1,16 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.query.QueryService;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  * Part summary panel.
@@ -16,6 +21,10 @@ import org.apache.wicket.model.Model;
  * Time: 7:19:59 PM
  */
 public class PartSummaryPanel extends Panel {
+
+    @SpringBean
+    private QueryService queryService;
+
     private IModel<Part> partModel;
 
     public PartSummaryPanel( String id, IModel<Part> partModel ) {
@@ -25,12 +34,34 @@ public class PartSummaryPanel extends Panel {
     }
 
     private void init() {
+        addPriorityImage();
+        addSummaryLabels();
+    }
+
+    private void addSummaryLabels() {
         Label preLabel = new Label( "pre", new Model<String>( getPre() ) );
         add( preLabel );
         Label infoLabel = new Label( "task", new Model<String>( getTask() ) );
         add( infoLabel );
         Label postLabel = new Label( "post", new Model<String>( getPost() ) );
         add( postLabel );
+    }
+
+    private void addPriorityImage() {
+        WebMarkupContainer priorityImage = new WebMarkupContainer( "priority" );
+        String src;
+        String title;
+        String alt;
+        Part part = getPart();
+        Level priority = queryService.computePartPriority( part );
+        String label = priority.getNegativeLabel().toLowerCase();
+        src = "images/bullet_" + label + ".png";
+        title = "Impact of failure is " + label;
+        alt = label;
+        priorityImage.add( new AttributeModifier( "src", true, new Model<String>( src ) ) );
+        priorityImage.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
+        priorityImage.add( new AttributeModifier( "alt", true, new Model<String>( alt ) ) );
+        add( priorityImage );
     }
 
     private String getPre() {
@@ -101,7 +132,9 @@ public class PartSummaryPanel extends Panel {
             sb.append( " The task" );
             StringBuilder sb1 = new StringBuilder();
             if ( part.isStartsWithSegment() ) {
-                sb1.append( " starts with the plan segment" );
+                sb1.append( " starts with \"" );
+                sb1.append( part.getSegment().getPhaseEventTitle().toLowerCase() );
+                sb1.append( "\"" );
             }
             if ( part.isRepeating() ) {
                 if ( !sb1.toString().isEmpty() ) {
@@ -134,7 +167,9 @@ public class PartSummaryPanel extends Panel {
                         sb1.append( "," );
                     }
                 }
-                sb1.append( " can end this plan segment" );
+                sb1.append( " can end \"" );
+                sb1.append( part.getSegment().getPhaseEventTitle().toLowerCase() );
+                sb1.append( "\"" );
             }
             if ( part.isSelfTerminating() ) {
                 if ( !sb1.toString().isEmpty() ) sb1.append( " and" );

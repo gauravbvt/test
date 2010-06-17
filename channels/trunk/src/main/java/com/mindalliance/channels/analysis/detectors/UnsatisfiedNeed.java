@@ -69,7 +69,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
             if ( !unsatisfiedEOIs.isEmpty() ) {
                 DetectedIssue issue = this.makeIssue( Issue.COMPLETENESS, need );
                 if ( need.isCritical() ) {
-                    issue.setSeverity( getQueryService().getPartPriority( (Part) need.getTarget() ) );
+                    issue.setSeverity( getQueryService().computePartPriority( (Part) need.getTarget() ) );
                 } else {
                     issue.setSeverity( Level.Low );
                 }
@@ -91,7 +91,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
                 // Open ended need is satisifed by any synonymous commitment.
                 DetectedIssue issue = makeIssue( Issue.COMPLETENESS, need );
                 if ( need.isCritical() ) {
-                    issue.setSeverity( getQueryService().getPartPriority( (Part) need.getTarget() ) );
+                    issue.setSeverity( getQueryService().computePartPriority( (Part) need.getTarget() ) );
                 } else {
                     issue.setSeverity( Level.Low );
                 }

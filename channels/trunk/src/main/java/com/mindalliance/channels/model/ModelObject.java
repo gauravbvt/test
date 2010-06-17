@@ -393,6 +393,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     /**
      * Get all media reference attachments.
      *
+     * @param attachmentManager an attachment manager
      * @return a list of attachments
      */
     @SuppressWarnings( "unchecked" )

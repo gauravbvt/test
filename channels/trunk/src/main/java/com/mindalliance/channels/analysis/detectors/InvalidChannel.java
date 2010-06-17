@@ -91,7 +91,7 @@ public class InvalidChannel extends AbstractIssueDetector {
         if ( channelable instanceof Flow ) {
             Flow flow = (Flow) channelable;
             if ( flow.getTarget().isPart() ) {
-                return getQueryService().getPartPriority( (Part) flow.getTarget() );
+                return getQueryService().computePartPriority( (Part) flow.getTarget() );
             } else {
                 return Level.Low;
             }

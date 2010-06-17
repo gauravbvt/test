@@ -1,6 +1,5 @@
 package com.mindalliance.channels.analysis.detectors;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Channelable;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -62,7 +62,7 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
                                     + flowChannel.getMedium()
                                     + " from the flow"
                             );
-                            issue.setSeverity( getQueryService().getPartPriority( (Part) flow.getTarget() ) );
+                            issue.setSeverity( getQueryService().computePartPriority( (Part) flow.getTarget() ) );
                             issues.add( issue );
                         }
                     }

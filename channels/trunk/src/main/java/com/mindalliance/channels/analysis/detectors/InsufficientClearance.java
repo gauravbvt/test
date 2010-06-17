@@ -45,7 +45,7 @@ public class InsufficientClearance extends AbstractIssueDetector {
                     issue.setRemediation( "Declassify the information" +
                             "\nor increase the clearance of " + actor.getName() );
                     if ( flow.isCritical() ) {
-                        issue.setSeverity( getQueryService().getPartPriority( (Part) flow.getTarget() ) );
+                        issue.setSeverity( getQueryService().computePartPriority( (Part) flow.getTarget() ) );
                     } else {
                         issue.setSeverity( Level.Low );
                     }
@@ -58,7 +58,7 @@ public class InsufficientClearance extends AbstractIssueDetector {
                     issue.setRemediation( "Declassify the information" +
                             "\nor change the definition of the task" );
                     if ( flow.isCritical() ) {
-                        issue.setSeverity( getQueryService().getPartPriority( (Part) flow.getTarget() ) );
+                        issue.setSeverity( getQueryService().computePartPriority( (Part) flow.getTarget() ) );
                     } else {
                         issue.setSeverity( Level.Low );
                     }

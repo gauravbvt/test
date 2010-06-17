@@ -61,7 +61,7 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
                                     + "\",\nor obtain more timely sharing commitments for "
                                     + "\"" + triggeredNeed.getName() + "\""
                     );
-                    issue.setSeverity( getQueryService().getPartPriority( target ) );
+                    issue.setSeverity( getQueryService().computePartPriority( target ) );
                     issues.add( issue );
                 }
             }

@@ -2399,11 +2399,16 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
+    public Level computePartPriority( Part part ) {
+        return getPartPriority( part, new ArrayList<Part>() );
+    }
+
     /**
      * {@inheritDoc}
      */
-    public Level getPartPriority( Part part ) {
-        return getPartPriority( part, new ArrayList<Part>() );
+    public Level computeSharingPriority( Flow flow ) {
+        assert flow.isSharing();
+        return computePartPriority( (Part) flow.getTarget() );
     }
 
     /**

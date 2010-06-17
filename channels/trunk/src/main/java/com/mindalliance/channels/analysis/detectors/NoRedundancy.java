@@ -97,7 +97,7 @@ public class NoRedundancy extends AbstractIssueDetector {
                 issue.setDescription( "Has a only one source task for critical \""
                         + name + "\"" );
                 issue.setRemediation( "Add alternate source task." );
-                issue.setSeverity( getQueryService().getPartPriority( part ) );
+                issue.setSeverity( getQueryService().computePartPriority( part ) );
                 issues.add( issue );
             }
         }

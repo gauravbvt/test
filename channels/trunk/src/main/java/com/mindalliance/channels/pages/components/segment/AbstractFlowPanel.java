@@ -5,9 +5,11 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.segment.menus.FlowActionsMenuPanel;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Set;
 
@@ -20,6 +22,9 @@ import java.util.Set;
  * Time: 1:52:11 PM
  */
 public class AbstractFlowPanel  extends AbstractCommandablePanel {
+
+    @SpringBean
+    private QueryService queryService;
 
     /**
      * The underlying flow.
@@ -119,7 +124,18 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
     protected String getCssClasses( boolean hasIssues, String summary ) {
         String flowType = getFlowTypeCssClass();
         String errorType = getFlowErrorCssClass( hasIssues, summary );
-        return "pointer " + flowType + ( errorType.isEmpty() ? "" : ( " " + errorType ) );
+        String priority = getFlowPriorityCssClass();
+        return "pointer "
+                + flowType
+                + ( errorType.isEmpty() ? "" : ( " " + errorType ) )
+                + ( priority.isEmpty() ? "" : ( " " + priority ) );
+    }
+
+    private String getFlowPriorityCssClass() {
+        Flow flow = getFlow();
+        return flow.isSharing()
+                ? queryService.computeSharingPriority( flow ).getName().toLowerCase()
+                : "";
     }
 
     protected String getRowTypeCssClass() {
