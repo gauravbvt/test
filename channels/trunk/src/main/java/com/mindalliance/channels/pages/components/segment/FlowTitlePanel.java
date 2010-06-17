@@ -47,7 +47,7 @@ public class FlowTitlePanel extends Panel {
         String src;
         String title;
         String alt;
-        if ( isSend && flow.isSharing() ) {
+        if ( flow.isSharing() ) {
             Level priority = queryService.computeSharingPriority( flow );
             String label =  priority.getNegativeLabel().toLowerCase();
             src = "images/bullet_" + label + ".png";

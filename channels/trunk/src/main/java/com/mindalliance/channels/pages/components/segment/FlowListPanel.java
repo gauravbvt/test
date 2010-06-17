@@ -126,7 +126,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Get flows to list.
+     * Get flows to sorted list.
      *
      * @return a list of lofws
      */
@@ -138,14 +138,19 @@ public class FlowListPanel extends AbstractCommandablePanel {
             public int compare( Flow flow, Flow other ) {
                 if ( flow.isSharing() && !other.isSharing() ) return -1;
                 if ( other.isSharing() && !flow.isSharing() ) return 1;
-                if ( !flow.isSharing() ) {
-                    return Collator.getInstance().compare( flow.getTitle(), other.getTitle() );
-                } else {
+                int comparison = 0;
+                if ( flow.isSharing() ) {
                     Level impact = queryService.computeSharingPriority( flow );
                     Level otherImpact = queryService.computeSharingPriority( other );
                     // reverse order
-                    return otherImpact.compareTo( impact );
+                    comparison = otherImpact.compareTo( impact );
                 }
+                if ( comparison == 0 ) {
+                    String title = sends ? flow.getSendTitle() : flow.getReceiveTitle();
+                    String otherTitle = sends ? other.getSendTitle() : other.getReceiveTitle();
+                    comparison = Collator.getInstance().compare( title.toLowerCase(), otherTitle.toLowerCase() );
+                }
+                return comparison;
             }
         } );
         return flows;
