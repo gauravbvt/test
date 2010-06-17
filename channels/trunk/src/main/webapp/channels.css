@@ -1047,8 +1047,17 @@ input[disabled] {
     background: #E0E0E0;
 }
 
-.flow .info {
+.flow .info , .summary .task {
     font-weight: bold;
+}
+
+#sg-sel {
+    margin: 3px 0 3px 0;
+}
+
+#sg-sel li {
+    list-style-type: none;
+    margin: 2px 0 0 0;
 }
 
 

@@ -157,7 +157,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     /**
      * Part summary.
      */
-    private Label summaryLabel;
+    private PartSummaryPanel summaryPanel;
     /**
      * Attachments panel.
      */
@@ -170,7 +170,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         super.setOutputMarkupPlaceholderTag( false );
         setOutputMarkupId( true );
         this.model = model;
-        addSummaryLabel();
+        addSummaryPanel();
         addPartDescription();
         addTaskField();
         addEntityFields();
@@ -183,15 +183,15 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         adjustFields();
     }
 
-    private void addSummaryLabel() {
-        summaryLabel = new Label( "partSummary", new PropertyModel( getPart(), "summary" ) );
-        summaryLabel.setOutputMarkupId( true );
-        summaryLabel.add( new AjaxEventBehavior( "onclick" ) {
+    private void addSummaryPanel() {
+        summaryPanel = new PartSummaryPanel( "partSummary", new PropertyModel<Part>( this, "part" ) );
+        summaryPanel.setOutputMarkupId( true );
+        summaryPanel.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Collapsed, getPart() ) );
             }
         } );
-        addOrReplace( summaryLabel );
+        addOrReplace( summaryPanel );
     }
 
 
@@ -862,8 +862,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         if ( !change.isNone() ) {
             if ( change.isUpdated() ) {
                 String property = change.getProperty();
-                addSummaryLabel();
-                target.addComponent( summaryLabel );
+                addSummaryPanel();
+                target.addComponent( summaryPanel );
                 for ( EntityReferencePanel entityReferencePanel : entityFields ) {
                     entityReferencePanel.updateIssues();
                     target.addComponent( entityReferencePanel );

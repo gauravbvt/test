@@ -25,7 +25,7 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
     /**
      * Summary label.
      */
-    private Label summaryLabel;
+    private PartSummaryPanel summaryPanel;
     /**
      * Instructions label.
      */
@@ -42,21 +42,21 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
 
     private void init() {
         setOutputMarkupId( true );
-        addSummaryLabel();
+        addSummaryPanel();
         addDescriptionLabel();
         addIssuesPanel();
         adjustFields();
     }
 
-    private void addSummaryLabel() {
-        summaryLabel = new Label( "partSummary", new PropertyModel( getPart(), "summary" ) );
-        summaryLabel.setOutputMarkupId( true );
-        summaryLabel.add( new AjaxEventBehavior( "onclick" ) {
+    private void addSummaryPanel() {
+        summaryPanel = new PartSummaryPanel( "partSummary", new PropertyModel<Part>( this, "part" ) );
+        summaryPanel.setOutputMarkupId( true );
+        summaryPanel.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getPart() ) );
             }
         } );
-        addOrReplace( summaryLabel );
+        addOrReplace( summaryPanel );
     }
 
     private void addDescriptionLabel() {
@@ -88,7 +88,7 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
      */
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         target.addComponent( descriptionLabel );
-        target.addComponent( summaryLabel );
+        target.addComponent( summaryPanel );
         addIssuesPanel();
         adjustFields();
         target.addComponent( partIssuesPanel );
