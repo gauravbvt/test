@@ -47,7 +47,7 @@ public class FlowTitlePanel extends Panel {
         String src;
         String title;
         String alt;
-        if ( flow.isSharing() ) {
+        if ( isSend && flow.isSharing() ) {
             Level priority = queryService.computeSharingPriority( flow );
             String label =  priority.getNegativeLabel().toLowerCase();
             src = "images/bullet_" + label + ".png";
@@ -56,7 +56,7 @@ public class FlowTitlePanel extends Panel {
         } else {
             src = "images/bullet_unknown.png";
             title = "";
-            alt = "No impact failure";
+            alt = "";
         }
         priorityImage.add( new AttributeModifier( "src", true, new Model<String>( src ) ) );
         priorityImage.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );

@@ -2408,7 +2408,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public Level computeSharingPriority( Flow flow ) {
         assert flow.isSharing();
-        return computePartPriority( (Part) flow.getTarget() );
+        if ( flow.isEssential( false ))
+            return computePartPriority( (Part) flow.getTarget() );
+        else
+            return Level.Low;
     }
 
     /**
