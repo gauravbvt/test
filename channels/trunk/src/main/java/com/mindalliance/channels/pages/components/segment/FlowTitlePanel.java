@@ -38,39 +38,29 @@ public class FlowTitlePanel extends Panel {
     }
 
     private void init() {
-        addPriorityImage();
-        addTitleLabels();
+        WebMarkupContainer summaryContainer = new WebMarkupContainer( "summary" );
+        String priority = getPriorityCssClass();
+        summaryContainer.add( new AttributeModifier( "class", true, new Model<String>(priority)));
+        add( summaryContainer );
+        addTitleLabels( summaryContainer );
     }
 
-    private void addPriorityImage() {
-        WebMarkupContainer priorityImage = new WebMarkupContainer( "priority" );
-        String src;
-        String title;
-        String alt;
+    private String getPriorityCssClass() {
         if ( flow.isSharing() ) {
             Level priority = queryService.computeSharingPriority( flow );
-            String label =  priority.getNegativeLabel().toLowerCase();
-            src = "images/bullet_" + label + ".png";
-            title = "Impact of failure is " + label;
-            alt = label;
+            return  priority.getNegativeLabel().toLowerCase();
         } else {
-            src = "images/bullet_unknown.png";
-            title = "";
-            alt = "";
+            return "none";
         }
-        priorityImage.add( new AttributeModifier( "src", true, new Model<String>( src ) ) );
-        priorityImage.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
-        priorityImage.add( new AttributeModifier( "alt", true, new Model<String>( alt ) ) );
-        add( priorityImage );
     }
 
-    private void addTitleLabels() {
+    private void addTitleLabels( WebMarkupContainer summaryContainer ) {
         Label preLabel = new Label( "pre", new Model<String>( getPre() ) );
-        add( preLabel );
+        summaryContainer.add( preLabel );
         Label infoLabel = new Label( "info", new Model<String>( getInfo() ) );
-        add( infoLabel );
+        summaryContainer.add( infoLabel );
         Label postLabel = new Label( "post", new Model<String>( getPost() ) );
-        add( postLabel );
+        summaryContainer.add( postLabel );
     }
 
     private String getPre() {

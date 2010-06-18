@@ -34,34 +34,25 @@ public class PartSummaryPanel extends Panel {
     }
 
     private void init() {
-        addPriorityImage();
-        addSummaryLabels();
+        WebMarkupContainer summaryContainer = new WebMarkupContainer( "summary" );
+        String priority = getPriorityCssClass();
+        summaryContainer.add( new AttributeModifier( "class", true, new Model<String>( priority ) ) );
+        add( summaryContainer );
+        addSummaryLabels( summaryContainer );
     }
 
-    private void addSummaryLabels() {
+    private String getPriorityCssClass() {
+        Level priority = queryService.computePartPriority( getPart() );
+        return priority.getNegativeLabel().toLowerCase();
+    }
+
+    private void addSummaryLabels( WebMarkupContainer summaryContainer ) {
         Label preLabel = new Label( "pre", new Model<String>( getPre() ) );
-        add( preLabel );
+        summaryContainer.add( preLabel );
         Label infoLabel = new Label( "task", new Model<String>( getTask() ) );
-        add( infoLabel );
+        summaryContainer.add( infoLabel );
         Label postLabel = new Label( "post", new Model<String>( getPost() ) );
-        add( postLabel );
-    }
-
-    private void addPriorityImage() {
-        WebMarkupContainer priorityImage = new WebMarkupContainer( "priority" );
-        String src;
-        String title;
-        String alt;
-        Part part = getPart();
-        Level priority = queryService.computePartPriority( part );
-        String label = priority.getNegativeLabel().toLowerCase();
-        src = "images/bullet_" + label + ".png";
-        title = "Impact of failure is " + label;
-        alt = label;
-        priorityImage.add( new AttributeModifier( "src", true, new Model<String>( src ) ) );
-        priorityImage.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
-        priorityImage.add( new AttributeModifier( "alt", true, new Model<String>( alt ) ) );
-        add( priorityImage );
+        summaryContainer.add( postLabel );
     }
 
     private String getPre() {
