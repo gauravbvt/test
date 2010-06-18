@@ -128,6 +128,14 @@ public class Channel implements Serializable, Comparable<Channel> {
 */
     }
 
+    public String getLabel() {
+        String label = medium == null ? "Unspecified medium" : medium.getLabel();
+        return address.isEmpty()
+                ? MessageFormat.format( "{0}", label )
+                : MessageFormat.format( "{0}: {1}", label, address );
+    }
+
+
     /**
      * Get string collating channels
      *
@@ -142,7 +150,7 @@ public class Channel implements Serializable, Comparable<Channel> {
             Iterator<Channel> iter = channels.iterator();
             while ( iter.hasNext() ) {
                 Channel channel = iter.next();
-                sb.append( channel.toString() );
+                sb.append( channel.getLabel() );
                 if ( iter.hasNext() ) sb.append( ", " );
             }
             return sb.toString();

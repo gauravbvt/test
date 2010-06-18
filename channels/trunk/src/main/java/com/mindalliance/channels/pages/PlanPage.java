@@ -1222,7 +1222,6 @@ public final class PlanPage extends WebPage implements Updatable {
                 aspectsShown = new ArrayList<String>();
             if ( !aspectsShown.contains( aspect ) )
                 aspectsShown.add( aspect );
-            expand( change );
             aspects.put( change.getId(), aspectsShown );
         }
     }
@@ -1522,7 +1521,9 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void refreshChildren(
-            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+            AjaxRequestTarget target,
+            Change change,
+            List<Updatable> updated ) {
         refreshPlanEditPanel( target, change, updated );
         refreshSegmentEditPanel( target, change, updated );
         refreshEntityPanel( target, change, updated );
@@ -1604,7 +1605,9 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void refreshAssignmentsPanel(
-            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+            AjaxRequestTarget target,
+            Change change,
+            List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( queryService );
         if ( change.isUnknown()
                 || identifiable instanceof Part && change.isAspect( "assignments" ) ) {

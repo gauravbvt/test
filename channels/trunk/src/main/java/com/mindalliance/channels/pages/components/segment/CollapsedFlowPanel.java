@@ -62,7 +62,7 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
             @Override
             public Object getObject() {
                 return c != null && c.isEmpty() ? ""
-                        : MessageFormat.format( "[{0}]", c );
+                        : MessageFormat.format( "[via {0}]", c );
             }
         } );
         makeVisible( channel, c != null && !c.isEmpty() );
