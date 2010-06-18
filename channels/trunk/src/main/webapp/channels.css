@@ -1146,7 +1146,8 @@ h3.task-title {
 	padding-left:18px;
 }
 
-div.section-content > div.flow > div > span.pointer > span > img {
+div.section-content > div.flow > div > span.pointer > span > img,
+div.section-content > div.flow > div > span.pointer > img {
 	padding:0 3px;
 }
 
