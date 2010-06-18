@@ -280,6 +280,7 @@ input.error, div.issues {
 span.error, li.error {
     background: transparent url( 'images/warning.png' ) no-repeat 100% 0;
     padding-right: 20px;
+	margin-right:5px;
 }
 
 h1.error {
@@ -312,8 +313,7 @@ h1 {
 }
 
 h2, h3 {
-    border-bottom: 1px solid #4d8222;
-    line-height: 20px;
+    border-bottom: 2px solid #BCBEC0;
 }
 
 h2 {
@@ -323,8 +323,9 @@ h2 {
 }
 
 h3 {
-    padding: 1px 0 0 0;
     font-size: 1.1em;
+	line-height:100%;
+	padding:3px 0 5px;	
 }
 
 body, ul.menu, .menubar {
@@ -407,6 +408,8 @@ ul.menu, div.caption, span.menubar, ul.ranges {
     top: 0;
     right: 5px;
     padding: 0;
+	text-align:right;
+	font-size:11px;
 }
 
 #history {
@@ -424,8 +427,7 @@ ul.menu, div.caption, span.menubar, ul.ranges {
 
 .receives .flow > div, .sends .flow > div {
     position: relative;
-    padding: 5px 5px 0.6em 5px;
-    line-height: 1.2em;
+    padding: 5px;
 }
 
 .receives .section-content, .sends .section-content {
@@ -436,15 +438,15 @@ ol.channels li {
     margin: 0 0 2px !important;
     white-space: nowrap;
 }
-
+/*
 .section-title span.menubar {
     top: 4px;
 }
-
+*/
 ul.menu, span.menubar {
     font-weight: normal;
     list-style: none;
-    margin: 0;
+    margin: 0 0 0 5px;
     padding: 0;
     display: inline;
     white-space: nowrap;
@@ -465,6 +467,8 @@ ul.attach li.controls {
     list-style: none;
 }
 
+/*
+
 ul.menu li:before {
     content: " \2015  ";
 }
@@ -472,6 +476,7 @@ ul.menu li:before {
 #part ul.menu li:first-child:before {
     content: " ";
 }
+
 
 div.section-title ul.menu {
     padding-left: 5px;
@@ -481,6 +486,9 @@ div.section-title ul.menu {
     bottom: 2px;
     margin: 0;
 }
+
+*/
+
 
 ul.attach ul.menu {
     padding-top: 2px;
@@ -651,8 +659,8 @@ td.link.notify, td.link.answer {
 }
 
 .receives h3 span {
-    background: transparent url( 'images/arrow_left_blue.png' ) no-repeat 100% 50%;
-    padding-right: 25px;
+    background: transparent url( 'images/arrow_left_green.bullet.png' ) no-repeat 100% 50%;
+    padding-right: 22px;
 }
 
 td.link.ask, td.link.receive {
@@ -661,8 +669,8 @@ td.link.ask, td.link.receive {
 }
 
 .sends h3 span {
-    background: transparent url( 'images/arrow_right_blue.png' ) no-repeat 100% 50%;
-    padding-right: 25px;
+    background: transparent url( 'images/arrow_right_green.bullet.png' ) no-repeat 100% 50%;
+    padding-right: 22px;
 }
 
 th.wicket_orderDown a {
@@ -750,33 +758,41 @@ div.wicket-aa ul li:hover {
 .menubar .dropmenu {
     width: auto;
     cursor: default;
-    background: transparent url( images/dropmenu.png ) no-repeat scroll 100% 50%;
-    padding: 0 12px 0 0;
+    padding: 1px 16px 1px 5px;
     position: relative;
+	border:1px solid transparent;
+    background: url( 'images/dropmenu.png' ) no-repeat scroll 90% 56%;
+	color:#333333;
+}
+
+.menubar .dropmenu:hover {
+    background: url( 'images/dropmenu.high.png' ) no-repeat scroll 90% 56% #e6e6e6;
+	border:1px solid #C7C8CA;
+	color:#000000;
 }
 
 .menubar .dropmenu ul {
     display: none;
     position: absolute;
-    top: 1.2em;
     right: 0;
     background-color: #e6e6e6;
     color: #000000;
     list-style: none;
-    margin: 0;
-    padding: 3px;
+    margin: 0 2px 0 0;
+    padding: 0;
     z-index: 100000;
-}
-
-.menubar .dropmenu:hover {
-    background-color: #bbbbbb;
+	border:1px solid #C7C8CA;
+	top:1.5em;
 }
 
 .menubar .dropmenu ul li {
     display: block;
-    padding: 0.2em;
+    padding: 2px 4px;
     z-index: 100000;
+	border-bottom:1px solid #D1D3D4;
 }
+
+/*
 
 #part .menubar .dropmenu.first:before {
     content: " ";
@@ -785,6 +801,8 @@ div.wicket-aa ul li:hover {
 .menubar .menuitem:before {
     content: " \2015  ";
 }
+
+*/
 
 .menubar .dropmenu li span.disabled {
     font-style: oblique;
@@ -1044,7 +1062,26 @@ input[disabled] {
 }
 
 .flow .even {
-    background: #E0E0E0;
+    background: #E8E8E8;
+	border-bottom:1px solid #BCBEC0;
+}
+
+.flow:first-child .even {
+    background: #E8E8E8;
+	border-bottom:1px solid #BCBEC0;
+	border-top:1px solid #BCBEC0;
+}
+
+.flow .even:hover {
+	border-bottom:1px solid #666666;
+}
+
+.flow .odd {
+	border-bottom:1px solid #BCBEC0;
+}
+
+.flow .odd:hover {
+	border-bottom:1px solid #666666;
 }
 
 .flow .info , .summary .task {
@@ -1052,14 +1089,68 @@ input[disabled] {
 }
 
 #sg-sel {
-    margin: 3px 0 3px 0;
+    margin:0;
+	list-style:none;
+	padding-top:5px;
 }
 
 #sg-sel li {
-    list-style-type: none;
-    margin: 2px 0 0 0;
+    margin: 0;
+	padding-bottom:7px;
 }
 
+/* ----- Add New Task, Info Received-Sent Link ----- */
 
+a.add-flow {
+	display:inline;
+	font-weight:normal;
+	margin:0;
+	padding:0 5px 0 15px;
+	position:absolute;
+	right:0;
+	top:0;
+	white-space:nowrap;
+	font-size:8pt;
+	background: url( "images/bullet_add.png" ) no-repeat 5px 6px ;
+	color:#333333;
+	text-transform:lowercase;
+}
 
+a.add-task {
+	display:inline;
+	font-weight:normal;
+	margin:0 0 0 5px;
+	padding:2px 5px 2px 15px;
+	right:0;
+	top:0;
+	white-space:nowrap;
+	font-size:8pt;
+	background: url( "images/bullet_add.png" ) no-repeat 5px 6px ;
+	color:#333333;
+	text-transform:lowercase;
+}
 
+a.add-flow:hover, a.add-task:hover {
+	background: url( "images/bullet_add.high.png" ) no-repeat 5px 6px #E8E8E8 ;
+	color:#000000;
+}
+
+div.part-header > div.section-title > span.menubar {
+	margin-top:1px;
+}
+
+/* ----- Task, Receives and Sends Title ----- */
+
+h3.task-title {
+	background: url( "images/tasks.cog.png" ) no-repeat 0 1px;
+	padding-left:18px;
+}
+
+div.section-content > div.flow > div > span.pointer > span > img {
+	padding:0 3px;
+}
+
+div.receives > div.section-content > div.flow > div > span.menubar > span > span.dropmenu > span,
+div.sends > div.section-content > div.flow > div > span.menubar > span > span.dropmenu > span {
+	text-transform:lowercase;
+}
