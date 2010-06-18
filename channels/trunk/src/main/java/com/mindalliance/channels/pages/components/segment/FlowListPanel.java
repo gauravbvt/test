@@ -126,7 +126,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Get flows to sorted list.
+     * Get flows sorted: sharing > not sharing, by priority, by title..
      *
      * @return a list of lofws
      */

@@ -32,7 +32,6 @@ import java.util.List;
  * A provider of graph attribute providers needed for rendering a segment
  */
 public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
-
     /**
      * Color for subgraph contour
      */
