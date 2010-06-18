@@ -18,7 +18,9 @@ import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.WordUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -32,6 +34,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -45,6 +48,9 @@ import java.util.Set;
  * A view on a Part.
  */
 public class ExpandedPartPanel extends AbstractCommandablePanel {
+
+    @SpringBean
+    private QueryService queryService;    
 
     /**
      * The task property.
@@ -191,9 +197,14 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Collapsed, getPart() ) );
             }
         } );
+        summaryPanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses() ) ) );
         addOrReplace( summaryPanel );
     }
 
+    private String getCssClasses() {
+        String priority = getPart().getPriorityCssClass( queryService );
+        return "summary " + priority;
+    }
 
     private void addPartDescription() {
         partDescription = new TextArea<String>( "description",                            // NON-NLS

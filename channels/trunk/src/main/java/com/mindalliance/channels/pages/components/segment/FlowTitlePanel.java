@@ -1,12 +1,9 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.query.QueryService;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
@@ -38,29 +35,16 @@ public class FlowTitlePanel extends Panel {
     }
 
     private void init() {
-        WebMarkupContainer summaryContainer = new WebMarkupContainer( "summary" );
-        String priority = getPriorityCssClass();
-        summaryContainer.add( new AttributeModifier( "class", true, new Model<String>(priority)));
-        add( summaryContainer );
-        addTitleLabels( summaryContainer );
+        addTitleLabels( );
     }
 
-    private String getPriorityCssClass() {
-        if ( flow.isSharing() ) {
-            Level priority = queryService.computeSharingPriority( flow );
-            return  priority.getNegativeLabel().toLowerCase();
-        } else {
-            return "none";
-        }
-    }
-
-    private void addTitleLabels( WebMarkupContainer summaryContainer ) {
+    private void addTitleLabels( ) {
         Label preLabel = new Label( "pre", new Model<String>( getPre() ) );
-        summaryContainer.add( preLabel );
+        add( preLabel );
         Label infoLabel = new Label( "info", new Model<String>( getInfo() ) );
-        summaryContainer.add( infoLabel );
+        add( infoLabel );
         Label postLabel = new Label( "post", new Model<String>( getPost() ) );
-        summaryContainer.add( postLabel );
+        add( postLabel );
     }
 
     private String getPre() {

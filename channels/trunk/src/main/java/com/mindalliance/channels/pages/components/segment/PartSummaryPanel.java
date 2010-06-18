@@ -1,16 +1,11 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.query.QueryService;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  * Part summary panel.
@@ -22,9 +17,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  */
 public class PartSummaryPanel extends Panel {
 
-    @SpringBean
-    private QueryService queryService;
-
     private IModel<Part> partModel;
 
     public PartSummaryPanel( String id, IModel<Part> partModel ) {
@@ -34,25 +26,16 @@ public class PartSummaryPanel extends Panel {
     }
 
     private void init() {
-        WebMarkupContainer summaryContainer = new WebMarkupContainer( "summary" );
-        String priority = getPriorityCssClass();
-        summaryContainer.add( new AttributeModifier( "class", true, new Model<String>( priority ) ) );
-        add( summaryContainer );
-        addSummaryLabels( summaryContainer );
+        addSummaryLabels( );
     }
 
-    private String getPriorityCssClass() {
-        Level priority = queryService.computePartPriority( getPart() );
-        return priority.getNegativeLabel().toLowerCase();
-    }
-
-    private void addSummaryLabels( WebMarkupContainer summaryContainer ) {
+    private void addSummaryLabels( ) {
         Label preLabel = new Label( "pre", new Model<String>( getPre() ) );
-        summaryContainer.add( preLabel );
+        add( preLabel );
         Label infoLabel = new Label( "task", new Model<String>( getTask() ) );
-        summaryContainer.add( infoLabel );
+        add( infoLabel );
         Label postLabel = new Label( "post", new Model<String>( getPost() ) );
-        summaryContainer.add( postLabel );
+        add( postLabel );
     }
 
     private String getPre() {

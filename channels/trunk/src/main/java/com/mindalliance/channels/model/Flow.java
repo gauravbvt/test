@@ -1049,6 +1049,21 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public abstract boolean hasPart( Part part );
 
+    /**
+     * Get CSS class for flow priority.
+     *
+     * @param queryService a query service
+     * @return a string
+     */
+    public String getPriorityCssClass( QueryService queryService ) {
+        if ( isSharing() ) {
+            Level priority = queryService.computeSharingPriority( this );
+            return priority.getNegativeLabel().toLowerCase();
+        } else {
+            return "none";
+        }
+    }
+
 
     /**
      * The significance of a flow.

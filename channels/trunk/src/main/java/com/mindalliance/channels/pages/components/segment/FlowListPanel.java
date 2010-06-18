@@ -119,11 +119,21 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 flowPanel.add( new AttributeModifier(
                         "class",
                         true,
-                        new Model<String>( ( item.getIndex() % 2 == 0 ? "even" : "odd" ) ) ) );
+                        new Model<String>( getCssClasses( item ) ) ) );
                 item.add( flowPanel );
             }
         };
     }
+
+    String getCssClasses( ListItem<Flow> item ) {
+        Flow flow = item.getModelObject();
+        String evenOdd = ( item.getIndex() % 2 == 0 ? "even" : "odd" );
+        String priority = flow.getPriorityCssClass( queryService );
+        return evenOdd + " " + priority;
+    }
+
+
+
 
     /**
      * Get flows sorted: sharing > not sharing, by priority, by title..

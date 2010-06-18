@@ -735,7 +735,7 @@ public class Part extends Node implements GeoLocatable {
             if ( isStartsWithSegment() ) {
                 sb1.append( " starts with \"" );
                 sb1.append( getSegment().getPhaseEventTitle().toLowerCase() );
-                sb1.append("\"");
+                sb1.append( "\"" );
             }
             if ( isRepeating() ) {
                 if ( !sb1.toString().isEmpty() ) {
@@ -770,7 +770,7 @@ public class Part extends Node implements GeoLocatable {
                 }
                 sb1.append( " can end \"" );
                 sb1.append( getSegment().getPhaseEventTitle().toLowerCase() );
-                sb1.append("\"");
+                sb1.append( "\"" );
             }
             if ( isSelfTerminating() ) {
                 if ( !sb1.toString().isEmpty() ) sb1.append( " and" );
@@ -1004,5 +1004,16 @@ public class Part extends Node implements GeoLocatable {
             if ( candidate.isCapability() ) return candidate;
         }
         return null;
+    }
+
+    /**
+     * Get CSS class for part priority.
+     *
+     * @param queryService a query service
+     * @return a string
+     */
+    public String getPriorityCssClass( QueryService queryService ) {
+        Level priority = queryService.computePartPriority( this );
+        return priority.getNegativeLabel().toLowerCase();
     }
 }
