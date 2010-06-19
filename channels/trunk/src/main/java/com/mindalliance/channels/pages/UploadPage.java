@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.attachments.FileBasedManager;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.dao.User;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
@@ -28,20 +28,15 @@ public class UploadPage extends Page {
     @SpringBean
     private FileBasedManager attachmentManager;
 
-    @SpringBean
-    private Plan plan;
-
-    /** The file to upload, if any. */
-    private File file;
+    private String filename;
 
     public UploadPage( PageParameters parameters ) {
         super( parameters );
 
-        String filename = parameters.getString( "0" );
+        filename = parameters.getString( "0" );
         if ( filename == null )
             throw new AbortWithWebErrorCodeException( 403 );
-
-        file = new File( attachmentManager.getUploadDirectory( plan ), filename );
+        File file = getFile( filename );
         if ( file.exists() ) {
             Response response = getResponse();
             response.setContentLength( file.length() );
@@ -54,13 +49,17 @@ public class UploadPage extends Page {
 
     }
 
+    private File getFile( String fileName ) {
+        return new File( attachmentManager.getUploadDirectory( User.current().getPlan() ), fileName );
+    }
+
     @Override
     protected void onRender( MarkupStream markupStream ) {
         FileInputStream inputStream = null;
         Logger logger = LoggerFactory.getLogger( getClass() );
         try {
             OutputStream outputStream = getResponse().getOutputStream();
-            inputStream = new FileInputStream( file );
+            inputStream = new FileInputStream( getFile( filename ) );
 
             byte[] buffer = new byte[ 10*1024 ];
             int len = inputStream.read( buffer );

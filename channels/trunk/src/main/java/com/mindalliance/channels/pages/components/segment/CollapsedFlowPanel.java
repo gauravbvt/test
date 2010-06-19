@@ -7,6 +7,7 @@ import com.mindalliance.channels.pages.components.MediaReferencesPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -31,6 +32,7 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
 
     private void init() {
         addFlowTitlePanel();
+        addIssueWarningImage();
         addFlowMediaPanel();
         addFlowActionMenu();
     }
@@ -68,6 +70,34 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
         makeVisible( channel, c != null && !c.isEmpty() );
         add( channel );
         add( titlePanel );
+    }
+
+    private void addIssueWarningImage() {
+        WebMarkupContainer warning = new WebMarkupContainer( "warning" );
+        String summary = getErrorSummary();
+        boolean hasIssues = hasIssues();
+        warning.add( new AttributeModifier(
+                "src",
+                true ,
+                new Model<String>(
+                        !summary.isEmpty()
+                           ? "images/warning.png"
+                           : hasIssues
+                            ? "images/waived.png"
+                            : ""
+                )) );
+        warning.add( new AttributeModifier(
+                "alt",
+                true ,
+                new Model<String>(
+                        !summary.isEmpty()
+                           ? "issues detected"
+                           : hasIssues
+                            ? "all issues waived"
+                            : ""
+                )) );
+        warning.setVisible( hasIssues );
+        add( warning );
     }
 
     private void addFlowMediaPanel() {

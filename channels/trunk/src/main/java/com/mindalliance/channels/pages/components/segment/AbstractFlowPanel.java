@@ -123,11 +123,11 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
 
     protected String getCssClasses( boolean hasIssues, String summary ) {
         String flowType = getFlowTypeCssClass();
-        String errorType = getFlowErrorCssClass( hasIssues, summary );
+        // String errorType = getFlowErrorCssClass( hasIssues, summary );
         String priority = getFlowPriorityCssClass();
         return "pointer "
                 + flowType
-                + ( errorType.isEmpty() ? "" : ( " " + errorType ) )
+               // + ( errorType.isEmpty() ? "" : ( " " + errorType ) )
                 + ( priority.isEmpty() ? "" : ( " " + priority ) );
     }
 

@@ -1138,6 +1138,10 @@ div.part-header > div.section-title > span.menubar {
 	margin-top:1px;
 }
 
+img.inline {
+    vertical-align: middle;
+}
+
 /* ----- Task Title ----- */
 
 h3.task-title {

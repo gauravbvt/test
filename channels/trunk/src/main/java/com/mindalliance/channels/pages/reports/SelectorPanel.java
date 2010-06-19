@@ -25,7 +25,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
@@ -104,7 +103,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
                 super.onSubmit();
             }
         };
-        addPlanSwitcher( form );
+        // addPlanSwitcher( form );
         form.add( new DropDownChoice<Segment>( "segment", getSegmentChoices( queryService ),
                 new IChoiceRenderer<Segment>() {
                     public Object getDisplayValue( Segment object ) {
@@ -158,6 +157,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         add( form );
     }
 
+/*
     private void addPlanSwitcher( Form form ) {
         WebMarkupContainer switchPlanContainer = new WebMarkupContainer( "switch-plan" );
         switchPlanContainer.setVisible( getPlannablePlans().size() > 1 );
@@ -172,6 +172,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         planDropDownChoice.add( newOnChange( "onchange" ) );
         switchPlanContainer.add( planDropDownChoice );
     }
+*/
 
     /**
      * Get all plans that the current can modify.
