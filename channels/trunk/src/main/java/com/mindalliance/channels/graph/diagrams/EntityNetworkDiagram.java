@@ -45,7 +45,7 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder<ModelEntity, EntityRelationship> entityNetworkGraphBuilder =
-                new EntityNetworkGraphBuilder( entity, diagramFactory.getQueryService() );
+                new EntityNetworkGraphBuilder( entity, queryService );
         Graph<ModelEntity, EntityRelationship> graph =
                 entityNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer =

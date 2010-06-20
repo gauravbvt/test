@@ -946,22 +946,30 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
+
     /**
      * {@inheritDoc}
      */
-    public <T extends ModelEntity> List<T> listActualEntitiesTaskedInSegment( Class<T> entityClass, Segment segment ) {
-        List<T> entities = this.listActualEntities( entityClass );
+    public <T extends ModelEntity> List<T> listEntitiesTaskedInSegment(
+            Class<T> entityClass,
+            Segment segment,
+            ModelEntity.Kind kind ) {
+        List<T> entities = kind.equals( ModelEntity.Kind.Actual )
+                ? listActualEntities( entityClass )
+                : listTypeEntities( entityClass );
         Set<T> result = new HashSet<T>();
         for ( T entity : entities ) {
-            Iterator<Flow> flows = segment.flows();
-            while ( flows.hasNext() ) {
-                Flow flow = flows.next();
-                if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
-                    Part sourcePart = (Part) flow.getSource();
-                    Part targetPart = (Part) flow.getTarget();
-                    if ( isExecutedBy( sourcePart, entity )
-                            || isExecutedBy( targetPart, entity ) ) {
-                        result.add( entity );
+            if ( !entity.isUnknown() ) {
+                Iterator<Flow> flows = segment.flows();
+                while ( flows.hasNext() ) {
+                    Flow flow = flows.next();
+                    if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
+                        Part sourcePart = (Part) flow.getSource();
+                        Part targetPart = (Part) flow.getTarget();
+                        if ( isExecutedBy( sourcePart, entity )
+                                || isExecutedBy( targetPart, entity ) ) {
+                            result.add( entity );
+                        }
                     }
                 }
             }
@@ -3182,9 +3190,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public List<EntityRelationship> findEntityRelationships( ModelEntity entity ) {
-        List<ModelEntity> entities = findOtherEntitiesOfSameKind( entity );
+        return findEntityRelationships( null, entity );
+    }
+
+    public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity ) {
+        List<ModelEntity> otherEntities = findEntities( segment, entity.getClass(), entity.getKind() );
+        otherEntities.remove( entity );
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
-        for ( ModelEntity otherEntity : entities ) {
+        for ( ModelEntity otherEntity : otherEntities ) {
             EntityRelationship<ModelEntity> sendRel = findEntityRelationship( entity, otherEntity );
             if ( sendRel != null ) {
                 rels.add( sendRel );
@@ -3197,16 +3210,47 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return rels;
     }
 
+    public List<EntityRelationship> findEntityRelationships(
+            Segment segment,
+            Class<? extends ModelEntity> entityClass,
+            ModelEntity.Kind kind ) {
+        List<ModelEntity> entities = findEntities( segment, entityClass, kind );
+        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
+        for ( ModelEntity entity : entities ) {
+            for ( ModelEntity otherEntity : entities ) {
+                if ( !entity.equals( otherEntity ) ) {
+                    EntityRelationship<ModelEntity> sendRel = findEntityRelationship( entity, otherEntity );
+                    if ( sendRel != null ) {
+                        rels.add( sendRel );
+                    }
+/*
+                    EntityRelationship<ModelEntity> receiveRel = findEntityRelationship( otherEntity, entity );
+                    if ( receiveRel != null ) {
+                        rels.add( receiveRel );
+                    }
+*/
+                }
+            }
+        }
+        return rels;
+    }
+
     @SuppressWarnings( "unchecked" )
-    private <T extends ModelEntity> List<T> findOtherEntitiesOfSameKind( final T entity ) {
-        return (List<T>) CollectionUtils.select(
-                list( entity.getClass() ),
+    private List<ModelEntity> findEntities(
+            Segment segment,
+            Class entityClass,
+            final ModelEntity.Kind kind ) {
+        List<ModelEntity> entities =
+                segment == null
+                        ? list( entityClass )
+                        : listEntitiesTaskedInSegment( entityClass, segment, kind );
+        return (List<ModelEntity>) CollectionUtils.select(
+                entities,
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        T other = (T) object;
-                        return !other.isUnknown()
-                                && !entity.equals( other )
-                                && entity.getKind().equals( other.getKind() );
+                        ModelEntity entity = (ModelEntity) object;
+                        return !entity.isUnknown()
+                                && entity.getKind().equals( kind );
                     }
                 } );
     }

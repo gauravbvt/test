@@ -85,7 +85,7 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
     @SuppressWarnings( "unchecked" )
     private List<ModelEntity> getEntities( QueryService queryService ) {
         if ( segment != null ) {
-            return queryService.listActualEntitiesTaskedInSegment( entityClass, segment );
+            return queryService.listEntitiesTaskedInSegment( entityClass, segment, ModelEntity.Kind.Actual );
         } else {
             return (List<ModelEntity>) CollectionUtils.select(
                     queryService.listActualEntities( entityClass ),

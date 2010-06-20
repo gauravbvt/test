@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -70,9 +71,10 @@ public class SegmentOrganizationsPanel extends AbstractUpdatablePanel {
      */
     @SuppressWarnings( "unchecked" )
     public List<Organization> getActualOrganizations() {
-        return getQueryService().listActualEntitiesTaskedInSegment(
+        return getQueryService().listEntitiesTaskedInSegment(
                 Organization.class,
-                getSegment() );
+                getSegment(),
+                ModelEntity.Kind.Actual);
     }
 
     /**

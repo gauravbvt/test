@@ -251,7 +251,19 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
         if ( selectedEntityRel != null ) {
             rels.add( selectedEntityRel );
         } else {
-            rels.addAll( getQueryService().findEntityRelationships( getEntity() ) );
+            ModelEntity entity = getEntity();
+            if ( entity != null ) {
+                // relationships with a given entity
+                rels.addAll( getQueryService().findEntityRelationships(
+                        segment,
+                        entity ) );
+            } else {
+                // relationships between all actual entities of given class in a segment or entire plan if segment is null
+                rels.addAll( getQueryService().findEntityRelationships(
+                        segment,
+                        entityClass,
+                        ModelEntity.Kind.Actual ) );
+            }
         }
         return rels;
     }
@@ -319,10 +331,10 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
         return selectedEntity;
     }
 
-    @SuppressWarnings( "unchecked" )
+/*    @SuppressWarnings( "unchecked" )
     private List<T> getEntities() {
         if ( segment != null ) {
-            return getQueryService().listActualEntitiesTaskedInSegment( entityClass, segment );
+            return getQueryService().listEntitiesTaskedInSegment( entityClass, segment );
         } else {
             return (List<T>) CollectionUtils.select(
                     getQueryService().listActualEntities( entityClass ),
@@ -333,7 +345,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
                     }
             );
         }
-    }
+    }*/
 
     public class ActorFlow implements Serializable {
         private Actor sourceActor;

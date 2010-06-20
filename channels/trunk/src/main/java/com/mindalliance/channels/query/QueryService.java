@@ -612,9 +612,13 @@ public interface QueryService {
      *
      * @param entityClass a model entity class
      * @param segment     a segment
+     * @param kind actual or type
      * @return a list of model entities
      */
-    <T extends ModelEntity> List<T> listActualEntitiesTaskedInSegment( Class<T> entityClass, Segment segment );
+    <T extends ModelEntity> List<T> listEntitiesTaskedInSegment( 
+            Class<T> entityClass,
+            Segment segment,
+            ModelEntity.Kind kind);
 
     /**
      * Find all confirmed jobs with resource spec
@@ -1364,4 +1368,24 @@ public interface QueryService {
      * @return  a list of relationships with other model entities
      */
      List<EntityRelationship> findEntityRelationships( ModelEntity entity );
+
+    /**
+     * Find relationships with entities of same kind.
+     * @param segment  a segment
+     * @param entity  a model entity
+     * @return  a list of relationships with other model entities
+     */
+     List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity );
+    /**
+     * Find relationships with entities of same kind referenced in a segment.
+     * @param segment  a segment
+     * @param entityClass  an entity class
+     * @param kind  a kind of entity (actual or type)
+     * @return  a list of relationships with other model entities
+     */
+     List<EntityRelationship> findEntityRelationships(
+            Segment segment,
+            Class<? extends ModelEntity> entityClass,
+            ModelEntity.Kind kind);
+
 }
