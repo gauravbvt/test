@@ -169,7 +169,7 @@ public class Channels extends WebApplication
             plan = planManager.getDefaultPlan( user );
             user.setPlan( plan );
         }
-        return user.isAdmin()                  ? AdminPage.class
+        return user.isAdmin()                  ? PlanPage.class // was AdminPage.class
              : plan == null                    ? NoAccessPage.class
              : user.isPlanner( plan.getUri() ) ? PlanPage.class
                                                : SOPsReportPage.class ;

@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.target.basic.RedirectRequestTarget;
@@ -77,11 +78,18 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                     } ) );
         }
         // Export
-        menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Export this segment..." ),
-                new BookmarkablePageLink(
-                        "link",
-                        ExportPage.class,
-                        PlanPage.getParameters( (Segment) getModel().getObject(), null ) ) ) );
+        BookmarkablePageLink pageLink = new BookmarkablePageLink(
+                "link",
+                ExportPage.class,
+                PlanPage.getParameters( (Segment) getModel().getObject(), null ) );
+        pageLink.setPopupSettings( new PopupSettings(
+                PopupSettings.RESIZABLE
+                        | PopupSettings.SCROLLBARS
+                        | PopupSettings.MENU_BAR ) );
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Export this segment..." ),
+                pageLink ) );
         // Logout
         ConfirmedAjaxFallbackLink logoutLink = new ConfirmedAjaxFallbackLink( "link", "Log out?" ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -102,43 +110,43 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     @Override
     protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
-            final Segment segment = getSegment();
-            commandWrappers.add( new CommandWrapper( new PastePart( getSegment() ) ) {
-                @Override
-                public void onExecuted( AjaxRequestTarget target, Change change ) {
-                    update( target, change );
-                }
-            } );
-            commandWrappers.add( new CommandWrapper( new PasteAttachment( getSegment() ) ) {
-                @Override
-                public void onExecuted( AjaxRequestTarget target, Change change ) {
-                    update( target, change );
-                }
-            } );
-            commandWrappers.add( new CommandWrapper( new AddPart( segment ) ) {
-                @Override
-                public void onExecuted( AjaxRequestTarget target, Change change ) {
-                    update( target, change );
-                }
-            } );
-            commandWrappers.add( new CommandWrapper( new AddUserIssue( segment ) ) {
-                @Override
-                public void onExecuted( AjaxRequestTarget target, Change change ) {
-                    update( target, change );
-                }
-            } );
-            commandWrappers.add( new CommandWrapper( new AddSegment() ) {
-                @Override
-                public void onExecuted( AjaxRequestTarget target, Change change ) {
-                    update( target, change );
-                }
-            } );
-            commandWrappers.add( new CommandWrapper( new DisconnectAndRemoveSegment( segment ), CONFIRM ) {
-                @Override
-                public void onExecuted( AjaxRequestTarget target, Change change ) {
-                    update( target, change );
-                }
-            } );
+        final Segment segment = getSegment();
+        commandWrappers.add( new CommandWrapper( new PastePart( getSegment() ) ) {
+            @Override
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new PasteAttachment( getSegment() ) ) {
+            @Override
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new AddPart( segment ) ) {
+            @Override
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new AddUserIssue( segment ) ) {
+            @Override
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new AddSegment() ) {
+            @Override
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
+        commandWrappers.add( new CommandWrapper( new DisconnectAndRemoveSegment( segment ), CONFIRM ) {
+            @Override
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        } );
         return commandWrappers;
     }
 

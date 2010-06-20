@@ -815,7 +815,8 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addSurveysPanel( Survey survey ) {
-        boolean showSurveys = expansions.contains( Survey.UNKNOWN.getId() );
+        boolean showSurveys = survey != null && expansions.contains( survey.getId() )
+                || expansions.contains( Survey.UNKNOWN.getId() );
         if ( showSurveys ) {
             surveysPanel = new SurveysPanel( "surveys", survey, getReadOnlyExpansions() );
         } else {

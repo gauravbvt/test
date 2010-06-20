@@ -97,7 +97,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private void addLinkToClassifications() {
         AjaxFallbackLink classificationsLink = new AjaxFallbackLink( "classifications" ) {
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, getPlan(), PlanEditPanel.CLASSIFICATIONS ) );
+                update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.CLASSIFICATIONS ) );
             }
         };
         add( classificationsLink );

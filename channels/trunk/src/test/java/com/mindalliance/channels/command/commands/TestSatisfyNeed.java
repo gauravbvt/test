@@ -59,7 +59,7 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
     public void testSatisfyNeed() throws CommandException {
         assertSame( 1, countFlows( source.sends() ) );
         assertSame( 1, countFlows( target.receives() ) );
-        Command satisfyNeed = new SatisfyNeed( need, capability, true );
+        Command satisfyNeed = new SatisfyNeed( need, capability, true, true );
         assertTrue( getCommander().canDo( satisfyNeed ) );
         assertTrue( getCommander().doCommand( satisfyNeed ).isAdded() );
         assertSame( 2, countFlows( source.sends() ) );

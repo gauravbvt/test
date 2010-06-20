@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.surveys;
 
-import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
+import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -16,6 +16,8 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Survey panel.
@@ -26,6 +28,11 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  * Time: 12:18:36 PM
  */
 public class SurveyPanel extends AbstractUpdatablePanel {
+
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( SurveyPanel.class );
 
     @SpringBean
     /**
@@ -147,6 +154,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
                     }
                     surveyService.launchSurvey( survey );
                 } catch ( SurveyException e ) {
+                    LOG.warn("Failed lo launch survey", e);
                     target.prependJavascript( "alert(\"Oops! Failed to launch survey.\")" );
                 }
                 update( target, new Change( Change.Type.Updated, survey ) );

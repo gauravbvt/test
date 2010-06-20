@@ -22,6 +22,14 @@ import com.mindalliance.channels.util.ChannelsUtils;
  * Time: 9:15:10 PM
  */
 public class SatisfyNeed extends AbstractCommand {
+    /**
+     * Indicates desire to keep need after connecting need and capability.
+     */
+    public static final boolean KEEP_NEED = true;
+    /**
+     * Indicates desire to keep capability after connecting need and capability.
+     */
+    public static final boolean KEEP_CAPABILITY = true;
 
     public SatisfyNeed() {
     }
@@ -29,22 +37,24 @@ public class SatisfyNeed extends AbstractCommand {
     /**
      * Constructor.
      *
-     * @param need                  a flow
-     * @param capability            a flow
-     * @param keepCapabilityAndNeed whether *not* to delete connected capability and need if both local
+     * @param need           a flow
+     * @param capability     a flow
+     * @param keepCapability whether *not* to delete connected capability if both local
+     * @param keepNeed       whether *not* to delete connected need if both local
      */
-    public SatisfyNeed( Flow need, Flow capability, boolean keepCapabilityAndNeed ) {
+    public SatisfyNeed( Flow need, Flow capability, boolean keepCapability, boolean keepNeed ) {
         needLocksOn( ChannelsUtils.getLockingSetFor( need ) );
         needLocksOn( ChannelsUtils.getLockingSetFor( capability ) );
         set( "needSegment", need.getSegment().getId() );
         set( "need", need.getId() );
         set( "capabilitySegment", capability.getSegment().getId() );
         set( "capability", capability.getId() );
-        set( "keep", keepCapabilityAndNeed );
+        set( "keepNeed", keepNeed );
+        set( "keepCapability", keepCapability );
     }
 
     public SatisfyNeed( Flow need, Flow capability ) {
-        this( need, capability, false );
+        this( need, capability, false, false );
     }
 
     /**
@@ -67,7 +77,8 @@ public class SatisfyNeed extends AbstractCommand {
                     Segment.class,
                     (Long) get( "capabilitySegment" ) );
             Flow capability = capabilitySegment.findFlow( (Long) get( "capability" ) );
-            boolean keepCapabilityAndNeed = (Boolean) get( "keep" );
+            boolean keepCapability = (Boolean) get( "keepCapability" );
+            boolean keepNeed = (Boolean) get( "keepNeed" );
             Node fromNode;
             Node toNode;
             if ( needSegment == capabilitySegment ) {
@@ -92,9 +103,13 @@ public class SatisfyNeed extends AbstractCommand {
             MultiCommand multi = (MultiCommand) get( "subCommands" );
             if ( multi == null ) {
                 multi = new MultiCommand( "satisfy need - extra" );
-                if ( needSegment == capabilitySegment && !keepCapabilityAndNeed ) {
-                    multi.addCommand( new RemoveCapability( capability ) );
-                    multi.addCommand( new RemoveNeed( need ) );
+                if ( needSegment.equals( capabilitySegment ) ) {
+                    if ( !keepCapability ) {
+                        multi.addCommand( new RemoveCapability( capability ) );
+                    }
+                    if ( !keepNeed ) {
+                        multi.addCommand( new RemoveNeed( need ) );
+                    }
                 }
                 set( "subCommands", multi );
             }

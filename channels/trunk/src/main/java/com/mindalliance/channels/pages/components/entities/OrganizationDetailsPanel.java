@@ -108,12 +108,12 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 "org-link",
                 new PropertyModel<Organization>( organization, "parent" ),
                 new Model<String>( "Parent" ) ) );
-        final List<String> parentChoices = findCandidateParents();
         // If organization is actual, parent must be actual
         actualParentField = new AutoCompleteTextField<String>( "actualParent",
                 new PropertyModel<String>( this, "parentOrganization" ) ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
+                final List<String> parentChoices = findCandidateParents();
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : parentChoices ) {
                     if ( Matcher.matches( s, choice ) ) candidates.add( choice );
@@ -133,7 +133,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         EntityReferencePanel<Organization> parentField = new EntityReferencePanel<Organization>(
                 "parent",
                 new Model<Organization>( getOrganization() ),
-                parentChoices,
+                findCandidateParents(),
                 "parent",
                 Organization.class);
         moDetailsDiv.add( parentField );
@@ -259,13 +259,16 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         if ( getOrganization().isActual() ) {
             List<Organization> ancestors = organization.ancestors();
             List<Organization> allOrganizations =
-                    new ArrayList<Organization>( getQueryService().list( Organization.class ) );
+                    new ArrayList<Organization>( getQueryService().listActualEntities( Organization.class ) );
+            allOrganizations.remove( Organization.UNKNOWN );
             allOrganizations.remove( organization );
             Collection<Organization> candidates = CollectionUtils.subtract( allOrganizations, ancestors );
             for ( Organization candidate : candidates ) {
                 if ( !candidate.ancestors().contains( organization ) )
                     candidateNames.add( candidate.getName() );
             }
+            if ( organization.getParent()!= null )
+                candidateNames.add( organization.getParent().getName() );
             Collections.sort( candidateNames );
         }
         return candidateNames;
