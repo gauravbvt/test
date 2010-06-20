@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.FilterableEntityFlowsPanel;
@@ -35,8 +36,8 @@ public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel
             Class<T> entityClass,
             Segment segment,
             Set<Long> expansions,
-            String prefixDomIdentifier) {
-        super( id, null, expansions);
+            String prefixDomIdentifier ) {
+        super( id, null, expansions );
         this.entityClass = entityClass;
         this.segment = segment;
         this.prefixDomIdentifier = prefixDomIdentifier;
@@ -79,8 +80,8 @@ public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel
      */
     public void changed( Change change ) {
         if ( change.isSelected() ) {
-            if ( change.isForInstanceOf( ModelEntity.class ) ) {
-                change.setType( Change.Type.Expanded );
+            if ( change.isForInstanceOf( ModelEntity.class )
+                    || change.isForInstanceOf( SegmentObject.class ) ) {
                 super.changed( change );
             } else if ( change.isForInstanceOf( EntityRelationship.class ) ) {
                 selectedEntityRel = (EntityRelationship<T>) change.getSubject( getQueryService() );
@@ -97,7 +98,8 @@ public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
-            if ( change.isForInstanceOf( ModelEntity.class ) ) {
+            if ( change.isForInstanceOf( ModelEntity.class )
+                    || change.isForInstanceOf( SegmentObject.class ) ) {
                 super.updateWith( target, change, updated );
             } else {
                 addEntitiesNetworkPanel();

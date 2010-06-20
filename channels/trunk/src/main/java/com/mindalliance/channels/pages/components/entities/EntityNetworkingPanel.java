@@ -3,13 +3,13 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.FilterableEntityFlowsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -65,7 +65,7 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
     private void addEntityFlowsPanel() {
         entityFlowPanel = new FilterableEntityFlowsPanel<T>(
                 "entity-flows",
-                (Class<T>)getEntity().getClass(),
+                (Class<T>) getEntity().getClass(),
                 null,
                 getExpansions(),
                 selectedEntity,
@@ -75,7 +75,7 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
         addOrReplace( entityFlowPanel );
     }
 
-    public List<EntityRelationship<T>> getEntityRelationships() {
+/*    public List<EntityRelationship<T>> getEntityRelationships() {
         boolean cartesianProduct = false;
         List<EntityRelationship<T>> entityRels = new ArrayList<EntityRelationship<T>>();
         if ( selectedEntityRel != null ) {
@@ -105,31 +105,42 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
             }
         }
         return entityRels;
-    }
+    }*/
 
-    @SuppressWarnings( "unchecked" )
-    public List<T> getEntityDomain() {
-        return (List<T>) getQueryService().listActualEntities( getEntity().getClass() );
-    }
+    /*   @SuppressWarnings( "unchecked" )
+        public List<T> getEntityDomain() {
+            return (List<T>) getQueryService().listActualEntities( getEntity().getClass() );
+        }
+    */
 
     private T getEntity() {
         return entityModel.getObject();
     }
+
+
 
     /**
      * {@inheritDoc}
      */
     public void changed( Change change ) {
         if ( change.isSelected() ) {
-            if ( change.isForInstanceOf( ModelEntity.class ) ) {
-                change.setType( Change.Type.Expanded );
+            if ( change.isForInstanceOf( SegmentObject.class ) ) {
+                // change.setType( Change.Type.Expanded );
                 super.changed( change );
+            } else if ( change.isForInstanceOf( ModelEntity.class ) ) {
+                if ( change.getProperty().equals( "network" )
+                        && change.getId() != getEntity().getId() ) {
+                    change.setType( Change.Type.Expanded );
+                    super.changed( change );
+                } else {
+                    super.changed( change );
+                }
             } else if ( change.isForInstanceOf( EntityRelationship.class ) ) {
                 selectedEntityRel = (EntityRelationship<T>) change.getSubject( getQueryService() );
-                selectedEntity = null;
+                // selectedEntity = null;
             } else {
                 selectedEntityRel = null;
-                selectedEntity = null;
+                // selectedEntity = null;
             }
         } else {
             super.changed( change );
@@ -141,7 +152,8 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
-            if ( change.isForInstanceOf( ModelEntity.class ) ) {
+            if ( change.isForInstanceOf( ModelEntity.class )
+                    || change.isForInstanceOf( SegmentObject.class ) ) {
                 super.updateWith( target, change, updated );
             } else {
                 addEntityNetworkPanel();

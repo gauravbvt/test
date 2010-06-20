@@ -67,6 +67,7 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
         if ( entityRel != null ) flows = entityRel.getFlows();
     }
 
+
     private ModelEntity getFromEntity( QueryService queryService ) {
         return (ModelEntity) getFromIdentifiable( queryService );
     }

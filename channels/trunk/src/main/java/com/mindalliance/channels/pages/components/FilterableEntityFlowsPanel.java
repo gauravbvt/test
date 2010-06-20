@@ -149,6 +149,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
      *
      * @return a string
      */
+    @SuppressWarnings( "unchecked" )
     public String getFlowsTitle() {
         if ( selectedEntityRel != null ) {
             T fromEntity = (T) selectedEntityRel.getFromIdentifiable( getQueryService() );
@@ -245,35 +246,15 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
         return actorFlows;
     }
 
-    private List<EntityRelationship<T>> getEntityRelationships() {
-        List<EntityRelationship<T>> rels = new ArrayList<EntityRelationship<T>>();
+    private List<EntityRelationship> getEntityRelationships() {
+        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         if ( selectedEntityRel != null ) {
             rels.add( selectedEntityRel );
         } else {
-            rels.addAll( getEntityRels() );
+            rels.addAll( getQueryService().findEntityRelationships( getEntity() ) );
         }
         return rels;
     }
-
-    private List<EntityRelationship<T>> getEntityRels() {
-        List<EntityRelationship<T>> entityRels = new ArrayList<EntityRelationship<T>>();
-        List<T> entities = getEntities();
-        for ( T entity : entities ) {
-            for ( T other : entities ) {
-                if ( entity != other ) {
-                    EntityRelationship<T> entityRel;
-                    if ( segment != null ) {
-                        entityRel = getQueryService().findEntityRelationship( entity, other, segment );
-                    } else {
-                        entityRel = getQueryService().findEntityRelationship( entity, other );
-                    }
-                    if ( entityRel != null ) entityRels.add( entityRel );
-                }
-            }
-        }
-        return entityRels;
-    }
-
 
     @SuppressWarnings( "unchecked" )
     private List<ActorFlow> getActorFlowsInRelationship( final EntityRelationship entityRelationship ) {
@@ -427,8 +408,9 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
                     "source.role.name",
                     EMPTY,
                     filterable ) );
-            columns.add( makeColumn(
+            columns.add( makeLinkColumn(
                     "Doing",
+                    "source",
                     "source.task",
                     EMPTY ) );
             columns.add( makeFilterableLinkColumn(
@@ -441,15 +423,16 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
                     "Sends info",
                     "",
                     "name",
-                    "?" ) );
+                    EMPTY ) );
             columns.add( makeFilterableLinkColumn(
                     "To role",
                     "target.role",
                     "target.role.name",
                     EMPTY,
                     filterable ) );
-            columns.add( makeColumn(
+            columns.add( makeLinkColumn(
                     "Doing",
+                    "target",
                     "target.task",
                     EMPTY ) );
             columns.add( makeFilterableLinkColumn(
@@ -511,8 +494,9 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
                     "sourceActor.name",
                     EMPTY,
                     filterable ) );
-            columns.add( makeColumn(
+            columns.add( makeLinkColumn(
                     "Doing",
+                    "flow.source",
                     "flow.source.task",
                     EMPTY ) );
             columns.add( makeFilterableLinkColumn(
@@ -525,15 +509,16 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
                     "Sends info",
                     "flow",
                     "flow.name",
-                    "?" ) );
+                    EMPTY ) );
             columns.add( makeFilterableLinkColumn(
                     "To agent",
                     "targetActor",
                     "targetActor.name",
                     EMPTY,
                     filterable ) );
-            columns.add( makeColumn(
+            columns.add( makeLinkColumn(
                     "Doing",
+                    "flow.target",
                     "flow.target.task",
                     EMPTY ) );
             columns.add( makeFilterableLinkColumn(

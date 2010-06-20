@@ -121,9 +121,8 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
         return analyst.getIssuesSummary( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
     }
 
-    protected String getCssClasses( boolean hasIssues, String summary ) {
+    protected String getCssClasses(  ) {
         String flowType = getFlowTypeCssClass();
-        // String errorType = getFlowErrorCssClass( hasIssues, summary );
         String priority = getFlowPriorityCssClass();
         return "pointer "
                 + flowType

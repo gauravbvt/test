@@ -1445,8 +1445,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 /*
     */
 /**
-     * {@inheritDoc}
-     */
+ * {@inheritDoc}
+ */
 /*
     public List<Actor> findActualActors( Organization organization, Role role, Segment segment ) {
         return findActualActors( organization, role, null, segment );
@@ -1454,8 +1454,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     */
 /**
-     * {@inheritDoc}
-     */
+ * {@inheritDoc}
+ */
 /*
     public List<Actor> findActualActors( Organization organization, Role role, Place jurisdiction, Segment segment ) {
         Set<Actor> actors = new HashSet<Actor>();
@@ -2408,7 +2408,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public Level computeSharingPriority( Flow flow ) {
         assert flow.isSharing();
-        if ( flow.isEssential( false ))
+        if ( flow.isEssential( false ) )
             return computePartPriority( (Part) flow.getTarget() );
         else
             return Level.Low;
@@ -2452,7 +2452,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<Goal> goals = new ArrayList<Goal>();
         visited.add( part );
         for ( Goal goal : part.getGoals() ) {
-            if ( !goal.isImpliedIn( goals) )
+            if ( !goal.isImpliedIn( goals ) )
                 goals.add( goal );
         }
         for ( Flow flow : part.requiredSends() ) {
@@ -2461,8 +2461,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 if ( !visited.contains( target ) ) {
                     List<Goal> flowGoals = findAllGoalsImpactedByFailure( target, visited );
                     for ( Goal flowGoal : flowGoals ) {
-                       if ( !flowGoal.isImpliedIn( goals) )
-                           goals.add( flowGoal );
+                        if ( !flowGoal.isImpliedIn( goals ) )
+                            goals.add( flowGoal );
                     }
                 }
             }
@@ -3175,6 +3175,40 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     }
                 }
         );
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<EntityRelationship> findEntityRelationships( ModelEntity entity ) {
+        List<ModelEntity> entities = findOtherEntitiesOfSameKind( entity );
+        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
+        for ( ModelEntity otherEntity : entities ) {
+            EntityRelationship<ModelEntity> sendRel = findEntityRelationship( entity, otherEntity );
+            if ( sendRel != null ) {
+                rels.add( sendRel );
+            }
+            EntityRelationship<ModelEntity> receiveRel = findEntityRelationship( otherEntity, entity );
+            if ( receiveRel != null ) {
+                rels.add( receiveRel );
+            }
+        }
+        return rels;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private <T extends ModelEntity> List<T> findOtherEntitiesOfSameKind( final T entity ) {
+        return (List<T>) CollectionUtils.select(
+                list( entity.getClass() ),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        T other = (T) object;
+                        return !other.isUnknown()
+                                && !entity.equals( other )
+                                && entity.getKind().equals( other.getKind() );
+                    }
+                } );
     }
 }
 

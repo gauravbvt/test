@@ -1217,13 +1217,17 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( aspect == null || aspect.isEmpty() ) {
             aspects.remove( change.getId() );
         } else {
-            List<String> aspectsShown = aspects.get( change.getId() );
-            if ( aspectsShown == null )
-                aspectsShown = new ArrayList<String>();
-            if ( !aspectsShown.contains( aspect ) )
-                aspectsShown.add( aspect );
-            aspects.put( change.getId(), aspectsShown );
+            updateAspects( change, aspect );
         }
+    }
+
+    private void updateAspects( Change change, String aspect ) {
+        List<String> aspectsShown = aspects.get( change.getId() );
+        if ( aspectsShown == null )
+            aspectsShown = new ArrayList<String>();
+        if ( !aspectsShown.contains( aspect ) )
+            aspectsShown.add( aspect );
+        aspects.put( change.getId(), aspectsShown );
     }
 
     private void closeAspect( Identifiable identifiable, String aspect ) {

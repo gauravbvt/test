@@ -1357,4 +1357,11 @@ public interface QueryService {
      * @return a participation or null
      */
     Participation findParticipation( String username );
+
+    /**
+     * Find relationships with entities of same kind.
+     * @param entity  a model entity
+     * @return  a list of relationships with other model entities
+     */
+     List<EntityRelationship> findEntityRelationships( ModelEntity entity );
 }

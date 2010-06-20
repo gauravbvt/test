@@ -451,19 +451,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addHeader() {
         FlowTitlePanel titlePanel = new FlowTitlePanel( "title", getFlow() ,isSend() );
         // Add style classes
-        String summary = getErrorSummary();
-        boolean hasIssues = hasIssues();
-        if ( !summary.isEmpty() ) {
-            titlePanel.add(
-                    new AttributeModifier( "title", true, new Model<String>( summary ) ) );
-        } else {
-            if ( hasIssues ) {
-                // All waived issues
-                titlePanel.add(
-                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
-            }
-        }
-        titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses( hasIssues, summary ) ) ) );
+        titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses(  ) ) ) );
         titlePanel.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Collapsed, getFlow() ) );

@@ -8,12 +8,10 @@ import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.ModelEntity;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
-import java.util.List;
 
 /**
  * Entity network diagram.
@@ -43,11 +41,11 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
             OutputStream outputStream,
             Analyst analyst,
             DiagramFactory diagramFactory ) {
-        List<? extends ModelEntity> entities = getEntitiesOfSameKind( diagramFactory );
+        QueryService queryService = diagramFactory.getQueryService();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder<ModelEntity, EntityRelationship> entityNetworkGraphBuilder =
-                new EntityNetworkGraphBuilder( entity, entities, diagramFactory.getQueryService() );
+                new EntityNetworkGraphBuilder( entity, diagramFactory.getQueryService() );
         Graph<ModelEntity, EntityRelationship> graph =
                 entityNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer =
@@ -73,18 +71,6 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
                 outputFormat,
                 outputStream
         );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private List<? extends ModelEntity> getEntitiesOfSameKind(
-                        DiagramFactory<ModelEntity, EntityRelationship> diagramFactory) {
-        return (List<? extends ModelEntity>) CollectionUtils.select(
-                diagramFactory.getQueryService().listEntitiesWithUnknown( entity.getClass() ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return entity.getKind().equals( ((ModelEntity)object).getKind() );
-                    }
-                } );
     }
 
 }

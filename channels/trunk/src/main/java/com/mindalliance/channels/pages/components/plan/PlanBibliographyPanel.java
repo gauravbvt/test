@@ -271,6 +271,10 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
                     "Type",
                     "attachment.type.label",
                     EMPTY ) );
+            columns.add( makeColumn(
+                    "Name",
+                    "attachment.name",
+                    EMPTY ) );
             columns.add( makeExternalLinkColumn(
                     "Document",
                     "attachment.url",

@@ -1,13 +1,12 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,10 +34,8 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelEntity, Enti
 
     public EntityNetworkGraphBuilder(
             ModelEntity entity,
-            List<? extends ModelEntity> entities,
             QueryService queryService ) {
         this.entity = entity;
-        this.entities = entities;
         this.queryService = queryService;
     }
 
@@ -54,28 +51,15 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelEntity, Enti
                             }
 
                         } );
-        populateGraph( digraph, entity, entities );
+        populateGraph( digraph, entity );
         return digraph;
     }
 
     private void populateGraph(
             DirectedGraph<ModelEntity, EntityRelationship> digraph,
-            ModelEntity entity,
-            List<? extends ModelEntity> entities ) {
+            ModelEntity entity ) {
         digraph.addVertex( entity );
-        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
-        for ( ModelEntity otherEntity : entities ) {
-            if ( otherEntity != entity ) {
-                EntityRelationship sendRel = queryService.findEntityRelationship( entity, otherEntity );
-                if ( sendRel != null ) {
-                    rels.add( sendRel );
-                }
-                EntityRelationship receiveRel = queryService.findEntityRelationship( otherEntity, entity );
-                if ( receiveRel != null ) {
-                    rels.add( receiveRel );
-                }
-            }
-        }
+        List<EntityRelationship> rels = queryService.findEntityRelationships( entity );
         for ( EntityRelationship entityRel : rels ) {
             digraph.addVertex( (ModelEntity)entityRel.getToIdentifiable( queryService ) );
             digraph.addVertex( (ModelEntity)entityRel.getFromIdentifiable( queryService ) );
