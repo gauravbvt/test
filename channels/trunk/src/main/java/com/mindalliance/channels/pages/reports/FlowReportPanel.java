@@ -81,10 +81,10 @@ public class FlowReportPanel extends Panel {
         final List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
         List<Goal> impactList;
         if ( isSource && flow.getTarget().isPart() && flow.isEssential( false ) ) {
-            impactList = queryService.findAllGoalsImpactedByFailure( (Part)flow.getTarget() );
+            impactList = queryService.findAllGoalsImpactedByFailure( (Part) flow.getTarget() );
         } else {
             impactList = new ArrayList<Goal>();
-        }        
+        }
         add( new Label( "information",
                 isSource ? flow.getSendTitle() : flow.getReceiveTitle() )
                 .add( new AttributeModifier( "class", true,
@@ -108,19 +108,6 @@ public class FlowReportPanel extends Panel {
                         new ResourceSpec( flow.getContactedPart() ), unicasts, broadcasts )
                         .setVisible( showContacts && !flow.getChannels().isEmpty() && actors.isEmpty() ),
 
-                new WebMarkupContainer( "cascading-failures" )
-                         .add( new ListView<Goal>( "impacts", impactList ) {
-                             @Override
-                             protected void populateItem( ListItem<Goal> item ) {
-                                 Goal goal = item.getModelObject();
-                                 item.add( new Label( "impact", goal.getFailureLabel("") ));
-                                 item.add( new AttributeModifier(
-                                         "class",
-                                         true,
-                                         new Model<String>(goal.getSeverityLabel().toLowerCase() ) ) );
-                             }
-                         } ).setVisible( !impactList.isEmpty() ),
-
                 new WebMarkupContainer( "actors-div" )
                         .add( new ListView<LocalizedActor>( "actors", actors ) {
                             @Override
@@ -132,12 +119,27 @@ public class FlowReportPanel extends Panel {
                                         true,
                                         localizedActor.getUnicasts(),
                                         localizedActor.getBroadcasts(),
-                                        "../../") );
+                                        "../../" ) );
                             }
                         }
                                 .add( new AttributeModifier( "class", true,
                                 new Model<String>( flow.isAll() ? "all-actors" : "any-actor" ) ) ) )
                         .setVisible( showContacts && !actors.isEmpty() ) );
+        WebMarkupContainer impactsContainer = new WebMarkupContainer( "impacts-container" );
+        impactsContainer.add( new WebMarkupContainer( "cascading-failures" )
+                .add( new ListView<Goal>( "impacts", impactList ) {
+            @Override
+            protected void populateItem( ListItem<Goal> item ) {
+                Goal goal = item.getModelObject();
+                item.add( new Label( "impact", goal.getFailureLabel( "" ) ) );
+                item.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>( goal.getSeverityLabel().toLowerCase() ) ) );
+            }
+        } ) );
+        impactsContainer.setVisible( !impactList.isEmpty() );
+        add( impactsContainer );
 
     }
 
