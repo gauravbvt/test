@@ -49,4 +49,8 @@ div.section-head h2 a.toplink:hover,
 a.flow-map-link,
 a.plan-map-link,
 a.flow-map-link:hover,
-a.plan-map-link:hover { float: none; }
+a.plan-map-link:hover,
+ul.impacts-container,
+ul.impacts-container > li.cascading-failures,
+ul.impacts-container > li.cascading-failures > span.attribute-title,
+ul.impacts-container > li.cascading-failures > ul.impacts { float: none; }

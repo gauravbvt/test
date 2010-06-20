@@ -643,5 +643,63 @@ a.plan-map-link:hover {
 a.logout {
 	padding:0 3px 0 7px;
 	border-left:1px solid #666666;
-	margin-left:5px;
+	margin-left:5px; }
+
+/* ----- Impacts ----- */
+
+ul.impacts-container {
+	clear: both;
+	float: left; }
+
+ul.impacts-container > li.cascading-failures {
+	float: left;
+	padding-bottom: 1px; }
+
+ul.impacts-container > li.cascading-failures > span.attribute-title {
+	clear: both;
+	float: left;
+	padding-bottom: 7px; }
+
+ul.impacts-container > li.cascading-failures > ul.impacts {
+	clear: both;
+	float: left; }
+
+ul.impacts-container > li.cascading-failures > ul.impacts > li { float: none; }
+
+ul.impacts-container > li.cascading-failures > ul.impacts > li.minor {
+	background: url( "images/bullet_minor.png" ) no-repeat 0px 4px;
 }
+
+ul.impacts-container > li.cascading-failures > ul.impacts > li.major {
+	background: url( "images/bullet_major.png" ) no-repeat 0px 4px;
+}
+
+ul.impacts-container > li.cascading-failures > ul.impacts > li.severe {
+	background: url( "images/bullet_severe.png" ) no-repeat 0px 4px;
+}
+
+ul.impacts-container > li.cascading-failures > ul.impacts > li.extreme {
+	background: url( "images/bullet_extreme.png" ) no-repeat 0px 4px;
+}
+
+ul.impacts-container > li.cascading-failures > ul.impacts > li.none {
+	background: url( "images/bullet_unknown.png" ) no-repeat 0px 4px;
+}
+
+/* ----- Organization Contacts ----- */
+
+ul.organization > li.contact > table.banner { margin: 0 0 5px 0; }
+
+ul.organization > li.contact > table.banner td.photo {
+	width: 29px;
+	border-color:#BCBEC0; }
+
+ul.organization > li.contact > table.banner td.photo > img {
+	padding: 0;
+	border: none; }
+
+ul.organization > li.contact > table.banner td.name {
+	width: 171px;
+	border-color:#BCBEC0; }
+	
+ul.organization > li.contact > table.banner td.channels-cont { border-color:#BCBEC0; }
