@@ -414,7 +414,7 @@ ul.menu, div.caption, span.menubar, ul.ranges {
 
 #history {
     position: absolute;
-    top: 18px;
+    top: 14px;
     right: 500px;
 }
 
@@ -884,6 +884,7 @@ div.aspect {
 .refresh, .navigation {
     cursor: pointer;
     vertical-align: baseline;
+	margin:0 0 0 -3px;
 }
 
 /* Tabbed panels */
@@ -1222,7 +1223,14 @@ span.none {
 
 span.channels-summary {
 	color:#333333;
-	padding-left:5px;
 	text-transform:lowercase;
 	cursor:pointer;
+}
+
+div.section-content > div.flow > div > span.pointer {
+	padding-right:2px;
+}
+
+div.section-content > div.flow > div > img {
+	padding-right:5px;
 }
