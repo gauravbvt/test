@@ -1,7 +1,7 @@
 <export>
-  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST">
+  <plan id="0" uri="mindalliance.com/channels/plans/acme" version="1.0" date="2010/06/19 12:30:58 EDT">
     <whenVersioned>2009/09/15 9:48:22 EDT</whenVersioned>
-    <lastId>17779</lastId>
+    <lastId>18904</lastId>
     <name>ACME Emergency Communications Plan</name>
     <client>ACME Manufacturing, Inc.</client>
     <description>Communications planning for responding and recovering from business interruptions due fire or power outage.</description>
@@ -56,9 +56,8 @@
     <actor id="277" kind="Actual" name="Richard Carry">
       <description>Administration</description>
       <attachments>
-        <attachment type="Image">uploads/richardcarry.jpeg</attachment>
+        <attachment type="Image" url="uploads/richardcarry.jpeg"></attachment>
       </attachments>
-      <user>rcarry</user>
       <channel>
         <medium id="-987" kind="Type">Phone</medium>
         <address>(973) 754-0722 x.223</address>
@@ -121,7 +120,7 @@
     <actor id="287" kind="Actual" name="Louise Burns">
       <description>President and CEO of ACME</description>
       <attachments>
-        <attachment type="Image">http://www.adamsonross.com/imgs/louise.jpg</attachment>
+        <attachment type="Image" url="http://www.adamsonross.com/imgs/louise.jpg"></attachment>
       </attachments>
       <channel>
         <medium id="-987" kind="Type">Phone</medium>
@@ -144,7 +143,7 @@
       <description>Sales and marketing</description>
       <tag id="10990" kind="Type">Certified emergency technician</tag>
       <attachments>
-        <attachment type="Image">uploads/petersanchez.jpeg</attachment>
+        <attachment type="Image" url="uploads/petersanchez.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-987" kind="Type">Phone</medium>
@@ -240,12 +239,16 @@
         <address>(973)478-7403</address>
       </channel>
     </actor>
-    <actor id="686" kind="Actual" name="R2D2">
+    <actor id="686" kind="Actual" name="Kingston Emcon">
       <description></description>
+      <tag id="17785" kind="Type">Notification System</tag>
       <attachments>
-        <attachment type="Image">http://www.cutiegadget.com/pict/r2-d2_robot.jpg</attachment>
+        <attachment type="Image" url="uploads/intercom.jpg"></attachment>
       </attachments>
       <system>true</system>
+    </actor>
+    <actor id="17785" kind="Type" name="Notification System">
+      <description></description>
     </actor>
     <role id="279" kind="Type" name="Emergency Manager">
       <description>Organizes and leads response to fire; leads evacuation etc.</description>
@@ -260,7 +263,7 @@
     <role id="10" kind="Type" name="Fire Chief">
       <description></description>
       <attachments>
-        <attachment type="Image">http://www.plumparty.com/partysupply/graphics/products/large/16596.jpg</attachment>
+        <attachment type="Image" url="http://www.plumparty.com/partysupply/graphics/products/large/16596.jpg"></attachment>
       </attachments>
     </role>
     <role id="286" kind="Type" name="Switchboard and Intercom Operator">
@@ -272,7 +275,7 @@
     <role id="40" kind="Type" name="Firefighter">
       <description></description>
       <attachments>
-        <attachment type="Image">http://www.things4myspace.com/myspace/backgrounds/firefighter/firefighter_18.jpg</attachment>
+        <attachment type="Image" url="http://www.things4myspace.com/myspace/backgrounds/firefighter/firefighter_18.jpg"></attachment>
       </attachments>
     </role>
     <role id="47" kind="Type" name="Media Representative">
@@ -336,8 +339,14 @@
     <role id="11801" kind="Type" name="Operations Manager">
       <description></description>
     </role>
+    <role id="17181" kind="Type" name="Press Operator">
+      <description></description>
+    </role>
     <role id="11623" kind="Type" name="Leader">
       <description>One who leads</description>
+    </role>
+    <role id="16749" kind="Type" name="Customer Contact Representative">
+      <description></description>
     </role>
     <place id="282" kind="Actual" name="1st shift/floor">
       <description></description>
@@ -372,7 +381,7 @@
     <place id="50" kind="Actual" name="ACME 100">
       <description></description>
       <streetAddress>200 South Street</streetAddress>
-      <geoname>Morristown, New Jersey</geoname>
+      <geoname>Morristown, NJ</geoname>
       <geoLocation>
         <geonameId>5101427</geonameId>
         <country>United States</country>
@@ -384,8 +393,8 @@
         <countyCode>027</countyCode>
         <cityCode>PPL</cityCode>
         <population>0</population>
-        <latitude>40.7967667</latitude>
-        <longitude>-74.4815438</longitude>
+        <latitude>40.79677</latitude>
+        <longitude>-74.48154</longitude>
         <precision>0</precision>
       </geoLocation>
     </place>
@@ -566,7 +575,22 @@
       <description></description>
       <streetAddress>100 Main Road</streetAddress>
       <postalCode>07963</postalCode>
-      <geoname>Morristown</geoname>
+      <geoname>Morristown, New Jersey</geoname>
+      <geoLocation>
+        <geonameId>5101427</geonameId>
+        <country>United States</country>
+        <state>New Jersey</state>
+        <county>Morris County</county>
+        <city>Morristown</city>
+        <countryCode>US</countryCode>
+        <stateCode>NJ</stateCode>
+        <countyCode>027</countyCode>
+        <cityCode>PPL</cityCode>
+        <population>0</population>
+        <latitude>40.7967667</latitude>
+        <longitude>-74.4815438</longitude>
+        <precision>0</precision>
+      </geoLocation>
     </place>
     <place id="333" kind="Actual" name="Warehouse">
       <description></description>
@@ -582,7 +606,7 @@
     <organization id="13" kind="Actual" name="Fire Department">
       <description></description>
       <attachments>
-        <attachment type="Image">http://cityofashville.googlepages.com/firelogo.jpg/firelogo-full.jpg</attachment>
+        <attachment type="Image" url="uploads/fire_department.jpeg"></attachment>
       </attachments>
       <mission></mission>
     </organization>
@@ -590,7 +614,7 @@
       <description>The ACME Corporation is a world leader in creative manufacturing services.</description>
       <tag id="11681" kind="Type">Multinational corporation</tag>
       <attachments>
-        <attachment type="Image">uploads/acme.png</attachment>
+        <attachment type="Image" url="uploads/acme.png"></attachment>
       </attachments>
       <actorsRequired>true</actorsRequired>
       <agreementsRequired>true</agreementsRequired>
@@ -733,7 +757,7 @@
       <description></description>
       <tag id="11682" kind="Type">Corporation</tag>
       <attachments>
-        <attachment type="Image">http://wpcontent.answers.com/wikipedia/en/2/2f/PSEG_Logo.jpg</attachment>
+        <attachment type="Image" url="http://wpcontent.answers.com/wikipedia/en/2/2f/PSEG_Logo.jpg"></attachment>
       </attachments>
       <mission></mission>
       <channel>
@@ -755,7 +779,7 @@
       <description></description>
       <tag id="11681" kind="Type">Multinational corporation</tag>
       <attachments>
-        <attachment type="Image">uploads/pinnacle.jpg</attachment>
+        <attachment type="Image" url="uploads/pinnacle.jpg"></attachment>
       </attachments>
       <location id="52">Pinnacle Headquarters</location>
       <mission></mission>
@@ -790,6 +814,48 @@
       <description>Responding to an event as it unfolds.</description>
       <timing>Concurrent</timing>
     </phase>
+    <participation id="-970" kind="Actual" name="rcarry">
+      <description></description>
+      <user>rcarry</user>
+      <actor id="277">Richard Carry</actor>
+    </participation>
+    <participation id="-969" kind="Actual" name="jf">
+      <description></description>
+      <user>jf</user>
+    </participation>
+    <participation id="-964" kind="Actual" name="romit">
+      <description></description>
+      <user>romit</user>
+    </participation>
+    <participation id="-963" kind="Actual" name="lburns">
+      <description></description>
+      <user>lburns</user>
+    </participation>
+    <participation id="-962" kind="Actual" name="psanchez">
+      <description></description>
+      <user>psanchez</user>
+      <actor id="285">Peter Sanchez</actor>
+    </participation>
+    <participation id="-961" kind="Actual" name="denis">
+      <description></description>
+      <user>denis</user>
+    </participation>
+    <participation id="-968" kind="Actual" name="howard">
+      <description></description>
+      <user>howard</user>
+    </participation>
+    <participation id="-967" kind="Actual" name="guest">
+      <description></description>
+      <user>guest</user>
+    </participation>
+    <participation id="-966" kind="Actual" name="mike">
+      <description></description>
+      <user>mike</user>
+    </participation>
+    <participation id="-965" kind="Actual" name="david">
+      <description></description>
+      <user>david</user>
+    </participation>
     <incident id="82">Power is out</incident>
     <incident id="5">Building on fire</incident>
     <incident id="1191">Building unsafe</incident>
@@ -798,22 +864,22 @@
     <plan-phase id="4952">Preparing</plan-phase>
     <organization-involved id="14">ACME</organization-involved>
     <organization-involved id="77">Pinnacle</organization-involved>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="3" name="Power outage">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/06/19 12:30:58 EDT" id="3" name="Power outage">
       <description>A power outage interrupts operations at main location.</description>
       <trigger-event id="82">Power is out</trigger-event>
       <phase id="1192">Responding</phase>
       <goal>
         <category>Delivery</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>true</endsWithSegment>
-        <description>A power outage put at risk time-sensitive delivery contracts.</description>
+        <description>A power outage jeopardizes time-sensitive delivery contracts.</description>
       </goal>
       <goal>
         <category>Property</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Low</level>
         <endsWithSegment>true</endsWithSegment>
         <description></description>
@@ -861,6 +927,7 @@
       </part>
       <part id="91">
         <task>Responding to outage</task>
+        <role id="16749" kind="Type">Customer Contact Representative</role>
         <organization id="43" kind="Actual">PSEG</organization>
         <startsWithSegment>true</startsWithSegment>
         <terminatesEvent>true</terminatesEvent>
@@ -892,6 +959,7 @@
         <target>
           <part id="88"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -910,6 +978,7 @@
         <target>
           <part id="87"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -928,6 +997,7 @@
         <target>
           <part id="92"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -954,6 +1024,7 @@
         <target>
           <part id="90"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -972,6 +1043,7 @@
         <target>
           <connector id="2052"/>
         </target>
+        <description></description>
         <eoi>
           <content>Expected duration of interuption</content>
           <sourceCodes></sourceCodes>
@@ -991,6 +1063,7 @@
         <target>
           <connector id="2051"/>
         </target>
+        <description></description>
         <eoi>
           <content>Restart time</content>
           <sourceCodes></sourceCodes>
@@ -1010,6 +1083,7 @@
         <target>
           <connector id="2050"/>
         </target>
+        <description></description>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
@@ -1024,6 +1098,7 @@
         <target>
           <part id="87"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -1042,6 +1117,7 @@
         <target>
           <part id="88"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -1060,6 +1136,7 @@
         <target>
           <part id="89"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -1072,30 +1149,30 @@
         <maxDelay>30 seconds</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="190" name="Business continuity">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/06/19 12:30:58 EDT" id="190" name="Business continuity">
       <description>Provide a framework on which to resume critical business processes when normal work location and the resources in it are not accessible. The department plans are closely coordinated and supported by local management support staff for such areas as technology and office administrative assistance in establishing a continuous working environment.</description>
       <trigger-event id="72">Business interrupted</trigger-event>
       <phase id="1192">Responding</phase>
       <goal>
         <category>Delivery</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description>Delivery of services may be delayed.</description>
       </goal>
       <goal>
         <category>Reputation</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
       </goal>
       <goal>
         <category>Revenue</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
@@ -1195,6 +1272,7 @@
         <detection-waivers>
           <detection>CommitmentWithoutRequiredAgreement</detection>
         </detection-waivers>
+        <description></description>
         <eoi>
           <content>Equipped with Battery powered lighting- Laptop with air card</content>
           <sourceCodes></sourceCodes>
@@ -1218,6 +1296,7 @@
         <target>
           <part id="194"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -1239,6 +1318,7 @@
         <detection-waivers>
           <detection>CommitmentWithoutRequiredAgreement</detection>
         </detection-waivers>
+        <description></description>
         <eoi>
           <content>Outage duration Secretary Cell phone, need list and home numbers</content>
           <sourceCodes></sourceCodes>
@@ -1262,6 +1342,7 @@
         <target>
           <part id="198"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -1284,6 +1365,7 @@
         <target>
           <part id="199"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -1295,77 +1377,6 @@
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
-        <askedFor>false</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>immediately</maxDelay>
-      </flow>
-      <flow id="221" name="Operations interrupted">
-        <source>
-          <connector id="184" segment="Fire in the building">
-            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
-9- Respond immediately to the fire event. &#xd;
-8- Ensure the safety and health of colleagues&#xd;
-7- Assess any damage or impact of a situation&#xd;
-4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
-            <flow name="Operations interrupted"/>
-            <part-id>172</part-id>
-            <part-role name="Emergency Manager"/>
-            <part-task name="Initiating fire response"></part-task>
-            <part-organization name="ACME"/>
-          </connector>
-        </source>
-        <target>
-          <part id="194"/>
-        </target>
-        <channel>
-          <medium id="-984" kind="Type">Cell</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium id="-987" kind="Type">Phone</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium id="-974" kind="Type">Face to face</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>None</significanceToSource>
-        <significanceToTarget>Triggers</significanceToTarget>
-        <askedFor>false</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>immediately</maxDelay>
-      </flow>
-      <flow id="228" name="Damage report">
-        <source>
-          <connector id="125" segment="Recovery after fire">
-            <segment-description>Managing the aftermath of a fire.</segment-description>
-            <flow name="Damage report"/>
-            <part-id>110</part-id>
-            <part-role name="Emergency Manager"/>
-            <part-task name="Assessing cost of damages"></part-task>
-            <part-organization name="ACME"/>
-          </connector>
-        </source>
-        <target>
-          <part id="194"/>
-        </target>
-        <channel>
-          <medium id="-987" kind="Type">Phone</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium id="-981" kind="Type">Email</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium id="-974" kind="Type">Face to face</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>Terminates</significanceToSource>
-        <significanceToTarget>Useful</significanceToTarget>
         <askedFor>false</askedFor>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
@@ -1380,6 +1391,7 @@
         <detection-waivers>
           <detection>FlowToSelf</detection>
         </detection-waivers>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -1398,6 +1410,7 @@
         <target>
           <part id="200"/>
         </target>
+        <description></description>
         <eoi>
           <content>Power resumption status, jobs under way, when will job be completed. What will we do if the capability is not resumed by time X.</content>
           <sourceCodes></sourceCodes>
@@ -1421,6 +1434,7 @@
         <target>
           <part id="195"/>
         </target>
+        <description></description>
         <eoi>
           <content>Business interruption</content>
           <sourceCodes></sourceCodes>
@@ -1444,6 +1458,7 @@
         <target>
           <part id="196"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -1473,6 +1488,7 @@
         <detection-waivers>
           <detection>FlowToSelf</detection>
         </detection-waivers>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -1491,6 +1507,7 @@
         <target>
           <part id="197"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -1503,19 +1520,23 @@
         <maxDelay>immediately</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="140" name="Building evacuation">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/06/19 12:30:58 EDT" id="140" name="Building evacuation">
       <description>Evacuating the building to minimize risk to personnel.</description>
       <trigger-event id="1191">Building unsafe</trigger-event>
       <phase id="1192">Responding</phase>
       <goal>
         <category>Health</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>true</endsWithSegment>
         <description></description>
       </goal>
       <part id="143">
+        <attachments>
+          <attachment type="Reference" url="http://www.youtube.com/watch?v=es8CK0-DsHc">Training video</attachment>
+          <attachment type="Reference" url="http://www.airport-int.com/upload/image_files/articles/images/companies/1637/evacchair2.jpg">Wheel chair evacuation</attachment>
+        </attachments>
         <task>Conducting warehouse evacuation</task>
         <role id="281" kind="Type">Evacuation Team Leader</role>
         <actor id="10990" kind="Type">Certified emergency technician</actor>
@@ -1563,7 +1584,7 @@
         <asTeam>false</asTeam>
       </part>
       <part id="148">
-        <task>Managing building evacuation</task>
+        <task>Managing safe building evacuation</task>
         <role id="279" kind="Type">Emergency Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
@@ -1590,14 +1611,21 @@
         <asTeam>true</asTeam>
       </part>
       <part id="150">
-        <task>Relaying evacuation message now</task>
+        <task>Relaying evacuation message</task>
         <role id="685" kind="Type">Switchboard and Intercom System</role>
-        <actor id="686" kind="Actual">R2D2</actor>
+        <actor id="686" kind="Actual">Kingston Emcon</actor>
         <organization id="14" kind="Actual">ACME</organization>
         <location id="50" kind="Actual">ACME 100</location>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <goal intent="mitigate" category="Health">ACME</goal>
+        <asTeam>false</asTeam>
+      </part>
+      <part id="17781">
+        <task>Relaying notification</task>
+        <actor id="17785" kind="Type">Notification System</actor>
+        <startsWithSegment>false</startsWithSegment>
+        <terminatesEvent>false</terminatesEvent>
         <asTeam>false</asTeam>
       </part>
       <flow id="153" name="Warehouse evacuation status">
@@ -1607,6 +1635,7 @@
         <target>
           <part id="148"/>
         </target>
+        <description></description>
         <channel>
           <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
@@ -1625,6 +1654,7 @@
         <target>
           <part id="146"/>
         </target>
+        <description></description>
         <eoi>
           <content>There is a fire. Everyone must evacuate the warehouse and proceed to the assembly area immediately.</content>
           <sourceCodes></sourceCodes>
@@ -1665,6 +1695,7 @@
         <detection-waivers>
           <detection>FlowToSelf</detection>
         </detection-waivers>
+        <description></description>
         <eoi>
           <content>Number of employees in assembly area and any missing</content>
           <sourceCodes></sourceCodes>
@@ -1689,32 +1720,15 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>5 seconds</maxDelay>
       </flow>
-      <flow id="157" name="Activate evacuation plan">
+      <flow id="17782" name="Activate evacuation plan">
         <source>
           <part id="148"/>
         </source>
         <target>
-          <part id="143"/>
+          <part id="17781"/>
         </target>
-        <eoi>
-          <content>date</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <eoi>
-          <content>assembly area</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <channel>
-          <medium id="-977" kind="Type">Television</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium id="-980" kind="Type">Notification system</medium>
-          <address></address>
-        </channel>
-        <all>true</all>
+        <description></description>
+        <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
@@ -1728,6 +1742,7 @@
         <target>
           <part id="149"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -1750,6 +1765,7 @@
         <target>
           <part id="150"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -1779,6 +1795,7 @@
         <detection-waivers>
           <detection>FlowToSelf</detection>
         </detection-waivers>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -1805,6 +1822,7 @@
         <target>
           <part id="142"/>
         </target>
+        <description></description>
         <eoi>
           <content>All occupants should evacuate to assembly area</content>
           <sourceCodes></sourceCodes>
@@ -1832,6 +1850,7 @@
         <target>
           <part id="149"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -1843,7 +1862,7 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>20 minutes</maxDelay>
       </flow>
-      <flow id="10375" name="Activate evacuation plan">
+      <flow id="16393" name="Activate evacuation plan">
         <source>
           <connector id="176" segment="Fire in the building">
             <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
@@ -1862,23 +1881,13 @@
         <target>
           <part id="148"/>
         </target>
-        <detection-waivers>
-          <detection>FlowToSelf</detection>
-        </detection-waivers>
-        <channel>
-          <medium id="-984" kind="Type">Cell</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium id="-974" kind="Type">Face to face</medium>
-          <address></address>
-        </channel>
+        <description></description>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
         <classificationsLinked>true</classificationsLinked>
-        <maxDelay>20 minutes</maxDelay>
+        <maxDelay>immediately</maxDelay>
       </flow>
       <flow id="151" name="Evacuate to assembly area">
         <source>
@@ -1887,6 +1896,7 @@
         <target>
           <part id="145"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -1909,6 +1919,7 @@
         <target>
           <part id="148"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -1932,39 +1943,6 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
-      <flow id="10376" name="Activate evacuation plan">
-        <source>
-          <connector id="176" segment="Fire in the building">
-            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
-9- Respond immediately to the fire event. &#xd;
-8- Ensure the safety and health of colleagues&#xd;
-7- Assess any damage or impact of a situation&#xd;
-4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
-            <flow name="Activate evacuation plan"/>
-            <part-id>170</part-id>
-            <part-role name="Emergency Manager"/>
-            <part-task name="Facilitating fire response"></part-task>
-            <part-organization name="ACME"/>
-          </connector>
-        </source>
-        <target>
-          <part id="142"/>
-        </target>
-        <detection-waivers>
-          <detection>EmptyNeedOrCapability</detection>
-        </detection-waivers>
-        <channel>
-          <medium id="-987" kind="Type">Phone</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>None</significanceToSource>
-        <significanceToTarget>Triggers</significanceToTarget>
-        <askedFor>false</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>26 minutes</maxDelay>
-      </flow>
       <flow id="166" name="Evacuate building">
         <source>
           <part id="150"/>
@@ -1972,6 +1950,7 @@
         <target>
           <part id="142"/>
         </target>
+        <description></description>
         <eoi>
           <content>Fire location</content>
           <sourceCodes></sourceCodes>
@@ -1995,6 +1974,7 @@
         <target>
           <part id="144"/>
         </target>
+        <description></description>
         <eoi>
           <content>Location of fire</content>
           <sourceCodes></sourceCodes>
@@ -2018,6 +1998,7 @@
         <target>
           <part id="143"/>
         </target>
+        <description></description>
         <eoi>
           <content>safe exits</content>
           <sourceCodes></sourceCodes>
@@ -2038,37 +2019,29 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>5 seconds</maxDelay>
       </flow>
-      <flow id="1321" name="Status of building evacuation">
+      <flow id="17783" name="Activate evacuation plan">
         <source>
-          <connector id="1320"/>
+          <part id="17781"/>
         </source>
         <target>
-          <part id="149"/>
+          <part id="143"/>
         </target>
-        <all>false</all>
-        <significanceToSource>None</significanceToSource>
-        <significanceToTarget>Critical</significanceToTarget>
-        <askedFor>true</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>10 minutes</maxDelay>
-      </flow>
-      <flow id="1213" name="Activate evacuation plan">
-        <source>
-          <connector id="1233"/>
-        </source>
-        <target>
-          <part id="142"/>
-        </target>
-        <detection-waivers>
-          <detection>EmptyNeedOrCapability</detection>
-        </detection-waivers>
+        <attachments>
+          <attachment type="Reference" url="http://www.premierautoworkers.com/images/evacuation-plan.jpg">Evacuation plan</attachment>
+        </attachments>
+        <description>Make sure recipient knowns how to get to the assembly area.</description>
         <eoi>
-          <content>contingencies</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
+          <content>location of classified containers</content>
+          <sourceCodes>Department of Defense</sourceCodes>
+          <specialHandlingCodes>Do not reveal the nature of the contents</specialHandlingCodes>
+          <classification>
+            <system>US Gov</system>
+            <name>Secret</name>
+            <level>-4</level>
+          </classification>
         </eoi>
         <eoi>
-          <content>danger zones</content>
+          <content>assembly area</content>
           <sourceCodes></sourceCodes>
           <specialHandlingCodes></specialHandlingCodes>
         </eoi>
@@ -2076,27 +2049,49 @@
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
         </channel>
-        <all>false</all>
+        <all>true</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
         <askedFor>false</askedFor>
         <classificationsLinked>true</classificationsLinked>
-        <maxDelay>26 minutes</maxDelay>
+        <maxDelay>immediately</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="13904" name="Shutting down operations">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/06/19 12:30:58 EDT" id="17774" name="Test">
+      <description>No description</description>
+      <trigger-event id="82">Power is out</trigger-event>
+      <phase id="1192">Responding</phase>
+      <part id="17775">
+        <task>doing something</task>
+        <startsWithSegment>false</startsWithSegment>
+        <terminatesEvent>false</terminatesEvent>
+        <asTeam>false</asTeam>
+      </part>
+    </segment>
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/06/19 12:30:58 EDT" id="13904" name="Shutting down operations">
       <description>Shutting down operations because of fire</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="1192">Responding</phase>
       <goal>
         <category>Property</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>true</endsWithSegment>
         <description></description>
       </goal>
+      <part id="17184">
+        <task>Shutting down press</task>
+        <role id="17181" kind="Type">Press Operator</role>
+        <organization id="14" kind="Actual">ACME</organization>
+        <startsWithSegment>false</startsWithSegment>
+        <terminatesEvent>false</terminatesEvent>
+        <asTeam>false</asTeam>
+      </part>
       <part id="13905">
+        <attachments>
+          <attachment type="Reference" url="uploads/startup_shutdown.pdf"></attachment>
+        </attachments>
         <task>Shutting down printing presses</task>
         <role id="11801" kind="Type">Operations Manager</role>
         <organization id="14" kind="Actual">ACME</organization>
@@ -2106,18 +2101,29 @@
         <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
-      <flow id="13909" name="Shutdown completed">
+      <flow id="17248" name="Shut down press">
         <source>
           <part id="13905"/>
         </source>
         <target>
-          <connector id="13932"/>
+          <part id="17184"/>
         </target>
-        <eoi>
-          <content>time of completion</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
+        <description></description>
+        <all>true</all>
+        <significanceToSource>None</significanceToSource>
+        <significanceToTarget>Useful</significanceToTarget>
+        <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
+        <maxDelay>immediately</maxDelay>
+      </flow>
+      <flow id="17250" name="Shut down press">
+        <source>
+          <part id="13905"/>
+        </source>
+        <target>
+          <connector id="17998"/>
+        </target>
+        <description></description>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
@@ -2125,7 +2131,27 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
-      <flow id="13911" name="Shut power off">
+      <flow id="13909" name="Shutdown completed">
+        <source>
+          <part id="13905"/>
+        </source>
+        <target>
+          <connector id="17997"/>
+        </target>
+        <description>Make sure time of completion is accurate to the minute</description>
+        <eoi>
+          <content>time of completion</content>
+          <sourceCodes></sourceCodes>
+          <specialHandlingCodes></specialHandlingCodes>
+        </eoi>
+        <all>false</all>
+        <significanceToSource>Terminates</significanceToSource>
+        <significanceToTarget>Useful</significanceToTarget>
+        <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
+        <maxDelay>2 minutes</maxDelay>
+      </flow>
+      <flow id="16740" name="Shut power off">
         <source>
           <connector id="186" segment="Fire in the building">
             <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
@@ -2144,9 +2170,7 @@
         <target>
           <part id="13905"/>
         </target>
-        <attachments>
-          <attachment type="Policy">http://www.acme.com/shutdown_procs.pdf</attachment>
-        </attachments>
+        <description></description>
         <eoi>
           <content>expected downtime</content>
           <sourceCodes></sourceCodes>
@@ -2172,31 +2196,14 @@
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>1 minute</maxDelay>
       </flow>
-      <flow id="13907" name="Shut power off">
+      <flow id="16730" name="Shut power off">
         <source>
-          <connector id="13906"/>
+          <connector id="17996"/>
         </source>
         <target>
           <part id="13905"/>
         </target>
-        <eoi>
-          <content>Expected downtime</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <eoi>
-          <content>Urgency</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <channel>
-          <medium id="-987" kind="Type">Phone</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium id="11809" kind="Type">Intercom</medium>
-          <address></address>
-        </channel>
+        <description></description>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Triggers</significanceToTarget>
@@ -2205,7 +2212,7 @@
         <maxDelay>1 minute</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="167" name="Fire in the building">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/06/19 12:30:58 EDT" id="167" name="Fire in the building">
       <description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
 9- Respond immediately to the fire event. &#xd;
 8- Ensure the safety and health of colleagues&#xd;
@@ -2214,27 +2221,18 @@
 0- Manage and communicate information about the incident to parties deemed necessary</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="1192">Responding</phase>
-      <issue id="4944" about="167">
-        <description>Capturing sharing commitments between firemen and fire chief seems out of scope.</description>
-        <type>Validity</type>
-        <severity>Low</severity>
-        <remediation>Keep current flows between firemen and fire chief
-or remove any such flows
-or move them  to another plan segment</remediation>
-        <reportedBy>jf</reportedBy>
-      </issue>
       <goal>
         <category>Health</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
       </goal>
       <goal>
         <category>Property</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>High</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
@@ -2306,6 +2304,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="170"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -2332,6 +2331,7 @@ or move them  to another plan segment</remediation>
         <target>
           <connector id="176"/>
         </target>
+        <description></description>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
@@ -2346,6 +2346,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="173"/>
         </target>
+        <description></description>
         <eoi>
           <content>jobs in progress</content>
           <sourceCodes></sourceCodes>
@@ -2370,6 +2371,7 @@ or move them  to another plan segment</remediation>
         <target>
           <connector id="1106"/>
         </target>
+        <description></description>
         <eoi>
           <content>jobs completed</content>
           <sourceCodes></sourceCodes>
@@ -2389,6 +2391,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="171"/>
         </target>
+        <description></description>
         <eoi>
           <content>Provide complete information about the emergency including: the nature of the fire, location (site, building, and area within the building), number and location of any victims, their symptoms or injuries, the nature and spread of the hazard, and actions taken to stabilize the situation or protect life and property, any fire alarms zones that have been activated. Advise the fire department of the building entrance closest to the scene. If an explosion occurs, attempt to determine its cause. Hazardous materials. When the public fire department arrives, inform its Incident Commander of the nature of the emergency and action being taken. Provide building plans, master keys, and other information as requested.</content>
           <sourceCodes></sourceCodes>
@@ -2412,6 +2415,7 @@ or move them  to another plan segment</remediation>
         <target>
           <connector id="1318"/>
         </target>
+        <description></description>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
@@ -2426,6 +2430,7 @@ or move them  to another plan segment</remediation>
         <target>
           <connector id="179"/>
         </target>
+        <description></description>
         <all>false</all>
         <significanceToSource>Terminates</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
@@ -2440,6 +2445,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="173"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -2458,6 +2464,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="169"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -2480,6 +2487,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="174"/>
         </target>
+        <description></description>
         <eoi>
           <content>Fire at ACME Location 100 Stark Road.</content>
           <sourceCodes></sourceCodes>
@@ -2503,6 +2511,7 @@ or move them  to another plan segment</remediation>
         <target>
           <connector id="184"/>
         </target>
+        <description></description>
         <all>false</all>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
@@ -2517,6 +2526,7 @@ or move them  to another plan segment</remediation>
         <target>
           <connector id="186"/>
         </target>
+        <description></description>
         <eoi>
           <content>expected downtime</content>
           <sourceCodes></sourceCodes>
@@ -2534,32 +2544,6 @@ or move them  to another plan segment</remediation>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
-      <flow id="13910" name="Shutdown completed">
-        <source>
-          <connector id="13932" segment="Shutting down operations">
-            <segment-description>Shutting down operations because of fire</segment-description>
-            <flow name="Shutdown completed"/>
-            <part-id>13905</part-id>
-            <part-role name="Operations Manager"/>
-            <part-task name="Shutting down printing presses"></part-task>
-            <part-organization name="ACME"/>
-          </connector>
-        </source>
-        <target>
-          <part id="173"/>
-        </target>
-        <eoi>
-          <content>time of completion</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <all>false</all>
-        <significanceToSource>None</significanceToSource>
-        <significanceToTarget>Useful</significanceToTarget>
-        <askedFor>false</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>immediately</maxDelay>
-      </flow>
       <flow id="188" name="Go to location">
         <source>
           <part id="174"/>
@@ -2567,6 +2551,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="171"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-978" kind="Type">Radio</medium>
           <address></address>
@@ -2585,6 +2570,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="169"/>
         </target>
+        <description></description>
         <channel>
           <medium id="11809" kind="Type">Intercom</medium>
           <address></address>
@@ -2596,84 +2582,47 @@ or move them  to another plan segment</remediation>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
-      <flow id="1064" name="Operational status">
-        <source>
-          <connector id="1084"/>
-        </source>
-        <target>
-          <part id="173"/>
-        </target>
-        <eoi>
-          <content>job status</content>
-          <sourceCodes></sourceCodes>
-          <specialHandlingCodes></specialHandlingCodes>
-        </eoi>
-        <channel>
-          <medium id="-974" kind="Type">Face to face</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>None</significanceToSource>
-        <significanceToTarget>Useful</significanceToTarget>
-        <askedFor>false</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>immediately</maxDelay>
-      </flow>
-      <flow id="11827" name="Shutdown completed">
-        <source>
-          <connector id="11853"/>
-        </source>
-        <target>
-          <part id="173"/>
-        </target>
-        <all>false</all>
-        <significanceToSource>None</significanceToSource>
-        <significanceToTarget>Useful</significanceToTarget>
-        <askedFor>false</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>immediately</maxDelay>
-      </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/02/26 12:08:43 EST" id="107" name="Recovery after fire">
+    <segment plan="mindalliance.com/channels/plans/acme" version="1.0" date="2010/06/19 12:30:58 EDT" id="107" name="Recovery after fire">
       <description>Managing the aftermath of a fire.</description>
       <trigger-event id="5">Building on fire</trigger-event>
       <phase id="4972">Recovering</phase>
       <goal>
         <category>Health</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Low</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
       </goal>
       <goal>
         <category>Award</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
       </goal>
       <goal>
         <category>Reputation</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
       </goal>
       <goal>
         <category>Assets</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
       </goal>
       <goal>
         <category>Property</category>
-        <intent>mitigate</intent>
         <organization id="14" kind="Actual">ACME</organization>
+        <intent>mitigate</intent>
         <level>Medium</level>
         <endsWithSegment>false</endsWithSegment>
         <description></description>
@@ -2721,20 +2670,20 @@ or move them  to another plan segment</remediation>
         <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
-      <part id="114">
-        <task>Engaging clean up contractor</task>
-        <role id="326" kind="Type">Business Continuity Manager</role>
-        <organization id="14" kind="Actual">ACME</organization>
-        <startsWithSegment>false</startsWithSegment>
-        <terminatesEvent>false</terminatesEvent>
-        <goal intent="mitigate" category="Property">ACME</goal>
-        <asTeam>false</asTeam>
-      </part>
       <part id="115">
         <task>Estimating costs</task>
         <role id="42" kind="Type">Cleanup Contractor</role>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
+        <asTeam>false</asTeam>
+      </part>
+      <part id="114">
+        <task>Hiring clean up contractor</task>
+        <role id="326" kind="Type">Business Continuity Manager</role>
+        <organization id="14" kind="Actual">ACME</organization>
+        <startsWithSegment>false</startsWithSegment>
+        <terminatesEvent>false</terminatesEvent>
+        <goal intent="mitigate" category="Property">ACME</goal>
         <asTeam>false</asTeam>
       </part>
       <part id="116">
@@ -2790,6 +2739,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="118"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -2812,6 +2762,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="113"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -2823,43 +2774,6 @@ or move them  to another plan segment</remediation>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>
-      <flow id="225" name="Fire extinguished">
-        <source>
-          <connector id="179" segment="Fire in the building">
-            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
-9- Respond immediately to the fire event. &#xd;
-8- Ensure the safety and health of colleagues&#xd;
-7- Assess any damage or impact of a situation&#xd;
-4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
-            <flow name="Fire extinguished"/>
-            <part-id>170</part-id>
-            <part-role name="Emergency Manager"/>
-            <part-task name="Facilitating fire response"></part-task>
-            <part-organization name="ACME"/>
-          </connector>
-        </source>
-        <target>
-          <part id="109"/>
-        </target>
-        <detection-waivers>
-          <detection>FlowToSelf</detection>
-        </detection-waivers>
-        <channel>
-          <medium id="-987" kind="Type">Phone</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium id="-974" kind="Type">Face to face</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>Terminates</significanceToSource>
-        <significanceToTarget>Triggers</significanceToTarget>
-        <askedFor>false</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>immediately</maxDelay>
-      </flow>
       <flow id="126" name="Damage report">
         <source>
           <part id="110"/>
@@ -2867,6 +2781,7 @@ or move them  to another plan segment</remediation>
         <target>
           <connector id="125"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-981" kind="Type">Email</medium>
           <address></address>
@@ -2885,6 +2800,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="109"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -2903,6 +2819,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="109"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -2921,6 +2838,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="109"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-974" kind="Type">Face to face</medium>
           <address></address>
@@ -2939,6 +2857,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="117"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -2957,6 +2876,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="114"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -2979,6 +2899,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="119"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-984" kind="Type">Cell</medium>
           <address></address>
@@ -2990,40 +2911,6 @@ or move them  to another plan segment</remediation>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>15 seconds</maxDelay>
       </flow>
-      <flow id="226" name="Fire extinguished">
-        <source>
-          <connector id="179" segment="Fire in the building">
-            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
-9- Respond immediately to the fire event. &#xd;
-8- Ensure the safety and health of colleagues&#xd;
-7- Assess any damage or impact of a situation&#xd;
-4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
-            <flow name="Fire extinguished"/>
-            <part-id>170</part-id>
-            <part-role name="Emergency Manager"/>
-            <part-task name="Facilitating fire response"></part-task>
-            <part-organization name="ACME"/>
-          </connector>
-        </source>
-        <target>
-          <part id="113"/>
-        </target>
-        <channel>
-          <medium id="-987" kind="Type">Phone</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium id="-974" kind="Type">Face to face</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>Terminates</significanceToSource>
-        <significanceToTarget>Triggers</significanceToTarget>
-        <askedFor>false</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>immediately</maxDelay>
-      </flow>
       <flow id="135" name="Cost estimates">
         <source>
           <part id="115"/>
@@ -3031,6 +2918,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="109"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -3049,6 +2937,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="109"/>
         </target>
+        <description></description>
         <channel>
           <medium id="-987" kind="Type">Phone</medium>
           <address></address>
@@ -3071,6 +2960,7 @@ or move them  to another plan segment</remediation>
         <target>
           <part id="120"/>
         </target>
+        <description></description>
         <eoi>
           <content>and other details</content>
           <sourceCodes></sourceCodes>
@@ -3088,40 +2978,6 @@ or move them  to another plan segment</remediation>
         <significanceToSource>None</significanceToSource>
         <significanceToTarget>Useful</significanceToTarget>
         <askedFor>true</askedFor>
-        <classificationsLinked>true</classificationsLinked>
-        <maxDelay>immediately</maxDelay>
-      </flow>
-      <flow id="222" name="Fire extinguished">
-        <source>
-          <connector id="179" segment="Fire in the building">
-            <segment-description>A fire starts during business hours on the lower level of the main printing facility. ACME needs to:&#xd;
-9- Respond immediately to the fire event. &#xd;
-8- Ensure the safety and health of colleagues&#xd;
-7- Assess any damage or impact of a situation&#xd;
-4- Identify and apply the necessary emergency activities&#xd;
-0- Manage and communicate information about the incident to parties deemed necessary</segment-description>
-            <flow name="Fire extinguished"/>
-            <part-id>170</part-id>
-            <part-role name="Emergency Manager"/>
-            <part-task name="Facilitating fire response"></part-task>
-            <part-organization name="ACME"/>
-          </connector>
-        </source>
-        <target>
-          <part id="118"/>
-        </target>
-        <channel>
-          <medium id="-987" kind="Type">Phone</medium>
-          <address></address>
-        </channel>
-        <channel>
-          <medium id="-974" kind="Type">Face to face</medium>
-          <address></address>
-        </channel>
-        <all>false</all>
-        <significanceToSource>Terminates</significanceToSource>
-        <significanceToTarget>Triggers</significanceToTarget>
-        <askedFor>false</askedFor>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>immediately</maxDelay>
       </flow>

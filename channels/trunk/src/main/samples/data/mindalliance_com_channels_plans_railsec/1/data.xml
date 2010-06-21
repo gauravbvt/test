@@ -1,7 +1,7 @@
 <export>
-  <plan id="1" uri="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/04/09 19:58:23 EDT">
+  <plan id="1" uri="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/06/17 23:07:45 EDT">
     <whenVersioned>2010/02/09 11:46:28 EST</whenVersioned>
-    <lastId>2664</lastId>
+    <lastId>3031</lastId>
     <name>Rail Security</name>
     <client>EastWest Institute Workshop</client>
     <description>Information sharing for an IED attack on a public transit system.</description>
@@ -32,7 +32,7 @@
       <description></description>
       <tag id="73" kind="Type">Senior Command Staff</tag>
       <attachments>
-        <attachment type="Image">uploads/john_drummond.jpeg</attachment>
+        <attachment type="Image" url="uploads/john_drummond.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -51,7 +51,7 @@
       <description></description>
       <tag id="73" kind="Type">Senior Command Staff</tag>
       <attachments>
-        <attachment type="Image">uploads/amanda_nevin.jpeg</attachment>
+        <attachment type="Image" url="uploads/amanda_nevin.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -69,7 +69,7 @@
     <actor id="285" kind="Actual" name="Linda S. Beckett">
       <description></description>
       <attachments>
-        <attachment type="Image">uploads/linda_s_beckett.jpeg</attachment>
+        <attachment type="Image" url="uploads/linda_s_beckett.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -87,7 +87,7 @@
     <actor id="305" kind="Actual" name="John Mullen">
       <description></description>
       <attachments>
-        <attachment type="Image">uploads/1_john_mullen.jpeg</attachment>
+        <attachment type="Image" url="uploads/1_john_mullen.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -109,7 +109,7 @@
     <actor id="306" kind="Actual" name="Claire Waters">
       <description></description>
       <attachments>
-        <attachment type="Image">uploads/claire_waters.jpeg</attachment>
+        <attachment type="Image" url="uploads/claire_waters.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -135,7 +135,7 @@
       <description></description>
       <tag id="522" kind="Type">Certified Train Operator</tag>
       <attachments>
-        <attachment type="Image">uploads/joseph_neumann.jpeg</attachment>
+        <attachment type="Image" url="uploads/joseph_neumann.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -154,7 +154,7 @@
       <description></description>
       <tag id="522" kind="Type">Certified Train Operator</tag>
       <attachments>
-        <attachment type="Image">uploads/lucille_healy.jpeg</attachment>
+        <attachment type="Image" url="uploads/lucille_healy.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -172,7 +172,7 @@
     <actor id="297" kind="Actual" name="Paul Tremaine">
       <description></description>
       <attachments>
-        <attachment type="Image">uploads/paul_tremaine.jpeg</attachment>
+        <attachment type="Image" url="uploads/paul_tremaine.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -190,7 +190,7 @@
     <actor id="298" kind="Actual" name="Anna Green">
       <description></description>
       <attachments>
-        <attachment type="Image">uploads/anna_green.jpeg</attachment>
+        <attachment type="Image" url="uploads/anna_green.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -208,7 +208,7 @@
     <actor id="303" kind="Actual" name="Zabrina Lewis">
       <description></description>
       <attachments>
-        <attachment type="Image">uploads/zabrina_lewis.jpeg</attachment>
+        <attachment type="Image" url="uploads/zabrina_lewis.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -229,7 +229,7 @@
     <actor id="331" kind="Actual" name="Johann Strauss">
       <description></description>
       <attachments>
-        <attachment type="Image">uploads/johann_strauss.jpeg</attachment>
+        <attachment type="Image" url="uploads/johann_strauss.jpeg"></attachment>
       </attachments>
       <channel>
         <medium id="-983" kind="Type">Pager</medium>
@@ -260,6 +260,9 @@
         <address></address>
       </channel>
     </actor>
+    <actor id="2891" kind="Type" name="Joe Billy">
+      <description></description>
+    </actor>
     <actor id="2633" kind="Actual" name="A train conductor">
       <description></description>
       <channel>
@@ -289,14 +292,14 @@
     <role id="26" kind="Type" name="Passenger">
       <description></description>
       <attachments>
-        <attachment type="Image">uploads/passenger.jpeg</attachment>
+        <attachment type="Image" url="uploads/passenger.jpeg"></attachment>
       </attachments>
     </role>
     <role id="58" kind="Type" name="Bus Driver">
       <description></description>
       <tag id="19" kind="Type">Employee</tag>
       <attachments>
-        <attachment type="Image">uploads/2_bus_driver.jpeg</attachment>
+        <attachment type="Image" url="uploads/2_bus_driver.jpeg"></attachment>
       </attachments>
     </role>
     <role id="60" kind="Type" name="Public Relations Officer">
@@ -313,21 +316,21 @@
       <description></description>
       <tag id="19" kind="Type">Employee</tag>
       <attachments>
-        <attachment type="Image">uploads/special_ops.jpeg</attachment>
+        <attachment type="Image" url="uploads/special_ops.jpeg"></attachment>
       </attachments>
     </role>
     <role id="173" kind="Type" name="Train Dispatcher">
       <description></description>
       <tag id="19" kind="Type">Employee</tag>
       <attachments>
-        <attachment type="Image">uploads/train_dispatcher.jpeg</attachment>
+        <attachment type="Image" url="uploads/train_dispatcher.jpeg"></attachment>
       </attachments>
     </role>
     <role id="161" kind="Type" name="Train Conductor">
       <description></description>
       <tag id="19" kind="Type">Employee</tag>
       <attachments>
-        <attachment type="Image">uploads/train_conductor.jpeg</attachment>
+        <attachment type="Image" url="uploads/train_conductor.jpeg"></attachment>
       </attachments>
     </role>
     <role id="472" kind="Type" name="Publisher">
@@ -343,7 +346,7 @@
       <description></description>
       <tag id="19" kind="Type">Employee</tag>
       <attachments>
-        <attachment type="Image">uploads/transit_police_officer.jpeg</attachment>
+        <attachment type="Image" url="uploads/transit_police_officer.jpeg"></attachment>
       </attachments>
     </role>
     <role id="504" kind="Type" name="Station Manager">
@@ -358,9 +361,12 @@
       <description></description>
       <tag id="505" kind="Type">Node Manager</tag>
     </role>
+    <role id="2892" kind="Type" name="Ticket">
+      <description></description>
+    </role>
     <place id="7" kind="Type" name="Rail transit system">
       <description></description>
-      <mustBeContainedIn eventOrPlace="event" kind="Type" id="8">Bomb threat</mustBeContainedIn>
+      <mustBeContainedIn ref="event" kind="Type" id="8">Bomb threat</mustBeContainedIn>
     </place>
     <place id="36" kind="Type" name="Rail station">
       <description>A rail station</description>
@@ -384,7 +390,7 @@
     </place>
     <place id="91" kind="Type" name="Transit system territory">
       <description></description>
-      <mustContain eventOrPlace="event" kind="Type" id="8">Bomb threat</mustContain>
+      <mustContain ref="event" kind="Type" id="8">Bomb threat</mustContain>
     </place>
     <place id="110" kind="Type" name="Transit system node">
       <description></description>
@@ -401,7 +407,7 @@
       <description></description>
       <tag id="9" kind="Type">Public Transit Agency</tag>
       <attachments>
-        <attachment type="Image">uploads/metropolis_transit_authority.jpeg</attachment>
+        <attachment type="Image" url="uploads/metropolis_transit_authority.jpeg"></attachment>
       </attachments>
       <actorsRequired>true</actorsRequired>
       <mission>Provide safe and speedy transit to the citizens and visitors of Metropolis.</mission>
@@ -419,7 +425,7 @@
       <description></description>
       <tag id="16" kind="Type">Transit Operations</tag>
       <attachments>
-        <attachment type="Image">uploads/operations.jpeg</attachment>
+        <attachment type="Image" url="uploads/operations.jpeg"></attachment>
       </attachments>
       <parent id="282" kind="Actual">Metropolis Transit Authority</parent>
       <mission></mission>
@@ -496,7 +502,7 @@
       <description>The Smallville Transit Authority</description>
       <tag id="82" kind="Type">Regional Public Transit Authority</tag>
       <attachments>
-        <attachment type="Image">uploads/sta.jpeg</attachment>
+        <attachment type="Image" url="uploads/sta.jpeg"></attachment>
       </attachments>
       <actorsRequired>true</actorsRequired>
       <mission></mission>
@@ -522,7 +528,7 @@
       <description>Security arm of the Metropolis Transit Authority.</description>
       <tag id="2585" kind="Type">Public Transit Security</tag>
       <attachments>
-        <attachment type="Image">uploads/security.jpeg</attachment>
+        <attachment type="Image" url="uploads/security.jpeg"></attachment>
       </attachments>
       <parent id="282" kind="Actual">Metropolis Transit Authority</parent>
       <mission>To serve and protect all users and employees of the Metropolis Transit Authority.</mission>
@@ -553,6 +559,10 @@
         <title>Police Officer</title>
         <supervisor id="286">Amanda Nevin</supervisor>
       </job>
+    </organization>
+    <organization id="2893" kind="Actual" name="NJ Transit">
+      <description></description>
+      <mission></mission>
     </organization>
     <organization id="241" kind="Type" name="Local Police Department">
       <description></description>
@@ -612,23 +622,19 @@
       <description></description>
       <user>jf</user>
     </participation>
-    <participation id="-969" kind="Actual" name="mitzi">
-      <description></description>
-      <user>mitzi</user>
-    </participation>
-    <participation id="-968" kind="Actual" name="mike">
+    <participation id="-969" kind="Actual" name="mike">
       <description></description>
       <user>mike</user>
     </participation>
-    <participation id="-967" kind="Actual" name="david">
+    <participation id="-968" kind="Actual" name="david">
       <description></description>
       <user>david</user>
     </participation>
-    <participation id="-966" kind="Actual" name="romit">
+    <participation id="-967" kind="Actual" name="romit">
       <description></description>
       <user>romit</user>
     </participation>
-    <participation id="-965" kind="Actual" name="denis">
+    <participation id="-966" kind="Actual" name="denis">
       <description></description>
       <user>denis</user>
     </participation>
@@ -645,7 +651,7 @@
     <organization-involved id="284">Metropolis Transit Operations</organization-involved>
     <organization-involved id="330">Smallville Transit Authority</organization-involved>
     <organization-involved id="2584">Metropolis Transit Security</organization-involved>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/04/09 19:58:23 EDT" id="4" name="IED threat warning">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/06/17 23:07:45 EDT" id="4" name="IED threat warning">
       <description>The IED attack warning is disseminated within the rail transit system.</description>
       <trigger-event id="8">Bomb threat</trigger-event>
       <phase id="3">Responding</phase>
@@ -1352,7 +1358,7 @@
         <maxDelay>immediately</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/04/09 19:58:23 EDT" id="107" name="Local response plan activated">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/06/17 23:07:45 EDT" id="107" name="Local response plan activated">
       <description>Train station or bus terminal executes its threat response plan</description>
       <trigger-event id="8">Bomb threat</trigger-event>
       <phase id="3">Responding</phase>
@@ -1613,7 +1619,7 @@
         <maxDelay>1 minute</maxDelay>
       </flow>
     </segment>
-    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/04/09 19:58:23 EDT" id="150" name="IED attack suspected">
+    <segment plan="mindalliance.com/channels/plans/railsec" version="1.0" date="2010/06/17 23:07:45 EDT" id="150" name="IED attack suspected">
       <description>A suspicious activity is reported</description>
       <trigger-event id="2">Attack suspected</trigger-event>
       <phase id="3">Responding</phase>
@@ -1658,6 +1664,16 @@
         <organization id="9" kind="Type">Public Transit Agency</organization>
         <location id="36" kind="Type">Rail station</location>
         <jurisdiction id="36" kind="Type">Rail station</jurisdiction>
+        <startsWithSegment>false</startsWithSegment>
+        <terminatesEvent>false</terminatesEvent>
+        <goal intent="mitigate" category="Health">Public Transit Agency</goal>
+        <asTeam>false</asTeam>
+      </part>
+      <part id="2890">
+        <task>Evacuating train and station</task>
+        <role id="2892" kind="Type">Ticket</role>
+        <actor id="2891" kind="Type">Joe Billy</actor>
+        <organization id="2893" kind="Actual">NJ Transit</organization>
         <startsWithSegment>false</startsWithSegment>
         <terminatesEvent>false</terminatesEvent>
         <goal intent="mitigate" category="Health">Public Transit Agency</goal>
@@ -2214,6 +2230,21 @@
         <askedFor>false</askedFor>
         <classificationsLinked>true</classificationsLinked>
         <maxDelay>1 minute</maxDelay>
+      </flow>
+      <flow id="2895" name="">
+        <source>
+          <connector id="2911"/>
+        </source>
+        <target>
+          <part id="2890"/>
+        </target>
+        <description></description>
+        <all>false</all>
+        <significanceToSource>None</significanceToSource>
+        <significanceToTarget>Useful</significanceToTarget>
+        <askedFor>false</askedFor>
+        <classificationsLinked>true</classificationsLinked>
+        <maxDelay>immediately</maxDelay>
       </flow>
     </segment>
   </plan>
