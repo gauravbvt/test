@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.commands.UpdateObject;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
+import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -111,7 +111,8 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
             }
         } );
         ModelObject about = issue.getAbout();
-        waiveCheckBox.setEnabled( isLockedByUserIfNeeded( about ) );
+        // waiveCheckBox.setEnabled( isLockedByUserIfNeeded( about ) );
+        waivedContainer.setVisible( isLockedByUserIfNeeded( about ) );
         waivedContainer.add( waiveCheckBox );
     }
 

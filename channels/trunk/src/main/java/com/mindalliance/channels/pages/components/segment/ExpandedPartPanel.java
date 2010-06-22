@@ -492,7 +492,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update(
                         target,
                         new Change(
-                                Change.Type.AspectViewed,
+                                Change.Type.Expanded,
                                 getPart().getSegment(),
                                 SegmentEditPanel.GOALS ) );
             }
