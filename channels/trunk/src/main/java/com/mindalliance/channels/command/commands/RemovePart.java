@@ -1,15 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Iterator;
@@ -68,7 +68,7 @@ public class RemovePart extends AbstractCommand {
         QueryService queryService = commander.getQueryService();
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Part part = (Part) segment.getNode( (Long) get( "part" ) );
-        set( "partState", ChannelsUtils.getPartState( part ) );
+        set( "partState", part.mapState() );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
             multi = makeSubCommands( part );

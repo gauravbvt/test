@@ -1,14 +1,11 @@
 package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ElementOfInformation;
-import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
@@ -17,10 +14,7 @@ import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.beanutils.NestedNullException;
@@ -190,74 +184,14 @@ public final class ChannelsUtils {
     }
 
     /**
-     * Initialize a part from a preserved state.
-     *
-     * @param part      a part
-     * @param state     a map
-     * @param commander a commander
+     * Retrieve an entity from a serialization map.
+     * @param entityClass entity class
+     * @param state a map
+     * @param key  a string
+     * @param queryService a query service
+     * @return a model entity
      */
-    @SuppressWarnings( "unchecked" )
-    public static void initPartFrom( Part part, Map<String, Object> state, Commander commander ) {
-        QueryService queryService = commander.getQueryService();
-        part.setDescription( (String) state.get( "description" ) );
-        part.setTask( (String) state.get( "task" ) );
-        part.setRepeating( (Boolean) state.get( "repeating" ) );
-        part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
-        part.setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
-        part.setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
-        part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
-        part.setCompletionTime( (Delay) state.get( "completionTime" ) );
-        part.setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );
-        part.setGoals( new ArrayList<Goal>( (ArrayList<Goal>) state.get( "goals" ) ) );
-        if ( state.get( "initiatedEvent" ) != null )
-            part.setInitiatedEvent( queryService.findOrCreateType(
-                    Event.class,
-                    (String) state.get( "initiatedEvent" ) ) );
-        else
-            part.setInitiatedEvent( null );
-        if ( state.get( "actor" ) != null )
-            part.setActor( retrieveEntity(
-                    Actor.class,
-                    state,
-                    "actor",
-                    queryService) ) ;
-        else
-            part.setActor( null );
-        if ( state.get( "role" ) != null )
-            part.setRole( retrieveEntity(
-                    Role.class,
-                    state,
-                    "role",
-                    queryService ) );
-        else
-            part.setRole( null );
-        if ( state.get( "organization" ) != null )
-            part.setOrganization( retrieveEntity(
-                    Organization.class,
-                    state,
-                    "organization",
-                    queryService ) );
-        else
-            part.setOrganization( null );
-        if ( state.get( "jurisdiction" ) != null )
-            part.setJurisdiction( retrieveEntity(
-                    Place.class,
-                    state,
-                    "jurisdiction",
-                    queryService ) );
-        else
-            part.setJurisdiction( null );
-        if ( state.get( "location" ) != null )
-            part.setLocation( retrieveEntity(
-                    Place.class,
-                    state,
-                    "location",
-                    queryService ) );
-        else
-            part.setLocation( null );
-    }
-
-    private static <T extends ModelEntity> T retrieveEntity(
+    public static <T extends ModelEntity> T retrieveEntity(
             Class<T> entityClass,
             Map<String, Object> state,
             String key,
@@ -396,7 +330,7 @@ public final class ChannelsUtils {
     public static Map<String, Object> getPartCopy( Part part ) {
         Map<String, Object> copy = new HashMap<String, Object>();
         copy.put( "segment", part.getSegment().getId() );
-        copy.put( "partState", getPartState( part ) );
+        copy.put( "partState", part.mapState() );
         Iterator<Flow> needs = part.receives();
         List<Map<String, Object>> needStates = new ArrayList<Map<String, Object>>();
         while ( needs.hasNext() ) {

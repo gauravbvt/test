@@ -133,8 +133,6 @@ public class FlowListPanel extends AbstractCommandablePanel {
     }
 
 
-
-
     /**
      * Get flows sorted: sharing > not sharing, by priority, by title..
      *

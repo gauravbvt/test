@@ -7,6 +7,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
@@ -15,6 +16,7 @@ import org.apache.commons.collections.Predicate;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 
@@ -43,7 +45,7 @@ public class MovePart extends AbstractCommand {
      */
 
     public String getName() {
-        return "move part";
+        return "move task";
     }
 
     /**
@@ -56,7 +58,7 @@ public class MovePart extends AbstractCommand {
         assert !fromSegment.equals( toSegment );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
-            multi = makeSubCommands( part, toSegment );
+            multi = makeSubCommands( part, toSegment, commander );
             set( "subCommands", multi );
         }
         // else this is a replay
@@ -67,10 +69,13 @@ public class MovePart extends AbstractCommand {
 
     private MultiCommand makeSubCommands(
             Part part,
-            Segment toSegment ) throws CommandException {
+            Segment toSegment,
+            Commander commander
+    ) throws CommandException {
         MultiCommand multi = new MultiCommand( "move task - extra" );
-        Map<String, Object> partState = ChannelsUtils.getPartState( part );
+        Map<String, Object> partState = part.mapState();
         // add identical part to other segment
+        addGoalsToSegment( partState, toSegment, multi, commander );
         Command addPart = new AddPart( toSegment );
         addPart.set( "partState", partState );
         multi.addCommand( addPart );
@@ -93,6 +98,86 @@ public class MovePart extends AbstractCommand {
         return multi;
     }
 
+    @SuppressWarnings( "unchecked" )
+    private void addGoalsToSegment(
+            Map<String, Object> partState,
+            Segment toSegment,
+            MultiCommand multi,
+            Commander commander ) {
+        for ( Map<String, Object> goalState : (List<Map<String, Object>>) partState.get( "goals" ) ) {
+            Goal goal = Goal.fromMap( goalState, commander.getQueryService() );
+            if ( !toSegment.getGoals().contains( goal ) ) {
+                UpdatePlanObject updateSegment = new UpdatePlanObject(
+                        toSegment,
+                        "goals",
+                        goal,
+                        UpdateObject.Action.Add );
+                multi.addCommand( updateSegment );
+            }
+        }
+    }
+
+
+    @SuppressWarnings( "unchecked" )
+    private void addSends(
+            Part partToMove,
+            Segment toSegment,
+            MultiCommand multi,
+            Command addPart ) throws CommandException {
+        Segment fromSegment = partToMove.getSegment();
+        Map<String, Command> addCapabilityCommands = new HashMap<String, Command>();
+        Iterator<Flow> capabilities = IteratorUtils.filteredIterator(
+                partToMove.sends(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ( (Flow) object ).isCapability();
+                    }
+                } );
+        while ( capabilities.hasNext() ) {
+            Flow capability = capabilities.next();
+            Command addCapability = new AddCapability();
+            addCapability.set( "name", capability.getName() );
+            addCapability.set( "segment", toSegment.getId() );
+            addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( capability ) );
+            multi.addLink( addPart, "id", addCapability, "part" );
+            multi.addCommand( addCapability );
+            addCapabilityCommands.put( capability.getName(), addCapability );
+        }
+        for ( Flow send : partToMove.getAllSharingSends() ) {
+            Map<String, Object> attributes = ChannelsUtils.getFlowAttributes( send );
+            String name = send.getName();
+            Command connect = new ConnectWithFlow();
+            connect.set( "name", name );
+            connect.set( "attributes", attributes );
+            if ( !send.getTarget().getSegment().equals( toSegment ) ) {
+                // flow will be external to moved part
+                // don't create redundant capability
+                Command addCapability = addCapabilityCommands.get( name );
+                if ( addCapability == null ) {
+                    addCapability = new AddCapability();
+                    multi.addCommand( addCapability );
+                    addCapability.set( "name", name );
+                    addCapability.set( "segment", toSegment.getId() );
+                    addCapability.set( "attributes", attributes );
+                    multi.addLink( addPart, "id", addCapability, "part" );
+                    addCapabilityCommands.put( name, addCapability );
+                }
+                connect.set( "part", send.getTarget().getId() );
+                connect.set( "segment", fromSegment.getId() );
+                multi.addLink( addCapability, "target.id", connect, "other" );
+                connect.set( "isSend", false );  // part is the receiver
+                connect.set( "otherSegment", toSegment.getId() );
+            } else {
+                // flow will be internal to moved part
+                multi.addLink( addPart, "id", connect, "part" );
+                connect.set( "segment", toSegment.getId() );
+                connect.set( "isSend", true );
+                connect.set( "other", send.getTarget().getId() ); // target = external part
+                connect.set( "otherSegment", toSegment.getId() );
+            }
+            multi.addCommand( connect );
+        }
+    }
 
     private void addReceives(
             Part partToMove,
@@ -113,6 +198,7 @@ public class MovePart extends AbstractCommand {
                 multi.addLink( addPart, "id", addNeed, "part" );
                 multi.addCommand( addNeed );
             } else {
+                // a sharing receive
                 Command connect = new ConnectWithFlow();
                 connect.set( "name", name );
                 connect.set( "attributes", attributes );
@@ -149,82 +235,6 @@ public class MovePart extends AbstractCommand {
                 }
                 multi.addCommand( connect );
             }
-        }
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private void addSends(
-            Part partToMove,
-            Segment toSegment,
-            MultiCommand multi,
-            Command addPart ) throws CommandException {
-        Segment fromSegment = partToMove.getSegment();
-        Map<String, Command> addCapabilityCommands = new HashMap<String, Command>();
-        Iterator<Flow> capabilities = IteratorUtils.filteredIterator(
-                partToMove.sends(),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return ( (Flow) object ).isCapability();
-                    }
-                } );
-        while ( capabilities.hasNext() ) {
-            Flow capability = capabilities.next();
-            Command addCapability = new AddCapability();
-            addCapability.set( "name", capability.getName() );
-            addCapability.set( "segment", toSegment.getId() );
-            addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( capability ) );
-            multi.addLink( addPart, "id", addCapability, "part" );
-            multi.addCommand( addCapability );
-            addCapabilityCommands.put( capability.getName(), addCapability );
-        }
-        Iterator<Flow> sharingSends = IteratorUtils.filteredIterator(
-                partToMove.sends(),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return !( (Flow) object ).isCapability();
-                    }
-                } );
-        while ( sharingSends.hasNext() ) {
-            Flow send = sharingSends.next();
-            Map<String, Object> attributes = ChannelsUtils.getFlowAttributes( send );
-            String name = send.getName();
-            Command connect = new ConnectWithFlow();
-            connect.set( "name", name );
-            connect.set( "attributes", attributes );
-            if ( send.isInternal() ) {
-                // was internal to old part,  flow will be external to moved part
-                Command addCapability = addCapabilityCommands.get( name );
-                if ( addCapability == null ) {
-                    addCapability = new AddCapability();
-                    multi.addCommand( addCapability );
-                    addCapability.set( "name", name );
-                    addCapability.set( "segment", toSegment.getId() );
-                    addCapability.set( "attributes", attributes );
-                    multi.addLink( addPart, "id", addCapability, "part" );
-                    addCapabilityCommands.put( name, addCapability );
-                }
-                connect.set( "part", send.getTarget().getId() );
-                connect.set( "segment", fromSegment.getId() );
-                multi.addLink( addCapability, "target.id", connect, "other" );
-                connect.set( "isSend", false );
-                connect.set( "otherSegment", toSegment.getId() );
-            } else {
-                // from external to old part
-                multi.addLink( addPart, "id", connect, "part" );
-                connect.set( "segment", toSegment.getId() );
-                connect.set( "isSend", true );
-                if ( send.getTarget().getSegment().equals( toSegment ) ) {
-                    // from external to internal
-                    connect.set( "other", send.getTarget().getId() ); // target = external part
-                    connect.set( "otherSegment", toSegment.getId() );
-                } else {
-                    // external stays external
-                    Map<String, Object> state = ChannelsUtils.getFlowState( send, partToMove );
-                    connect.set( "otherSegment", state.get( "otherSegment" ) );
-                    connect.set( "other", state.get( "other" ) );
-                }
-            }
-            multi.addCommand( connect );
         }
     }
 

@@ -704,7 +704,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
          * @return a string
          */
         public String getKind() {
-            if ( part.isTerminatesEventPhase() ) {
+            if ( part.isTerminatesEventPhase() && goal.isEndsWithSegment() ) {
                 return "Ends event phase";
             } else if ( part.getGoals().contains( goal ) ) {
                 return goal.isPositive() ? "Makes gain" : "Reduces risk";

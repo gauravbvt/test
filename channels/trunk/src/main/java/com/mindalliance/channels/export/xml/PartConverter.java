@@ -64,7 +64,7 @@ public class PartConverter extends AbstractChannelsConverter {
         if ( part.getRole() != null ) {
             writer.startNode( "role" );
             writer.addAttribute( "id", Long.toString( part.getRole().getId() ) );
-            writer.addAttribute( "kind",  "Type" );
+            writer.addAttribute( "kind", "Type" );
             writer.setValue( part.getRole().getName() );
             writer.endNode();
         }
@@ -216,12 +216,16 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( segment, Flow.class );
             } else if ( nodeName.equals( "goal" ) ) {
-                boolean positive = reader.getAttribute("intent").equals( "gain" );
+                boolean positive = reader.getAttribute( "intent" ).equals( "gain" );
                 Goal.Category category = Goal.Category.valueOf( reader.getAttribute( "category" ) );
                 String orgName = reader.getValue();
                 Goal goal = segment.getGoal( category, positive, orgName );
-                part.getGoals().add( goal );
-            }  else if ( nodeName.equals( "asTeam" ) ) {
+                if ( goal == null ) {
+                    LOG.error( "Goal not found: " + category + " " + positive + " " + orgName );
+                } else {
+                    part.getGoals().add( goal );
+                }
+            } else if ( nodeName.equals( "asTeam" ) ) {
                 part.setAsTeam( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( segment, UserIssue.class );

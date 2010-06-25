@@ -3,6 +3,7 @@ package com.mindalliance.channels.model;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -13,11 +14,14 @@ import org.apache.commons.lang.WordUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -376,6 +380,12 @@ public class Part extends Node implements GeoLocatable {
 
     public void setGoals( List<Goal> goals ) {
         this.goals = goals;
+    }
+
+    private void addGoal( Goal goal ) {
+        if ( !goals.contains( goal )) {
+            goals.add( goal );
+        }
     }
 
     /**
@@ -1016,4 +1026,115 @@ public class Part extends Node implements GeoLocatable {
         Level priority = queryService.computePartPriority( this );
         return priority.getNegativeLabel().toLowerCase();
     }
+    /**
+      * Serialize the state of the part, minus its flows
+      *
+      * @return a map of attribute names and values
+      */
+    public Map<String,Object> mapState() {
+        Map<String, Object> state = new HashMap<String, Object>();
+        state.put( "description", getDescription() );
+        state.put( "task", getTask() );
+        state.put( "repeatsEvery", new Delay( getRepeatsEvery() ) );
+        state.put( "completionTime", new Delay( getCompletionTime() ) );
+        state.put( "attachments", new ArrayList<Attachment>( getAttachments() ) );
+        state.put( "waivedIssueDetections", new ArrayList<String>( getWaivedIssueDetections() ) );
+        state.put( "selfTerminating", isSelfTerminating() );
+        state.put( "repeating", isRepeating() );
+        state.put( "terminatesEventPhase", isTerminatesEventPhase() );
+        state.put( "startsWithSegment", isStartsWithSegment() );
+        List<Map<String, Object>> goalMaps = new ArrayList<Map<String, Object>>();
+        for ( Goal goal : getGoals() ) {
+            goalMaps.add( goal.toMap() );
+        }
+        state.put( "goals", goalMaps );
+        if ( getInitiatedEvent() != null )
+            state.put(
+                    "initiatedEvent",
+                    getInitiatedEvent().getName() );
+        if ( getActor() != null )
+            state.put(
+                    "actor",
+                    Arrays.asList( getActor().getName(), getActor().isType() ) );
+        if ( getRole() != null )
+            state.put( "role",
+                    Arrays.asList( getRole().getName(), getRole().isType() ) );
+        if ( getOrganization() != null )
+            state.put(
+                    "organization",
+                    Arrays.asList( getOrganization().getName(), getOrganization().isType() ) );
+        if ( getJurisdiction() != null )
+            state.put(
+                    "jurisdiction",
+                    Arrays.asList( getJurisdiction().getName(), getJurisdiction().isType() ) );
+        if ( getLocation() != null )
+            state.put(
+                    "location",
+                    Arrays.asList( getLocation().getName(), getLocation().isType() ) );
+        return state;
+
+    }
+
+    public void initFromMap( Map<String,Object> state, QueryService queryService ) {
+        setDescription( (String) state.get( "description" ) );
+        setTask( (String) state.get( "task" ) );
+        setRepeating( (Boolean) state.get( "repeating" ) );
+        setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
+        setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
+        setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
+        setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
+        setCompletionTime( (Delay) state.get( "completionTime" ) );
+        setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );
+        for (Map<String,Object> goalMap : (List<Map<String,Object>>)state.get( "goals" ) ) {
+            Goal goal = Goal.fromMap( goalMap, queryService );
+            addGoal(  goal );
+        }
+        if ( state.get( "initiatedEvent" ) != null )
+            setInitiatedEvent( queryService.findOrCreateType(
+                    Event.class,
+                    (String) state.get( "initiatedEvent" ) ) );
+        else
+            setInitiatedEvent( null );
+        if ( state.get( "actor" ) != null )
+            setActor( ChannelsUtils.retrieveEntity(
+                    Actor.class,
+                    state,
+                    "actor",
+                    queryService) ) ;
+        else
+            setActor( null );
+        if ( state.get( "role" ) != null )
+            setRole( ChannelsUtils.retrieveEntity(
+                    Role.class,
+                    state,
+                    "role",
+                    queryService ) );
+        else
+            setRole( null );
+        if ( state.get( "organization" ) != null )
+            setOrganization( ChannelsUtils.retrieveEntity(
+                    Organization.class,
+                    state,
+                    "organization",
+                    queryService ) );
+        else
+            setOrganization( null );
+        if ( state.get( "jurisdiction" ) != null )
+            setJurisdiction( ChannelsUtils.retrieveEntity(
+                    Place.class,
+                    state,
+                    "jurisdiction",
+                    queryService ) );
+        else
+            setJurisdiction( null );
+        if ( state.get( "location" ) != null )
+            setLocation( ChannelsUtils.retrieveEntity(
+                    Place.class,
+                    state,
+                    "location",
+                    queryService ) );
+        else
+            setLocation( null );
+    }
+
 }

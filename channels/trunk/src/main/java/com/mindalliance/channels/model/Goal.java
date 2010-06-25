@@ -1,6 +1,8 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.command.MappedObject;
+import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -10,7 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A goal of an organization (risk mitigation of opportunity capture).
@@ -127,9 +131,9 @@ public class Goal implements Serializable, Mappable {
 
     public String getShortLabel() {
         return ( isGain() ? "Make " : "Mitigate " )
-                +( level != null ? getLevelLabel().toLowerCase() : "" ) + " "
+                + ( level != null ? getLevelLabel().toLowerCase() : "" ) + " "
                 + ( category != null ? category.getGroup().toLowerCase() : "" )
-                + ( isPositive() ? " gain" : " risk")
+                + ( isPositive() ? " gain" : " risk" )
                 + ( category != null ? " of " + category.getName( positive ) : "" ).toLowerCase();
     }
 
@@ -241,23 +245,23 @@ public class Goal implements Serializable, Mappable {
      */
     public String getFailureLabel( String sep ) {
         String label = category.getName( positive );
-        label +=  isRiskMitigation() ? " not mitigated by " : " not achieved by ";
+        label += isRiskMitigation() ? " not mitigated by " : " not achieved by ";
         label += sep + organization.getName();
         return label;
     }
 
     /**
-      * Return a success label for the goals.
-      *
-      * @param sep the separator string
-      * @return a string
-      */
-     public String getSuccessLabel( String sep ) {
-         String label = category.getName( positive );
-         label +=  isRiskMitigation() ? " mitigated by " : " achieved by ";
-         label += sep + organization.getName();
-         return label;
-     }
+     * Return a success label for the goals.
+     *
+     * @param sep the separator string
+     * @return a string
+     */
+    public String getSuccessLabel( String sep ) {
+        String label = category.getName( positive );
+        label += isRiskMitigation() ? " mitigated by " : " achieved by ";
+        label += sep + organization.getName();
+        return label;
+    }
 
     /**
      * Get full label for goal.
@@ -272,6 +276,7 @@ public class Goal implements Serializable, Mappable {
 
     /**
      * Whether this goal is broadly implied by a list of goals.
+     *
      * @param goals a list of goals
      * @return a boolean
      */
@@ -280,12 +285,50 @@ public class Goal implements Serializable, Mappable {
                 goals,
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        Goal other = (Goal)object;
+                        Goal other = (Goal) object;
                         return Goal.this.getCategory().equals( other.getCategory() )
                                 && Goal.this.getLevel().compareTo( other.getLevel() ) <= 0;
                     }
                 }
         );
+    }
+
+    /**
+     * Serialize goal to a map.
+     *
+     * @return a map
+     */
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put( "category", getCategory().name() );
+        map.put( "description", getDescription() );
+        map.put( "level", getLevel().name() );
+        map.put( "positive", isPositive() );
+        map.put( "ends", isEndsWithSegment() );
+        map.put( "organization", Arrays.asList( getOrganization().getName(), getOrganization().isType() ) );
+        return map;
+    }
+
+    /**
+     * Instantiate a gaol from a serialization map.
+     *
+     * @param map          a map
+     * @param queryService a query service
+     * @return a goal
+     */
+    public static Goal fromMap( Map<String, Object> map, QueryService queryService ) {
+        Goal goal = new Goal();
+        goal.setCategory( Category.valueOf( (String) map.get( "category" ) ) );
+        goal.setDescription( (String) map.get( "description" ) );
+        goal.setLevel( Level.valueOf( (String) map.get( "level" ) ) );
+        goal.setPositive( (Boolean) map.get( "positive" ) );
+        goal.setEndsWithSegment( (Boolean) map.get( "ends" ) );
+        goal.setOrganization( ChannelsUtils.retrieveEntity(
+                Organization.class,
+                map,
+                "organization",
+                queryService ) );
+        return goal;
     }
 
 

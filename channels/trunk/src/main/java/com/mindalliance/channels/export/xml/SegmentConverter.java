@@ -202,16 +202,16 @@ public class SegmentConverter extends AbstractChannelsConverter {
                 Phase phase = findOrCreate( Phase.class, reader.getValue(), id );
                 segment.setPhase( phase );
                 // Parts and flows
+            } else if ( nodeName.equals( "goal" ) ) {
+                Goal goal = (Goal) context.convertAnother( segment, Goal.class );
+                segment.addGoal( goal );
+                // Issues
             } else if ( nodeName.equals( "part" ) ) {
                 context.convertAnother( segment, Part.class );
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( segment, Flow.class );
                 // Risks
-            } else if ( nodeName.equals( "goal" ) ) {
-                Goal goal = (Goal) context.convertAnother( segment, Goal.class );
-                segment.addGoal( goal );
-                // Issues
-            } else if ( nodeName.equals( "issue" ) ) {
+            }else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( segment, UserIssue.class );
             } else {
                 LOG.warn( "Unknown element " + nodeName );

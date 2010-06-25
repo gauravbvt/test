@@ -9,7 +9,6 @@ import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
 
@@ -60,7 +59,7 @@ public class AddPart extends AbstractCommand {
         if ( defaultPart != null ) segment.removeNode( defaultPart, planDao );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
         if ( partState != null ) {
-            ChannelsUtils.initPartFrom( part, partState, commander );
+            part.initFromMap( partState, commander.getQueryService() );
         }
         return new Change( Change.Type.Added, part );
     }

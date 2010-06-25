@@ -1,10 +1,10 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
@@ -66,7 +66,7 @@ public class SetPartFromCopy extends AbstractCommand {
             multi = makeSubCommands( copy );
             set( "subCommands", multi );
         } // TODO - attachment TICKETS are also copied - problem
-        ChannelsUtils.initPartFrom( part, (Map<String, Object>) copy.get( "partState" ), commander );
+        part.initFromMap( (Map<String, Object>) copy.get( "partState" ), commander.getQueryService() );
         multi.execute( commander );
         return new Change( Change.Type.Recomposed, segment );
     }
