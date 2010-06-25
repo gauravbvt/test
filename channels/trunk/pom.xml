@@ -308,6 +308,12 @@
             <groupId>jwnl</groupId>
             <artifactId>jwnl</artifactId>
             <version>14.1</version>
+            <!-- Download from
+                    http://downloads.sourceforge.net/project/jwordnet/jwnl/JWNL%201.4/jwnl14-rc2.zip?use_mirror=hivelocity
+                 Install with:
+                    mvn install:install-file -DgroupId=jwnl -DartifactId=jwnl -Dversion=14.1 -Dpackaging=jar -Dfile=/path/to/file
+
+            -->
         </dependency>
         <dependency>
           <groupId>org.apache.lucene</groupId>
@@ -345,6 +351,7 @@
             <groupId>org.geonames</groupId>
             <artifactId>geonames</artifactId>
             <version>1.0.1</version>
+            <!-- Download from: http://www.geonames.org/source-code/geonames-1.0.1.jar -->
         </dependency>
         <dependency>
             <groupId>org.wicketstuff</groupId>
@@ -447,7 +454,7 @@
                 <artifactId>tomcat-maven-plugin</artifactId>
                 <configuration>
                     <server>tomcat</server>
-                    <path>/</path>
+                    <path>${contextPath}</path>
                 </configuration>
             </plugin>
             <plugin>
@@ -497,6 +504,21 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <contextPath>/</contextPath>
+            </properties>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <contextPath>/dev</contextPath>
+            </properties>
+        </profile>
         <profile>
             <id>http-80</id>
             <build>
