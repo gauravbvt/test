@@ -392,7 +392,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                     new PropertyModel<ModelEntity>( part, prop ),
                     new Model<String>(
                             prop.equals( "initiatedEvent" )
-                                    ? "event"
+                                    ? "Causes event"
                                     : WordUtils.capitalize( prop.equals( "actor" )
                                     ? "agent"
                                     : prop ) ) );
