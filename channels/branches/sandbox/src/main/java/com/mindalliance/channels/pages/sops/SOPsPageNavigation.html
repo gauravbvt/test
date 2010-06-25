@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+   <span id="breadcrumbs">
+       <ul>
+           <li wicket:id="breadcrumbs">
+               <span wicket:id="breadcrumb">breadcrumb</span>
+           </li>
+       </ul>
+   </span>
+    <span id="search">
+        <input wicket:id="search" type = "text"/>
+        <span class="dropmenu"><span wicket:id="title">Search</span>
+            <ul>
+                <li wicket:id="items">
+                    <span wicket:id="menuItem">[menu item]</span>
+                </li>
+            </ul>
+        </span>
+    </span>
+    <div class="title-section">
+        <span class="title" wicket:id="title">A title</span>
+        <span id="expand-collapse">
+            <a wicket:id="expand-all" href="#">Expand All</a> | <a wicket:id="collapse-all" href="#">Collapse All</a>
+        </span>
+    </div>
+</wicket:panel>
+</body>
+</html>

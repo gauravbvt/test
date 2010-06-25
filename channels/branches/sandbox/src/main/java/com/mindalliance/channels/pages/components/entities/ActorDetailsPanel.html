@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <tr wicket:id="system">
+        <th align="right">
+            <label for="system">Is a system:</label>
+        </th>
+        <td><input id="system" wicket:id="system" type="checkbox"/></td>
+    </tr>
+    <tr wicket:id="archetype">
+        <th align="right">
+            <label for="archetype">Is archetype:</label>
+        </th>
+        <td><input id="archetype" wicket:id="isArchetype" type="checkbox"/></td>
+    </tr>
+    <tr wicket:id="contact">
+        <th align="right">
+            <label for="contact-info">Contact info:</label>
+        </th>
+        <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
+    </tr>
+    <tr wicket:id="clearancesContainer">
+        <th align="right">
+            <label for="clearances">Clearances:</label>
+        </th>
+        <td><span id="clearances" wicket:id="clearances">[classifications panel]</span></td>
+    </tr>
+    <tr wicket:id="rolesContainer">
+        <td colspan="2">
+            <h3>Roles performed
+                <span wicket:id="geomapLink">[geomap link panel]</span>
+            </h3>
+            Index on
+            <select wicket:id="indexed">
+                <option>Role</option>
+            </select>
+            <div>
+                <span wicket:id="nameRanges">[name range panel]</span>
+                <span wicket:id="actorEmployments">[actor employments panel]</span>
+            </div>
+        </td>
+    </tr>
+    <tr wicket:id="assignmentsContainer">
+        <td colspan="2">
+            <h3>Task assignments</h3>
+            <div wicket:id="assignments">[assignments panel]</div>
+        </td>
+    </tr>
+    <tr wicket:id="commitmentsContainer">
+        <td colspan="2">
+            <h3>Sharing commitments</h3>
+            <span wicket:id="commitments">[commitments panel]</span>
+        </td>
+    </tr>
+</wicket:extend>
+</body>
+</html>

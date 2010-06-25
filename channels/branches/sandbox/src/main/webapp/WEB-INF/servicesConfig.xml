@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file defines external services that should be mocked in unit tests. -->
+
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+
+        default-autowire="byName">
+
+    <!-- =========================== Bean Factory Modifiers -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="WEB-INF/channels.properties"/>
+    </bean>
+    <bean id="propertyOverride" class="org.springframework.beans.factory.config.PropertyOverrideConfigurer" >
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreInvalidKeys" value="true"/>
+        <property name="locations"><array>
+            <value>WEB-INF/channels.properties</value>
+            <value>file:${user.home}/channels/channels.properties</value>
+            <value>file:${user.home}/channels.properties</value>
+            <value>file:${user.dir}/channels.properties</value>
+        </array></property>
+    </bean>
+
+    <!-- =========================== External Services -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtps.auth">true</prop>
+                <prop key="mail.smtps.starttls.enable">true</prop>
+                <prop key="mail.smtps.debug">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="geoService" class="com.mindalliance.channels.geo.DefaultGeoService"/>
+
+    <bean id="surveyService" class="com.mindalliance.channels.surveys.SurveyGizmoService">
+        <property name="template" value="1800"/>
+        <property name="surveysFile" value="surveys"/>
+        <property name="templatesDir" value="${channels.home}/templates"/>
+        <property name="templatesSource" value="WEB-INF/templates"/>
+        <property name="userDetailsService" ref="userService"/>
+    </bean>
+
+
+</beans>

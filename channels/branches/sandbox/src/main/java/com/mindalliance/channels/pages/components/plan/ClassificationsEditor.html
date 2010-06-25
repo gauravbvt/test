@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table>
+        <tr wicket:id="newSystemContainer">
+            <th align="right"><label>New classification system:</label></th>
+            <td><input width="40" wicket:id="newSystem" type="text"/></td>
+        </tr>
+        <tr>
+            <th align="right" valign="top"><label>Classification system:</label></th>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <select wicket:id="systems">
+                                <option>US Gov</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table wicket:id="classificationsContainer" cellpadding="0" cellspacing="0">
+                                <tr wicket:id="classifications">
+                                    <td align="right">
+                                        <span wicket:id="new">New classification:</span>
+                                    </td>
+                                    <td>
+                                        <span wicket:id="name">Confidential</span>
+                                        <input wicket:id="newName" type="text" size="25" title="Enter name"/>
+                                    </td>
+                                    <td>
+                                        <a wicket:id="move-to-top" href="#">
+                                            <img border="0" src="images/up.png" alt="Move to top" title="Move to top"/>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a wicket:id="delete" href="#">
+                                            <img  border="0" src="images/delete.png" alt="delete"
+                                                 title="Delete this classification"/>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a wicket:id="more" href="#">More...</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

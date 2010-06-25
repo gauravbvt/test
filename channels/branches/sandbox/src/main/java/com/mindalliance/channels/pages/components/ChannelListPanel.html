@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <ol class="channels" wicket:id="editable-container">
+        <li wicket:id="channels">
+            <input wicket:id="included" type="checkbox" alt="Include this channel"
+                   title="Check to include channel. Uncheck to exclude."/>
+            <span wicket:id="mediumLink">[link to medium entity]</span>
+            <input class="address" wicket:id="address" type="text" size="20"/>
+            <span wicket:id="addressString">222-3333</span>
+            <span wicket:id="channel-string">Phone</span>
+            <a wicket:id="move-to-top" href="#">
+                <img border="0" src="images/up.png" alt="Move to top" title="Move to top"/>
+            </a>
+            <select wicket:id="medium">
+                <option>[medium]</option>
+            </select>
+        </li>
+    </ol>
+    <ul wicket:id="no-channel">
+        <li>(No channel)</li>
+    </ul>
+</wicket:panel>
+</body>
+</html>

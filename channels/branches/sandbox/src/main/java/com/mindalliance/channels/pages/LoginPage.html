@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<head>
+    <title>Channels - Sign in</title>
+    <link rel="stylesheet" href="playbook.css" type="text/css">
+    <link rel="stylesheet" href="iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
+</head>
+<body id="login">
+<div id="top">
+    <div id="header">
+        <div>
+            <h1>Channels</h1>
+            <h3>Information Sharing Planning</h3>
+        </div>
+    </div>
+    <div id="contents">
+        <form action="login.do" method="POST">
+			<div>
+				<label for="j_username">Username: </label>
+			</div>
+			<div id="login-username">
+				<input width="30" name="j_username" id="j_username">
+			</div>
+			<div>
+				<label for="j_password">Password: </label>
+			</div>
+			<div id="login-password">
+				<input width="30" name="j_password" id="j_password" type="password">
+			</div>
+			<div id="login-rememberme">
+				<label for="_spring_security_remember_me">
+					<input type="checkbox" name="_spring_security_remember_me" id="_spring_security_remember_me" /> Remember me on this browser
+				</label>
+			</div>
+			<div id="login-submit">
+				<input type="submit" value="Sign in">
+			</div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

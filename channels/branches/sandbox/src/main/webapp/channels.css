@@ -1,0 +1,1236 @@
+body {
+    font-size: 9pt;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    min-width: 94em;
+    min-height: 34em;
+}
+
+body.profile {
+}
+
+.message td {
+    white-space: nowrap;
+}
+
+.stretch {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#contents {
+    position: absolute;
+    top: 5em;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    padding-bottom: 5px;
+}
+
+.maximized {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    padding-bottom: 0;
+}
+
+
+div.section-content {
+    position: absolute;
+    top: 3em;
+    bottom: 5px;
+    left: 5px;
+    right: 0;
+    overflow: auto;
+}
+
+#graph, #part {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 5px 5px 0 5px;
+}
+
+#maximized-graph {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 0 0 0;
+}
+
+#part {
+    bottom: 0;
+    top: 50.5%;
+    overflow: hidden;
+}
+
+#part .summary {
+    display: block;
+	padding-left:20px;
+}
+
+#part .instructions {
+    display: block;
+    font-style: italic;
+}
+
+#graph {
+    top: 0;
+    bottom: 49.5%;
+    overflow: auto;
+}
+
+#maximized-graph {
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+    z-index: 9999;
+}
+
+div.zoom {
+    top: 5px;
+    left: 5px;
+    position: inherit;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+div.maximized > div.zoom {
+    top: 10px;
+    left: 10px;
+    z-index: 10000;
+}
+
+#contents div.zoom {
+    top: 10px;
+    left: 10px;
+}
+
+div.section-title {
+    position: relative;
+}
+
+.receives, .sends, .part-header {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+
+.part-header {
+    left: 0;
+    right: 66.66%;
+    margin-right: 4px;
+}
+
+.receives {
+    left: 33.33%;
+    right: 33.33%;
+    margin-right: 2px;
+}
+
+.sends {
+    left: 66.66%;
+    right: 0;
+    margin-left: 2px;
+}
+
+#segment {
+    width: 32%;
+}
+
+div.header {
+    height: 5em;
+    padding: 1em 0 0 60px;
+}
+
+form > div.header {
+    margin: 5px 0;
+}
+
+div.section, div.form {
+    margin: 5px auto;
+    position: relative;
+    max-width: 80em;
+}
+
+div.section input[type='submit'] {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+#footer {
+    display: none;
+}
+
+#sc-sel {
+    line-height: 1.6em;
+    list-style-position: inside;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+#sc-sel li {
+    font-size: 8pt;
+    list-style: none;
+}
+
+input, textarea, select, div.flow-details {
+    padding: 1px;
+    margin: 0;
+}
+
+input[type='checkbox'], input[type='radio'] {
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+}
+
+input[type='submit'], input[type='button'], input[type='file'] {
+    font-size: 8pt;
+}
+
+input[type='file'] {
+    margin-top: 2px;
+}
+
+input[type='text'], textarea {
+    width: 96%;
+}
+
+span.entityReference {
+    display: block;
+    position: relative;
+    width: 98%;
+}
+
+span.entityReference select {
+    position: absolute;
+    width: 21%;
+    padding: 1px;
+}
+
+span.entityReference input[type='text'] {
+    width: 76%;
+    margin-left: 22%;
+}
+
+input[type="text"].no-expand {
+    width: 5em;
+}
+
+input[type="text"].address {
+    width: 12em;
+}
+
+input[type="text"].invalid-address {
+    width: 12em;
+    background-color: #ffe4c4;
+    border: 1px inset #808080;
+}
+
+.float {
+    float: right;
+}
+
+div.issues {
+    position: relative;
+    border: 1px inset #d11212;
+    padding: 5px 5px 0 5px;
+    margin-top: 5px;
+}
+
+#part div.issues {
+    margin-right: 7px;
+}
+
+div.issues h4 {
+    background: transparent url( 'images/warning.png' ) no-repeat 0 0;
+    padding-left: 20px;
+    border-bottom: 1px solid #730A0A;
+}
+
+div.issues li {
+    line-height: 1.25em;
+    margin-bottom: 0.5em;
+}
+
+div.issue-details {
+    margin-top: 5px;
+}
+
+div.issue-details table {
+}
+
+input.error, div.issues {
+    background-color: #ffe4c4;
+}
+
+span.error, li.error {
+    background: transparent url( 'images/warning.png' ) no-repeat 100% 0;
+    padding-right: 20px;
+}
+
+h1.error {
+    background: transparent url( 'images/warning.png' ) no-repeat 100% 0;
+    padding-right: 20px;
+    padding-top: 0;
+}
+
+span.waived, li.waived {
+    background: transparent url( 'images/waived.png' ) no-repeat 100% 0;
+    padding-right: 20px;
+}
+
+h1.waived {
+    background: transparent url( 'images/waived.png' ) no-repeat 100% 0;
+    padding-right: 20px;
+    padding-top: 0;
+}
+
+h1, h2, h3, h4 {
+    margin: 0 0 0.4em 0;
+    padding-right: 4em;
+}
+
+h1 {
+    padding: 0.8em 5px 5px 0;
+    font-size: 1.6em;
+    margin: 0;
+    display: inline;
+}
+
+h2, h3 {
+    border-bottom: 2px solid #BCBEC0;
+}
+
+h2 {
+    padding: 0 0 1px 0;
+    font-size: 1.2em;
+    white-space: nowrap;
+}
+
+h3 {
+    font-size: 1.1em;
+	line-height:100%;
+	padding:3px 0 5px;	
+}
+
+body, ul.menu, .menubar {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5em;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+#part td {
+    width: 100%;
+    padding-right: 0;
+}
+
+#part table {
+    width: 98%;
+}
+
+tbody {
+}
+
+div.flow-details {
+    margin: 5px 0;
+    position: relative;
+    padding: 5px;
+}
+
+textarea, select, input[type='text'], td, th {
+    font: inherit;
+    margin: 0;
+}
+
+th {
+    white-space: nowrap;
+}
+
+td, th {
+    padding: 1px;
+    vertical-align: baseline;
+}
+tbody th {
+    padding-right: 5px;
+}
+
+th.area {
+    vertical-align: top;
+    padding-top: 1px;
+    white-space: normal;
+}
+
+td span.timing:first-child {
+    margin-bottom: 2px;
+}
+
+span.timing {
+    display: block;
+    white-space: nowrap;
+}
+
+span.timing input:first-child {
+    margin-right: 2px;
+}
+
+div.section td, div.section th {
+    padding-right: 2em;
+}
+
+ul.menu, div.caption, span.menubar, ul.ranges {
+    font-size: 8pt;
+}
+
+#logout {
+    margin: 0;
+}
+
+#controls {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    padding: 0;
+	text-align:right;
+	font-size:11px;
+}
+
+#history {
+    position: absolute;
+    top: 14px;
+    right: 500px;
+}
+
+#form-buttons {
+    margin: 0;
+    top: 3px;
+    right: 5px;
+    position: absolute;
+}
+
+.receives .flow > div, .sends .flow > div {
+    position: relative;
+    padding: 5px 5px 5px 23px;
+}
+
+.receives .section-content, .sends .section-content {
+    width: 98%;
+}
+
+ol.channels li {
+    margin: 0 0 2px !important;
+    white-space: nowrap;
+}
+/*
+.section-title span.menubar {
+    top: 4px;
+}
+*/
+ul.menu, span.menubar {
+    font-weight: normal;
+    list-style: none;
+    margin: 0 0 0 5px;
+    padding: 0;
+    display: inline;
+    white-space: nowrap;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+ul.menu li {
+    display: inline;
+}
+
+ul.attach ul.menu li:before {
+    content: " ";
+}
+
+ul.attach li.controls {
+    list-style: none;
+}
+
+/*
+
+ul.menu li:before {
+    content: " \2015  ";
+}
+
+#part ul.menu li:first-child:before {
+    content: " ";
+}
+
+
+div.section-title ul.menu {
+    padding-left: 5px;
+    z-index: 1;
+
+    top: auto;
+    bottom: 2px;
+    margin: 0;
+}
+
+*/
+
+
+ul.attach ul.menu {
+    padding-top: 2px;
+    padding-right: 8px;
+}
+
+.header ul.menu, .header span.menubar {
+    margin: 0;
+    position: static;
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+.receives span.menubar, .sends span.menubar, .issues span.menubar {
+    float: right;
+    position: static;
+}
+
+h2 ul.menu, h3 ul.menu {
+    margin: 2px 5px 0 0;
+}
+
+ul > li > ul.menu {
+    margin: 1px 0 0 5px;
+    position: static;
+    float: right;
+}
+
+ul.attach, ul.call-list {
+    margin: 0;
+    padding: 0 0 0 1em;
+    list-style: outside;
+    line-height: 1.5em;
+}
+
+ul.call-list {
+    padding-bottom: 5px;
+}
+
+ul.attach li {
+    position: relative;
+}
+
+ul.attach input[type='text'] {
+    height: 1.2em;
+    margin-top: 2px;
+    width: 20em;
+}
+
+span.suggest {
+    font-style: italic;
+}
+
+span.note {
+    font-style: italic;
+    font-size: x-small;
+}
+
+div.picture {
+    background: white;
+}
+
+div.picture img {
+    border: none;
+}
+
+p.caption {
+    padding: 0;
+    margin: 0;
+    clear: both;
+}
+
+hr {
+    display: none;
+}
+
+a, a:link, a:visited, td.link span {
+    color: #4f2d87;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+h1 a, div.caption a {
+    padding: 0 2px;
+}
+
+/** Backgrounds & borders */
+html {
+    background: #c3d9ff;
+}
+
+div.header {
+    background: transparent url( 'images/logo.png' ) no-repeat 5px 5px;
+}
+
+.role .header {
+    background: transparent url( 'images/role.png' ) no-repeat 5px 2px;
+}
+
+.actor .header {
+    background: transparent url( 'images/actor.png' ) no-repeat 5px 2px;
+}
+
+.medium .header {
+    background: transparent url( 'images/medium.png' ) no-repeat 5px 2px;
+}
+
+.system .header {
+    background: transparent url( 'images/system.png' ) no-repeat 5px 2px;
+}
+
+.phase .header {
+    background: transparent url( 'images/phase.png' ) no-repeat 5px 2px;
+}
+
+.event .header {
+    background: transparent url( 'images/event.png' ) no-repeat 5px 2px;
+}
+
+.organization .header {
+    background: transparent url( 'images/organization.png' ) no-repeat 5px 2px;
+}
+
+.surveys .header {
+    background: transparent url( 'images/survey_big.png' ) no-repeat 5px 2px;
+}
+
+.assignments .header {
+    background: transparent url( 'images/assignment.png' ) no-repeat 5px 2px;
+}
+
+.commitments .header {
+    background: transparent url( 'images/commitment.png' ) no-repeat 5px 2px;
+}
+
+.eois .header {
+    background: transparent url( 'images/eois.png' ) no-repeat 5px 2px;
+}
+
+.failure .header {
+    background: transparent url( 'images/failure.png' ) no-repeat 5px 2px;
+}
+
+.help .header {
+    background: transparent url( 'images/help.png' ) no-repeat 5px 2px;
+}
+
+#footer {
+    border: 1px outset #6fafaf;
+}
+
+#graph, #maximized-graph {
+    background: white;
+}
+
+.part-header, .receives, .sends, div.section, #graph, div.aspect {
+    border: 1px inset #c3dede;
+}
+
+.part-header, .receives, .sends, div.section, div.aspect {
+    background: #f6f6f6;
+    padding: 5px;
+}
+
+td.link.notify, td.link.answer {
+    background: transparent url( 'images/arrow_right_blue.png' ) no-repeat 0 50%;
+    padding-left: 25px;
+}
+
+.receives h3 span {
+    background: transparent url( 'images/arrow_left_green.bullet.png' ) no-repeat 100% 50%;
+    padding-right: 22px;
+}
+
+td.link.ask, td.link.receive {
+    background: transparent url( 'images/arrow_left_blue.png' ) no-repeat 0 50%;
+    padding-left: 25px;
+}
+
+.sends h3 span {
+    background: transparent url( 'images/arrow_right_green.bullet.png' ) no-repeat 100% 50%;
+    padding-right: 22px;
+}
+
+th.wicket_orderDown a {
+    background: transparent url( 'images/navigate_open.png' ) no-repeat 100% 0;
+    padding-right: 16px;
+}
+
+th.wicket_orderUp a {
+    background: transparent url( 'images/navigate_close.png' ) no-repeat 100% 0;
+    padding-right: 16px;
+}
+
+div.section th {
+    color: #000000;
+    font-weight: bold;
+    text-align: left;
+    text-decoration: underline;
+}
+
+div.form th {
+    text-align: right;
+}
+
+.profile thead a, .profile thead a:link, .profile thead a:visited {
+    color: #000000;
+}
+
+.italic {
+    font-style: italic;
+}
+
+li.doc_Reference {
+    padding-left: 20px;
+    background: transparent url( 'images/document.png' ) no-repeat 0;
+}
+
+li.doc_Policy {
+    padding-left: 20px;
+    background: transparent url( 'images/scroll.png' ) no-repeat 0;
+}
+
+li.doc_Image {
+    padding-left: 20px;
+    background: transparent url( 'images/picture.png' ) no-repeat 0;
+}
+
+li.doc_MOU {
+    padding-left: 20px;
+    background: transparent url( 'images/handshake.png' ) no-repeat 0;
+}
+
+li.doc_PolicyMust {
+    padding-left: 20px;
+    background: transparent url( 'images/scroll_ok.png' ) no-repeat 0;
+}
+
+li.doc_PolicyCant {
+    padding-left: 20px;
+    background: transparent url( 'images/scroll_error.png' ) no-repeat 0;
+}
+
+div.wicket-aa-container {
+    background: white;
+    border: 1px outset #808080;
+    margin: 2px;
+}
+
+div.wicket-aa {
+}
+
+div.wicket-aa ul {
+    margin: 0;
+    padding: 2px;
+    list-style: none;
+}
+
+div.wicket-aa ul li {
+    cursor: pointer;
+}
+
+div.wicket-aa ul li:hover {
+    background: #c3d9ff;
+}
+
+.menubar .dropmenu {
+    width: auto;
+    cursor: pointer;
+    padding: 1px 16px 1px 5px;
+    position: relative;
+	border:1px solid transparent;
+    background: url( 'images/dropmenu.png' ) no-repeat scroll 90% 56%;
+	color:#333333;
+}
+
+.menubar .dropmenu:hover {
+    background: url( 'images/dropmenu.high.png' ) no-repeat scroll 90% 56% #e6e6e6;
+	border:1px solid #C7C8CA;
+	color:#000000;
+}
+
+.menubar .dropmenu ul {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #e6e6e6;
+    color: #000000;
+    list-style: none;
+    margin: 0 2px 0 0;
+    padding: 0;
+    z-index: 100000;
+	border:1px solid #C7C8CA;
+	top:1.5em;
+}
+
+.menubar .dropmenu ul li {
+    display: block;
+    padding: 2px 4px;
+    z-index: 100000;
+	border-bottom:1px solid #D1D3D4;
+}
+
+/*
+
+#part .menubar .dropmenu.first:before {
+    content: " ";
+}
+
+.menubar .menuitem:before {
+    content: " \2015  ";
+}
+
+*/
+
+.menubar .dropmenu li span.disabled {
+    font-style: oblique;
+    color: #808080;
+}
+
+.menubar .dropmenu:hover ul {
+    display: block;
+}
+
+.menubar .dropmenu ul li:hover {
+    background-color: #ccccff;
+}
+
+div.import-dialog {
+    background: #c3d9ff;
+    border: 1px outset #c3dede;
+    padding: 5px;
+    position: absolute;
+    width: 300px;
+    top: 8em;
+    left: 25em;
+    z-index: 10000;
+    overflow: auto;
+}
+
+div.float-bar {
+    padding-bottom: 18px;
+    width: 100%;
+    background-color: #718191;
+    border-bottom: 1px solid #464f5a;
+    cursor: move;
+}
+
+div.float-resize {
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+    float: right;
+    cursor: se-resize;
+}
+
+div.aspect {
+    right: 5px;
+    top: 6.3em;
+    bottom: 20px;
+    left: 5px;
+    overflow: auto;
+    position: absolute;
+}
+
+.aspect table {
+    width: 100%;
+    border-collapse: separate;
+}
+
+.aspect thead td {
+    border-bottom: 1px solid #4d8222;
+    font-weight: bold;
+    padding: 0 10px 0 0
+}
+
+.aspect td {
+    vertical-align: top;
+}
+
+.aspect tr.headers th {
+    text-align: left;
+    font-weight: bold;
+}
+
+.aspect tr.even {
+    background-color: #fdfdfd;
+}
+
+.aspect tr.odd {
+}
+
+.refresh, .navigation {
+    cursor: pointer;
+    vertical-align: baseline;
+	margin:0 0 0 -3px;
+}
+
+/* Tabbed panels */
+
+div.tabpanel div.tab-row {
+    float: left;
+    width: 100%;
+    background: #DAE0D2 url( "images/tabs/bg.gif" ) repeat-x bottom;
+    line-height: normal;
+}
+
+div.tabpanel div.tab-row ul {
+    margin: 0;
+    padding: 10px 10px 0;
+    list-style: none;
+}
+
+div.tabpanel div.tab-row li {
+    float: left;
+    background: url( "images/tabs/left.gif" ) no-repeat left top;
+    margin: 0;
+    padding: 0 0 0 9px;
+}
+
+div.tabpanel div.tab-row a {
+    display: block;
+    background: url( "images/tabs/right.gif" ) no-repeat right top;
+    padding: 5px 15px 4px 6px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #776655;
+    white-space: nowrap;
+}
+
+div.tabpanel div.tab-row a:hover {
+    color: #333333;
+}
+
+div.tabpanel div.tab-row li.selected {
+    background-image: url( "images/tabs/left_on.gif" );
+}
+
+div.tabpanel div.tab-row li.selected a {
+    background-image: url( "images/tabs/right_on.gif" );
+    color: #333333;
+    padding-bottom: 5px;
+}
+
+div.tabpanel table {
+    border: 1px solid transparent;
+    display: block;
+}
+
+ul.ranges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+}
+
+ul.ranges li {
+    display: inline;
+}
+
+ul.ranges li:before {
+    content: "  \2015   ";
+}
+
+ul.ranges li:first-child:before {
+    content: " ";
+}
+
+ul.ranges li a.selected {
+    background-color: #c3d9ff;
+    color: #000000;
+}
+
+span.spinner {
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+span.spinner img {
+}
+
+img.filter {
+    cursor: pointer;
+}
+
+ul.index-counter {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+ul.index-counter li {
+    display: inline;
+}
+
+ul.index-counter li:before {
+    content: "-";
+}
+
+ul.index-counter li:first-child:before {
+    content: ":";
+}
+
+input.filter {
+    width: 30em;
+}
+
+input.filter-small {
+    width: 15em
+}
+
+body.message {
+    background: white url( "images/plain-back.png" ) repeat-y;
+}
+
+body.message div {
+    background: transparent url( "images/plain-head.png" ) no-repeat 0 -20px;
+    padding: 5px 5px 5px 1in;
+}
+
+.message h1 {
+    padding: 18px 0;
+    border-bottom: 2px solid #4d8222;
+    margin: 0 0 1em 0;
+    display: block;
+    font-size: 2em;
+}
+
+.alert {
+    font-size: 1.6em;
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    top: 45%;
+}
+
+.classifications {
+    background-color: #e6e6e6;
+}
+
+textarea[disabled] {
+    color: #555555;
+}
+
+input[disabled] {
+    color: #555555;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.partMediaRefs ul {
+    margin: 0;
+    position: absolute;
+    top: 2px;
+    left: 1.5em;
+}
+
+.flowMediaRefs ul {
+    display: inline;
+    padding-left: 5px;
+}
+
+.partMediaRefs li, .flowMediaRefs li {
+    display: inline;
+    list-style: none;
+}
+
+.capability, .need {
+    font-style: italic;
+}
+
+.flow .even {
+	border-bottom:1px solid #BCBEC0;
+}
+
+.flow:first-child .even {
+	border-bottom:1px solid #BCBEC0;
+	border-top:1px solid #BCBEC0;
+}
+
+.flow .even:hover {
+	border-bottom:1px solid #666666;
+}
+
+.flow .odd {
+	border-bottom:1px solid #BCBEC0;
+}
+
+.flow .odd:hover {
+	border-bottom:1px solid #666666;
+}
+
+.flow .info , .summary .task {
+    font-weight: bold;
+}
+
+#sg-sel {
+    margin:0;
+	list-style:none;
+	padding-top:5px;
+}
+
+#sg-sel li {
+    margin: 0;
+	padding-bottom:7px;
+}
+
+/* ----- Add New Task, Info Received-Sent Link ----- */
+
+a.add-flow {
+	display:inline;
+	font-weight:normal;
+	margin:0;
+	padding:0 5px 0 15px;
+	position:absolute;
+	right:0;
+	top:0;
+	white-space:nowrap;
+	font-size:8pt;
+	background: url( "images/bullet_add.png" ) no-repeat 5px 6px ;
+	color:#333333;
+	text-transform:lowercase;
+}
+
+a.add-task {
+	display:inline;
+	font-weight:normal;
+	margin:0 0 0 5px;
+	padding:2px 5px 2px 15px;
+	right:0;
+	top:0;
+	white-space:nowrap;
+	font-size:8pt;
+	background: url( "images/bullet_add.png" ) no-repeat 5px 6px ;
+	color:#333333;
+	text-transform:lowercase;
+}
+
+a.add-flow:hover, a.add-task:hover {
+	background: url( "images/bullet_add.high.png" ) no-repeat 5px 6px #E8E8E8 ;
+	color:#000000;
+}
+
+div.part-header > div.section-title > span.menubar {
+	margin-top:1px;
+}
+
+img.inline {
+    vertical-align: middle;
+}
+
+/* ----- Task Title ----- */
+
+h3.task-title {
+	background: url( "images/tasks.cog.png" ) no-repeat 0 1px;
+	padding-left:18px;
+}
+
+/* ----- More Menu Lowercase ----- */
+
+div.receives > div.section-content > div.flow > div > span.menubar > span > span.dropmenu > span,
+div.sends > div.section-content > div.flow > div > span.menubar > span > span.dropmenu > span {
+	text-transform:lowercase;
+}
+
+/* ----- Task, Receive and Send Severity Icon ----- */
+
+div.flow div.extreme {
+	background: url( "images/bullet_extreme.png" ) no-repeat 9px 10px;
+}
+
+div.flow div.extreme.even {
+	background: url( "images/bullet_extreme.png" ) no-repeat 9px 10px #E8E8E8;
+}
+
+span.extreme {
+	background: url( "images/bullet_extreme.png" ) no-repeat 6px 5px;
+}
+
+div.flow div.major {
+	background: url( "images/bullet_major.png" ) no-repeat 9px 10px;
+}
+
+div.flow div.major.even {
+	background: url( "images/bullet_major.png" ) no-repeat 9px 10px #E8E8E8;
+}
+
+span.major {
+	background: url( "images/bullet_major.png" ) no-repeat 6px 5px;
+}
+
+div.flow div.minor {
+	background: url( "images/bullet_minor.png" ) no-repeat 9px 10px;
+}
+
+div.flow div.minor.even {
+	background: url( "images/bullet_minor.png" ) no-repeat 9px 10px #E8E8E8;
+}
+
+span.minor {
+	background: url( "images/bullet_minor.png" ) no-repeat 6px 5px;
+}
+
+div.flow div.severe {
+	background: url( "images/bullet_severe.png" ) no-repeat 9px 10px;
+}
+
+div.flow div.severe.even {
+	background: url( "images/bullet_severe.png" ) no-repeat 9px 10px #E8E8E8;
+}
+
+span.severe {
+	background: url( "images/bullet_severe.png" ) no-repeat 6px 5px;
+}
+
+div.flow div.none {
+	background: url( "images/bullet_unknown.png" ) no-repeat 9px 10px;
+}
+
+div.flow div.none.even {
+	background: url( "images/bullet_unknown.png" ) no-repeat 9px 10px #E8E8E8;
+}
+
+span.none {
+	background: url( "images/bullet_unknown.png" ) no-repeat 6px 5px;
+}
+
+/* ----- Sends and Receives Channels ----- */
+
+span.channels-summary {
+	color:#333333;
+	text-transform:lowercase;
+	cursor:pointer;
+}
+
+div.section-content > div.flow > div > span.pointer {
+	padding-right:2px;
+}
+
+div.section-content > div.flow > div > img {
+	padding-right:5px;
+}

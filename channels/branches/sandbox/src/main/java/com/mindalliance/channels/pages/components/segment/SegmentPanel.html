@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div id="contents">
+        <div class="zoom">
+            <span wicket:id="showGoals"><img src="images/show_goals.png" title = "Show goals (click again to hide goals)" alt="Show goals"/></span>
+            <span wicket:id="maximized"><img src="images/fullscreen.png" title = "Maximize" alt="Maximize"/></span>
+            <span wicket:id="fit"><img src="images/fit.png" title = "Reduce to fit (click again to restore)" alt="Reduce to fit"/></span>
+            <span wicket:id="minimized"><img src="images/split.png" title = "Minimize (click again to restore)" alt="Minimize"/></span>
+            <span wicket:id="legend"><img src="images/help_small.png" title = "Legend" alt="Legend"/></span>
+        </div>
+        <div id="graph">
+            <div class="picture">
+                <span wicket:id="flow-map">[flow map panel]</span>
+            </div>
+            <hr>
+        </div>
+        <div id="part">
+            <div class="part-header">
+                <div class="section-title">
+                    <h3 class="task-title">Task</h3>
+                    <span wicket:id="partMedia" class="partMediaRefs">[media references panel]</span>
+                    <span class="menubar">
+                        <span class="menuitem" wicket:id="partShowMenu">[part show menu]</span><span class="menuitem" wicket:id="partActionsMenu">[part action menu]</span>
+	                    <a class="add-task" wicket:id="addPart" href="#">Add new task</a>
+                    </span>
+                </div>
+                <div wicket:id="part" class="section-content">
+                    [part]
+                </div>
+            </div>
+
+            <div wicket:id="receives" class="receives">
+                <h3>Receives</h3>
+            </div>
+
+            <div wicket:id="sends" class="sends">
+                <h3>Sends</h3>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+</wicket:panel>
+</body>
+</html>

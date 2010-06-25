@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="zoom">
+        <span id="flow-full" wicket:id="full"><img src="images/full.png" title="Full size" alt="Full size"/></span>
+            <span id="flow-fit" wicket:id="fit"><img src="images/fit.png" title="Reduce to fit"
+                                                     alt="Reduce to fit"/></span>
+    </div>
+    <div class="picture" wicket:id="plan-map">
+        [plan map diagram panel]
+    </div>
+    Group plan segments
+    <input wicket:id="groupByEvent" type="checkbox"> by event
+    <input wicket:id="groupByPhase" type="checkbox"> or by phase
+    <br/>
+    <h3 wicket:id="flows-title">[All inter-segment flows]</h3>
+    <span wicket:id="flows">[external flows panel]</span>
+
+    <h3 wicket:id="causes-title">[All inter-segment causations]</h3>
+
+    <div wicket:id="causes">[causes panel]</div>
+</wicket:panel>
+</body>
+</html>

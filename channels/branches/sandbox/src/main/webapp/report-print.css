@@ -1,0 +1,56 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px; }
+
+* {
+	margin: 0;
+	padding: 0; }
+
+div.headermenu,
+a.toplink,
+a.flow-map-link,
+a.plan-map-link { display: none; }
+
+div.flow-map { border: 5px solid #E8E8E8; }
+
+div#contents { background: #FFFFFF; }
+
+div.report-header,
+div.headerlogo,
+div.headermenu,
+div#contents,
+div#plan > span,
+div#plan span ul li a,
+p.notice,
+div.segment,
+div.section-head h2,
+div.section-head.segment h2,
+div.section-head h3,
+div.section-head h3.role,
+table.tasks,
+table.tasks ul,
+table.tasks h4.tasks,
+table.tasks h4.comm,
+div.flow-map,
+div.top-organization,
+div.actor,
+div.header,
+ul.contacts,
+ul.flows li ul.contacts li.contact table.banner,
+ul.flows li ul.contacts li.contact td.channels-cont ul.channels li.channel,
+ul.channels li.channel,
+ul.tagscont,
+p.section-head,
+div.issues,
+p.task-name,
+ul.flows li p.section-head,
+div.section-head h2 a.toplink,
+div.section-head h2 a.toplink:hover,
+a.flow-map-link,
+a.plan-map-link,
+a.flow-map-link:hover,
+a.plan-map-link:hover,
+ul.impacts-container,
+ul.impacts-container > li.cascading-failures,
+ul.impacts-container > li.cascading-failures > span.attribute-title,
+ul.impacts-container > li.cascading-failures > ul.impacts { float: none; }

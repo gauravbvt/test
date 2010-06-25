@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <div class="failure">
+        <div class="header">
+            <h1>
+                <span wicket:id="title">Impacts of failing task "Doing something"</span>
+                <input wicket:id="done" class="close" type="button" value="Done"/>                                                     
+            </h1>
+        </div>
+        <div class="aspect">
+            <div class="diagram">
+                <div class="zoom">
+                <span id="flow-fit" wicket:id="fit"><img src="images/fit.png" title="Reduce to fit (click again to restore)"
+                                                         alt="Reduce to fit"/></span>
+                <span id="legend" wicket:id="legend"><img src="images/help_small.png" title = "Flows legend" alt="Flows legend"/></span>
+                </div>
+                <div class="picture">
+                    <span wicket:id="essentialFlowMap">[Essential flow map]</span>
+                </div>
+            </div>
+            <input wicket:id="assumeFails" type="checkbox">&nbsp;Assume alternate flows all fail (no redundancy)
+            <span wicket:id="failures">[task failures panel]</span>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>

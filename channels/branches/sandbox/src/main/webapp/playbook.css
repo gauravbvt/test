@@ -1,0 +1,509 @@
+/* Fonts ------------------------------------ */
+body, input, select, label, h1, h2, h3, h4, h5, #grid {
+    font-size: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 18px;
+}
+
+h1 {
+    font-size: 19px;
+}
+
+h2 {
+    font-size: 17px;
+}
+
+h3.big {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#contents, h3, h5, #grid, th, td {
+    font-size: 12px;
+}
+
+#contents, h3, h5, #grid, td {
+    font-weight: normal;
+}
+
+#nav, p.notice, span.sub, .plan-map-link, .flow-map-link {
+    font-size: 10.5px;
+}
+
+p.task-name, .required-information, span.unicast, span.urgent, th {
+    font-weight: bold;
+}
+
+p.notice {
+    font-style: italic;
+}
+
+/* Margins & paddings ---------------------- */
+body, h1, h2, h3, h4, h5, li, input, #nav ul, th, td {
+    padding: 0;
+    margin: 0;
+}
+
+#nav {
+    padding: 3px 0 0 0 !important;
+}
+
+h1 {
+    padding-bottom: 3px !important;
+}
+h2 {
+    padding-bottom: 2px !important;
+}
+
+#header {
+    padding: 5px;
+    margin-bottom: 27px;
+}
+
+.section-head {
+    padding: 0 0 0 9px;
+    margin-bottom: 9px;
+}
+
+.segment {
+    margin-top: 40px;
+}
+
+#header div {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+div.notifications img {
+    margin-right: 3em;
+    margin-top: 9px;
+    padding-left: 9px;
+}
+
+#plan div.flow-map img {
+    margin-bottom: 18px;
+}
+
+p {
+    padding: 0 0 0 9px;
+    margin: 18px 0 0;
+}
+p.notice {
+    margin-bottom: 18px;
+    padding: 0 5px;
+}
+
+table {
+    padding: 0;
+}
+table.banner {
+}
+table.td {
+
+}
+td.name {
+    white-space: nowrap;
+}
+
+form table {
+    margin-left: 7px;
+}
+
+td {
+    padding-top: 9px;
+    vertical-align: top;
+}
+th.first, td.first {
+    padding-left: 7px;
+}
+td, th {
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+ul {
+    list-style-type: disc;
+    padding-left: 3em;
+    margin: 9px 0 18px;
+}
+
+/* Layout ---------------------------------- */
+#grid {
+    display: block;
+    position: fixed;
+    top: 12px;
+    z-index: 100;
+    color: gray;
+}
+
+#top {
+    max-width: 70em;
+    min-width: 420px;
+    margin: 0 auto;
+}
+
+div.segment div.flow-map, table.tasks {
+    width: 100%;
+}
+
+#header, div.segment div.flow-map {
+    position: relative;
+}
+
+div.top-organization, div.sub-organization, div.responsibilities {
+    padding-top: 10px;
+}
+
+p.description {
+    clear: none;
+}
+
+div.section, div.person, #nav, table.tasks, div.notifications, p {
+    clear: both;
+}
+
+#nav {
+    float: right;
+    margin-left: 3em;
+}
+
+#nav hr {
+    display: none;
+}
+ul.contacts, ul.channels-only {
+    list-style: none;
+    display: block;
+    border-spacing: 0;
+    margin: 14px 0 9px 2em !important;
+}
+
+ul.contact-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul.contacts {
+    padding: 0 !important;
+}
+ul.channels-only {
+    padding: 0 9px !important;
+}
+
+ul.contacts h4 {
+    display: none;
+}
+
+ul.contacts li.contact {
+}
+
+ul.details, ul.flows {
+    list-style: none;
+}
+
+table {
+    border: 0 solid white;
+    border-spacing: 2px;
+    border-collapse: separate;
+    width: 100%;
+}
+table.channels {
+    display: block;
+}
+table.channels th {
+    white-space: nowrap;
+    min-width: 6em;
+}
+div.table-wrap {
+    padding-top: 18px;
+}
+table.tasks {
+    border-spacing: 0;
+}
+table.tasks th {
+    text-align: left;
+    padding-left: 9px;
+}
+table.tasks td {
+    padding-top: 0;
+}
+table.tasks ul {
+    margin: 0;
+    padding: 0;
+}
+table.tasks ul ul {
+    padding-left: 3em;
+}
+table.tasks ul.flows {
+    padding-left: 9px;
+}
+
+div.segment div.flow-map img {
+    display: block;
+    border: none;
+    max-width: 100%;
+    text-align: center;
+}
+
+#plan div.flow-map img {
+    border: none;
+    float: right;
+    width: 50%;
+    max-width: 470px;
+}
+
+form td {
+    white-space: nowrap;
+}
+
+form input {
+    vertical-align: text-top;
+}
+
+p.notice {
+    text-align: right;
+}
+
+ul.channels li.channel {
+    display: inline-block;
+    min-width: 14em;
+    padding-left: 5px;
+    white-space: nowrap;
+}
+
+div.notifications ul {
+    display: block;
+    margin-left: 57px;
+}
+div.notifications ul li ul {
+    margin: 0;
+}
+ul.flows ul.channels {
+}
+ul.channels {
+    width: 100%;
+    list-style: none;
+    margin: 0 !important;
+}
+
+.section-head ul.channels li.channel {
+    border-spacing: 0;
+}
+
+div.segment, div#plan { position: relative; }
+.plan-map-link, .flow-map-link {
+    position: absolute;
+    right: 0;
+    z-index: 100;
+}
+
+table.section-head ul.channels {
+    padding-left: 0;
+}
+table.section-head {
+    padding: 0 !important;
+    margin-bottom: 0;
+}
+table.section-head h4 {
+    padding-top: 2px;
+}
+table.section-head td {
+    padding: 0 !important;
+}
+table.section-head img {
+    width: 48px;
+    height: auto;
+    padding-right: 9px;
+    text-align: center;
+}
+
+div.issues p {
+    margin: 0;
+    padding: 0;
+}
+
+}
+
+/* Color and graphics ------------------------------------ */
+body, #contents {
+    background: white;
+}
+
+div.notifications, div.events {
+    border-bottom: 1px solid #c3d9ff;
+    padding-bottom: 8px;
+}
+
+#nav {
+    background: transparent !important;
+}
+
+td.channels, td.name, table.flows tr.odd {
+    background: #f5f8ff;
+}
+
+p.notice {
+    color: #c4d5b6;
+}
+
+p.big-notice {
+    font-weight: bold;
+    font-size: large;
+    color: #808080;
+}
+
+div.issues {
+    color: darkred;
+}
+
+.policycant {
+    color: darkred;
+    font-weight:bold;
+}
+
+.policymust {
+    color: darkgreen;
+    font-weight:bold;
+}
+
+ul.contacts, ul.channels-only {
+    border: 2px solid #c3d9ff;
+}
+thead tr {
+    background: #c3d9ff;
+}
+
+#header, table.channels th, .section-head {
+    background: #c3d9ff url('images/back.png') repeat-y;
+}
+
+#header div {
+    background: transparent url('images/logo.png') no-repeat 0 0;
+    padding-left: 58px;
+    min-height: 40px;
+}
+
+#header div.report-header {
+    background: transparent url('images/logo.png') no-repeat 0 0;
+    padding-left: 58px;
+    min-height: 105px;
+}
+
+td.in, td.out {
+    background: transparent no-repeat 0 9px;
+    width: 16px;
+    min-width: 16px;
+    height: 25px;
+}
+td.in {
+    background-image: url( 'images/arrow_left_blue.png' );
+}
+td.out {
+    background-image: url( 'images/arrow_right_blue.png' );
+}
+td.in span, td.out span {
+    display: none;
+}
+
+ul.flows li {
+    background: transparent no-repeat top left;
+    padding-left: 2em;
+}
+ul.flows li ul li {
+    padding-left: 0;
+}
+ul.flows li.receive-notification, ul.flows li.send-answer {
+    background-image: url('images/arrow_left_blue.png');
+}
+ul.flows li.receive-notification.trigger, ul.flows li.send-answer.trigger {
+    background-image: url('images/left_plus.png');
+}
+ul.flows li.receive-notification.trigger.terminate, ul.flows li.send-answer.trigger.terminate {
+    background-image: url('images/left_both.png');
+}
+ul.flows li.receive-notification.terminate, ul.flows li.send-answer.terminate {
+    background-image: url('images/left_box.png');
+}
+ul.flows li.send-notification, ul.flows li.receive-answer {
+    background-image: url('images/arrow_right_blue.png');
+}
+ul.flows li.send-notification.trigger, ul.flows li.receive-answer.trigger {
+    background-image: url('images/right_plus.png');
+}
+ul.flows li.send-notification.trigger.terminate, ul.flows li.receive-answer.trigger.terminate {
+    background-image: url('images/right_both.png');
+}
+ul.flows li.send-notification.terminate, ul.flows li.receive-answer.terminate {
+    background-image: url('images/right_box.png');
+}
+
+/* Login (RC) 03.15.2010 -----------------------------------------*/
+
+body#login {
+	background:#E9F0FF;
+}
+
+body#login div#top {
+	width:300px;
+	border:1px solid #CCCCCC;
+	margin-top:100px;
+	min-width:300px;
+}
+
+body#login div#header {
+	margin-bottom:0;
+}
+
+body#login div#contents {
+	padding:10px;
+	background:#F6F6F6;
+	border-top:1px solid #CCCCCC;
+}
+
+body#login div#contents label {
+	font-weight:bold;
+}
+
+body#login input#j_username, body#login input#j_password {
+	width:275px;
+	height:20px;
+}
+
+body#login div#login-username, body#login div#login-password {
+	margin:3px 0 10px 0;
+}
+
+body#login div#login-rememberme label {
+	font-weight:normal;
+}
+
+body#login div#login-submit {
+	margin:10px 0 0 0;
+}
+
+body#login div#login-submit input {
+	padding:5px 10px;
+}
+
+tr.task>td {
+    border-bottom: 1px solid gray;
+}
+
+
+/* Printed version -----------------------------------------------*/
+@media print {
+
+    @page {
+        margin: 0;
+    }
+    div.segment, div.actor {
+        page-break-before: always;
+    }
+
+    tr.task {
+        page-break-inside: avoid;
+    }
+
+    #nav {
+        display: none;
+    }
+}
