@@ -35,10 +35,8 @@ public interface Commander {
      *
      * @param command a command
      * @return an change
-     * @throws com.mindalliance.channels.command.CommandException
-     *          if execution could not proceeed or failed.
      */
-    Change doCommand( Command command ) throws CommandException;
+    Change doCommand( Command command );
 
     /**
      * Whether user could undo a previous command right now.
@@ -58,17 +56,15 @@ public interface Commander {
      * Undo user's previous command.
      *
      * @return a change
-     * @throws CommandException if undoing fails or is not allowed.
      */
-    Change undo() throws CommandException;
+    Change undo();
 
     /**
      * Redo user's previous undone command.
      *
      * @return a change
-     * @throws CommandException if redoing fails or is not allowed.
      */
-    Change redo() throws CommandException;
+    Change redo();
 
     /**
      * Resets commander

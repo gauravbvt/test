@@ -165,21 +165,16 @@ public class MultiCommand extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Change execute( Commander commander ) throws CommandException {
+    public Change execute( Commander commander ) {
         QueryService queryService = commander.getQueryService();
         for ( Command command : commands ) {
-            try {
+
                 LOG.info( "--- sub-command --" );
                 Change change = commander.doCommand( command ); // TODO -- command journaled here
                 for ( Link link : links ) {
                     link.process( command, change, queryService ); // without benefit of link processing
                 }
                 executed.add( command );
-            }
-            catch ( CommandException e ) {
-                LOG.warn( " Execution failed", e );
-                // ignore
-            }
         }
         LOG.info( "END multicommand " + getName() );
         return new Change();

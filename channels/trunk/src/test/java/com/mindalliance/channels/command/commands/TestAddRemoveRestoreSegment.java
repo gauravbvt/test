@@ -29,7 +29,7 @@ public class TestAddRemoveRestoreSegment extends AbstractChannelsTest {
     }
 
     @Test
-    public void testAddRemoveRestore() throws Exception {
+    public void testAddRemoveRestore() {
         int count = countSegments();
         Command command = new AddSegment();
         assertTrue( getCommander().canDo( command ) );

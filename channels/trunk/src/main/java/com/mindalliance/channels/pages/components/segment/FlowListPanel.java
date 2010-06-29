@@ -8,6 +8,8 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
@@ -57,7 +59,6 @@ public class FlowListPanel extends AbstractCommandablePanel {
      * Expansions
      */
     private Set<Long> expansions;
-
 
     public FlowListPanel( String id, IModel<Part> model, boolean sends, Set<Long> expansions ) {
         super( id );
@@ -183,20 +184,16 @@ public class FlowListPanel extends AbstractCommandablePanel {
         this.sends = sends;
     }
 
-/*
-    */
-/**
- * {@inheritDoc}
- */
-/*
+
+    /**
+     * {@inheritDoc}
+     */
+
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject();
-        if ( identifiable instanceof Flow ) {
-            target.addComponent( flowsDiv );
-        }
+        target.appendJavascript( PlanPage.IE7CompatibilityScript );
         super.updateWith( target, change, updated );
     }
-*/
+
 
     /**
      * Refresh list of flows.
@@ -204,6 +201,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
      * @param target an ajax request target
      */
     public void refresh( AjaxRequestTarget target ) {
+        target.appendJavascript( PlanPage.IE7CompatibilityScript );
         target.addComponent( flowsDiv );
     }
 

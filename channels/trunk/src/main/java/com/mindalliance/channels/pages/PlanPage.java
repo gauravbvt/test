@@ -54,6 +54,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -120,6 +121,10 @@ public final class PlanPage extends WebPage implements Updatable {
      * Length a segment title is abbreviated to
      */
     private static final int SEGMENT_DESCRIPTION_MAX_LENGTH = 94;
+    /**
+     * IE7 compatibility script.
+     */
+    public static String IE7CompatibilityScript;
 
     /**
      * Id of components that are expanded.
@@ -317,6 +322,20 @@ public final class PlanPage extends WebPage implements Updatable {
     @SpringBean
     private PlanManager planManager;
 
+    static {
+        IE7CompatibilityScript =
+        // "alert($.browser.msie + ' ' + parseInt( $.browser.version ) );\n" +
+        "$(document).ready(function() {\n" +
+            "if ( $.browser.msie && parseInt( $.browser.version ) < 8 ) {\n" +
+                            "    var zIndexFix = 110;\n" +
+                            "    $('div.flow > div').each(function() {\n" +
+                            "        $(this).css('zIndex', -zIndexFix);\n" +
+                            "        zIndexFix += 10;\n" +
+                            "    })\n" +
+                            "};\n" +
+        "});";
+    }
+
     /**
      * Used when page is called without parameters.
      * Set to default segment, default part, all collapsed.
@@ -349,6 +368,11 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     public PlanPage( Segment sc, Part p ) {
         init( sc, p, new HashSet<Long>() );
+    }
+
+    public void renderHead( HtmlHeaderContainer container ) {
+        container.getHeaderResponse().renderJavascript( PlanPage.IE7CompatibilityScript, null );
+        super.renderHead( container );
     }
 
     private void init( Segment sc, Part p, Set<Long> expanded ) {
@@ -1433,6 +1457,9 @@ public final class PlanPage extends WebPage implements Updatable {
                 segmentPanel.resizePartPanels( target );
             } else if ( change.isCopied() ) {
                 refreshAllMenus( target );
+            } else if ( change.isRefreshNeeded() ) {
+                change.setScript( "alert('The action failed because the page was out of sync.');" );
+                refreshAll( target );
             } else {
                 refresh( target, change, updated );
             }
@@ -1943,5 +1970,5 @@ public final class PlanPage extends WebPage implements Updatable {
             return true;
         }
     }
-} 
+}
 

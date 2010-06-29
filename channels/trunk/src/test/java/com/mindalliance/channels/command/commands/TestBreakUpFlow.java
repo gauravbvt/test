@@ -82,7 +82,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
     }
 
     @Test
-    public void testInternalBreakUp() throws Exception {
+    public void testInternalBreakUp() {
         assertSame( 1, countFlows() );
         assertNotNull( findFlow() );
         assertTrue( commander.canDo( command ) );

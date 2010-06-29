@@ -34,7 +34,7 @@ public class TestUpdatePlanObject extends AbstractChannelsTest {
     }
 
     @Test
-    public void testCommand() throws Exception {
+    public void testCommand() {
         Commander commander = getCommander();
         QueryService queryService = commander.getQueryService();
         assertTrue( commander.canDo( command ) );
