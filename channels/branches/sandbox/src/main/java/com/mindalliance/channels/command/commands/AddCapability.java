@@ -1,15 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
@@ -50,17 +50,19 @@ public class AddCapability extends AbstractCommand {
             Part part = (Part) segment.getNode( (Long) get( "part" ) );
             if ( part == null ) throw new NotFoundException();
             // Can be null
-            Long priorId = (Long) get( "flow" );
+            Long priorFlowId = (Long) get( "flow" );
+            Long priorConnectorId = (Long) get( "connector" );
             Flow flow = queryService.connect(
                     part,
-                    queryService.createConnector( segment ),
+                    queryService.createConnector( segment, priorConnectorId ),
                     (String) get( "name" ),
-                    priorId );
+                    priorFlowId );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 ChannelsUtils.initialize( flow, flowAttributes );
             }
             set( "flow", flow.getId() );
+            set( "connector", flow.getTarget().getId() );
             return new Change( Change.Type.Added, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

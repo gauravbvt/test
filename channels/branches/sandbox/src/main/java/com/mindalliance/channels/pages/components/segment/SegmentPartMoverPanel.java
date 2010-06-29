@@ -29,6 +29,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -158,6 +159,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
     private List<Segment> getCandidateDestinationSegments() {
         List<Segment> otherSegments = new ArrayList<Segment>( queryService.list( Segment.class ) );
         otherSegments.remove( getSegment() );
+        Collections.sort( otherSegments );
         return otherSegments;
     }
 
