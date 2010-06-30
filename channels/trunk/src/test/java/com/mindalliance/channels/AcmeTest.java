@@ -3,10 +3,10 @@
 
 package com.mindalliance.channels;
 
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.analysis.Analyst;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;

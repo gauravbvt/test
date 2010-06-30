@@ -54,7 +54,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         lock.setUserName( "bob" );
         command.needLockOn( segment );
         assertFalse( commander.canDo( command ) );
-        if ( commander.doCommand( command ).isRefreshNeeded() ) fail();
+        if ( !commander.doCommand( command ).isRefreshNeeded() ) fail();
     }
 
     @Test
@@ -80,6 +80,6 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         Thread.sleep( 10 );
         commander.doCommand( otherUserCommand );
         assertFalse( commander.canRedo() );
-        if ( commander.redo().isRefreshNeeded() ) fail();
+        if ( !commander.redo().isRefreshNeeded() ) fail();
     }
 }
