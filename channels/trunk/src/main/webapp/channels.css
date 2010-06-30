@@ -30,7 +30,7 @@ body.profile {
     top: 5em;
     bottom: 5px;
     left: 0;
-    right: 0;
+    width: 100%;
     overflow: hidden;
     padding-bottom: 5px;
 }

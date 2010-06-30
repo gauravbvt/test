@@ -312,6 +312,7 @@ public class XmlStreamer implements ImportExportFactory {
          */
         public void export( Segment segment, OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
+            out.writeObject( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
             out.writeObject( segment );
             out.close();
         }

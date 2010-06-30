@@ -10,8 +10,6 @@ import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.PastePart;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.pages.ExportPage;
-import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
@@ -20,9 +18,7 @@ import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.target.basic.RedirectRequestTarget;
@@ -69,6 +65,8 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                     new Model<String>( "Move tasks to segment..." ),
                     indexLink ) );
 
+            // Import
+/*
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import a segment..." ),
                     new AjaxFallbackLink( "link" ) {
                         @Override
@@ -76,8 +74,10 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                             ( (PlanPage) getPage() ).importSegment( target );
                         }
                     } ) );
+*/
         }
         // Export
+/*
         BookmarkablePageLink pageLink = new BookmarkablePageLink(
                 "link",
                 ExportPage.class,
@@ -90,6 +90,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                 "menuItem",
                 new Model<String>( "Export this segment..." ),
                 pageLink ) );
+*/
         // Logout
         ConfirmedAjaxFallbackLink logoutLink = new ConfirmedAjaxFallbackLink( "link", "Log out?" ) {
             public void onClick( AjaxRequestTarget target ) {

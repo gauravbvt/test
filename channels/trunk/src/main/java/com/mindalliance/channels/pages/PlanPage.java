@@ -406,7 +406,7 @@ public final class PlanPage extends WebPage implements Updatable {
         addSegmentSelector();
         addPlanSwitcher();
         addModalDialog();
-        addSegmentImportDialog();
+        // addSegmentImportDialog();
         addSegmentPanel();
         addEntityPanel();
         addAssignmentsPanel();
@@ -496,10 +496,12 @@ public final class PlanPage extends WebPage implements Updatable {
                 getUser().getUsername() ) );                              // NON-NLS
     }
 
+/*
     private void addSegmentImportDialog() {
         segmentImportPanel = new SegmentImportPanel( "segment-import" );
         form.add( segmentImportPanel );
     }
+*/
 
     private void addSegmentPanel() {
         segmentPanel = new SegmentPanel( "segment",
