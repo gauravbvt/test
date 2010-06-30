@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.commands.AddProducer;
 import com.mindalliance.channels.command.commands.RemoveProducer;
 import com.mindalliance.channels.dao.User;
@@ -203,11 +202,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
             } else {
                 command = new RemoveProducer( planner.getUsername() );
             }
-            try {
-                change = getCommander().doCommand( command );
-            } catch ( CommandException e ) {
-                LOG.warn( "Voting failed", e );
-            }
+            change = getCommander().doCommand( command );
         }
 
         public Change getChange() {

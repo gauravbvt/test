@@ -238,7 +238,7 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     protected static void installSamples() {
         LOG.debug( "Installing samples" );
         try {
-            copyFiles( new File( "src/main/samples" ), new File( "target/channel-test-data" ) );
+            copyFiles( new File( "src/main/webapp/WEB-INF/samples" ), new File( "target/channel-test-data" ) );
         } catch ( IOException e ) {
             throw new RuntimeException( e );
         }

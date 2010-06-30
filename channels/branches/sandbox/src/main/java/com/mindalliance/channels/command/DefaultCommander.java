@@ -287,57 +287,75 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public synchronized Change doCommand( Command command ) throws CommandException {
-        if ( !getPlan().isDevelopment() )
-            throw new CommandException(
-                    "This version is no longer in development. You need to refresh. " );
-        if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
-        LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
-        Change change = execute( command );
-        if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
-        history.recordDone( command );
-        afterExecution( command, change );
+    public synchronized Change doCommand( Command command ) {
+        Change change;
+        try {
+            if ( !getPlan().isDevelopment() )
+                throw new CommandException(
+                        "This version is no longer in development. You need to refresh. " );
+            if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
+            LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
+            change = execute( command );
+            if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
+            history.recordDone( command );
+            afterExecution( command, change );
+        } catch ( CommandException e ) {
+            LOG.warn("Command failed: " + command, e);
+            change = new Change( Change.Type.NeedsRefresh );
+        }
         return change;
     }
 
     /**
      * {@inheritDoc}
      */
-    public synchronized Change undo() throws CommandException {
-        Memento memento = history.getUndo();
-        if ( memento == null )
-            throw new CommandException( "Nothing can be undone right now." );
+    public synchronized Change undo() {
+        Change change;
+        try {
+            Memento memento = history.getUndo();
+            if ( memento == null )
+                throw new CommandException( "Nothing can be undone right now." );
 
-        Command undoCommand = memento.getCommand().getUndoCommand( this );
-        if ( undoCommand instanceof MultiCommand )
-            LOG.info( "*** START multicommand ***" );
-        LOG.info( "Undoing: " + undoCommand.toString() );
-        Change change = execute( undoCommand );
-        if ( undoCommand instanceof MultiCommand )
-            LOG.info( "*** END multicommand ***" );
+            Command undoCommand = memento.getCommand().getUndoCommand( this );
+            if ( undoCommand instanceof MultiCommand )
+                LOG.info( "*** START multicommand ***" );
+            LOG.info( "Undoing: " + undoCommand.toString() );
+            change = execute( undoCommand );
+            if ( undoCommand instanceof MultiCommand )
+                LOG.info( "*** END multicommand ***" );
 
-        change.setUndoing( true );
-        history.recordUndone( memento, undoCommand );
-        afterExecution( undoCommand, change );
+            change.setUndoing( true );
+            history.recordUndone( memento, undoCommand );
+            afterExecution( undoCommand, change );
+        } catch ( CommandException e ) {
+            change = new Change( Change.Type.NeedsRefresh);
+            LOG.warn( "Undo failed", e);
+        }
         return change;
     }
 
     /**
      * {@inheritDoc}
      */
-    public synchronized Change redo() throws CommandException {
-        // Get memento of undoing command
-        Memento memento = history.getRedo();
-        if ( memento == null )
-            throw new CommandException( "Nothing can be redone right now." );
+    public synchronized Change redo() {
+        Change change;
+        try {
+// Get memento of undoing command
+            Memento memento = history.getRedo();
+            if ( memento == null )
+                throw new CommandException( "Nothing can be redone right now." );
 
-        // undo the undoing
-        Command redoCommand = memento.getCommand().getUndoCommand( this );
-        LOG.info( "Redoing: {}", redoCommand.toString() );
-        Change change = execute( redoCommand );
-        change.setUndoing( true );
-        history.recordRedone( memento, redoCommand );
-        afterExecution( redoCommand, change );
+            // undo the undoing
+            Command redoCommand = memento.getCommand().getUndoCommand( this );
+            LOG.info( "Redoing: {}", redoCommand.toString() );
+            change = execute( redoCommand );
+            change.setUndoing( true );
+            history.recordRedone( memento, redoCommand );
+            afterExecution( redoCommand, change );
+        } catch ( CommandException e ) {
+            change = new Change( Change.Type.NeedsRefresh );
+            LOG.warn( "Failed to redo", e);
+        }
         return change;
     }
 
@@ -513,7 +531,7 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public void replay( Journal journal ) throws CommandException {
+    public void replay( Journal journal ) {
         setReplaying( true );
         if ( !journal.isEmpty() )
             for ( Command command : journal.getCommands() )
@@ -609,8 +627,6 @@ public class DefaultCommander implements Commander {
 
         } catch ( IOException e ) {
             LOG.error( MessageFormat.format( "Unable to save plan {0}", plan ), e );
-        } catch ( CommandException e ) {
-            LOG.error( MessageFormat.format( "Unable to replay journal for plan {0}", plan ), e );
         }
     }
 }

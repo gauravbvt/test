@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.MediaReferencesPanel;
@@ -20,7 +21,6 @@ import com.mindalliance.channels.pages.components.segment.menus.PartShowMenuPane
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
@@ -115,10 +115,6 @@ public class SegmentPanel extends AbstractCommandablePanel {
      */
     private boolean showingGoals = false;
     /**
-     * Captures the current part panel sizes
-     */
-    private String partPanelSizes;
-    /**
      * Part panel css identifier.
      */
     private static final String PART_PANEL_ID = ".part-header";
@@ -147,7 +143,6 @@ public class SegmentPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        partPanelSizes = StringUtils.join( getPartPanelSizes(), ',' );
         setOutputMarkupId( true );
         addFlowViewControls();
         addFlowDiagram();
@@ -402,11 +397,9 @@ public class SegmentPanel extends AbstractCommandablePanel {
 
     public void resizePartPanels( AjaxRequestTarget target ) {
         String[] sizes = getPartPanelSizes();
-        String newSizes = StringUtils.join( sizes, ',' );
         addPartPanel();
         adjustPartPanelSizes( target, sizes );
         target.addComponent( partPanel );
-        partPanelSizes = newSizes;
     }
 
     /**
@@ -441,6 +434,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
             }
+            target.appendJavascript( PlanPage.IE7CompatibilityScript );
             addPartMediaPanel();
             target.addComponent( partMediaPanel );
             resizePartPanels( target );

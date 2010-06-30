@@ -92,7 +92,11 @@ public class Change implements Serializable {
         /**
          * Not explained.
          */
-        Unexplained
+        Unexplained,
+        /**
+         * Change failed because refresh needed.
+         */
+        NeedsRefresh
 
     }
 
@@ -442,14 +446,29 @@ public class Change implements Serializable {
         return type == Type.Minimized;
     }
 
+    /**
+     * Type is explained.
+     * @return  a boolean
+     */
     public boolean isExplained() {
         return type == Type.Explained;
     }
 
+    /**
+     * Type is unexplained.
+     * @return  a boolean
+     */
     public boolean isUnexplained() {
         return type == Type.Unexplained;
     }
 
+    /**
+     * Type is needs refresh.
+     * @return  a boolean
+     */
+    public boolean isRefreshNeeded() {
+        return type == Type.NeedsRefresh;
+    }
 
     /**
      * Whether change is to a given property.

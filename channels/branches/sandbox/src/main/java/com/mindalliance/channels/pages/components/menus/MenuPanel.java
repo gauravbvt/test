@@ -9,7 +9,6 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -114,12 +113,8 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         if ( getCommander().canUndo() ) {
             Link link = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    try {
-                        Change change = getCommander().undo();
-                        update( target, change );
-                    } catch ( CommandException e ) {
-                        throw new WicketRuntimeException( "Failed to undo", e );
-                    }
+                    Change change = getCommander().undo();
+                    update( target, change );
                 }
             };
             menuItem = new LinkMenuItem(
@@ -147,12 +142,8 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         if ( getCommander().canRedo() ) {
             Link link = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    try {
-                        Change change = getCommander().redo();
-                        update( target, change );
-                    } catch ( CommandException e ) {
-                        throw new WicketRuntimeException( "Failed to redo", e );
-                    }
+                    Change change = getCommander().redo();
+                    update( target, change );
                 }
             };
             menuItem = new LinkMenuItem(
@@ -183,16 +174,10 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             if ( getCommander().canDo( command ) ) {
                 Link link = new ConfirmedAjaxFallbackLink(
                         "link",
-                        commandWrapper.isConfirm() ? "Are you sure?" : null) {
+                        commandWrapper.isConfirm() ? "Are you sure?" : null ) {
                     public void onClick( AjaxRequestTarget target ) {
-                        try {
-                            Change change = getCommander().doCommand( command );
-                            commandWrapper.onExecuted( target, change );
-                        } catch ( CommandException e ) {
-                            throw new WicketRuntimeException(
-                                    "Failed to " + command.getTitle(),
-                                    e );
-                        }
+                        Change change = getCommander().doCommand( command );
+                        commandWrapper.onExecuted( target, change );
                     }
                 };
                 menuItems.add( new LinkMenuItem( id,
