@@ -11,7 +11,6 @@ import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.PredicateUtils;
 import org.apache.commons.collections.Transformer;
 
 import java.util.ArrayList;
@@ -80,7 +79,12 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
         Delay cumulativeDelay = new Delay( commitment.getMaxDelay() );
         List<Flow> priorCommitments = (List<Flow>) CollectionUtils.select(
                 IteratorUtils.toList( ( (Part) commitment.getSource() ).receivesNamed( commitment.getName() ) ),
-                PredicateUtils.invokerPredicate( "isSharingCommitment" )
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ((Flow)object).isSharing();
+                    }
+                }
+                //PredicateUtils.invokerPredicate( "isSharingCommitment" )
         );
         List<Delay> alternateDelays = (List<Delay>) CollectionUtils.collect(
                 priorCommitments,

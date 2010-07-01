@@ -1,6 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
@@ -63,7 +62,7 @@ public class DefaultLockManager implements LockManager {
                     String userName = User.current().getUsername();
                     if ( !lock.isOwnedBy( userName ) ) {
                         throw new LockingException(
-                                userName + " is making changes to " + mo.getName() + "." );
+                                userName + " can't grab lock on " + mo.getName() + ": it is locked by " + lock.getUserName() );
                     }
                     // Grab the lock
                 } else {
