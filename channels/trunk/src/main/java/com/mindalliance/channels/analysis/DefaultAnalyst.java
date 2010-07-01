@@ -1,6 +1,9 @@
 package com.mindalliance.channels.analysis;
 
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
@@ -88,10 +91,6 @@ public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener 
         return running;
     }
 
-    public void onAfterCommand( Plan plan ) {
-        issueScanner.rescan( plan );
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -108,6 +107,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener 
 
     /**
      * A plan is about to be put in production.
+     *
      * @param devPlan the development plan
      */
     public void aboutToProductize( Plan devPlan ) {
@@ -116,6 +116,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener 
 
     /**
      * A new development plan was created.
+     *
      * @param devPlan the new plan.
      */
     public void created( Plan devPlan ) {
@@ -124,6 +125,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener 
 
     /**
      * A new plan was put in production.
+     *
      * @param plan the new plan
      */
     public void productized( Plan plan ) {
@@ -431,6 +433,23 @@ public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener 
             issues.addAll( detective.detectUnwaivedIssues( modelObject, false ) );
             return issues;
         }
+    }
+
+
+    public void commandDone( Command command, Change change ) {
+        onAfterCommand();
+    }
+
+    public void commandUndone( Command command ) {
+        onAfterCommand();
+    }
+
+    public void commandRedone( Command command ) {
+        onAfterCommand();
+    }
+
+    private void onAfterCommand() {
+        issueScanner.rescan( User.current().getPlan() );
     }
 
 

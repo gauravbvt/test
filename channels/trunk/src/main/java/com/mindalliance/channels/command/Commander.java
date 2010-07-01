@@ -353,4 +353,16 @@ public interface Commander {
      * @return a boolean
      */
     boolean isLockable( String className );
+
+    /**
+     * Add a command listener.
+     * @param listener  a command listener
+     */
+    void addCommandListener ( CommandListener listener );
+
+    /**
+     * Remove a command listener.
+     * @param listener  a command listener
+     */
+    void removeCommandListener ( CommandListener listener );
 }

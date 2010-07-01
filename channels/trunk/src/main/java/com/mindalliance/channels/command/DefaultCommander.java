@@ -66,7 +66,9 @@ public class DefaultCommander implements Commander {
      */
     private boolean replaying;
 
-    /** The planDao (and therefore, plan) used by this commander. */
+    /**
+     * The planDao (and therefore, plan) used by this commander.
+     */
     private PlanDao planDao;
 
     private PlanManager planManager;
@@ -102,12 +104,19 @@ public class DefaultCommander implements Commander {
      */
     private long whenLastCheckedForTimeouts = System.currentTimeMillis();
 
+    /**
+     * Command listeners.
+     */
+    private List<CommandListener> listeners = new ArrayList<CommandListener>();
+
     //===============================================
     public DefaultCommander() {
     }
 
     public void setAnalyst( Analyst analyst ) {
         this.analyst = analyst;
+        if ( !listeners.contains( analyst ) )
+            listeners.add( analyst );
     }
 
     public Analyst getAnalyst() {
@@ -298,9 +307,9 @@ public class DefaultCommander implements Commander {
             change = execute( command );
             if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
             history.recordDone( command );
-            afterExecution( command, change );
+            afterDo( command, change );
         } catch ( CommandException e ) {
-            LOG.warn("Command failed: " + command, e);
+            LOG.warn( "Command failed: " + command, e );
             change = new Change( Change.Type.NeedsRefresh );
         }
         return change;
@@ -326,10 +335,10 @@ public class DefaultCommander implements Commander {
 
             change.setUndoing( true );
             history.recordUndone( memento, undoCommand );
-            afterExecution( undoCommand, change );
+            afterUndo( undoCommand, change );
         } catch ( CommandException e ) {
-            change = new Change( Change.Type.NeedsRefresh);
-            LOG.warn( "Undo failed", e);
+            change = new Change( Change.Type.NeedsRefresh );
+            LOG.warn( "Undo failed", e );
         }
         return change;
     }
@@ -351,21 +360,34 @@ public class DefaultCommander implements Commander {
             change = execute( redoCommand );
             change.setUndoing( true );
             history.recordRedone( memento, redoCommand );
-            afterExecution( redoCommand, change );
+            afterRedo( redoCommand, change );
         } catch ( CommandException e ) {
             change = new Change( Change.Type.NeedsRefresh );
-            LOG.warn( "Failed to redo", e);
+            LOG.warn( "Failed to redo", e );
         }
         return change;
     }
 
-    private void afterExecution( Command command, Change change ) {
+    private void afterDo( Command command, Change change ) {
         if ( !isReplaying() && command.isTop() && !change.isNone() ) {
             LOG.debug( "***After command" );
+            for ( CommandListener listener : listeners ) {
+                listener.commandDone( command, change );
+            }
+        }
+    }
 
-            // TODO Implement proper observers/listeners
-            planManager.onAfterCommand( getPlan(), command );
-            analyst.onAfterCommand( getPlan() );
+    private void afterUndo( Command command, Change change ) {
+        LOG.debug( "***After undo" );
+        for ( CommandListener listener : listeners ) {
+            listener.commandUndone( command );
+        }
+    }
+
+    private void afterRedo( Command command, Change change ) {
+        LOG.debug( "***After redo" );
+        for ( CommandListener listener : listeners ) {
+            listener.commandRedone( command );
         }
     }
 
@@ -387,7 +409,7 @@ public class DefaultCommander implements Commander {
 
         ModelObject mo = planDao.find( clazz, name.trim() );
         if ( mo == null || mo.isUnknown() || !mo.isUndefined()
-                        || queryService.isReferenced( mo ) || mo.isImmutable() )
+                || queryService.isReferenced( mo ) || mo.isImmutable() )
             return false;
 
         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );
@@ -579,6 +601,8 @@ public class DefaultCommander implements Commander {
 
     public void setPlanManager( PlanManager planManager ) {
         this.planManager = planManager;
+        if ( !listeners.contains( planManager ) )
+            listeners.add( planManager );
     }
 
     public PlanDao getPlanDao() {
@@ -600,7 +624,7 @@ public class DefaultCommander implements Commander {
                     !Plan.class.isAssignableFrom( clazz ) &&
                     !Segment.class.isAssignableFrom( clazz );
         } catch ( ClassNotFoundException e ) {
-            throw new IllegalArgumentException( "Class not found", e);
+            throw new IllegalArgumentException( "Class not found", e );
         }
     }
 
@@ -612,6 +636,7 @@ public class DefaultCommander implements Commander {
 
     /**
      * Replay journaled commands for current plan.
+     *
      * @param exportFactory
      */
     public void replayJournal( ImportExportFactory exportFactory ) {
@@ -621,7 +646,6 @@ public class DefaultCommander implements Commander {
             if ( plan.isDevelopment() ) {
                 replay( planDao.getJournal() );
                 LOG.info( "Replayed journal for plan {}", plan );
-
                 planDao.save( exportFactory.createExporter( planDao ) );
             }
 
@@ -629,4 +653,20 @@ public class DefaultCommander implements Commander {
             LOG.error( MessageFormat.format( "Unable to save plan {0}", plan ), e );
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addCommandListener( CommandListener listener ) {
+        listeners.add( listener );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeCommandListener( CommandListener listener ) {
+        listeners.remove( listener );
+    }
+
+
 }

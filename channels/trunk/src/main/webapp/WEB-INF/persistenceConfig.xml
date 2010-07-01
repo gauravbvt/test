@@ -60,8 +60,12 @@
         <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.graph.DiagramFactory.*(..))"
                      advice-ref="cacheSet"/>
 
-        <!-- Temporary caching trigger -->
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.dao.PlanManager.onAfterCommand(..))"
+        <!-- Temporary caching triggers -->
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.dao.PlanManager.commandDone(..))"
+                     advice-ref="cacheClear"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.dao.PlanManager.commandUndone(..))"
+                     advice-ref="cacheClear"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.dao.PlanManager.commandRedone(..))"
                      advice-ref="cacheClear"/>
 
         <!-- Permanent caching -->

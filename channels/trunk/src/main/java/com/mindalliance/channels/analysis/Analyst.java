@@ -1,8 +1,8 @@
 package com.mindalliance.channels.analysis;
 
+import com.mindalliance.channels.command.CommandListener;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.query.QueryService;
 
@@ -16,19 +16,12 @@ import java.util.List;
  * Date: Nov 26, 2008
  * Time: 9:29:14 AM
  */
-public interface Analyst {
+public interface Analyst extends CommandListener {
 
     /**
      * Whether to include issues that are property-specific.
      */
     boolean INCLUDE_PROPERTY_SPECIFIC = true;
-
-    /**
-     * Notification of command execution.
-     *
-     * @param plan a plan
-     */
-    void onAfterCommand( Plan plan );
 
     /**
      * Use all applicable issue detectors to find issues about a model object.

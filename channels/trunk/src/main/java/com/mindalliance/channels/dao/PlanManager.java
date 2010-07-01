@@ -1,7 +1,9 @@
 package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.analysis.IssueScanner;
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandListener;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
@@ -34,7 +36,7 @@ import java.util.StringTokenizer;
 /**
  * Persistent store for plans.
  */
-public class PlanManager {
+public class PlanManager implements CommandListener {
 
     /**
      * Default uri.
@@ -112,7 +114,7 @@ public class PlanManager {
      */
     private Resource dataDirectory =
             new FileSystemResource( new File( System.getProperty( "java.io.tmpdir" ),
-                                              "channels-data" ) );
+                    "channels-data" ) );
 
     /**
      * Number of commands journaled before a snapshot is taken on next command.
@@ -266,7 +268,7 @@ public class PlanManager {
             inputStream = new FileInputStream( plansFile );
         } else if ( defaultPlanDefinitions != null && defaultPlanDefinitions.exists() ) {
             LOG.debug( "Reading default plan definitions from {}",
-                       defaultPlanDefinitions.getURI() );
+                    defaultPlanDefinitions.getURI() );
             inputStream = defaultPlanDefinitions.getInputStream();
         } else {
             LOG.warn( "No user readable plan definitions" );
@@ -314,6 +316,7 @@ public class PlanManager {
 
     /**
      * Get all plan names.
+     *
      * @return names of all plans
      */
     public List<String> getPlanNames() {
@@ -381,34 +384,6 @@ public class PlanManager {
         this.snapshotThreshold = snapshotThreshold;
     }
 
-    /**
-     * Callback after a command was executed.
-     *
-     * @param plan         the plan
-     * @param command      the command
-     */
-    public void onAfterCommand( Plan plan, Command command ) {
-        // TODO implement proper listener/callback mechanism
-        if ( command.isMemorable() )
-            try {
-                PlanDao dao = getDao( plan );
-                Exporter exporter = importExportFactory.createExporter( dao );
-                synchronized ( dao ) {
-                    Journal journal = dao.getJournal();
-                    if ( command.forcesSnapshot() || journal.size() >= dao.getSnapshotThreshold() )
-                        dao.save( exporter );
-                    else {
-                        journal.addCommand( command );
-                        dao.saveJournal( exporter );
-                    }
-                }
-
-            } catch ( IOException e ) {
-                throw new RuntimeException( "Failed to save journal", e );
-            } catch ( NotFoundException e ) {
-                throw new RuntimeException( "Failed to save journal", e );
-            }
-    }
 
     /**
      * Get current plan from current thread.
@@ -426,6 +401,7 @@ public class PlanManager {
 
     /**
      * Create a new plan and index it.
+     *
      * @return the new plan dao
      */
     public PlanDao createPlan() {
@@ -470,7 +446,6 @@ public class PlanManager {
     public synchronized void validate() {
         createDataDir();
 
-
         // Load persisted, defined plans
         for ( PlanDao dao : getDaos() ) {
             if ( dao.isPersisted() )
@@ -499,6 +474,7 @@ public class PlanManager {
 
     /**
      * Create DAOs implied by the definition file.
+     *
      * @return list of versioned daos, not loaded or imported.
      */
     private List<PlanDao> getDaos() {
@@ -511,9 +487,9 @@ public class PlanManager {
 
             for ( int version = lastVersion; version > 0; version-- ) {
                 Plan plan = createPlan( uri, version,
-                                        version == lastVersion     ? Plan.Status.DEVELOPMENT
-                                      : version == lastVersion - 1 ? Plan.Status.PRODUCTION
-                                                                   : Plan.Status.RETIRED );
+                        version == lastVersion ? Plan.Status.DEVELOPMENT
+                                : version == lastVersion - 1 ? Plan.Status.PRODUCTION
+                                : Plan.Status.RETIRED );
                 plan.setName( properties.get( 0 ) );
                 plan.setClient( properties.get( 1 ) );
                 daos.add( createDao( plan ) );
@@ -599,7 +575,7 @@ public class PlanManager {
     private String getPlanDirectory( String uri ) {
         try {
             return getDataDirectory().getFile().getAbsolutePath() + File.separator
-                   + PlanDao.sanitize( uri );
+                    + PlanDao.sanitize( uri );
         } catch ( IOException e ) {
             throw new RuntimeException( "Failed to get plan directory", e );
         }
@@ -634,7 +610,7 @@ public class PlanManager {
      * Substitute the new development plan as the current plan for each user where applicable.
      * Substitute the new production plan as the current plan for each user where applicable.
      *
-     * @param oldDevPlan   a plan
+     * @param oldDevPlan a plan
      */
     public void moveToProduction( Plan oldDevPlan ) {
         if ( !oldDevPlan.isDevelopment() )
@@ -682,7 +658,7 @@ public class PlanManager {
      */
     public Plan findProductionPlan( String uri ) {
         return (Plan) CollectionUtils.find( getPlanVersions( uri ),
-                                            PredicateUtils.invokerPredicate( "isProduction" ) );
+                PredicateUtils.invokerPredicate( "isProduction" ) );
     }
 
     /**
@@ -693,7 +669,7 @@ public class PlanManager {
      */
     public Plan findDevelopmentPlan( String uri ) {
         return (Plan) CollectionUtils.find( getPlanVersions( uri ),
-                                            PredicateUtils.invokerPredicate( "isDevelopment" ) );
+                PredicateUtils.invokerPredicate( "isDevelopment" ) );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -716,10 +692,10 @@ public class PlanManager {
         File oldVersionDir = new File( getPlanVersionDirectory( plan ) );
         // Copy files from old to new
         FileUtils.copyFileToDirectory( new File( oldVersionDir, PlanDao.DATA_FILE ),
-                                       newVersionDir );
+                newVersionDir );
         FileUtils.copyFileToDirectory( new File( oldVersionDir, surveysFileName ), newVersionDir );
         FileUtils.copyDirectoryToDirectory( new File( oldVersionDir, uploadsDirName ),
-                                            newVersionDir );
+                newVersionDir );
     }
 
     private Plan makeNewDevPlan( Plan oldDevPlan ) {
@@ -751,8 +727,8 @@ public class PlanManager {
      * Add a producer to the plan.
      * Returns whether the plan was put into production as a result.
      *
-     * @param producer     user name of planner voting to put plan in production
-     * @param plan         a plan
+     * @param producer user name of planner voting to put plan in production
+     * @param plan     a plan
      * @return a boolean
      */
     public boolean addProducer( String producer, final Plan plan ) {
@@ -840,6 +816,7 @@ public class PlanManager {
 
     /**
      * Get a plan the uer can edit, else one the user can read, else the default plan.
+     *
      * @param user a user
      * @return a plan, or null if none
      */
@@ -862,12 +839,61 @@ public class PlanManager {
      *
      * @param user the user
      * @param role either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null for none
-     * @param uri either a plan uri or null for all.
+     * @param uri  either a plan uri or null for all.
      */
     @Secured( "ROLE_ADMIN" )
     public void setAuthorities( User user, String role, String uri ) {
         user.getUserInfo().setAuthorities( role, uri, getPlans() );
         user.setPlan( uri != null ? getDefaultPlan( user ) : null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void commandDone( Command command, Change change ) {
+        onAfterCommand( User.current().getPlan(), command );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void commandUndone( Command command ) {
+        onAfterCommand( User.current().getPlan(), command );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void commandRedone( Command command ) {
+        onAfterCommand( User.current().getPlan(), command );
+    }
+
+    /**
+     * Callback after a command was executed.
+     *
+     * @param plan    the plan
+     * @param command the command
+     */
+    private void onAfterCommand( Plan plan, Command command ) {
+        if ( command.isMemorable() )
+            try {
+                PlanDao dao = getDao( plan );
+                Exporter exporter = importExportFactory.createExporter( dao );
+                synchronized ( dao ) {
+                    Journal journal = dao.getJournal();
+                    if ( command.forcesSnapshot() || journal.size() >= dao.getSnapshotThreshold() )
+                        dao.save( exporter );
+                    else {
+                        journal.addCommand( command );
+                        dao.saveJournal( exporter );
+                    }
+                }
+
+            } catch ( IOException e ) {
+                throw new RuntimeException( "Failed to save journal", e );
+            } catch ( NotFoundException e ) {
+                throw new RuntimeException( "Failed to save journal", e );
+            }
     }
 
     //=============================================================
@@ -878,18 +904,21 @@ public class PlanManager {
 
         /**
          * A plan is about to be put in production.
+         *
          * @param devPlan the development plan
          */
         void aboutToProductize( Plan devPlan );
 
         /**
          * A new plan was put in production.
+         *
          * @param plan the new plan
          */
         void productized( Plan plan );
 
         /**
          * A new development plan was created.
+         *
          * @param devPlan the new plan.
          */
         void created( Plan devPlan );
@@ -901,7 +930,9 @@ public class PlanManager {
      */
     private static final class Listeners {
 
-        /** Whoever cares about plan manager events. */
+        /**
+         * Whoever cares about plan manager events.
+         */
         private final List<Listener> listeners =
                 Collections.synchronizedList( new ArrayList<Listener>() );
 
