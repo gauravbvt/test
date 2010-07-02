@@ -84,13 +84,13 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
 
         renderer.highlight( selectedSegment, selectedSgRel );
         renderer.render(
-                createGraph( diagramFactory.getQueryService() ),
+                createGraph( diagramFactory.getQueryService(), analyst ),
                 createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst ), outputFormat,
                 outputStream );
     }
 
-    private DirectedGraph<Segment, SegmentRelationship> createGraph( QueryService queryService ) {
-        return new PlanMapGraphBuilder( segments, queryService, null ).buildDirectedGraph();
+    private DirectedGraph<Segment, SegmentRelationship> createGraph( QueryService queryService, Analyst analyst ) {
+        return new PlanMapGraphBuilder( segments, queryService, analyst ).buildDirectedGraph();
     }
 
     /**

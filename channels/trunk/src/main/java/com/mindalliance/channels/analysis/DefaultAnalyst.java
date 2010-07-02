@@ -1,6 +1,9 @@
 package com.mindalliance.channels.analysis;
 
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
@@ -9,11 +12,8 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.query.Play;
-import com.mindalliance.channels.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.springframework.context.Lifecycle;
@@ -423,6 +423,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     /**
      * Get the imaging service.
+     *
      * @return the imaging service
      */
     public ImagingService getImagingService() {
@@ -476,7 +477,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return allUnwaivedIssues;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public SegmentRelationship findSegmentRelationship( Segment fromSegment, Segment toSegment ) {
         List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
         List<Part> initiators = new ArrayList<Part>();
@@ -522,7 +525,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship(
             T fromEntity, T toEntity ) {
         List<Flow> entityFlows = new ArrayList<Flow>();
@@ -534,8 +539,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                     Part sourcePart = (Part) flow.getSource();
                     Part targetPart = (Part) flow.getTarget();
                     if ( queryService.isExecutedBy( sourcePart, fromEntity )
-                            && queryService.isExecutedBy( targetPart, toEntity ) )
-                    {
+                            && queryService.isExecutedBy( targetPart, toEntity ) ) {
                         entityFlows.add( flow );
                     }
                 }
@@ -550,7 +554,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship(
             T fromEntity, T toEntity, Segment segment ) {
         List<Flow> entityFlows = new ArrayList<Flow>();
@@ -561,8 +567,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 Part sourcePart = (Part) flow.getSource();
                 Part targetPart = (Part) flow.getTarget();
                 if ( queryService.isExecutedBy( sourcePart, fromEntity )
-                        && queryService.isExecutedBy( targetPart, toEntity ) )
-                {
+                        && queryService.isExecutedBy( targetPart, toEntity ) ) {
                     entityFlows.add( flow );
                 }
             }
@@ -576,7 +581,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<EntityRelationship> findEntityRelationships(
             Segment segment, Class<? extends ModelEntity> entityClass, ModelEntity.Kind kind ) {
         List<ModelEntity> entities = queryService.findEntities( segment, entityClass, kind );
@@ -600,10 +607,13 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return rels;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity ) {
         List<ModelEntity> otherEntities =
-                queryService.findEntities( segment, entity.getClass(), entity.getKind() );
+                new ArrayList<ModelEntity>(
+                        queryService.findEntities( segment, entity.getClass(), entity.getKind() ) );
         otherEntities.remove( entity );
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         for ( ModelEntity otherEntity : otherEntities ) {
