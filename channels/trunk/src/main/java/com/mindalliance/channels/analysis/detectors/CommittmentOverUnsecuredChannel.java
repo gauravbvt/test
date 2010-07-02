@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.dao.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -47,7 +48,8 @@ public class CommittmentOverUnsecuredChannel extends AbstractIssueDetector {
                             contacted.getEffectiveChannels(),
                             new Predicate() {
                                 public boolean evaluate( Object object ) {
-                                    return ( (Channel) object ).getMedium().narrowsOrEquals( flowChannel.getMedium() );
+                                    return ( (Channel) object ).getMedium().narrowsOrEquals( flowChannel.getMedium(),
+                                                                                             User.current().getPlan() );
                                 }
                             }
                     );

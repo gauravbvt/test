@@ -35,7 +35,7 @@ public class TestUpdateSegmentObject extends AbstractChannelsTest {
     }
 
     @Test
-    public void testCommand() {
+    public void testCommand() throws Exception {
         Commander commander = getCommander();
 
         assertTrue( commander.canDo( command ) );

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
@@ -14,11 +13,12 @@ public class Role extends ModelEntity {
     /**
       * Bogus role used to signify that the role is not known...
       */
-     public static Role UNKNOWN;
+    public static Role UNKNOWN;
+
     /**
      * Name of unknown role.
      */
-    private static String UnknownName = "(unknown)";
+    public static String UnknownName = "(unknown)";
 
     public Role() {
     }
@@ -30,16 +30,6 @@ public class Role extends ModelEntity {
      */
     public Role( String name ) {
         super( name );
-    }
-
-    /**
-     * Create immutables.
-     *
-     * @param dao a query service
-     */
-    public static void createImmutables( PlanDao dao ) {
-        UNKNOWN = dao.findOrCreate( Role.class, UnknownName, null );
-        UNKNOWN.makeImmutable();
     }
 
     /**

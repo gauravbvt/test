@@ -1,11 +1,11 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntitiesNetworkGraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Segment;
@@ -54,7 +54,7 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
         GraphBuilder<ModelEntity, EntityRelationship> entitiesNetworkGraphBuilder =
                 new EntitiesNetworkGraphBuilder(
                         getEntities( queryService ),
-                        getEntityRels( queryService ),
+                        getEntityRels( queryService, analyst ),
                         diagramFactory.getQueryService() );
         Graph<ModelEntity, EntityRelationship> graph =
                 entitiesNetworkGraphBuilder.buildDirectedGraph();
@@ -98,7 +98,7 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
         }
     }
 
-    private List<EntityRelationship> getEntityRels( QueryService queryService ) {
+    private List<EntityRelationship> getEntityRels( QueryService queryService, Analyst analyst ) {
         List<EntityRelationship> entityRels = new ArrayList<EntityRelationship>();
         List<ModelEntity> entities = getEntities( queryService );
         for ( ModelEntity entity : entities ) {
@@ -106,9 +106,9 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
                 if ( entity != other ) {
                     EntityRelationship<ModelEntity> entityRel;
                     if ( segment != null ) {
-                        entityRel = queryService.findEntityRelationship( entity, other, segment );
+                        entityRel = analyst.findEntityRelationship( entity, other, segment );
                     } else {
-                        entityRel = queryService.findEntityRelationship( entity, other );
+                        entityRel = analyst.findEntityRelationship( entity, other );
                     }
                     if ( entityRel != null ) entityRels.add( entityRel );
                 }

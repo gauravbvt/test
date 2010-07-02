@@ -1,8 +1,7 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.dao.JournalCommand;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +13,7 @@ import java.util.Set;
  * Date: Feb 28, 2009
  * Time: 2:20:01 PM
  */
-public interface Command extends Serializable {
+public interface Command extends JournalCommand {
     /**
      * The command's name.
      *
@@ -44,16 +43,6 @@ public interface Command extends Serializable {
      * @return an object
      */
     Object get( String argumentName );
-
-    /**
-     * Get the value of named argument, allowing for resoluton of ModelObjectRef values.
-     *
-     * @param argumentName a string
-     * @param commander    a commander
-     * @return an object
-     * @throws CommandException if getting argument fails
-     */
-    Object get( String argumentName, Commander commander ) throws CommandException;
 
     /**
      * Get the value of named argument.
@@ -115,7 +104,6 @@ public interface Command extends Serializable {
 
     /**
      * Whether the command's execution should be remembered.
-     *
      * @return a boolean
      */
     boolean isMemorable();
@@ -184,13 +172,6 @@ public interface Command extends Serializable {
      * @param val a boolean
      */
     void setTop( boolean val );
-
-    /**
-     * Whether the execution of the command forces an immediate snapshot.
-     *
-     * @return a boolean
-     */
-    boolean forcesSnapshot();
 
     /**
      * Get label for command.

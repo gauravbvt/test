@@ -194,7 +194,7 @@ public class GeoMapPage extends WebPage {
             Set<String> labels = new HashSet<String>();
             while ( locs.hasNext() ) {
                 GeoLocatable geo = locs.next();
-                String label = geo.getGeoMarkerLabel();
+                String label = geo.getGeoMarkerLabel( Channels.instance().getQueryService() );
                 if ( !labels.contains( label ) ) {
                     if ( !sb.toString().isEmpty() && !sb.toString().endsWith( " - " ) ) {
                         sb.append( " - " );

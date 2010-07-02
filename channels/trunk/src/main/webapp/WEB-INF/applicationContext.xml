@@ -28,15 +28,16 @@ CONFIGURATION NOTES:
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
     <bean id="issueScanner" class="com.mindalliance.channels.analysis.IssueScanner"/>
 
-    <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager" lazy-init="true">
-        <property name="base" value="${channels.home}"/>
-        <property name="importDirectory" value="file:${channels.home}${file.separator}import"/>
-        <property name="planDefinitionsFileName" value="plans.properties"/>
-        <property name="defaultPlanDefinitions" value="/WEB-INF/plans.properties"/>
-        <property name="surveysFileName" value="surveys"/>
-        <property name="uploadsDirName" value="uploads"/>
-        <property name="dataDirectory" value="file:${channels.home}${file.separator}data"/>
+    <bean id="definitionManager" class="com.mindalliance.channels.dao.DefinitionManager">
+        <constructor-arg value="${channels.home}${file.separator}data"/>
+        <constructor-arg value="${channels.home}${file.separator}plans.properties"/>
+        <property name="defaultProperties" value="/WEB-INF/plans.properties"/>
         <property name="snapshotThreshold" value="10"/>
+    </bean>
+
+    <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager" lazy-init="true">
+        <constructor-arg ref="definitionManager" />
+        <property name="importDirectory" value="file:${channels.home}${file.separator}import"/>
         <property name="builtInMedia">
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>
@@ -195,7 +196,7 @@ CONFIGURATION NOTES:
     <!-- =========================== Prototypes -->
     <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory"
           scope="prototype">
-        <property name="imageDirectory" value="WEB-INF/images"/>
+        <property name="imageDirectory" value="WEB-INF${file.separator}images"/>
     </bean>
 
     <bean id="lockManager" class="com.mindalliance.channels.command.DefaultLockManager"
@@ -206,6 +207,7 @@ CONFIGURATION NOTES:
         <property name="analyst" ref="analyst"/>
         <property name="planManager" ref="planManager"/>
         <property name="queryService" ref="queryService"/>
+        <property name="importExportFactory" ref="importExportFactory"/>
         <property name="timeout" value="300"/>
     </bean>
 

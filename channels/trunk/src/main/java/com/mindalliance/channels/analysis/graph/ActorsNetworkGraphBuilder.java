@@ -1,8 +1,9 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.analysis.Analyst;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -24,9 +25,11 @@ public class ActorsNetworkGraphBuilder implements GraphBuilder<Actor, EntityRela
      */
     private QueryService queryService;
 
+    private Analyst analyst;
 
-    public ActorsNetworkGraphBuilder( QueryService queryService ) {
-        this.queryService = queryService;
+    public ActorsNetworkGraphBuilder( Analyst analyst ) {
+        this.analyst = analyst;
+        this.queryService = analyst.getQueryService();
     }
 
     /**
@@ -58,7 +61,7 @@ public class ActorsNetworkGraphBuilder implements GraphBuilder<Actor, EntityRela
         for ( Actor fromActor : allActors ) {
             for ( Actor toActor : allActors ) {
                 if ( !fromActor.equals( toActor ) ) {
-                    EntityRelationship<Actor> rel = queryService.findEntityRelationship( fromActor, toActor );
+                    EntityRelationship<Actor> rel = analyst.findEntityRelationship( fromActor, toActor );
                     if ( rel != null ) {
                         digraph.addEdge(
                                 (Actor) rel.getFromIdentifiable( queryService ),

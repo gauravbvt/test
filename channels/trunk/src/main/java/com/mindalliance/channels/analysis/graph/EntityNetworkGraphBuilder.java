@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
@@ -23,20 +24,20 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelEntity, Enti
      * An entity.
      */
     private ModelEntity entity;
-    /**
-     * Related entities.
-     */
-    private List<? extends ModelEntity> entities;
+
     /**
      * A query service.
      */
     private QueryService queryService;
 
+    /** The analyst. */
+    private Analyst analyst;
+
     public EntityNetworkGraphBuilder(
-            ModelEntity entity,
-            QueryService queryService ) {
+            ModelEntity entity, Analyst analyst ) {
         this.entity = entity;
-        this.queryService = queryService;
+        this.analyst = analyst;
+        this.queryService = analyst.getQueryService();
     }
 
     public DirectedGraph<ModelEntity, EntityRelationship> buildDirectedGraph() {
@@ -59,7 +60,7 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelEntity, Enti
             DirectedGraph<ModelEntity, EntityRelationship> digraph,
             ModelEntity entity ) {
         digraph.addVertex( entity );
-        List<EntityRelationship> rels = queryService.findEntityRelationships( entity );
+        List<EntityRelationship> rels = analyst.findEntityRelationships( null, entity );
         for ( EntityRelationship entityRel : rels ) {
             digraph.addVertex( (ModelEntity)entityRel.getToIdentifiable( queryService ) );
             digraph.addVertex( (ModelEntity)entityRel.getFromIdentifiable( queryService ) );

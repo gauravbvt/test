@@ -3,9 +3,11 @@ package com.mindalliance.channels.attachments;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.ModelObject;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * A thing that keeps track of the associations of model objects and their file attachments.
@@ -76,4 +78,37 @@ public interface AttachmentManager {
      * @return a boolean
      */
     boolean hasImageContent( String url );
+
+    /**
+     * Get all media reference attachments.
+     *
+     * @param object
+     * @return a list of attachments
+     */
+    @SuppressWarnings( "unchecked" )
+    List<Attachment> getMediaReferences( ModelObject object );
+
+    /**
+     * Whether the attchment is an image or video reference.
+     *
+     * @param attachment
+     * @return a boolean
+     */
+    boolean isMediaReference( Attachment attachment );
+
+    /**
+     * Whether the attachment is a reference movie.
+     *
+     * @param attachment
+     * @return a boolean
+     */
+    boolean isVideoReference( Attachment attachment );
+
+    /**
+     * Whether the attachment is a reference image.
+     *
+     * @param attachment
+     * @return a boolean
+     */
+    boolean isImageReference( Attachment attachment );
 }

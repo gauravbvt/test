@@ -119,7 +119,7 @@ public class Disintermediate extends AbstractCommand {
                     receive.getName() );
             // Use eois of receive and other attributes of send
             Map<String, Object> attributes = ChannelsUtils.getFlowAttributes( send );
-            attributes.put( "eois", ChannelsUtils.copyEois( send ) );
+            attributes.put( "eois", send.copyEois() );
             directConnect.set( "attributes", attributes );
             subCommands.addCommand( directConnect );
             sendsToDisconnect.add( send );

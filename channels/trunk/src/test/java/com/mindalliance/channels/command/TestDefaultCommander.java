@@ -3,9 +3,7 @@ package com.mindalliance.channels.command;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.command.commands.HelloCommand;
 import com.mindalliance.channels.model.Segment;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,6 +30,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     @Test
     public void testExecuteSimpleCommand() {
         AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
+        try {
             assertTrue( commander.canDo( command ) );
             assertFalse( commander.canUndo() );
 
@@ -42,7 +41,9 @@ public class TestDefaultCommander extends AbstractChannelsTest {
             assertTrue( commander.canRedo() );
             assertTrue( commander.redo().isUnknown() );
             assertFalse( commander.canRedo() );
-            if ( change.isRefreshNeeded() ) fail();
+        } catch ( CommandException e ) {
+            fail();
+        }
     }
 
     @Test
@@ -54,7 +55,21 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         lock.setUserName( "bob" );
         command.needLockOn( segment );
         assertFalse( commander.canDo( command ) );
-        if ( !commander.doCommand( command ).isRefreshNeeded() ) fail();
+        try {
+            commander.doCommand( command );
+        }
+        catch ( CommandException e ) {
+            lockManager.releaseAllLocks( "bob" );
+            assertTrue( commander.canDo( command ) );
+            commander.doCommand( command );
+            lockManager.grabLockOn( segment.getId() );
+            try {
+                commander.doCommand( command );
+            }
+            catch ( CommandException exc ) {
+                fail();
+            }
+        }
     }
 
     @Test
@@ -80,6 +95,12 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         Thread.sleep( 10 );
         commander.doCommand( otherUserCommand );
         assertFalse( commander.canRedo() );
-        if ( !commander.redo().isRefreshNeeded() ) fail();
+        try {
+            commander.redo();
+            fail();
+        }
+        catch ( CommandException e ) {
+            // ok
+        }
     }
 }

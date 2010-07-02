@@ -126,15 +126,16 @@ public abstract class ModelEntity extends ModelObject {
      *
      * @param entity an entity
      * @param other  an entity
+     * @param plan
      * @return a boolean
      */
-    public static boolean compatible( ModelEntity entity, ModelEntity other ) {
+    public static boolean compatible( ModelEntity entity, ModelEntity other, Plan plan ) {
         if ( entity == null
                 || other == null
             //       || entity.isUnknown()
             //       || other.isUnknown()
                 ) return true;
-        if ( entity.narrowsOrEquals( other ) ) return true;
+        if ( entity.narrowsOrEquals( other, plan ) ) return true;
         return false;
     }
 
@@ -328,11 +329,12 @@ public abstract class ModelEntity extends ModelObject {
      *
      * @param entity an entity
      * @param other  an entity
+     * @param plan
      * @return a boolean
      */
-    public static boolean implies( ModelEntity entity, ModelEntity other ) {
+    public static boolean implies( ModelEntity entity, ModelEntity other, Plan plan ) {
         return other == null
-                || entity != null && entity.narrowsOrEquals( other );
+                || entity != null && entity.narrowsOrEquals( other, plan );
     }
 
     /**
@@ -356,10 +358,11 @@ public abstract class ModelEntity extends ModelObject {
      *
      * @param entity an entity
      * @param other  another entity
+     * @param plan
      * @return a boolean
      */
-    public static boolean broadensOrEquals( ModelEntity entity, ModelEntity other ) {
-        return entity != null && other.narrowsOrEquals( entity );
+    public static boolean broadensOrEquals( ModelEntity entity, ModelEntity other, Plan plan ) {
+        return entity != null && other.narrowsOrEquals( entity, plan );
     }
 
 
@@ -394,17 +397,18 @@ public abstract class ModelEntity extends ModelObject {
      * or has all the tags (transitively) of the other, type entity.
      *
      * @param other a model entity
+     * @param plan
      * @return a boolean
      */
-    public boolean narrowsOrEquals( ModelEntity other ) {
+    public boolean narrowsOrEquals( ModelEntity other, final Plan plan ) {
         if ( other == null ) return false;
         if ( isUnknown() || other.isUnknown() ) return false;
         // Can't compare apples with oranges
         if ( !getClass().isAssignableFrom( other.getClass() ) ) return false;
         // same entity
         if ( equals( other ) ) return true;
-        if ( !valid() || !other.valid() ) return false;
-        if ( overrideNarrows( other ) ) return true;
+        if ( !valid( plan ) || !other.valid( plan ) ) return false;
+        if ( overrideNarrows( other, plan ) ) return true;
         // a type of entity can't narrow an actual entity
         // and an actual entity can't narrow a different actual entity
         if ( other.isActual() ) return false;
@@ -416,12 +420,12 @@ public abstract class ModelEntity extends ModelObject {
                 getAllTags() );
         if ( !isSubCollection ) return false;
         // meets specific and inherited requirement tests of entity type
-        if ( !meetsTypeRequirementTests( other ) ) return false;
+        if ( !meetsTypeRequirementTests( other, plan ) ) return false;
         boolean meetsInheritedTests = CollectionUtils.selectRejected(
                 other.getAllTags(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return meetsTypeRequirementTests( (ModelEntity) obj );
+                        return meetsTypeRequirementTests( (ModelEntity) obj, plan );
                     }
                 }
         ).isEmpty();
@@ -432,8 +436,9 @@ public abstract class ModelEntity extends ModelObject {
      * Whether the model object can be meaningfully and safely compared to another.
      *
      * @return a boolean
+     * @param plan
      */
-    public boolean valid() {
+    public boolean valid( Plan plan ) {
         return true; // default
     }
 
@@ -441,9 +446,10 @@ public abstract class ModelEntity extends ModelObject {
      * Override test for narrowing.
      *
      * @param other a model entity
+     * @param plan
      * @return a boolean
      */
-    protected boolean overrideNarrows( ModelEntity other ) {
+    protected boolean overrideNarrows( ModelEntity other, Plan plan ) {
         return false;
     }
 
@@ -451,9 +457,10 @@ public abstract class ModelEntity extends ModelObject {
      * Apply tests specific to the class of entity.
      *
      * @param entityType an entity type
+     * @param plan
      * @return a boolean
      */
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
         // Default
         return true;
     }
@@ -462,11 +469,12 @@ public abstract class ModelEntity extends ModelObject {
      * Is consistent with the definition of an entity type.
      *
      * @param entityType a model entity
+     * @param plan
      * @return a boolean
      */
-    public boolean isConsistentWith( ModelEntity entityType ) {
+    public boolean isConsistentWith( ModelEntity entityType, Plan plan ) {
         assert entityType.isType();
-        return overrideNarrows( entityType ) || meetsTypeRequirementTests( entityType );
+        return overrideNarrows( entityType, plan ) || meetsTypeRequirementTests( entityType, plan );
     }
 
     private List<ModelEntity> getTyping() {

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.dao.User;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -139,7 +139,7 @@ public class ResultCache {
 
             // Add plan uri to key
             key.append( ") in " );
-            key.append( PlanManager.plan().getUri() );
+            key.append( User.plan().getUri() );
             return key.toString();
         }
     }

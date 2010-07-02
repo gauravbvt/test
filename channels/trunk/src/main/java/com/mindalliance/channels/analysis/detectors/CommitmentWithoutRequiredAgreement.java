@@ -42,7 +42,8 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
                         org.getAgreements(),
                         new Predicate() {
                             public boolean evaluate( Object object ) {
-                                return ( (Agreement) object ).covers( commitment, queryService );
+                                return queryService.covers( ( (Agreement) object ),
+                                                         commitment );
                             }
                         }
                 ) ) {

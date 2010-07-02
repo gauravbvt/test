@@ -1,15 +1,15 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
-import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.jgrapht.DirectedGraph;
@@ -120,7 +120,8 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                             critical = true;
                             for ( Flow otherFlow : receives ) {
                                 if ( otherFlow != flow
-                                        && Matcher.same( otherFlow.getName(), flow.getName() ) )
+                                        && Matcher.getInstance().same( otherFlow.getName(),
+                                                                        flow.getName() ) )
                                     unique = false;
                             }
                         }

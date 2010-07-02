@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.dao.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                     issues.add( issue );
                 }
                 // under-secured delegated medium
-                List<TransmissionMedium> delegates = medium.getEffectiveDelegates();
+                List<TransmissionMedium> delegates = medium.getEffectiveDelegates( User.current().getPlan() );
                 for ( TransmissionMedium delegate : delegates ) {
                     List<Classification> delegateClassifications = medium.getEffectiveSecurity();
                     if ( !Classification.hasHigherOrEqualClassification(

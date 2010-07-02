@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.dao.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,7 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
     }
 
     private boolean redundantDelegate( TransmissionMedium medium, TransmissionMedium delegate ) {
-        return medium.narrowsOrEquals( delegate );
+        return medium.narrowsOrEquals( delegate, User.current().getPlan() );
     }
 
     private List<Issue> subsumedDelegate( TransmissionMedium medium, TransmissionMedium delegate ) {
@@ -93,7 +94,7 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
         others.remove( delegate );
         others.addAll( medium.getInheritedDelegates() );
         for ( TransmissionMedium otherDelegate : others ) {
-            if ( delegate.narrowsOrEquals( otherDelegate ) ) {
+            if ( delegate.narrowsOrEquals( otherDelegate, User.current().getPlan() ) ) {
                 Issue issue = makeIssue( Issue.VALIDITY, medium );
                 issue.setDescription( "Delegated-to medium \"" + delegate.getName() + "\" is redundant"
                         + " given other delegated-to medium \"" + otherDelegate.getName() + "\"." );

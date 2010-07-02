@@ -1,8 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.Memory;
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -86,7 +83,8 @@ public class Segment extends ModelObject {
     }
 
     public void setEvent( Event event ) {
-        assert event.isType();
+    // TODO avoid setEvent( null ) during import
+    //  assert event.isType();
         this.event = event;
     }
 
@@ -220,42 +218,16 @@ public class Segment extends ModelObject {
     }
 
     /**
-     * Remove a node from this segment.
-     * Quietly succeeds if node is not part of the segment
-     *
-     * @param node    the node to remove.
-     * @param planDao the dao
+     * Direct removal of a node.
+     * <b>Note:</b> Use dao.removeNode( segment, node ) instead...
+     * @param node the node
      */
-    public void removeNode( Node node, Memory planDao ) {
-        if ( nodeIndex.containsKey( node.getId() )
-                && ( node.isConnector() || hasMoreThanOnePart() ) ) {
-            Iterator<Flow> ins = node.receives();
-            while ( ins.hasNext() ) {
-                ins.next().disconnect( planDao );
-            }
-            Iterator<Flow> outs = node.sends();
-            while ( outs.hasNext() ) {
-                outs.next().disconnect( planDao );
-            }
-
-            if ( node.isConnector() ) {
-                List<ExternalFlow> toDisconnect = new ArrayList<ExternalFlow>();
-                Iterator<ExternalFlow> xf = ( (Connector) node ).externalFlows();
-                while ( xf.hasNext() ) {
-                    toDisconnect.add( xf.next() );
-                }
-                // Avoid ConcurrentModificationException
-                for ( ExternalFlow flow : toDisconnect ) {
-                    flow.disconnect( planDao );
-                }
-            }
-            planDao.remove( node );
-            nodeIndex.remove( node.getId() );
-            node.setSegment( null );
-        }
+    public void removeNode( Node node ) {
+        nodeIndex.remove( node.getId() );
+        node.setSegment( null );
     }
 
-    private boolean hasMoreThanOnePart() {
+    public boolean hasMoreThanOnePart() {
         Iterator<Part> parts = parts();
         parts.next();
         // Note: segment must always have at least one part
@@ -270,20 +242,6 @@ public class Segment extends ModelObject {
      */
     public Node getNode( long id ) {
         return nodeIndex.get( id );
-    }
-
-    /**
-     * Remove any connections to the outside world
-     * (essentially, anything connected to an input or output connector).
-     *
-     * @param planDao
-     */
-    public void disconnect( Memory planDao ) {
-        for ( Node n : nodeIndex.values() ) {
-            if ( n.isConnector() )
-                ( (Connector) n ).disconnect( planDao );
-        }
-
     }
 
     /**
@@ -371,14 +329,15 @@ public class Segment extends ModelObject {
      * Find parts played by a given organization, when no roles or actors have been specified.
      *
      * @param organization the organization, possibly Organization.UNKNOWN
+     * @param plan
      * @return the appropriate parts
      */
-    public List<Part> findParts( Organization organization ) {
+    public List<Part> findParts( Organization organization, Plan plan ) {
         List<Part> partsForRole = new ArrayList<Part>();
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isInOrganization( organization ) && part.getActor() == null && part.getRole() == null )
+            if ( part.isInOrganization( organization, plan ) && part.getActor() == null && part.getRole() == null )
                 partsForRole.add( part );
         }
         return partsForRole;
@@ -390,16 +349,18 @@ public class Segment extends ModelObject {
      * @param organization the organization, possibly Organization.UNKNOWN
      * @param role         the role, possibly Role.UNKNOWN
      * @param jurisdiction
+     * @param plan
      * @return the appropriate parts
      */
-    public List<Part> findParts( Organization organization, Role role, Place jurisdiction ) {
+    public List<Part> findParts(
+            Organization organization, Role role, Place jurisdiction, Plan plan ) {
         List<Part> partsForRole = new ArrayList<Part>();
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isInOrganization( organization )
+            if ( part.isInOrganization( organization, plan )
                     && part.isPlayedBy( role )
-                    && ( jurisdiction == null || part.isInJurisdiction( jurisdiction ) ) )
+                    && ( jurisdiction == null || part.isInJurisdiction( jurisdiction, plan ) ) )
                 partsForRole.add( part );
         }
         return partsForRole;
@@ -409,16 +370,17 @@ public class Segment extends ModelObject {
      * Find roles in a given organization used in this segment.
      *
      * @param organization the organization, possibly Organization.UNKNOWN
+     * @param plan
      * @return the appropriate roles.
      */
-    public List<Role> findRoles( Organization organization ) {
+    public List<Role> findRoles( Organization organization, Plan plan ) {
         boolean hasUnknown = false;
 
         Set<Role> roles = new HashSet<Role>();
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isInOrganization( organization ) ) {
+            if ( part.isInOrganization( organization, plan ) ) {
                 if ( part.getRole() == null ) {
                     hasUnknown = true;
                 } else {
@@ -454,10 +416,6 @@ public class Segment extends ModelObject {
         }
         if ( flow == null ) throw new NotFoundException();
         else return flow;
-    }
-
-    public QueryService getQueryService() {
-        return Channels.instance().getQueryService();
     }
 
     /**

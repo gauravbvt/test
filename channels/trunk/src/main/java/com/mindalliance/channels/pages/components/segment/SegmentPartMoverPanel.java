@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.commands.MoveParts;
 import com.mindalliance.channels.model.Goal;
@@ -28,7 +29,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -158,7 +158,6 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
     private List<Segment> getCandidateDestinationSegments() {
         List<Segment> otherSegments = new ArrayList<Segment>( queryService.list( Segment.class ) );
         otherSegments.remove( getSegment() );
-        Collections.sort( otherSegments );
         return otherSegments;
     }
 
@@ -191,10 +190,15 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
 
     private Change moveSelectedParts() {
         Change change;
-        change = getCommander().doCommand( new MoveParts(
-                selectedParts,
-                getSegment(),
-                destinationSegment ) );
+        try {
+            change = getCommander().doCommand( new MoveParts(
+                    selectedParts,
+                    getSegment(),
+                    destinationSegment ) );
+        } catch ( CommandException e ) {
+            change = new Change( Change.Type.None );
+            change.setScript( "alert(\"Failed to move tasks\")" );
+        }
         return change;
     }
 

@@ -66,8 +66,9 @@ public class Assignment implements Serializable, GeoLocatable {
 
     /**
      * {@inheritDoc}
+     * @param queryService
      */
-    public String getGeoMarkerLabel() {
+    public String getGeoMarkerLabel( QueryService queryService ) {
         return employment.toString() + ", and is assigned to task \"" + part.getTask() + "\"";
     }
 
@@ -76,8 +77,8 @@ public class Assignment implements Serializable, GeoLocatable {
      */
     public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
         List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
-        geoLocatables.addAll( employment.getImpliedGeoLocatables( queryService ) );
-        geoLocatables.addAll( part.getImpliedGeoLocatables( queryService ) );
+        geoLocatables.addAll( getEmployment().getImpliedGeoLocatables( queryService ) );
+        geoLocatables.addAll( getPart().getImpliedGeoLocatables( queryService ) );
         return geoLocatables;
     }
 

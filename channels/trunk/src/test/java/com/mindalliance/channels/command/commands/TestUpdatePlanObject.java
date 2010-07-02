@@ -28,13 +28,14 @@ public class TestUpdatePlanObject extends AbstractChannelsTest {
     @Override
     public void setUp() throws IOException {
         super.setUp();
+        login( "denis" );
         segment = queryService.getDefaultSegment();
         command = new UpdatePlanObject( segment, "description", "ipso lorem etc." );
         getCommander().reset();
     }
 
     @Test
-    public void testCommand() {
+    public void testCommand() throws Exception {
         Commander commander = getCommander();
         QueryService queryService = commander.getQueryService();
         assertTrue( commander.canDo( command ) );

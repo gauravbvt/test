@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Segment;
@@ -35,9 +35,10 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
      * @param id           a long
      * @param queryService a query service
      * @return an entity relationship
-     * @throws com.mindalliance.channels.dao.NotFoundException if id not valid
+     * @throws com.mindalliance.channels.model.NotFoundException if id not valid
      */
-    public static EntityRelationship fromId( long id, QueryService queryService ) throws NotFoundException {
+    public static EntityRelationship fromId( long id, QueryService queryService ) throws
+                                                                                  NotFoundException {
         EntityRelationship entityRel = new EntityRelationship();
         entityRel.setId( id, queryService );
         if ( entityRel.isValid() )
@@ -51,15 +52,15 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
     }
 
 
-    public void setId( long id, Segment segment, QueryService queryService ) {
-        super.setId( id, queryService );
+    public void setId( long id, Segment segment, QueryService queryService, Analyst analyst ) {
+        super.setId( id, analyst.getQueryService() );
         EntityRelationship entityRel;
         if ( segment == null ) {
-        entityRel = queryService.findEntityRelationship(
+            entityRel = analyst.findEntityRelationship(
                 getFromEntity( queryService ),
                 getToEntity( queryService ) );
         } else {
-            entityRel = queryService.findEntityRelationship(
+            entityRel = analyst.findEntityRelationship(
                     getFromEntity( queryService ),
                     getToEntity( queryService ),
                     segment );

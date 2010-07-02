@@ -30,8 +30,7 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.UserIssue;
-import com.mindalliance.channels.util.ChannelsUtils;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.nlp.Matcher;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.io.xml.XppReader;
@@ -401,7 +400,7 @@ public class XmlStreamer implements ImportExportFactory {
                         : planDao.connect( part, externalConnector, innerName, null ) );
             }
             copy( localInnerFlow, externalFlow );
-            localInnerFlow.disconnect( planDao );
+            planDao.disconnect( localInnerFlow );
         }
 
         private void copy( Flow inner, Flow external ) {
@@ -411,7 +410,7 @@ public class XmlStreamer implements ImportExportFactory {
             external.setSignificanceToTarget( inner.getSignificanceToTarget() );
             external.setAll( inner.isAll() );
             external.setAskedFor( inner.isAskedFor() );
-            external.setEois( ChannelsUtils.copyEois( inner ) );
+            external.setEois( inner.copyEois() );
             external.setWaivedIssueDetections( inner.getWaivedIssueDetections() );
             external.setAttachments( inner.getAttachments() );
         }
@@ -446,7 +445,7 @@ public class XmlStreamer implements ImportExportFactory {
                     : externalInnerFlow.getTarget() );
             Long partIdValue = Long.parseLong( conSpec.getPartSpecification().getId() );
             boolean partIdMatches = partIdValue != null && partIdValue == part.getId();
-            return Matcher.same( externalInnerFlow.getName(), conSpec.getFlowName() )
+            return Matcher.getInstance().same( externalInnerFlow.getName(), conSpec.getFlowName() )
                     && ( partIdMatches
                     || ConverterUtils.partMatches( part, conSpec.getPartSpecification() ) );
         }

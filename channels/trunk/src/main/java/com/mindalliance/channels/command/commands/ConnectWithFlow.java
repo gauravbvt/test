@@ -84,7 +84,7 @@ public class ConnectWithFlow extends AbstractCommand {
                 Segment.class,
                 (Long) get( "otherSegment" ) );
         Long nodeId = (Long) get( "other" );
-        Node other = ChannelsUtils.resolveNode( nodeId, otherSegment, queryService );
+        Node other = resolveNode( nodeId, otherSegment, queryService );
         String name = (String) get( "name" );
         boolean isSend = (Boolean) get( "isSend" );
         Long priorId = (Long) get( "flow" );

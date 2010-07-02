@@ -1,8 +1,8 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -144,7 +144,7 @@ public class Change implements Serializable {
         this.property = property;
     }
 
-    public Identifiable getSubject( QueryService queryService ) throws NotFoundException {
+    public Identifiable getSubject( QueryService queryService ) {
         return identifiableRef == null ? null : identifiableRef.resolve( queryService );
     }
 
@@ -217,7 +217,7 @@ public class Change implements Serializable {
      * @param queryService a queryService
      * @return an object
      */
-    public Object getChangedPropertyValue( QueryService queryService ) {
+    public Object getChangedPropertyValue( QueryService queryService ) throws NotFoundException {
         Object value = null;
         if ( type == Type.Updated ) {
             try {

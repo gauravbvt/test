@@ -6,7 +6,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
@@ -93,7 +93,7 @@ public class SatisfyNeed extends AbstractCommand {
             Long priorId = (Long) get( "satisfy" );
             String name = need.getName().isEmpty() ? capability.getName() : need.getName();
             newFlow = queryService.connect( fromNode, toNode, name, priorId );
-            newFlow.setEois( ChannelsUtils.copyEois( capability ) );
+            newFlow.setEois( capability.copyEois() );
             newFlow.setSignificanceToSource( capability.getSignificanceToSource() );
             newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
             newFlow.setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );

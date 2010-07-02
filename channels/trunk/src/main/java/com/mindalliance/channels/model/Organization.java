@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.query.QueryService;
@@ -54,10 +53,11 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      * Bogus organization used to signify that the organization is not known...
      */
     public static Organization UNKNOWN;
+
     /**
      * Name of unknown organization.
      */
-    private static String UnknownName = "(unknown)";
+    public static String UnknownName = "(unknown)";
 
     public Organization() {
     }
@@ -69,17 +69,6 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      */
     public Organization( String name ) {
         super( name );
-    }
-
-    /**
-     * Create immutables.
-     *
-     * @param dao a query service
-     */
-    public static void createImmutables( PlanDao dao ) {
-        UNKNOWN = dao.findOrCreate( Organization.class, UnknownName, null );
-        UNKNOWN.setActual();
-        UNKNOWN.makeImmutable();
     }
 
     /**
@@ -101,22 +90,21 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
                 || ModelEntity.isEquivalentToOrDefinedUsing( getLocation(), entity );
     }
 
-    public boolean narrowsOrEquals( ModelEntity other ) {
-        boolean noe = super.narrowsOrEquals( other );
-        return noe;
+    public boolean narrowsOrEquals( ModelEntity other, Plan plan ) {
+        return super.narrowsOrEquals( other, plan );
     }
 
     /**
      * {@inheritDoc}
      */
-    protected boolean overrideNarrows( ModelEntity other ) {
+    protected boolean overrideNarrows( ModelEntity other, Plan plan ) {
         if ( isActual() ) {
             if ( other.isActual() ) {
                 // Any actual organization narrows any of its ancestors
-                return isWithin( (Organization) other );
+                return isWithin( (Organization) other, plan );
             } else {
                 if ( getParent() != null ) {
-                    return getParent().narrowsOrEquals( other );
+                    return getParent().narrowsOrEquals( other, plan );
                 } else {
                     return false;
                 }
@@ -130,10 +118,10 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      * {@inheritDoc}
      */
     @Override
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
         // check that location and parent are compatible
-        return ModelEntity.implies( location, ( (Organization) entityType ).getLocation() )
-                && ModelEntity.implies( parent, ( (Organization) entityType ).getParent() );
+        return ModelEntity.implies( location, ( (Organization) entityType ).getLocation(), plan )
+            && ModelEntity.implies( parent, ( (Organization) entityType ).getParent(), plan );
     }
 
     public boolean isActorsRequired() {
@@ -203,15 +191,16 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      * Whether this organization has an ancestor that narrows or equals a given organization.
      *
      * @param organization an organization
+     * @param plan
      * @return a boolean
      */
-    public boolean isWithin( final Organization organization ) {
+    public boolean isWithin( final Organization organization, final Plan plan ) {
         return CollectionUtils.exists(
                 ancestors(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Organization ancestor = (Organization) obj;
-                        return ancestor.narrowsOrEquals( organization );
+                        return ancestor.narrowsOrEquals( organization, plan );
                     }
                 }
         );
@@ -221,10 +210,11 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
      * Whether this is the same or within a given organization
      *
      * @param organization an organization
+     * @param plan
      * @return a boolean
      */
-    public boolean isSameOrWithin( Organization organization ) {
-        return this.equals( organization ) || isWithin( organization );
+    public boolean isSameOrWithin( Organization organization, Plan plan ) {
+        return equals( organization ) || isWithin( organization, plan );
     }
 
     /**
@@ -352,9 +342,10 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
 
     /**
      * {@inheritDoc}
+     * @param queryService
      */
-    public String getGeoMarkerLabel() {
-        return location != null ? location.getGeoMarkerLabel() : "";
+    public String getGeoMarkerLabel( QueryService queryService ) {
+        return location != null ? location.getGeoMarkerLabel( queryService ) : "";
     }
 
     /**

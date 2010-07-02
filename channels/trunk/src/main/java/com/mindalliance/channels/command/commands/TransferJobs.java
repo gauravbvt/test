@@ -103,9 +103,9 @@ public class TransferJobs extends AbstractCommand {
 
     private List<MappedObject> mapJobs( List<Job> jobs ) {
         List<MappedObject> mappedJobs = new ArrayList<MappedObject>();
-        for ( Job job : jobs ) {
-            mappedJobs.add( job.map() );
-        }
+        for ( Job job : jobs )
+            mappedJobs.add( new MappedObject( job ) );
+
         return mappedJobs;
     }
 

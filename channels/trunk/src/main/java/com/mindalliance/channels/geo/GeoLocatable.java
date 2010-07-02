@@ -24,9 +24,10 @@ public interface GeoLocatable extends Serializable {
     /**
      * Get a geo marker's label.
      *
+     * @param queryService the associated query service
      * @return a string
      */
-    String getGeoMarkerLabel();
+    String getGeoMarkerLabel( QueryService queryService );
 
     /**
      * Get implied geolocatables.

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.sops;
 
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Participation;
@@ -63,7 +63,7 @@ public abstract class AbstractSOPsPage extends WebPage {
         } else {
             if ( !user.isPlanner( getPlan().getUri() ) ) {
                 setRedirect( true );
-                throw new RestartResponseException( LoginPage.class );                
+                throw new RestartResponseException( LoginPage.class );
             }
         }
         return participation;

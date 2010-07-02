@@ -1,12 +1,10 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.ImportExportFactory;
+import com.mindalliance.channels.dao.DefinitionManager;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.SimpleIdGenerator;
 import com.mindalliance.channels.dao.User;
 import junit.framework.TestCase;
-import org.mockito.Mockito;
 
 /**
  * ...
@@ -28,11 +26,12 @@ public class TestExternalFlow extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        ImportExportFactory exporter = Mockito.mock( ImportExportFactory.class );
-        PlanManager planManager = new PlanManager( exporter, new SimpleIdGenerator() );
+        DefinitionManager definitionManager = new DefinitionManager();
+        definitionManager.afterPropertiesSet();
+        PlanManager planManager = new PlanManager( definitionManager );
         planManager.validate();
 
-        assertEquals( 1, planManager.getPlans().size() );
+        assertEquals( 1, planManager.getDefinitionManager().getPlanNames().size() );
         Plan plan = planManager.getPlans().get( 0 );
 
         planDao = planManager.getDao( plan );
@@ -50,8 +49,8 @@ public class TestExternalFlow extends TestCase {
         // S2 "included" in S1
         Part s2Part = s2.getDefaultPart();
         s2Part.setActor( new Actor( "p3" ) );
-        s2Part.createSend( planDao );
-        s2Part.createReceive( planDao );
+        planDao.createSend( s2Part );
+        planDao.createReceive( s2Part );
 
         planDao.connect( s1p1, s2.inputs().next(), "", null );
         planDao.connect( s2.outputs().next(), s1p2, "", null );
@@ -89,7 +88,7 @@ public class TestExternalFlow extends TestCase {
     public void testRemove1() {
         // output
         Flow f = s1p1.sends().next();
-        f.disconnect( planDao );
+        planDao.disconnect( f );
 
         assertNull( f.getSource() );
         assertNull( f.getTarget() );
@@ -98,7 +97,7 @@ public class TestExternalFlow extends TestCase {
 
         // input
         Flow f2 = s1p2.receives().next();
-        f2.disconnect( planDao );
+        planDao.disconnect( f2 );
 
         assertNull( f2.getSource() );
         assertNull( f2.getTarget() );
@@ -114,7 +113,7 @@ public class TestExternalFlow extends TestCase {
         Flow f1 = p3.sends().next();
         Connector c1 = (Connector) f1.getTarget();
 
-        f1.disconnect( planDao );
+        planDao.disconnect( f1 );
 
         assertFalse( c1.receives().hasNext() );
         assertFalse( c1.externalFlows().hasNext() );
@@ -123,7 +122,7 @@ public class TestExternalFlow extends TestCase {
         Flow f2 = p3.receives().next();
         Connector c2 = (Connector) f2.getSource();
 
-        f2.disconnect( planDao );
+        planDao.disconnect( f2 );
 
         assertFalse( c2.sends().hasNext() );
         assertFalse( c2.externalFlows().hasNext() );

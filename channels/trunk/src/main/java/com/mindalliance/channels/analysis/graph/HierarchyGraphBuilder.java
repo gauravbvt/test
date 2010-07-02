@@ -1,7 +1,7 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.model.Hierarchical;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;

@@ -1,10 +1,15 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Mappable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.InternalFlow;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -99,17 +104,17 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
-     * {@inheritDoc}
+     * Get the value of named argument, allowing for resoluton of ModelObjectRef values.
+     *
+     * @param commander    a commander
+     * @return an object
+     * @throws CommandException if getting argument fails
      */
     public Object get( String key, Commander commander ) throws CommandException {
         Object value = arguments.get( key );
         if ( value instanceof ModelObjectRef ) {
             ModelObjectRef moRef = (ModelObjectRef) value;
-            try {
-                value = moRef.resolve( commander.getQueryService() );
-            } catch ( NotFoundException e ) {
-                throw new CommandException( " Can't dereference " + moRef, e );
-            }
+            value = moRef.resolve( commander.getQueryService() );
         } else if ( value instanceof MappedObject ) {
             value = ( (MappedObject) value ).fromMap( commander );
         }
@@ -119,16 +124,11 @@ public abstract class AbstractCommand implements Command {
     /**
      * {@inheritDoc}
      */
-    public void set( String key, Object value ) {
-        Object val;
-        if ( value instanceof ModelObject )
-            val = new ModelObjectRef( (ModelObject) value );
-        else if ( value instanceof Mappable ) {
-            val = ( (Mappable) value ).map();
-        } else {
-            val = value;
-        }
-        arguments.put( key, val );
+    public void set( String argumentName, Object value ) {
+        arguments.put( argumentName,
+                       value instanceof ModelObject ? new ModelObjectRef( (ModelObject) value )
+                     : value instanceof Mappable ? new MappedObject( (Mappable) value )
+                     : value );
     }
 
     public Set<Long> getLockingSet() {
@@ -402,5 +402,65 @@ public abstract class AbstractCommand implements Command {
     public String getLabel( Commander commander ) throws CommandException {
         // Default
         return getTitle();
+    }
+
+    /**
+     * Resolve a node from an id.
+     *
+     * @param id           a long
+     * @param segment      a segment in context
+     * @param queryService a query service
+     * @return a node
+     * @throws CommandException
+     *          if not found
+     */
+    public static Node resolveNode(
+            Long id,
+            Segment segment,
+            QueryService queryService ) throws CommandException {
+        Node node;
+        // null id represents a local connector
+        if ( id != null ) {
+            ModelObject mo;
+            try {
+                mo = queryService.find( ModelObject.class, id );
+            } catch ( NotFoundException e ) {
+                throw new CommandException( "You need to refresh.", e );
+            }
+            // How external an connector is captured
+            if ( mo instanceof InternalFlow ) {
+                InternalFlow internalFlow = (InternalFlow) mo;
+                assert ( internalFlow.hasConnector() );
+                node = internalFlow.getSource().isConnector()
+                        ? internalFlow.getSource()
+                        : internalFlow.getTarget();
+            } else {
+                node = segment.getNode( id );
+            }
+
+        } else {
+            node = queryService.createConnector( segment );
+        }
+        return node;
+    }
+
+    /**
+     * Find flow in segment given id.
+     *
+     * @param id      a long
+     * @param segment a segment
+     * @return a flow
+     * @throws com.mindalliance.channels.command.CommandException if not found
+     */
+    public static Flow resolveFlow( Long id, Segment segment ) throws CommandException {
+        try {
+            if ( id != null && segment != null ) {
+                return segment.findFlow( id );
+            } else {
+                throw new NotFoundException();
+            }
+        } catch ( NotFoundException e ) {
+            throw new CommandException( "Can't find flow", e );
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -83,12 +82,7 @@ public class MultiCommand extends AbstractCommand {
          */
         private void process( Command command, Change change, QueryService queryService ) {
             if ( command == sourceCommand ) {
-                Object result = null;
-                try {
-                result = change.getSubject( queryService );
-                } catch ( NotFoundException e) {
-                    throw new RuntimeException( "Linking error: subject of change not found", e );
-                }
+                Object result = change.getSubject( queryService );
                 if ( result != null ) {
                     Object value;
                     try {
@@ -165,16 +159,21 @@ public class MultiCommand extends AbstractCommand {
     /**
      * {@inheritDoc}
      */
-    public Change execute( Commander commander ) {
+    public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         for ( Command command : commands ) {
-
+            try {
                 LOG.info( "--- sub-command --" );
                 Change change = commander.doCommand( command ); // TODO -- command journaled here
                 for ( Link link : links ) {
                     link.process( command, change, queryService ); // without benefit of link processing
                 }
                 executed.add( command );
+            }
+            catch ( CommandException e ) {
+                LOG.warn( " Execution failed", e );
+                // ignore
+            }
         }
         LOG.info( "END multicommand " + getName() );
         return new Change();

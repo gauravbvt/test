@@ -1,10 +1,9 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.dao.DefinitionManager;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.SimpleIdGenerator;
 import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.export.DummyExporter;
 import junit.framework.TestCase;
 
 import java.util.Iterator;
@@ -30,7 +29,9 @@ public class TestNode extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        PlanManager planManager = new PlanManager( new DummyExporter(), new SimpleIdGenerator() );
+        DefinitionManager definitionManager = new DefinitionManager();
+        definitionManager.afterPropertiesSet();
+        PlanManager planManager = new PlanManager( definitionManager );
         planManager.validate();
 
         Plan plan = planManager.getPlans().get( 0 );
@@ -38,15 +39,15 @@ public class TestNode extends TestCase {
         User user = new User();
         user.setPlan( plan );
 
-        segment = planDao.createSegment( null, null );
+        segment = plan.getDefaultSegment();
         p1 = planDao.createPart( segment, null );
             p1.setActor( planDao.findOrCreate( Actor.class, "p1", null ) );
         p2 = planDao.createPart( segment, null );
             p2.setActor( planDao.findOrCreate( Actor.class, "p2", null ) );
 
-        f1 = p1.createSend( planDao );
+        f1 = planDao.createSend( p1 );
                 f1.setName( "A" );
-        f2 = p2.createReceive( planDao );
+        f2 = planDao.createReceive( p2 );
                 f2.setName( "B" );
         f3 = planDao.connect( p1, p2, "message", null );
     }

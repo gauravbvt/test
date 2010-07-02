@@ -3,6 +3,7 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.dao.Journal;
+import com.mindalliance.channels.dao.JournalCommand;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -43,7 +44,7 @@ public class JournalConverter extends AbstractChannelsConverter {
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
         Journal journal = (Journal) obj;
-        for ( Command command : journal.getCommands() ) {
+        for ( JournalCommand command : journal.getCommands() ) {
             writer.startNode( "command" );
             context.convertAnother( command );
             writer.endNode();

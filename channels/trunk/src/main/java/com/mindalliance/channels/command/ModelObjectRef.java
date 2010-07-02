@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
@@ -139,7 +139,11 @@ public class ModelObjectRef implements Serializable {
      */
     public boolean isForInstanceOf
             ( Class<? extends Identifiable> clazz ) {
-        return clazz.isAssignableFrom( getIdentifiableClass() );
+        try {
+            return clazz.isAssignableFrom( getIdentifiableClass() );
+        } catch ( NotFoundException e ) {
+            return false;
+        }
     }
 
 

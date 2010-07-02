@@ -9,7 +9,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -391,7 +391,8 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                                         flow.getTarget().receives() ) ) ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return Matcher.same( ( (Flow) obj ).getName(), flow.getName() );
+                        return Matcher.getInstance().same( ( (Flow) obj ).getName(),
+                                                            flow.getName() );
                     }
                 }
         ) );

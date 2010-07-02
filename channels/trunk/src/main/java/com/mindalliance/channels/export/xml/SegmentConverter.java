@@ -220,7 +220,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
         }
 
         // Remove automatically created default part
-        segment.removeNode( defaultPart, getPlanDao() );
+        getPlanDao().removeNode( defaultPart, segment );
         if ( segment.getPhase() == null ) {
             LOG.warn( "Setting segment's phase to plan default." );
             segment.setPhase( getPlan().getDefaultPhase() );

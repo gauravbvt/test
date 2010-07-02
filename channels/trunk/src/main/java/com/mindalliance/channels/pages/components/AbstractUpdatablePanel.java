@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
@@ -113,7 +114,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a commander
      */
     protected Commander getCommander() {
-        return getChannels().getCommander( PlanManager.plan() );
+        return getChannels().getCommander( User.plan() );
     }
 
     /**
@@ -317,7 +318,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a plan
      */
     protected Plan getPlan() {
-        return PlanManager.plan();
+        return User.plan();
     }
 
     /**

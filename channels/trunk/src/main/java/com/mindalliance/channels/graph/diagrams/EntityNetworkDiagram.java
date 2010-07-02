@@ -1,14 +1,13 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntityNetworkGraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -41,11 +40,10 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
             OutputStream outputStream,
             Analyst analyst,
             DiagramFactory diagramFactory ) {
-        QueryService queryService = diagramFactory.getQueryService();
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder<ModelEntity, EntityRelationship> entityNetworkGraphBuilder =
-                new EntityNetworkGraphBuilder( entity, queryService );
+                new EntityNetworkGraphBuilder( entity, analyst );
         Graph<ModelEntity, EntityRelationship> graph =
                 entityNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer =

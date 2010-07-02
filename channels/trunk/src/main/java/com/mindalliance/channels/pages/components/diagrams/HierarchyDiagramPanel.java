@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Hierarchical;

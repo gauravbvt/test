@@ -21,7 +21,7 @@ import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -852,7 +852,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     private boolean isEmptyOrEquivalent( SegmentObject connectorFlow ) {
         return getFlow().getName().isEmpty()
-                || Matcher.same( getFlow().getName(), connectorFlow.getName() );
+                || Matcher.getInstance().same( getFlow().getName(), connectorFlow.getName() );
     }
 
     private List<Flow> findRelevantInternalFlows() {

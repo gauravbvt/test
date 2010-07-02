@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.User;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -75,7 +76,7 @@ public class ResponsibilityReportPanel extends Panel {
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( role ) )
                 .setVisible( showingIssues )
         );
-        add( new ListView<Part>( "parts", segment.findParts( organization, role, jurisdiction ) ) {
+        add( new ListView<Part>( "parts", segment.findParts( organization, role, jurisdiction, User.current().getPlan() ) ) {
             @Override
             protected void populateItem( ListItem<Part> item ) {
                 item.add( new PartReportPanel(
@@ -153,7 +154,7 @@ public class ResponsibilityReportPanel extends Panel {
             spec.setJurisdiction( jurisdiction );
             for ( Employment employment : queryService.findAllEmploymentsIn( organization ) ) {
                 ResourceSpec employmentSpec = new ResourceSpec( employment );
-                if ( employmentSpec.narrowsOrEquals( spec ) ) {
+                if ( employmentSpec.narrowsOrEquals( spec, User.current().getPlan() ) ) {
                     actors.add( employment.getActor() );
                 }
             }

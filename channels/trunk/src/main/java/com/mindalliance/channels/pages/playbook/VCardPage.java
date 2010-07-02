@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
@@ -14,6 +14,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.reports.VCardPanel;
+import com.mindalliance.channels.dao.User;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -64,7 +65,7 @@ public class VCardPage extends WebPage {
             throw new AbortWithHttpStatusException( HttpServletResponse.SC_NOT_FOUND, false );
 
         ResourceSpec actorSpec = getActorSpec( flow.getContactedPart() );
-        init( actorSpec.getOrganization(), actorSpec.getJob() );
+        init( actorSpec.getOrganization(), actorSpec.getJob( User.current().getPlan() ) );
     }
 
     private List<Channel> getChannels( ModelEntity object ) {

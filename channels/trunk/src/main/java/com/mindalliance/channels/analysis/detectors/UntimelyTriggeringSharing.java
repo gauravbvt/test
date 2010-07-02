@@ -7,7 +7,6 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -81,9 +80,10 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
                 IteratorUtils.toList( ( (Part) commitment.getSource() ).receivesNamed( commitment.getName() ) ),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        return ( (Flow) object ).isSharing();
+                        return ((Flow)object).isSharing();
                     }
                 }
+                //PredicateUtils.invokerPredicate( "isSharingCommitment" )
         );
         List<Delay> alternateDelays = (List<Delay>) CollectionUtils.collect(
                 priorCommitments,
@@ -111,10 +111,7 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
                         return receive.isNeed()
                                 && receive.isTriggeringToTarget()
                                 && ( receive.getEois().isEmpty()
-                                || Matcher.hasCommonEOIs(
-                                receive,
-                                commitment,
-                                getQueryService() ) );
+                                || getQueryService().hasCommonEOIs( receive, commitment ) );
                     }
                 }
         );

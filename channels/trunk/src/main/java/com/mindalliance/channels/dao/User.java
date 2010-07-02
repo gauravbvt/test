@@ -270,4 +270,18 @@ public class User implements UserDetails {
     public String getPlanUri() {
         return plan != null ? plan.getUri() : null;
     }
+
+    /**
+     * Get current plan from current thread.
+     *
+     * @return a plan
+     */
+    public static Plan plan() {
+//        if ( Thread.currentThread() instanceof IssueScanner.Daemon ) {
+//            return ( (IssueScanner.Daemon) Thread.currentThread() ).getPlan();
+//        } else {
+        User user = current();
+        return user == null ? null : user.getPlan();
+//        }
+    }
 }

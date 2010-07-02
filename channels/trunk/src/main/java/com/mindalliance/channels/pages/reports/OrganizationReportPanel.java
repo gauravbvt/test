@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.basic.Label;
@@ -122,7 +123,7 @@ public class OrganizationReportPanel extends Panel {
             Organization specOrg = spec.getOrganization();
             // Tweak the matching
             boolean matches = specOrg == null && organization.isUnknown()
-                    || specOrg != null && !organization.isWithin( specOrg );
+                    || specOrg != null && !organization.isWithin( specOrg, User.current().getPlan() );
             if ( matches ) {
                 spec.setOrganization( organization );
                 if ( spec.getRole() == null ) {

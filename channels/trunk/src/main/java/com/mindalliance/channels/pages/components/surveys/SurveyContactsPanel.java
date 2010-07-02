@@ -17,8 +17,8 @@ import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.surveys.Contact;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
-import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.dao.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -245,8 +245,9 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
         if ( role != null && !role.equals( contactDescriptor.getRole() ) )
             return true;
         Place jurisdiction = (Place) filters.get( "jurisdiction" );
+        Place place = contactDescriptor.getJurisdiction();
         return jurisdiction != null
-                && !Matcher.within( contactDescriptor.getJurisdiction(), jurisdiction );
+            && ( place == null || !place.matchesOrIsInside( jurisdiction, User.plan() ) );
     }
 
     public Survey getSurvey() {

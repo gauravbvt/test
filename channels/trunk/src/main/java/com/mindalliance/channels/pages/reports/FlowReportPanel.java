@@ -80,7 +80,7 @@ public class FlowReportPanel extends Panel {
         Collection<Channel> broadcasts = flow.getBroadcasts();
         final List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
         List<Goal> impactList;
-        if ( isSource && flow.getTarget().isPart() && flow.isEssential( false ) ) {
+        if ( isSource && flow.getTarget().isPart() && flow.isEssential( false, queryService ) ) {
             impactList = queryService.findAllGoalsImpactedByFailure( (Part) flow.getTarget() );
         } else {
             impactList = new ArrayList<Goal>();

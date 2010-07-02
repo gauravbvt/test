@@ -7,7 +7,6 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -74,10 +73,7 @@ public class UntimelyCriticalSharing extends AbstractIssueDetector {
                                 && receive.isAskedFor() == commitment.isAskedFor()
                                 && receive.isCritical()
                                 && ( receive.getEois().isEmpty()
-                                || Matcher.hasCommonEOIs(
-                                receive,
-                                commitment,
-                                getQueryService() ) );
+                                || getQueryService().hasCommonEOIs( receive, commitment ) );
                     }
                 }
         );

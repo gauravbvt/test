@@ -13,15 +13,16 @@ import java.text.Collator;
  * Date: Sep 18, 2009
  * Time: 10:29:06 AM
  */
-public class Phase extends ModelEntity implements Comparable<ModelObject> {
+public class Phase extends ModelEntity {
     /**
      * Unknown phase.
      */
     public static Phase UNKNOWN;
+    
     /**
      * Name of unknown phase.
      */
-    private static String UnknownName = "(unknown)";
+    public static String UnknownName = "(unknown)";
 
     /**
      * The timing of the phase relative to an event.
@@ -35,15 +36,6 @@ public class Phase extends ModelEntity implements Comparable<ModelObject> {
         super( name );
     }
 
-    /**
-     * Create immutables.
-     *
-     * @param dao a query service
-     */
-    public static void createImmutables( PlanDao dao ) {
-        UNKNOWN = dao.findOrCreate( Phase.class, UnknownName, null );
-        UNKNOWN.makeImmutable();
-    }
     public Timing getTiming() {
         return timing;
     }

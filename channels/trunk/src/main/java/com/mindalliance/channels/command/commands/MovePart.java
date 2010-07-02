@@ -105,7 +105,7 @@ public class MovePart extends AbstractCommand {
             MultiCommand multi,
             Commander commander ) {
         for ( Map<String, Object> goalState : (List<Map<String, Object>>) partState.get( "goals" ) ) {
-            Goal goal = Goal.fromMap( goalState, commander.getQueryService() );
+            Goal goal = commander.getQueryService().goalFromMap( goalState );
             if ( !toSegment.getGoals().contains( goal ) ) {
                 UpdatePlanObject updateSegment = new UpdatePlanObject(
                         toSegment,

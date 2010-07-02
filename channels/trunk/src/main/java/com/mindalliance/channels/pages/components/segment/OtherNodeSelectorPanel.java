@@ -5,7 +5,7 @@ import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -197,7 +197,7 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
             protected Iterator<String> getChoices( String nodeString ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.matches( nodeString, choice ) )
+                    if ( Matcher.getInstance().matches( nodeString, choice ) )
                         candidates.add( choice );
                 }
                 return candidates.iterator();
@@ -257,7 +257,8 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
                     getSecondChoices(),
                     new Predicate() {
                         public boolean evaluate( Object object ) {
-                            return Matcher.same( displayString( (Node) object ), nodeName );
+                            return Matcher.getInstance().same( displayString( (Node) object ),
+                                                                nodeName );
                         }
                     }
             );

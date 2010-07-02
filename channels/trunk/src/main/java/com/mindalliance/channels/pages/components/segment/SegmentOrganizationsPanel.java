@@ -89,7 +89,7 @@ public class SegmentOrganizationsPanel extends AbstractUpdatablePanel {
             for ( Organization other : orgs ) {
                 if ( org != other ) {
                     EntityRelationship<Organization> sendRel =
-                            getQueryService().findEntityRelationship( org, other, getSegment() );
+                            getAnalyst().findEntityRelationship( org, other, getSegment() );
                     if ( sendRel != null ) orgRels.add( sendRel );
                 }
             }

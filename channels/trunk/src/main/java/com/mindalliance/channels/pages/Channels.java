@@ -4,7 +4,6 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.dao.ImportExportFactory;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.geo.GeoService;
@@ -239,12 +238,7 @@ public class Channels extends WebApplication
             if ( commander == null ) {
                 commander = (Commander) applicationContext.getBean( "commander" );
                 commander.setLockManager( getLockManager( plan ) );
-                try {
-                    commander.setPlanDao( planManager.getDao( plan ) );
-                } catch ( NotFoundException e ) {
-                    // Program error if this happens...
-                    throw new RuntimeException( e );
-                }
+                commander.setPlanDao( planManager.getDao( plan ) );
                 commanders.put( plan, commander );
                 commander.initialize();
             }

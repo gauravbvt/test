@@ -63,6 +63,7 @@ public final class UserInfo implements Serializable {
         password = tokens.nextToken();
         fullName = tokens.nextToken();
         email = tokens.nextToken();
+        globalAccess = null;
 
         while ( tokens.hasMoreTokens() ) {
             String token = tokens.nextToken();

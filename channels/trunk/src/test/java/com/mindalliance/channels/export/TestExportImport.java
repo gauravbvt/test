@@ -1,7 +1,7 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.Exporter;
@@ -48,12 +48,8 @@ public class TestExportImport extends AbstractChannelsTest {
         for ( Segment segment : queryService.list( Segment.class ) ) {
             segmentNames.add( segment.getName() );
         }
-        try {
-            Plan plan = User.current().getPlan();
-            planDao = planManager.getDao( plan );
-        } catch ( NotFoundException e ) {
-            fail();
-        }
+        Plan plan = User.current().getPlan();
+        planDao = planManager.getDao( plan );
     }
 
     @Test

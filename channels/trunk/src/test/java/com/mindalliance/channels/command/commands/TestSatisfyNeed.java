@@ -2,6 +2,7 @@ package com.mindalliance.channels.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
@@ -55,7 +56,7 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
     }
 
     @Test
-    public void testSatisfyNeed() {
+    public void testSatisfyNeed() throws CommandException {
         assertSame( 1, countFlows( source.sends() ) );
         assertSame( 1, countFlows( target.receives() ) );
         Command satisfyNeed = new SatisfyNeed( need, capability, true, true );

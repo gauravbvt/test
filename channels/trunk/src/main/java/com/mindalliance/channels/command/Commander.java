@@ -1,10 +1,12 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.query.QueryService;
 
@@ -35,8 +37,10 @@ public interface Commander {
      *
      * @param command a command
      * @return an change
+     * @throws com.mindalliance.channels.command.CommandException
+     *          if execution could not proceeed or failed.
      */
-    Change doCommand( Command command );
+    Change doCommand( Command command ) throws CommandException;
 
     /**
      * Whether user could undo a previous command right now.
@@ -56,15 +60,17 @@ public interface Commander {
      * Undo user's previous command.
      *
      * @return a change
+     * @throws CommandException if undoing fails or is not allowed.
      */
-    Change undo();
+    Change undo() throws CommandException;
 
     /**
      * Redo user's previous undone command.
      *
      * @return a change
+     * @throws CommandException if redoing fails or is not allowed.
      */
-    Change redo();
+    Change redo() throws CommandException;
 
     /**
      * Resets commander
@@ -354,15 +360,15 @@ public interface Commander {
      */
     boolean isLockable( String className );
 
-    /**
-     * Add a command listener.
-     * @param listener  a command listener
-     */
-    void addCommandListener ( CommandListener listener );
+    ImportExportFactory getImportExportFactory();
+
 
     /**
-     * Remove a command listener.
-     * @param listener  a command listener
+     * Initialize a part from a preserved state.
+     *
+     * @param part      a part
+     * @param state     a map
      */
-    void removeCommandListener ( CommandListener listener );
+    @SuppressWarnings( "unchecked" )
+    void initPartFrom( Part part, Map<String, Object> state );
 }

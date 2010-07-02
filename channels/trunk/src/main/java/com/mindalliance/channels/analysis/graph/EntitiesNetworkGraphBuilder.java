@@ -1,6 +1,6 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;

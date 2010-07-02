@@ -168,9 +168,10 @@ public class Employment implements Serializable, GeoLocatable {
 
     /**
      * {@inheritDoc}
+     * @param queryService
      */
-    public String getGeoMarkerLabel() {
-        return getOrganization().getGeoMarkerLabel();
+    public String getGeoMarkerLabel( QueryService queryService ) {
+        return getOrganization().getGeoMarkerLabel( queryService );
     }
 
     /**
@@ -201,16 +202,17 @@ public class Employment implements Serializable, GeoLocatable {
      * Employment has known actor and/or organization, and matches part.
      *
      * @param part a part
+     * @param plan
      * @return a boolean
      */
-    public boolean playsPart( Part part ) {
+    public boolean playsPart( Part part, Plan plan ) {
         return !part.isEmpty()
                 &&!getActor().isUnknown()
                 && !getOrganization().isUnknown()
-                && ModelEntity.implies( getActor(), part.getActor() )
-                && ModelEntity.implies( getRole(), part.getRole() )
-                && ModelEntity.implies( getOrganization(), part.getOrganization() )
-                && ModelEntity.implies( getJurisdiction(), part.getJurisdiction() );
+                && ModelEntity.implies( getActor(), part.getActor(), plan )
+                && ModelEntity.implies( getRole(), part.getRole(), plan )
+                && ModelEntity.implies( getOrganization(), part.getOrganization(), plan )
+                && ModelEntity.implies( getJurisdiction(), part.getJurisdiction(), plan );
     }
 
 }

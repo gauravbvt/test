@@ -3,8 +3,7 @@ package com.mindalliance.channels.model;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.util.ChannelsUtils;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -273,11 +272,13 @@ public class Part extends Node implements GeoLocatable {
      * Test whether the resource spec of the part intersects a given resource spec
      *
      * @param resourceSpec a resource
+     * @param plan
      * @return a boolean
      */
-    public boolean isImpliedBy( ResourceSpec resourceSpec ) {
+    public boolean isImpliedBy( ResourceSpec resourceSpec, Plan plan ) {
         ResourceSpec partResourceSpec = resourceSpec();
-        return !partResourceSpec.isAnyone() && resourceSpec.narrowsOrEquals( partResourceSpec );
+        return !partResourceSpec.isAnyone() && resourceSpec.narrowsOrEquals( partResourceSpec,
+                                                                             plan );
     }
 
     /**
@@ -382,7 +383,7 @@ public class Part extends Node implements GeoLocatable {
         this.goals = goals;
     }
 
-    private void addGoal( Goal goal ) {
+    public void addGoal( Goal goal ) {
         if ( !goals.contains( goal )) {
             goals.add( goal );
         }
@@ -392,23 +393,24 @@ public class Part extends Node implements GeoLocatable {
      * Test if this part is considered belonging to an organization.
      *
      * @param o the organization
+     * @param plan
      * @return true if belonging
      */
-    public boolean isInOrganization( Organization o ) {
+    public boolean isInOrganization( Organization o, Plan plan ) {
         return organization == null ? Organization.UNKNOWN == o
-                : o.narrowsOrEquals( organization );
+                                    : o.narrowsOrEquals( organization, plan );
     }
 
     /**
      * Test if this part is considered belonging to an organization.
      *
      * @param j the jurisdiction
+     * @param plan
      * @return true if belonging
      */
-    public boolean isInJurisdiction( Place j ) {
-        return jurisdiction == null
-                ? Place.UNKNOWN == j
-                : j.narrowsOrEquals( jurisdiction );
+    public boolean isInJurisdiction( Place j, Plan plan ) {
+        return jurisdiction == null ? Place.UNKNOWN == j
+                                    : j.narrowsOrEquals( jurisdiction, plan );
     }
 
     /**
@@ -433,7 +435,7 @@ public class Part extends Node implements GeoLocatable {
         return new FilterIterator( sends(), new Predicate() {
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
-                return Matcher.same( flow.getName(), name );
+                return Matcher.getInstance().same( flow.getName(), name );
             }
         } );
     }
@@ -449,7 +451,7 @@ public class Part extends Node implements GeoLocatable {
         return new FilterIterator( receives(), new Predicate() {
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
-                return Matcher.same( flow.getName(), name );
+                return Matcher.getInstance().same( flow.getName(), name );
             }
         } );
     }
@@ -580,17 +582,18 @@ public class Part extends Node implements GeoLocatable {
      * Find explicit or implicit, single, actual actor, if any.
      *
      * @return an actor or null
+     * @param queryService
      */
-    public Actor getKnownActor() {
+    public Actor getKnownActor( QueryService queryService ) {
         if ( actor != null ) {
             return actor;
         } else {
-            return getKnownActualActor();
+            return getKnownActualActor( queryService );
         }
     }
 
-    public Actor getKnownActualActor() {
-        List<Actor> knownActors = getSegment().getQueryService().findAllActualActors( resourceSpec() );
+    public Actor getKnownActualActor( QueryService queryService ) {
+        List<Actor> knownActors = queryService.findAllActualActors( resourceSpec() );
         if ( knownActors.size() == 1 ) {
             return knownActors.get( 0 );
         } else {
@@ -638,14 +641,15 @@ public class Part extends Node implements GeoLocatable {
      * Get extended title for the part.
      *
      * @param sep separator string
+     * @param queryService
      * @return a string
      */
-    public String getFullTitle( String sep ) {
+    public String getFullTitle( String sep, QueryService queryService ) {
         String label = "";
         if ( getActor() != null ) {
             label += getActor().getName();
             if ( getActor().isType() ) {
-                Actor impliedActor = getKnownActualActor();
+                Actor impliedActor = getKnownActualActor( queryService );
                 if ( impliedActor != null ) {
                     label += " (" + impliedActor.getName() + ")";
                 }
@@ -654,7 +658,7 @@ public class Part extends Node implements GeoLocatable {
         if ( getRole() != null ) {
             if ( !label.isEmpty() ) label += sep;
             if ( getActor() == null ) {
-                Actor impliedActor = getKnownActualActor();
+                Actor impliedActor = getKnownActualActor( queryService );
                 if ( impliedActor != null ) {
                     label += impliedActor.getName();
                     label += " ";
@@ -683,13 +687,14 @@ public class Part extends Node implements GeoLocatable {
      * Get summary of the part.
      *
      * @return a string
+     * @param queryService
      */
-    public String getSummary() {
+    public String getSummary( QueryService queryService ) {
         StringBuilder sb = new StringBuilder();
         if ( getActor() != null ) {
             sb.append( getActor().getName() );
             if ( getActor().isType() ) {
-                Actor impliedActor = getKnownActualActor();
+                Actor impliedActor = getKnownActualActor( queryService );
                 if ( impliedActor != null ) {
                     sb.append( " " );
                     sb.append( impliedActor.getName() );
@@ -699,14 +704,14 @@ public class Part extends Node implements GeoLocatable {
         if ( getRole() != null ) {
             if ( !sb.toString().isEmpty() ) sb.append( ' ' );
             if ( getActor() == null ) {
-                Actor impliedActor = getKnownActualActor();
+                Actor impliedActor = getKnownActualActor( queryService );
                 if ( impliedActor != null ) {
                     sb.append( impliedActor.getName() );
                 } else {
                     sb.append( "Any " );
                 }
             }
-            if ( getKnownActualActor() != null ) {
+            if ( getKnownActualActor( queryService ) != null ) {
                 if ( getActor() != null ) {
                     sb.append( " as " );
                 } else {
@@ -813,10 +818,11 @@ public class Part extends Node implements GeoLocatable {
 
     /**
      * {@inheritDoc}
+     * @param queryService
      */
-    public String getGeoMarkerLabel() {
+    public String getGeoMarkerLabel( QueryService queryService ) {
         StringBuilder sb = new StringBuilder();
-        sb.append( getFullTitle( " " ) );
+        sb.append( getFullTitle( " ", queryService ) );
         if ( location != null ) {
             sb.append( " at " );
             sb.append( getLocation().getName() );
@@ -1074,67 +1080,4 @@ public class Part extends Node implements GeoLocatable {
         return state;
 
     }
-
-    public void initFromMap( Map<String,Object> state, QueryService queryService ) {
-        setDescription( (String) state.get( "description" ) );
-        setTask( (String) state.get( "task" ) );
-        setRepeating( (Boolean) state.get( "repeating" ) );
-        setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
-        setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
-        setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
-        setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
-        setCompletionTime( (Delay) state.get( "completionTime" ) );
-        setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );
-        for (Map<String,Object> goalMap : (List<Map<String,Object>>)state.get( "goals" ) ) {
-            Goal goal = Goal.fromMap( goalMap, queryService );
-            addGoal(  goal );
-        }
-        if ( state.get( "initiatedEvent" ) != null )
-            setInitiatedEvent( queryService.findOrCreateType(
-                    Event.class,
-                    (String) state.get( "initiatedEvent" ) ) );
-        else
-            setInitiatedEvent( null );
-        if ( state.get( "actor" ) != null )
-            setActor( ChannelsUtils.retrieveEntity(
-                    Actor.class,
-                    state,
-                    "actor",
-                    queryService) ) ;
-        else
-            setActor( null );
-        if ( state.get( "role" ) != null )
-            setRole( ChannelsUtils.retrieveEntity(
-                    Role.class,
-                    state,
-                    "role",
-                    queryService ) );
-        else
-            setRole( null );
-        if ( state.get( "organization" ) != null )
-            setOrganization( ChannelsUtils.retrieveEntity(
-                    Organization.class,
-                    state,
-                    "organization",
-                    queryService ) );
-        else
-            setOrganization( null );
-        if ( state.get( "jurisdiction" ) != null )
-            setJurisdiction( ChannelsUtils.retrieveEntity(
-                    Place.class,
-                    state,
-                    "jurisdiction",
-                    queryService ) );
-        else
-            setJurisdiction( null );
-        if ( state.get( "location" ) != null )
-            setLocation( ChannelsUtils.retrieveEntity(
-                    Place.class,
-                    state,
-                    "location",
-                    queryService ) );
-        else
-            setLocation( null );
-    }
-
 }

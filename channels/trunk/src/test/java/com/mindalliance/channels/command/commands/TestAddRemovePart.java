@@ -42,7 +42,7 @@ public class TestAddRemovePart extends AbstractChannelsTest {
     }
 
     @Test
-    public void testRemoveAddPart() {
+    public void testRemoveAddPart() throws Exception {
         assertSame( 2, countParts() );
         assertSame( 2, countFlows() );
 

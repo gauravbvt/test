@@ -1,7 +1,6 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.User;
 import org.junit.After;
@@ -31,11 +30,7 @@ public class TestSegment extends AbstractChannelsTest {
     @Before
     public void setUp() throws IOException {
         super.setUp();
-        try {
-            planDao = planManager.getDao( User.current().getPlan() );
-        } catch ( NotFoundException ignored ) {
-            fail();
-        }
+        planDao = planManager.getDao( User.current().getPlan() );
         segment = planDao.createSegment( null, null );
     }
 
@@ -100,7 +95,7 @@ public class TestSegment extends AbstractChannelsTest {
         assertSame( f2, p2.getFlow( f2.getId() ) );
         assertSame( f2, p3.getFlow( f2.getId() ) );
 
-        segment.removeNode( p2, planDao );
+        planDao.removeNode( p2, segment );
         // node replaced in flows by connectors
         assertEquals( 2, segment.getNodeCount() );
         assertSame( p1, segment.getNode( p1.getId() ) );
@@ -122,7 +117,7 @@ public class TestSegment extends AbstractChannelsTest {
         Node initial = nodes.next();
         assertSame( initial, segment.getNode( initial.getId() ) );
 
-        segment.removeNode( initial, planDao );
+        planDao.removeNode( initial, segment );
         assertSame( initial, segment.getNode( initial.getId() ) );
     }
 
@@ -167,7 +162,7 @@ public class TestSegment extends AbstractChannelsTest {
 
         assertSame( f, p1.getFlow( f.getId() ) );
         assertSame( f, p2.getFlow( f.getId() ) );
-        f.disconnect( planDao );
+        planDao.disconnect( f );
         assertNull( p1.getFlow( f.getId() ) );
         assertNull( p2.getFlow( f.getId() ) );
     }
@@ -217,28 +212,28 @@ public class TestSegment extends AbstractChannelsTest {
         assertSame( dp, nodes.next() );
         assertFalse( nodes.hasNext() );
 
-        segment.removeNode( dp, planDao );
+        planDao.removeNode( dp, segment );
         Iterator<Node> nodes2 = segment.nodes();
         assertSame( dp, nodes2.next() );
         assertFalse( nodes2.hasNext() );
 
-        Flow out = dp.createSend( planDao );
+        Flow out = planDao.createSend( dp );
         Connector c1 = (Connector) out.getTarget();
-        Flow in  = dp.createReceive( planDao );
+        Flow in  = planDao.createReceive( dp );
         Connector c2 = (Connector) in.getSource();
-        segment.removeNode( dp, planDao );
+        planDao.removeNode( dp, segment );
 
         assertSame( dp, segment.getNode( dp.getId() ) );
         assertSame( c1, segment.getNode( c1.getId() ) );
         assertSame( c2, segment.getNode( c2.getId() ) );
         Part p2 = planDao.createPart( segment, null );
-        segment.removeNode( dp, planDao );
+        planDao.removeNode( dp, segment );
         assertSame( p2, segment.getNode( p2.getId() ) );
         assertNull( segment.getNode( dp.getId() ) );
         assertNull( segment.getNode( c1.getId() ) );
         assertNull( segment.getNode( c2.getId() ) );
 
-        segment.removeNode( p2, planDao );
+        planDao.removeNode( p2, segment );
         assertSame( p2, segment.getNode( p2.getId() ) );
     }
 
@@ -254,13 +249,13 @@ public class TestSegment extends AbstractChannelsTest {
         Role r2 = planDao.findOrCreate( Role.class, "Plumber", null );
         p2.setRole( r2 );
 
-        List<Role> roleList = segment.findRoles( org );
+        List<Role> roleList = segment.findRoles( org, User.current().getPlan() );
         assertEquals( 0, roleList.size() );
 
         p1.setOrganization( org );
         p2.setOrganization( org );
 
-        List<Role> roleList2 = segment.findRoles( org );
+        List<Role> roleList2 = segment.findRoles( org, User.current().getPlan() );
         assertEquals( 2, roleList2.size() );
         assertTrue( roleList2.contains( r1 ) );
         assertTrue( roleList2.contains( r2 ) );

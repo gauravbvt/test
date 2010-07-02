@@ -90,7 +90,7 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
     }
 
     private DirectedGraph<Segment, SegmentRelationship> createGraph( QueryService queryService ) {
-        return new PlanMapGraphBuilder( segments, queryService ).buildDirectedGraph();
+        return new PlanMapGraphBuilder( segments, queryService, null ).buildDirectedGraph();
     }
 
     /**

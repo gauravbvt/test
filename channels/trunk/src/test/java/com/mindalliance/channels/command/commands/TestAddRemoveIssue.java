@@ -43,7 +43,7 @@ public class TestAddRemoveIssue extends AbstractChannelsTest {
     }
 
     @Test
-    public void testAddRemoveIssue() {
+    public void testAddRemoveIssue() throws Exception {
         Commander commander = getCommander();
 
         int count = countIssues( segment );

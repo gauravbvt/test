@@ -1,6 +1,6 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.Mappable;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -27,7 +27,16 @@ public class MappedObject implements Serializable {
      */
     private Map<String, Object> map = new HashMap<String, Object>();
 
-    public MappedObject( Class clazz ) {
+    public MappedObject( Mappable mappable ) {
+        this( mappable.getClass() );
+        Map<String,Object> objectMap = new HashMap<String, Object>();
+        mappable.map( objectMap );
+        for ( Map.Entry<String, Object> mapped : objectMap.entrySet() )
+            set( mapped.getKey(), mapped.getValue() );
+    }
+
+
+    public MappedObject( Class<? extends Mappable> clazz ) {
         className = clazz.getName();
     }
 
@@ -47,7 +56,6 @@ public class MappedObject implements Serializable {
 
     /**
      * Reconstitute mapped object.
-     *
      * @param commander a commander
      * @return an object
      * @throws CommandException if conversion from map fails
@@ -75,10 +83,9 @@ public class MappedObject implements Serializable {
             throw new CommandException( "Failed to convert from map.", e );
         } catch ( NoSuchMethodException e ) {
             throw new CommandException( "Failed to convert from map.", e );
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "Failed to convert from map.", e );
         } catch ( InstantiationException e ) {
             throw new CommandException( "Failed to convert from map.", e );
         }
     }
+
 }

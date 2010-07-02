@@ -2,6 +2,7 @@ package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
@@ -524,19 +525,62 @@ public class FileBasedManager implements AttachmentManager {
         return new ArrayList<String>( allAttachedUrls );
     }
 
-    /**
-     * Get the location of the uploaded files.
-     *
-     * @param plan the plan
-     * @return a directory
-     */
+    /** {@inheritDoc} */
     public File getUploadDirectory( Plan plan ) {
-        File uploadsDir = new File(
-                planManager.getPlanVersionDirectory( plan ) + File.separator + uploadPath );
+        PlanDefinition.Version version = planManager.getVersion( plan );
+        File uploadsDir = new File( version.getVersionDirectory(), uploadPath );
         if ( !uploadsDir.exists() ) {
             uploadsDir.mkdir();
             LOG.info( "Created upload directory: {}", uploadsDir.getAbsolutePath() );
         }
         return uploadsDir;
+    }
+
+    /**
+     * Get all media reference attachments.
+     *
+     * @param object
+     * @return a list of attachments
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Attachment> getMediaReferences( ModelObject object ) {
+        return (List<Attachment>) CollectionUtils.select(
+                object.getAttachments(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return isMediaReference( ( (Attachment) object ) );
+                    }
+                }
+        );
+    }
+
+    /**
+     * Whether the attchment is an image or video reference.
+     *
+     * @param attachment
+     * @return a boolean
+     */
+    public boolean isMediaReference( Attachment attachment ) {
+        return isImageReference( attachment ) || isVideoReference( attachment );
+    }
+
+    /**
+     * Whether the attachment is a reference movie.
+     *
+     * @param attachment
+     * @return a boolean
+     */
+    public boolean isVideoReference( Attachment attachment ) {
+        return attachment.getType() == Attachment.Type.Reference && hasVideoContent( attachment.getUrl() );
+    }
+
+    /**
+     * Whether the attachment is a reference image.
+     *
+     * @param attachment
+     * @return a boolean
+     */
+    public boolean isImageReference( Attachment attachment ) {
+        return attachment.getType() == Attachment.Type.Reference && hasImageContent( attachment.getUrl() );
     }
 }

@@ -1,8 +1,9 @@
-package com.mindalliance.channels.util;
+package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.dao.User;
 
 import java.io.Serializable;
 
@@ -120,19 +121,24 @@ public class Play implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean equals( Object obj ) {
-      if ( !(obj instanceof Play) ) return false;
-        Play play = (Play)obj;
-        return flow == play.getFlow() && part == play.getPart();
+        if ( obj instanceof Play ) {
+            Play play = (Play) obj;
+            return flow == play.getFlow() && part == play.getPart();
+        }
+
+        return false;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         int hash = 1;
-        if ( part != null) hash = hash * SEED + part.hashCode();
-        if ( flow != null) hash = hash * SEED + flow.hashCode();
+        if ( part != null ) hash = hash * SEED + part.hashCode();
+        if ( flow != null ) hash = hash * SEED + flow.hashCode();
         return hash;
     }
 
@@ -144,7 +150,7 @@ public class Play implements Serializable {
      */
     public Part getPartFor( ResourceSpec resourceSpec ) {
         Part part = getPart();
-        if (part.resourceSpec().narrowsOrEquals( resourceSpec )) {
+        if ( part.resourceSpec().narrowsOrEquals( resourceSpec, User.plan() ) ) {
             return part;
         }
         else {

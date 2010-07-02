@@ -66,7 +66,7 @@ public class SetPartFromCopy extends AbstractCommand {
             multi = makeSubCommands( copy );
             set( "subCommands", multi );
         } // TODO - attachment TICKETS are also copied - problem
-        part.initFromMap( (Map<String, Object>) copy.get( "partState" ), commander.getQueryService() );
+        commander.initPartFrom( part, (Map<String, Object>) copy.get( "partState" ) );
         multi.execute( commander );
         return new Change( Change.Type.Recomposed, segment );
     }

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
@@ -116,7 +116,7 @@ public class TestSegmentPage extends AbstractChannelsTest {
     /**
      * Test submit with part modifications.
      *
-     * @throws com.mindalliance.channels.dao.NotFoundException on error
+     * @throws com.mindalliance.channels.model.NotFoundException on error
      */
     @Test
     public void testEmptySubmit() throws NotFoundException, IOException {
@@ -210,7 +210,7 @@ public class TestSegmentPage extends AbstractChannelsTest {
 
         ft.submit();
         try {
-            Memory dao = planManager.getDao( PlanManager.plan() );
+            AbstractDao dao = planManager.getDao( PlanManager.plan() );
             assertNull( dao.find( Segment.class, segment.getId() ) );
             fail();
         } catch ( NotFoundException ignored ) {

@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.Memory;
-
 import java.util.List;
 
 /**
@@ -61,26 +59,6 @@ public class InternalFlow extends Flow {
     public void setEffectiveChannels( List<Channel> channels ) {
         assert canSetChannels();
         setChannels( channels );
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param planDao
-     */
-    @Override
-    public void disconnect( Memory planDao ) {
-        Node s = source;
-        s.removeSend( this );
-        if ( s.isConnector() )
-            s.getSegment().removeNode( s, planDao );
-        source = null;
-
-        Node t = target;
-        t.removeReceive( this );
-        if ( t.isConnector() ) {
-            t.getSegment().removeNode( t, planDao );
-        }
-        target = null;
     }
 
     @Override

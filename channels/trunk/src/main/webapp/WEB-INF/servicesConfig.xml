@@ -20,10 +20,10 @@
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="ignoreInvalidKeys" value="true"/>
         <property name="locations"><array>
-            <value>WEB-INF/channels.properties</value>
-            <value>file:${user.home}/channels/channels.properties</value>
-            <value>file:${user.home}/channels.properties</value>
             <value>file:${user.dir}/channels.properties</value>
+            <value>file:${user.home}/channels.properties</value>
+            <value>file:${user.home}/channels/channels.properties</value>
+            <value>WEB-INF/channels.properties</value>
         </array></property>
     </bean>
 

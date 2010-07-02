@@ -1,9 +1,10 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
@@ -182,7 +183,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      */
     @Override
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, PlanManager.plan() ) );
+        update( target, new Change( Change.Type.Selected, User.plan() ) );
     }
 
     /**
@@ -240,7 +241,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             int scrollLeft,
             AjaxRequestTarget target ) {
         SegmentRelationship scRel = new SegmentRelationship();
-        scRel.setId( Long.valueOf( edgeId ), getQueryService() );
+        scRel.setId( Long.valueOf( edgeId ), getQueryService(), getAnalyst() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, scRel );
         change.setScript( js );

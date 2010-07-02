@@ -1,4 +1,4 @@
-package com.mindalliance.channels.graph;
+package com.mindalliance.channels.analysis;
 
 import org.jgrapht.DirectedGraph;
 

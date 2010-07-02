@@ -4,13 +4,23 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.dao.Journal;
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.dao.JournalCommand;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
@@ -66,12 +76,12 @@ public class DefaultCommander implements Commander {
      */
     private boolean replaying;
 
-    /**
-     * The planDao (and therefore, plan) used by this commander.
-     */
+    /** The planDao (and therefore, plan) used by this commander. */
     private PlanDao planDao;
 
     private PlanManager planManager;
+
+    private ImportExportFactory importExportFactory;
 
     /**
      * Record of when users were most recently active.
@@ -104,19 +114,12 @@ public class DefaultCommander implements Commander {
      */
     private long whenLastCheckedForTimeouts = System.currentTimeMillis();
 
-    /**
-     * Command listeners.
-     */
-    private List<CommandListener> listeners = new ArrayList<CommandListener>();
-
     //===============================================
     public DefaultCommander() {
     }
 
     public void setAnalyst( Analyst analyst ) {
         this.analyst = analyst;
-        if ( !listeners.contains( analyst ) )
-            listeners.add( analyst );
     }
 
     public Analyst getAnalyst() {
@@ -296,98 +299,67 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public synchronized Change doCommand( Command command ) {
-        Change change;
-        try {
-            if ( !getPlan().isDevelopment() )
-                throw new CommandException(
-                        "This version is no longer in development. You need to refresh. " );
-            if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
-            LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
-            change = execute( command );
-            if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
-            history.recordDone( command );
-            afterDo( command, change );
-        } catch ( CommandException e ) {
-            LOG.warn( "Command failed: " + command, e );
-            change = new Change( Change.Type.NeedsRefresh );
-        }
+    public synchronized Change doCommand( Command command ) throws CommandException {
+        if ( !getPlan().isDevelopment() )
+            throw new CommandException(
+                    "This version is no longer in development. You need to refresh. " );
+        if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
+        LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
+        Change change = execute( command );
+        if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
+        history.recordDone( command );
+        afterExecution( command, change );
         return change;
     }
 
     /**
      * {@inheritDoc}
      */
-    public synchronized Change undo() {
-        Change change;
-        try {
-            Memento memento = history.getUndo();
-            if ( memento == null )
-                throw new CommandException( "Nothing can be undone right now." );
+    public synchronized Change undo() throws CommandException {
+        Memento memento = history.getUndo();
+        if ( memento == null )
+            throw new CommandException( "Nothing can be undone right now." );
 
-            Command undoCommand = memento.getCommand().getUndoCommand( this );
-            if ( undoCommand instanceof MultiCommand )
-                LOG.info( "*** START multicommand ***" );
-            LOG.info( "Undoing: " + undoCommand.toString() );
-            change = execute( undoCommand );
-            if ( undoCommand instanceof MultiCommand )
-                LOG.info( "*** END multicommand ***" );
+        Command undoCommand = memento.getCommand().getUndoCommand( this );
+        if ( undoCommand instanceof MultiCommand )
+            LOG.info( "*** START multicommand ***" );
+        LOG.info( "Undoing: " + undoCommand.toString() );
+        Change change = execute( undoCommand );
+        if ( undoCommand instanceof MultiCommand )
+            LOG.info( "*** END multicommand ***" );
 
-            change.setUndoing( true );
-            history.recordUndone( memento, undoCommand );
-            afterUndo( undoCommand, change );
-        } catch ( CommandException e ) {
-            change = new Change( Change.Type.NeedsRefresh );
-            LOG.warn( "Undo failed", e );
-        }
+        change.setUndoing( true );
+        history.recordUndone( memento, undoCommand );
+        afterExecution( undoCommand, change );
         return change;
     }
 
     /**
      * {@inheritDoc}
      */
-    public synchronized Change redo() {
-        Change change;
-        try {
-// Get memento of undoing command
-            Memento memento = history.getRedo();
-            if ( memento == null )
-                throw new CommandException( "Nothing can be redone right now." );
+    public synchronized Change redo() throws CommandException {
+        // Get memento of undoing command
+        Memento memento = history.getRedo();
+        if ( memento == null )
+            throw new CommandException( "Nothing can be redone right now." );
 
-            // undo the undoing
-            Command redoCommand = memento.getCommand().getUndoCommand( this );
-            LOG.info( "Redoing: {}", redoCommand.toString() );
-            change = execute( redoCommand );
-            change.setUndoing( true );
-            history.recordRedone( memento, redoCommand );
-            afterRedo( redoCommand, change );
-        } catch ( CommandException e ) {
-            change = new Change( Change.Type.NeedsRefresh );
-            LOG.warn( "Failed to redo", e );
-        }
+        // undo the undoing
+        Command redoCommand = memento.getCommand().getUndoCommand( this );
+        LOG.info( "Redoing: {}", redoCommand.toString() );
+        Change change = execute( redoCommand );
+        change.setUndoing( true );
+        history.recordRedone( memento, redoCommand );
+        afterExecution( redoCommand, change );
         return change;
     }
 
-    private void afterDo( Command command, Change change ) {
+    private void afterExecution( Command command, Change change ) {
         if ( !isReplaying() && command.isTop() && !change.isNone() ) {
             LOG.debug( "***After command" );
-            for ( CommandListener listener : listeners ) {
-                listener.commandDone( command, change );
-            }
-        }
-    }
 
-    private void afterUndo( Command command, Change change ) {
-        LOG.debug( "***After undo" );
-        for ( CommandListener listener : listeners ) {
-            listener.commandUndone( command );
-        }
-    }
-
-    private void afterRedo( Command command, Change change ) {
-        LOG.debug( "***After redo" );
-        for ( CommandListener listener : listeners ) {
-            listener.commandRedone( command );
+            // TODO Implement proper observers/listeners
+            planManager.onAfterCommand( getPlan(), command );
+            analyst.onAfterCommand( getPlan() );
         }
     }
 
@@ -409,7 +381,7 @@ public class DefaultCommander implements Commander {
 
         ModelObject mo = planDao.find( clazz, name.trim() );
         if ( mo == null || mo.isUnknown() || !mo.isUndefined()
-                || queryService.isReferenced( mo ) || mo.isImmutable() )
+                        || queryService.isReferenced( mo ) || mo.isImmutable() )
             return false;
 
         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );
@@ -553,11 +525,11 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public void replay( Journal journal ) {
+    public void replay( Journal journal ) throws CommandException {
         setReplaying( true );
         if ( !journal.isEmpty() )
-            for ( Command command : journal.getCommands() )
-                doCommand( command );
+            for ( JournalCommand command : journal.getCommands() )
+                doCommand( (Command) command );
         journal.reset();
         reset();
     }
@@ -591,8 +563,7 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public Exporter getExporter() {
-        ImportExportFactory factory = planManager.getImportExportFactory();
-        return factory.createExporter( planDao );
+        return importExportFactory.createExporter( planDao );
     }
 
     public PlanManager getPlanManager() {
@@ -601,8 +572,6 @@ public class DefaultCommander implements Commander {
 
     public void setPlanManager( PlanManager planManager ) {
         this.planManager = planManager;
-        if ( !listeners.contains( planManager ) )
-            listeners.add( planManager );
     }
 
     public PlanDao getPlanDao() {
@@ -624,49 +593,84 @@ public class DefaultCommander implements Commander {
                     !Plan.class.isAssignableFrom( clazz ) &&
                     !Segment.class.isAssignableFrom( clazz );
         } catch ( ClassNotFoundException e ) {
-            throw new IllegalArgumentException( "Class not found", e );
+            throw new IllegalArgumentException( "Class not found", e);
         }
     }
 
     public void initialize() {
-        replayJournal( planManager.getImportExportFactory() );
+        replayJournal();
         queryService.getAttachmentManager().removeUnattached( planDao );
         analyst.onStart();
     }
 
+    public ImportExportFactory getImportExportFactory() {
+        return importExportFactory;
+    }
+
+    public void setImportExportFactory( ImportExportFactory importExportFactory ) {
+        this.importExportFactory = importExportFactory;
+    }
+
     /**
      * Replay journaled commands for current plan.
-     *
-     * @param exportFactory
      */
-    public void replayJournal( ImportExportFactory exportFactory ) {
+    public void replayJournal() {
         Plan plan = planDao.getPlan();
 
         try {
             if ( plan.isDevelopment() ) {
                 replay( planDao.getJournal() );
                 LOG.info( "Replayed journal for plan {}", plan );
-                planDao.save( exportFactory.createExporter( planDao ) );
+
+                planDao.save( importExportFactory.createExporter( planDao ) );
             }
 
         } catch ( IOException e ) {
             LOG.error( MessageFormat.format( "Unable to save plan {0}", plan ), e );
+        } catch ( CommandException e ) {
+            LOG.error( MessageFormat.format( "Unable to replay journal for plan {0}", plan ), e );
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void addCommandListener( CommandListener listener ) {
-        listeners.add( listener );
+    /** {@inheritDoc} */
+    @SuppressWarnings( "unchecked" )
+    public void initPartFrom( Part part, Map<String, Object> state ) {
+        part.setDescription( (String) state.get( "description" ) );
+        part.setTask( (String) state.get( "task" ) );
+        part.setRepeating( (Boolean) state.get( "repeating" ) );
+        part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
+        part.setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
+        part.setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
+        part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
+        part.setCompletionTime( (Delay) state.get( "completionTime" ) );
+        part.setAttachments( new ArrayList<Attachment>( (List<Attachment>) state.get( "attachments" ) ) );
+        part.setGoals( new ArrayList<Goal>( (List<Goal>) state.get( "goals" ) ) );
+        if ( state.get( "initiatedEvent" ) != null )
+            part.setInitiatedEvent( queryService.findOrCreateType(
+                    Event.class,
+                    (String) state.get( "initiatedEvent" ) ) );
+        else
+            part.setInitiatedEvent( null );
+        if ( state.get( "actor" ) != null )
+            part.setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) ) ;
+        else
+            part.setActor( null );
+        if ( state.get( "role" ) != null )
+            part.setRole( queryService.retrieveEntity( Role.class, state, "role" ) );
+        else
+            part.setRole( null );
+        if ( state.get( "organization" ) != null )
+            part.setOrganization( queryService.retrieveEntity(
+                    Organization.class, state, "organization" ) );
+        else
+            part.setOrganization( null );
+        if ( state.get( "jurisdiction" ) != null )
+            part.setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
+        else
+            part.setJurisdiction( null );
+        if ( state.get( "location" ) != null )
+            part.setLocation( queryService.retrieveEntity( Place.class, state, "location" ) );
+        else
+            part.setLocation( null );
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void removeCommandListener( CommandListener listener ) {
-        listeners.remove( listener );
-    }
-
-
 }
