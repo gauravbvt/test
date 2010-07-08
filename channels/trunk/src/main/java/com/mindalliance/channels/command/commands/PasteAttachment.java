@@ -70,6 +70,7 @@ public class PasteAttachment extends AbstractCommand {
         }
         Attachment attachment = getAttachmentFromCopy( copy );
         mo.addAttachment( attachment );
+        describeTarget( mo );                
         return new Change( Change.Type.Updated, mo, "attachmentTickets" );
     }
 

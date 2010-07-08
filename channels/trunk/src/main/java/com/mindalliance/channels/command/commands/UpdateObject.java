@@ -97,7 +97,7 @@ public abstract class UpdateObject extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "updating " + getObjectTypeName( (String) get( "type" ) );
+        return "update " + getObjectTypeName( (String) get( "type" ) );
     }
 
     /**
@@ -155,7 +155,12 @@ public abstract class UpdateObject extends AbstractCommand {
             default:
                 throw new IllegalArgumentException( "Unknown action " + action() );
         }
-        if ( identifiable instanceof ModelObject ) queryService.update( (ModelObject) identifiable );
+        if ( identifiable instanceof ModelObject ) {
+            queryService.update( (ModelObject) identifiable );
+            describeTarget( (ModelObject) identifiable );            
+        } else {
+            setTargetDescription( identifiable.toString() );
+        }
         return new Change( Change.Type.Updated, identifiable, (String) get( "property" ) );
     }
 

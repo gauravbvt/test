@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -18,6 +19,7 @@ import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.segment.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.segment.menus.PartShowMenuPanel;
+import com.mindalliance.channels.pages.components.social.SocialPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -47,6 +49,14 @@ import java.util.Set;
  * Time: 8:52:20 AM
  */
 public class SegmentPanel extends AbstractCommandablePanel {
+   /**
+     * CSS id.
+     */
+    private static final String SEGMENT_PANEL_ID = "#contents";
+    /**
+     * CSS id.
+     */
+    private static final String SOCIAL_PANEL_ID = "#social";
     /**
      * Flow map panel DOM id.
      */
@@ -100,6 +110,12 @@ public class SegmentPanel extends AbstractCommandablePanel {
      * Receives flow panel.
      */
     private FlowListPanel receivesFlowPanel;
+
+    /**
+     * The social panel.
+     */
+    private SocialPanel socialPanel;
+
     /**
      * Width, height dimension contraints on the flow diagram.
      * In inches.
@@ -151,6 +167,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
         addPartPanel();
         addReceivesFlowPanel();
         addSendsFlowPanel();
+        addSocialPanel();
         adjustComponents();
     }
 
@@ -357,11 +374,18 @@ public class SegmentPanel extends AbstractCommandablePanel {
         update( target, change );
     }
 
+    private void addSocialPanel() {
+        socialPanel = new SocialPanel( "social" );
+        add( socialPanel );
+    }
+
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        resizeSocialPanel( target, change );
         boolean stopUpdates = false;
         if ( !change.isNone() ) {
             Identifiable identifiable = change.getSubject( getQueryService() );
@@ -416,6 +440,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        resizeSocialPanel( target, change );
         Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isModified()
                 || ( change.isDisplay()
@@ -441,6 +466,27 @@ public class SegmentPanel extends AbstractCommandablePanel {
             adjustComponents();
         }
     }
+
+    public void resizeSocialPanel( AjaxRequestTarget target, Change change ) {
+        if ( change.isUnknown() || change.getId() == Channels.SOCIAL_ID && change.isDisplay() ) {
+            String segmentPanelWidth;
+            String socialPanelWidth;
+            if ( getExpansions().contains( Channels.SOCIAL_ID ) ) {
+                segmentPanelWidth = "80%";
+                socialPanelWidth = "20%";
+            } else {
+                segmentPanelWidth = "100%";
+                socialPanelWidth = "0%";
+            }
+            final String script = "$(\"" + SEGMENT_PANEL_ID + "\")"
+                    + ".css(\"width\",\"" + segmentPanelWidth + "\");"
+                    + "$(\"" + SOCIAL_PANEL_ID + "\")"
+                    + ".css(\"width\",\"" + socialPanelWidth + "\");";
+            target.prependJavascript( script );
+            target.addComponent( flowMapDiagramPanel );
+        }
+    }
+
 
     private String[] getPartPanelSizes() {
         String[] sizes = new String[6];
@@ -578,5 +624,9 @@ public class SegmentPanel extends AbstractCommandablePanel {
         showingGoals = change.isForProperty( "showGoals" );
         addFlowDiagram();
         target.addComponent( flowMapDiagramPanel );
+    }
+
+    public void updateSocialPanel( AjaxRequestTarget target ) {
+        socialPanel.refresh(  target, new Change( Change.Type.Unknown) );
     }
 }

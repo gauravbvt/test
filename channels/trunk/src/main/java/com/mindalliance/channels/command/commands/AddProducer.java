@@ -41,6 +41,7 @@ public class AddProducer extends AbstractCommand {
         Plan plan = User.plan();
         PlanManager planManager = commander.getQueryService().getPlanManager();
         boolean produced = planManager.addProducer( producer, plan );
+        setTargetDescription( producer );
         if ( produced ) {
             commander.setResyncRequired();
             return new Change( Change.Type.Recomposed, plan );

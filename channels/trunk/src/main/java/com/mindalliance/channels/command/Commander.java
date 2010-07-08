@@ -366,9 +366,23 @@ public interface Commander {
     /**
      * Initialize a part from a preserved state.
      *
-     * @param part      a part
-     * @param state     a map
+     * @param part  a part
+     * @param state a map
      */
-    @SuppressWarnings( "unchecked" )
     void initPartFrom( Part part, Map<String, Object> state );
+
+    /**
+     * User logged out.
+     *
+     * @param username a string
+     */
+    void loggedOut( String username );
+
+    /**
+     * User logged in.
+     *
+     * @param username a string
+     */
+    void loggedIn( String username );
+
 }

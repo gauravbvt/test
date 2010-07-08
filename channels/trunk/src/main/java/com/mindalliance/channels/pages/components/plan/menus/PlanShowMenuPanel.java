@@ -6,6 +6,7 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.AdminPage;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
@@ -59,9 +60,31 @@ public class PlanShowMenuPanel extends MenuPanel {
     public List<Component> getMenuItems() {
         List<Component> menuItems = new ArrayList<Component>();
         final Plan plan = User.plan();
-        // Edit<->Hide
+        // Show <-> Hide social panel
+        if ( getExpansions().contains( Channels.SOCIAL_ID ) ) {
+            AjaxFallbackLink hideSocialLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Collapsed, Channels.SOCIAL_ID ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Hide planners" ),
+                    hideSocialLink ) );
+        } else {
+            AjaxFallbackLink showSocialLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.Expanded, Channels.SOCIAL_ID ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Planners" ),
+                    showSocialLink ) );
+        }
+        // Edit<->Hide about plan
         if ( getExpansions().contains( plan.getId() ) ) {
-            AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
+            AjaxFallbackLink editPlanLink = new AjaxFallbackLink( "link" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
                     update( target, new Change( Change.Type.Collapsed, plan ) );
@@ -70,7 +93,7 @@ public class PlanShowMenuPanel extends MenuPanel {
             menuItems.add( new LinkMenuItem(
                     "menuItem",
                     new Model<String>( "Hide about plan" ),
-                    planMapLink ) );
+                    editPlanLink ) );
         } else {
             AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
                 @Override

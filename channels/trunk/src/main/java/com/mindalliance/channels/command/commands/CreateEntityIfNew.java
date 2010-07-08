@@ -1,12 +1,12 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.query.QueryService;
 
 /**
  * Create an entity if it does not already exist.
@@ -53,6 +53,7 @@ public class CreateEntityIfNew extends AbstractCommand {
                 entity = queryService.safeFindOrCreateType( clazz, name, priorId );
             }
             set( "id", entity.getId() );
+            describeTarget( entity );                    
             return exists
                     ? new Change( Change.Type.None, entity )
                     : new Change( Change.Type.Added, entity );

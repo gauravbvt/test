@@ -1,13 +1,13 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +44,7 @@ public class RemoveIssue extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
+        describeTarget( issue );
         set( "modelObject", issue.getAbout().getId() );
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "description", issue.getDescription() );

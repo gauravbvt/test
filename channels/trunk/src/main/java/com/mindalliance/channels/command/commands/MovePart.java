@@ -54,6 +54,7 @@ public class MovePart extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Segment fromSegment = commander.resolve( Segment.class, (Long) get( "fromSegment" ) );
         Part part = (Part) fromSegment.getNode( (Long) get( "part" ) );
+        describeTarget( part );                
         Segment toSegment = commander.resolve( Segment.class, (Long) get( "toSegment" ) );
         assert !fromSegment.equals( toSegment );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
@@ -250,7 +251,6 @@ public class MovePart extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "unmove task" );
-        multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );

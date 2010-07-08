@@ -22,11 +22,39 @@ public interface Command extends JournalCommand {
     String getName();
 
     /**
+     * Get name of command being undone by this one (if any).
+     *
+     * @return a string or null
+     */
+    String getUndoes();
+    /**
+     * Set name of command being undone by this one.
+     *
+     * @param name a string
+     */
+    void setUndoes( String name );
+
+    /**
      * Get name of user who will/did execute this command.
      *
      * @return a string
      */
     String getUserName();
+
+    /**
+     * Get preserved description of actual target..
+     *
+     * @return a string
+     */
+    String getTargetDescription();
+
+    /**
+     * Set a preserved target description.
+     *
+     * @param subjectDescription a string
+     */
+    void setTargetDescription( String subjectDescription );
+
 
     /**
      * Get the command's arguments.
@@ -104,6 +132,7 @@ public interface Command extends JournalCommand {
 
     /**
      * Whether the command's execution should be remembered.
+     *
      * @return a boolean
      */
     boolean isMemorable();

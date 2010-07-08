@@ -23,6 +23,8 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.social.CommandListener;
+import com.mindalliance.channels.social.PresenceListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +78,9 @@ public class DefaultCommander implements Commander {
      */
     private boolean replaying;
 
-    /** The planDao (and therefore, plan) used by this commander. */
+    /**
+     * The planDao (and therefore, plan) used by this commander.
+     */
     private PlanDao planDao;
 
     private PlanManager planManager;
@@ -113,9 +117,34 @@ public class DefaultCommander implements Commander {
      * When timeouts were last checked.
      */
     private long whenLastCheckedForTimeouts = System.currentTimeMillis();
+    /**
+     * Presence listeners.
+     */
+    private List<PresenceListener> presenceListeners = new ArrayList<PresenceListener>();
+    /**
+     * Command listeners.
+     */
+    private List<CommandListener> commandListeners = new ArrayList<CommandListener>();
 
     //===============================================
     public DefaultCommander() {
+    }
+
+    public void setPresenceListeners( List<PresenceListener> presenceListeners ) {
+        this.presenceListeners = presenceListeners;
+    }
+
+    public void setCommandListeners( List<CommandListener> commandListeners ) {
+        this.commandListeners = commandListeners;
+    }
+
+    /**
+     * Add a presence listener.
+     *
+     * @param presenceListener a presence listener
+     */
+    public void addPresenceListener( PresenceListener presenceListener ) {
+        presenceListeners.add( presenceListener );
     }
 
     public void setAnalyst( Analyst analyst ) {
@@ -309,6 +338,11 @@ public class DefaultCommander implements Commander {
         if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
         history.recordDone( command );
         afterExecution( command, change );
+        if ( !isReplaying() && command.isTop() && !change.isNone() ) {
+            for ( CommandListener commandListener : commandListeners ) {
+                commandListener.commandDone( command, change );
+            }
+        }
         return change;
     }
 
@@ -331,6 +365,9 @@ public class DefaultCommander implements Commander {
         change.setUndoing( true );
         history.recordUndone( memento, undoCommand );
         afterExecution( undoCommand, change );
+        for ( CommandListener commandListener : commandListeners ) {
+            commandListener.commandUndone( undoCommand );
+        }
         return change;
     }
 
@@ -350,6 +387,9 @@ public class DefaultCommander implements Commander {
         change.setUndoing( true );
         history.recordRedone( memento, redoCommand );
         afterExecution( redoCommand, change );
+        for ( CommandListener commandListener : commandListeners ) {
+            commandListener.commandRedone( redoCommand );
+        }
         return change;
     }
 
@@ -381,7 +421,7 @@ public class DefaultCommander implements Commander {
 
         ModelObject mo = planDao.find( clazz, name.trim() );
         if ( mo == null || mo.isUnknown() || !mo.isUndefined()
-                        || queryService.isReferenced( mo ) || mo.isImmutable() )
+                || queryService.isReferenced( mo ) || mo.isImmutable() )
             return false;
 
         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );
@@ -449,28 +489,30 @@ public class DefaultCommander implements Commander {
         return history.getLastModifier();
     }
 
-    private void updateUserActive( String userName ) {
+    private synchronized void updateUserActive( String userName ) {
         whenLastActive.put( userName, System.currentTimeMillis() );
     }
 
     /**
      * {@inheritDoc}
      */
-    public void keepAlive( String userName, int refreshDelay ) {
-        if ( !userLives.containsKey( userName ) )
+    public synchronized void keepAlive( String userName, int refreshDelay ) {
+        if ( !userLives.containsKey( userName ) ) {
             LOG.info( "{} is planning", userName );
+        }
         userLives.put( userName, System.currentTimeMillis() + refreshDelay * 2 * 1000 );
     }
 
     /**
      * {@inheritDoc}
      */
-    public void processDeaths() {
+    public synchronized void processDeaths() {
         List<String> deads = new ArrayList<String>();
 
         long now = System.currentTimeMillis();
         for ( String userName : userLives.keySet() )
             if ( now > userLives.get( userName ) ) {
+                loggedOut( userName );
                 deads.add( userName );
                 LOG.info( "{} is done planning", userName );
                 lockManager.releaseAllLocks( userName );
@@ -478,6 +520,24 @@ public class DefaultCommander implements Commander {
 
         for ( String userName : deads )
             userLives.remove( userName );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized void loggedOut( String username ) {
+        for ( PresenceListener presenceListener : presenceListeners ) {
+            presenceListener.loggedOut( username );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized void loggedIn( String username ) {
+        for ( PresenceListener presenceListener : presenceListeners ) {
+            presenceListener.loggedIn( username );
+        }
     }
 
 
@@ -593,7 +653,7 @@ public class DefaultCommander implements Commander {
                     !Plan.class.isAssignableFrom( clazz ) &&
                     !Segment.class.isAssignableFrom( clazz );
         } catch ( ClassNotFoundException e ) {
-            throw new IllegalArgumentException( "Class not found", e);
+            throw new IllegalArgumentException( "Class not found", e );
         }
     }
 
@@ -632,7 +692,9 @@ public class DefaultCommander implements Commander {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings( "unchecked" )
     public void initPartFrom( Part part, Map<String, Object> state ) {
         part.setDescription( (String) state.get( "description" ) );
@@ -652,7 +714,7 @@ public class DefaultCommander implements Commander {
         else
             part.setInitiatedEvent( null );
         if ( state.get( "actor" ) != null )
-            part.setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) ) ;
+            part.setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) );
         else
             part.setActor( null );
         if ( state.get( "role" ) != null )

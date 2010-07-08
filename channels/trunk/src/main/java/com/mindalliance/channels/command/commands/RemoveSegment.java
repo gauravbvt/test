@@ -1,15 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -49,6 +49,7 @@ public class RemoveSegment extends AbstractCommand {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            describeTarget( segment );
             segment.setBeingDeleted( true );
             Exporter exporter = commander.getExporter();
             exporter.export( segment, bos );

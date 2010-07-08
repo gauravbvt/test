@@ -1,10 +1,10 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Segment;
 
@@ -57,16 +57,35 @@ public class PastePart extends AbstractCommand {
         }
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
-            multi = makeSubCommands( copy );
+            multi = makeSubCommands( copy, commander );
             set( "subCommands", multi );
         }
+        setTargetDescription( makeTargetDescription( copy, commander ) );
         // else this is a replay
         multi.execute( commander );
         return new Change( Change.Type.Recomposed, segment );
     }
 
     @SuppressWarnings( "unchecked" )
-    private MultiCommand makeSubCommands( Map<String, Object> copy ) {
+    private String makeTargetDescription( Map<String, Object> copy, Commander commander ) {
+        StringBuilder sb = new StringBuilder();
+        sb.append( '"' );
+        sb.append( ( (Map<String, Object>) copy.get( "partState" ) ).get( "task" ) );
+        sb.append( '"' );
+        try {
+            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+            sb.append( " in segment " );
+            sb.append( '"' );
+            sb.append( segment.getName() );
+            sb.append( '"' );
+        } catch ( CommandException e ) {
+            // do nothing
+        }
+        return sb.toString();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private MultiCommand makeSubCommands( Map<String, Object> copy, Commander commander ) {
         MultiCommand subCommands = new MultiCommand( "paste task - extra" );
         subCommands.setMemorable( false );
         Command addPart = new AddPart();
@@ -78,7 +97,7 @@ public class PastePart extends AbstractCommand {
         for ( Map<String, Object> needState : needStates ) {
             Command addNeed = new AddNeed();
             addNeed.set( "segment", get( "segment" ) );
-            addNeed.set("name", needState.get("name"));
+            addNeed.set( "name", needState.get( "name" ) );
             addNeed.set( "attributes", needState.get( "attributes" ) );
             subCommands.addCommand( addNeed );
             subCommands.addLink( addPart, "id", addNeed, "part" );
@@ -88,7 +107,7 @@ public class PastePart extends AbstractCommand {
         for ( Map<String, Object> capabilityState : capabilityStates ) {
             Command addCapability = new AddCapability();
             addCapability.set( "segment", get( "segment" ) );
-            addCapability.set("name", capabilityState.get("name"));
+            addCapability.set( "name", capabilityState.get( "name" ) );
             addCapability.set( "attributes", capabilityState.get( "attributes" ) );
             subCommands.addCommand( addCapability );
             subCommands.addLink( addPart, "id", addCapability, "part" );
@@ -109,7 +128,6 @@ public class PastePart extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "unpaste part" );
-        multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         multi.addCommand( subCommands.getUndoCommand( commander ) );
         return multi;

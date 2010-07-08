@@ -1,27 +1,27 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.Delay;
-import com.mindalliance.channels.model.Attachment;
-import com.mindalliance.channels.model.Goal;
-import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Goal;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Command to add a new part to a plan segment.
@@ -72,6 +72,7 @@ public class AddPart extends AbstractCommand {
         if ( partState != null ) {
             initFromMap( part, partState, commander.getQueryService() );
         }
+        describeTarget( part );
         return new Change( Change.Type.Added, part );
     }
 

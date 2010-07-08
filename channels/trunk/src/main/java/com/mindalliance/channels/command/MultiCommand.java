@@ -32,10 +32,6 @@ public class MultiCommand extends AbstractCommand {
      */
     private String name = "multiple commands";
     /**
-     * Name of what this command undoes.
-     */
-    private String undoes = "";
-    /**
      * A list of commands.
      */
     private List<Command> commands = new ArrayList<Command>();
@@ -144,14 +140,6 @@ public class MultiCommand extends AbstractCommand {
         this.name = name;
     }
 
-    public String getUndoes() {
-        return undoes;
-    }
-
-    public void setUndoes( String undoes ) {
-        this.undoes = undoes;
-    }
-
     public List<Command> getCommands() {
         return commands;
     }
@@ -199,7 +187,6 @@ public class MultiCommand extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand undoMulti = new MultiCommand( getUndoes() );
-        undoMulti.setUndoes( getName() );
         // Add undoes of executed commands in reverse order of their execution.
         for ( int i = executed.size() - 1; i >= 0; i-- ) {
             Command command = executed.get( i );

@@ -38,6 +38,7 @@ public class RemoveProducer extends AbstractCommand {
         String producer = (String) get( "producer" );
         Plan plan = User.plan();
         plan.removeProducer( producer );
+        setTargetDescription( producer );
         return new Change( Change.Type.Updated, plan, "producers" );
     }
 

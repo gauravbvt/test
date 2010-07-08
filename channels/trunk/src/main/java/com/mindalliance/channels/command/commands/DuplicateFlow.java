@@ -1,14 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 
 /**
@@ -49,6 +49,7 @@ public class DuplicateFlow extends AbstractCommand {
             boolean isSend = (Boolean) get( "send" );
             duplicate = duplicate( commander.getQueryService(),
                                    flow, isSend, (Long) get( "duplicate" ) );
+            describeTarget( duplicate );                    
             set( "duplicate", duplicate.getId() );
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {

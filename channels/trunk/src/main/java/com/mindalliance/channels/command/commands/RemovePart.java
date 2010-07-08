@@ -68,6 +68,7 @@ public class RemovePart extends AbstractCommand {
         QueryService queryService = commander.getQueryService();
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Part part = (Part) segment.getNode( (Long) get( "part" ) );
+        describeTarget( part );
         set( "partState", part.mapState() );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
@@ -98,8 +99,7 @@ public class RemovePart extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "add task" );
-        multi.setUndoes( getName() );
+        MultiCommand multi = new MultiCommand( "add new task" );
         // Reconstitute part
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         AddPart addPart = new AddPart( segment );

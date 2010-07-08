@@ -1,14 +1,15 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.Mappable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.InternalFlow;
-import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
@@ -62,9 +63,19 @@ public abstract class AbstractCommand implements Command {
      */
     private Command undoCommand;
     /**
+     * Name of what this command undoes.
+     */
+    private String undoes = "";
+    /**
      * Whether this is a top-most command (not some other command's sub-command).
      */
     private boolean top = true;
+
+    /**
+     * A preserved description for the actual subject of the change.
+     */
+    private String targetDescription = "";
+    
 
     public AbstractCommand() {
         userName = User.current().getUsername();
@@ -77,6 +88,22 @@ public abstract class AbstractCommand implements Command {
     // For testing only
     public void setUserName( String userName ) {
         this.userName = userName;
+    }
+
+    public String getTargetDescription() {
+        return targetDescription;
+    }
+
+    public void setTargetDescription( String subjectDescription ) {
+        this.targetDescription = subjectDescription;
+    }
+
+    public String getUndoes() {
+        return undoes;
+    }
+
+    public void setUndoes( String undoes ) {
+        this.undoes = undoes;
     }
 
     /**
@@ -257,9 +284,11 @@ public abstract class AbstractCommand implements Command {
         if ( undoCommand == null )
             try {
                 Command undo = makeUndoCommand( commander );
+                undo.setUndoes( getName() );
                 undo.setMemorable( isMemorable() );
                 undo.setTop( isTop() );
                 undoCommand = undo;
+                undoCommand.setTargetDescription( getTargetDescription() );
             }
             catch ( RuntimeException e ) {
                 LOG.warn( "Runtime exception while making undo command.", e );
@@ -463,4 +492,22 @@ public abstract class AbstractCommand implements Command {
             throw new CommandException( "Can't find flow", e );
         }
     }
+
+    /**
+     * Set the description of the actual target of the command.
+     * @param modelObject  a model object
+     */
+    protected void describeTarget( ModelObject modelObject ) {
+        String description = "";
+        if ( modelObject != null ) {
+            description = "\"" + modelObject.getLabel() + "\"";
+            if ( modelObject instanceof SegmentObject ) {
+                description += " in segment \"" + ( (SegmentObject) modelObject ).getSegment().getLabel() + "\"";
+            }
+        }
+        setTargetDescription( description );
+    }
+
+
+
 }

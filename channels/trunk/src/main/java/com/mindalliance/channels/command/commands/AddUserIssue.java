@@ -54,6 +54,7 @@ public class AddUserIssue extends AbstractCommand {
         }
         queryService.add( issue, priorId );
         set( "issue", issue.getId() );
+        describeTarget( issue );                
         return new Change( Change.Type.Added, issue );
 
     }

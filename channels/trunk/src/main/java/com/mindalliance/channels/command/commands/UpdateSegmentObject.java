@@ -1,10 +1,10 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 
@@ -42,7 +42,7 @@ public class UpdateSegmentObject extends UpdateObject {
         if ( type.contains( "flow" ) )
             return "flow";
         else
-            return "part";
+            return super.getObjectTypeName( type );
     }
 
     /**

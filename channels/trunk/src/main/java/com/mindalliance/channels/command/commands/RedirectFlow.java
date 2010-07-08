@@ -1,15 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 
 /**
  * Redirect a flow to a new target or from a new source.
@@ -58,6 +58,7 @@ public class RedirectFlow extends AbstractCommand {
         // else command replay
         multi.execute( commander );
         Flow newFlow = resolveFlow( (Long) get( "newFlow" ), segment );
+        describeTarget( newFlow );
         return new Change( Change.Type.Recomposed, newFlow );
     }
 
@@ -84,7 +85,6 @@ public class RedirectFlow extends AbstractCommand {
 
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "unredirect" );
-        multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );

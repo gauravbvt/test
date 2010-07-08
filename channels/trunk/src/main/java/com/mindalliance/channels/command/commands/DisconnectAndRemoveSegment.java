@@ -43,6 +43,7 @@ public class DisconnectAndRemoveSegment extends AbstractCommand {
 
     public Change execute( Commander commander ) throws CommandException {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+        describeTarget( segment );                
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
             multi = new MultiCommand( "remove plan segment - extra" );
@@ -62,7 +63,6 @@ public class DisconnectAndRemoveSegment extends AbstractCommand {
 
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "restore plan segment" );
-        multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );

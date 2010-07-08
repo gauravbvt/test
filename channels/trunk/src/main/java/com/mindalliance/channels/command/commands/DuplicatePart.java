@@ -1,14 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.Map;
 
@@ -52,6 +52,7 @@ public class DuplicatePart extends AbstractCommand {
             duplicate = queryService.createPart( segment, priorId );
             commander.initPartFrom( duplicate, partState );
             set( "duplicate", duplicate.getId() );
+            describeTarget( duplicate );                    
             return new Change( Change.Type.Added, duplicate );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

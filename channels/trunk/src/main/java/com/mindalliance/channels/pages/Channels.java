@@ -96,6 +96,11 @@ public class Channels extends WebApplication
     private ApplicationContext applicationContext;
 
     /**
+     * Expansion id for social panel.
+     */
+    public static final long SOCIAL_ID = -1;
+    
+    /**
      * Default Constructor.
      */
     public Channels() {

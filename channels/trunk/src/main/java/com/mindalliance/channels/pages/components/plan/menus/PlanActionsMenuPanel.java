@@ -94,6 +94,8 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         // Logout
         ConfirmedAjaxFallbackLink logoutLink = new ConfirmedAjaxFallbackLink( "link", "Log out?" ) {
             public void onClick( AjaxRequestTarget target ) {
+                String username = User.current().getUsername();
+                getCommander().loggedOut( username );
                 getRequestCycle().setRequestTarget( new RedirectRequestTarget( "/logout" ) );
             }
         };

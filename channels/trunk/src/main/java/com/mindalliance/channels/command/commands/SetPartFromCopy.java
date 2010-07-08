@@ -68,6 +68,7 @@ public class SetPartFromCopy extends AbstractCommand {
         } // TODO - attachment TICKETS are also copied - problem
         commander.initPartFrom( part, (Map<String, Object>) copy.get( "partState" ) );
         multi.execute( commander );
+        describeTarget( part );        
         return new Change( Change.Type.Recomposed, segment );
     }
 

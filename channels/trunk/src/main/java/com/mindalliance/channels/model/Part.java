@@ -2,8 +2,8 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -108,6 +108,14 @@ public class Part extends Node implements GeoLocatable {
 
     public Part() {
         adjustName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getLabel() {
+        return getTitle();
     }
 
     /**

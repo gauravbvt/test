@@ -47,6 +47,13 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
     public MenuPanel(
             String s,
             String title,
+            IModel<? extends Identifiable> model) {
+        this(s,title,model, null);
+    }
+
+    public MenuPanel(
+            String s,
+            String title,
             IModel<? extends Identifiable> model,
             Set<Long> expansions ) {
         super( s, model, expansions );
@@ -59,7 +66,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      */
     protected void init() {
         setOutputMarkupId( true );
-        add( new Label( "title", new Model<String>( title ) ) );
+        add( new Label( "menu-title", new Model<String>( title ) ) );
         ListView<Component> menuItems = new ListView<Component>(
                 "items",
                 new PropertyModel<List<Component>>( this, "menuItems" ) ) {

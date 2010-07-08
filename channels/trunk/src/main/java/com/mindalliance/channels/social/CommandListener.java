@@ -1,4 +1,7 @@
-package com.mindalliance.channels.command;
+package com.mindalliance.channels.social;
+
+import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
 
 /**
  * A listener to command execution.

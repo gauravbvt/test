@@ -283,15 +283,6 @@ public class TransmissionMedium extends ModelEntity {
             security.add( classification );
     }
 
-    /**
-     * Get the label.
-     *
-     * @return a string
-     */
-    public String getLabel() {
-        return getName();
-    }
-
 
     /**
      * Check if an address is valid if set.

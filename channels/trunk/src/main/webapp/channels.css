@@ -30,7 +30,7 @@ body.profile {
     top: 5em;
     bottom: 5px;
     left: 0;
-    width: 100%;
+    width: 80%;
     overflow: hidden;
     padding-bottom: 5px;
 }
@@ -1237,4 +1237,20 @@ div.section-content > div.flow > div > span.pointer {
 
 div.section-content > div.flow > div > img {
 	padding-right:5px;
+}
+
+/* ---- social --------*/
+
+#social {
+    position: absolute;
+    top: 5em;
+    bottom: 5px;
+    right: 0;
+    width: 20%;
+    overflow: hidden;
+    padding-bottom: 5px;
+}
+.social-list span.menubar {
+    float: right;
+    position: static;;
 }

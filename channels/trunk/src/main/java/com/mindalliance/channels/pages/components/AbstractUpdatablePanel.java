@@ -206,6 +206,13 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * {@inheritDoc}
      */
+    public void refresh( AjaxRequestTarget target, Change change ) {
+        refresh( target, change, new ArrayList<Updatable>() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         refresh( target, change, updated, null );
     }

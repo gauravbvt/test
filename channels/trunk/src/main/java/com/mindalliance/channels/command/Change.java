@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
  * Time: 8:09:56 AM
  */
 public class Change implements Serializable {
-
     /**
      * A kind of change.
      */
@@ -111,6 +110,10 @@ public class Change implements Serializable {
      */
     private Type type = Type.Unknown;
     /**
+     * An id not attached to a model object.
+     */
+    private Long id = null;
+    /**
      * Reference to the changed model object.
      */
     private ModelObjectRef identifiableRef;
@@ -142,6 +145,11 @@ public class Change implements Serializable {
         this.type = type;
         identifiableRef = new ModelObjectRef( subject );
         this.property = property;
+    }
+
+    public Change( Type type, Long id ) {
+        this.type = type;
+        this.id = id;
     }
 
     public Identifiable getSubject( QueryService queryService ) {
@@ -194,12 +202,20 @@ public class Change implements Serializable {
         return identifiableRef != null && identifiableRef.isForInstanceOf( clazz );
     }
 
+    public void setId( Long id ) {
+        this.id = id;
+    }
+
     /**
      * Get id of what has changed.
      * @return  a long
      */
     public long  getId() {
-        return identifiableRef == null ? Long.MIN_VALUE : identifiableRef.getId();
+        if ( id == null ) {
+            return identifiableRef == null ? Long.MIN_VALUE : identifiableRef.getId();
+        } else {
+            return id;
+        }
     }
 
     /**
@@ -216,6 +232,7 @@ public class Change implements Serializable {
      *
      * @param queryService a queryService
      * @return an object
+     * @throws com.mindalliance.channels.model.NotFoundException if fails to retrieve property value
      */
     public Object getChangedPropertyValue( QueryService queryService ) throws NotFoundException {
         Object value = null;

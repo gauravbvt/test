@@ -1,14 +1,12 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
@@ -59,6 +57,7 @@ public class AddCapability extends AbstractCommand {
                     queryService.createConnector( segment, priorConnectorId ),
                     (String) get( "name" ),
                     priorFlowId );
+            describeTarget( flow );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 ChannelsUtils.initialize( flow, flowAttributes );
@@ -85,7 +84,7 @@ public class AddCapability extends AbstractCommand {
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             Flow flow = segment.findFlow( (Long) get( "flow" ) );
-            return new RemoveCapability( flow );
+             return new RemoveCapability( flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
         }

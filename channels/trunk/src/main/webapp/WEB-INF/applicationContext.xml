@@ -209,6 +209,16 @@ CONFIGURATION NOTES:
         <property name="queryService" ref="queryService"/>
         <property name="importExportFactory" ref="importExportFactory"/>
         <property name="timeout" value="300"/>
+        <property name="presenceListeners">
+            <list value-type="com.mindalliance.channels.social.PresenceListener">
+                <ref bean="planningEventService"/>
+            </list>
+        </property>
+        <property name="commandListeners">
+            <list value-type="com.mindalliance.channels.social.CommandListener">
+                <ref bean="planningEventService"/>
+            </list>
+        </property>
     </bean>
 
     <!-- =========================== Transmission Media -->
@@ -336,6 +346,16 @@ CONFIGURATION NOTES:
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Broadcast"/>
+    </bean>
+
+    <!-- Collaboration services -->
+
+    <bean id="plannerMessagingService" class="com.mindalliance.channels.social.DefaultPlannerMessagingService">
+        <property name="odbDir" value="${channels.home}${file.separator}data"/>
+    </bean>
+
+    <bean id="planningEventService" class="com.mindalliance.channels.social.DefaultPlanningEventService">
+        <property name="odbDir" value="${channels.home}${file.separator}data"/>
     </bean>
 
 </beans>

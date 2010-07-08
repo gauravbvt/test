@@ -6,9 +6,9 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.ChannelsUtils;
@@ -90,6 +90,7 @@ public class SatisfyNeed extends AbstractCommand {
                 fromNode = capability.getTarget();
                 toNode = need.getTarget();
             }
+            describeTarget( toNode );            
             Long priorId = (Long) get( "satisfy" );
             String name = need.getName().isEmpty() ? capability.getName() : need.getName();
             newFlow = queryService.connect( fromNode, toNode, name, priorId );
@@ -134,7 +135,6 @@ public class SatisfyNeed extends AbstractCommand {
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         try {
             MultiCommand multi = new MultiCommand( "unsatisfy need" );
-            multi.setUndoes( getName() );
             MultiCommand subCommands = (MultiCommand) get( "subCommands" );
             subCommands.setMemorable( false );
             multi.addCommand( subCommands.getUndoCommand( commander ) );
