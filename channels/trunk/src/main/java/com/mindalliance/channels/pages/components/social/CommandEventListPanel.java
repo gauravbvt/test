@@ -36,11 +36,11 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
     @SpringBean
     private PlanningEventService planningEventService;
 
-    private static final int A_FEW = 10;
-    private static final int MORE = 10;
-    private int numberToShow;
+    private static final int A_FEW = 7;
+    private static final int MORE = 7;
+    private int numberToShow = A_FEW;
     private boolean othersOnly = true;
-
+    private boolean allShown;
     private WebMarkupContainer planningEventsContainer;
 
     private WebMarkupContainer noCommandContainer;
@@ -55,7 +55,6 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        numberToShow = A_FEW;
         addOthersOnly();
         planningEventsContainer = new WebMarkupContainer( "planningEventsContainer" );
         planningEventsContainer.setOutputMarkupId( true );
@@ -91,7 +90,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
         List<CommandEvent> commandEvents = getCommandEvents();
         makeVisible( noCommandContainer, commandEvents.isEmpty() );
         makeVisible( planningEventsContainer, !commandEvents.isEmpty() );
-        showMore.setEnabled( commandEvents.size() == A_FEW );
+        showMore.setEnabled( !allShown );
         showAFew.setEnabled( commandEvents.size() > A_FEW );
     }
 
@@ -150,9 +149,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
                     commandEvents.add( commandEvent );
             }
         }
-        if ( !iterator.hasNext() ) {
-            numberToShow = A_FEW;
-        }
+        allShown = !iterator.hasNext();
         Collections.reverse( commandEvents );
         return commandEvents;
     }
