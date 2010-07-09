@@ -16,8 +16,9 @@ public interface PlannerMessagingService {
 
     PlannerMessage getMessage( String messageId );
 
-    Iterator<PlannerMessage> getMessages( );
+    Iterator<PlannerMessage> getReceivedMessages( );
     
     void deleteMessage( String messageId );
 
+    Iterator<PlannerMessage> getSentMessages();
 }

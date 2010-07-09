@@ -54,6 +54,8 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
     private static final User ALL = new User();
     private int numberToShow = A_FEW;
     private boolean privateOnly = false;
+    private boolean showSent = false;
+    private boolean showReceived = true;
     private boolean allShown;
     private WebMarkupContainer plannerMessagesContainer;
     private User newMessageRecipient = ALL;
@@ -65,6 +67,8 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
     private Updatable updatable;
     private WebMarkupContainer newMessageContainer;
     private WebMarkupContainer newMessageAboutContainer;
+    private CheckBox showSentCheckBox;
+    private CheckBox showReceivedCheckBox;
 
     public PlannerMessageListPanel( String id, Updatable updatable ) {
         super( id );
@@ -74,6 +78,8 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
 
     private void init() {
         addPrivateOnly();
+        addShowSent();
+        addShowReceived();
         plannerMessagesContainer = new WebMarkupContainer( "plannerMessagesContainer" );
         plannerMessagesContainer.setOutputMarkupId( true );
         add( plannerMessagesContainer );
@@ -94,6 +100,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
                 PlannerMessagePanel plannerMessagePanel = new PlannerMessagePanel(
                         "plannerMessage",
                         new Model<PlannerMessage>( plannerMessage ),
+                        isShowReceived(),
                         updatable );
                 item.add( plannerMessagePanel );
             }
@@ -124,6 +131,34 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
         } );
         add( privateOnlyCheckBox );
 
+    }
+
+    private void addShowSent() {
+        showSentCheckBox = new CheckBox(
+                "sent",
+                new PropertyModel<Boolean>( this, "showSent" ) );
+        showSentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addPlannerMessages();
+                target.addComponent( showReceivedCheckBox ) ;
+                adjustComponents( target );
+            }
+        } );
+        add( showSentCheckBox );
+    }
+
+    private void addShowReceived() {
+        showReceivedCheckBox = new CheckBox(
+                "received",
+                new PropertyModel<Boolean>( this, "showReceived" ) );
+        showReceivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addPlannerMessages();
+                target.addComponent( showSentCheckBox ) ;
+                adjustComponents( target );
+            }
+        } );
+        add( showReceivedCheckBox );
     }
 
     private void addShowMore() {
@@ -312,7 +347,12 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
 
     public List<PlannerMessage> getPlannerMessages() {
         List<PlannerMessage> plannerMessages = new ArrayList<PlannerMessage>();
-        Iterator<PlannerMessage> iterator = plannerMessagingService.getMessages();
+        Iterator<PlannerMessage> iterator;
+        if ( isShowReceived() ) {
+            iterator = plannerMessagingService.getReceivedMessages();
+        } else {
+             iterator = plannerMessagingService.getSentMessages();
+        }
         while ( iterator.hasNext() && plannerMessages.size() < numberToShow ) {
             PlannerMessage plannerMessage = iterator.next();
             if ( plannerMessage != null ) {
@@ -352,5 +392,23 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
 
     public void setNewMessageText( String newMessageText ) {
         this.newMessageText = newMessageText;
+    }
+
+    public boolean isShowReceived() {
+        return showReceived;
+    }
+
+    public void setShowReceived( boolean showReceived ) {
+        this.showReceived = showReceived;
+        showSent = ! showReceived;
+    }
+
+    public boolean isShowSent() {
+        return showSent;
+    }
+
+    public void setShowSent( boolean showSent ) {
+        this.showSent = showSent;
+        showReceived = !showSent;
     }
 }

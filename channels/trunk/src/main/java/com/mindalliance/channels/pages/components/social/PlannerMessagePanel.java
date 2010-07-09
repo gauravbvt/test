@@ -19,11 +19,32 @@ import org.apache.wicket.model.Model;
  */
 public class PlannerMessagePanel extends AbstractSocialEventPanel {
     private IModel<PlannerMessage> plannerMessageModel;
+    private boolean showReceived;
 
-    public PlannerMessagePanel( String id, IModel<PlannerMessage> plannerMessageModel, Updatable updatable ) {
-        super( id, plannerMessageModel.getObject().getFromUsername(), updatable );
+    public PlannerMessagePanel(
+            String id,
+            IModel<PlannerMessage> plannerMessageModel,
+            boolean showReceived,
+            Updatable updatable ) {
+        super( id,
+                getInvolvement( showReceived ),
+                getMessageUserName( showReceived, plannerMessageModel),
+                updatable );
         this.plannerMessageModel = plannerMessageModel;
+        this.showReceived = showReceived;
         init();
+    }
+
+    private static String getInvolvement(boolean showReceived) {
+        return showReceived ? "From" : "To";
+    }
+
+    private static String getMessageUserName(
+            boolean showReceived,
+            IModel<PlannerMessage> plannerMessageModel) {
+        return showReceived
+                ? plannerMessageModel.getObject().getFromUsername()
+                : plannerMessageModel.getObject().getToUsername();
     }
 
 

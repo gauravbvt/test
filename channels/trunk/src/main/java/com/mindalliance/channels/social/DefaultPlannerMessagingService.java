@@ -71,7 +71,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                     PlannerMessage.class,
                     Where.and()
                             .add( Where.equal( "messageId", messageId ) )
-                            .add( visibilityQuery() ) );
+                            .add( receivedQuery() ) );
             Objects<PlannerMessage> results;
             try {
                 results = odb.getObjects( query );
@@ -90,7 +90,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         }
     }
 
-    private ComposedExpression visibilityQuery() {
+    private ComposedExpression receivedQuery() {
         return Where.and()
                 .add( Where.equal( "planId", getPlanId() ) )
                 .add(
@@ -100,21 +100,27 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                 );
     }
 
-    public synchronized Iterator<PlannerMessage> getMessages() {
+    private ComposedExpression sentQuery() {
+        return Where.and()
+                .add( Where.equal( "planId", getPlanId() ) )
+                .add( Where.equal( "fromUsername", getUsername() ) );
+    }
+
+    public synchronized Iterator<PlannerMessage> getReceivedMessages() {
         ODB odb = null;
         try {
             odb = getOdb();
             Iterator<PlannerMessage> messages;
             IQuery query = new CriteriaQuery(
                     PlannerMessage.class,
-                    visibilityQuery() );
+                    receivedQuery() );
             query.orderByDesc( "date" );
             Objects<PlannerMessage> results;
             try {
                 results = odb.getObjects( query );
                 messages = results.iterator();
             } catch ( Exception e ) {
-                LOG.warn( "Failed to query for planning events", e );
+                LOG.warn( "Failed to query for received messages", e );
                 messages = new ArrayList<PlannerMessage>().iterator();
             }
             return messages;
@@ -153,6 +159,30 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
             }
         } else {
             LOG.warn( "Failed to delete planner message " + messageId );
+        }
+    }
+
+    public Iterator<PlannerMessage> getSentMessages() {
+        ODB odb = null;
+        try {
+            odb = getOdb();
+            Iterator<PlannerMessage> messages;
+            IQuery query = new CriteriaQuery(
+                    PlannerMessage.class,
+                    sentQuery() );
+            query.orderByDesc( "date" );
+            Objects<PlannerMessage> results;
+            try {
+                results = odb.getObjects( query );
+                messages = results.iterator();
+            } catch ( Exception e ) {
+                LOG.warn( "Failed to query for sent messages", e );
+                messages = new ArrayList<PlannerMessage>().iterator();
+            }
+            return messages;
+        } finally {
+            if ( odb != null && !odb.isClosed() )
+                odb.close();
         }
     }
 

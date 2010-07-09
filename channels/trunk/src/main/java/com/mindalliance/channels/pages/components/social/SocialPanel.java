@@ -109,15 +109,17 @@ public class SocialPanel extends AbstractUpdatablePanel {
     public void update( AjaxRequestTarget target, Object object, String action ) {
         if ( object instanceof String ) {
             if ( action.equals( SEND_MESSAGE ) ) {
-                tabbedPanel.setSelectedTab( 2 );
+                if ( tabbedPanel.getSelectedTab() != 2 ) {
+                    tabbedPanel.setSelectedTab( 2 );
+                    target.addComponent( tabbedPanel );
+                }
                 plannerMessageListPanel.newMessage( (String) object, target );
-                target.addComponent( tabbedPanel );
             }
         }
     }
 
     public void newMessage( AjaxRequestTarget target, Change change ) {
-        ModelObject about = (ModelObject)change.getSubject( getQueryService() );
+        ModelObject about = (ModelObject) change.getSubject( getQueryService() );
         tabbedPanel.setSelectedTab( 2 );
         plannerMessageListPanel.newMessage( "", about, target );
         target.addComponent( tabbedPanel );

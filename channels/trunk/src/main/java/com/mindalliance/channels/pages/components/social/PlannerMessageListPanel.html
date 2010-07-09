@@ -7,7 +7,9 @@
         lang="en">
 <body>
 <wicket:panel>
-    <input wicket:id="privateOnly" type="checkbox"/> Only show private messages
+    Show <input wicket:id="privateOnly" type="checkbox"/> only private
+    <input wicket:id="sent" type="checkbox"/> sent
+    <input wicket:id="received" type="checkbox"/> received messages
     <div wicket:id="plannerMessagesContainer"  class="social-list">
         <span wicket:id="plannerMessages">
             <div wicket:id="plannerMessage">[planner message panel]</div>

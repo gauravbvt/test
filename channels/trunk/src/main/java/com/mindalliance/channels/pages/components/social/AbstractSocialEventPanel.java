@@ -35,11 +35,17 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     @SpringBean
     private PlanningEventService planningEventService;
 
+    private String involvement;
     private String username;
     private Updatable updatable;
 
     public AbstractSocialEventPanel( String id, String username, Updatable updatable ) {
+        this( id, "", username, updatable );
+    }
+
+    public AbstractSocialEventPanel( String id, String involvement, String username, Updatable updatable ) {
         super( id );
+        this.involvement = involvement;
         this.username = username;
         this.updatable = updatable;
     }
@@ -55,24 +61,31 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     protected void init() {
         WebMarkupContainer socialItemContainer = new WebMarkupContainer( "socialItem" );
         String cssClasses = getCssClass();
-        if ( username.equals( User.current().getUsername() ) ) {
+        if ( getUsername() != null && getUsername().equals( User.current().getUsername() ) ) {
             cssClasses += " self";
         }
         socialItemContainer.add( new AttributeModifier( "class", true, new Model<String>( cssClasses ) ) );
         add( socialItemContainer );
         addMoreMenu( socialItemContainer );
         addPhoto( socialItemContainer );
+        addInvolvement( socialItemContainer );
         addName( socialItemContainer );
         addJobTitles( socialItemContainer );
         addTime( socialItemContainer );
         moreInit( socialItemContainer );
     }
 
+    private void addInvolvement( WebMarkupContainer socialItemContainer ) {
+        Label involvementLabel = new Label( "involvement", involvement );
+        involvementLabel.setVisible( !involvement.isEmpty() );
+        socialItemContainer.add( involvementLabel );
+    }
+
     private void addMoreMenu( WebMarkupContainer socialItemContainer ) {
         SocialItemMenuPanel menu = new SocialItemMenuPanel(
                 "menu",
                 new PropertyModel<Participation>( this, "participation" ),
-                username,
+                getUsername(),
                 updatable );
         socialItemContainer.add( menu );
     }
@@ -110,7 +123,10 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     public String getUserFullName() {
-        return queryService.findUserFullName( getUsername() );
+        if ( getUsername() == null )
+            return "All";
+        else
+            return queryService.findUserFullName( getUsername() );
     }
 
     public String getJobTitles() {
