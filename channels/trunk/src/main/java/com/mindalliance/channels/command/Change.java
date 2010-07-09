@@ -93,6 +93,10 @@ public class Change implements Serializable {
          */
         Unexplained,
         /**
+         * Communicated.
+         */
+        Communicated,
+        /**
          * Change failed because refresh needed.
          */
         NeedsRefresh
@@ -208,9 +212,10 @@ public class Change implements Serializable {
 
     /**
      * Get id of what has changed.
-     * @return  a long
+     *
+     * @return a long
      */
-    public long  getId() {
+    public long getId() {
         if ( id == null ) {
             return identifiableRef == null ? Long.MIN_VALUE : identifiableRef.getId();
         } else {
@@ -220,7 +225,8 @@ public class Change implements Serializable {
 
     /**
      * Get name of class of what changed.
-     * @return  a string
+     *
+     * @return a string
      */
     public String getClassName() {
         return identifiableRef != null ? identifiableRef.getClassName() : null;
@@ -232,7 +238,8 @@ public class Change implements Serializable {
      *
      * @param queryService a queryService
      * @return an object
-     * @throws com.mindalliance.channels.model.NotFoundException if fails to retrieve property value
+     * @throws com.mindalliance.channels.model.NotFoundException
+     *          if fails to retrieve property value
      */
     public Object getChangedPropertyValue( QueryService queryService ) throws NotFoundException {
         Object value = null;
@@ -465,7 +472,8 @@ public class Change implements Serializable {
 
     /**
      * Type is explained.
-     * @return  a boolean
+     *
+     * @return a boolean
      */
     public boolean isExplained() {
         return type == Type.Explained;
@@ -473,15 +481,26 @@ public class Change implements Serializable {
 
     /**
      * Type is unexplained.
-     * @return  a boolean
+     *
+     * @return a boolean
      */
     public boolean isUnexplained() {
         return type == Type.Unexplained;
     }
 
     /**
+     * Type is communicated.
+     *
+     * @return a boolean
+     */
+    public boolean isCommunicated() {
+        return type == Type.Communicated;
+    }
+
+    /**
      * Type is needs refresh.
-     * @return  a boolean
+     *
+     * @return a boolean
      */
     public boolean isRefreshNeeded() {
         return type == Type.NeedsRefresh;

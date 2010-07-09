@@ -47,8 +47,8 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
     public MenuPanel(
             String s,
             String title,
-            IModel<? extends Identifiable> model) {
-        this(s,title,model, null);
+            IModel<? extends Identifiable> model ) {
+        this( s, title, model, null );
     }
 
     public MenuPanel(
@@ -173,6 +173,27 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         return menuItem;
     }
 
+    protected Component getSendMessageMenuItem( String id ) {
+        Component menuItem;
+        final Identifiable identifiable = getModel().getObject();
+        if ( identifiable != null & identifiable instanceof ModelObject ) {
+            Link link = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    Change change = new Change( Change.Type.Communicated, identifiable );
+                    update( target, change );
+                }
+            };
+            menuItem = new LinkMenuItem(
+                    id,
+                    new Model<String>( "Send message" ), link );
+        } else {
+            Label label = new Label( id, "Send message" );
+            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+            menuItem = label;
+        }
+        return menuItem;
+    }
+
     /**
      * Make menu items from commands.
      *
@@ -190,7 +211,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             if ( getCommander().canDo( command ) ) {
                 Link link = new ConfirmedAjaxFallbackLink(
                         "link",
-                        commandWrapper.isConfirm() ? "Are you sure?" : null) {
+                        commandWrapper.isConfirm() ? "Are you sure?" : null ) {
                     public void onClick( AjaxRequestTarget target ) {
                         try {
                             Change change = getCommander().doCommand( command );

@@ -19,7 +19,6 @@ import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
-import com.mindalliance.channels.pages.components.SegmentImportPanel;
 import com.mindalliance.channels.pages.components.SegmentLink;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
@@ -203,7 +202,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Import segment "dialog".
      */
-    private SegmentImportPanel segmentImportPanel;
+    // private SegmentImportPanel segmentImportPanel;
 
     /**
      * Segment edit panel.
@@ -581,7 +580,7 @@ public final class PlanPage extends WebPage implements Updatable {
             updateRefreshNotice();
             target.addComponent( refreshNeededComponent );
         }
-        segmentPanel.updateSocialPanel( target );        
+        segmentPanel.updateSocialPanel( target );
     }
 
     private void updateRefreshNotice() {
@@ -1371,6 +1370,8 @@ public final class PlanPage extends WebPage implements Updatable {
         else if ( change.isAspectReplaced() ) {
             closeAspect( change, null );
             viewAspect( change, change.getProperty() );
+        }  else if ( change.isCommunicated() ) {
+            expand( new Change( Change.Type.Expanded, Channels.SOCIAL_ID ) );
         }
         if ( change.isForInstanceOf( Segment.class ) ) {
             Segment changedSegment = (Segment) change.getSubject( queryService );
@@ -1462,6 +1463,9 @@ public final class PlanPage extends WebPage implements Updatable {
             } else if ( change.isRefreshNeeded() ) {
                 change.setScript( "alert('The action failed because the page was out of sync.');" );
                 refreshAll( target );
+            } else if ( change.isCommunicated() ) {
+                segmentPanel.newMessage( target, change );
+                segmentPanel.refreshSocialPanel( target, change );
             } else {
                 refresh( target, change, updated );
             }
@@ -1778,14 +1782,11 @@ public final class PlanPage extends WebPage implements Updatable {
         return Collections.unmodifiableMap( copy );
     }
 
-    /**
-     * Open segment import dialog.
-     *
-     * @param target an ajax request target
-     */
+/*
     public void importSegment( AjaxRequestTarget target ) {
         segmentImportPanel.open( target );
     }
+*/
 
     public boolean isCanGoBack() {
         return historyCursor > 0;
@@ -1842,7 +1843,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 ModelObject toExpand = getQueryService().find( ModelObject.class, id );
                 expand( toExpand );
             } catch ( NotFoundException e ) {
-                expand( new Change(Change.Type.Expanded, id ) );
+                expand( new Change( Change.Type.Expanded, id ) );
             }
         }
         for ( Long id : collapseSet ) {
@@ -1850,7 +1851,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 ModelObject toCollapse = getQueryService().find( ModelObject.class, id );
                 collapse( toCollapse );
             } catch ( NotFoundException e ) {
-                collapse( new Change(Change.Type.Collapsed, id ) );
+                collapse( new Change( Change.Type.Collapsed, id ) );
             }
         }
         // Reset aspects

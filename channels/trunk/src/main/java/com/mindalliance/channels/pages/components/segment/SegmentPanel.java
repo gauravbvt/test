@@ -49,7 +49,7 @@ import java.util.Set;
  * Time: 8:52:20 AM
  */
 public class SegmentPanel extends AbstractCommandablePanel {
-   /**
+    /**
      * CSS id.
      */
     private static final String SEGMENT_PANEL_ID = "#contents";
@@ -468,7 +468,9 @@ public class SegmentPanel extends AbstractCommandablePanel {
     }
 
     public void resizeSocialPanel( AjaxRequestTarget target, Change change ) {
-        if ( change.isUnknown() || change.getId() == Channels.SOCIAL_ID && change.isDisplay() ) {
+        if ( change.isUnknown()
+                || change.isCommunicated()
+                || change.getId() == Channels.SOCIAL_ID && change.isDisplay() ) {
             String segmentPanelWidth;
             String socialPanelWidth;
             if ( getExpansions().contains( Channels.SOCIAL_ID ) ) {
@@ -626,7 +628,32 @@ public class SegmentPanel extends AbstractCommandablePanel {
         target.addComponent( flowMapDiagramPanel );
     }
 
+    /**
+     * Update social panel.
+     *
+     * @param target an ajax request target
+     */
     public void updateSocialPanel( AjaxRequestTarget target ) {
-        socialPanel.refresh(  target, new Change( Change.Type.Unknown) );
+        socialPanel.refresh( target, new Change( Change.Type.Unknown ) );
+    }
+
+    /**
+     * Have social panel create a new message.
+     *
+     * @param target  an ajax request target
+     * @param change a change referencing what the communication is about
+     */
+    public void newMessage(  AjaxRequestTarget target, Change change ) {
+        socialPanel.newMessage( target, change );
+    }
+
+    /**
+     * Refresh social panel.
+     * @param target  an ajax request target
+     * @param change a change referencing what the communication is about
+      */
+    public void refreshSocialPanel( AjaxRequestTarget target, Change change ) {
+        resizeSocialPanel( target, change );
+        updateSocialPanel( target );
     }
 }

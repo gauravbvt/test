@@ -7,13 +7,22 @@
         lang="en">
 <body>
 <wicket:panel>
-    TODO
-  <!--  <div class="messages" wicket:id="messages">
-        <div wicket:id="message">[message panel]</div>
+    <input wicket:id="privateOnly" type="checkbox"/> Only show private messages
+    <div wicket:id="plannerMessagesContainer"  class="social-list">
+        <span wicket:id="plannerMessages">
+            <div wicket:id="plannerMessage">[planner message panel]</div>
+        </span>
     </div>
-    <hr/>
+    <div wicket:id="noMessages">No messages</div>
     <input wicket:id="showMore" type="button" value="Show more"/>
-    <input wicket:id="showFew" type="button" value="Show a few"/>-->
+    <input wicket:id="showFew" type="button" value="Show a few"/>
+    <div wicket:id="newMessage" class="new-message">
+        <div>To: <select wicket:id="recipient"><option>All</option></select></div>
+        <div wicket:id="aboutContainer">About: <span wicket:id="about">[model object link panel]</span></div>
+        <textarea wicket:id="text" rows="3" cols ="60">text</textarea>
+        <input wicket:id="cancel" type="button" value="Cancel"/>
+        <input wicket:id="send" type="button" value="Send"/>
+    </div>
 </wicket:panel>
 </body>
 </html>

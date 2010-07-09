@@ -1,7 +1,5 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.model.ModelObject;
-
 import java.util.Iterator;
 
 /**
@@ -14,23 +12,12 @@ import java.util.Iterator;
  */
 public interface PlannerMessagingService {
 
-    PlannerMessage broadcastMessage( String text );
-
-    PlannerMessage broadcastMessage ( String text, ModelObject about );
-
-    PlannerMessage sendMessage( String text, String toUserName );
-
-    PlannerMessage sendMessage ( String text, ModelObject about, String toUserName );
+    void sendMessage( PlannerMessage message );
 
     PlannerMessage getMessage( String messageId );
-
-    void markAsRead( String messageId );
-
-    PlannerMessageStatus getMessageStatus( String messageId );
 
     Iterator<PlannerMessage> getMessages( );
     
     void deleteMessage( String messageId );
 
-    int getUnreadCount();
 }

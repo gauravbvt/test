@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.PlannerMessagingService;
@@ -11,7 +12,6 @@ import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
@@ -80,22 +80,22 @@ public class SocialPanel extends AbstractUpdatablePanel {
                 return commandEventListPanel;
             }
         } );
-        tabs.add( new AbstractTab( new PropertyModel<String>( this, "messagesTitle" ) ) {
+        tabs.add( new AbstractTab( new Model<String>( "Messages" ) ) {
             public Panel getPanel( String id ) {
-                plannerMessageListPanel = new PlannerMessageListPanel( id );
+                plannerMessageListPanel = new PlannerMessageListPanel( id, SocialPanel.this );
                 return plannerMessageListPanel;
             }
         } );
         return tabs;
     }
 
-    public String getMessagesTitle() {
+/*    public String getMessagesTitle() {
         int unreadCount = plannerMessagingService.getUnreadCount();
         if ( unreadCount == 0 )
             return "Messages";
         else
             return "Messages (" + unreadCount + ")";
-    }
+    }*/
 
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         if ( plannerPresenceListPanel != null && tabbedPanel.getSelectedTab() == 0 )
@@ -110,9 +110,16 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( object instanceof String ) {
             if ( action.equals( SEND_MESSAGE ) ) {
                 tabbedPanel.setSelectedTab( 2 );
-                plannerMessageListPanel.newMessage( (String) object );
+                plannerMessageListPanel.newMessage( (String) object, target );
                 target.addComponent( tabbedPanel );
             }
         }
+    }
+
+    public void newMessage( AjaxRequestTarget target, Change change ) {
+        ModelObject about = (ModelObject)change.getSubject( getQueryService() );
+        tabbedPanel.setSelectedTab( 2 );
+        plannerMessageListPanel.newMessage( "", about, target );
+        target.addComponent( tabbedPanel );
     }
 }

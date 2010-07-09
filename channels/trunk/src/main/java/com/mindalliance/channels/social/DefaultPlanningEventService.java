@@ -87,7 +87,7 @@ public class DefaultPlanningEventService implements PlanningEventService {
     public Iterator<CommandEvent> getCommandEvents() {
         Iterator<CommandEvent> commandEvents;
         IQuery query = new CriteriaQuery( CommandEvent.class, Where.equal( "planId", getPlanId() ) );
-        query.orderByAsc( "date" );
+        query.orderByDesc( "date" );
         Objects<CommandEvent> results;
         ODB odb = null;
         try {

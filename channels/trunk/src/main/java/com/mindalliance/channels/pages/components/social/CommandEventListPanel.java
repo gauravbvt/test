@@ -7,6 +7,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.CommandEvent;
 import com.mindalliance.channels.social.PlanningEventService;
+import com.mindalliance.channels.util.PeekAheadIterator;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -19,8 +20,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -140,28 +139,28 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
 
     public List<CommandEvent> getCommandEvents() {
         List<CommandEvent> commandEvents = new ArrayList<CommandEvent>();
-        Iterator<CommandEvent> iterator = planningEventService.getCommandEvents();
+        PeekAheadIterator<CommandEvent> iterator = new PeekAheadIterator<CommandEvent>(
+                planningEventService.getCommandEvents() );
         while ( iterator.hasNext() && commandEvents.size() < numberToShow ) {
             CommandEvent commandEvent = iterator.next();
             if ( commandEvent != null ) {
+                CommandEvent nextCommandEvent = iterator.peek();
                 if ( !( isOthersOnly() && commandEvent.getCommand().getUserName().equals( getUsername() ) )
-                        && !isAnotherUpdate( commandEvent, commandEvents ) )
+                        && !isFollwedByAnotherUpdate( commandEvent, nextCommandEvent ) )
                     commandEvents.add( commandEvent );
             }
         }
         allShown = !iterator.hasNext();
-        Collections.reverse( commandEvents );
         return commandEvents;
     }
 
-    private boolean isAnotherUpdate( CommandEvent commandEvent, List<CommandEvent> commandEvents ) {
-        if ( commandEvents.isEmpty() ) return false;
+    private boolean isFollwedByAnotherUpdate( CommandEvent commandEvent, CommandEvent nextCommandEvent ) {
         if ( !commandEvent.isDone() ) return false;
         if ( !( commandEvent.getCommand() instanceof UpdateObject ) ) return false;
-        CommandEvent priorCommandEvent = commandEvents.get( commandEvents.size() - 1 );
-        if ( !priorCommandEvent.isDone() ) return false;
-        if ( !( priorCommandEvent.getCommand() instanceof UpdateObject ) ) return false;
-        if ( priorCommandEvent.getChange().getId() != commandEvent.getChange().getId() ) return false;
+        if ( nextCommandEvent == null ) return false;
+        if ( !nextCommandEvent.isDone() ) return false;
+        if ( !( nextCommandEvent.getCommand() instanceof UpdateObject ) ) return false;
+        if ( commandEvent.getChange().getId() != nextCommandEvent.getChange().getId() ) return false;
         return true;
     }
 
@@ -181,4 +180,5 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
     private String getUsername() {
         return User.current().getUsername();
     }
+
 }

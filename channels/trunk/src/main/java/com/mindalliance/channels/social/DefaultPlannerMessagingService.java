@@ -2,7 +2,6 @@ package com.mindalliance.channels.social;
 
 import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.ModelObject;
 import org.neodatis.odb.ODB;
 import org.neodatis.odb.ODBFactory;
 import org.neodatis.odb.Objects;
@@ -59,24 +58,8 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         }
     }
 
-    public PlannerMessage broadcastMessage( String text, ModelObject about ) {
-        PlannerMessage message = new PlannerMessage( text, about );
+    public void sendMessage( PlannerMessage message ) {
         addSentMessage( message );
-        return message;
-    }
-
-    public PlannerMessage sendMessage( String text, String toUserName ) {
-        PlannerMessage message = new PlannerMessage( text );
-        message.setToUsername( toUserName );
-        addSentMessage( message );
-        return message;
-    }
-
-    public PlannerMessage sendMessage( String text, ModelObject about, String toUserName ) {
-        PlannerMessage message = new PlannerMessage( text, about );
-        message.setToUsername( toUserName );
-        addSentMessage( message );
-        return message;
     }
 
     public synchronized PlannerMessage getMessage( String messageId ) {
@@ -173,61 +156,8 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         }
     }
 
-    public synchronized int getUnreadCount() {
-        int count = 0;
-        Iterator<PlannerMessage> messages = getMessages();
-        while ( messages.hasNext() ) {
-            PlannerMessage message = messages.next();
-            PlannerMessageStatus status = getMessageStatus( message.getId() );
-            if ( !status.isRead() ) count++;
-        }
-        return count;
-    }
-
-
-    public synchronized void markAsRead( String messageId ) {
-        PlannerMessageStatus status = new PlannerMessageStatus( messageId, getUsername() );
-        status.setRead( true );
-        ODB odb = null;
-        try {
-            odb = getOdb();
-            odb.store( status );
-        } finally {
-            if ( odb != null && !odb.isClosed() )
-                odb.close();
-        }
-    }
-
     private String getUsername() {
         return User.current().getUsername();
     }
-
-    public synchronized PlannerMessageStatus getMessageStatus( String messageId ) {
-        PlannerMessageStatus status = null;
-        ODB odb = null;
-        try {
-            odb = getOdb();
-            PlannerMessage message = getMessage( messageId );
-            if ( message != null ) {
-                IQuery query = new CriteriaQuery(
-                        PlannerMessageStatus.class,
-                        Where.and()
-                                .add( Where.equal( "messageId", message.getId() ) )
-                                .add( Where.equal( "username", getUsername() ) ) );
-                Objects<PlannerMessageStatus> results = odb.getObjects( query );
-                if ( results.hasNext() ) {
-                    status = results.next();
-                }
-            }
-        } finally {
-            if ( odb != null && !odb.isClosed() )
-                odb.close();
-        }
-        if ( status == null ) {
-            LOG.warn( "Failed to get status of message " + messageId );
-        }
-        return status;
-    }
-
 
 }
