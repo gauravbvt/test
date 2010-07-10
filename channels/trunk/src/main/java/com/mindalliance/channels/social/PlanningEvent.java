@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social;
 
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.odb.PersistentObject;
 
 /**
  * A planning event.

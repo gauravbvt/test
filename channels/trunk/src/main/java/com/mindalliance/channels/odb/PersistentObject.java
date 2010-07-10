@@ -1,4 +1,4 @@
-package com.mindalliance.channels.social;
+package com.mindalliance.channels.odb;
 
 import java.io.Serializable;
 import java.text.DateFormat;

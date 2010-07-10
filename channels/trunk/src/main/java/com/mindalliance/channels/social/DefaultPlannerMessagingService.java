@@ -1,16 +1,12 @@
 package com.mindalliance.channels.social;
 
 import com.mindalliance.channels.dao.User;
-import org.neodatis.odb.ODB;
-import org.neodatis.odb.Objects;
-import org.neodatis.odb.core.query.IQuery;
-import org.neodatis.odb.core.query.criteria.ComposedExpression;
+import com.mindalliance.channels.odb.ODBAccessor;
+import com.mindalliance.channels.odb.ODBTransactionFactory;
 import org.neodatis.odb.core.query.criteria.Where;
-import org.neodatis.odb.impl.core.query.criteria.CriteriaQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -27,7 +23,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultPlannerMessagingService.class );
-    private DatabaseFactory databaseFactory;
+    private ODBTransactionFactory databaseFactory;
 
     public DefaultPlannerMessagingService() {
     }
@@ -38,139 +34,51 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         return message;
     }
 
-    public void setDatabaseFactory( DatabaseFactory databaseFactory ) {
+    public void setDatabaseFactory( ODBTransactionFactory databaseFactory ) {
         this.databaseFactory = databaseFactory;
     }
 
     private synchronized void addSentMessage( PlannerMessage message ) {
-        ODB odb = null;
-        try {
-            odb = getOdb();
-            odb.store( message );
-        } finally {
-            if ( odb != null && !odb.isClosed() )
-                odb.close();
-        }
+        getOdb().store( message );
     }
 
     public void sendMessage( PlannerMessage message ) {
         addSentMessage( message );
     }
 
-    public synchronized PlannerMessage getMessage( String messageId ) {
-        ODB odb = null;
-        try {
-            odb = getOdb();
-            Iterator<PlannerMessage> messages;
-            IQuery query = new CriteriaQuery(
-                    PlannerMessage.class,
-                    Where.and()
-                            .add( Where.equal( "messageId", messageId ) )
-                            .add( receivedQuery() ) );
-            Objects<PlannerMessage> results;
-            try {
-                results = odb.getObjects( query );
-                messages = results.iterator();
-            } catch ( Exception e ) {
-                LOG.warn( "Failed to query for planning events", e );
-                messages = new ArrayList<PlannerMessage>().iterator();
-            }
-            if ( messages.hasNext() )
-                return messages.next();
-            else
-                return null;
-        } finally {
-            if ( odb != null && !odb.isClosed() )
-                odb.close();
-        }
-    }
-
-    private ComposedExpression receivedQuery() {
-        return Where.and()
-                .add( Where.equal( "planId", getPlanId() ) )
-                .add(
+    public synchronized Iterator<PlannerMessage> getReceivedMessages() {
+        return getOdb().iterate(
+                PlannerMessage.class,
+                Where.and()
+                        .add( Where.equal( "planId", getPlanId() ) )
+                        .add(
                         Where.or()
                                 .add( Where.equal( "toUsername", getUsername() ) )
                                 .add( Where.isNull( "toUsername" ) )
-                );
+                ),
+                ODBAccessor.Ordering.Descendant,
+                "date"
+        );
     }
 
-    private ComposedExpression sentQuery() {
-        return Where.and()
-                .add( Where.equal( "planId", getPlanId() ) )
-                .add( Where.equal( "fromUsername", getUsername() ) );
+    private ODBAccessor getOdb() {
+        return databaseFactory.getODBAccessor();
     }
 
-    public synchronized Iterator<PlannerMessage> getReceivedMessages() {
-        ODB odb = null;
-        try {
-            odb = getOdb();
-            Iterator<PlannerMessage> messages;
-            IQuery query = new CriteriaQuery(
-                    PlannerMessage.class,
-                    receivedQuery() );
-            query.orderByDesc( "date" );
-            Objects<PlannerMessage> results;
-            try {
-                results = odb.getObjects( query );
-                messages = results.iterator();
-            } catch ( Exception e ) {
-                LOG.warn( "Failed to query for received messages", e );
-                messages = new ArrayList<PlannerMessage>().iterator();
-            }
-            return messages;
-        } finally {
-            if ( odb != null && !odb.isClosed() )
-                odb.close();
-        }
-    }
-
-    private ODB getOdb() {
-        return databaseFactory.getDatabase();
-    }
 
     private long getPlanId() {
         return User.current().getPlan().getId();
     }
 
-    public synchronized void deleteMessage( String messageId ) {
-        PlannerMessage message = getMessage( messageId );
-        if ( message != null ) {
-            ODB odb = null;
-            try {
-                odb = getOdb();
-                odb.delete( message );
-            } finally {
-                if ( odb != null && !odb.isClosed() )
-                    odb.close();
-            }
-        } else {
-            LOG.warn( "Failed to delete planner message " + messageId );
-        }
-    }
-
     public Iterator<PlannerMessage> getSentMessages() {
-        ODB odb = null;
-        try {
-            odb = getOdb();
-            Iterator<PlannerMessage> messages;
-            IQuery query = new CriteriaQuery(
-                    PlannerMessage.class,
-                    sentQuery() );
-            query.orderByDesc( "date" );
-            Objects<PlannerMessage> results;
-            try {
-                results = odb.getObjects( query );
-                messages = results.iterator();
-            } catch ( Exception e ) {
-                LOG.warn( "Failed to query for sent messages", e );
-                messages = new ArrayList<PlannerMessage>().iterator();
-            }
-            return messages;
-        } finally {
-            if ( odb != null && !odb.isClosed() )
-                odb.close();
-        }
+        return getOdb().iterate(
+                PlannerMessage.class,
+                Where.and()
+                        .add( Where.equal( "planId", getPlanId() ) )
+                        .add( Where.equal( "fromUsername", getUsername() ) ),
+                ODBAccessor.Ordering.Descendant,
+                "date"
+        );
     }
 
     private String getUsername() {

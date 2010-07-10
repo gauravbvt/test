@@ -3,15 +3,10 @@ package com.mindalliance.channels.social;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.dao.User;
-import org.neodatis.odb.ODB;
-import org.neodatis.odb.Objects;
-import org.neodatis.odb.core.query.IQuery;
+import com.mindalliance.channels.odb.ODBAccessor;
+import com.mindalliance.channels.odb.ODBTransactionFactory;
 import org.neodatis.odb.core.query.criteria.Where;
-import org.neodatis.odb.impl.core.query.criteria.CriteriaQuery;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,12 +21,7 @@ import java.util.Map;
  */
 public class DefaultPlanningEventService implements PlanningEventService {
 
-    /**
-     * Logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( DefaultPlanningEventService.class );
-
-    private DatabaseFactory databaseFactory;
+    private ODBTransactionFactory databaseFactory;
 
     private Map<String, PresenceEvent> latestPresences = null;
 
@@ -43,7 +33,7 @@ public class DefaultPlanningEventService implements PlanningEventService {
         latestPresences = new HashMap<String, PresenceEvent>();
     }
 
-    public void setDatabaseFactory( DatabaseFactory databaseFactory ) {
+    public void setDatabaseFactory( ODBTransactionFactory databaseFactory ) {
         this.databaseFactory = databaseFactory;
     }
 
@@ -80,71 +70,33 @@ public class DefaultPlanningEventService implements PlanningEventService {
         if ( planningEvent.isPresenceEvent() ) {
             resetLatestPresences();
         }
-        ODB odb = null;
-        try {
-            odb = getOdb();
-            odb.store( planningEvent );
-            LOG.info( "Planning event: " + planningEvent );
-        } catch ( Exception e ) {
-            LOG.warn( "Failed to store commandEvent " + planningEvent );
-        } finally {
-            if ( odb != null && !odb.isClosed() )
-                odb.close();
-        }
+        getOdb().store( planningEvent );
     }
 
     public Iterator<CommandEvent> getCommandEvents() {
-        Iterator<CommandEvent> commandEvents;
-        IQuery query = new CriteriaQuery( CommandEvent.class, Where.equal( "planId", getPlanId() ) );
-        query.orderByDesc( "date" );
-        Objects<CommandEvent> results;
-        ODB odb = null;
-        try {
-            odb = getOdb();
-            results = odb.getObjects( query );
-            commandEvents = results.iterator();
-        } catch ( Exception e ) {
-            LOG.warn( "Failed to query for command events", e );
-            commandEvents = new ArrayList<CommandEvent>().iterator();
-        } finally {
-            if ( odb != null && !odb.isClosed() )
-                odb.close();
-        }
-        return commandEvents;
+        return getOdb().iterate(
+                CommandEvent.class,
+                Where.equal( "planId", getPlanId() ),
+                ODBAccessor.Ordering.Descendant,
+                "date" );
     }
 
     public PresenceEvent findLatestPresence( String username ) {
         if ( latestPresences.containsKey( username ) ) {
             return latestPresences.get( username );
         } else {
-            PresenceEvent presenceEvent = null;
-            IQuery query = new CriteriaQuery(
+            return getOdb().first(
                     PresenceEvent.class,
                     Where.and()
                             .add( Where.equal( "username", username ) )
-                            .add( Where.equal( "planId", getPlanId() ) ) );
-            query.orderByDesc( "date" );
-            Objects<PresenceEvent> results;
-            ODB odb = null;
-            try {
-                odb = getOdb();
-                results = odb.getObjects( query );
-                if ( results.hasNext() ) {
-                    presenceEvent = results.next();
-                }
-            } catch ( Exception e ) {
-                LOG.warn( "Failed to query for latest presence event of " + username, e );
-            } finally {
-                if ( odb != null && !odb.isClosed() )
-                    odb.close();
-            }
-            latestPresences.put( username, presenceEvent );
-            return presenceEvent;
+                            .add( Where.equal( "planId", getPlanId() ) ),
+                    ODBAccessor.Ordering.Descendant,
+                    "date" );
         }
     }
 
-    private ODB getOdb() {
-        return databaseFactory.getDatabase();
+    private ODBAccessor getOdb() {
+        return databaseFactory.getODBAccessor();
     }
 
 

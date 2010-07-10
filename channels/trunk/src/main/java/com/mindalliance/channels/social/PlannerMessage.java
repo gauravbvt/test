@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.ModelObjectRef;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.odb.PersistentObject;
 import com.mindalliance.channels.query.QueryService;
 
 /**

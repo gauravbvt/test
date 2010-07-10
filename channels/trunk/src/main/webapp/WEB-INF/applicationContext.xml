@@ -350,7 +350,7 @@ CONFIGURATION NOTES:
 
     <!-- Collaboration services -->
 
-    <bean id="databaseFactory" class="com.mindalliance.channels.social.DefaultDatabaseFactory">
+    <bean id="databaseFactory" class="com.mindalliance.channels.odb.DefaultODBTransactionFactory">
         <property name="odbDir" value="${channels.home}${file.separator}data"/>
     </bean>
     
