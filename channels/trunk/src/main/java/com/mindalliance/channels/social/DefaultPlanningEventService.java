@@ -12,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Planning event service default implementation.
@@ -31,7 +33,14 @@ public class DefaultPlanningEventService implements PlanningEventService {
 
     private DatabaseFactory databaseFactory;
 
+    private Map<String, PresenceEvent> latestPresences = null;
+
     public DefaultPlanningEventService() {
+        resetLatestPresences();
+    }
+
+    private void resetLatestPresences() {
+        latestPresences = new HashMap<String, PresenceEvent>();
     }
 
     public void setDatabaseFactory( DatabaseFactory databaseFactory ) {
@@ -68,6 +77,9 @@ public class DefaultPlanningEventService implements PlanningEventService {
     }
 
     private void addPlanningEvent( PlanningEvent planningEvent ) {
+        if ( planningEvent.isPresenceEvent() ) {
+            resetLatestPresences();
+        }
         ODB odb = null;
         try {
             odb = getOdb();
@@ -102,28 +114,33 @@ public class DefaultPlanningEventService implements PlanningEventService {
     }
 
     public PresenceEvent findLatestPresence( String username ) {
-        PresenceEvent presenceEvent = null;
-        IQuery query = new CriteriaQuery(
-                PresenceEvent.class,
-                Where.and()
-                        .add( Where.equal( "username", username ) )
-                        .add( Where.equal( "planId", getPlanId() ) ) );
-        query.orderByDesc( "date" );
-        Objects<PresenceEvent> results;
-        ODB odb = null;
-        try {
-            odb = getOdb();
-            results = odb.getObjects( query );
-            if ( results.hasNext() ) {
-                presenceEvent = results.next();
+        if ( latestPresences.containsKey( username ) ) {
+            return latestPresences.get( username );
+        } else {
+            PresenceEvent presenceEvent = null;
+            IQuery query = new CriteriaQuery(
+                    PresenceEvent.class,
+                    Where.and()
+                            .add( Where.equal( "username", username ) )
+                            .add( Where.equal( "planId", getPlanId() ) ) );
+            query.orderByDesc( "date" );
+            Objects<PresenceEvent> results;
+            ODB odb = null;
+            try {
+                odb = getOdb();
+                results = odb.getObjects( query );
+                if ( results.hasNext() ) {
+                    presenceEvent = results.next();
+                }
+            } catch ( Exception e ) {
+                LOG.warn( "Failed to query for latest presence event of " + username, e );
+            } finally {
+                if ( odb != null && !odb.isClosed() )
+                    odb.close();
             }
-        } catch ( Exception e ) {
-            LOG.warn( "Failed to query for latest presence event of " + username, e );
-        } finally {
-            if ( odb != null && !odb.isClosed() )
-                odb.close();
+            latestPresences.put( username, presenceEvent );
+            return presenceEvent;
         }
-        return presenceEvent;
     }
 
     private ODB getOdb() {

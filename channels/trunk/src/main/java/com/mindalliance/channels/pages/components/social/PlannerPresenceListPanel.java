@@ -40,7 +40,7 @@ public class PlannerPresenceListPanel extends AbstractUpdatablePanel {
 
     private Updatable updatable;
     private WebMarkupContainer presencesContainer;
-    private boolean showHereOnly = false;
+    private boolean showHereOnly = true;
     private AjaxFallbackLink showHideLink;
     private Label showHideLabel;
 

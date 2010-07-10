@@ -69,8 +69,11 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
         }
         timeLabel.setVisible( isPresent() );
         socialItemContainer.add( timeLabel );
-        if ( !present ) {
-            getNameLabel().add( new AttributeModifier( "title", true, new Model<String>( "left " + time ) ) );
+        if ( !present & !time.isEmpty() ) {
+            getNameLabel().add( new AttributeModifier(
+                    "title",
+                    true,
+                    new Model<String>( "left " + time ) ) );
         }
     }
 

@@ -80,9 +80,9 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 othersOnly = !othersOnly;
                 addShowHideLabel();
-                addCommandEvents();
                 target.addComponent( showHideLabel );
-                target.addComponent( planningEventsContainer );
+                addCommandEvents();
+                adjustComponents( target );
             }
         };
         add( showHideLink );
