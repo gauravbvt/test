@@ -5,6 +5,7 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -15,7 +16,6 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -48,13 +48,12 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
     @SpringBean
     private UserService userService;
 
-    private static final int A_FEW = 7;
-    private static final int MORE = 7;
+    private static final int A_FEW = 5;
+    private static final int MORE = 5;
 
     private static final User ALL = new User();
     private int numberToShow = A_FEW;
     private boolean privateOnly = false;
-    private boolean showSent = false;
     private boolean showReceived = true;
     private boolean allShown;
     private WebMarkupContainer plannerMessagesContainer;
@@ -66,9 +65,10 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
     private AjaxFallbackLink showMore;
     private Updatable updatable;
     private WebMarkupContainer newMessageContainer;
-    private WebMarkupContainer newMessageAboutContainer;
-    private CheckBox showSentCheckBox;
-    private CheckBox showReceivedCheckBox;
+    private AjaxFallbackLink showHideBroadcastsLink;
+    private Label showHideBroadcastsLabel;
+    private AjaxFallbackLink sentReceivedLink;
+    private Label sentReceivedLabel;
 
     public PlannerMessageListPanel( String id, Updatable updatable ) {
         super( id );
@@ -77,9 +77,11 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        addPrivateOnly();
-        addShowSent();
-        addShowReceived();
+        addHideSocial();
+        addShowHideBroadcastsLink();
+        addShowHideBroadcastsLabel();
+        addShowReceivedSentLink();
+        addShowReceivedSentLabel();
         plannerMessagesContainer = new WebMarkupContainer( "plannerMessagesContainer" );
         plannerMessagesContainer.setOutputMarkupId( true );
         add( plannerMessagesContainer );
@@ -89,6 +91,57 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
         addNewMessage();
         adjustComponents();
     }
+
+    private void addHideSocial() {
+        AjaxFallbackLink hideSocialLink = new AjaxFallbackLink( "hideAll" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Collapsed, Channels.SOCIAL_ID ) );
+            }
+        };
+        add( hideSocialLink );
+    }
+
+    private void addShowHideBroadcastsLink() {
+         showHideBroadcastsLink = new AjaxFallbackLink( "hideShowBroadcastsLink" ) {
+             public void onClick( AjaxRequestTarget target ) {
+                 privateOnly = !privateOnly;
+                 addShowHideBroadcastsLabel();
+                 addPlannerMessages();
+                 target.addComponent( showHideBroadcastsLabel );
+                 target.addComponent( plannerMessagesContainer );
+             }
+         };
+         add( showHideBroadcastsLink );
+     }
+
+     private void addShowHideBroadcastsLabel() {
+         showHideBroadcastsLabel = new Label(
+                 "hideShowBroadcasts",
+                 privateOnly ? "show all messages" : "hide broadcasts"  );
+         showHideBroadcastsLabel.setOutputMarkupId( true );
+         showHideBroadcastsLink.addOrReplace( showHideBroadcastsLabel );
+     }
+
+    private void addShowReceivedSentLink() {
+          sentReceivedLink = new AjaxFallbackLink( "sentReceivedLink" ) {
+              public void onClick( AjaxRequestTarget target ) {
+                  showReceived = !showReceived;
+                  addShowReceivedSentLabel();
+                  addPlannerMessages();
+                  target.addComponent( sentReceivedLabel );
+                  target.addComponent( plannerMessagesContainer );
+              }
+          };
+          add( sentReceivedLink );
+      }
+
+      private void addShowReceivedSentLabel() {
+          sentReceivedLabel = new Label(
+                  "sentReceived",
+                  showReceived ? "show sent" : "show received"  );
+          sentReceivedLabel.setOutputMarkupId( true );
+          sentReceivedLink.addOrReplace( sentReceivedLabel );
+      }
 
     private void addPlannerMessages() {
         List<PlannerMessage> plannerMessages = getPlannerMessages();
@@ -117,48 +170,6 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
 
     public void setPrivateOnly( boolean privateOnly ) {
         this.privateOnly = privateOnly;
-    }
-
-    private void addPrivateOnly() {
-        CheckBox privateOnlyCheckBox = new CheckBox(
-                "privateOnly",
-                new PropertyModel<Boolean>( this, "privateOnly" ) );
-        privateOnlyCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                addPlannerMessages();
-                adjustComponents( target );
-            }
-        } );
-        add( privateOnlyCheckBox );
-
-    }
-
-    private void addShowSent() {
-        showSentCheckBox = new CheckBox(
-                "sent",
-                new PropertyModel<Boolean>( this, "showSent" ) );
-        showSentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                addPlannerMessages();
-                target.addComponent( showReceivedCheckBox ) ;
-                adjustComponents( target );
-            }
-        } );
-        add( showSentCheckBox );
-    }
-
-    private void addShowReceived() {
-        showReceivedCheckBox = new CheckBox(
-                "received",
-                new PropertyModel<Boolean>( this, "showReceived" ) );
-        showReceivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                addPlannerMessages();
-                target.addComponent( showSentCheckBox ) ;
-                adjustComponents( target );
-            }
-        } );
-        add( showReceivedCheckBox );
     }
 
     private void addShowMore() {
@@ -241,7 +252,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
     }
 
     private void addAbout( WebMarkupContainer newMessageContainer ) {
-        newMessageAboutContainer = new WebMarkupContainer( "aboutContainer" );
+        WebMarkupContainer newMessageAboutContainer = new WebMarkupContainer( "aboutContainer" );
         newMessageAboutContainer.setOutputMarkupId( true );
         newMessageContainer.add( newMessageAboutContainer );
         if ( newMessageAbout != null ) {
@@ -398,17 +409,4 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
         return showReceived;
     }
 
-    public void setShowReceived( boolean showReceived ) {
-        this.showReceived = showReceived;
-        showSent = ! showReceived;
-    }
-
-    public boolean isShowSent() {
-        return showSent;
-    }
-
-    public void setShowSent( boolean showSent ) {
-        this.showSent = showSent;
-        showReceived = !showSent;
-    }
 }

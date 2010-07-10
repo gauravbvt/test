@@ -1,9 +1,7 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.dao.User;
 import org.neodatis.odb.ODB;
-import org.neodatis.odb.ODBFactory;
 import org.neodatis.odb.Objects;
 import org.neodatis.odb.core.query.IQuery;
 import org.neodatis.odb.core.query.criteria.ComposedExpression;
@@ -12,7 +10,6 @@ import org.neodatis.odb.impl.core.query.criteria.CriteriaQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -30,21 +27,19 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultPlannerMessagingService.class );
-
-    private String odbDir;
-
+    private DatabaseFactory databaseFactory;
 
     public DefaultPlannerMessagingService() {
-    }
-
-    public void setOdbDir( String odbDir ) {
-        this.odbDir = odbDir;
     }
 
     public PlannerMessage broadcastMessage( String text ) {
         PlannerMessage message = new PlannerMessage( text );
         addSentMessage( message );
         return message;
+    }
+
+    public void setDatabaseFactory( DatabaseFactory databaseFactory ) {
+        this.databaseFactory = databaseFactory;
     }
 
     private synchronized void addSentMessage( PlannerMessage message ) {
@@ -131,15 +126,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
     }
 
     private ODB getOdb() {
-        return ODBFactory.open( odbDir
-                + File.separator
-                + PlanDefinition.sanitize( getPlanUri() )
-                + File.separator
-                + "db" );
-    }
-
-    private String getPlanUri() {
-        return User.current().getPlan().getUri();
+        return databaseFactory.getDatabase();
     }
 
     private long getPlanId() {

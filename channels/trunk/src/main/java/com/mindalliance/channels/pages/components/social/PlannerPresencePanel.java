@@ -2,8 +2,10 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.PresenceEvent;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 /**
@@ -24,7 +26,8 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
     }
 
     protected void moreInit( WebMarkupContainer socialItemContainer ) {
-        addStatus( socialItemContainer );
+        addIcon( socialItemContainer );
+        addTime( socialItemContainer );
     }
 
     protected String getCssClass() {
@@ -40,24 +43,40 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
     }
 
     public String getLongTime() {
-         PresenceEvent presenceEvent = getLatestPresenceEvent();
-         return presenceEvent == null ? "" : presenceEvent.getLongTimeElapsedString();
-     }
-
-    private void addStatus( WebMarkupContainer socialItemContainer ) {
-        Label statusLabel = new Label( "status", new PropertyModel<String>( this, "status" ) );
-        socialItemContainer.add( statusLabel );
+        PresenceEvent presenceEvent = getLatestPresenceEvent();
+        return presenceEvent == null ? "" : presenceEvent.getLongTimeElapsedString();
     }
 
-    public String getStatus() {
-        PresenceEvent presenceEvent = getLatestPresenceEvent();
-        if ( presenceEvent == null ) {
-            return " Is not here";
-        } else if ( presenceEvent.isLogin() ) {
-            return " Is here ";
-        } else {
-            return " Has left ";
+    private void addIcon( WebMarkupContainer socialItemContainer ) {
+        WebMarkupContainer icon = new WebMarkupContainer( "icon" );
+        icon.setVisible( isPresent() );
+        socialItemContainer.add( icon );
+    }
+
+    private void addTime( WebMarkupContainer socialItemContainer ) {
+        boolean present = isPresent();
+        String time = getTime();
+        String timeLabelString = "";
+        if ( !time.isEmpty() && present ) {
+            timeLabelString = time;
         }
+        Label timeLabel = new Label( "time", new Model<String>( timeLabelString ) );
+        if ( !timeLabelString.isEmpty() ) {
+            timeLabel.add( new AttributeModifier(
+                    "title",
+                    true,
+                    new PropertyModel<String>( this, "longTime" ) ) );
+        }
+        timeLabel.setVisible( isPresent() );
+        socialItemContainer.add( timeLabel );
+        if ( !present ) {
+            getNameLabel().add( new AttributeModifier( "title", true, new Model<String>( "left " + time ) ) );
+        }
+    }
+
+    public boolean isPresent() {
+        PresenceEvent presenceEvent = getLatestPresenceEvent();
+        return presenceEvent != null && presenceEvent.isLogin();
     }
 
     private PresenceEvent getLatestPresenceEvent() {

@@ -350,12 +350,16 @@ CONFIGURATION NOTES:
 
     <!-- Collaboration services -->
 
-    <bean id="plannerMessagingService" class="com.mindalliance.channels.social.DefaultPlannerMessagingService">
+    <bean id="databaseFactory" class="com.mindalliance.channels.social.DefaultDatabaseFactory">
         <property name="odbDir" value="${channels.home}${file.separator}data"/>
+    </bean>
+    
+    <bean id="plannerMessagingService" class="com.mindalliance.channels.social.DefaultPlannerMessagingService">
+        <property name="databaseFactory" ref="databaseFactory"/>
     </bean>
 
     <bean id="planningEventService" class="com.mindalliance.channels.social.DefaultPlanningEventService">
-        <property name="odbDir" value="${channels.home}${file.separator}data"/>
+        <property name="databaseFactory" ref="databaseFactory"/>
     </bean>
 
 </beans>

@@ -26,8 +26,8 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
             IModel<PlannerMessage> plannerMessageModel,
             boolean showReceived,
             Updatable updatable ) {
-        super( id,
-                getInvolvement( showReceived ),
+        super(
+                id,
                 getMessageUserName( showReceived, plannerMessageModel),
                 updatable );
         this.plannerMessageModel = plannerMessageModel;
@@ -36,8 +36,13 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
     }
 
     private static String getInvolvement(boolean showReceived) {
-        return showReceived ? "From" : "To";
+        return showReceived ? "From " : "To ";
     }
+
+    public String getUserFullName() {
+         return getInvolvement( showReceived ) + super.getUserFullName();
+     }
+
 
     private static String getMessageUserName(
             boolean showReceived,
@@ -63,8 +68,9 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
     }
 
     protected void moreInit( WebMarkupContainer socialItemContainer ) {
-        addMessage( socialItemContainer );
         addSubject( socialItemContainer );
+        addMessage( socialItemContainer );
+        addTime( socialItemContainer );
     }
 
     private void addMessage( WebMarkupContainer socialItemContainer ) {
@@ -93,6 +99,11 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
         socialItemContainer.add( subjectContainer );
     }
 
+    private void addTime( WebMarkupContainer socialItemContainer ) {
+        String timeLabelString = "(" + getTime() + ")";
+        Label timeLabel = new Label( "time", new Model<String>( timeLabelString ) );
+        socialItemContainer.add( timeLabel );
+    }
 
     private PlannerMessage getPlannerMessage() {
         return plannerMessageModel.getObject();

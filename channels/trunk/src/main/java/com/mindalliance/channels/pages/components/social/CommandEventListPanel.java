@@ -3,20 +3,19 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.CommandEvent;
 import com.mindalliance.channels.social.PlanningEventService;
 import com.mindalliance.channels.util.PeekAheadIterator;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
@@ -38,10 +37,11 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
     private static final int A_FEW = 7;
     private static final int MORE = 7;
     private int numberToShow = A_FEW;
+    boolean allShown = false;
     private boolean othersOnly = true;
-    private boolean allShown;
     private WebMarkupContainer planningEventsContainer;
-
+    private AjaxFallbackLink showHideLink;
+    private Label showHideLabel;
     private WebMarkupContainer noCommandContainer;
     private AjaxFallbackLink showAFew;
     private AjaxFallbackLink showMore;
@@ -54,7 +54,9 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        addOthersOnly();
+        addHideSocial();
+        addShowHideLink();
+        addShowHideLabel();
         planningEventsContainer = new WebMarkupContainer( "planningEventsContainer" );
         planningEventsContainer.setOutputMarkupId( true );
         add( planningEventsContainer );
@@ -64,17 +66,34 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
         adjustComponents();
     }
 
-    private void addOthersOnly() {
-        CheckBox othersOnlyCheckBox = new CheckBox(
-                "othersOnly",
-                new PropertyModel<Boolean>( this, "othersOnly" ) );
-        othersOnlyCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                addCommandEvents();
-                adjustComponents( target );
+    private void addHideSocial() {
+        AjaxFallbackLink hideSocialLink = new AjaxFallbackLink( "hideAll" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Collapsed, Channels.SOCIAL_ID ) );
             }
-        } );
-        add( othersOnlyCheckBox );
+        };
+        add( hideSocialLink );
+    }
+
+    private void addShowHideLink() {
+        showHideLink = new AjaxFallbackLink( "hideShowLink" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                othersOnly = !othersOnly;
+                addShowHideLabel();
+                addCommandEvents();
+                target.addComponent( showHideLabel );
+                target.addComponent( planningEventsContainer );
+            }
+        };
+        add( showHideLink );
+    }
+
+    private void addShowHideLabel() {
+        showHideLabel = new Label(
+                "hideShow",
+                othersOnly ? "show all activites" : "hide my activites"  );
+        showHideLabel.setOutputMarkupId( true );
+        showHideLink.addOrReplace( showHideLabel );
     }
 
     private void adjustComponents( AjaxRequestTarget target ) {

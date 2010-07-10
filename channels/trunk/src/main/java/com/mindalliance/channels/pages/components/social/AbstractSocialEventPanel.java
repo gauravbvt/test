@@ -35,17 +35,13 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     @SpringBean
     private PlanningEventService planningEventService;
 
-    private String involvement;
     private String username;
     private Updatable updatable;
 
-    public AbstractSocialEventPanel( String id, String username, Updatable updatable ) {
-        this( id, "", username, updatable );
-    }
+    private Label nameLabel;
 
-    public AbstractSocialEventPanel( String id, String involvement, String username, Updatable updatable ) {
+    public AbstractSocialEventPanel( String id, String username, Updatable updatable ) {
         super( id );
-        this.involvement = involvement;
         this.username = username;
         this.updatable = updatable;
     }
@@ -68,17 +64,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         add( socialItemContainer );
         addMoreMenu( socialItemContainer );
         addPhoto( socialItemContainer );
-        addInvolvement( socialItemContainer );
         addName( socialItemContainer );
         addJobTitles( socialItemContainer );
-        addTime( socialItemContainer );
         moreInit( socialItemContainer );
-    }
-
-    private void addInvolvement( WebMarkupContainer socialItemContainer ) {
-        Label involvementLabel = new Label( "involvement", involvement );
-        involvementLabel.setVisible( !involvement.isEmpty() );
-        socialItemContainer.add( involvementLabel );
     }
 
     private void addMoreMenu( WebMarkupContainer socialItemContainer ) {
@@ -97,29 +85,13 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     private void addName( WebMarkupContainer socialItemContainer ) {
-        Label nameLabel = new Label( "name", new PropertyModel<String>( this, "userFullName" ) );
+        nameLabel = new Label( "name", new PropertyModel<String>( this, "userFullName" ) );
         socialItemContainer.add( nameLabel );
     }
 
     private void addJobTitles( WebMarkupContainer socialItemContainer ) {
         Label jobsLabel = new Label( "titles", new PropertyModel<String>( this, "jobTitles" ) );
         socialItemContainer.add( jobsLabel );
-    }
-
-    private void addTime( WebMarkupContainer socialItemContainer ) {
-        String time = getTime();
-        String timeLabelString = "";
-        if ( !time.isEmpty() ) {
-            timeLabelString = "(" + time + ")";
-        }
-        Label timeLabel = new Label( "time", new Model<String>( timeLabelString ) );
-        if ( !timeLabelString.isEmpty() ) {
-            timeLabel.add( new AttributeModifier(
-                    "title",
-                    true,
-                    new PropertyModel<String>( this, "longTime" ) ) );
-        }
-        socialItemContainer.add( timeLabel );
     }
 
     public String getUserFullName() {
@@ -187,5 +159,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         return planningEventService;
     }
 
-
+    protected Label getNameLabel() {
+        return nameLabel;
+    }
 }

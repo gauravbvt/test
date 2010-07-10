@@ -11,10 +11,13 @@ import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.social.CommandEvent;
 import com.mindalliance.channels.social.PlanningEventService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
@@ -44,6 +47,7 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
     protected void moreInit( WebMarkupContainer socialItemContainer ) {
         addCommandEvent( socialItemContainer );
         addSubject( socialItemContainer );
+        addTime( socialItemContainer );
     }
 
     private void addCommandEvent( WebMarkupContainer socialItemContainer ) {
@@ -63,29 +67,26 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
     }
 
     private void addSubject( WebMarkupContainer socialItemContainer ) {
-        WebMarkupContainer subjectContainer = new WebMarkupContainer( "subject" );
         Identifiable identifiable;
         CommandEvent commandEvent = getCommandEvent();
-        boolean linked = false;
         String subject = getTargetDescription( commandEvent );
         Change change = commandEvent.getChange();
+        Component modelObjectComponent = null;
         if ( change != null ) {
             identifiable = change.getSubject( getQueryService() );
             if ( identifiable != null && identifiable instanceof ModelObject ) {
                 ModelObject mo = (ModelObject) identifiable;
-                ModelObjectLink moLink = new ModelObjectLink(
+                modelObjectComponent = new ModelObjectLink(
                         "modelObject",
                         new Model<ModelObject>( mo ),
                         new Model<String>( subject ) );
-                subjectContainer.add( moLink );
-                linked = true;
             }
         }
-        if ( !linked ) {
-            subjectContainer.add( new Label( "modelObject", subject ) );
+        if ( modelObjectComponent == null ) {
+            modelObjectComponent = new Label( "modelObject", subject );
         }
-        subjectContainer.setVisible( !subject.isEmpty() );
-        socialItemContainer.add( subjectContainer );
+        socialItemContainer.add( modelObjectComponent );
+        socialItemContainer.setVisible( !subject.isEmpty() );
     }
 
     private String getTargetDescription( CommandEvent commandEvent ) {
@@ -102,6 +103,22 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
             }
         }
         return description;
+    }
+
+    private void addTime( WebMarkupContainer socialItemContainer ) {
+        String time = getTime();
+        String timeLabelString = "";
+        if ( !time.isEmpty() ) {
+            timeLabelString = "(" + time + ")";
+        }
+        Label timeLabel = new Label( "time", new Model<String>( timeLabelString ) );
+        if ( !timeLabelString.isEmpty() ) {
+            timeLabel.add( new AttributeModifier(
+                    "title",
+                    true,
+                    new PropertyModel<String>( this, "longTime" ) ) );
+        }
+        socialItemContainer.add( timeLabel );
     }
 
 

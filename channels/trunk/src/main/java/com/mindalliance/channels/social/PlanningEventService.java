@@ -15,4 +15,5 @@ public interface PlanningEventService extends CommandListener, PresenceListener 
     Iterator<CommandEvent> getCommandEvents();
 
     PresenceEvent findLatestPresence( String username );
+    
 }

@@ -2,11 +2,9 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.PlannerMessagingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
@@ -46,18 +44,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        this.setOutputMarkupId( true );
-        addHideLink();
         addSocialTabs();
-    }
-
-    private void addHideLink() {
-        AjaxFallbackLink hideLink = new AjaxFallbackLink( "hide" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Collapsed, Channels.SOCIAL_ID ) );
-            }
-        };
-        add( hideLink );
     }
 
     private void addSocialTabs() {
@@ -88,14 +75,6 @@ public class SocialPanel extends AbstractUpdatablePanel {
         } );
         return tabs;
     }
-
-/*    public String getMessagesTitle() {
-        int unreadCount = plannerMessagingService.getUnreadCount();
-        if ( unreadCount == 0 )
-            return "Messages";
-        else
-            return "Messages (" + unreadCount + ")";
-    }*/
 
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         if ( plannerPresenceListPanel != null && tabbedPanel.getSelectedTab() == 0 )

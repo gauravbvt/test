@@ -7,7 +7,8 @@
         lang="en">
 <body>
 <wicket:panel>
-    <input wicket:id="onlyHere" type="checkbox"/> Only show who's here
+    <a wicket:id="hideAll" href="#"><img src="/images/hide.png" alt="Hide social panel"/></a>
+    <a wicket:id="hideShowLink" href="#"><span wicket:id="hideShow">Hide inactive users</span></a>
     <div  class="social-list" wicket:id="presencesContainer">
         <span wicket:id="presences">
             <div wicket:id="presence">[presence panel]</div>
