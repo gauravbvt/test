@@ -304,6 +304,8 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 sendNewMessage();
                 resetNewMessage( target );
+                addPlannerMessages();
+                adjustComponents( target );
             }
         };
         newMessageContainer.add( sendLink );
