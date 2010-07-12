@@ -7,6 +7,7 @@ import org.neodatis.odb.core.query.criteria.Where;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -24,8 +25,10 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
      */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultPlannerMessagingService.class );
     private ODBTransactionFactory databaseFactory;
+    private Date whenLastChanged;
 
     public DefaultPlannerMessagingService() {
+        whenLastChanged = new Date();
     }
 
     public PlannerMessage broadcastMessage( String text ) {
@@ -38,15 +41,16 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         this.databaseFactory = databaseFactory;
     }
 
-    private synchronized void addSentMessage( PlannerMessage message ) {
+    private void addSentMessage( PlannerMessage message ) {
         getOdb().store( message );
+        whenLastChanged = new Date();
     }
 
     public void sendMessage( PlannerMessage message ) {
         addSentMessage( message );
     }
 
-    public synchronized Iterator<PlannerMessage> getReceivedMessages() {
+    public Iterator<PlannerMessage> getReceivedMessages() {
         return getOdb().iterate(
                 PlannerMessage.class,
                 Where.and()
@@ -79,6 +83,10 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                 ODBAccessor.Ordering.Descendant,
                 "date"
         );
+    }
+
+    public Date getWhenLastChanged() {
+        return whenLastChanged;
     }
 
     private String getUsername() {

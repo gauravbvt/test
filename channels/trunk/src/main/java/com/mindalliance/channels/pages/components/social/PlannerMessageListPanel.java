@@ -29,6 +29,7 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -69,6 +70,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
     private Label showHideBroadcastsLabel;
     private AjaxFallbackLink sentReceivedLink;
     private Label sentReceivedLabel;
+    private Date whenLastRefreshed;
 
     public PlannerMessageListPanel( String id, Updatable updatable ) {
         super( id );
@@ -90,6 +92,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
         addShowAFew();
         addNewMessage();
         adjustComponents();
+        whenLastRefreshed = new Date();
     }
 
     private void addHideSocial() {
@@ -102,46 +105,46 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
     }
 
     private void addShowHideBroadcastsLink() {
-         showHideBroadcastsLink = new AjaxFallbackLink( "hideShowBroadcastsLink" ) {
-             public void onClick( AjaxRequestTarget target ) {
-                 privateOnly = !privateOnly;
-                 addShowHideBroadcastsLabel();
-                 addPlannerMessages();
-                 target.addComponent( showHideBroadcastsLabel );
-                 target.addComponent( plannerMessagesContainer );
-             }
-         };
-         add( showHideBroadcastsLink );
-     }
+        showHideBroadcastsLink = new AjaxFallbackLink( "hideShowBroadcastsLink" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                privateOnly = !privateOnly;
+                addShowHideBroadcastsLabel();
+                addPlannerMessages();
+                target.addComponent( showHideBroadcastsLabel );
+                target.addComponent( plannerMessagesContainer );
+            }
+        };
+        add( showHideBroadcastsLink );
+    }
 
-     private void addShowHideBroadcastsLabel() {
-         showHideBroadcastsLabel = new Label(
-                 "hideShowBroadcasts",
-                 privateOnly ? "show all messages" : "hide broadcasts"  );
-         showHideBroadcastsLabel.setOutputMarkupId( true );
-         showHideBroadcastsLink.addOrReplace( showHideBroadcastsLabel );
-     }
+    private void addShowHideBroadcastsLabel() {
+        showHideBroadcastsLabel = new Label(
+                "hideShowBroadcasts",
+                privateOnly ? "show all messages" : "hide broadcasts" );
+        showHideBroadcastsLabel.setOutputMarkupId( true );
+        showHideBroadcastsLink.addOrReplace( showHideBroadcastsLabel );
+    }
 
     private void addShowReceivedSentLink() {
-          sentReceivedLink = new AjaxFallbackLink( "sentReceivedLink" ) {
-              public void onClick( AjaxRequestTarget target ) {
-                  showReceived = !showReceived;
-                  addShowReceivedSentLabel();
-                  addPlannerMessages();
-                  target.addComponent( sentReceivedLabel );
-                  target.addComponent( plannerMessagesContainer );
-              }
-          };
-          add( sentReceivedLink );
-      }
+        sentReceivedLink = new AjaxFallbackLink( "sentReceivedLink" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                showReceived = !showReceived;
+                addShowReceivedSentLabel();
+                addPlannerMessages();
+                target.addComponent( sentReceivedLabel );
+                target.addComponent( plannerMessagesContainer );
+            }
+        };
+        add( sentReceivedLink );
+    }
 
-      private void addShowReceivedSentLabel() {
-          sentReceivedLabel = new Label(
-                  "sentReceived",
-                  showReceived ? "show sent" : "show received"  );
-          sentReceivedLabel.setOutputMarkupId( true );
-          sentReceivedLink.addOrReplace( sentReceivedLabel );
-      }
+    private void addShowReceivedSentLabel() {
+        sentReceivedLabel = new Label(
+                "sentReceived",
+                showReceived ? "show sent" : "show received" );
+        sentReceivedLabel.setOutputMarkupId( true );
+        sentReceivedLink.addOrReplace( sentReceivedLabel );
+    }
 
     private void addPlannerMessages() {
         List<PlannerMessage> plannerMessages = getPlannerMessages();
@@ -364,7 +367,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
         if ( isShowReceived() ) {
             iterator = plannerMessagingService.getReceivedMessages();
         } else {
-             iterator = plannerMessagingService.getSentMessages();
+            iterator = plannerMessagingService.getSentMessages();
         }
         while ( iterator.hasNext() && plannerMessages.size() < numberToShow ) {
             PlannerMessage plannerMessage = iterator.next();
@@ -379,8 +382,11 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        addPlannerMessages();
-        adjustComponents( target );
+        if ( plannerMessagingService.getWhenLastChanged().after( whenLastRefreshed ) ) {
+            addPlannerMessages();
+            adjustComponents( target );
+            whenLastRefreshed = new Date();
+        }
     }
 
     public User getNewMessageRecipient() {

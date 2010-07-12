@@ -7,6 +7,7 @@ import com.mindalliance.channels.odb.ODBAccessor;
 import com.mindalliance.channels.odb.ODBTransactionFactory;
 import org.neodatis.odb.core.query.criteria.Where;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,8 +25,10 @@ public class DefaultPlanningEventService implements PlanningEventService {
     private ODBTransactionFactory databaseFactory;
 
     private Map<String, PresenceEvent> latestPresences = null;
+    private Date whenLastChanged    ;
 
     public DefaultPlanningEventService() {
+        whenLastChanged = new Date();
         resetLatestPresences();
     }
 
@@ -71,6 +74,7 @@ public class DefaultPlanningEventService implements PlanningEventService {
             resetLatestPresences();
         }
         getOdb().store( planningEvent );
+        whenLastChanged = new Date();
     }
 
     public Iterator<CommandEvent> getCommandEvents() {
@@ -82,17 +86,20 @@ public class DefaultPlanningEventService implements PlanningEventService {
     }
 
     public PresenceEvent findLatestPresence( String username ) {
+        PresenceEvent latestPresence;
         if ( latestPresences.containsKey( username ) ) {
-            return latestPresences.get( username );
+            latestPresence = latestPresences.get( username );
         } else {
-            return getOdb().first(
+            latestPresence = getOdb().first(
                     PresenceEvent.class,
                     Where.and()
                             .add( Where.equal( "username", username ) )
                             .add( Where.equal( "planId", getPlanId() ) ),
                     ODBAccessor.Ordering.Descendant,
                     "date" );
+            latestPresences.put( username, latestPresence );
         }
+        return latestPresence;
     }
 
     private ODBAccessor getOdb() {
@@ -104,4 +111,7 @@ public class DefaultPlanningEventService implements PlanningEventService {
         return User.current().getPlan().getId();
     }
 
+    public Date getWhenLastChanged() {
+        return whenLastChanged;
+    }
 }

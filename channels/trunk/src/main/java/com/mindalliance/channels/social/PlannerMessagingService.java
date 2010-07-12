@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social;
 
+import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -17,4 +18,7 @@ public interface PlannerMessagingService {
     Iterator<PlannerMessage> getReceivedMessages( );
 
     Iterator<PlannerMessage> getSentMessages();
+
+    Date getWhenLastChanged();
+
 }

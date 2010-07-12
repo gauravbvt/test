@@ -19,6 +19,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,6 +47,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
     private AjaxFallbackLink showAFew;
     private AjaxFallbackLink showMore;
     private Updatable updatable;
+    private Date whenLastRefreshed;
 
     public CommandEventListPanel( String id, Updatable updatable ) {
         super( id );
@@ -64,6 +66,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
         addShowMore();
         addShowAFew();
         adjustComponents();
+        whenLastRefreshed = new Date();
     }
 
     private void addHideSocial() {
@@ -91,7 +94,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
     private void addShowHideLabel() {
         showHideLabel = new Label(
                 "hideShow",
-                othersOnly ? "show all activites" : "hide my activites"  );
+                othersOnly ? "show all activites" : "hide my activites" );
         showHideLabel.setOutputMarkupId( true );
         showHideLink.addOrReplace( showHideLabel );
     }
@@ -184,8 +187,11 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        addCommandEvents();
-        adjustComponents( target );
+        if ( planningEventService.getWhenLastChanged().after( whenLastRefreshed ) ) {
+            addCommandEvents();
+            adjustComponents( target );
+            whenLastRefreshed = new Date();
+        }
     }
 
     public boolean isOthersOnly() {
