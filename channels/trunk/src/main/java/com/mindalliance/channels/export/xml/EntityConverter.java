@@ -6,6 +6,8 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -18,6 +20,11 @@ import java.util.Map;
  * Time: 4:10:27 PM
  */
 public abstract class EntityConverter extends AbstractChannelsConverter {
+
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( XmlStreamer.class );
 
     protected EntityConverter( XmlStreamer.Context context ) {
         super( context );
@@ -76,6 +83,10 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         String name = reader.getAttribute( "name" );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
         String kind = reader.getAttribute( "kind" );
+        if ( kind == null ) {
+            LOG.warn( "Kind of entity is not set" );
+            kind = ModelEntity.defaultKindFor( getEntityClass() ).name();
+        }
         // The default kind is Actual
         boolean isType = ( kind != null && ModelEntity.Kind.valueOf( kind ) == ModelEntity.Kind.Type );
         ModelEntity entity = getEntity(

@@ -1414,7 +1414,7 @@ public final class PlanPage extends WebPage implements Updatable {
             }
         } else if ( change.isForInstanceOf( Flow.class ) ) {
             Flow changedFlow = (Flow) change.getSubject( queryService );
-            if ( change.isUpdated() && change.getProperty().equals( "other" ) ) {
+            if ( change.isUpdated() && change.isForProperty( "other" ) ) {
                 expand( changedFlow );
             } else if ( change.isSelected() ) {
                 if ( changedFlow.getSegment() != segment ) {

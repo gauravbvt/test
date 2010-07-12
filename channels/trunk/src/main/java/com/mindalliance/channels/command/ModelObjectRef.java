@@ -50,7 +50,10 @@ public class ModelObjectRef implements Serializable {
     public ModelObjectRef( Identifiable identifiable ) {
         if ( identifiable instanceof ModelEntity ) {
             entityName = identifiable.getName();
-            entityKind = ( (ModelEntity) identifiable ).getKind().name();
+            ModelEntity.Kind kind = ( (ModelEntity) identifiable ).getKind();
+            // TODO - hack: remove this patch once all Phases are correctly initialized
+            if ( kind == null ) kind = ModelEntity.defaultKindFor( (Class<? extends ModelEntity>)identifiable.getClass() );
+            entityKind = kind.name();
         }
         id = identifiable.getId();
         className = identifiable.getClass().getName();

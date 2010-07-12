@@ -94,7 +94,8 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
 
     private Set<Actor> detectSignificantCutpoints() {
         Set<Actor> cutpoints = new HashSet<Actor>();
-        GraphBuilder<Actor, EntityRelationship<Actor>> graphBuilder = new ActorsNetworkGraphBuilder( analyst );
+        GraphBuilder<Actor, EntityRelationship<Actor>> graphBuilder =
+                new ActorsNetworkGraphBuilder( analyst.getQueryService() );
         final DirectedGraph<Actor, EntityRelationship<Actor>> digraph = graphBuilder.buildDirectedGraph();
         if ( !digraph.edgeSet().isEmpty() ) {
             BlockCutpointGraph<Actor, EntityRelationship<Actor>> bcg =

@@ -198,11 +198,11 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     public boolean isActual() {
-        return kind == Kind.Actual;
+        return getKind() == Kind.Actual;
     }
 
     public boolean isType() {
-        return kind == Kind.Type;
+        return getKind() == Kind.Type;
     }
 
     public void setType() {
