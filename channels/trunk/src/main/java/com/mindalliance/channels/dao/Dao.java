@@ -2,7 +2,9 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
@@ -10,7 +12,6 @@ import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.Flow;
 
 import java.util.List;
 
@@ -30,14 +31,14 @@ public interface Dao {
      * Create a part with given id if not null.
      *
      * @param segment the segment that will contain this part
-     * @param id a Long
+     * @param id      a Long
      * @return a new default part.
      */
     Part createPart( Segment segment, Long id );
 
     /**
      * @param segment the segment that will contain this connector
-     * @param id a Long
+     * @param id      a Long
      * @return a new connector.
      */
     Connector createConnector( Segment segment, Long id );
@@ -71,7 +72,8 @@ public interface Dao {
      * @param id    the id
      * @param <T>   a subclass of modelobject
      * @return the object
-     * @throws com.mindalliance.channels.model.NotFoundException when not found
+     * @throws com.mindalliance.channels.model.NotFoundException
+     *          when not found
      */
     <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
 
@@ -126,9 +128,10 @@ public interface Dao {
 
     /**
      * Find an existing or create a new model object.
+     *
      * @param clazz the kind of model object
-     * @param name the name to look for, or null if irrelevant
-     * @param id the id to look for, or null if irrelevant
+     * @param name  the name to look for, or null if irrelevant
+     * @param id    the id to look for, or null if irrelevant
      * @param <T>   a subclass of model object
      * @return the relevant model object
      */
@@ -136,9 +139,11 @@ public interface Dao {
 
     /**
      * Find a named segment.
+     *
      * @param name the name
      * @return the segment, if found
-     * @throws com.mindalliance.channels.model.NotFoundException if none exists
+     * @throws com.mindalliance.channels.model.NotFoundException
+     *          if none exists
      */
     Segment findSegment( String name ) throws NotFoundException;
 
@@ -146,6 +151,7 @@ public interface Dao {
 
     /**
      * Get the plan associated with this dao.
+     *
      * @return a plan
      */
     Plan getPlan();
@@ -165,4 +171,12 @@ public interface Dao {
      * @return a flow from a new connector to this node
      */
     Flow createReceive( Node node );
+
+    /**
+     * Find all planner-created issues about a model object.
+     *
+     * @param modelObject a model object
+     * @return a list of user issues
+     */
+    List<Issue> findAllUserIssues( ModelObject modelObject );
 }

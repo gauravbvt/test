@@ -8,23 +8,23 @@ import com.mindalliance.channels.model.InvalidEntityKindException;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.NotFoundException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.ArrayList;
 
 /**
  * An in-memory, no-transactions implementation of a store.
@@ -393,4 +393,5 @@ public abstract class AbstractDao implements Dao {
         return connect(
                 createConnector( node.getSegment(), null ), node, Node.DEFAULT_FLOW_NAME, null );
     }
+
 }

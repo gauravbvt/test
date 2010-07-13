@@ -38,7 +38,6 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.nlp.SemanticMatcher;
@@ -776,12 +775,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public List<Issue> findAllUserIssues( ModelObject identifiable ) {
-        List<Issue> foundIssues = new ArrayList<Issue>();
-        for ( UserIssue userIssue : list( UserIssue.class ) ) {
-            if ( userIssue.getAbout().getId() == identifiable.getId() )
-                foundIssues.add( userIssue );
-        }
-        return foundIssues;
+        return getDao().findAllUserIssues( identifiable );
     }
 
     /**
