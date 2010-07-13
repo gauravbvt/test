@@ -660,7 +660,7 @@ public class DefaultCommander implements Commander {
     public void initialize() {
         replayJournal();
         queryService.getAttachmentManager().removeUnattached( planDao );
-        analyst.onStart();
+        analyst.onStart( planDao.getPlan() );
     }
 
     public ImportExportFactory getImportExportFactory() {

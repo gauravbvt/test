@@ -157,6 +157,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
                         "plannerMessage",
                         new Model<PlannerMessage>( plannerMessage ),
                         isShowReceived(),
+                        item.getIndex(),
                         updatable );
                 item.add( plannerMessagePanel );
             }

@@ -25,10 +25,12 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
             String id,
             IModel<PlannerMessage> plannerMessageModel,
             boolean showReceived,
+            int index,
             Updatable updatable ) {
         super(
                 id,
                 getMessageUserName( showReceived, plannerMessageModel),
+                index,
                 updatable );
         this.plannerMessageModel = plannerMessageModel;
         this.showReceived = showReceived;
@@ -53,10 +55,11 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
     }
 
 
-    protected String getCssClass() {
-        return getPlannerMessage().isBroadcast()
+    protected String getCssClasses() {
+        String cssClasses = getPlannerMessage().isBroadcast()
                 ? "broadcast"
                 : "private";
+        return cssClasses + super.getCssClasses();
     }
 
     public String getTime() {

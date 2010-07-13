@@ -13,8 +13,9 @@ import com.mindalliance.channels.model.Plan;
 public interface Scanner {
     /**
      * Start scan of all plans.
+     * @param plan a plan
      */
-    void scan();
+    void scan( Plan plan );
 
     /**
      * Abort scan of plan and restart it.

@@ -36,17 +36,17 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     private PlanningEventService planningEventService;
 
     private String username;
+    private int index;
     private Updatable updatable;
 
     private Label nameLabel;
 
-    public AbstractSocialEventPanel( String id, String username, Updatable updatable ) {
+    public AbstractSocialEventPanel( String id, String username, int index, Updatable updatable ) {
         super( id );
         this.username = username;
+        this.index = index;
         this.updatable = updatable;
     }
-
-    protected abstract String getCssClass();
 
     public abstract String getTime();
 
@@ -54,9 +54,18 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     protected abstract void moreInit( WebMarkupContainer socialItemContainer );
 
+    protected String getCssClasses() {
+        String cssClasses = index % 2 == 0
+                ? " even"
+                : " odd";
+        if ( index == 0 )
+            cssClasses += " first";
+        return cssClasses;
+}
+
     protected void init() {
         WebMarkupContainer socialItemContainer = new WebMarkupContainer( "socialItem" );
-        String cssClasses = getCssClass();
+        String cssClasses = getCssClasses();
         if ( getUsername() != null && getUsername().equals( User.current().getUsername() ) ) {
             cssClasses += " self";
         }
@@ -90,7 +99,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     private void addJobTitles( WebMarkupContainer socialItemContainer ) {
-        Label jobsLabel = new Label( "titles", new PropertyModel<String>( this, "jobTitles" ) );
+        String jobTitles = getJobTitles();
+        Label jobsLabel = new Label( "titles", new Model<String>( jobTitles ) );
+        jobsLabel.setVisible( !jobTitles.isEmpty() );
         socialItemContainer.add( jobsLabel );
     }
 

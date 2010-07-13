@@ -73,16 +73,13 @@ public class IssueScanner implements Scanner, PlanListener {
         this.queryService = queryService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void scan() {
+ /*   public void scan() {
         LOG.debug( "Activating issue scans" );
         synchronized ( daemons  ) {
             for ( Daemon daemon : daemons.values() )
                 daemon.activate();
         }
-    }
+    }*/
 
     /**
      * {@inheritDoc}
@@ -104,7 +101,7 @@ public class IssueScanner implements Scanner, PlanListener {
         scan( plan );
     }
 
-    private void scan( Plan plan ) {
+    public void scan( Plan plan ) {
         Daemon daemon = new Daemon( plan );
         daemons.put( plan.getUri(), daemon );
         daemon.activate();

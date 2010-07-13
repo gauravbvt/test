@@ -7,14 +7,18 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div wicket:id="socialItem"> <!-- class = "joining", "leaving", "doing", "undoing", "redoing", "broadcast" or "private" -->
+    <div wicket:id="socialItem">
+        <!-- class = "joining", "leaving", "doing", "undoing", "redoing", "broadcast" or "private" -->
         <span class="menubar">
              <span wicket:id="menu">[planner action menu]</span>
         </span>
-        <img class="photo" wicket:id="pic" width="32" height="32" src="" alt="Picture">
-        <span class="name" wicket:id="name">name</span>
-        <span class="titles" wicket:id="titles">job titles</span>
-        <wicket:child/>
+
+        <div>
+            <img class="photo" wicket:id="pic" width="32" height="32" src="" alt="Picture">
+            <span class="name" wicket:id="name">name</span>
+            <span class="titles" wicket:id="titles">job titles</span>
+            <wicket:child/>
+        </div>
     </div>
 </wicket:panel>
 </body>

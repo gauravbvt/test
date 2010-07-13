@@ -99,6 +99,7 @@ public class PlannerPresenceListPanel extends AbstractUpdatablePanel {
                 PlannerPresencePanel presencePanel = new PlannerPresencePanel(
                         "presence",
                         planner.getUsername(),
+                        item.getIndex(),
                         updatable );
                 item.add( presencePanel );
             }

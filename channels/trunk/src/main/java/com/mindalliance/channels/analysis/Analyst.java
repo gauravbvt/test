@@ -195,8 +195,9 @@ public interface Analyst {
 
     /**
      * On startup.
+     * @param plan a plan
      */
-    void onStart();
+    void onStart( Plan plan );
 
     /**
      * On stop.

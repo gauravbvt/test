@@ -125,6 +125,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
                 CommandEventPanel commandEventPanel = new CommandEventPanel(
                         "commandEvent",
                         new Model<CommandEvent>( commandEvent ),
+                        item.getIndex(),
                         updatable );
                 item.add( commandEventPanel );
             }

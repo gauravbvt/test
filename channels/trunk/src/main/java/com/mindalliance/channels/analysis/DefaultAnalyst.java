@@ -85,7 +85,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
      */
     public void start() {
         running = true;
-        onStart();
+        // onStart();
     }
 
     /**
@@ -106,8 +106,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     /**
      * {@inheritDoc}
      */
-    public void onStart() {
-        issueScanner.scan();
+    public void onStart( Plan plan ) {
+        issueScanner.scan( plan );
     }
 
     /**

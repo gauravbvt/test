@@ -20,8 +20,12 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
 
     private PresenceEvent latestPresenceEvent = null;
 
-    public PlannerPresencePanel( String id, String username, Updatable updatable ) {
-        super( id, username, updatable );
+    public PlannerPresencePanel(
+            String id,
+            String username,
+            int index,
+            Updatable updatable ) {
+        super( id, username, index, updatable );
         init();
     }
 
@@ -30,11 +34,16 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
         addTime( socialItemContainer );
     }
 
-    protected String getCssClass() {
+    protected String getCssClasses() {
         PresenceEvent presenceEvent = getLatestPresenceEvent();
-        return presenceEvent != null && presenceEvent.isLogin()
+        String cssClasses = "";
+        if ( presenceEvent != null ) {
+            cssClasses = presenceEvent.isLogin()
                 ? "joining"
                 : "leaving";
+            cssClasses += super.getCssClasses();
+        }
+        return cssClasses;
     }
 
     public String getTime() {

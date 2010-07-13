@@ -100,6 +100,6 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Commitment without needed contact info";
+        return "Sharing commitment without contact info";
     }
 }

@@ -38,8 +38,8 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
 
     private IModel<CommandEvent> commandEventModel;
 
-    public CommandEventPanel( String id, IModel<CommandEvent> commandEventModel, Updatable updatable ) {
-        super( id, commandEventModel.getObject().getUsername(), updatable );
+    public CommandEventPanel( String id, IModel<CommandEvent> commandEventModel, int index, Updatable updatable ) {
+        super( id, commandEventModel.getObject().getUsername(), index, updatable );
         this.commandEventModel = commandEventModel;
         init();
     }
@@ -122,8 +122,8 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
     }
 
 
-    protected String getCssClass() {
-        return getCommandEventType();
+    protected String getCssClasses() {
+        return getCommandEventType() + super.getCssClasses();
     }
 
     private String getCommandEventType() {
