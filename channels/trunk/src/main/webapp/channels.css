@@ -1321,51 +1321,70 @@ div.section-content > div.flow > div > img {
 	height:20px;
 	float:left;
 	width:100%;
+	padding:1px 0 0 0;
 }
 
-#social div.tabpanel div.social-controls a img {border:none;}
+#social div.tabpanel div.social-controls a img {
+	border:none;
+	padding-top:1px;
+}
 
-#social div.tabpanel div.social-controls a {
+#social div.tabpanel div.social-controls div.text-controls {
+	height:20px;
+	float:right;
+	padding:0 10px 0 0;
+}
+
+#social div.tabpanel div.social-controls div.text-controls a {
 	font-size:10px;
 	font-weight:bold;
 	color:#666666;
-	padding-right:10px;
+	padding-left:10px;
 }
 
 #social div.tabpanel div.social-list,
 #social div.tabpanel div.social-list > span > div {
 	width:100%;
-	border-bottom:1px solid #bcbec0;
-}
-
-#social div.tabpanel div.social-list div.joining,
-#social div.tabpanel div.social-list div.leaving {
-	border-bottom:1px solid #bcbec0;
-	height:56px;
-	width:97%;
-	margin-left:5px;
 	float:left;
 }
 
-#social div.tabpanel div.social-list > span:first-child div.joining,
-#social div.tabpanel div.social-list > span:first-child div.leaving {
+#social div.tabpanel div.social-list > span > div > div {
+	border-bottom:1px solid #bcbec0;
+}
+
+#social div.tabpanel div.social-list div.first {
 	border-top:1px solid #999999;
 }
 
-#social div.tabpanel div.social-list > span:nth-child(odd) div.joining,
-#social div.tabpanel div.social-list > span:nth-child(odd) div.leaving {
+#social div.tabpanel div.social-list div.even {
 	background:#e8e8e8;
 }
 
-.social-list span.menubar {
-    float: right;
-	padding:19px 5px 0 5px;
-    position: relative;
+#social div.tabpanel table {
+	width:100%;
+	display:table;
+	line-height:100%;
+	border:none;
 }
 
-#social div.tabpanel div.social-list > span:nth-child(odd) div.joining img,
-#social div.tabpanel div.social-list > span:nth-child(odd) div.leaving img {
-	background:#dadada;
+#social div.tabpanel table td.photo-cont {
+	width:50px;
+}
+
+#social div.tabpanel table td table {
+	width:100%;
+}
+
+#social div.tabpanel table td,
+#social div.tabpanel table td table td {
+	vertical-align:top;
+}
+
+#social div.tabpanel div.social-list span.menubar,
+#social div.tabpanel div.social-list span.menubar {
+    float: right;
+	padding:5px;
+    position: relative;
 }
 
 #social div.tabpanel div.social-list img.photo {
@@ -1378,17 +1397,40 @@ div.section-content > div.flow > div > img {
 	float:left;
 }
 
-#social div.tabpanel div.social-list span.name {
+#social div.tabpanel div.social-list div.even img.photo {
+	background:#dadada;
+}
+
+#social div.tabpanel div.social-list div.joining span.name,
+#social div.tabpanel div.social-list div.leaving span.name {
 	font-size:12px;
 	font-weight:bold;
 	color:#333333;
-	padding:17px 0 0 0;
+	padding:0;
+	text-transform:capitalize;
+	float:left;
+	float:left;
 	display:block;
+}
+
+#social div.tabpanel div.social-list div.joining span.name {
+	padding:13px 0 2px 0;
+}
+
+#social div.tabpanel div.social-list div.leaving span.name {
+	padding:20px 0 2px 0;
+}
+
+#social div.tabpanel div.social-list div.even img.present,
+#social div.tabpanel div.social-list div.odd img.present {
+	display:block;
+	padding:15px 0 0 5px;
+	float:left;
+	background:none;
 }
 
 #social div.tabpanel div.social-list div.time {
 	font-size:10px;
 	font-weight:bold;
 	color:#959595;
-	text-transform:capitalize;
 }

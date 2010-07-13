@@ -9,17 +9,33 @@
 <wicket:panel>
     <div wicket:id="socialItem">
         <!-- class = "joining", "leaving", "doing", "undoing", "redoing", "broadcast" or "private" -->
-        <span class="menubar">
-             <span wicket:id="menu">[planner action menu]</span>
-        </span>
 
-        <div>
-            <img class="photo" wicket:id="pic" width="32" height="32" src="" alt="Picture">
-            <span class="name" wicket:id="name">name</span>
-            <span class="titles" wicket:id="titles">job titles</span>
-            <img wicket:id="icon" src="/images/present.png" alt="present">
-        </div>
-        <wicket:child/>
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td valign="top" class="photo-cont">
+		            <img class="photo" wicket:id="pic" width="32" height="32" src="" alt="Picture">
+				</td>
+				<td valign="top">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="name-title-icon-menu">
+					            <span class="name" wicket:id="name">name</span>
+            					<span class="titles" wicket:id="titles">job titles</span>
+            					<img wicket:id="icon" src="/images/present.png" class="present" alt="present">
+						        <span class="menubar">
+    						         <span wicket:id="menu">[planner action menu]</span>
+        						</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+					            <wicket:child/>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
     </div>
 </wicket:panel>
 </body>
