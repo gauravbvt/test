@@ -14,14 +14,14 @@
 		    <a wicket:id="sentReceivedLink" href="#"><span wicket:id="sentReceived">show received</span></a>
 		</div>
 	</div>
-    <div wicket:id="plannerMessagesContainer"  class="social-list">
+    <div wicket:id="plannerMessagesContainer"  class="social-list messages">
         <span wicket:id="plannerMessages">
             <div wicket:id="plannerMessage">[planner message panel]</div>
         </span>
     </div>
     <div wicket:id="noMessages">No messages</div>
-    <input wicket:id="showMore" type="button" value="Show more"/>
-    <input wicket:id="showFew" type="button" value="Show a few"/>
+    <a wicket:id="showMore" href="#">Show more</a>
+    <a wicket:id="showFew" href="#">Show a few</a>
     <div wicket:id="newMessage" class="new-message">
         <div>To: <select wicket:id="recipient"><option>All</option></select></div>
         <div wicket:id="aboutContainer">About: <span wicket:id="about">[model object link panel]</span></div>

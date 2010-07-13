@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.social.menus;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.pages.Updatable;
@@ -27,16 +28,16 @@ import java.util.List;
  * Time: 7:50:03 PM
  */
 public class SocialItemMenuPanel extends MenuPanel {
-    
+
     private String username;
     private Updatable updatable;
     private IModel<Participation> participationModel;
 
     public SocialItemMenuPanel(
             String id,
-            IModel<Participation>participationModel,
+            IModel<Participation> participationModel,
             String username,
-            Updatable updatable) {
+            Updatable updatable ) {
         super( id, "more", participationModel );
         this.participationModel = participationModel;
         this.username = username;
@@ -46,7 +47,7 @@ public class SocialItemMenuPanel extends MenuPanel {
 
     protected void init() {
         // do nothing
-    }    
+    }
 
     private void doInit() {
         super.init();
@@ -59,25 +60,28 @@ public class SocialItemMenuPanel extends MenuPanel {
             final Actor actor = participation.getActor();
             if ( actor != null ) {
                 Link link = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Expanded, actor ) );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Show profile" ),
-                    link ) );
+                    public void onClick( AjaxRequestTarget target ) {
+                        update( target, new Change( Change.Type.Expanded, actor ) );
+                    }
+                };
+                menuItems.add( new LinkMenuItem(
+                        "menuItem",
+                        new Model<String>( "Show profile" ),
+                        link ) );
+            }
+            String participant = participation.getUsername();
+            if ( participant != null && !participant.equals( User.current().getUsername() ) ) {
+                Link link = new AjaxFallbackLink( "link" ) {
+                    public void onClick( AjaxRequestTarget target ) {
+                        updatable.update( target, username, SocialPanel.SEND_MESSAGE );
+                    }
+                };
+                menuItems.add( new LinkMenuItem(
+                        "menuItem",
+                        new Model<String>( "Send message" ),
+                        link ) );
             }
         }
-        Link link = new AjaxFallbackLink( "link" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                updatable.update( target, username, SocialPanel.SEND_MESSAGE );
-            }
-        };
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "Send message" ),
-                link ) );
         return menuItems;
     }
 

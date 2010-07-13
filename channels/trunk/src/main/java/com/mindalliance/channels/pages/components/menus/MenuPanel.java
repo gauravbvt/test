@@ -38,7 +38,10 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * Confirmation requested.
      */
     protected static boolean CONFIRM = true;
-
+    /**
+     * List view of menu items.
+     */
+    private ListView<Component> menuItemsList;
     /**
      * Title.
      */
@@ -67,14 +70,14 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
     protected void init() {
         setOutputMarkupId( true );
         add( new Label( "menu-title", new Model<String>( title ) ) );
-        ListView<Component> menuItems = new ListView<Component>(
+        menuItemsList = new ListView<Component>(
                 "items",
                 new PropertyModel<List<Component>>( this, "menuItems" ) ) {
             protected void populateItem( ListItem<Component> item ) {
                 item.add( item.getModelObject() );
             }
         };
-        add( menuItems );
+        add( menuItemsList );
     }
 
     /**
@@ -84,6 +87,21 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @throws CommandException if fails to get menu items
      */
     public abstract List<Component> getMenuItems() throws CommandException;
+
+    /**
+     * Whether the menu is empty.
+     *
+     * @return a boolean
+     */
+    public boolean isEmpty() {
+        List<Component> menuItems = null;
+        try {
+            menuItems = getMenuItems();
+        } catch ( CommandException e ) {
+            // do nothing
+        }
+        return menuItems != null && menuItems.size() == 0;
+    }
 
     /**
      * Make menu items linking to model object pages.

@@ -92,6 +92,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 new PropertyModel<Participation>( this, "participation" ),
                 getUsername(),
                 updatable );
+        menu.setVisible( !menu.isEmpty() );
         socialItemContainer.add( menu );
     }
 
