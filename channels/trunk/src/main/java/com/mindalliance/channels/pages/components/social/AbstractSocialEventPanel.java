@@ -63,8 +63,12 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 : " odd";
         if ( index == 0 )
             cssClasses += " first";
+        PresenceEvent presenceEvent = getLatestPresenceEvent();
+        cssClasses += presenceEvent != null && presenceEvent.isLogin()
+                ? " joining"
+                : " leaving";
         return cssClasses;
-}
+    }
 
     protected void init() {
         WebMarkupContainer socialItemContainer = new WebMarkupContainer( "socialItem" );

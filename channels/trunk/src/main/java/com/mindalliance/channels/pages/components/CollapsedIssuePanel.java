@@ -10,6 +10,8 @@ import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -51,7 +53,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         this.setOutputMarkupId( true );
         final Issue issue = getIssue();
         addMenubar( issue );
-        addLabelAndSuggestion( issue );
+        addSummary();
         addWaiving( issue );
         addSurveying( issue );
     }
@@ -116,7 +118,17 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         waivedContainer.add( waiveCheckBox );
     }
 
-    private void addLabelAndSuggestion( final Issue issue ) {
+    private void addSummary(  ) {
+        final Issue issue = getIssue();
+        WebMarkupContainer summary = new WebMarkupContainer( "summary" );
+        summary.setOutputMarkupId( true );
+        summary.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getIssue() ) );
+            }
+        } );
+        summary.add( new AttributeModifier( "class", true, new Model<String>( "summary pointer" ) ) );
+        addOrReplace( summary );
         Label label;
         Label suggestion;
         if ( issue.isDetected() ) {
@@ -138,8 +150,8 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
                 }
             } );
         }
-        add( label );
-        add( suggestion );
+        summary.add( label );
+        summary.add( suggestion );
     }
 
     private Issue getIssue() {

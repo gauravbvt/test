@@ -1,16 +1,22 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
+import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -50,6 +56,10 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * Issue action menu.
      */
     private IssueActionsMenuPanel issueActionMenu;
+    /**
+     * Summary container.
+     */
+    private WebMarkupContainer summary;
 
     public ExpandedIssuePanel( String id, IModel<Issue> model ) {
         super( id );
@@ -61,6 +71,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         Issue issue = model.getObject();
         setOutputMarkupId( true );
         addIssueActionsMenu();
+        addSummary( );
         // Description
         descriptionArea = new TextArea<String>( "description",
                 new PropertyModel<String>( this, "description" ) );
@@ -68,6 +79,8 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssueActionsMenu();
                 target.addComponent( issueActionMenu );
+                addSummary();
+                target.addComponent( summary );
             }
         } );
         add( descriptionArea );
@@ -79,7 +92,8 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         );
         typeChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                // do nothing
+                addSummary();
+                target.addComponent( summary );
             }
         } );
         add( typeChoice );
@@ -100,7 +114,8 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 );
         severityChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                // do nothing
+                addSummary();
+                target.addComponent( summary );
             }
         } );
         add( severityChoice );
@@ -111,6 +126,8 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssueActionsMenu();
                 target.addComponent( issueActionMenu );
+                addSummary();
+                target.addComponent( summary );
             }
         } );
         add( remediationArea );
@@ -119,6 +136,43 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 new PropertyModel<String>( issue, "reportedBy" ) ) );
         adjustFields();
     }
+
+    private void addSummary(  ) {
+        final Issue issue = getIssue();
+        summary = new WebMarkupContainer( "summary" );
+        summary.setOutputMarkupId( true );
+        summary.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Collapsed, getIssue() ) );
+            }
+        } );
+        summary.add( new AttributeModifier( "class", true, new Model<String>( "summary pointer" ) ) );
+        addOrReplace( summary );
+        Label label;
+        Label suggestion;
+        if ( issue.isDetected() ) {
+            label = new Label( "issue-label", new PropertyModel( issue, "label" ) );
+            suggestion = new Label( "issue-suggestion", new PropertyModel( issue, "remediation" ) );
+        } else {
+            label = new Label( "issue-label", new AbstractReadOnlyModel() {
+
+                public Object getObject() {
+                    return issue.getLabel( IssuesPanel.MAX_LENGTH );
+                }
+            } );
+            suggestion = new Label( "issue-suggestion", new AbstractReadOnlyModel() {
+
+                public Object getObject() {
+                    return StringUtils.abbreviate(
+                            issue.getRemediation().replaceAll( "\n", " " ),
+                            IssuesPanel.MAX_LENGTH );
+                }
+            } );
+        }
+        summary.add( label );
+        summary.add( suggestion );
+    }
+
 
     private void adjustFields() {
         descriptionArea.setEnabled( !getIssue().isDetected()

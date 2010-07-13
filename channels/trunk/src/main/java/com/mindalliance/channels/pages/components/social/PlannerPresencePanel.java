@@ -31,18 +31,6 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
         addTime( socialItemContainer );
     }
 
-    protected String getCssClasses() {
-        PresenceEvent presenceEvent = getLatestPresenceEvent();
-        String cssClasses = "";
-        if ( presenceEvent != null ) {
-            cssClasses = presenceEvent.isLogin()
-                ? "joining"
-                : "leaving";
-        }
-        cssClasses += super.getCssClasses();        
-        return cssClasses;
-    }
-
     public String getTime() {
         PresenceEvent presenceEvent = getLatestPresenceEvent();
         return presenceEvent == null ? "" : presenceEvent.getShortTimeElapsedString();

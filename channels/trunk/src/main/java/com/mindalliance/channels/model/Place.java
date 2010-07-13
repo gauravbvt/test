@@ -111,10 +111,11 @@ public class Place extends ModelEntity implements GeoLocatable {
     public List<ModelEntity> getImplicitTags() {
         List<ModelEntity> implicitTags = new ArrayList<ModelEntity>();
         if ( isRegion() ) {
-            if ( geoLocation.isCity() ) implicitTags.add( City );
-            else if ( geoLocation.isCounty() ) implicitTags.add( County );
-            else if ( geoLocation.isState() ) implicitTags.add( State );
-            else if ( geoLocation.isCountry() ) implicitTags.add( Country );
+            GeoLocation geo = geoLocate();
+            if ( geo.isCity() ) implicitTags.add( City );
+            else if ( geo.isCounty() ) implicitTags.add( County );
+            else if ( geo.isState() ) implicitTags.add( State );
+            else if ( geo.isCountry() ) implicitTags.add( Country );
         }
         return implicitTags;
     }
