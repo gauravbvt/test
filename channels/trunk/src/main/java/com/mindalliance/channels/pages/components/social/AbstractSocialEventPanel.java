@@ -138,7 +138,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 url = actor.getImageUrl();
         }
         if ( url == null ) {
-            url = "/images/actor.png";
+            url = "/images/actor.user.png";
         }
         return url;
     }

@@ -1239,18 +1239,156 @@ div.section-content > div.flow > div > img {
 	padding-right:5px;
 }
 
-/* ---- social --------*/
+/* ---- Social ----- */
 
 #social {
     position: absolute;
-    top: 5em;
+    top: 5.4em;
     bottom: 5px;
     right: 0;
     width: 20%;
     overflow: hidden;
     padding-bottom: 5px;
+	background:#c3d9ff;
+	border-left:1px solid #6c7b7b;
+	float:right;
 }
+
+#social div.tabpanel {
+	background:#f6f6f6;
+	bottom:0;
+	position:absolute;
+	top:0;
+	width:100%;
+}
+
+/* ----- Social - Tabbed Panels ----- */
+
+#social div.tabpanel div.tab-row {
+    float: left;
+    width: 100%;
+    background: #c3d9ff;
+    line-height: normal;
+}
+
+#social div.tabpanel div.tab-row ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#social div.tabpanel div.tab-row li {
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+#social div.tabpanel div.tab-row a {
+    display: block;
+    background: #e7f0ff;
+	height:20px;
+    padding: 4px 10px 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #666666;
+    white-space: nowrap;
+	border-top:1px solid #6c7b7b;
+	border-right:1px solid #6c7b7b;
+	border-bottom:1px solid #6c7b7b;
+}
+
+#social div.tabpanel div.tab-row a:hover {
+    color: #333333;
+}
+
+#social div.tabpanel div.tab-row li.selected { background:none; }
+
+#social div.tabpanel div.tab-row li.selected a {
+    display: block;
+    background: #f6f6f6;
+	height: 20px;
+    padding: 4px 10px 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #000000;
+    white-space: nowrap;
+	border-bottom:1px solid #f6f6f6;
+}
+
+/* ----- Social - Presence ----- */
+
+#social div.tabpanel div.social-controls {
+	height:20px;
+	float:left;
+	width:100%;
+}
+
+#social div.tabpanel div.social-controls a img {border:none;}
+
+#social div.tabpanel div.social-controls a {
+	font-size:10px;
+	font-weight:bold;
+	color:#666666;
+	padding-right:10px;
+}
+
+#social div.tabpanel div.social-list,
+#social div.tabpanel div.social-list > span > div {
+	width:100%;
+	border-bottom:1px solid #bcbec0;
+}
+
+#social div.tabpanel div.social-list div.joining,
+#social div.tabpanel div.social-list div.leaving {
+	border-bottom:1px solid #bcbec0;
+	height:56px;
+	width:97%;
+	margin-left:5px;
+	float:left;
+}
+
+#social div.tabpanel div.social-list > span:first-child div.joining,
+#social div.tabpanel div.social-list > span:first-child div.leaving {
+	border-top:1px solid #999999;
+}
+
+#social div.tabpanel div.social-list > span:nth-child(odd) div.joining,
+#social div.tabpanel div.social-list > span:nth-child(odd) div.leaving {
+	background:#e8e8e8;
+}
+
 .social-list span.menubar {
     float: right;
-    position: static;;
+	padding:19px 5px 0 5px;
+    position: relative;
+}
+
+#social div.tabpanel div.social-list > span:nth-child(odd) div.joining img,
+#social div.tabpanel div.social-list > span:nth-child(odd) div.leaving img {
+	background:#dadada;
+}
+
+#social div.tabpanel div.social-list img.photo {
+	background:#E8E8E8;
+	border:1px solid #999999;
+	padding:2px;
+	margin:9px;
+	width:32px;
+	height:32px;
+	float:left;
+}
+
+#social div.tabpanel div.social-list span.name {
+	font-size:12px;
+	font-weight:bold;
+	color:#333333;
+	padding:17px 0 0 0;
+	display:block;
+}
+
+#social div.tabpanel div.social-list div.time {
+	font-size:10px;
+	font-weight:bold;
+	color:#959595;
+	text-transform:capitalize;
 }
