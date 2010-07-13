@@ -81,7 +81,8 @@ public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel
     public void changed( Change change ) {
         if ( change.isSelected() ) {
             if ( change.isForInstanceOf( ModelEntity.class )
-                    || change.isForInstanceOf( SegmentObject.class ) ) {
+                    || change.isForInstanceOf( SegmentObject.class )
+                    || change.isForInstanceOf( Segment.class ) ) {
                 super.changed( change );
             } else if ( change.isForInstanceOf( EntityRelationship.class ) ) {
                 selectedEntityRel = (EntityRelationship<T>) change.getSubject( getQueryService() );
@@ -99,7 +100,8 @@ public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
             if ( change.isForInstanceOf( ModelEntity.class )
-                    || change.isForInstanceOf( SegmentObject.class ) ) {
+                    || change.isForInstanceOf( SegmentObject.class )
+                    || change.isForInstanceOf( Segment.class ) ) {
                 super.updateWith( target, change, updated );
             } else {
                 addEntitiesNetworkPanel();

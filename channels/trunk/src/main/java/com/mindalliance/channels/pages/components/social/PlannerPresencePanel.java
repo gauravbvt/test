@@ -18,8 +18,6 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class PlannerPresencePanel extends AbstractSocialEventPanel {
 
-    private PresenceEvent latestPresenceEvent = null;
-
     public PlannerPresencePanel(
             String id,
             String username,
@@ -30,7 +28,6 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
     }
 
     protected void moreInit( WebMarkupContainer socialItemContainer ) {
-        addIcon( socialItemContainer );
         addTime( socialItemContainer );
     }
 
@@ -41,8 +38,8 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
             cssClasses = presenceEvent.isLogin()
                 ? "joining"
                 : "leaving";
-            cssClasses += super.getCssClasses();
         }
+        cssClasses += super.getCssClasses();        
         return cssClasses;
     }
 
@@ -54,12 +51,6 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
     public String getLongTime() {
         PresenceEvent presenceEvent = getLatestPresenceEvent();
         return presenceEvent == null ? "" : presenceEvent.getLongTimeElapsedString();
-    }
-
-    private void addIcon( WebMarkupContainer socialItemContainer ) {
-        WebMarkupContainer icon = new WebMarkupContainer( "icon" );
-        icon.setVisible( isPresent() );
-        socialItemContainer.add( icon );
     }
 
     private void addTime( WebMarkupContainer socialItemContainer ) {
@@ -86,16 +77,5 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
         }
     }
 
-    public boolean isPresent() {
-        PresenceEvent presenceEvent = getLatestPresenceEvent();
-        return presenceEvent != null && presenceEvent.isLogin();
-    }
-
-    private PresenceEvent getLatestPresenceEvent() {
-        if ( latestPresenceEvent == null ) {
-            latestPresenceEvent = getPlanningEventService().findLatestPresence( getUsername() );
-        }
-        return latestPresenceEvent;
-    }
 
 }

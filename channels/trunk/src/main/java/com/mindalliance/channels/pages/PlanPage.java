@@ -575,7 +575,7 @@ public final class PlanPage extends WebPage implements Updatable {
         getCommander().processDeaths();
         getCommander().processTimeOuts();
         if ( getCommander().isTimedOut() ) {
-            refreshAll( target );
+            refreshAll( target );  // TODO -- only refresh forms on lockable objects
         } else {
             updateRefreshNotice();
             target.addComponent( refreshNeededComponent );

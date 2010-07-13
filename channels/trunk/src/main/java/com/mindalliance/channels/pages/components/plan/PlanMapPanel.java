@@ -496,11 +496,11 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
-            refresh( target );
             // Don't percolate update on selection unless a part was selected.
             if ( change.isForInstanceOf( Part.class ) ) {
                 super.updateWith( target, change, updated );
             } else {
+                refresh( target );
                 if ( change.getScript() != null ) {
                     target.appendJavascript( change.getScript() );
                 }
