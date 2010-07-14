@@ -111,7 +111,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
         List<CommandEvent> commandEvents = getCommandEvents();
         makeVisible( noCommandContainer, commandEvents.isEmpty() );
         makeVisible( planningEventsContainer, !commandEvents.isEmpty() );
-        makeVisible(showMore, !allShown );
+        makeVisible( showMore, !allShown );
         makeVisible( showAFew, commandEvents.size() > A_FEW );
     }
 
@@ -152,7 +152,6 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
         showAFew = new AjaxFallbackLink( "showFew" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow = A_FEW;
-                showAFew.setEnabled( false );
                 addCommandEvents();
                 adjustComponents( target );
             }

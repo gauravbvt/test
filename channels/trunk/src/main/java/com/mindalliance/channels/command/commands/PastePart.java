@@ -90,7 +90,7 @@ public class PastePart extends AbstractCommand {
         subCommands.setMemorable( false );
         Command addPart = new AddPart();
         addPart.set( "segment", get( "segment" ) );
-        addPart.set( "part", get( "part" ) );
+        // addPart.set( "part", get( "part" ) );
         addPart.set( "partState", copy.get( "partState" ) );
         subCommands.addCommand( addPart );
         List<Map<String, Object>> needStates = (List<Map<String, Object>>) copy.get( "needs" );

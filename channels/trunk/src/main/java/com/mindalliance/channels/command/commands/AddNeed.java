@@ -57,7 +57,7 @@ public class AddNeed extends AbstractCommand {
                     (String) get( "name" ),
                     priorId );
             set( "flow", flow.getId() );
-            set( "connector", flow.getTarget().getId() );
+            set( "connector", flow.getSource().getId() );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 ChannelsUtils.initialize( flow, flowAttributes );

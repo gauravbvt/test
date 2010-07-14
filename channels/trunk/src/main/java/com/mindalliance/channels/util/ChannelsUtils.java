@@ -283,7 +283,7 @@ public final class ChannelsUtils {
      */
     public static Map<String, Object> getPartCopy( Part part ) {
         Map<String, Object> copy = new HashMap<String, Object>();
-        copy.put( "segment", part.getSegment().getId() );
+        // copy.put( "segment", part.getSegment().getId() );
         copy.put( "partState", getPartState( part ) );
         Iterator<Flow> needs = part.receives();
         List<Map<String, Object>> needStates = new ArrayList<Map<String, Object>>();
