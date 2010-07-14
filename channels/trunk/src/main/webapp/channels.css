@@ -1251,7 +1251,6 @@ div.section-content > div.flow > div > img {
 	background:#c3d9ff;
 	border-left:1px solid #6c7b7b;
 	float:right;
-	min-width:235px;
 	overflow:hidden;
 }
 
@@ -1360,6 +1359,10 @@ div.section-content > div.flow > div > img {
 	color:#666666;
 	padding-left:10px;
 	outline:none;
+}
+
+#social div.social-controls div.text-controls a:hover {
+	color:#333333;
 }
 
 #social div.social-list {
