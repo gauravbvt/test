@@ -1252,6 +1252,7 @@ div.section-content > div.flow > div > img {
 	background:#c3d9ff;
 	border-left:1px solid #6c7b7b;
 	float:right;
+	min-width:235px;
 }
 
 #social div.tabpanel {
@@ -1264,26 +1265,26 @@ div.section-content > div.flow > div > img {
 
 /* ----- Social - Tabbed Panels ----- */
 
-#social div.tabpanel div.tab-row {
+#social div.tab-row {
     float: left;
     width: 100%;
     background: #c3d9ff;
     line-height: normal;
 }
 
-#social div.tabpanel div.tab-row ul {
+#social div.tab-row ul {
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-#social div.tabpanel div.tab-row li {
+#social div.tab-row li {
     float: left;
     margin: 0;
     padding: 0;
 }
 
-#social div.tabpanel div.tab-row a {
+#social div.tab-row a {
     display: block;
     background: #e7f0ff;
 	height:20px;
@@ -1297,13 +1298,13 @@ div.section-content > div.flow > div > img {
 	border-bottom:1px solid #6c7b7b;
 }
 
-#social div.tabpanel div.tab-row a:hover {
+#social div.tab-row a:hover {
     color: #333333;
 }
 
-#social div.tabpanel div.tab-row li.selected { background:none; }
+#social div.tab-row li.selected { background:none; }
 
-#social div.tabpanel div.tab-row li.selected a {
+#social div.tab-row li.selected a {
     display: block;
     background: #f6f6f6;
 	height: 20px;
@@ -1315,79 +1316,80 @@ div.section-content > div.flow > div > img {
 	border-bottom:1px solid #f6f6f6;
 }
 
-/* ----- Social - Presence ----- */
+/* ----- Social - Global ----- */
 
-#social div.tabpanel div.social-controls {
+#social div.social-controls {
 	height:20px;
 	float:left;
 	width:100%;
 	padding:1px 0 0 0;
 }
 
-#social div.tabpanel div.social-controls a img {
+#social div.social-controls a img {
 	border:none;
-	padding-top:1px;
+	padding-top:3px;
 }
 
-#social div.tabpanel div.social-controls div.text-controls {
+#social div.social-controls div.text-controls {
 	height:20px;
 	float:right;
 	padding:0 10px 0 0;
 }
 
-#social div.tabpanel div.social-controls div.text-controls a {
+#social div.social-controls div.text-controls a {
 	font-size:10px;
 	font-weight:bold;
 	color:#666666;
 	padding-left:10px;
+	outline:none;
 }
 
-#social div.tabpanel div.social-list,
-#social div.tabpanel div.social-list > span > div {
+#social div.social-list,
+#social div.social-list > span > div {
 	width:100%;
 	float:left;
 }
 
-#social div.tabpanel div.social-list > span > div > div {
-	border-bottom:1px solid #bcbec0;
-}
-
-#social div.tabpanel div.social-list div.first {
+#social div.social-list div.first {
 	border-top:1px solid #999999;
 }
 
-#social div.tabpanel div.social-list div.even {
+#social div.social-list div.even {
 	background:#e8e8e8;
 }
 
-#social div.tabpanel table {
+#social div.social-list > span > div > div {
+	border-bottom:1px solid #bcbec0;
+	padding:0 5px 0 0;
+}
+
+#social table {
 	width:100%;
 	display:table;
 	line-height:100%;
 	border:none;
 }
 
-#social div.tabpanel table td.photo-cont {
+#social table td.photo-cont {
 	width:50px;
 }
 
-#social div.tabpanel table td table {
+#social table td table {
 	width:100%;
 }
 
-#social div.tabpanel table td,
-#social div.tabpanel table td table td {
+#social table td,
+#social table td table td {
 	vertical-align:top;
 }
 
-#social div.tabpanel div.social-list span.menubar,
-#social div.tabpanel div.social-list span.menubar {
+#social div.social-list span.menubar {
     float: right;
-	padding:5px;
+	padding:6px 0 0 0;
     position: relative;
 }
 
-#social div.tabpanel div.social-list img.photo {
+#social div.social-list img.photo {
 	background:#E8E8E8;
 	border:1px solid #999999;
 	padding:2px;
@@ -1397,12 +1399,12 @@ div.section-content > div.flow > div > img {
 	float:left;
 }
 
-#social div.tabpanel div.social-list div.even img.photo {
+#social div.social-list div.even img.photo {
 	background:#dadada;
 }
 
-#social div.tabpanel div.social-list div.joining span.name,
-#social div.tabpanel div.social-list div.leaving span.name {
+#social div.social-list div.joining span.name,
+#social div.social-list div.leaving span.name {
 	font-size:12px;
 	font-weight:bold;
 	color:#333333;
@@ -1413,24 +1415,136 @@ div.section-content > div.flow > div > img {
 	display:block;
 }
 
-#social div.tabpanel div.social-list div.joining span.name {
-	padding:13px 0 2px 0;
-}
-
-#social div.tabpanel div.social-list div.leaving span.name {
-	padding:20px 0 2px 0;
-}
-
-#social div.tabpanel div.social-list div.even img.present,
-#social div.tabpanel div.social-list div.odd img.present {
+#social div.social-list div.even img.present,
+#social div.social-list div.odd img.present {
 	display:block;
-	padding:15px 0 0 5px;
 	float:left;
 	background:none;
 }
 
-#social div.tabpanel div.social-list div.time {
+#social div.social-list td.info-container {
+	font-size:11px;
+	line-height:140%;
+	color:#333333;
+}
+
+#social div.social-list td.info-container a {
+	font-size:11px;
+	line-height:140%;
+	color:#333333;
+}
+
+#social div.social-list td.info-container a:hover {
+	font-size:11px;
+	line-height:140%;
+	color:#666666;
+}
+
+#social div.social-list div.time {
 	font-size:10px;
 	font-weight:bold;
 	color:#959595;
+}
+
+#social div.social-list span.time {
+	color:#666666;
+}
+
+/* ----- Social - Presence ----- */
+
+#social div.social-list.presence > span > div > div {
+	padding:0 5px 0 0;
+}
+
+#social div.social-list.presence div.joining span.name {
+	padding:13px 0 2px 0;
+}
+
+#social div.social-list.presence div.leaving span.name {
+	padding:20px 0 2px 0;
+}
+
+#social div.social-list.presence img.present {
+	padding:14px 0 0 5px;
+}
+
+/* ----- Social - Activities ----- */
+
+#social div.social-list.commands div span.name {
+	padding:11px 0 2px 0;
+}
+
+#social div.social-list.commands img.present {
+	padding:12px 0 0 5px;
+}
+
+#social div.social-list.commands td.info-container {
+	padding:0 0 8px 0;
+}
+
+/* ----- Social - Messages ----- */
+
+#social div.social-list.messages td.name-title-icon-menu {
+	border-bottom:1px solid #bcbec0;
+}
+
+#social div.social-list.messages div span.name {
+	padding:9px 0 3px 0;
+}
+
+#social div.social-list.messages img.present {
+	padding:12px 0 0 5px;
+}
+
+#social div.social-list.messages td.info-container {
+	padding:3px 0 8px 0;
+}
+
+/* ----- Social - New Message ----- */
+
+#social div.new-message {
+	background:#E8E8E8;
+	border-top:1px solid #999999;
+	bottom:0;
+	float:left;
+	font-size:11px;
+	padding:5px 0 10px 10px;
+	position:absolute;
+}
+
+#social div.new-message > div {
+	padding:5px 0;
+}
+
+#social div.new-message > div > span {
+	font-weight:bold;
+}
+
+#social div.new-message > div > select {
+	background:#F6F6F6;
+	border:1px solid #666666;
+	margin-left:5px;
+	font-size:11px;
+}
+
+#social div.new-message textarea {
+	background:#F6F6F6;
+	border:1px solid #999999;
+	margin:2px 0 5px 0;
+	overflow-x:hidden;
+	font-size:11px;
+}
+
+#social div.new-message input {
+	background:#d9d9d9;
+	border:1px solid #666666;
+	color:#000000;
+	font-size:11px;
+}
+
+#social div.new-message input:hover {
+	background:#f6f6f6;
+	border:1px solid #999999;
+	color:#333333;
+	font-size:11px;
 }
