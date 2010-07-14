@@ -1510,11 +1510,51 @@ div.section-content > div.flow > div > img {
 	color:#333333;
 }
 
+#social div.no-commands,
+#social div.no-messages {
+	float:right;
+	position:absolute;
+	right:0;
+	top:23px;
+	width:100%;
+	text-align:center;
+	border-bottom:1px solid #BCBEC0;
+	background:#e8e8e8;
+}
+
+#social div.no-commands span,
+#social div.no-messages span {
+	color:#666666;
+	font-size:11px;
+	font-weight:bold;
+	padding:5px;
+	text-transform:lowercase;
+}
+
+
 /* ----- Social - Presence ----- */
 
 #social div.social-list.presence > span > div > div {
 	padding:0 5px 0 0;
 }
+
+#social div.social-list.presence div.joining img.present {padding:15px 0 0 5px;}
+
+#social div.social-list.presence div.joining div.time {line-height:100%;}
+
+#social div.social-list.presence div.employed.joining span.name {padding:7px 0 0 0;}
+
+#social div.social-list.presence div.employed.joining img.present {padding:9px 0 0 5px;}
+
+#social div.social-list.presence div.employed.joining span.menubar {padding:3px 0 0 0;}
+
+#social div.social-list.presence div.employed.joining div.time {line-height:100%;}
+
+#social div.social-list.presence div.employed.leaving span.name {padding:12px 0 2px 0;}
+
+#social div.social-list.presence div.employed.leaving span.menubar {padding:3px 0 0 0;}
+
+
 
 #social div.social-list.presence div.joining span.name {
 	padding:13px 0 0 0;
@@ -1535,11 +1575,15 @@ div.section-content > div.flow > div > img {
 }
 
 #social div.social-list.commands img.present {
-	padding:12px 0 0 5px;
+	padding:13px 0 0 5px;
+}
+
+#social div.social-list.commands td.jobtitle span.titles {
+	padding:1px 0 2px 0;
 }
 
 #social div.social-list.commands td.info-container {
-	padding:0 0 8px 0;
+	padding:0 0 8px 1px;
 }
 
 /* ----- Social - Messages ----- */
@@ -1549,7 +1593,7 @@ div.section-content > div.flow > div > img {
 }
 
 #social div.social-list.messages img.present {
-	padding:12px 0 0 5px;
+	padding:11px 0 0 5px;
 }
 
 #social div.social-list.messages td.jobtitle span.titles {
