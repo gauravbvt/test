@@ -111,8 +111,8 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
         List<CommandEvent> commandEvents = getCommandEvents();
         makeVisible( noCommandContainer, commandEvents.isEmpty() );
         makeVisible( planningEventsContainer, !commandEvents.isEmpty() );
-        showMore.setEnabled( !allShown );
-        showAFew.setEnabled( commandEvents.size() > A_FEW );
+        makeVisible(showMore, !allShown );
+        makeVisible( showAFew, commandEvents.size() > A_FEW );
     }
 
     private void addCommandEvents() {
@@ -144,6 +144,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
                 adjustComponents( target );
             }
         };
+        showMore.setOutputMarkupId( true );
         add( showMore );
     }
 
@@ -156,7 +157,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
                 adjustComponents( target );
             }
         };
-        showAFew.setEnabled( false );
+        showAFew.setOutputMarkupId( true );
         add( showAFew );
     }
 

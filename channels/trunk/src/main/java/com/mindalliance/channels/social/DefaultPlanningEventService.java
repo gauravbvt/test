@@ -25,9 +25,11 @@ public class DefaultPlanningEventService implements PlanningEventService {
     private ODBTransactionFactory databaseFactory;
 
     private Map<String, PresenceEvent> latestPresences = null;
-    private Date whenLastChanged    ;
+    private Date whenLastChanged;
+    private Date startupDate;
 
     public DefaultPlanningEventService() {
+        startupDate = new Date();
         whenLastChanged = new Date();
         resetLatestPresences();
     }
@@ -94,7 +96,8 @@ public class DefaultPlanningEventService implements PlanningEventService {
                     PresenceEvent.class,
                     Where.and()
                             .add( Where.equal( "username", username ) )
-                            .add( Where.equal( "planId", getPlanId() ) ),
+                            .add( Where.equal( "planId", getPlanId() ) )
+                            .add( Where.ge( "date", startupDate )),
                     ODBAccessor.Ordering.Descendant,
                     "date" );
             latestPresences.put( username, latestPresence );

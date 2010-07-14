@@ -124,10 +124,15 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         summary.setOutputMarkupId( true );
         summary.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getIssue() ) );
+                if ( !issue.isDetected() )
+                    update( target, new Change( Change.Type.Expanded, getIssue() ) );
             }
         } );
-        summary.add( new AttributeModifier( "class", true, new Model<String>( "summary pointer" ) ) );
+        String cssClasses = "summary";
+        if ( !issue.isDetected() )  {
+          cssClasses += " pointer";
+        }
+        summary.add( new AttributeModifier( "class", true, new Model<String>( cssClasses ) ) );
         addOrReplace( summary );
         Label label;
         Label suggestion;

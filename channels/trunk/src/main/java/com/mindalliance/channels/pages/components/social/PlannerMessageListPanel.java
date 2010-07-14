@@ -184,6 +184,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
                 adjustComponents( target );
             }
         };
+        showMore.setOutputMarkupId( true );
         add( showMore );
     }
 
@@ -196,7 +197,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
                 adjustComponents( target );
             }
         };
-        showAFew.setEnabled( false );
+        showAFew.setOutputMarkupId( true );
         add( showAFew );
     }
 
@@ -347,8 +348,8 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
         List<PlannerMessage> plannerMessages = getPlannerMessages();
         makeVisible( noMessageContainer, plannerMessages.isEmpty() );
         makeVisible( plannerMessagesContainer, !plannerMessages.isEmpty() );
-        showMore.setEnabled( !allShown );
-        showAFew.setEnabled( plannerMessages.size() > A_FEW );
+        makeVisible( showMore, !allShown );
+        makeVisible( showAFew, plannerMessages.size() > A_FEW );
     }
 
     public void newMessage( String username, AjaxRequestTarget target ) {
