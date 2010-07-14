@@ -37,7 +37,7 @@ public class BreakUpFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "Break up flow";
+        return "break up flow";
     }
 
     /**

@@ -34,7 +34,7 @@ public class DuplicateFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "duplicate";
+        return "duplicate flow";
     }
 
     /**

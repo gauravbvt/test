@@ -692,6 +692,13 @@ public class DefaultCommander implements Commander {
         }
     }
 
+    /*
+        List<Map<String, Object>> goalMaps = new ArrayList<Map<String, Object>>();
+        for ( Goal goal : getGoals() ) {
+            goalMaps.add( goal.toMap() );
+        }
+     */
+
     /**
      * {@inheritDoc}
      */
@@ -706,7 +713,12 @@ public class DefaultCommander implements Commander {
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
         part.setAttachments( new ArrayList<Attachment>( (List<Attachment>) state.get( "attachments" ) ) );
-        part.setGoals( new ArrayList<Goal>( (List<Goal>) state.get( "goals" ) ) );
+        List<Map<String, Object>> goalStates =  (List<Map<String, Object>>)state.get( "goals" );
+        for ( Map<String, Object> goalMap : goalStates ) {
+            Goal goal = Goal.fromMap( goalMap, getQueryService() );
+            part.addGoal( goal );
+        }
+//        part.setGoals( new ArrayList<Goal>( (List<Goal>) state.get( "goals" ) ) );
         if ( state.get( "initiatedEvent" ) != null )
             part.setInitiatedEvent( queryService.findOrCreateType(
                     Event.class,

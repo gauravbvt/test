@@ -36,7 +36,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "satisfy needs";
+        return "satisfy info needs";
     }
 
     /**

@@ -2,13 +2,13 @@ package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.dao.PlanListener;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.query.QueryService;
@@ -446,10 +446,21 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
      * {@inheritDoc}
      */
     public void deleteSurvey( Survey survey ) throws SurveyException {
-        if ( survey.isRegistered() ) throw new SurveyException( "Can't delete registered survey." );
+        if ( !survey.canBeCancelled() ) throw new SurveyException( "Can't cancel survey." );
+        if ( survey.isRegistered() ) {
+            unregisterSurvey( survey );
+        }
         getSurveys( User.plan() ).remove( survey );
         save();
     }
+
+    /**
+     * Unregister a survey.
+     *
+     * @param survey a survey
+     * @throws SurveyException if service call fails
+     */
+    protected abstract void unregisterSurvey( Survey survey )  throws SurveyException;
 
     /**
      * {@inheritDoc}

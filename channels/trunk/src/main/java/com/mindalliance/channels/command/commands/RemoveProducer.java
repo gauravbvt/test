@@ -28,7 +28,7 @@ public class RemoveProducer extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "Vote not to put in production";
+        return "vote not to put in production";
     }
 
     /**

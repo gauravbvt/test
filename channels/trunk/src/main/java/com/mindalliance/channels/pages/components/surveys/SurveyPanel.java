@@ -63,7 +63,9 @@ public class SurveyPanel extends AbstractUpdatablePanel {
         add( surveyDataContainer );
         addStats();
         addLinks();
-        addButton();
+        addLaunchButton();
+        addCloseButton();
+        addCancelButton();
         surveyDataContainer.setVisible( known );
     }
 
@@ -101,7 +103,9 @@ public class SurveyPanel extends AbstractUpdatablePanel {
         if ( known ) {
             surveyContactsPanel = new SurveyContactsPanel( "contacts", new Model<Survey>( survey ) );
         } else {
-            surveyContactsPanel = new Label( "contacts", new Model<String>( "Survey not found or survey service not accessible." ) );
+            surveyContactsPanel = new Label(
+                    "contacts",
+                    new Model<String>( "Survey not found or survey service not accessible." ) );
         }
         add( surveyContactsPanel );
     }
@@ -145,7 +149,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
         surveyDataContainer.add( reportingLink );
     }
 
-    private void addButton() {
+    private void addLaunchButton() {
         AjaxFallbackLink launchLink = new AjaxFallbackLink( "launch" ) {
             public void onClick( AjaxRequestTarget target ) {
                 try {
@@ -162,6 +166,9 @@ public class SurveyPanel extends AbstractUpdatablePanel {
         };
         launchLink.setVisible( survey.canBeLaunched() );
         surveyDataContainer.add( launchLink );
+    }
+
+    private void addCloseButton() {
         ConfirmedAjaxFallbackLink closeLink = new ConfirmedAjaxFallbackLink(
                 "close",
                 "Close the survey?" ) {
@@ -176,6 +183,23 @@ public class SurveyPanel extends AbstractUpdatablePanel {
         };
         closeLink.setVisible( survey.isLaunched() );
         surveyDataContainer.add( closeLink );
+    }
+
+    private void addCancelButton() {
+        ConfirmedAjaxFallbackLink cancelLink = new ConfirmedAjaxFallbackLink(
+                "cancel",
+                "Cancel the survey?" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                try {
+                    surveyService.deleteSurvey( survey );
+                } catch ( SurveyException e ) {
+                    target.prependJavascript( "alert(\"Oops! Failed to cancel survey.\")" );
+                }
+                update( target, new Change( Change.Type.Removed, survey ) );
+            }
+        };
+        cancelLink.setVisible( survey.canBeCancelled() );
+        surveyDataContainer.add( cancelLink );
     }
 
 }

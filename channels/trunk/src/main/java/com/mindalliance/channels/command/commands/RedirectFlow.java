@@ -35,7 +35,7 @@ public class RedirectFlow extends AbstractCommand {
     }
 
     public String getName() {
-        return "redirect";
+        return "redirect flow";
     }
 
     public Change execute( Commander commander ) throws CommandException {

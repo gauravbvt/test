@@ -30,7 +30,7 @@ public class AddProducer extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "Vote to put in production";
+        return "vote to put in production";
     }
 
     /**

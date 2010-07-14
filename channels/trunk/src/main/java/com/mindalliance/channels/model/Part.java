@@ -401,7 +401,7 @@ public class Part extends Node implements GeoLocatable {
      * Test if this part is considered belonging to an organization.
      *
      * @param o the organization
-     * @param plan
+     * @param plan a plan
      * @return true if belonging
      */
     public boolean isInOrganization( Organization o, Plan plan ) {

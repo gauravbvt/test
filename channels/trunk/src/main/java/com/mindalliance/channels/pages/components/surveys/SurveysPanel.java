@@ -421,7 +421,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
             if ( change.isExpanded() ) {
                 selectedSurvey = (Survey) change.getSubject( getQueryService() );
             }
-            if ( change.isCollapsed() ) {
+            if ( change.isCollapsed() || change.isRemoved() ) {
                 selectedSurvey = Survey.UNKNOWN;
             }
         }
@@ -430,17 +430,17 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
 
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( Survey.class ) ) {
-            if ( change.isUpdated() ) {
+            if ( change.isUpdated() || change.isRemoved() ) {
                 addSurveysTable();
                 target.addComponent( surveysTable );
             }
-            if ( !selectedSurvey.isUnknown() ) {
+            if ( !selectedSurvey.isUnknown() || change.isRemoved() ) {
                 addSurveyPanel();
                 updateVisibility();
                 target.addComponent( surveyContainer );
             } else {
                 super.updateWith( target, change, updated );
-            }           
+            }
         } else {
             super.updateWith( target, change, updated );
         }

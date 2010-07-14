@@ -35,7 +35,7 @@ public class RemoveGoal extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "delete goal";
+        return "remove goal";
     }
 
     /**
