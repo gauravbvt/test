@@ -45,7 +45,7 @@ public class Disintermediate extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "Disintermediate";
+        return "disintermediate";
     }
 
     /**

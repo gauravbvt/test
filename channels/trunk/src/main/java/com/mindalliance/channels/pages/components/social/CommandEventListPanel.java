@@ -145,7 +145,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
             }
         };
         showMore.setOutputMarkupId( true );
-        add( showMore );
+        planningEventsContainer.add( showMore );
     }
 
     private void addShowAFew() {
@@ -157,7 +157,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
             }
         };
         showAFew.setOutputMarkupId( true );
-        add( showAFew );
+        planningEventsContainer.add( showAFew );
     }
 
     public List<CommandEvent> getCommandEvents() {

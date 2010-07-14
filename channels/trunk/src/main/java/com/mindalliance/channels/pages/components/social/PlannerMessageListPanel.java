@@ -185,7 +185,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
             }
         };
         showMore.setOutputMarkupId( true );
-        add( showMore );
+        plannerMessagesContainer.add( showMore );
     }
 
     private void addShowAFew() {
@@ -198,7 +198,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
             }
         };
         showAFew.setOutputMarkupId( true );
-        add( showAFew );
+        plannerMessagesContainer.add( showAFew );
     }
 
     private void addNewMessage() {

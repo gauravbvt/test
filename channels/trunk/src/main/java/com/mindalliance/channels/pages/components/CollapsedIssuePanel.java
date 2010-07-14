@@ -128,11 +128,9 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
                     update( target, new Change( Change.Type.Expanded, getIssue() ) );
             }
         } );
-        String cssClasses = "summary";
         if ( !issue.isDetected() )  {
-          cssClasses += " pointer";
+            summary.add( new AttributeModifier( "class", true, new Model<String>( "pointer" ) ) );
         }
-        summary.add( new AttributeModifier( "class", true, new Model<String>( cssClasses ) ) );
         addOrReplace( summary );
         Label label;
         Label suggestion;

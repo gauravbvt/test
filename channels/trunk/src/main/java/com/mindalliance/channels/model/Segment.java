@@ -213,6 +213,7 @@ public class Segment extends ModelObject {
      * @param node the new node
      */
     public void addNode( Node node ) {
+ //       assert !nodeIndex.containsKey( node.getId() );
         nodeIndex.put( node.getId(), node );
         node.setSegment( this );
     }

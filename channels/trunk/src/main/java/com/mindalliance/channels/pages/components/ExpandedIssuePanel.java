@@ -7,7 +7,6 @@ import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -146,7 +145,6 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Collapsed, getIssue() ) );
             }
         } );
-        summary.add( new AttributeModifier( "class", true, new Model<String>( "summary pointer" ) ) );
         addOrReplace( summary );
         Label label;
         Label suggestion;

@@ -122,7 +122,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     public String getUserFullName() {
         if ( getUsername() == null )
-            return "All";
+            return "all planners";
         else
             return queryService.findUserFullName( getUsername() );
     }

@@ -4,8 +4,6 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.odb.ODBAccessor;
 import com.mindalliance.channels.odb.ODBTransactionFactory;
 import org.neodatis.odb.core.query.criteria.Where;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -20,10 +18,6 @@ import java.util.Iterator;
  */
 public class DefaultPlannerMessagingService implements PlannerMessagingService {
 
-    /**
-     * Logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( DefaultPlannerMessagingService.class );
     private ODBTransactionFactory databaseFactory;
     private Date whenLastChanged;
 
