@@ -76,6 +76,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         if ( getUsername() != null && getUsername().equals( User.current().getUsername() ) ) {
             cssClasses += " self";
         }
+        if ( !getJobTitles().isEmpty() ) {
+            cssClasses += " employed";
+        }
         socialItemContainer.add( new AttributeModifier( "class", true, new Model<String>( cssClasses ) ) );
         add( socialItemContainer );
         addMoreMenu( socialItemContainer );
@@ -152,7 +155,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         }
         return jobTitles.isEmpty()
                 ? ""
-                : "(" + jobTitles + ")";
+                : jobTitles;
     }
 
     public String getPhotoUrl() {
