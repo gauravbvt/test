@@ -39,7 +39,7 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
     private static final int MORE = 7;
     private int numberToShow = A_FEW;
     boolean allShown = false;
-    private boolean othersOnly = true;
+    private boolean othersOnly = false;
     private WebMarkupContainer planningEventsContainer;
     private AjaxFallbackLink showHideLink;
     private Label showHideLabel;

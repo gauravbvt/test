@@ -28,7 +28,10 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -158,6 +161,14 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
     private List<Segment> getCandidateDestinationSegments() {
         List<Segment> otherSegments = new ArrayList<Segment>( queryService.list( Segment.class ) );
         otherSegments.remove( getSegment() );
+        final Collator collator = Collator.getInstance();
+        Collections.sort(
+                otherSegments,
+                new Comparator<Segment>() {
+                    public int compare( Segment s1, Segment s2 ) {
+                        return collator.compare( s1.getName(), s2.getName() );
+                    }
+                } );
         return otherSegments;
     }
 
