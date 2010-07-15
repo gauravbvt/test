@@ -1,8 +1,8 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.analysis.graph.TriggerGraphBuilder;
-import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;

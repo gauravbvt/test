@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.User;
-
 import java.io.Serializable;
 
 /**
@@ -54,22 +52,20 @@ public class PlaceReference implements Serializable {
         this.event = event;
     }
 
-    public Place getReferencedPlace() {
-        return isPlanReferenced() ?
-                User.current().getPlan().getLocale()
-                : event != null
-                ? event.getScope()
-                : place;
+    public Place getReferencedPlace( Plan plan ) {
+        return isPlanReferenced() ? plan.getLocale()
+             : event != null      ? event.getScope()
+                                  : place;
     }
 
-    public boolean narrowsOrEquals( PlaceReference other ) {
-        return narrowsOrEquals( other.getReferencedPlace() );
+    public boolean narrowsOrEquals( PlaceReference other, Plan plan ) {
+        return narrowsOrEquals( other.getReferencedPlace( plan ), plan );
     }
 
-    public boolean narrowsOrEquals( Place other ) {
+    public boolean narrowsOrEquals( Place other, Plan plan ) {
         return other != null
-                && getReferencedPlace() != null
-                && getReferencedPlace().narrowsOrEquals( other );
+                && getReferencedPlace( plan ) != null
+                && getReferencedPlace( plan ).narrowsOrEquals( other, plan );
     }
 
     public boolean references( ModelObject entity ) {
@@ -77,8 +73,8 @@ public class PlaceReference implements Serializable {
                 || ModelObject.areIdentical( event, entity );
     }
 
-    public boolean isSet() {
-        return getReferencedPlace() != null;
+    public boolean isSet( Plan plan ) {
+        return getReferencedPlace( plan ) != null;
     }
 
     public boolean isEventReferenced() {

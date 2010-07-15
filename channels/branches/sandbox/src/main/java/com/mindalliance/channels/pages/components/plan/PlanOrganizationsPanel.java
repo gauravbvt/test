@@ -112,7 +112,7 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
             for ( Organization other : orgs ) {
                 if ( org != other ) {
                     EntityRelationship<Organization> sendRel =
-                            getQueryService().findEntityRelationship( org, other );
+                            getAnalyst().findEntityRelationship( org, other );
                     if ( sendRel != null ) orgRels.add( sendRel );
                 }
             }

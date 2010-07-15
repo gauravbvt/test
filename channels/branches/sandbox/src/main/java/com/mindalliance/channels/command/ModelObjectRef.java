@@ -1,9 +1,9 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,10 @@ public class ModelObjectRef implements Serializable {
     public ModelObjectRef( Identifiable identifiable ) {
         if ( identifiable instanceof ModelEntity ) {
             entityName = identifiable.getName();
-            entityKind = ( (ModelEntity) identifiable ).getKind().name();
+            ModelEntity.Kind kind = ( (ModelEntity) identifiable ).getKind();
+            // TODO - hack: remove this patch once all Phases are correctly initialized
+            if ( kind == null ) kind = ModelEntity.defaultKindFor( (Class<? extends ModelEntity>)identifiable.getClass() );
+            entityKind = kind.name();
         }
         id = identifiable.getId();
         className = identifiable.getClass().getName();
@@ -125,7 +128,7 @@ public class ModelObjectRef implements Serializable {
                 }
                 return mo;
             } catch ( NotFoundException e ) {
-                LOG.warn( className + " not found at " + id);
+                LOG.debug( className + " not found at " + id);
                 return null;
             }
         }
@@ -139,7 +142,11 @@ public class ModelObjectRef implements Serializable {
      */
     public boolean isForInstanceOf
             ( Class<? extends Identifiable> clazz ) {
-        return clazz.isAssignableFrom( getIdentifiableClass() );
+        try {
+            return clazz.isAssignableFrom( getIdentifiableClass() );
+        } catch ( NotFoundException e ) {
+            return false;
+        }
     }
 
 

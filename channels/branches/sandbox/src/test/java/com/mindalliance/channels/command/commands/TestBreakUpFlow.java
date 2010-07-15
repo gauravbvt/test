@@ -82,9 +82,10 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
     }
 
     @Test
-    public void testInternalBreakUp() {
+    public void testInternalBreakUp() throws Exception {
         assertSame( 1, countFlows() );
-        assertNotNull( findFlow() );
+        Flow f0 = findFlow();
+        assertNotNull( f0 );
         assertTrue( commander.canDo( command ) );
 
         Change change = commander.doCommand( command );
@@ -106,9 +107,9 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         List<ElementOfInformation> eois = f.getEois();
         assertSame( 1, eois.size() );
         ElementOfInformation eoi = eois.get( 0 );
-        assertEquals( eoi.getContent(), "content" );
-        assertEquals( eoi.getSources(), "sources" );
-        assertEquals( eoi.getSpecialHandling(), "handling" );
+        assertEquals( "content", eoi.getContent() );
+        assertEquals( "sources", eoi.getSources() );
+        assertEquals( "handling", eoi.getSpecialHandling() );
         assertSame( 1, countFlows() );
         assertTrue( commander.canRedo() );
         assertTrue( commander.redo().isUnknown() );

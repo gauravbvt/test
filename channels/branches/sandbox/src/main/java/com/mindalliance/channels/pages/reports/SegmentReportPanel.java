@@ -163,7 +163,8 @@ public class SegmentReportPanel extends Panel {
                         new Predicate() {
                             public boolean evaluate( Object object ) {
                                 Organization otherType = (Organization) object;
-                                return !type.equals( otherType ) && otherType.narrowsOrEquals( type );
+                                return !type.equals( otherType ) && otherType.narrowsOrEquals( type,
+                                                                                               User.current().getPlan() );
                             }
                         }
                 );

@@ -293,6 +293,7 @@ public class Plan extends ModelObject {
      * @return a plan event
      */
     public Event getDefaultEvent() {
+        // TODO  revise loading strategy so this does not return null on import
         assert incidents != null && !incidents.isEmpty();
         Iterator<Event> eventIterator = incidents.iterator();
         return eventIterator.hasNext() ? eventIterator.next() : null;

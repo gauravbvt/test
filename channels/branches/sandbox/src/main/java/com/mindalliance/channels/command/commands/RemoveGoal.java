@@ -1,10 +1,10 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Part;
@@ -35,7 +35,7 @@ public class RemoveGoal extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "delete goal";
+        return "remove goal";
     }
 
     /**
@@ -53,6 +53,7 @@ public class RemoveGoal extends AbstractCommand {
         boolean positive = (Boolean)get("positive");
         Goal.Category category = Goal.Category.valueOf( (String) get( "category" ) );
         Goal goal = segment.getGoal( category, positive, (String) get( "organization" ) );
+        setTargetDescription( goal.getLabel() + " in segment " + segment.getName() );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
             multi = makeSubCommands( segment, goal );
@@ -69,7 +70,6 @@ public class RemoveGoal extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "undelete goal" );
-        multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );

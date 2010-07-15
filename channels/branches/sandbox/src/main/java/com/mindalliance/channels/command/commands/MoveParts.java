@@ -65,6 +65,7 @@ public class MoveParts extends AbstractCommand {
         for ( Part part : parts ) {
             ignoreLocksOn( ChannelsUtils.getLockingSetFor( part ) );
         }
+        describeTarget( toSegment );                
         return new Change( Change.Type.Recomposed, fromSegment );
     }
 
@@ -92,7 +93,6 @@ public class MoveParts extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "unmove tasks" );
-        multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );

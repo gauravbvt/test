@@ -1,8 +1,7 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.iterators.IteratorChain;
 
 import java.text.Collator;
@@ -20,14 +19,14 @@ import java.util.Map;
 public abstract class Node extends ModelObject implements SegmentObject {
 
     /**
+     * The name for new flows.
+     */
+    public static final String DEFAULT_FLOW_NAME = "";
+
+    /**
      * Initial capacity of send and receive flows.
      */
     private static final int INITIAL_CAPACITY = 5;
-
-    /**
-     * The name for new flows.
-     */
-    private static final String DEFAULT_FLOW_NAME = "";
 
     /**
      * All receives, indexed by id.
@@ -124,19 +123,6 @@ public abstract class Node extends ModelObject implements SegmentObject {
     }
 
     /**
-     * Create a new send for this node.
-     *
-     * @param planDao the dao
-     * @return an internal flow to a new connector
-     */
-    public Flow createSend( PlanDao planDao ) {
-        return planDao.connect(
-                this,
-                planDao.createConnector( getSegment(), null ),
-                DEFAULT_FLOW_NAME, null );
-    }
-
-    /**
      * Add a send to this node.
      *
      * @param send the send
@@ -152,7 +138,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
      *
      * @param send the send
      */
-    void removeSend( Flow send ) {
+    public void removeSend( Flow send ) {
         sends.remove( send.getId() );
         send.setSource( null );
     }
@@ -190,17 +176,6 @@ public abstract class Node extends ModelObject implements SegmentObject {
     }
 
     /**
-     * Create and add a new receive.
-     *
-     * @param planDao the dao
-     * @return a flow from a new connector to this node
-     */
-    public Flow createReceive( PlanDao planDao ) {
-        return planDao.connect(
-                planDao.createConnector( getSegment(), null ), this, DEFAULT_FLOW_NAME, null );
-    }
-
-    /**
      * Add a receive to this node.
      *
      * @param receive the receive
@@ -216,7 +191,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
      *
      * @param receive the receive
      */
-    void removeReceive( Flow receive ) {
+    public void removeReceive( Flow receive ) {
         receives.remove( receive.getId() );
         receive.setTarget( null );
     }
@@ -324,7 +299,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
     public boolean hasMultipleSends( String name ) {
         int count = 0;
         for ( Flow send : sends.values() ) {
-            if ( Matcher.same( send.getName(), name ) ) count++;
+            if ( Matcher.getInstance().same( send.getName(), name ) ) count++;
         }
         return count > 1;
     }
@@ -338,7 +313,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
     public boolean hasMultipleReceives( String name ) {
         int count = 0;
         for ( Flow receive : receives.values() ) {
-            if ( Matcher.same( receive.getName(), name ) ) count++;
+            if ( Matcher.getInstance().same( receive.getName(), name ) ) count++;
         }
         return count > 1;
     }

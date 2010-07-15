@@ -4,8 +4,6 @@ import org.apache.commons.lang.StringUtils;
 
 import java.text.MessageFormat;
 
-import com.mindalliance.channels.dao.User;
-
 /**
  * A user provided issue
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -56,7 +54,6 @@ public class UserIssue extends ModelObject implements Issue {
     public UserIssue( ModelObject mo ) {
         this.about = mo;
         setDescription( "(No description)" );
-        setReportedBy( User.current().getUsername() );
     }
 
     /**

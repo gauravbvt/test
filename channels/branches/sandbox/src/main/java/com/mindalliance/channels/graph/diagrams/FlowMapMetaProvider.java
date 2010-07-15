@@ -6,6 +6,7 @@ import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -199,7 +200,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
     protected String getNodeLabel( Node node ) {
         if ( node.isPart() ) {
             Part part = (Part) node;
-            return part.getFullTitle( "|" );
+            return part.getFullTitle( "|", getAnalyst().getQueryService() );
         } else {
             return "c";
         }
@@ -263,7 +264,8 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                 }
                 // assuming a bitmap format
             } else {
-                list.add( new DOTAttribute( "image", getIcon( vertex ) ) );
+                list.add( new DOTAttribute( "image", getIcon( FlowMapMetaProvider.this.getAnalyst().getImagingService(),
+                                                              vertex ) ) );
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
@@ -400,7 +402,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
         return sanitize( sb.toString() );
     }
 
-    private String getIcon( Node node ) {
+    private String getIcon( ImagingService imagingService, Node node ) {
         String iconName;
         int numLines = 0;
         String imagesDirName;
@@ -425,7 +427,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             String[] lines = label.split( "\\|" );
             numLines = Math.min( lines.length, 5 );
             Part part = (Part) node;
-            iconName = getAnalyst().getQueryService().findIconName( part, imagesDirName );
+            iconName = imagingService.findIconName( part, imagesDirName, getAnalyst().getQueryService() );
         }
         return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
     }

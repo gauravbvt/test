@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
@@ -31,7 +32,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
         List<ModelEntity> types = entity.getAllTags();
         // Entity is inherently inconsistent with one of its types
         for ( ModelEntity type : types ) {
-            if ( !entity.isConsistentWith( type ) ) {
+            if ( !entity.isConsistentWith( type, User.current().getPlan() ) ) {
                 Issue issue = makeIssue( Issue.VALIDITY, entity );
                 issue.setDescription( "This " + entity.getTypeName()
                         + " is tagged as a " + type.getName()
@@ -49,7 +50,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
             // Two types used are mutually inconsistent.
             for (ModelEntity otherType : types ) {
                 if (!type.equals( otherType )) {
-                    if ( !type.isConsistentWith( otherType )) {
+                    if ( !type.isConsistentWith( otherType, User.current().getPlan() )) {
                         Issue issue = makeIssue( Issue.VALIDITY, entity );
                          issue.setDescription( "The type " + type.getName()
                                  + " is inconsistent with other type "

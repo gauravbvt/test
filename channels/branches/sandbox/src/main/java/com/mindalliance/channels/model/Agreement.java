@@ -1,9 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.nlp.Proximity;
-import com.mindalliance.channels.util.ChannelsUtils;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
@@ -57,49 +53,9 @@ public class Agreement implements Serializable {
         Agreement agreement = new Agreement();
         agreement.setBeneficiary( commitment.getBeneficiary().getOrganization() );
         agreement.setInformation( commitment.getSharing().getName() );
-        agreement.setEois( ChannelsUtils.copyEois( commitment.getSharing() ) );
+        agreement.setEois( commitment.getSharing().copyEois() );
         agreement.setUsage( commitment.getBeneficiary().getPart().getTask() );
         return agreement;
-    }
-
-    /**
-     * Whether the agreement covers a sharing commitment.
-     *
-     * @param commitment   a commitment
-     * @param queryService a query service
-     * @return a boolean
-     */
-    public boolean covers( Commitment commitment, QueryService queryService ) {
-        return commitment.getBeneficiary().getOrganization().narrowsOrEquals( getBeneficiary() )
-                &&
-                Matcher.same( getInformation(), commitment.getSharing().getName() )
-                &&
-                ( getEois().isEmpty()
-                        || Matcher.subsetOf(
-                        commitment.getSharing().getEois(),
-                        getEois(),
-                        queryService ) )
-                &&
-                ( getUsage().isEmpty()
-                        || queryService.isSemanticMatch(
-                        getUsage(),
-                        commitment.getBeneficiary().getPart().getTask(),
-                        Proximity.HIGH ) );
-    }
-
-    /**
-     * Whether an agreement encompasses another.
-     *
-     * @param other        an agreement
-     * @param queryService an agreement
-     * @return a boolean
-     */
-    public boolean encompasses( Agreement other, QueryService queryService ) {
-        if ( !other.getBeneficiary().narrowsOrEquals( getBeneficiary() ) ) return false;
-        if ( !Matcher.same( information, other.getInformation() ) ) return false;
-        if ( !getUsage().isEmpty()
-                && !queryService.isSemanticMatch( usage, other.getUsage(), Proximity.HIGH ) ) return false;
-        return Matcher.subsetOf( other.getEois(), eois, queryService );
     }
 
     public Organization getBeneficiary() {

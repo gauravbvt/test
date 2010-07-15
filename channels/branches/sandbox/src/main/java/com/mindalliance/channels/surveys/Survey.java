@@ -284,12 +284,21 @@ public class Survey implements Identifiable, Serializable {
     }
 
     /**
-     * Survey can be launched.
+     * Survey can be launched?
      *
      * @return a boolean
      */
     public boolean canBeLaunched() {
         return isRegistered() && !isLaunched() && !isClosed();
+    }
+
+    /**
+     * Survey can be cancelled?
+     *
+     * @return a boolean
+     */
+    public boolean canBeCancelled() {
+        return !isLaunched() && !isClosed();
     }
 
     /**

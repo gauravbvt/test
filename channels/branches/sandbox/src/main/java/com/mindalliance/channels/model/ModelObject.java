@@ -1,9 +1,7 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
 
 import java.text.Collator;
@@ -375,8 +373,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
                 Role.class, Segment.class, Part.class, Flow.class, TransmissionMedium.class,
                 Participation.class
         };
-        return
-                Arrays.asList( classes );
+        return Arrays.asList( classes );
     }
 
     /**
@@ -388,23 +385,5 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     public boolean references( ModelObject mo ) {
         // default
         return false;
-    }
-
-    /**
-     * Get all media reference attachments.
-     *
-     * @param attachmentManager an attachment manager
-     * @return a list of attachments
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Attachment> getMediaReferences( final AttachmentManager attachmentManager ) {
-        return (List<Attachment>) CollectionUtils.select(
-                getAttachments(),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return ( (Attachment) object ).isMediaReference( attachmentManager );
-                    }
-                }
-        );
     }
 }

@@ -1,8 +1,7 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.dao.JournalCommand;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +13,7 @@ import java.util.Set;
  * Date: Feb 28, 2009
  * Time: 2:20:01 PM
  */
-public interface Command extends Serializable {
+public interface Command extends JournalCommand {
     /**
      * The command's name.
      *
@@ -23,11 +22,39 @@ public interface Command extends Serializable {
     String getName();
 
     /**
+     * Get name of command being undone by this one (if any).
+     *
+     * @return a string or null
+     */
+    String getUndoes();
+    /**
+     * Set name of command being undone by this one.
+     *
+     * @param name a string
+     */
+    void setUndoes( String name );
+
+    /**
      * Get name of user who will/did execute this command.
      *
      * @return a string
      */
     String getUserName();
+
+    /**
+     * Get preserved description of actual target..
+     *
+     * @return a string
+     */
+    String getTargetDescription();
+
+    /**
+     * Set a preserved target description.
+     *
+     * @param subjectDescription a string
+     */
+    void setTargetDescription( String subjectDescription );
+
 
     /**
      * Get the command's arguments.
@@ -44,16 +71,6 @@ public interface Command extends Serializable {
      * @return an object
      */
     Object get( String argumentName );
-
-    /**
-     * Get the value of named argument, allowing for resoluton of ModelObjectRef values.
-     *
-     * @param argumentName a string
-     * @param commander    a commander
-     * @return an object
-     * @throws CommandException if getting argument fails
-     */
-    Object get( String argumentName, Commander commander ) throws CommandException;
 
     /**
      * Get the value of named argument.
@@ -184,13 +201,6 @@ public interface Command extends Serializable {
      * @param val a boolean
      */
     void setTop( boolean val );
-
-    /**
-     * Whether the execution of the command forces an immediate snapshot.
-     *
-     * @return a boolean
-     */
-    boolean forcesSnapshot();
 
     /**
      * Get label for command.

@@ -1,10 +1,11 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.analysis.graph.ActorsNetworkGraphBuilder;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.graph.GraphBuilder;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
@@ -34,6 +35,8 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      * Minimum out degree of a part that is a bottleneck and thus a single point of failure.
      */
     private static final int MINIMUM_DEGREE = 3;
+
+    private Analyst analyst;
 
     public SinglePointOfFailure() {
     }
@@ -92,7 +95,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     private Set<Actor> detectSignificantCutpoints() {
         Set<Actor> cutpoints = new HashSet<Actor>();
         GraphBuilder<Actor, EntityRelationship<Actor>> graphBuilder =
-                new ActorsNetworkGraphBuilder( getQueryService() );
+                new ActorsNetworkGraphBuilder( analyst.getQueryService() );
         final DirectedGraph<Actor, EntityRelationship<Actor>> digraph = graphBuilder.buildDirectedGraph();
         if ( !digraph.edgeSet().isEmpty() ) {
             BlockCutpointGraph<Actor, EntityRelationship<Actor>> bcg =
@@ -108,5 +111,11 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
         return cutpoints;
     }
 
+    public Analyst getAnalyst() {
+        return analyst;
+    }
 
+    public void setAnalyst( Analyst analyst ) {
+        this.analyst = analyst;
+    }
 }

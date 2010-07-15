@@ -30,7 +30,7 @@ body.profile {
     top: 5em;
     bottom: 5px;
     left: 0;
-    right: 0;
+    width: 80%;
     overflow: hidden;
     padding-bottom: 5px;
 }
@@ -1237,4 +1237,422 @@ div.section-content > div.flow > div > span.pointer {
 
 div.section-content > div.flow > div > img {
 	padding-right:5px;
+}
+
+/* ---- Social ----- */
+
+#social {
+    position: absolute;
+    top: 5.4em;
+    bottom: 0;
+    right: 0;
+    width: 20%;
+    margin-bottom: 5px;
+	background:#c3d9ff;
+	border-left:1px solid #6c7b7b;
+	float:right;
+	overflow:hidden;
+}
+
+#social div.tabpanel {
+	float:right;
+	background:#f6f6f6;
+	bottom:0;
+	position:absolute;
+	top:0;
+	right:0;
+	width:100%;
+}
+
+/* ----- Social - Tabbed Panels ----- */
+
+#social div.tab-row {
+    float: right;
+	bottom:0;
+	right:0;
+	top:0;
+	position:absolute;
+    width: 100%;
+    background: #c3d9ff;
+    line-height: normal;
+}
+
+#social div.tab-row ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#social div.tab-row li {
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+#social div.tab-row a {
+    display: block;
+    background: #e7f0ff;
+	height:20px;
+    padding: 4px 10px 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #666666;
+    white-space: nowrap;
+	border-top:1px solid #6c7b7b;
+	border-right:1px solid #6c7b7b;
+	border-bottom:1px solid #6c7b7b;
+}
+
+#social div.tab-row a:hover {
+    color: #333333;
+}
+
+#social div.tab-row li.selected { background:none; }
+
+#social div.tab-row li.selected a {
+    display: block;
+    background: #f6f6f6;
+	height: 20px;
+    padding: 4px 10px 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #000000;
+    white-space: nowrap;
+	border-bottom:1px solid #f6f6f6;
+}
+
+/* ----- Social - Global ----- */
+
+#social div.tab-panel {
+	bottom:0;
+	right:0;
+	top:2.2em;
+	background:#F6F6F6;
+	position:absolute;
+	float:right;
+	width:100%;
+}
+
+#social div.social-controls {
+	float:right;
+	right:0;
+	top:0;
+	position:absolute;
+	width:100%;
+	border-bottom:1px solid #999999;
+}
+
+#social div.social-controls a img {
+	border:none;
+	padding-top:3px;
+}
+
+#social div.social-controls div.text-controls {
+	height:20px;
+	float:right;
+	padding:0 10px 0 0;
+}
+
+#social div.social-controls div.text-controls a {
+	font-size:10px;
+	font-weight:bold;
+	color:#666666;
+	padding-left:10px;
+	outline:none;
+}
+
+#social div.social-controls div.text-controls a:hover {
+	color:#333333;
+}
+
+#social div.social-list {
+	width:100%;
+	overflow-y:auto;
+	float:right;
+	position:absolute;
+	top:23px;
+	right:0;
+	bottom:0;
+}
+
+#social div.social-list.messages {
+	width:100%;
+	overflow-y:auto;
+	float:right;
+	position:absolute;
+	top:23px;
+	right:0;
+	bottom:132px;
+}
+
+#social div.social-list > span > div {
+	width:100%;
+	float:left;
+}
+
+#social div.social-list div.even {
+	background:#e8e8e8;
+}
+
+#social div.social-list > span > div > div {
+	border-bottom:1px solid #bcbec0;
+	padding:0 5px 0 0;
+}
+
+#social table {
+	width:100%;
+	display:table;
+	line-height:100%;
+	border:none;
+}
+
+#social table td.photo-cont {
+	width:50px;
+}
+
+#social table td table {
+	width:100%;
+}
+
+#social table td,
+#social table td table td {
+	vertical-align:top;
+}
+
+#social div.social-list img.photo {
+	background:#E8E8E8;
+	border:1px solid #999999;
+	padding:2px;
+	margin:9px;
+	width:32px;
+	height:32px;
+	float:left;
+}
+
+#social div.social-list div.even img.photo {
+	background:#dadada;
+}
+
+#social div.social-list div.joining span.name,
+#social div.social-list div.leaving span.name {
+	font-size:12px;
+	font-weight:bold;
+	color:#333333;
+	padding:0;
+	text-transform:capitalize;
+	float:left;
+	display:block;
+}
+
+#social div.social-list div.even img.present,
+#social div.social-list div.odd img.present {
+	display:block;
+	float:left;
+	background:none;
+}
+
+#social div.social-list span.menubar {
+    float: right;
+	padding:6px 0 0 0;
+    position: relative;
+}
+
+#social div.social-list td.jobtitle span.titles {
+	display:block;
+	font-size:10px;
+	font-weight:bold;
+	color:#666666;
+	float:left;
+}
+
+#social div.social-list td.info-container {
+	font-size:11px;
+	line-height:140%;
+	color:#333333;
+}
+
+#social div.social-list td.info-container a {
+	font-size:11px;
+	line-height:140%;
+	color:#333333;
+}
+
+#social div.social-list td.info-container a:hover {
+	font-size:11px;
+	line-height:140%;
+	color:#666666;
+}
+
+#social div.social-list div.time {
+	font-size:10px;
+	font-weight:bold;
+	color:#959595;
+}
+
+#social div.social-list span.time {
+	color:#666666;
+}
+
+#social div.social-list div.show-more-less {
+	border-bottom:1px solid #BCBEC0;
+	float:left;
+	text-align:center;
+	width:100%;
+}
+
+#social div.social-list div.show-more-less a {
+	color:#666666;
+	font-size:11px;
+	font-weight:bold;
+	padding:5px;
+	text-transform:lowercase;
+	outline:none;
+}
+
+#social div.social-list div.show-more-less a:hover {
+	color:#333333;
+}
+
+#social div.no-commands,
+#social div.no-messages {
+	float:right;
+	position:absolute;
+	right:0;
+	top:23px;
+	width:100%;
+	text-align:center;
+	border-bottom:1px solid #BCBEC0;
+	background:#e8e8e8;
+}
+
+#social div.no-commands span,
+#social div.no-messages span {
+	color:#666666;
+	font-size:11px;
+	font-weight:bold;
+	padding:5px;
+	text-transform:lowercase;
+}
+
+
+/* ----- Social - Presence ----- */
+
+#social div.social-list.presence > span > div > div {
+	padding:0 5px 0 0;
+}
+
+#social div.social-list.presence div.joining img.present {padding:15px 0 0 5px;}
+
+#social div.social-list.presence div.joining div.time {line-height:100%;}
+
+#social div.social-list.presence div.employed.joining span.name {padding:7px 0 0 0;}
+
+#social div.social-list.presence div.employed.joining img.present {padding:9px 0 0 5px;}
+
+#social div.social-list.presence div.employed.joining span.menubar {padding:3px 0 0 0;}
+
+#social div.social-list.presence div.employed.joining div.time {line-height:100%;}
+
+#social div.social-list.presence div.employed.leaving span.name {padding:12px 0 2px 0;}
+
+#social div.social-list.presence div.employed.leaving span.menubar {padding:3px 0 0 0;}
+
+
+
+#social div.social-list.presence div.joining span.name {
+	padding:13px 0 0 0;
+}
+
+#social div.social-list.presence div.leaving span.name {
+	padding:20px 0 0 0;
+}
+
+#social div.social-list.presence img.present {
+	padding:14px 0 0 5px;
+}
+
+/* ----- Social - Activities ----- */
+
+#social div.social-list.commands div span.name {
+	padding:11px 0 0 0;
+}
+
+#social div.social-list.commands img.present {
+	padding:13px 0 0 5px;
+}
+
+#social div.social-list.commands td.jobtitle span.titles {
+	padding:1px 0 2px 0;
+}
+
+#social div.social-list.commands td.info-container {
+	padding:0 0 8px 1px;
+}
+
+/* ----- Social - Messages ----- */
+
+#social div.social-list.messages div span.name {
+	padding:9px 0 2px 0;
+}
+
+#social div.social-list.messages img.present {
+	padding:11px 0 0 5px;
+}
+
+#social div.social-list.messages td.jobtitle span.titles {
+	padding:0 0 4px 0;
+}
+
+#social div.social-list.messages td.info-container {
+	padding:3px 0 8px 0;
+	border-top:1px solid #bcbec0;
+}
+
+/* ----- Social - New Message ----- */
+
+#social div.new-message {
+	background:#E8E8E8;
+	border-top:1px solid #999999;
+	bottom:0;
+	float:left;
+	font-size:11px;
+	padding:5px 0 10px 10px;
+	position:absolute;
+}
+
+#social div.new-message > div {
+	padding:5px 0;
+}
+
+#social div.new-message > div > span {
+	font-weight:bold;
+}
+
+#social div.new-message > div > select {
+	background:#F6F6F6;
+	border:1px solid #666666;
+	margin-left:5px;
+	font-size:11px;
+}
+
+#social div.new-message textarea {
+	background:#F6F6F6;
+	border:1px solid #999999;
+	margin:2px 0 5px 0;
+	overflow-x:hidden;
+	font-size:11px;
+}
+
+#social div.new-message input {
+	background:#d9d9d9;
+	border:1px solid #666666;
+	color:#000000;
+	font-size:11px;
+}
+
+#social div.new-message input:hover {
+	background:#f6f6f6;
+	border:1px solid #999999;
+	color:#333333;
+	font-size:11px;
 }

@@ -2,12 +2,13 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.nlp.Matcher;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -88,14 +89,14 @@ public class RedundantPart extends AbstractIssueDetector {
 
     // One narrows or equals the other
     private boolean isEquivalent( Part part, Part otherPart ) {
-        return Matcher.same( part.getTask(), otherPart.getTask() )
+        return Matcher.getInstance().same( part.getTask(), otherPart.getTask() )
                 && (
-                part.resourceSpec().narrowsOrEquals( otherPart.resourceSpec() )
-                        || otherPart.resourceSpec().narrowsOrEquals( part.resourceSpec() )
+                part.resourceSpec().narrowsOrEquals( otherPart.resourceSpec(), User.current().getPlan() )
+                        || otherPart.resourceSpec().narrowsOrEquals( part.resourceSpec(), User.current().getPlan() )
         )
                 && (
-                ModelEntity.implies( part.getLocation(), otherPart.getLocation() )
-                        || ModelEntity.implies( otherPart.getLocation(), part.getLocation() )
+                ModelEntity.implies( part.getLocation(), otherPart.getLocation(), User.current().getPlan() )
+                        || ModelEntity.implies( otherPart.getLocation(), part.getLocation(), User.current().getPlan() )
         );
 
     }

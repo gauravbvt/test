@@ -1,12 +1,12 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,15 +81,15 @@ public class SegmentRelationship implements Identifiable {
         return Long.valueOf( fromId + toId );
     }
 
-    public void setId( long id, QueryService queryService ) {
+    public void setId( long id, QueryService queryService, Analyst analyst ) {
         String s = Long.toString( id );
         String toId = s.substring( s.length() - 9 );
         String fromId = s.substring( 0, s.length() - 9 );
         fromSegmentId = Long.valueOf( fromId );
         toSegmentId = Long.valueOf( toId );
-        SegmentRelationship scRel = queryService.findSegmentRelationship(
-                getFromSegment( queryService ),
-                getToSegment( queryService ) );
+        SegmentRelationship scRel = analyst.findSegmentRelationship(
+                                        getFromSegment( queryService ),
+                                        getToSegment( queryService ) );
         if ( scRel != null ) {
             externalFlows = scRel.getExternalFlows();
             initiators = scRel.getInitiators();

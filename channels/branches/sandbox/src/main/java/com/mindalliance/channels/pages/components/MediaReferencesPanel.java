@@ -24,7 +24,7 @@ import java.util.Set;
  * Time: 10:25:00 AM
  */
 public class MediaReferencesPanel extends AbstractUpdatablePanel {
-    
+
     @SpringBean
     private AttachmentManager attachmentManager;
 
@@ -44,7 +44,7 @@ public class MediaReferencesPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        List<Attachment> mediaRefs = moModel.getObject().getMediaReferences( attachmentManager );
+        List<Attachment> mediaRefs = attachmentManager.getMediaReferences( moModel.getObject() );
         boolean tooMany = mediaRefs.size() > MAX_SIZE;
         if ( tooMany ) mediaRefs = mediaRefs.subList( 0, MAX_SIZE );
         WebMarkupContainer mediaRefsContainer = new WebMarkupContainer( "mediaRefsList" );
@@ -55,14 +55,14 @@ public class MediaReferencesPanel extends AbstractUpdatablePanel {
                   Attachment attachment = item.getModelObject();
                 ExternalLink link = new ExternalLink( "link", attachment.getUrl() );
                 item.add( link );
-                String src = attachment.isImageReference( attachmentManager )
+                String src = attachmentManager.isImageReference( attachment )
                         ? "/images/image.png"
-                        : attachment.isVideoReference( attachmentManager )
+                        : attachmentManager.isVideoReference( attachment )
                         ? "/images/movie.png"
                         : "";
-                String title = attachment.isImageReference( attachmentManager )
+                String title = attachmentManager.isImageReference( attachment )
                         ? "Image"
-                        : attachment.isVideoReference( attachmentManager )
+                        : attachmentManager.isVideoReference( attachment )
                         ? "Video"
                         : "";
                 WebMarkupContainer icon = new WebMarkupContainer( "icon" );

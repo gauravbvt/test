@@ -5,8 +5,8 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
@@ -57,11 +57,12 @@ public class AddNeed extends AbstractCommand {
                     (String) get( "name" ),
                     priorId );
             set( "flow", flow.getId() );
-            set( "connector", flow.getTarget().getId() );
+            set( "connector", flow.getSource().getId() );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null ) {
                 ChannelsUtils.initialize( flow, flowAttributes );
             }
+            describeTarget( flow );
             return new Change( Change.Type.Added, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

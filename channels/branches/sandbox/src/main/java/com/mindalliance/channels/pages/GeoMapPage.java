@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.geo.GeoService;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.geo.GeoService;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
@@ -194,7 +194,7 @@ public class GeoMapPage extends WebPage {
             Set<String> labels = new HashSet<String>();
             while ( locs.hasNext() ) {
                 GeoLocatable geo = locs.next();
-                String label = geo.getGeoMarkerLabel();
+                String label = geo.getGeoMarkerLabel( Channels.instance().getQueryService() );
                 if ( !labels.contains( label ) ) {
                     if ( !sb.toString().isEmpty() && !sb.toString().endsWith( " - " ) ) {
                         sb.append( " - " );

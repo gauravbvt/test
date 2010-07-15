@@ -5,11 +5,22 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Goal;
+import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,11 +67,12 @@ public class AddPart extends AbstractCommand {
         Long priorId = (Long) get( "part" );
         Part part = planDao.createPart( segment, priorId );
         set( "part", part.getId() );
-        if ( defaultPart != null ) segment.removeNode( defaultPart, planDao );
+        if ( defaultPart != null ) planDao.removeNode( defaultPart, segment );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
         if ( partState != null ) {
-            part.initFromMap( partState, commander.getQueryService() );
+            initFromMap( part, partState, commander.getQueryService() );
         }
+        describeTarget( part );
         return new Change( Change.Type.Added, part );
     }
 
@@ -83,5 +95,62 @@ public class AddPart extends AbstractCommand {
         } catch ( NotFoundException e ) {
             throw new CommandException( "Can't undo", e );
         }
+    }
+
+    public static void initFromMap( Part part, Map<String, Object> state, QueryService queryService ) {
+        part.setDescription( (String) state.get( "description" ) );
+        part.setTask( (String) state.get( "task" ) );
+        part.setRepeating( (Boolean) state.get( "repeating" ) );
+        part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
+        part.setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
+        part.setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
+        part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
+        part.setCompletionTime( (Delay) state.get( "completionTime" ) );
+        part.setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );
+        for (Map<String,Object> goalMap : (List<Map<String,Object>>)state.get( "goals" ) ) {
+            Goal goal = queryService.goalFromMap( goalMap );
+            part.addGoal(  goal );
+        }
+        if ( state.get( "initiatedEvent" ) != null )
+            part.setInitiatedEvent( queryService.findOrCreateType(
+                    Event.class,
+                    (String) state.get( "initiatedEvent" ) ) );
+        else
+            part.setInitiatedEvent( null );
+        if ( state.get( "actor" ) != null )
+            part.setActor( queryService.retrieveEntity(
+                    Actor.class,
+                    state,
+                    "actor" ) ) ;
+        else
+            part.setActor( null );
+        if ( state.get( "role" ) != null )
+            part.setRole( queryService.retrieveEntity(
+                    Role.class,
+                    state,
+                    "role" ) );
+        else
+            part.setRole( null );
+        if ( state.get( "organization" ) != null )
+            part.setOrganization( queryService.retrieveEntity(
+                    Organization.class,
+                    state,
+                    "organization" ) );
+        else
+            part.setOrganization( null );
+        if ( state.get( "jurisdiction" ) != null )
+            part.setJurisdiction( queryService.retrieveEntity(
+                    Place.class,
+                    state,
+                    "jurisdiction" ) );
+        else
+            part.setJurisdiction( null );
+        if ( state.get( "location" ) != null )
+            part.setLocation( queryService.retrieveEntity(
+                    Place.class,
+                    state,
+                    "location" ) );
+        else
+            part.setLocation( null );
     }
 }

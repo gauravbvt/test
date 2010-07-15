@@ -1,13 +1,14 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Plan;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -161,14 +162,12 @@ public abstract class AbstractChannelsConverter implements Converter {
             ModelObject modelObject,
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
-
-        // TODO export issues? really?
-//        List<Issue> issues = getPlanDao().findAllUserIssues( modelObject );
-//        for ( Issue issue : issues ) {
-//            writer.startNode( "issue" );
-//            context.convertAnother( issue );
-//            writer.endNode();
-//        }
+        List<Issue> issues = getPlanDao().findAllUserIssues( modelObject );
+       for ( Issue issue : issues ) {
+            writer.startNode( "issue" );
+            context.convertAnother( issue );
+           writer.endNode();
+       }
     }
 
     /**

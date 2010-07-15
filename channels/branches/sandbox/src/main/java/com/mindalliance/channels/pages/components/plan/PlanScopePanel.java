@@ -14,12 +14,12 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
@@ -139,7 +139,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
+                    if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
 

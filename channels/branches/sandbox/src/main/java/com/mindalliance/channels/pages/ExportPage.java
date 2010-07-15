@@ -1,13 +1,12 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.dao.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.ImportExportFactory;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
@@ -66,12 +65,7 @@ public class ExportPage extends WebPage {
     }
 
     private Exporter getExporter() {
-        try {
-            return importExportFactory.createExporter( planManager.getDao( plan ) );
-
-        } catch ( NotFoundException e ) {
-            throw new RuntimeException( e );
-        }
+        return importExportFactory.createExporter( planManager.getDao( plan ) );
     }
 
     @Override

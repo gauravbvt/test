@@ -6,6 +6,7 @@ import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.ModelEntity;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
@@ -115,7 +116,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
 
         public List<DOTAttribute> getVertexAttributes( ModelEntity vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "image", getIcon( vertex ) ) );
+            list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
             if ( highlighted ) {
                 list.add( new DOTAttribute( "shape", "box" ) );
@@ -156,7 +157,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             return list;
         }
 
-        private String getIcon( ModelEntity entity ) {
+        private String getIcon( ImagingService service, ModelEntity entity ) {
             String iconName;
             String imagesDirName;
             try {
@@ -167,7 +168,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             String label = getIdentifiableLabel( entity );
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
-            iconName = getAnalyst().getQueryService().findIconName( entity, imagesDirName );
+            iconName = service.findIconName( entity, imagesDirName );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.command.MappedObject;
+import java.util.Map;
 
 /**
  * An object convertible to and reconstitutable from a safely serializable map.
@@ -11,11 +11,11 @@ import com.mindalliance.channels.command.MappedObject;
  * Time: 7:52:23 PM
  */
 public interface Mappable {
+
     /**
-     * Convert to a map that can be safely serialized.
-     *
-     * @return a map
+     * Add attributes to a map.
+     * @param map the map
      */
-    MappedObject map();
+    void map( Map<String,Object> map );
 
 }

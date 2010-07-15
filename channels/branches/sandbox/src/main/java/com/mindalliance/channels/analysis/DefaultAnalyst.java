@@ -1,6 +1,9 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
@@ -9,8 +12,8 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.Play;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.springframework.context.Lifecycle;
@@ -29,7 +32,7 @@ import java.util.Set;
  * Date: Nov 26, 2008
  * Time: 10:07:27 AM
  */
-public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener {
+public class DefaultAnalyst implements Analyst, Lifecycle {
 
     /**
      * Description separator.
@@ -40,16 +43,19 @@ public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener 
      * The query service.
      */
     private QueryService queryService;
+
     /**
      * The detective service.
      */
     private Detective detective;
 
-
     /**
      * Low priority, multi-threaded issues scanner.
      */
     private IssueScanner issueScanner;
+
+    private ImagingService imagingService;
+
     /**
      * Lifecycle status.
      */
@@ -74,13 +80,18 @@ public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener 
         this.issueScanner = issueScanner;
     }
 
+    /**
+     * Enable analysis of problems in active plans.
+     */
     public void start() {
-        queryService.getPlanManager().addListener( this );
         running = true;
+        // onStart();
     }
 
+    /**
+     * Disable analysis of problems in active plans.
+     */
     public void stop() {
-        queryService.getPlanManager().removeListener( this );
         issueScanner.terminate();
     }
 
@@ -95,8 +106,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener 
     /**
      * {@inheritDoc}
      */
-    public void onStart() {
-        issueScanner.scan();
+    public void onStart( Plan plan ) {
+        issueScanner.scan( plan );
     }
 
     /**
@@ -104,29 +115,6 @@ public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener 
      */
     public void onStop() {
         stop();
-    }
-
-    /**
-     * A plan is about to be put in production.
-     * @param devPlan the development plan
-     */
-    public void aboutToProductize( Plan devPlan ) {
-        onStop();
-    }
-
-    /**
-     * A new development plan was created.
-     * @param devPlan the new plan.
-     */
-    public void created( Plan devPlan ) {
-        onStart();
-    }
-
-    /**
-     * A new plan was put in production.
-     * @param plan the new plan
-     */
-    public void productized( Plan plan ) {
     }
 
     /**
@@ -433,5 +421,213 @@ public class DefaultAnalyst implements Analyst, Lifecycle, PlanManager.Listener 
         }
     }
 
+    /**
+     * Get the imaging service.
+     *
+     * @return the imaging service
+     */
+    public ImagingService getImagingService() {
+        return imagingService;
+    }
 
+    public void setImagingService( ImagingService imagingService ) {
+        this.imagingService = imagingService;
+    }
+
+    public List<Issue> findAllIssues() {
+        List<Issue> allIssues = new ArrayList<Issue>();
+        // allIssues.addAll( analyst.listIssues( getPlan(), true ) );
+        for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
+            allIssues.addAll( listIssues( mo, true ) );
+        }
+        for ( Segment segment : queryService.list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
+            while ( parts.hasNext() ) {
+                allIssues.addAll( listIssues( parts.next(), true ) );
+            }
+            Iterator<Flow> flows = segment.flows();
+            while ( flows.hasNext() ) {
+                allIssues.addAll( listIssues( flows.next(), true ) );
+            }
+        }
+        return allIssues;
+    }
+
+    /**
+     * Find all unwaived issues on all model objects in the plan.
+     *
+     * @return a list of issues.
+     */
+    public List<Issue> findAllUnwaivedIssues() {
+        List<Issue> allUnwaivedIssues = new ArrayList<Issue>();
+        // allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( getPlan(), true ) );
+        for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
+            allUnwaivedIssues.addAll( listUnwaivedIssues( mo, true ) );
+        }
+        for ( Segment segment : queryService.list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
+            while ( parts.hasNext() ) {
+                allUnwaivedIssues.addAll( listUnwaivedIssues( parts.next(), true ) );
+            }
+            Iterator<Flow> flows = segment.flows();
+            while ( flows.hasNext() ) {
+                allUnwaivedIssues.addAll( listUnwaivedIssues( flows.next(), true ) );
+            }
+        }
+        return allUnwaivedIssues;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public SegmentRelationship findSegmentRelationship( Segment fromSegment, Segment toSegment ) {
+        List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
+        List<Part> initiators = new ArrayList<Part>();
+        List<Part> terminators = new ArrayList<Part>();
+        Iterator<Flow> flows = fromSegment.flows();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( flow.isExternal() ) {
+                ExternalFlow externalFlow = (ExternalFlow) flow;
+                if ( externalFlow.getConnector().getSegment() == toSegment
+                        && !externalFlow.isPartTargeted() ) {
+                    externalFlows.add( externalFlow );
+                }
+            }
+        }
+        flows = toSegment.flows();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( flow.isExternal() ) {
+                ExternalFlow externalFlow = (ExternalFlow) flow;
+                if ( externalFlow.getConnector().getSegment() == fromSegment
+                        && externalFlow.isPartTargeted() ) {
+                    externalFlows.add( externalFlow );
+                }
+            }
+        }
+        for ( Part part : queryService.findInitiators( toSegment ) ) {
+            if ( part.getSegment().equals( fromSegment ) ) initiators.add( part );
+        }
+        for ( Part part : queryService.findExternalTerminators( toSegment ) ) {
+            if ( part.getSegment().equals( fromSegment ) ) terminators.add( part );
+        }
+        if ( externalFlows.isEmpty() && initiators.isEmpty() && terminators.isEmpty() ) {
+            return null;
+        } else {
+            SegmentRelationship segmentRelationship = new SegmentRelationship(
+                    fromSegment,
+                    toSegment );
+            segmentRelationship.setExternalFlows( externalFlows );
+            segmentRelationship.setInitiators( initiators );
+            segmentRelationship.setTerminators( terminators );
+            return segmentRelationship;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship(
+            T fromEntity, T toEntity ) {
+        List<Flow> entityFlows = new ArrayList<Flow>();
+        for ( Segment segment : queryService.list( Segment.class ) ) {
+            Iterator<Flow> flows = segment.flows();
+            while ( flows.hasNext() ) {
+                Flow flow = flows.next();
+                if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
+                    Part sourcePart = (Part) flow.getSource();
+                    Part targetPart = (Part) flow.getTarget();
+                    if ( queryService.isExecutedBy( sourcePart, fromEntity )
+                            && queryService.isExecutedBy( targetPart, toEntity ) ) {
+                        entityFlows.add( flow );
+                    }
+                }
+            }
+        }
+        if ( entityFlows.isEmpty() ) {
+            return null;
+        } else {
+            EntityRelationship<T> entityRel = new EntityRelationship<T>( fromEntity, toEntity );
+            entityRel.setFlows( entityFlows );
+            return entityRel;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship(
+            T fromEntity, T toEntity, Segment segment ) {
+        List<Flow> entityFlows = new ArrayList<Flow>();
+        Iterator<Flow> flows = segment.flows();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
+                Part sourcePart = (Part) flow.getSource();
+                Part targetPart = (Part) flow.getTarget();
+                if ( queryService.isExecutedBy( sourcePart, fromEntity )
+                        && queryService.isExecutedBy( targetPart, toEntity ) ) {
+                    entityFlows.add( flow );
+                }
+            }
+        }
+        if ( entityFlows.isEmpty() ) {
+            return null;
+        } else {
+            EntityRelationship<T> entityRel = new EntityRelationship<T>( fromEntity, toEntity );
+            entityRel.setFlows( entityFlows );
+            return entityRel;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<EntityRelationship> findEntityRelationships(
+            Segment segment, Class<? extends ModelEntity> entityClass, ModelEntity.Kind kind ) {
+        List<ModelEntity> entities = queryService.findEntities( segment, entityClass, kind );
+        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
+        for ( ModelEntity entity : entities ) {
+            for ( ModelEntity otherEntity : entities ) {
+                if ( !entity.equals( otherEntity ) ) {
+                    EntityRelationship<ModelEntity> sendRel = findEntityRelationship( entity, otherEntity );
+                    if ( sendRel != null ) {
+                        rels.add( sendRel );
+                    }
+/*
+                    EntityRelationship<ModelEntity> receiveRel = findEntityRelationship( otherEntity, entity );
+                    if ( receiveRel != null ) {
+                        rels.add( receiveRel );
+                    }
+*/
+                }
+            }
+        }
+        return rels;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity ) {
+        List<ModelEntity> otherEntities =
+                new ArrayList<ModelEntity>(
+                        queryService.findEntities( segment, entity.getClass(), entity.getKind() ) );
+        otherEntities.remove( entity );
+        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
+        for ( ModelEntity otherEntity : otherEntities ) {
+            EntityRelationship<ModelEntity> sendRel =
+                    findEntityRelationship( entity, otherEntity );
+            if ( sendRel != null ) {
+                rels.add( sendRel );
+            }
+            EntityRelationship<ModelEntity> receiveRel =
+                    findEntityRelationship( otherEntity, entity );
+            if ( receiveRel != null ) {
+                rels.add( receiveRel );
+            }
+        }
+        return rels;
+    }
 }

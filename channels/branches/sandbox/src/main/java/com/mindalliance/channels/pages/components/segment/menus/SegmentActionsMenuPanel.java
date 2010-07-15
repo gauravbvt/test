@@ -44,7 +44,7 @@ public class SegmentActionsMenuPanel extends ActionMenuPanel {
                     Change change ) {
                 update( target, change );
             }
-        } );
+        } );                                                                
         return commandWrappers;
     }
 

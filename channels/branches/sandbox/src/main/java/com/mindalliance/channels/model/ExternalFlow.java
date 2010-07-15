@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.Memory;
-
 import java.util.List;
 
 /**
@@ -79,22 +77,6 @@ public class ExternalFlow extends Flow {
     @Override
     void setTarget( Node target ) {
         setPart( (Part) target );
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param planDao
-     */
-    @Override
-    public void disconnect( Memory planDao ) {
-        Part p = part;
-        p.removeSend( this );
-        p.removeReceive( this );
-        part = null;
-
-        Connector c = connector;
-        c.removeExternalFlow( this );
-        connector = null;
     }
 
     /**

@@ -1,8 +1,7 @@
 package com.mindalliance.channels.pages.components.surveys;
 
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
@@ -14,10 +13,11 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.surveys.Contact;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -245,8 +245,9 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
         if ( role != null && !role.equals( contactDescriptor.getRole() ) )
             return true;
         Place jurisdiction = (Place) filters.get( "jurisdiction" );
+        Place place = contactDescriptor.getJurisdiction();
         return jurisdiction != null
-                && !Matcher.within( contactDescriptor.getJurisdiction(), jurisdiction );
+            && ( place == null || !place.matchesOrIsInside( jurisdiction, User.plan() ) );
     }
 
     public Survey getSurvey() {

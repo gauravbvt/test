@@ -2,12 +2,13 @@ package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.dao.NotFoundException;
+import com.mindalliance.channels.dao.PlanListener;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.query.QueryService;
@@ -154,7 +155,41 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         this.templatesSource = templatesSource;
     }
 
-    public void afterPropertiesSet() throws Exception {
+    /**
+     * Called by Spring after properties have been set.
+     */
+    public void afterPropertiesSet() {
+        planManager.addListener( new PlanListener() {
+            public void aboutToProductize( Plan devPlan ) {
+                for ( Survey survey : getSurveys( devPlan ) )
+                    try {
+                        closeSurvey( survey );
+                    } catch ( SurveyException e ) {
+                        LOG.error( "Unable to close survey", e );
+                    }
+            }
+
+            public void productized( Plan plan ) {
+            }
+
+            public void created( Plan devPlan ) {
+                loadSurveys( devPlan );
+            }
+
+            public void loaded( Plan plan ) {
+                loadSurveys( plan );
+            }
+
+            public void aboutToUnload( Plan plan ) {
+                for ( Survey survey : getSurveys( plan ) )
+                    try {
+                        closeSurvey( survey );
+                    } catch ( SurveyException e ) {
+                        LOG.error( "Unable to close survey", e );
+                    }
+            }
+        } );
+
         for ( Plan plan : planManager.getPlans() )
             if ( plan.isDevelopment() ) {
                 loadSurveys( plan );
@@ -242,9 +277,9 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     private void save() {
         PrintWriter out = null;
         try {
-            File file = new File( getDataDirectory( getPlan() ), surveysFile );
+            File file = new File( getDataDirectory( User.plan() ), surveysFile );
             out = new PrintWriter( new FileWriter( file ) );
-            for ( Survey survey : getSurveys( getPlan() ) ) {
+            for ( Survey survey : getSurveys( User.plan() ) ) {
                 out.println( survey.toString() );
             }
             LOG.info( "Survey records saved" );
@@ -255,12 +290,8 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         }
     }
 
-    private Plan getPlan() {
-        return PlanManager.plan();
-    }
-
-    private File getDataDirectory( Plan plan ) throws IOException, NotFoundException {
-        return planManager.getDao( plan ).getPlanStoreDirectory();
+    private File getDataDirectory( Plan plan ) {
+        return planManager.getVersion( plan ).getVersionDirectory();
     }
 
     /**
@@ -274,7 +305,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     private Survey findOpenSurvey( final Issue issue ) {
         Survey latestSurvey = null;
         List<Survey> planSurveys = (List<Survey>) CollectionUtils.select(
-                getSurveys( getPlan() ),
+                getSurveys( User.plan() ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Survey survey = (Survey) obj;
@@ -338,7 +369,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
             survey.setStatus( Survey.Status.In_design );
             survey.setIssuer( getIssuerName( survey ) );
             survey.addContacts( getDefaultContacts( issue ) );
-            addSurvey( getPlan(), survey );
+            addSurvey( User.plan(), survey );
             save();
         }
         survey.updateSurveyData( this );
@@ -415,10 +446,21 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
      * {@inheritDoc}
      */
     public void deleteSurvey( Survey survey ) throws SurveyException {
-        if ( survey.isRegistered() ) throw new SurveyException( "Can't delete registered survey." );
-        getSurveys( getPlan() ).remove( survey );
+        if ( !survey.canBeCancelled() ) throw new SurveyException( "Can't cancel survey." );
+        if ( survey.isRegistered() ) {
+            unregisterSurvey( survey );
+        }
+        getSurveys( User.plan() ).remove( survey );
         save();
     }
+
+    /**
+     * Unregister a survey.
+     *
+     * @param survey a survey
+     * @throws SurveyException if service call fails
+     */
+    protected abstract void unregisterSurvey( Survey survey )  throws SurveyException;
 
     /**
      * {@inheritDoc}
@@ -444,7 +486,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
      */
     public void closeSurvey( Survey survey ) throws SurveyException {
         if ( !survey.isLaunched() ) throw new SurveyException( "Survey not launched." );
-        if ( survey.isClosed() ) throw new SurveyException( "Survey already launched." );
+        if ( survey.isClosed() ) throw new SurveyException( "Survey already closed." );
         doCloseSurvey( survey );
         survey.setStatus( Survey.Status.Closed );
         survey.setClosedDate( new Date() );
@@ -455,7 +497,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
      * {@inheritDoc}
      */
     public List<Survey> getSurveys() {
-        return new ArrayList<Survey>( surveys.get( getPlan() ) );
+        return new ArrayList<Survey>( surveys.get( User.plan() ) );
     }
 
     public String getIssueDescriptionText( Issue issue ) {

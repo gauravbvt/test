@@ -62,4 +62,12 @@ public interface Updatable {
      */
     void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated );
 
+    /**
+      * Refresh due to change..
+      * Meant to sink down the children tree.
+      * @param target the ajax request target
+      * @param change the nature of tha change
+      */
+    void refresh( AjaxRequestTarget target, Change change );
+
 }

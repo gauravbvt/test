@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -111,7 +111,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
+                    if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
@@ -279,12 +279,12 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isUpdated() && change.getProperty().equals( "tags" ) ) {
+        if ( change.isUpdated() && change.isForProperty( "tags" ) ) {
             addTagsPanel();
             target.addComponent( tagsPanel );
             tagsChanged( target );
         }
-        if ( change.isUpdated() && change.getProperty().equals( "attachments" ) ) {
+        if ( change.isUpdated() && change.isForProperty( "attachments" ) ) {
             addImage();
             adjustFields();
             target.addComponent( image );

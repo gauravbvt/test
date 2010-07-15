@@ -1,22 +1,14 @@
 package com.mindalliance.channels.util;
 
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
-import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.InternalFlow;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -25,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,7 +50,7 @@ public final class ChannelsUtils {
     public static Map<String, Object> getFlowAttributes( final Flow flow ) {
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put( "description", flow.getDescription() );
-        attributes.put( "eois", copyEois( flow ) );
+        attributes.put( "eois", flow.copyEois() );
         attributes.put( "askedFor", flow.isAskedFor() );
         attributes.put( "all", flow.isAll() );
         attributes.put( "maxDelay", new Delay( flow.getMaxDelay() ) );
@@ -69,20 +60,6 @@ public final class ChannelsUtils {
         attributes.put( "significanceToTarget", flow.getSignificanceToTarget() );
         attributes.put( "significanceToSource", flow.getSignificanceToSource() );
         return attributes;
-    }
-
-    /**
-     * Get a copy of the elements fo information in a flow.
-     *
-     * @param flow a flow
-     * @return a list of elements of information
-     */
-    public static List<ElementOfInformation> copyEois( Flow flow ) {
-        List<ElementOfInformation> eois = new ArrayList<ElementOfInformation>();
-        for ( ElementOfInformation eoi : flow.getEois() ) {
-            eois.add( new ElementOfInformation( eoi ) );
-        }
-        return eois;
     }
 
     /**
@@ -181,29 +158,6 @@ public final class ChannelsUtils {
                     "location",
                     Arrays.asList( part.getLocation().getName(), part.getLocation().isType() ) );
         return state;
-    }
-
-    /**
-     * Retrieve an entity from a serialization map.
-     * @param entityClass entity class
-     * @param state a map
-     * @param key  a string
-     * @param queryService a query service
-     * @return a model entity
-     */
-    public static <T extends ModelEntity> T retrieveEntity(
-            Class<T> entityClass,
-            Map<String, Object> state,
-            String key,
-            QueryService queryService ) {
-        Object[] vals = ((Collection)state.get( key )).toArray();
-        String name = (String)vals[0];
-        boolean type = (Boolean)vals[1];
-        if ( type ) {
-            return queryService.findOrCreateType( entityClass, name );
-        } else {
-            return queryService.findOrCreate( entityClass, name );
-        }
     }
 
     /**
@@ -329,8 +283,8 @@ public final class ChannelsUtils {
      */
     public static Map<String, Object> getPartCopy( Part part ) {
         Map<String, Object> copy = new HashMap<String, Object>();
-        copy.put( "segment", part.getSegment().getId() );
-        copy.put( "partState", part.mapState() );
+        // copy.put( "segment", part.getSegment().getId() );
+        copy.put( "partState", getPartState( part ) );
         Iterator<Flow> needs = part.receives();
         List<Map<String, Object>> needStates = new ArrayList<Map<String, Object>>();
         while ( needs.hasNext() ) {
@@ -393,65 +347,4 @@ public final class ChannelsUtils {
         identity.put( "state", getFlowState( flow, part ) );
         return identity;
     }
-
-    /**
-     * Resolve a node from an id.
-     *
-     * @param id           a long
-     * @param segment      a segment in context
-     * @param queryService a query service
-     * @return a node
-     * @throws com.mindalliance.channels.command.CommandException
-     *          if not found
-     */
-    public static Node resolveNode(
-            Long id,
-            Segment segment,
-            QueryService queryService ) throws CommandException {
-        Node node;
-        // null id represents a local connector
-        if ( id != null ) {
-            ModelObject mo;
-            try {
-                mo = queryService.find( ModelObject.class, id );
-            } catch ( NotFoundException e ) {
-                throw new CommandException( "You need to refresh.", e );
-            }
-            // How external an connector is captured
-            if ( mo instanceof InternalFlow ) {
-                InternalFlow internalFlow = (InternalFlow) mo;
-                assert ( internalFlow.hasConnector() );
-                node = internalFlow.getSource().isConnector()
-                        ? internalFlow.getSource()
-                        : internalFlow.getTarget();
-            } else {
-                node = segment.getNode( id );
-            }
-
-        } else {
-            node = queryService.createConnector( segment );
-        }
-        return node;
-    }
-
-    /**
-     * Find flow in segment given id.
-     *
-     * @param id      a long
-     * @param segment a segment
-     * @return a flow
-     * @throws CommandException if not found
-     */
-    public static Flow resolveFlow( Long id, Segment segment ) throws CommandException {
-        try {
-            if ( id != null && segment != null ) {
-                return segment.findFlow( id );
-            } else {
-                throw new NotFoundException();
-            }
-        } catch ( NotFoundException e ) {
-            throw new CommandException( "Can't find flow", e );
-        }
-    }
-
 }

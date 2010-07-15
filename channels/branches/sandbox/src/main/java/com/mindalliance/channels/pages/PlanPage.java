@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.geo.GeoLocatable;
@@ -12,6 +11,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
@@ -19,7 +19,6 @@ import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
-import com.mindalliance.channels.pages.components.SegmentImportPanel;
 import com.mindalliance.channels.pages.components.SegmentLink;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
@@ -86,7 +85,6 @@ import java.util.Set;
  * Note: When a user switches plan, this page *must* be reloaded.
  */
 public final class PlanPage extends WebPage implements Updatable {
-
     /**
      * Delay between refresh check callbacks.
      */
@@ -204,7 +202,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Import segment "dialog".
      */
-    private SegmentImportPanel segmentImportPanel;
+    // private SegmentImportPanel segmentImportPanel;
 
     /**
      * Segment edit panel.
@@ -324,16 +322,16 @@ public final class PlanPage extends WebPage implements Updatable {
 
     static {
         IE7CompatibilityScript =
-        // "alert($.browser.msie + ' ' + parseInt( $.browser.version ) );\n" +
-        "$(document).ready(function() {\n" +
-            "if ( $.browser.msie && parseInt( $.browser.version ) < 8 ) {\n" +
-                            "    var zIndexFix = 110;\n" +
-                            "    $('div.flow > div').each(function() {\n" +
-                            "        $(this).css('zIndex', -zIndexFix);\n" +
-                            "        zIndexFix += 10;\n" +
-                            "    })\n" +
-                            "};\n" +
-        "});";
+                // "alert($.browser.msie + ' ' + parseInt( $.browser.version ) );\n" +
+                "$(document).ready(function() {\n" +
+                        "if ( $.browser.msie && parseInt( $.browser.version ) < 8 ) {\n" +
+                        "    var zIndexFix = 110;\n" +
+                        "    $('div.flow > div').each(function() {\n" +
+                        "        $(this).css('zIndex', -zIndexFix);\n" +
+                        "        zIndexFix += 10;\n" +
+                        "    })\n" +
+                        "};\n" +
+                        "});";
     }
 
     /**
@@ -377,6 +375,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void init( Segment sc, Part p, Set<Long> expanded ) {
         final Commander commander = getCommander();
+        commander.loggedIn( getUser().getUsername() );
         commander.releaseAllLocks( getUser().getUsername() );
         setSegment( sc );
         setPart( p );
@@ -385,7 +384,7 @@ public final class PlanPage extends WebPage implements Updatable {
             commander.requestLockOn( id );
         }
         setVersioned( false );
-
+        expanded.add( Channels.SOCIAL_ID );
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
 
@@ -496,11 +495,12 @@ public final class PlanPage extends WebPage implements Updatable {
                 getUser().getUsername() ) );                              // NON-NLS
     }
 
- /*   private void addSegmentImportDialog() {
-        segmentImportPanel = new SegmentImportPanel( "segment-import" );
-        form.add( segmentImportPanel );
-    }
-*/
+    /*   private void addSegmentImportDialog() {
+            segmentImportPanel = new SegmentImportPanel( "segment-import" );
+            form.add( segmentImportPanel );
+        }
+    */
+
     private void addSegmentPanel() {
         segmentPanel = new SegmentPanel( "segment",
                 new PropertyModel<Segment>( this, "segment" ),
@@ -576,10 +576,12 @@ public final class PlanPage extends WebPage implements Updatable {
         getCommander().processTimeOuts();
         if ( getCommander().isTimedOut() ) {
             refreshAll( target );
+            getCommander().clearTimeOut();
         } else {
             updateRefreshNotice();
             target.addComponent( refreshNeededComponent );
         }
+        segmentPanel.updateSocialPanel( target );
     }
 
     private void updateRefreshNotice() {
@@ -1369,6 +1371,8 @@ public final class PlanPage extends WebPage implements Updatable {
         else if ( change.isAspectReplaced() ) {
             closeAspect( change, null );
             viewAspect( change, change.getProperty() );
+        }  else if ( change.isCommunicated() ) {
+            expand( new Change( Change.Type.Expanded, Channels.SOCIAL_ID ) );
         }
         if ( change.isForInstanceOf( Segment.class ) ) {
             Segment changedSegment = (Segment) change.getSubject( queryService );
@@ -1411,7 +1415,7 @@ public final class PlanPage extends WebPage implements Updatable {
             }
         } else if ( change.isForInstanceOf( Flow.class ) ) {
             Flow changedFlow = (Flow) change.getSubject( queryService );
-            if ( change.isUpdated() && change.getProperty().equals( "other" ) ) {
+            if ( change.isUpdated() && change.isForProperty( "other" ) ) {
                 expand( changedFlow );
             } else if ( change.isSelected() ) {
                 if ( changedFlow.getSegment() != segment ) {
@@ -1460,6 +1464,9 @@ public final class PlanPage extends WebPage implements Updatable {
             } else if ( change.isRefreshNeeded() ) {
                 change.setScript( "alert('The action failed because the page was out of sync.');" );
                 refreshAll( target );
+            } else if ( change.isCommunicated() ) {
+                segmentPanel.newMessage( target, change );
+                segmentPanel.refreshSocialPanel( target, change );
             } else {
                 refresh( target, change, updated );
             }
@@ -1500,6 +1507,13 @@ public final class PlanPage extends WebPage implements Updatable {
         updateRefresh( target );
         updateSelectors( target, change );
         refreshChildren( target, change, updated );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void refresh( AjaxRequestTarget target, Change change ) {
+        refresh( target, change, new ArrayList<Updatable>() );
     }
 
     private void refreshAllMenus( AjaxRequestTarget target ) {
@@ -1566,6 +1580,7 @@ public final class PlanPage extends WebPage implements Updatable {
         refreshSegmentPanel( target, change, updated );
         refreshFailureImpactsPanel( target, change, updated );
     }
+
 
     private void refreshChildrenMenus( AjaxRequestTarget target ) {
         if ( planEditPanel instanceof PlanEditPanel )
@@ -1768,14 +1783,11 @@ public final class PlanPage extends WebPage implements Updatable {
         return Collections.unmodifiableMap( copy );
     }
 
-    /**
-     * Open segment import dialog.
-     *
-     * @param target an ajax request target
-     */
+/*
     public void importSegment( AjaxRequestTarget target ) {
         segmentImportPanel.open( target );
     }
+*/
 
     public boolean isCanGoBack() {
         return historyCursor > 0;
@@ -1832,7 +1844,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 ModelObject toExpand = getQueryService().find( ModelObject.class, id );
                 expand( toExpand );
             } catch ( NotFoundException e ) {
-                // Do nothing
+                expand( new Change( Change.Type.Expanded, id ) );
             }
         }
         for ( Long id : collapseSet ) {
@@ -1840,7 +1852,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 ModelObject toCollapse = getQueryService().find( ModelObject.class, id );
                 collapse( toCollapse );
             } catch ( NotFoundException e ) {
-                // Do nothing
+                collapse( new Change( Change.Type.Collapsed, id ) );
             }
         }
         // Reset aspects

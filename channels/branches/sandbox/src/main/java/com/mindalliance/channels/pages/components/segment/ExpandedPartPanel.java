@@ -50,7 +50,7 @@ import java.util.Set;
 public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     @SpringBean
-    private QueryService queryService;    
+    private QueryService queryService;
 
     /**
      * The task property.

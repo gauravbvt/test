@@ -365,6 +365,13 @@
             </exclusions>
         </dependency>
 
+        <!-- Database -->
+        <dependency>
+          <groupId>org.neodatis</groupId>
+          <artifactId>neodatis-odb</artifactId>
+          <version>1.9.24.679</version>
+        </dependency>
+        
         <!--  JUNIT DEPENDENCY FOR TESTING -->
         <dependency>
             <groupId>junit</groupId>

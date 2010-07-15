@@ -1,13 +1,20 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.graph.GraphBuilder;
+import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Commitment;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A graph of all actors in a plan linked by the existence of sharing commitments between them.
@@ -23,7 +30,6 @@ public class ActorsNetworkGraphBuilder implements GraphBuilder<Actor, EntityRela
      * A query service.
      */
     private QueryService queryService;
-
 
     public ActorsNetworkGraphBuilder( QueryService queryService ) {
         this.queryService = queryService;
@@ -50,21 +56,55 @@ public class ActorsNetworkGraphBuilder implements GraphBuilder<Actor, EntityRela
         return digraph;
     }
 
+
     private void populateGraph( DirectedGraph<Actor, EntityRelationship<Actor>> digraph ) {
-        List<Actor> allActors = queryService.list( Actor.class );
+        List<Actor> allActors = queryService.listActualEntities( Actor.class );
         for ( Actor actor : allActors ) {
             digraph.addVertex( actor );
+        }
+        Map<Actor, Map<Actor, List<Flow>>> relFlows = new HashMap<Actor, Map<Actor, List<Flow>>>();
+        for ( Segment segment : queryService.list( Segment.class ) ) {
+            Iterator<Flow> flows = segment.flows();
+            while ( flows.hasNext() ) {
+                Flow flow = flows.next();
+                if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
+                    List<Commitment> commitments = queryService.findAllCommitments( flow );
+                    for ( Commitment commitment : commitments ) {
+                        Actor fromActor = commitment.getCommitter().getActor();
+                        Actor toActor = commitment.getBeneficiary().getActor();
+                        if ( !fromActor.equals( toActor ) ) {
+                            Map<Actor, List<Flow>> toFlows = relFlows.get( fromActor );
+                            if ( toFlows == null ) {
+                                toFlows = new HashMap<Actor, List<Flow>>();
+                                relFlows.put( fromActor, toFlows );
+                            }
+                            List<Flow> flowList = toFlows.get( toActor );
+                            if ( flowList == null ) {
+                                flowList = new ArrayList<Flow>();
+                                toFlows.put( toActor, flowList );
+                            }
+                            if ( !flowList.contains( flow ) ) flowList.add( flow );
+                        }
+                    }
+                }
+            }
         }
         for ( Actor fromActor : allActors ) {
             for ( Actor toActor : allActors ) {
                 if ( !fromActor.equals( toActor ) ) {
-                    EntityRelationship<Actor> rel = queryService.findEntityRelationship( fromActor, toActor );
-                    if ( rel != null ) {
-                        digraph.addEdge(
-                                (Actor) rel.getFromIdentifiable( queryService ),
-                                (Actor) rel.getToIdentifiable( queryService ),
-                                rel
-                        );
+                    if ( relFlows.containsKey( fromActor ) && relFlows.get( fromActor ).containsKey( toActor ) ) {
+                        List<Flow> flows = relFlows.get( fromActor ).get( toActor );
+                        if ( !flows.isEmpty() ) {
+                            EntityRelationship<Actor> rel = new EntityRelationship<Actor>(
+                                    fromActor,
+                                    toActor );
+                            rel.setFlows( flows );
+                            digraph.addEdge(
+                                    fromActor,
+                                    toActor,
+                                    rel
+                            );
+                        }
                     }
                 }
             }

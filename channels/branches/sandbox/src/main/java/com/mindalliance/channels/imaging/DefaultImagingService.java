@@ -1,8 +1,13 @@
 package com.mindalliance.channels.imaging;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -121,7 +126,7 @@ public class DefaultImagingService implements ImagingService {
 
     private File getImageFile( String url ) {
         return new File(
-                attachmentManager.getUploadDirectory( PlanManager.plan() ),
+                attachmentManager.getUploadDirectory( User.plan() ),
                 url.replaceFirst( attachmentManager.getUploadPath(), "" ) );
     }
 
@@ -131,7 +136,7 @@ public class DefaultImagingService implements ImagingService {
      * @return a directory
      */
     public File uploadDirectory() {
-        return attachmentManager.getUploadDirectory( PlanManager.plan() );
+        return attachmentManager.getUploadDirectory( User.plan() );
     }
 
     /**
@@ -317,5 +322,68 @@ public class DefaultImagingService implements ImagingService {
         }
     }
 
+    /**
+     * Find icon name for given model object.
+     *
+     * @param modelObject   a model object
+     * @param imagesDirName the name of the directory with the default icons
+     * @return a string
+     */
+    public String findIconName( ModelObject modelObject, String imagesDirName ) {
+        String iconName = getIconPath( modelObject );
+        if ( iconName == null ) {
+            if ( modelObject instanceof Actor ) {
+                iconName = imagesDirName + '/'
+                           + ( ( (Actor) modelObject ).isSystem() ? "system" : "person" );
+            } else if ( modelObject instanceof Role ) {
+                iconName = imagesDirName + '/' + "role";
+            } else if ( modelObject instanceof Organization ) {
+                iconName = imagesDirName + '/' + "organization";
+            } else {
+                iconName = imagesDirName + '/' + "unknown";
+            }
+        }
+        return iconName;
+    }
 
+    /** {@inheritDoc} */
+    public String findIconName( Part part, String imagesDirName, QueryService queryService ) {
+        String iconName = null;
+        if ( part.getActor() != null ) {
+            if ( part.getActor().isType() ) {
+                Actor knownActor = part.getKnownActualActor( queryService );
+                if ( knownActor != null ) {
+                    iconName = getIconPath( knownActor );
+                }
+            }
+            if ( iconName == null ) {
+                iconName = getIconPath( part.getActor() );
+            }
+            if ( iconName == null ) {
+                iconName = this + "/" + ( part.isSystem() ? "system" : "person" );
+            }
+        } else if ( part.getRole() != null ) {
+            Actor knownActor = part.getKnownActualActor( queryService );
+            boolean onePlayer = knownActor != null;
+            if ( onePlayer ) {
+                iconName = getIconPath( knownActor );
+                if ( iconName == null ) {
+                    iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "person" );
+                }
+            } else {
+                iconName = getIconPath( part.getRole() );
+                if ( iconName == null ) {
+                    iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "role" );
+                }
+            }
+        } else if ( part.getOrganization() != null ) {
+            iconName = getIconPath( part.getOrganization() );
+            if ( iconName == null ) {
+                iconName = imagesDirName + "/" + "organization";
+            }
+        } else {
+            iconName = imagesDirName + "/" + "unknown";
+        }
+        return iconName;
+    }
 }

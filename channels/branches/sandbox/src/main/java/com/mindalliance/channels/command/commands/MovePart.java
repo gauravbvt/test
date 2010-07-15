@@ -54,6 +54,7 @@ public class MovePart extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Segment fromSegment = commander.resolve( Segment.class, (Long) get( "fromSegment" ) );
         Part part = (Part) fromSegment.getNode( (Long) get( "part" ) );
+        describeTarget( part );
         Segment toSegment = commander.resolve( Segment.class, (Long) get( "toSegment" ) );
         assert !fromSegment.equals( toSegment );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
@@ -83,10 +84,11 @@ public class MovePart extends AbstractCommand {
         addSends( part, toSegment, multi, addPart );
         addReceives( part, toSegment, multi, addPart );
         // disconnect flows to "old" part
-        Iterator<Flow> sends = part.sends();
-        while ( sends.hasNext() ) {
-            Flow send = sends.next();
-            multi.addCommand( new DisconnectFlow( send ) );
+        for ( Flow sharingSend :  part.getAllSharingSends() ) {
+            multi.addCommand( new DisconnectFlow( sharingSend ) );
+        }
+        for ( Flow capability : part.getCapabilities()  ) {
+            multi.addCommand( new DisconnectFlow( capability ) );
         }
         Iterator<Flow> receives = part.receives();
         while ( receives.hasNext() ) {
@@ -105,7 +107,7 @@ public class MovePart extends AbstractCommand {
             MultiCommand multi,
             Commander commander ) {
         for ( Map<String, Object> goalState : (List<Map<String, Object>>) partState.get( "goals" ) ) {
-            Goal goal = Goal.fromMap( goalState, commander.getQueryService() );
+            Goal goal = commander.getQueryService().goalFromMap( goalState );
             if ( !toSegment.getGoals().contains( goal ) ) {
                 UpdatePlanObject updateSegment = new UpdatePlanObject(
                         toSegment,
@@ -163,7 +165,7 @@ public class MovePart extends AbstractCommand {
                     addCapabilityCommands.put( name, addCapability );
                 }
                 connect.set( "part", send.getTarget().getId() );
-                connect.set( "segment", fromSegment.getId() );
+                connect.set( "segment", send.getTarget().getSegment().getId() );
                 multi.addLink( addCapability, "target.id", connect, "other" );
                 connect.set( "isSend", false );  // part is the receiver
                 connect.set( "otherSegment", toSegment.getId() );
@@ -206,7 +208,7 @@ public class MovePart extends AbstractCommand {
                 connect.set( "isSend", false );
                 multi.addLink( addPart, "id", connect, "part" );
                 if ( receive.isInternal() ) {
-                    // was internal to old part,  flow will be externalto moved part
+                    // was internal to old part,  flow will be external to moved part
                     Part source = (Part) receive.getSource();
                     Flow capability = source.findCapability( name );
                     if ( capability == null ) {
@@ -250,7 +252,6 @@ public class MovePart extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "unmove task" );
-        multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );

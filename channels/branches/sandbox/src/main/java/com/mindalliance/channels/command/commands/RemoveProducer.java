@@ -1,11 +1,11 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
 
 /**
@@ -28,7 +28,7 @@ public class RemoveProducer extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "Vote not to put in production";
+        return "vote not to put in production";
     }
 
     /**
@@ -36,9 +36,9 @@ public class RemoveProducer extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         String producer = (String) get( "producer" );
-        Plan plan = PlanManager.plan();
-        PlanManager planManager = commander.getQueryService().getPlanManager();
+        Plan plan = User.plan();
         plan.removeProducer( producer );
+        setTargetDescription( producer );
         return new Change( Change.Type.Updated, plan, "producers" );
     }
 

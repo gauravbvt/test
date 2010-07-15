@@ -32,13 +32,14 @@ public class AddSegment extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         Long priorId = (Long) get( "segment" );
-        Long priorDefaultPartId = (Long) get("defaultPart");
+        Long priorDefaultPartId = (Long) get( "defaultPart" );
         Segment segment = commander.getQueryService().createSegment(
                 priorId,
-                priorDefaultPartId);
+                priorDefaultPartId );
         commander.getPlan().addSegment( segment );
         set( "segment", segment.getId() );
         set( "defaultPart", segment.getDefaultPart().getId() );
+        describeTarget( segment );
         return new Change( Change.Type.Added, segment );
     }
 

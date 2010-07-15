@@ -1,7 +1,5 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.command.Command;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,21 +15,23 @@ import java.util.List;
  */
 public class Journal implements Serializable {
 
-    private List<Command> commands;
+    private static final long serialVersionUID = -1994094393336425521L;
+
+    private List<JournalCommand> commands =
+            Collections.synchronizedList( new ArrayList<JournalCommand>() );
 
     public Journal() {
-        reset();
     }
 
     public void reset() {
-        commands = Collections.synchronizedList( new ArrayList<Command>() );
+        commands.clear();
     }
 
-    public List<Command> getCommands() {
+    public List<JournalCommand> getCommands() {
         return commands;
     }
 
-    public void addCommand( Command command ) {
+    public void addCommand( JournalCommand command ) {
         commands.add( command );
     }
 

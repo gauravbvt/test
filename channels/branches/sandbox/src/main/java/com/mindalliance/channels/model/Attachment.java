@@ -1,8 +1,6 @@
 package com.mindalliance.channels.model;
 
 
-import com.mindalliance.channels.attachments.AttachmentManager;
-
 import java.io.Serializable;
 import java.text.MessageFormat;
 
@@ -130,36 +128,6 @@ public class Attachment implements Serializable, Comparable<Attachment> {
      */
     public boolean isPicture() {
         return type == Type.Image;
-    }
-
-    /**
-     * Whether the attchment is an image or video reference.
-     *
-     * @param attachmentManager an attachment manager
-     * @return a boolean
-     */
-    public boolean isMediaReference( AttachmentManager attachmentManager ) {
-        return isImageReference( attachmentManager ) || isVideoReference( attachmentManager );
-    }
-
-    /**
-     * Whether the attachment is a reference movie.
-     *
-     * @param attachmentManager an attachment manager
-     * @return a boolean
-     */
-    public boolean isVideoReference( AttachmentManager attachmentManager ) {
-        return type == Type.Reference && attachmentManager.hasVideoContent( getUrl() );
-    }
-
-    /**
-     * Whether the attachment is a reference image.
-     *
-     * @param attachmentManager an attachment manager
-     * @return a boolean
-     */
-    public boolean isImageReference( AttachmentManager attachmentManager ) {
-        return type == Type.Reference && attachmentManager.hasImageContent( getUrl() );
     }
 
     /**

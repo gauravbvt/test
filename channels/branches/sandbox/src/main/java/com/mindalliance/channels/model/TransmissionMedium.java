@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.PlanDao;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +37,7 @@ public class TransmissionMedium extends ModelEntity {
     /**
      * Name of unknown medium.
      */
-    private static String UnknownName = "(unknown)";
+    public static String UnknownName = "(unknown)";
 
     /**
      * A pattern for validation
@@ -90,15 +89,6 @@ public class TransmissionMedium extends ModelEntity {
             LOG.warn( "Invalid pattern: " + addressPattern );
         }
 
-    }
-
-    public static void createImmutables( List<TransmissionMedium> builtInMedia, PlanDao dao ) {
-        UNKNOWN = dao.findOrCreateType( TransmissionMedium.class, UnknownName, null );
-        UNKNOWN.makeImmutable();
-        for ( TransmissionMedium medium : builtInMedia ) {
-            dao.add( medium );
-            medium.makeImmutable();
-        }
     }
 
     /**
@@ -293,15 +283,6 @@ public class TransmissionMedium extends ModelEntity {
             security.add( classification );
     }
 
-    /**
-     * Get the label.
-     *
-     * @return a string
-     */
-    public String getLabel() {
-        return getName();
-    }
-
 
     /**
      * Check if an address is valid if set.
@@ -346,7 +327,7 @@ public class TransmissionMedium extends ModelEntity {
      * {@inheritDoc}
      */
     @Override
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
         return getEffectiveCast() == ( (TransmissionMedium) entityType ).getEffectiveCast();
     }
 
@@ -449,16 +430,17 @@ public class TransmissionMedium extends ModelEntity {
      * Aggregate local and inherited delegated-to mediua, without redundancies.
      *
      * @return a list of transmission media
+     * @param plan
      */
-    public List<TransmissionMedium> getEffectiveDelegates() {
+    public List<TransmissionMedium> getEffectiveDelegates( Plan plan ) {
         List<TransmissionMedium> effectiveMedia = new ArrayList<TransmissionMedium>( delegatedToMedia );
         for ( ModelEntity ancestor : getAllTags() ) {
             for ( TransmissionMedium delegate : ( (TransmissionMedium) ancestor ).getDelegatedToMedia() ) {
                 boolean redundant = false;
                 for ( TransmissionMedium effectiveMedium : effectiveMedia ) {
-                    if ( effectiveMedium.narrowsOrEquals( delegate ) ) {
+                    if ( effectiveMedium.narrowsOrEquals( delegate, plan ) ) {
                         redundant = true;
-                    } else if ( delegate.narrowsOrEquals( effectiveMedium ) ) {
+                    } else if ( delegate.narrowsOrEquals( effectiveMedium, plan ) ) {
                         effectiveMedia.remove( effectiveMedium );
                     }
                 }

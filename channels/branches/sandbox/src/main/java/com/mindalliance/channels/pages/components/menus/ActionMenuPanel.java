@@ -27,9 +27,10 @@ abstract public class ActionMenuPanel extends MenuPanel {
      */
     public List<Component> getMenuItems() throws CommandException {
         List<Component> menuItems = new ArrayList<Component>();
-            // Undo and redo
-            menuItems.add( this.getUndoMenuItem( "menuItem" ) );
-            menuItems.add( this.getRedoMenuItem( "menuItem" ) );
+        // Undo and redo
+        menuItems.add( getUndoMenuItem( "menuItem" ) );
+        menuItems.add( getRedoMenuItem( "menuItem" ) );
+        menuItems.add( getSendMessageMenuItem( "menuItem" ) );
         // Commands
         menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
         return menuItems;

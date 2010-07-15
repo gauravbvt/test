@@ -116,6 +116,14 @@ public class SurveyGizmoService extends AbstractSurveyService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected void unregisterSurvey( Survey survey )  throws SurveyException {
+        // todo -- do something when removing a survey is supported
+    }
+
+
     private boolean requestSuccess( String response ) throws SurveyException {
         return xpathEquals( response, "/apiResults/status/text()", "success" );
     }

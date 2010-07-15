@@ -1,14 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
 
@@ -37,7 +37,7 @@ public class BreakUpFlow extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "Break up flow";
+        return "break up flow";
     }
 
     /**
@@ -55,7 +55,8 @@ public class BreakUpFlow extends AbstractCommand {
             // else this is a replay
             multi.execute( commander );
             set( "flowState", ChannelsUtils.getFlowState( flow ) );
-            flow.disconnect( commander.getPlanDao() );
+            describeTarget( flow );        
+            commander.getPlanDao().disconnect( flow );
 //            breakup( flow, commander );
             ignoreLock( (Long) get( "flow" ) );
             return new Change( Change.Type.Recomposed, segment );
@@ -77,7 +78,6 @@ public class BreakUpFlow extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "reconnect flow" );
-        multi.setUndoes( getName() );
         ConnectWithFlow connectWithFlow = new ConnectWithFlow();
         connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
         connectWithFlow.set( "flow", get( "flow" ) );

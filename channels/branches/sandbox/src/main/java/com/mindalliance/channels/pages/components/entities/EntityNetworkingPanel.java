@@ -128,7 +128,7 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
                 // change.setType( Change.Type.Expanded );
                 super.changed( change );
             } else if ( change.isForInstanceOf( ModelEntity.class ) ) {
-                if ( change.getProperty().equals( "network" )
+                if ( change.isForProperty( "network" )
                         && change.getId() != getEntity().getId() ) {
                     change.setType( Change.Type.Expanded );
                     super.changed( change );

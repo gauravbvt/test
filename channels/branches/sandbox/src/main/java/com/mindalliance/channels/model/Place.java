@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.geo.GeoService;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A location or jurisdiction.
@@ -105,45 +105,17 @@ public class Place extends ModelEntity implements GeoLocatable {
     }
 
     /**
-     * Create immutable places.
-     *
-     * @param dao a query service
-     */
-    public static void createImmutables( PlanDao dao ) {
-        // Unknown place
-        UNKNOWN = dao.findOrCreate( Place.class, UnknownPlaceName, null );
-        UNKNOWN.makeImmutable();
-        // Administrative area types
-        Place administrativeArea = dao.findOrCreateType( Place.class, ADMINISTRATIVE_AREA, null );
-        administrativeArea.makeImmutable();
-        Country = dao.findOrCreateType( Place.class, COUNTRY, null );
-        Country.addTag( administrativeArea );
-        Country.makeImmutable();
-        State = dao.findOrCreateType( Place.class, STATE, null );
-        State.addTag( administrativeArea );
-        State.setWithin( Country );
-        State.makeImmutable();
-        County = dao.findOrCreateType( Place.class, COUNTY, null );
-        County.addTag( administrativeArea );
-        County.setWithin( State );
-        County.makeImmutable();
-        City = dao.findOrCreateType( Place.class, CITY, null );
-        City.addTag( administrativeArea );
-        City.setWithin( County );
-        City.makeImmutable();
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public List<ModelEntity> getImplicitTags() {
         List<ModelEntity> implicitTags = new ArrayList<ModelEntity>();
         if ( isRegion() ) {
-            if ( geoLocation.isCity() ) implicitTags.add( City );
-            else if ( geoLocation.isCounty() ) implicitTags.add( County );
-            else if ( geoLocation.isState() ) implicitTags.add( State );
-            else if ( geoLocation.isCountry() ) implicitTags.add( Country );
+            GeoLocation geo = geoLocate();
+            if ( geo.isCity() ) implicitTags.add( City );
+            else if ( geo.isCounty() ) implicitTags.add( County );
+            else if ( geo.isState() ) implicitTags.add( State );
+            else if ( geo.isCountry() ) implicitTags.add( Country );
         }
         return implicitTags;
     }
@@ -220,84 +192,86 @@ public class Place extends ModelEntity implements GeoLocatable {
 
     /**
      * {@inheritDoc}
+     * @param plan
      */
     @Override
-    public boolean valid() {
+    public boolean valid( Plan plan ) {
         return !circularWithin( new HashSet<Place>() )
-                && !circularReference();
+                && !circularReference( plan );
     }
 
     /**
-     * Whether a place is not specified as contained or containing another, or tagged only with absolute places.
+     * Whether a place is not specified as contained or containing another,
+     * or tagged only with absolute places.
      *
+     * @param plan
      * @return a boolean
      */
-    public boolean isAbsolute() {
-        return !isReferencing( mustContain )
-                && !isReferencing( mustBeContainedIn )
-                && ( within == null || within.isAbsolute() )
-                && !CollectionUtils.exists(
-                getAllTags(),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return !( (Place) object ).isAbsolute();
-                    }
+    public boolean isAbsolute( final Plan plan ) {
+        if ( !isReferencing( mustContain, plan )
+             && !isReferencing( mustBeContainedIn, plan )
+             && ( within == null || within.isAbsolute( plan ) ) )
+
+            return !CollectionUtils.exists( getAllTags(), new Predicate() {
+                public boolean evaluate( Object object ) {
+                    return !( (Place) object ).isAbsolute( plan );
                 }
-        );
+            } );
+
+        return false;
     }
 
-    private boolean isReferencing( PlaceReference ref ) {
-        return ref != null && ( ref.isPlanReferenced() || ref.getReferencedPlace() != null );
+    private boolean isReferencing( PlaceReference ref, Plan plan ) {
+        return ref != null
+            && ( ref.isPlanReferenced() || ref.getReferencedPlace( plan ) != null );
     }
 
-    private boolean circularReference() {
-        return circularMustContain( new HashSet<Place>() )
-                || circularMustBeContainedIn( new HashSet<Place>() );
+    private boolean circularReference( Plan plan ) {
+        return circularMustContain( new HashSet<Place>(), plan )
+            || circularMustBeContainedIn( new HashSet<Place>(), plan );
     }
 
 
-    private boolean circularMustContain( HashSet<Place> visited ) {
-        if ( !visited.contains( this ) ) {
-            visited.add( this );
-            boolean circular = false;
-            if ( mustContain != null && mustContain.getReferencedPlace() != null ) {
-                Place contained = mustContain.getReferencedPlace();
-                if ( mustContain.isPlanReferenced() ) {
-                    if ( !contained.isAbsolute() ) return false;
-                }
-                circular = contained.circularMustContain( visited );
+    private boolean circularMustContain( Set<Place> visited, Plan plan ) {
+        if ( visited.contains( this ) )
+            return true;
+
+        visited.add( this );
+        if ( mustContain != null ) {
+            Place referenced = mustContain.getReferencedPlace( plan );
+            if ( referenced != null && ( !mustContain.isPlanReferenced()
+                                         || referenced.isAbsolute( plan ) ) ) {
+                return referenced.circularMustContain( visited, plan );
             }
-            return circular;
-        } else {
-            return true;
         }
+
+        return false;
     }
 
-    private boolean circularMustBeContainedIn( HashSet<Place> visited ) {
-        if ( !visited.contains( this ) ) {
-            visited.add( this );
-            boolean circular = false;
-            if ( mustBeContainedIn != null && mustBeContainedIn.getReferencedPlace() != null ) {
-                Place containedIn = mustBeContainedIn.getReferencedPlace();
-                if ( mustBeContainedIn.isPlanReferenced() ) {
-                    if ( !containedIn.isAbsolute() ) return false;
-                }
-                circular = containedIn.circularMustBeContainedIn( visited );
-            }
-            return circular;
-        } else {
+    private boolean circularMustBeContainedIn( Set<Place> visited, Plan plan ) {
+        if ( visited.contains( this ) )
             return true;
+
+        visited.add( this );
+        if ( mustBeContainedIn != null ) {
+            Place referenced = mustBeContainedIn.getReferencedPlace( plan );
+            if ( referenced != null
+                 && ( !mustBeContainedIn.isPlanReferenced()
+                      || referenced.isAbsolute( plan )
+                         && referenced.circularMustBeContainedIn( visited, plan ) ) )
+                return true;
         }
+
+        return false;
     }
 
 
-    private boolean circularWithin( HashSet<Place> visited ) {
-        if ( !visited.contains( this ) ) {
-            visited.add( this );
-            return within != null && within.circularWithin( visited );
-        } else {
+    private boolean circularWithin( Set<Place> visited ) {
+        if ( visited.contains( this ) )
             return true;
-        }
+
+        visited.add( this );
+        return within != null && within.circularWithin( visited );
     }
 
 
@@ -305,47 +279,48 @@ public class Place extends ModelEntity implements GeoLocatable {
      * {@inheritDoc}
      */
     @Override
-    protected boolean overrideNarrows( ModelEntity other ) {
+    protected boolean overrideNarrows( ModelEntity other, Plan plan ) {
         // a place narrows another place if it or one of its parent is within the other place
-        return matchesOrIsInside( (Place) other );
+        return matchesOrIsInside( (Place) other, plan );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
         Place placeType = (Place) entityType;
         if ( isActual() ) {
             // Check that this place contains a place that it must contain according to the place type
             PlaceReference contained = placeType.getMustContain();
-            if ( contained.isSet() ) {
-                Place placeToContain = contained.getReferencedPlace();
-                if ( placeToContain != null && !placeToContain.matchesOrIsInside( this ) ) return false;
+            if ( contained.isSet( plan ) ) {
+                Place placeToContain = contained.getReferencedPlace( plan );
+                if ( placeToContain != null && !placeToContain.matchesOrIsInside( this, plan ) ) return false;
             }
             // Check that any place specified by the place type contains this one
             PlaceReference contain = placeType.getMustBeContainedIn();
-            if ( contain.isSet() ) {
-                Place placeToBeContainedIn = contain.getReferencedPlace();
-                if ( placeToBeContainedIn != null && !matchesOrIsInside( placeToBeContainedIn ) ) return false;
+            if ( contain.isSet( plan ) ) {
+                Place placeToBeContainedIn = contain.getReferencedPlace( plan );
+                if ( placeToBeContainedIn != null && !matchesOrIsInside( placeToBeContainedIn, plan ) ) return false;
             }
         } else {
             // verify that containment relationships, if defined, are consistent between place types
             // TODO - risk of circularity
             PlaceReference otherMustContain = placeType.getMustContain();
-            if ( otherMustContain.isSet() ) {
-                if ( !mustContain.isSet() ) return false;
+            if ( otherMustContain.isSet( plan ) ) {
+                if ( !mustContain.isSet( plan ) ) return false;
                 // other mustContain test must be less stringent
                 // "must contain NJ" is more stringent than "must contain Morristown" because
                 // some places that contain Morristown do not contain NJ, but all places containing
                 // NJ contain Morristown. so "must contain NJ" narrows "must contain Morristown"
                 // because Morristown narrows NJ
-                if ( !otherMustContain.narrowsOrEquals( mustContain ) ) return false;
+                if ( !otherMustContain.narrowsOrEquals( mustContain, plan ) ) return false;
             }
             PlaceReference otherMustBeContainedIn = placeType.getMustBeContainedIn();
-            if ( otherMustBeContainedIn.isSet() ) {
-                if ( !mustBeContainedIn.isSet() ) return false;
-                if ( !mustBeContainedIn.narrowsOrEquals( otherMustBeContainedIn ) ) return false;
+            if ( otherMustBeContainedIn.isSet( plan ) ) {
+                if ( !mustBeContainedIn.isSet( plan ) ) return false;
+                if ( !mustBeContainedIn.narrowsOrEquals( otherMustBeContainedIn, plan ) )
+                    return false;
             }
         }
         return true;
@@ -436,8 +411,9 @@ public class Place extends ModelEntity implements GeoLocatable {
 
     /**
      * {@inheritDoc}
+     * @param queryService
      */
-    public String getGeoMarkerLabel() {
+    public String getGeoMarkerLabel( QueryService queryService ) {
         StringBuilder sb = new StringBuilder();
         sb.append( toString() );
         String fullAddress = getFullAddress();
@@ -588,11 +564,12 @@ public class Place extends ModelEntity implements GeoLocatable {
      * Whether this place is the same as or is inside another by definition or by geolocation.
      *
      * @param place a place
+     * @param plan
      * @return a boolean
      */
-    public boolean matchesOrIsInside( Place place ) {
+    public boolean matchesOrIsInside( Place place, Plan plan ) {
         return equals( place )
-                || isInside( place )
+                || isInside( place, plan )
                 || isGeoLocatedIn( place.geoLocate() );
     }
 
@@ -680,17 +657,15 @@ public class Place extends ModelEntity implements GeoLocatable {
      * Checks if any of my parent places matches (narrowsOrEquals) a given place.
      *
      * @param place a place
+     * @param plan
      * @return a boolean
      */
-    public boolean isInside( final Place place ) {
-        return CollectionUtils.exists(
-                containment(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ( (Place) obj ).narrowsOrEquals( place );
-                    }
-                }
-        );
+    public boolean isInside( Place place, Plan plan ) {
+        for ( Place otherPlace : containment() )
+            if ( otherPlace.narrowsOrEquals( place, plan ) )
+                return true;
+
+        return false;
     }
 
     /**

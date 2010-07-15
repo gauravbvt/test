@@ -1,6 +1,8 @@
 package com.mindalliance.channels.imaging;
 
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.query.QueryService;
 
 /**
  * An image transformation service.
@@ -43,4 +45,23 @@ public interface ImagingService {
      * @return a string
      */
     String getIconPath( ModelObject modelObject );
+
+    /**
+     * Find icon name for given model object.
+     *
+     * @param modelObject   a model object
+     * @param imagesDirName the name of the directory with the default icons
+     * @return a string
+     */
+    String findIconName( ModelObject modelObject, String imagesDirName );
+
+    /**
+     * Find icon name for given part.
+     *
+     * @param part a part
+     * @param imagesDirName the name of the directory with the default icons
+     * @param queryService the query service
+     * @return a string
+     */
+    String findIconName( Part part, String imagesDirName, QueryService queryService );
 }

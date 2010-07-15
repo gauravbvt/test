@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.plan;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.dao.DefinitionManager;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
@@ -22,6 +23,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,10 +39,16 @@ import java.util.Set;
  * Time: 5:31:25 AM
  */
 public class PlanEditDetailsPanel extends AbstractCommandablePanel {
+
+    /** The plan definition manager. */
+    @SpringBean
+    private DefinitionManager definitionManager;
+
     /**
      * Entity reference panel for scope of event (a place).
      */
     private EntityReferencePanel<Place> scopePanel;
+
     /**
      * Issues panel.
      */
@@ -143,7 +151,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
             String oldName = getPlan().getName();
             String uniqueName = name.trim();
             if ( !isSame( oldName, name ) ) {
-                List<String> namesTaken = getPlanManager().getPlanNames();
+                List<String> namesTaken = definitionManager.getPlanNames();
                 int count = 2;
                 while ( namesTaken.contains( uniqueName ) ) {
                     uniqueName = name + "(" + count++ + ")";

@@ -6,6 +6,7 @@ import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
 import org.jgrapht.ext.EdgeNameProvider;
@@ -118,7 +119,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
 
         public List<DOTAttribute> getVertexAttributes( Hierarchical vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "image", getIcon( (ModelObject)vertex ) ) );
+            list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), (ModelObject)vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
             if ( highlighted ) {
                 list.add( new DOTAttribute( "shape", "box" ) );
@@ -153,7 +154,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             return list;
         }
 
-        private String getIcon( ModelObject modelObject ) {
+        private String getIcon( ImagingService imagingService, ModelObject modelObject ) {
             String iconName;
             String imagesDirName;
             try {
@@ -164,7 +165,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             String label = getIdentifiableLabel( modelObject );
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
-            iconName = getAnalyst().getQueryService().findIconName( modelObject, imagesDirName );
+            iconName = imagingService.findIconName( modelObject, imagesDirName );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 

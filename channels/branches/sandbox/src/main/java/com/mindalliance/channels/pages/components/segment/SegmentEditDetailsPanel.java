@@ -3,18 +3,19 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -190,7 +191,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
+                    if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
 
@@ -293,7 +294,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
         String oldName = oldEvent == null ? "" : oldEvent.getName();
         Event newEvent = null;
         if ( name == null || name.trim().isEmpty() )
-            newEvent = PlanManager.plan().getDefaultEvent();
+            newEvent = User.plan().getDefaultEvent();
         else {
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().findOrCreateType( Event.class, name );

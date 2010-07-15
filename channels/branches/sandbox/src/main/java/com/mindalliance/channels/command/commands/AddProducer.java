@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
 
 /**
@@ -29,7 +30,7 @@ public class AddProducer extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "Vote to put in production";
+        return "vote to put in production";
     }
 
     /**
@@ -37,9 +38,10 @@ public class AddProducer extends AbstractCommand {
      */
     public Change execute( Commander commander ) throws CommandException {
         String producer = (String) get( "producer" );
-        Plan plan = PlanManager.plan();
+        Plan plan = User.plan();
         PlanManager planManager = commander.getQueryService().getPlanManager();
         boolean produced = planManager.addProducer( producer, plan );
+        setTargetDescription( producer );
         if ( produced ) {
             commander.setResyncRequired();
             return new Change( Change.Type.Recomposed, plan );

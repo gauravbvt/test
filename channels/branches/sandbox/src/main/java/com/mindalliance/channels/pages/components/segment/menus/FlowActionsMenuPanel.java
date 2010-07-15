@@ -82,6 +82,8 @@ public class FlowActionsMenuPanel extends MenuPanel {
             };
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), hideLink ) );
         }
+        // Send message
+        menuItems.add( getSendMessageMenuItem( "menuItem" ) );
         // View flow eois
         if ( !isCollapsed ) {
             AjaxFallbackLink eoisLink = new AjaxFallbackLink( "link" ) {

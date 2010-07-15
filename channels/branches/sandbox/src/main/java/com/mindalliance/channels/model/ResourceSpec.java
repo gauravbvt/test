@@ -311,9 +311,10 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      *
      * @param other     a resource spec
      * @param precisely a boolean - true -> must be equal, false -> must be equal or more narrow
+     * @param plan
      * @return a boolean
      */
-    public boolean matches( ResourceSpec other, boolean precisely ) {
+    public boolean matches( ResourceSpec other, boolean precisely, Plan plan ) {
         if ( precisely ) {
 
             boolean sameActor = ModelObject.areEqualOrNull( actor, other.getActor() )
@@ -333,39 +334,41 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
                     && sameOrganization
                     && Place.samePlace( jurisdiction, other.getJurisdiction() );
         } else
-            return compatibleWith( other );
+            return compatibleWith( other, plan );
     }
 
     /**
      * Whether this resource spec and another could be describing the same resource.
      *
      * @param other a resource spec
+     * @param plan
      * @return a boolean
      */
-    public boolean compatibleWith( ResourceSpec other ) {
-        return ModelEntity.compatible( getActor(), other.getActor() )
-                && ModelEntity.compatible( getRole(), other.getRole() )
-                && ModelEntity.compatible( getJurisdiction(), other.getJurisdiction() )
-                && ModelEntity.compatible( getOrganization(), other.getOrganization() );
+    public boolean compatibleWith( ResourceSpec other, Plan plan ) {
+        return ModelEntity.compatible( getActor(), other.getActor(), plan )
+                && ModelEntity.compatible( getRole(), other.getRole(), plan )
+                && ModelEntity.compatible( getJurisdiction(), other.getJurisdiction(), plan )
+                && ModelEntity.compatible( getOrganization(), other.getOrganization(), plan );
     }
 
     /**
      * Is this resource spec generalized by another resource spec?
      *
      * @param other a resource spec
+     * @param plan
      * @return a boolean
      */
-    public boolean narrowsOrEquals( ResourceSpec other ) {
+    public boolean narrowsOrEquals( ResourceSpec other, Plan plan ) {
         if ( other.isAnyone() ) return false;
         if ( equals( other ) ) return true;
-        if ( !( ModelEntity.implies( actor, other.getActor() ) || other.isAnyActor() ) )
+        if ( !( ModelEntity.implies( actor, other.getActor(), plan ) || other.isAnyActor() ) )
             return false;
-        if ( !( ModelEntity.implies( role, other.getRole() ) || other.isAnyRole() ) )
+        if ( !( ModelEntity.implies( role, other.getRole(), plan ) || other.isAnyRole() ) )
             return false;
-        if ( !( ModelEntity.implies( organization, other.getOrganization() )
+        if ( !( ModelEntity.implies( organization, other.getOrganization(), plan )
                 || other.isAnyOrganization() ) )
             return false;
-        if ( !( ModelEntity.implies( jurisdiction, other.getJurisdiction() )
+        if ( !( ModelEntity.implies( jurisdiction, other.getJurisdiction(), plan )
                 || other.isAnyJurisdiction() ) )
             return false;
         return true;
@@ -427,17 +430,18 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * Whether this resource spec references the entity ot an entity that broadens it.
      *
      * @param entity an entity
+     * @param plan
      * @return a boolean
      */
-    public boolean hasEntityOrBroader( ModelEntity entity ) {
-        return broadensOrEqualsEntity( entity );
+    public boolean hasEntityOrBroader( ModelEntity entity, Plan plan ) {
+        return broadensOrEqualsEntity( entity, plan );
     }
 
-    private boolean broadensOrEqualsEntity( ModelEntity entity ) {
-        return ModelEntity.broadensOrEquals( actor, entity )
-                || ModelEntity.broadensOrEquals( role, entity )
-                || ModelEntity.broadensOrEquals( organization, entity )
-                || ModelEntity.broadensOrEquals( jurisdiction, entity );
+    private boolean broadensOrEqualsEntity( ModelEntity entity, Plan plan ) {
+        return ModelEntity.broadensOrEquals( actor, entity, plan )
+                || ModelEntity.broadensOrEquals( role, entity, plan )
+                || ModelEntity.broadensOrEquals( organization, entity, plan )
+                || ModelEntity.broadensOrEquals( jurisdiction, entity, plan );
     }
 
     /**
@@ -478,11 +482,12 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * Find the first job that fits this resource spec.
      *
      * @return a job or null
+     * @param plan
      */
-    public Job getJob() {
+    public Job getJob( Plan plan ) {
         if ( organization != null )
             for ( Job job : organization.getJobs() )
-                if ( narrowsOrEquals( job.resourceSpec( organization ) ) )
+                if ( narrowsOrEquals( job.resourceSpec( organization ), plan ) )
                     return job;
 
         return null;

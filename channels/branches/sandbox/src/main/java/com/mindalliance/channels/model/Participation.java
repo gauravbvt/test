@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.query.QueryService;
 
@@ -23,7 +22,7 @@ public class Participation extends AbstractUnicastChannelable {
     /**
      * Name of unknown participation.
      */
-    private static String UnknownName = "(unknown)";
+    public static String UnknownName = "(unknown)";
 
     /**
      * Name of the user, if any, represented by this actor.
@@ -40,12 +39,6 @@ public class Participation extends AbstractUnicastChannelable {
 
     public Participation() {
     }
-
-    public static void createImmutables( PlanDao dao ) {
-        UNKNOWN = dao.findOrCreateType( Participation.class, UnknownName, null );
-        UNKNOWN.makeImmutable();
-    }
-
 
     /**
      * {@inheritDoc}

@@ -111,6 +111,9 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     @Autowired
     protected PlanManager planManager;
 
+    @Autowired
+    private Analyst analyst;
+
     //================================================================
     protected AbstractChannelsTest() {
         this( "guest", null );
@@ -402,6 +405,6 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     }
 
     protected Analyst getAnalyst() {
-        return queryService.getAnalyst();
+        return analyst;
     }
 }

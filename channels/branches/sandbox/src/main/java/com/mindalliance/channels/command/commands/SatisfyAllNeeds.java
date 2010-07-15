@@ -6,8 +6,8 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 
@@ -36,7 +36,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "satisfy needs";
+        return "satisfy info needs";
     }
 
     /**
@@ -81,6 +81,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
             }
             // else command replay
             multi.execute( commander );
+            describeTarget( part );            
             return new Change( Change.Type.Recomposed, part.getSegment() );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
@@ -99,7 +100,6 @@ public class SatisfyAllNeeds extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "unsatisfy needs" );
-        multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );

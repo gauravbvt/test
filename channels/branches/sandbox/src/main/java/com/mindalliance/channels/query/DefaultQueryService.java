@@ -1,15 +1,10 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Assignment;
@@ -17,6 +12,7 @@ import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -30,6 +26,7 @@ import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Participation;
@@ -41,11 +38,9 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.nlp.SemanticMatcher;
-import com.mindalliance.channels.util.Matcher;
-import com.mindalliance.channels.util.Play;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -64,6 +59,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -92,15 +88,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     private SemanticMatcher semanticMatcher;
 
     /**
-     * Imaging service.
-     */
-    private ImagingService imagingService;
-    /**
      * File user details service.
      */
     private UserService userService;
-
-    private Analyst analyst;
 
     //=============================================
 
@@ -127,22 +117,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         this.semanticMatcher = semanticMatcher;
     }
 
-    public Analyst getAnalyst() {
-        return analyst;
-    }
-
-    public void setAnalyst( Analyst analyst ) {
-        this.analyst = analyst;
-    }
-
-    public ImagingService getImagingService() {
-        return imagingService;
-    }
-
-    public void setImagingService( ImagingService imagingService ) {
-        this.imagingService = imagingService;
-    }
-
     public void setUserService( UserService userService ) {
         this.userService = userService;
     }
@@ -153,12 +127,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @return the dao
      */
     public PlanDao getDao() {
-        try {
-            return planManager.getDao( PlanManager.plan() );
-        } catch ( NotFoundException e ) {
-            LOG.error( "No plan found", e );
-            throw new RuntimeException( e );
-        }
+        return planManager.getDao( User.plan() );
     }
 
     public AttachmentManager getAttachmentManager() {
@@ -191,7 +160,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @SuppressWarnings( "unchecked" )
-    private <T extends ModelObject> T findUnknown( Class<T> clazz, long id ) throws NotFoundException {
+    private <T extends ModelObject> T findUnknown( Class<T> clazz, long id ) throws
+                                                                             NotFoundException {
         if ( clazz.isAssignableFrom( Actor.class ) && Actor.UNKNOWN.getId() == id )
             return (T) Actor.UNKNOWN;
         else if ( clazz.isAssignableFrom( Event.class ) && Event.UNKNOWN.getId() == id )
@@ -271,7 +241,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 list( entity.getClass() ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return ( (ModelEntity) obj ).narrowsOrEquals( entity );
+                        return ( (ModelEntity) obj ).narrowsOrEquals( entity, User.current().getPlan() );
                     }
                 }
         );
@@ -652,7 +622,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         } else {
             boolean hasReference = false;
             Iterator classes = ModelObject.referencingClasses().iterator();
-            if ( PlanManager.plan().references( mo ) ) return true;
+            if ( User.plan().references( mo ) ) return true;
             while ( !hasReference && classes.hasNext() ) {
                 List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
                 hasReference = CollectionUtils.exists(
@@ -725,7 +695,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec ) {
         List<ResourceSpec> list = new ArrayList<ResourceSpec>();
         for ( ResourceSpec spec : findAllResourceSpecs() ) {
-            if ( spec.narrowsOrEquals( resourceSpec ) )
+            if ( spec.narrowsOrEquals( resourceSpec, User.current().getPlan() ) )
                 list.add( spec );
         }
         return list;
@@ -737,7 +707,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<ResourceSpec> findAllResourcesBroadeningOrEqualTo( ResourceSpec resourceSpec ) {
         List<ResourceSpec> list = new ArrayList<ResourceSpec>();
         for ( ResourceSpec spec : findAllResourceSpecs() ) {
-            if ( resourceSpec.narrowsOrEquals( spec ) )
+            if ( resourceSpec.narrowsOrEquals( spec, User.current().getPlan() ) )
                 list.add( spec );
         }
         return list;
@@ -781,7 +751,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 if ( Play.hasPlay( flow ) ) {
                     if ( flow.getSource().isPart() ) {
                         Part part = (Part) flow.getSource();
-                        if ( part.resourceSpec().matches( resourceSpec, specific ) ) {
+                        if ( part.resourceSpec().matches( resourceSpec, specific, User.current().getPlan() ) ) {
                             // sends
                             Play play = new Play( part, flow, true );
                             plays.add( play );
@@ -789,7 +759,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     }
                     if ( flow.getTarget().isPart() ) {
                         Part part = (Part) flow.getTarget();
-                        if ( part.resourceSpec().matches( resourceSpec, specific ) ) {
+                        if ( part.resourceSpec().matches( resourceSpec, specific, User.current().getPlan() ) ) {
                             // receives
                             Play play = new Play( part, flow, false );
                             plays.add( play );
@@ -805,19 +775,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public List<Issue> findAllUserIssues( ModelObject identifiable ) {
-        List<Issue> foundIssues = new ArrayList<Issue>();
-        for ( UserIssue userIssue : list( UserIssue.class ) ) {
-            if ( userIssue.getAbout().getId() == identifiable.getId() )
-                foundIssues.add( userIssue );
-        }
-        return foundIssues;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific ) {
-        return analyst.findAllIssuesFor( resourceSpec, specific );
+        return getDao().findAllUserIssues( identifiable );
     }
 
     /**
@@ -837,115 +795,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return responsibilities;
     }
-
-    /**
-     * /**
-     * {@inheritDoc}
-     */
-    public SegmentRelationship findSegmentRelationship(
-            Segment fromSegment,
-            Segment toSegment ) {
-        List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
-        List<Part> initiators = new ArrayList<Part>();
-        List<Part> terminators = new ArrayList<Part>();
-        Iterator<Flow> flows = fromSegment.flows();
-        while ( flows.hasNext() ) {
-            Flow flow = flows.next();
-            if ( flow.isExternal() ) {
-                ExternalFlow externalFlow = (ExternalFlow) flow;
-                if ( externalFlow.getConnector().getSegment() == toSegment
-                        && !externalFlow.isPartTargeted() ) {
-                    externalFlows.add( externalFlow );
-                }
-            }
-        }
-        flows = toSegment.flows();
-        while ( flows.hasNext() ) {
-            Flow flow = flows.next();
-            if ( flow.isExternal() ) {
-                ExternalFlow externalFlow = (ExternalFlow) flow;
-                if ( externalFlow.getConnector().getSegment() == fromSegment
-                        && externalFlow.isPartTargeted() ) {
-                    externalFlows.add( externalFlow );
-                }
-            }
-        }
-        for ( Part part : findInitiators( toSegment ) ) {
-            if ( part.getSegment().equals( fromSegment ) ) initiators.add( part );
-        }
-        for ( Part part : findExternalTerminators( toSegment ) ) {
-            if ( part.getSegment().equals( fromSegment ) ) terminators.add( part );
-        }
-        if ( externalFlows.isEmpty() && initiators.isEmpty() && terminators.isEmpty() ) {
-            return null;
-        } else {
-            SegmentRelationship segmentRelationship = new SegmentRelationship(
-                    fromSegment,
-                    toSegment );
-            segmentRelationship.setExternalFlows( externalFlows );
-            segmentRelationship.setInitiators( initiators );
-            segmentRelationship.setTerminators( terminators );
-            return segmentRelationship;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity ) {
-        List<Flow> entityFlows = new ArrayList<Flow>();
-        for ( Segment segment : list( Segment.class ) ) {
-            Iterator<Flow> flows = segment.flows();
-            while ( flows.hasNext() ) {
-                Flow flow = flows.next();
-                if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
-                    Part sourcePart = (Part) flow.getSource();
-                    Part targetPart = (Part) flow.getTarget();
-                    if ( isExecutedBy( sourcePart, fromEntity )
-                            && isExecutedBy( targetPart, toEntity ) ) {
-                        entityFlows.add( flow );
-                    }
-                }
-            }
-        }
-        if ( entityFlows.isEmpty() ) {
-            return null;
-        } else {
-            EntityRelationship<T> entityRel = new EntityRelationship<T>( fromEntity, toEntity );
-            entityRel.setFlows( entityFlows );
-            return entityRel;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship(
-            T fromEntity,
-            T toEntity,
-            Segment segment ) {
-        List<Flow> entityFlows = new ArrayList<Flow>();
-        Iterator<Flow> flows = segment.flows();
-        while ( flows.hasNext() ) {
-            Flow flow = flows.next();
-            if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
-                Part sourcePart = (Part) flow.getSource();
-                Part targetPart = (Part) flow.getTarget();
-                if ( isExecutedBy( sourcePart, fromEntity )
-                        && isExecutedBy( targetPart, toEntity ) ) {
-                    entityFlows.add( flow );
-                }
-            }
-        }
-        if ( entityFlows.isEmpty() ) {
-            return null;
-        } else {
-            EntityRelationship<T> entityRel = new EntityRelationship<T>( fromEntity, toEntity );
-            entityRel.setFlows( entityFlows );
-            return entityRel;
-        }
-    }
-
 
     /**
      * {@inheritDoc}
@@ -977,7 +826,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<T>( result );
     }
 
-    private boolean isExecutedBy( Part part, final ModelEntity entity ) {
+    public boolean isExecutedBy( Part part, final ModelEntity entity ) {
         if ( entity.isActual() ) {
             List<Assignment> assignments = findAllAssignments( part, false );
             return part.resourceSpec().hasEntity( entity )
@@ -1000,7 +849,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 else
                     return allPlayers.contains( (Actor) entity );
             } else {*/
-            return partSpec.hasEntityOrBroader( entity );
+            return partSpec.hasEntityOrBroader( entity, User.current().getPlan() );
             //           }
         }
     }
@@ -1017,7 +866,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Flow flow = flows.next();
                 Node node = asSource ? flow.getSource() : flow.getTarget();
                 if ( node.isPart()
-                        && resourceSpec.narrowsOrEquals( ( (Part) node ).resourceSpec() ) )
+                        && resourceSpec.narrowsOrEquals( ( (Part) node ).resourceSpec(), User.current().getPlan() ) )
                     relatedFlows.add( flow );
             }
         }
@@ -1042,7 +891,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             } );
             while ( actorSpecs.hasNext() ) {
                 ResourceSpec actorResourceSpec = actorSpecs.next();
-                if ( actorResourceSpec.narrowsOrEquals( resourceSpec ) ) {
+                if ( actorResourceSpec.narrowsOrEquals( resourceSpec, User.current().getPlan() ) ) {
                     Actor actor = actorResourceSpec.getActor();
                     if ( !actor.isUnknown() && !actor.isArchetype() ) actors.add( actor );
                 }
@@ -1070,7 +919,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             } );
             while ( orgSpecs.hasNext() ) {
                 ResourceSpec orgResourceSpec = orgSpecs.next();
-                if ( orgResourceSpec.narrowsOrEquals( resourceSpec ) ) {
+                if ( orgResourceSpec.narrowsOrEquals( resourceSpec, User.current().getPlan() ) ) {
                     Organization organization = orgResourceSpec.getOrganization();
                     if ( !organization.isUnknown() ) organizations.add( organization );
                 }
@@ -1078,67 +927,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
 
         return new ArrayList<Organization>( organizations );
-    }
-
-    private void visitParts( Set<Part> visited, ResourceSpec spec, Segment segment, boolean exactMatch ) {
-        // Add matches
-        for ( Segment s : getSegments( segment ) )
-            for ( Iterator<Part> partIterator = s.parts(); partIterator.hasNext(); ) {
-                Part part = partIterator.next();
-                if ( spec.matches( part.resourceSpec(), exactMatch ) )  // was exactMatch == true
-                    visited.add( part );
-            }
-
-        Actor actor = spec.getActor();
-        Organization organization = spec.getOrganization();
-        Role role = spec.getRole();
-        Place jurisdiction = spec.getJurisdiction();
-
-        if ( actor != null ) {
-            if ( role == null ) {
-                // Add parts with all of actor's roles
-                for ( ResourceSpec job : findAllJobSpecs( organization, actor ) ) {
-                    ResourceSpec s = new ResourceSpec( spec );
-                    s.setRole( job.getRole() );
-                    s.setJurisdiction( job.getJurisdiction() );
-                    s.setOrganization( job.getOrganization() );
-                    visitParts( visited, s, segment, exactMatch );
-                }
-            } else {
-                // Add regular role parts
-                ResourceSpec s = new ResourceSpec( spec );
-                s.setActor( null );
-                visitParts( visited, s, segment, exactMatch );
-            }
-        }
-
-        if ( organization != null ) {
-
-            if ( role == null && actor == null && jurisdiction == null ) {
-                for ( Role r : findRolesIn( organization ) )
-                    for ( Actor a : findActualActors( organization, r ) ) {
-                        ResourceSpec s = new ResourceSpec( spec );
-                        if ( Actor.UNKNOWN.equals( a ) )
-                            s.setRole( r );
-                        else
-                            s.setActor( a );
-                        visitParts( visited, s, segment, exactMatch );
-                    }
-            }
-
-            ResourceSpec s = new ResourceSpec( spec );
-            s.setOrganization( organization.getParent() );
-            visitParts( visited, s, segment, exactMatch );
-
-        }
-
-        if ( jurisdiction != null ) {
-            // look for parts with no specific jurisdiction
-            // TODO process geo inclusions
-            ResourceSpec s = new ResourceSpec( spec );
-            s.setJurisdiction( null );
-            visitParts( visited, s, segment, exactMatch );
-        }
     }
 
     private List<Segment> getSegments( Segment segment ) {
@@ -1226,7 +1014,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Flow flow = segmentFlows.next();
                 Part contactedPart = flow.getContactedPart();
                 if ( contactedPart != null
-                        && resourceSpec.narrowsOrEquals( contactedPart.resourceSpec() ) )
+                        && resourceSpec.narrowsOrEquals( contactedPart.resourceSpec(), User.current().getPlan() ) )
                     flows.add( flow );
             }
         }
@@ -1321,7 +1109,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Set<Role> roles = new HashSet<Role>();
         for ( ResourceSpec spec : findAllResourceSpecs() ) {
             if ( spec.getRole() != null ) {
-                if ( spec.getActor() != null && actor.narrowsOrEquals( spec.getActor() )
+                if ( spec.getActor() != null && actor.narrowsOrEquals( spec.getActor(), User.current().getPlan() )
                         || ( actor.isUnknown() && spec.getActor() == null ) )
                     roles.add( spec.getRole() );
             }
@@ -1453,8 +1241,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 /*
     */
 /**
- * {@inheritDoc}
- */
+     * {@inheritDoc}
+     */
 /*
     public List<Actor> findActualActors( Organization organization, Role role, Segment segment ) {
         return findActualActors( organization, role, null, segment );
@@ -1561,7 +1349,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<Job> jobs = new ArrayList<Job>();
         for ( Organization org : listActualEntities( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
-                if ( job.resourceSpec( org ).narrowsOrEquals( resourceSpec ) ) {
+                if ( job.resourceSpec( org ).narrowsOrEquals( resourceSpec, User.current().getPlan() ) ) {
                     jobs.add( job );
                 }
             }
@@ -1676,7 +1464,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( Segment seg : segments ) {
             for ( Iterator<Part> parts = seg.parts(); parts.hasNext(); ) {
                 Part part = parts.next();
-                if ( resourceSpec.matches( part.resourceSpec(), exactMatch ) ) {
+                if ( resourceSpec.matches( part.resourceSpec(), exactMatch, User.current().getPlan() ) ) {
                     list.add( part );
                 }
             }
@@ -1715,7 +1503,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         Flow other = others.next();
                         Node source = other.getSource();
                         connected = !source.isConnector()
-                                && Matcher.same( receive.getName(), other.getName() );
+                                && Matcher.getInstance().same( receive.getName(), other.getName() );
                     }
                     if ( !connected ) unconnectedNeeds.add( receive );
                 }
@@ -1741,7 +1529,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         Flow other = others.next();
                         Node target = other.getTarget();
                         used = !target.isConnector()
-                                && Matcher.same( send.getName(), other.getName() );
+                                && Matcher.getInstance().same( send.getName(), other.getName() );
                     }
                     if ( !used ) unusedCapabilities.add( send );
                 }
@@ -1775,18 +1563,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     private boolean satisfiesNeed( Flow send, Flow need ) {
-        return Matcher.same( send.getName(), need.getName() )
+        return Matcher.getInstance().same( send.getName(), need.getName() )
                 &&
                 ( need.getEois().isEmpty()
-                        ||
-                        Matcher.hasCommonEOIs(
-                                send,
-                                need,
-                                this ) );
+                        || hasCommonEOIs( send, need ) );
     }
 
     private boolean doFindIfSegmentStarted( Segment segment, Set<ModelObject> visited ) {
-        if ( PlanManager.plan().isIncident( segment.getEvent() ) ) return true;
+        if ( User.plan().isIncident( segment.getEvent() ) ) return true;
         if ( visited.contains( segment ) ) return false;
         visited.add( segment );
         boolean started = false;
@@ -1811,7 +1595,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public List<Event> findPlannedEvents() {
-        Plan plan = PlanManager.plan();
+        Plan plan = User.plan();
         List<Event> plannedEvents = new ArrayList<Event>();
         for ( Event event : listReferencedEntities( Event.class ) ) {
             if ( !plan.isIncident( event ) ) plannedEvents.add( event );
@@ -1944,7 +1728,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Role empRole = ( (Employment) obj ).getRole();
-                        return empRole != null && empRole.narrowsOrEquals( role );
+                        return empRole != null && empRole.narrowsOrEquals( role, User.current().getPlan() );
                     }
                 }
         );
@@ -1990,50 +1774,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             names.add( flow.getName() );
         }
         return new ArrayList<String>( names );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> findAllIssues( Analyst analyst ) {
-        List<Issue> allIssues = new ArrayList<Issue>();
-        // allIssues.addAll( analyst.listIssues( getPlan(), true ) );
-        for ( ModelObject mo : list( ModelObject.class ) ) {
-            allIssues.addAll( analyst.listIssues( mo, true ) );
-        }
-        for ( Segment segment : list( Segment.class ) ) {
-            Iterator<Part> parts = segment.parts();
-            while ( parts.hasNext() ) {
-                allIssues.addAll( analyst.listIssues( parts.next(), true ) );
-            }
-            Iterator<Flow> flows = segment.flows();
-            while ( flows.hasNext() ) {
-                allIssues.addAll( analyst.listIssues( flows.next(), true ) );
-            }
-        }
-        return allIssues;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> findAllUnwaivedIssues( Analyst analyst ) {
-        List<Issue> allUnwaivedIssues = new ArrayList<Issue>();
-        // allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( getPlan(), true ) );
-        for ( ModelObject mo : list( ModelObject.class ) ) {
-            allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( mo, true ) );
-        }
-        for ( Segment segment : list( Segment.class ) ) {
-            Iterator<Part> parts = segment.parts();
-            while ( parts.hasNext() ) {
-                allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( parts.next(), true ) );
-            }
-            Iterator<Flow> flows = segment.flows();
-            while ( flows.hasNext() ) {
-                allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( flows.next(), true ) );
-            }
-        }
-        return allUnwaivedIssues;
     }
 
     /**
@@ -2171,22 +1911,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<? extends ModelObject> findAllModelObjectsIn( Place place ) {
         List<ModelObject> inPlace = new ArrayList<ModelObject>();
         for ( Organization org : list( Organization.class ) ) {
-            if ( org.getLocation() != null && org.getLocation().narrowsOrEquals( place ) )
+            if ( org.getLocation() != null && org.getLocation().narrowsOrEquals( place, User.current().getPlan() ) )
                 inPlace.add( org );
         }
         for ( Event event : listReferencedEntities( Event.class ) ) {
-            if ( event.getScope() != null && event.getScope().narrowsOrEquals( place ) )
+            if ( event.getScope() != null && event.getScope().narrowsOrEquals( place, User.current().getPlan() ) )
                 inPlace.add( event );
         }
         for ( Place p : list( Place.class ) ) {
-            if ( !p.equals( place ) && p.narrowsOrEquals( place ) )
+            if ( !p.equals( place ) && p.narrowsOrEquals( place, User.current().getPlan() ) )
                 inPlace.add( p );
         }
         for ( Segment segment : list( Segment.class ) ) {
             Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( part.getLocation() != null && part.getLocation().narrowsOrEquals( place ) )
+                if ( part.getLocation() != null && part.getLocation().narrowsOrEquals( place, User.current().getPlan() ) )
                     inPlace.add( part );
             }
         }
@@ -2345,7 +2085,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public boolean isSemanticMatch( String text, String otherText, Proximity proximity ) {
-        return Matcher.same( text, otherText )
+        return Matcher.getInstance().same( text, otherText )
                 || semanticMatcher.matches( text.trim(), otherText.trim(), proximity );
     }
 
@@ -2353,7 +2093,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public boolean likelyRelated( String text, String otherText ) {
-        return Matcher.matches( text, otherText )
+        return Matcher.getInstance().matches( text, otherText )
                 || isSemanticMatch( StringUtils.uncapitalize( text ),
                 StringUtils.uncapitalize( otherText ),
                 Proximity.HIGH );
@@ -2385,7 +2125,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             Part p = parts.next();
             if ( !part.equals( p )
                     && p.getTask().isEmpty()
-                    && part.resourceSpec().narrowsOrEquals( p.resourceSpec() ) ) {
+                    && part.resourceSpec().narrowsOrEquals( p.resourceSpec(), User.current().getPlan() ) ) {
                 anonymousParts.add( p );
             }
         }
@@ -2397,7 +2137,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Iterator<Flow> incoming = part.receives();
         while ( incoming.hasNext() ) {
             Flow in = incoming.next();
-            if ( in.getSource().isPart() && Matcher.matches( in.getName(), flowName ) ) {
+            if ( in.getSource().isPart() && Matcher.getInstance().matches( in.getName(),
+                                                                            flowName ) ) {
                 commitments.add( in );
             }
         }
@@ -2416,7 +2157,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public Level computeSharingPriority( Flow flow ) {
         assert flow.isSharing();
-        if ( flow.isEssential( false ) )
+        if ( flow.isEssential( false, this ) )
             return computePartPriority( (Part) flow.getTarget() );
         else
             return Level.Low;
@@ -2426,7 +2167,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Plan getCurrentPlan() {
-        return PlanManager.plan();
+        return User.plan();
     }
 
     private Level getPartPriority( Part part, List<Part> visited ) {
@@ -2478,76 +2219,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return goals;
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    public String findIconName( Part part, String imagesDirName ) {
-        String iconName = null;
-        if ( part.getActor() != null ) {
-            if ( part.getActor().isType() ) {
-                Actor knownActor = part.getKnownActualActor();
-                if ( knownActor != null ) {
-                    iconName = imagingService.getIconPath( knownActor );
-                }
-            }
-            if ( iconName == null ) {
-                iconName = imagingService.getIconPath( part.getActor() );
-            }
-            if ( iconName == null ) {
-                iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "person" );
-            }
-        } else if ( part.getRole() != null ) {
-            Actor knownActor = part.getKnownActualActor();
-            boolean onePlayer = knownActor != null;
-            if ( onePlayer ) {
-                iconName = imagingService.getIconPath( knownActor );
-                if ( iconName == null ) {
-                    iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "person" );
-                }
-            } else {
-                iconName = imagingService.getIconPath( part.getRole() );
-                if ( iconName == null ) {
-                    iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "role" );
-                }
-            }
-        } else if ( part.getOrganization() != null ) {
-            iconName = imagingService.getIconPath( part.getOrganization() );
-            if ( iconName == null ) {
-                iconName = imagesDirName + "/" + "organization";
-            }
-        } else {
-            iconName = imagesDirName + "/" + "unknown";
-        }
-        return iconName;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String findIconName( ModelObject modelObject, String imagesDirName ) {
-        String iconName = imagingService.getIconPath( modelObject );
-        if ( iconName == null ) {
-            if ( modelObject instanceof Actor ) {
-                iconName = imagesDirName + "/" + ( ( (Actor) modelObject ).isSystem() ? "system" : "person" );
-            } else if ( modelObject instanceof Role ) {
-                iconName = imagesDirName + "/" + "role";
-            } else if ( modelObject instanceof Organization ) {
-                iconName = imagesDirName + "/" + "organization";
-            } else {
-                iconName = imagesDirName + "/" + "unknown";
-            }
-        }
-        return iconName;
-    }
-
     /**
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
     public List<String> findAllPlanners() {
         return (List<String>) CollectionUtils.collect(
-                userService.getPlanners( PlanManager.plan().getUri() ),
+                userService.getPlanners( User.plan().getUri() ),
                 TransformerUtils.invokerTransformer( "getUsername" )
         );
     }
@@ -2724,7 +2402,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 list( entity.getClass() ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return ( (ModelEntity) obj ).narrowsOrEquals( entity );
+                        return ( (ModelEntity) obj ).narrowsOrEquals( entity, User.current().getPlan() );
                     }
                 }
         );
@@ -2751,7 +2429,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Boolean isInvolvementExpected( Organization organization ) {
-        return PlanManager.plan().getOrganizations().contains( organization );
+        return User.plan().getOrganizations().contains( organization );
     }
 
     /**
@@ -2783,7 +2461,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         List<Assignment> assignments = new ArrayList<Assignment>();
         for ( Employment employment : employments ) {
-            if ( employment.playsPart( part ) )
+            if ( employment.playsPart( part, User.current().getPlan() ) )
                 assignments.add( new Assignment( employment, part ) );
         }
         return assignments;
@@ -2798,7 +2476,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<Part> parts = findAllParts();
         for ( Employment employment : employments ) {
             for ( Part part : parts ) {
-                if ( employment.playsPart( part ) )
+                if ( employment.playsPart( part, User.current().getPlan() ) )
                     assignments.add( new Assignment( employment, part ) );
             }
         }
@@ -2815,7 +2493,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<Part> parts = (List<Part>) IteratorUtils.toList( segment.parts() );
         for ( Employment employment : employments ) {
             for ( Part part : parts ) {
-                if ( employment.playsPart( part ) )
+                if ( employment.playsPart( part, User.current().getPlan() ) )
                     assignments.add( new Assignment( employment, part ) );
             }
         }
@@ -2947,9 +2625,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         agreements,
                         new Predicate() {
                             public boolean evaluate( Object object ) {
-                                return Agreement.from( commitment ).encompasses(
-                                        (Agreement) object,
-                                        DefaultQueryService.this );
+                                return DefaultQueryService.this.encompasses( Agreement.from( commitment ),
+                                                                             (Agreement) object );
                             }
                         } )
                 );
@@ -2969,7 +2646,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<Actor> actorsInOrganization = findAllActorsInOrganization( organization );
         for ( Actor actor : actorsInOrganization ) {
             for ( Commitment commitment : findAllCommitmentsOf( actor ) ) {
-                if ( commitment.isBetweenOrganizations() && agreement.covers( commitment, this ) )
+                if ( commitment.isBetweenOrganizations() && this.covers( agreement,
+                                                                              commitment ) )
                     commitments.add( commitment );
             }
         }
@@ -2994,7 +2672,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     new Predicate() {
                         public boolean evaluate( Object object ) {
                             Flow flow = (Flow) object;
-                            List<Flow> alternates = flow.getAlternates();
+                            List<Flow> alternates = getAlternates( flow );
                             return alternates.isEmpty()
                                     || CollectionUtils.isSubCollection( alternates, essentialFlows );
                         }
@@ -3009,7 +2687,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Part> findFailureImpacts( SegmentObject segmentObject, boolean assumeFails ) {
         if ( segmentObject instanceof Flow ) {
             Flow flow = (Flow) segmentObject;
-            if ( ( (Flow) segmentObject ).isEssential( assumeFails ) ) {
+            if ( ( (Flow) segmentObject ).isEssential( assumeFails, this ) ) {
                 Part target = (Part) flow.getTarget();
                 List<Part> impacted = findPartFailureImpacts( target, assumeFails );
                 if ( target.isUseful() && !impacted.contains( target ) ) {
@@ -3106,7 +2784,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         T entity = (T) object;
-                        return entity.isActual() && entity.narrowsOrEquals( entityType );
+                        return entity.isActual() && entity.narrowsOrEquals( entityType, User.current().getPlan() );
                     }
                 }
         );
@@ -3185,58 +2863,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<EntityRelationship> findEntityRelationships( ModelEntity entity ) {
-        return findEntityRelationships( null, entity );
-    }
-
-    public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity ) {
-        List<ModelEntity> otherEntities = findEntities( segment, entity.getClass(), entity.getKind() );
-        otherEntities.remove( entity );
-        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
-        for ( ModelEntity otherEntity : otherEntities ) {
-            EntityRelationship<ModelEntity> sendRel = findEntityRelationship( entity, otherEntity );
-            if ( sendRel != null ) {
-                rels.add( sendRel );
-            }
-            EntityRelationship<ModelEntity> receiveRel = findEntityRelationship( otherEntity, entity );
-            if ( receiveRel != null ) {
-                rels.add( receiveRel );
-            }
-        }
-        return rels;
-    }
-
-    public List<EntityRelationship> findEntityRelationships(
-            Segment segment,
-            Class<? extends ModelEntity> entityClass,
-            ModelEntity.Kind kind ) {
-        List<ModelEntity> entities = findEntities( segment, entityClass, kind );
-        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
-        for ( ModelEntity entity : entities ) {
-            for ( ModelEntity otherEntity : entities ) {
-                if ( !entity.equals( otherEntity ) ) {
-                    EntityRelationship<ModelEntity> sendRel = findEntityRelationship( entity, otherEntity );
-                    if ( sendRel != null ) {
-                        rels.add( sendRel );
-                    }
-/*
-                    EntityRelationship<ModelEntity> receiveRel = findEntityRelationship( otherEntity, entity );
-                    if ( receiveRel != null ) {
-                        rels.add( receiveRel );
-                    }
-*/
-                }
-            }
-        }
-        return rels;
-    }
-
     @SuppressWarnings( "unchecked" )
-    private List<ModelEntity> findEntities(
+    public List<ModelEntity> findEntities(
             Segment segment,
             Class entityClass,
             final ModelEntity.Kind kind ) {
@@ -3253,6 +2881,144 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 && entity.getKind().equals( kind );
                     }
                 } );
+    }
+
+    /** {@inheritDoc} */
+    public boolean covers( Agreement agreement, Commitment commitment ) {
+        Flow sharing = commitment.getSharing();
+        Assignment beneficiary = commitment.getBeneficiary();
+        if ( beneficiary.getOrganization().narrowsOrEquals(
+                    agreement.getBeneficiary(), getDao().getPlan() )
+             && Matcher.getInstance().same( agreement.getInformation(), sharing.getName() ) )
+        {
+            List<ElementOfInformation> eois = agreement.getEois();
+            if ( eois.isEmpty() || subsetOf( sharing.getEois(), eois ) ) {
+                String usage = agreement.getUsage();
+                if ( usage.isEmpty()
+                     || isSemanticMatch( usage, beneficiary.getPart().getTask(), Proximity.HIGH ) )
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    /** {@inheritDoc} */
+    public boolean encompasses( Agreement agreement, Agreement other ) {
+        Plan plan = getDao().getPlan();
+        if ( other.getBeneficiary().narrowsOrEquals( agreement.getBeneficiary(), plan )
+             && Matcher.getInstance().same( agreement.getInformation(), other.getInformation() ) )
+        {
+            String usage = agreement.getUsage();
+            if ( usage.isEmpty() || isSemanticMatch( usage, other.getUsage(), Proximity.HIGH ) )
+                return subsetOf( other.getEois(), agreement.getEois() );
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether there are common EOIs in two free-form texts.
+     *
+     * @param flow         a flow
+     * @param otherFlow    a flow
+     * @return a boolean
+     */
+    public boolean hasCommonEOIs( Flow flow, Flow otherFlow ) {
+        List<ElementOfInformation> eois = flow.getEois();
+        final List<ElementOfInformation> otherEois = otherFlow.getEois();
+        return CollectionUtils.exists(
+                eois,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        final String eoi = ( (ElementOfInformation) obj ).getContent();
+                        return CollectionUtils.exists(
+                                otherEois,
+                                new Predicate() {
+                                    public boolean evaluate( Object o ) {
+                                        String otherEoi = ( (ElementOfInformation) o ).getContent();
+                                        return isSemanticMatch( eoi, otherEoi, Proximity.HIGH );
+                                    }
+                                } );
+                    }
+                } );
+    }
+
+    /**
+     * Whether none in a list eois is without a strong match with some in another list.
+     *
+     * @param eois         a list of elements of information
+     * @param superset     a list of elements of information
+     * @return a boolean
+     */
+    public boolean subsetOf(
+            List<ElementOfInformation> eois, final List<ElementOfInformation> superset ) {
+        return !CollectionUtils.exists(
+                eois,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        final String eoi = ( (ElementOfInformation) obj ).getContent();
+                        return !CollectionUtils.exists(
+                                superset,
+                                new Predicate() {
+                                    public boolean evaluate( Object o ) {
+                                        final String otherEoi = ( (ElementOfInformation) o ).getContent();
+                                        return isSemanticMatch( eoi, otherEoi, Proximity.HIGH );
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+    }
+
+    public <T extends ModelEntity> T retrieveEntity(
+            Class<T> entityClass, Map<String, Object> state, String key ) {
+        Object[] vals = ( (Collection<?>) state.get( key ) ).toArray();
+        String name = (String)vals[0];
+        boolean type = (Boolean)vals[1];
+        if ( type ) {
+            return findOrCreateType( entityClass, name );
+        } else {
+            return findOrCreate( entityClass, name );
+        }
+    }
+
+    /**
+     * Get alternate flows.
+     *
+     * @return a list of flows @param flow
+     */
+    public List<Flow> getAlternates( Flow flow ) {
+        List<Flow> answer = new ArrayList<Flow>();
+        if ( flow.isSharing() ) {
+            Part target = (Part) flow.getTarget();
+            for ( Iterator<Flow> it = target.receives(); it.hasNext(); ) {
+                Flow alternate = it.next();
+                if ( !alternate.equals( flow ) && alternate.isSharing()
+                     && Matcher.getInstance().same( flow.getName(), alternate.getName() )
+                     && subsetOf( flow.getEois(), alternate.getEois() ) )
+                    answer.add( alternate );
+            }
+        }
+
+        return answer;
+    }
+
+    /**
+     * Instantiate a gaol from a serialization map.
+     *
+     * @param map          a map
+     * @return a goal
+     */
+    public Goal goalFromMap( Map<String, Object> map ) {
+        Goal goal = new Goal();
+        goal.setCategory( Goal.Category.valueOf( (String) map.get( "category" ) ) );
+        goal.setDescription( (String) map.get( "description" ) );
+        goal.setLevel( Level.valueOf( (String) map.get( "level" ) ) );
+        goal.setPositive( (Boolean) map.get( "positive" ) );
+        goal.setEndsWithSegment( (Boolean) map.get( "ends" ) );
+        goal.setOrganization( retrieveEntity( Organization.class, map, "organization" ) );
+        return goal;
     }
 }
 

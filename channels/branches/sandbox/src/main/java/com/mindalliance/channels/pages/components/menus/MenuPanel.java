@@ -9,6 +9,7 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -37,11 +38,21 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * Confirmation requested.
      */
     protected static boolean CONFIRM = true;
-
+    /**
+     * List view of menu items.
+     */
+    private ListView<Component> menuItemsList;
     /**
      * Title.
      */
     private String title;
+
+    public MenuPanel(
+            String s,
+            String title,
+            IModel<? extends Identifiable> model ) {
+        this( s, title, model, null );
+    }
 
     public MenuPanel(
             String s,
@@ -58,15 +69,15 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      */
     protected void init() {
         setOutputMarkupId( true );
-        add( new Label( "title", new Model<String>( title ) ) );
-        ListView<Component> menuItems = new ListView<Component>(
+        add( new Label( "menu-title", new Model<String>( title ) ) );
+        menuItemsList = new ListView<Component>(
                 "items",
                 new PropertyModel<List<Component>>( this, "menuItems" ) ) {
             protected void populateItem( ListItem<Component> item ) {
                 item.add( item.getModelObject() );
             }
         };
-        add( menuItems );
+        add( menuItemsList );
     }
 
     /**
@@ -76,6 +87,21 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @throws CommandException if fails to get menu items
      */
     public abstract List<Component> getMenuItems() throws CommandException;
+
+    /**
+     * Whether the menu is empty.
+     *
+     * @return a boolean
+     */
+    public boolean isEmpty() {
+        List<Component> menuItems = null;
+        try {
+            menuItems = getMenuItems();
+        } catch ( CommandException e ) {
+            // do nothing
+        }
+        return menuItems != null && menuItems.size() == 0;
+    }
 
     /**
      * Make menu items linking to model object pages.
@@ -113,8 +139,12 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         if ( getCommander().canUndo() ) {
             Link link = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    Change change = getCommander().undo();
-                    update( target, change );
+                    try {
+                        Change change = getCommander().undo();
+                        update( target, change );
+                    } catch ( CommandException e ) {
+                        throw new WicketRuntimeException( "Failed to undo", e );
+                    }
                 }
             };
             menuItem = new LinkMenuItem(
@@ -142,8 +172,12 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         if ( getCommander().canRedo() ) {
             Link link = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    Change change = getCommander().redo();
-                    update( target, change );
+                    try {
+                        Change change = getCommander().redo();
+                        update( target, change );
+                    } catch ( CommandException e ) {
+                        throw new WicketRuntimeException( "Failed to redo", e );
+                    }
                 }
             };
             menuItem = new LinkMenuItem(
@@ -151,6 +185,27 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                     new Model<String>( getCommander().getRedoTitle() ), link );
         } else {
             Label label = new Label( id, "Redo" );
+            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+            menuItem = label;
+        }
+        return menuItem;
+    }
+
+    protected Component getSendMessageMenuItem( String id ) {
+        Component menuItem;
+        final Identifiable identifiable = getModel().getObject();
+        if ( identifiable != null & identifiable instanceof ModelObject ) {
+            Link link = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    Change change = new Change( Change.Type.Communicated, identifiable );
+                    update( target, change );
+                }
+            };
+            menuItem = new LinkMenuItem(
+                    id,
+                    new Model<String>( "Send message" ), link );
+        } else {
+            Label label = new Label( id, "Send message" );
             label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
             menuItem = label;
         }
@@ -176,8 +231,14 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                         "link",
                         commandWrapper.isConfirm() ? "Are you sure?" : null ) {
                     public void onClick( AjaxRequestTarget target ) {
-                        Change change = getCommander().doCommand( command );
-                        commandWrapper.onExecuted( target, change );
+                        try {
+                            Change change = getCommander().doCommand( command );
+                            commandWrapper.onExecuted( target, change );
+                        } catch ( CommandException e ) {
+                            throw new WicketRuntimeException(
+                                    "Failed to " + command.getTitle(),
+                                    e );
+                        }
                     }
                 };
                 menuItems.add( new LinkMenuItem( id,

@@ -2,15 +2,17 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -29,14 +31,14 @@ public interface Dao {
      * Create a part with given id if not null.
      *
      * @param segment the segment that will contain this part
-     * @param id a Long
+     * @param id      a Long
      * @return a new default part.
      */
     Part createPart( Segment segment, Long id );
 
     /**
      * @param segment the segment that will contain this connector
-     * @param id a Long
+     * @param id      a Long
      * @return a new connector.
      */
     Connector createConnector( Segment segment, Long id );
@@ -70,7 +72,8 @@ public interface Dao {
      * @param id    the id
      * @param <T>   a subclass of modelobject
      * @return the object
-     * @throws NotFoundException when not found
+     * @throws com.mindalliance.channels.model.NotFoundException
+     *          when not found
      */
     <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
 
@@ -125,29 +128,55 @@ public interface Dao {
 
     /**
      * Find an existing or create a new model object.
+     *
      * @param clazz the kind of model object
-     * @param name the name to look for, or null if irrelevant
-     * @param id the id to look for, or null if irrelevant
+     * @param name  the name to look for, or null if irrelevant
+     * @param id    the id to look for, or null if irrelevant
      * @param <T>   a subclass of model object
      * @return the relevant model object
      */
     <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id );
 
     /**
-     * Get the location of the wrapped plan's data.
-     *
-     * @return a directory
-     * @throws IOException on error
-     */
-    File getPlanStoreDirectory() throws IOException;
-
-    /**
      * Find a named segment.
+     *
      * @param name the name
      * @return the segment, if found
-     * @throws NotFoundException if none exists
+     * @throws com.mindalliance.channels.model.NotFoundException
+     *          if none exists
      */
     Segment findSegment( String name ) throws NotFoundException;
 
     <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id );
+
+    /**
+     * Get the plan associated with this dao.
+     *
+     * @return a plan
+     */
+    Plan getPlan();
+
+    /**
+     * Create a new send for a node.
+     *
+     * @param node the node
+     * @return an internal flow to a new connector
+     */
+    Flow createSend( Node node );
+
+    /**
+     * Create and add a new receive.
+     *
+     * @param node the node
+     * @return a flow from a new connector to this node
+     */
+    Flow createReceive( Node node );
+
+    /**
+     * Find all planner-created issues about a model object.
+     *
+     * @param modelObject a model object
+     * @return a list of user issues
+     */
+    List<Issue> findAllUserIssues( ModelObject modelObject );
 }

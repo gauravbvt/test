@@ -65,6 +65,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                     new Model<String>( "Move tasks to segment..." ),
                     indexLink ) );
 
+            // Import
 /*
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Import a segment..." ),
                     new AjaxFallbackLink( "link" ) {
@@ -93,6 +94,8 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         // Logout
         ConfirmedAjaxFallbackLink logoutLink = new ConfirmedAjaxFallbackLink( "link", "Log out?" ) {
             public void onClick( AjaxRequestTarget target ) {
+                String username = User.current().getUsername();
+                getCommander().loggedOut( username );
                 getRequestCycle().setRequestTarget( new RedirectRequestTarget( "/logout" ) );
             }
         };

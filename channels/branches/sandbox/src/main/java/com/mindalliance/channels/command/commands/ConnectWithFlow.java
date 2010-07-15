@@ -1,15 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.HashMap;
@@ -84,7 +84,7 @@ public class ConnectWithFlow extends AbstractCommand {
                 Segment.class,
                 (Long) get( "otherSegment" ) );
         Long nodeId = (Long) get( "other" );
-        Node other = ChannelsUtils.resolveNode( nodeId, otherSegment, queryService );
+        Node other = resolveNode( nodeId, otherSegment, queryService );
         String name = (String) get( "name" );
         boolean isSend = (Boolean) get( "isSend" );
         Long priorId = (Long) get( "flow" );
@@ -97,6 +97,7 @@ public class ConnectWithFlow extends AbstractCommand {
         if ( attributes != null ) {
             ChannelsUtils.initialize( flow, attributes );
         }
+        describeTarget( flow );                
         return new Change( Change.Type.Added, flow );
     }
 

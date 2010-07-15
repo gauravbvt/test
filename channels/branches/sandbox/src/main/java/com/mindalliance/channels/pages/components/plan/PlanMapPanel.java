@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
-
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Event;
@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,9 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * None if any is 0.
      */
     private double[] diagramSize = new double[2];
+
+    @SpringBean
+    private Analyst analyst;
 
     public PlanMapPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -331,7 +335,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                             &&
                             ( segmentsInGroup.contains( segment )
                                     || segmentsInGroup.contains( other ) ) ) {
-                        SegmentRelationship scRel = getQueryService().findSegmentRelationship( segment, other );
+                        SegmentRelationship scRel = analyst.findSegmentRelationship( segment, other );
                         if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
                     }
                 }
@@ -342,9 +346,9 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             List<Segment> allSegments = getAllSegments();
             for ( Segment other : allSegments ) {
                 if ( !selectedSegment.equals( other ) ) {
-                    SegmentRelationship scRel = getQueryService().findSegmentRelationship( selectedSegment, other );
+                    SegmentRelationship scRel = analyst.findSegmentRelationship( selectedSegment, other );
                     if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
-                    scRel = getQueryService().findSegmentRelationship( other, selectedSegment );
+                    scRel = analyst.findSegmentRelationship( other, selectedSegment );
                     if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
                 }
             }
@@ -355,7 +359,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             for ( Segment segment : allSegments ) {
                 for ( Segment other : allSegments ) {
                     if ( !segment.equals( other ) ) {
-                        SegmentRelationship scRel = getQueryService().findSegmentRelationship( segment, other );
+                        SegmentRelationship scRel = analyst.findSegmentRelationship( segment, other );
                         if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
                     }
                 }
@@ -400,11 +404,9 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             for ( Segment segment : allSegments ) {
                 for ( Segment other : allSegments ) {
                     if ( !segment.equals( other )
-                            &&
-                            ( segmentsInGroup.contains( segment )
+                            && ( segmentsInGroup.contains( segment )
                                     || segmentsInGroup.contains( other ) ) ) {
-                        SegmentRelationship scRel =
-                                getQueryService().findSegmentRelationship( segment, other );
+                        SegmentRelationship scRel = analyst.findSegmentRelationship( segment, other );
                         if ( scRel != null ) scRels.add( scRel );
                     }
                 }
@@ -413,10 +415,9 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             List<Segment> allSegments = getAllSegments();
             for ( Segment other : allSegments ) {
                 if ( !selectedSegment.equals( other ) ) {
-                    SegmentRelationship scRel = getQueryService().
-                            findSegmentRelationship( selectedSegment, other );
+                    SegmentRelationship scRel = analyst.findSegmentRelationship( selectedSegment, other );
                     if ( scRel != null ) scRels.add( scRel );
-                    scRel = getQueryService().findSegmentRelationship( other, selectedSegment );
+                    scRel = analyst.findSegmentRelationship( other, selectedSegment );
                     if ( scRel != null ) scRels.add( scRel );
                 }
             }
@@ -425,7 +426,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             for ( Segment segment : allSegments ) {
                 for ( Segment other : allSegments ) {
                     if ( !segment.equals( other ) ) {
-                        SegmentRelationship scRel = getQueryService().findSegmentRelationship( segment, other );
+                        SegmentRelationship scRel = analyst.findSegmentRelationship( segment, other );
                         if ( scRel != null ) scRels.add( scRel );
                     }
                 }
@@ -495,11 +496,11 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
-            refresh( target );
             // Don't percolate update on selection unless a part was selected.
             if ( change.isForInstanceOf( Part.class ) ) {
                 super.updateWith( target, change, updated );
             } else {
+                refresh( target );
                 if ( change.getScript() != null ) {
                     target.appendJavascript( change.getScript() );
                 }

@@ -1,9 +1,9 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

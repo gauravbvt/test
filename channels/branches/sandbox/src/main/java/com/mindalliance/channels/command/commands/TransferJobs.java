@@ -1,15 +1,15 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MappedObject;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +59,7 @@ public class TransferJobs extends AbstractCommand {
             set("subCommands", multi);
         }
         multi.execute( commander );
+        describeTarget( toOrg );        
         return new Change( Change.Type.Updated, queryService.getCurrentPlan() );
     }
 
@@ -94,7 +95,6 @@ public class TransferJobs extends AbstractCommand {
      */
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         MultiCommand multi = new MultiCommand( "untransfer jobs" );
-        multi.setUndoes( getName() );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );
@@ -103,9 +103,9 @@ public class TransferJobs extends AbstractCommand {
 
     private List<MappedObject> mapJobs( List<Job> jobs ) {
         List<MappedObject> mappedJobs = new ArrayList<MappedObject>();
-        for ( Job job : jobs ) {
-            mappedJobs.add( job.map() );
-        }
+        for ( Job job : jobs )
+            mappedJobs.add( new MappedObject( job ) );
+
         return mappedJobs;
     }
 

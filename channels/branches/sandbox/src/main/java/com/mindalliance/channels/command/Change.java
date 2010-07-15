@@ -1,8 +1,8 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
  * Time: 8:09:56 AM
  */
 public class Change implements Serializable {
-
     /**
      * A kind of change.
      */
@@ -94,6 +93,10 @@ public class Change implements Serializable {
          */
         Unexplained,
         /**
+         * Communicated.
+         */
+        Communicated,
+        /**
          * Change failed because refresh needed.
          */
         NeedsRefresh
@@ -110,6 +113,10 @@ public class Change implements Serializable {
      * The type of change.
      */
     private Type type = Type.Unknown;
+    /**
+     * An id not attached to a model object.
+     */
+    private Long id = null;
     /**
      * Reference to the changed model object.
      */
@@ -144,7 +151,12 @@ public class Change implements Serializable {
         this.property = property;
     }
 
-    public Identifiable getSubject( QueryService queryService ) throws NotFoundException {
+    public Change( Type type, Long id ) {
+        this.type = type;
+        this.id = id;
+    }
+
+    public Identifiable getSubject( QueryService queryService ) {
         return identifiableRef == null ? null : identifiableRef.resolve( queryService );
     }
 
@@ -194,17 +206,27 @@ public class Change implements Serializable {
         return identifiableRef != null && identifiableRef.isForInstanceOf( clazz );
     }
 
+    public void setId( Long id ) {
+        this.id = id;
+    }
+
     /**
      * Get id of what has changed.
-     * @return  a long
+     *
+     * @return a long
      */
-    public long  getId() {
-        return identifiableRef == null ? Long.MIN_VALUE : identifiableRef.getId();
+    public long getId() {
+        if ( id == null ) {
+            return identifiableRef == null ? Long.MIN_VALUE : identifiableRef.getId();
+        } else {
+            return id;
+        }
     }
 
     /**
      * Get name of class of what changed.
-     * @return  a string
+     *
+     * @return a string
      */
     public String getClassName() {
         return identifiableRef != null ? identifiableRef.getClassName() : null;
@@ -216,8 +238,10 @@ public class Change implements Serializable {
      *
      * @param queryService a queryService
      * @return an object
+     * @throws com.mindalliance.channels.model.NotFoundException
+     *          if fails to retrieve property value
      */
-    public Object getChangedPropertyValue( QueryService queryService ) {
+    public Object getChangedPropertyValue( QueryService queryService ) throws NotFoundException {
         Object value = null;
         if ( type == Type.Updated ) {
             try {
@@ -448,7 +472,8 @@ public class Change implements Serializable {
 
     /**
      * Type is explained.
-     * @return  a boolean
+     *
+     * @return a boolean
      */
     public boolean isExplained() {
         return type == Type.Explained;
@@ -456,15 +481,26 @@ public class Change implements Serializable {
 
     /**
      * Type is unexplained.
-     * @return  a boolean
+     *
+     * @return a boolean
      */
     public boolean isUnexplained() {
         return type == Type.Unexplained;
     }
 
     /**
+     * Type is communicated.
+     *
+     * @return a boolean
+     */
+    public boolean isCommunicated() {
+        return type == Type.Communicated;
+    }
+
+    /**
      * Type is needs refresh.
-     * @return  a boolean
+     *
+     * @return a boolean
      */
     public boolean isRefreshNeeded() {
         return type == Type.NeedsRefresh;

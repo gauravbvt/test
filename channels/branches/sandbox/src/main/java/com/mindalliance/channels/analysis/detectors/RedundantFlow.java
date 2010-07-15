@@ -7,7 +7,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.nlp.Matcher;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -80,6 +80,6 @@ public class RedundantFlow extends AbstractIssueDetector {
     private boolean equivalent( Flow flow, Flow otherFlow ) {
         return flow.getTarget().equals( otherFlow.getTarget() )
                 && flow.isAskedFor() == otherFlow.isAskedFor()
-                && Matcher.same( flow.getName(), otherFlow.getName() );
+                && Matcher.getInstance().same( flow.getName(), otherFlow.getName() );
     }
 }

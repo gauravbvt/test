@@ -2,10 +2,11 @@ package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.NotFoundException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -115,7 +116,7 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
     }
 
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, PlanManager.plan() ) );
+        update( target, new Change( Change.Type.Selected, User.plan() ) );
     }
 
     /**
@@ -165,7 +166,7 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
             int scrollLeft,
             AjaxRequestTarget target ) {
         EntityRelationship<T> entityRelationship = new EntityRelationship<T>();
-        entityRelationship.setId( Long.valueOf( edgeId ), null, getQueryService() );
+        entityRelationship.setId( Long.valueOf( edgeId ), null, getQueryService(), getAnalyst() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, entityRelationship );
         change.setScript( js );

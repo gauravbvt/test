@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Organization;
@@ -122,7 +123,7 @@ public class OrganizationReportPanel extends Panel {
             Organization specOrg = spec.getOrganization();
             // Tweak the matching
             boolean matches = specOrg == null && organization.isUnknown()
-                    || specOrg != null && !organization.isWithin( specOrg );
+                    || specOrg != null && !organization.isWithin( specOrg, User.current().getPlan() );
             if ( matches ) {
                 spec.setOrganization( organization );
                 if ( spec.getRole() == null ) {

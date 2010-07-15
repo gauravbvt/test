@@ -1,13 +1,13 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.command.MappedObject;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.query.QueryService;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A role possibly with jurisdiction and title assigned to an actor by an organization.
@@ -225,15 +225,13 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    public MappedObject map() {
-        MappedObject mappedObject = new MappedObject( Job.class );
-        mappedObject.set( "id", id );
-        mappedObject.set( "actor", actor );
-        mappedObject.set( "role", role );
-        mappedObject.set( "jurisdiction", jurisdiction );
-        mappedObject.set( "title", title );
-        mappedObject.set( "supervisor", supervisor );
-        return mappedObject;
+    public void map( Map<String,Object> map ) {
+        map.put( "id", id );
+        map.put( "actor", actor );
+        map.put( "role", role );
+        map.put( "jurisdiction", jurisdiction );
+        map.put( "title", title );
+        map.put( "supervisor", supervisor );
     }
 
     /**
@@ -252,9 +250,10 @@ public class Job implements Serializable, Mappable, GeoLocatable {
 
     /**
      * {@inheritDoc}
+     * @param queryService
      */
-    public String getGeoMarkerLabel() {
-        return jurisdiction != null ? jurisdiction.getGeoMarkerLabel() : "";
+    public String getGeoMarkerLabel( QueryService queryService ) {
+        return jurisdiction != null ? jurisdiction.getGeoMarkerLabel( queryService ) : "";
     }
 
     /**

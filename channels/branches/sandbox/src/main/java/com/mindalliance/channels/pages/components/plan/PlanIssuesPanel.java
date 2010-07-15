@@ -68,9 +68,9 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
             issues = getAnalyst().listIssues( about, true, includeWaived );
         } else {
             if ( includeWaived ) {
-                issues = getQueryService().findAllIssues( getAnalyst() );
+                issues = getAnalyst().findAllIssues();
             } else {
-                issues = getQueryService().findAllUnwaivedIssues( getAnalyst() );
+                issues = getAnalyst().findAllUnwaivedIssues();
             }
         }
         return (List<Issue>) CollectionUtils.select(

@@ -8,9 +8,9 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.util.ChannelsUtils;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -220,7 +220,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         if ( entityClass.isAssignableFrom( Role.class ) || getEntityKind().equals( ModelEntity.Kind.Type ) ) {
             return getQueryService().likelyRelated( text, otherText );
         } else {
-            return Matcher.matches( text, otherText );
+            return Matcher.getInstance().matches( text, otherText );
         }
     }
 

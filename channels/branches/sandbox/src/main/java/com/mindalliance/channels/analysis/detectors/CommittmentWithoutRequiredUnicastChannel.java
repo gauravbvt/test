@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Commitment;
@@ -43,7 +44,8 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
                                     public boolean evaluate( Object object ) {
                                         Channel channel = (Channel) object;
                                         return channel.isValid()
-                                                && channel.getMedium().narrowsOrEquals( flowChannel.getMedium() );
+                                                && channel.getMedium().narrowsOrEquals( flowChannel.getMedium(),
+                                                                                        User.current().getPlan() );
                                     }
                                 } );
                         if ( !hasValidChannel ) {
@@ -98,6 +100,6 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Commitment without needed contact info";
+        return "Sharing commitment without contact info";
     }
 }

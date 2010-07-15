@@ -2,12 +2,14 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
@@ -17,7 +19,6 @@ import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
@@ -152,7 +153,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.matches( input, choice ) ) candidates.add( choice );
+                    if ( Matcher.getInstance().matches( input, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
@@ -182,7 +183,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
                             : getQueryService().listTypeEntities( Place.class ) ),
                     new Predicate() {
                         public boolean evaluate( Object object ) {
-                            return !( (Place) object ).matchesOrIsInside( place );
+                            return !( (Place) object ).matchesOrIsInside( place, User.current().getPlan() );
                         }
                     }
             );
@@ -276,7 +277,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.matches( input, choice ) ) candidates.add( choice );
+                    if ( Matcher.getInstance().matches( input, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
@@ -564,7 +565,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
         for ( Place p : places ) {
             if ( !p.equals( place ) &&
-                 ( p.isInside( place ) || place.isRegion() && p.isGeoLocatedIn( geoLocation ) ) )
+                 ( p.isInside( place, User.current().getPlan() ) || place.isRegion() && p.isGeoLocatedIn( geoLocation ) ) )
                 result.add( p );
         }
         return result;

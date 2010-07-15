@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.ModelEntity;
@@ -75,7 +76,7 @@ public class ResponsibilityReportPanel extends Panel {
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( role ) )
                 .setVisible( showingIssues )
         );
-        add( new ListView<Part>( "parts", segment.findParts( organization, role, jurisdiction ) ) {
+        add( new ListView<Part>( "parts", segment.findParts( organization, role, jurisdiction, User.current().getPlan() ) ) {
             @Override
             protected void populateItem( ListItem<Part> item ) {
                 item.add( new PartReportPanel(
@@ -153,7 +154,7 @@ public class ResponsibilityReportPanel extends Panel {
             spec.setJurisdiction( jurisdiction );
             for ( Employment employment : queryService.findAllEmploymentsIn( organization ) ) {
                 ResourceSpec employmentSpec = new ResourceSpec( employment );
-                if ( employmentSpec.narrowsOrEquals( spec ) ) {
+                if ( employmentSpec.narrowsOrEquals( spec, User.current().getPlan() ) ) {
                     actors.add( employment.getActor() );
                 }
             }

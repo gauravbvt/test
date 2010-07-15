@@ -11,14 +11,14 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.query.Play;
 import com.mindalliance.channels.util.ChannelsUtils;
-import com.mindalliance.channels.util.Matcher;
 import com.mindalliance.channels.util.NameRange;
-import com.mindalliance.channels.util.Play;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -780,7 +780,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {
-                        if ( Matcher.matches( s, choice ) ) candidates.add( choice );
+                        if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
                     }
                     return candidates.iterator();
 

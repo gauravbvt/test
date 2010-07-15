@@ -5,9 +5,9 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -108,7 +108,7 @@ public class TagsPanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
+                    if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
 
@@ -255,9 +255,9 @@ public class TagsPanel extends AbstractCommandablePanel {
 
         public void setTagName( String name ) {
             assert isMarkedForCreation();
-            if ( name != null && !name.isEmpty() ) {
+            if ( name != null && !name.isEmpty()) {
                 tag = doSafeFindOrCreateType( getEntity().getClass(), name );
-                if ( tag != null ) {
+                if ( tag != null  && !getEntity().hasTag( tag ) ) {
                     doCommand( new UpdatePlanObject(
                             getEntity(),
                             "tags",

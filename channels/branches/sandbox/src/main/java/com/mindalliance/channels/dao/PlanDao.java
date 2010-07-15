@@ -3,6 +3,7 @@ package com.mindalliance.channels.dao;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
@@ -14,18 +15,15 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.model.UserIssue;
 import org.apache.commons.collections.iterators.IteratorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -36,27 +34,12 @@ import java.util.Set;
 /**
  * Wrapper for per-plan dao-related operations.
  */
-public class PlanDao extends Memory {
+public class PlanDao extends AbstractDao {
 
     /**
      * Lowest id for mutable model objects.
      */
     public static final long IMMUTABLE_RANGE = -1000L;
-
-    /**
-     * Name of persisted data file.
-     */
-    public static final String DATA_FILE = "data.xml";
-
-    /**
-     * Name of file contining last id used in plan or and in journal, if any.
-     */
-    private static final String LAST_ID_FILE = "lastid";
-
-    /**
-     * Name of command journal file.
-     */
-    private static final String JOURNAL_FILE = "journal.xml";
 
     /**
      * Name of the default event.
@@ -71,54 +54,78 @@ public class PlanDao extends Memory {
     /**
      * The wrapped plan.
      */
-    private final Plan plan;
+    private Plan plan;
 
     /**
      * Pending commands attached to wrapped plan.
      */
     private Journal journal = new Journal();
 
-    /** The id generator. */
-    private final IdGenerator idGenerator;
-
-    /** Base directory of data. */
-    private final File baseDirectory;
-
-    /** Interval of commands at which snapshots are taken. */
-    private int snapshotThreshold = 10;
-
+    /** The user service. */
     private UserService userService;
 
+    /** The plan version. */
+    private final PlanDefinition.Version version;
+
+    private IdGenerator idGenerator;
+
     //-------------------------------------
-    PlanDao( Plan plan, File baseDirectory, IdGenerator idGenerator ) {
-        this.plan = plan;
-        this.idGenerator = idGenerator;
-        this.baseDirectory = baseDirectory;
+    PlanDao( PlanDefinition.Version version ) {
+        this.version = version;
     }
 
+    public PlanDefinition.Version getVersion() {
+        return version;
+    }
+
+    /** {@inheritDoc} */
     @Override
-    public Plan getPlan() {
+    public synchronized Plan getPlan() {
+        if ( plan == null )
+            throw new IllegalStateException( "Plan not loaded" );
         return plan;
     }
 
-    public synchronized int getSnapshotThreshold() {
-        return snapshotThreshold;
+    public synchronized boolean isLoaded() {
+        return plan != null;
     }
 
-    public synchronized void setSnapshotThreshold( int snapshotThreshold ) {
-        this.snapshotThreshold = snapshotThreshold;
+    private void unload( Exporter exporter ) {
+        try {
+            synchronized ( this ) {
+                save( exporter );
+                plan = null;
+            }
+        } catch ( IOException e ) {
+            LOG.warn( "Unable to unload " + version + ". Plan remains in memory.", e );
+        }
+    }
+
+    /**
+     * Save the plan to the file repository.
+     * @param exporter where to export
+     * @throws IOException on errors
+     */
+    public synchronized void save( Exporter exporter ) throws IOException {
+        if ( isLoaded() ) {
+            takeSnapshot( exporter );
+            version.getJournalFile().delete();
+            journal.reset();
+            version.setLastId( idGenerator.getLastAssignedId( plan ) );
+        }
+    }
+
+    @Override
+    public IdGenerator getIdGenerator() {
+        return idGenerator;
+    }
+
+    public void setIdGenerator( IdGenerator idGenerator ) {
+        this.idGenerator = idGenerator;
     }
 
     public synchronized Journal getJournal() {
         return journal;
-    }
-
-    /**
-     * @return the id generator
-     */
-    @Override
-    public IdGenerator getIdGenerator() {
-        return idGenerator;
     }
 
     public UserService getUserDetailsService() {
@@ -129,72 +136,11 @@ public class PlanDao extends Memory {
         this.userService = userService;
     }
 
-    /**
-     * Whether the plan is persisted.
-     *
-     * @return a boolean
-     */
-    public boolean isPersisted() {
-        try {
-            return new File( getPlanStoreDirectory(), DATA_FILE ).exists();
-        } catch ( IOException e ) {
-            LOG.warn( "IO failure", e );
-            return false;
-        }
-    }
-
-    /**
-     * Get the location of the wrapped plan's xml file.
-     *
-     * @return a file
-     * @throws IOException on errors
-     */
-    private File getDataFile() throws IOException {
-        File dataFile = new File( getPlanStoreDirectory(), DATA_FILE );
-        if ( !dataFile.exists() )
-            dataFile.createNewFile();
-        return dataFile;
-    }
-
-    /**
-     * Get the location of the wrapped plan's data.
-     *
-     * @return a directory
-     * @throws IOException on error
-     */
-    public File getPlanStoreDirectory() throws IOException {
-        File directory = new File(
-                baseDirectory,
-                sanitize( plan.getUri() ) + File.separator + plan.getVersion() );
-        if ( !directory.exists() )
-            directory.mkdirs();
-
-        return directory;
-    }
-
-    public static String sanitize( String name ) {
-        return name.replaceAll( "\\W", "_" );
-    }
-
-    /**
-     * Get the location of the journal file for the wrapped plan.
-     *
-     * @return a directory
-     * @throws IOException on errors
-     */
-    private File getJournalFile() throws IOException {
-        File data = getPlanStoreDirectory();
-        File journalFile = new File( data.getPath(), JOURNAL_FILE );
-        if ( !journalFile.exists() )
-            journalFile.createNewFile();
-        return journalFile;
-    }
-
     private Journal loadJournal( Importer importer ) throws IOException {
         FileInputStream inputStream = null;
-        if ( plan.isDevelopment() && importer != null )
+        if ( version.isDevelopment() && importer != null )
             try {
-                File journalFile = getJournalFile();
+                File journalFile = version.getJournalFile();
                 if ( journalFile.length() > 0L ) {
                     inputStream = new FileInputStream( journalFile );
                     return importer.importJournal( inputStream );
@@ -208,26 +154,11 @@ public class PlanDao extends Memory {
         return new Journal();
     }
 
-    /**
-     * Persist all plan data.
-     *
-     * @param exporter the save mechanism
-     * @throws IOException on error
-     */
-    public synchronized void save( Exporter exporter ) throws IOException {
-        if ( exporter != null ) {
-            takeSnapshot( exporter );
-            getJournalFile().delete();
-            journal.reset();
-            writeLastAssignedId();
-        }
-    }
-
     private void takeSnapshot( Exporter exporter ) throws IOException {
         LOG.info( "Taking snapshot of plan {}", plan.getUri() );
 
         // Make backup
-        File dataFile = getDataFile();
+        File dataFile = version.getDataFile();
         if ( dataFile.length() > 0L ) {
             String backupPath = dataFile.getAbsolutePath() + '_' + System.currentTimeMillis();
             File backup = new File( backupPath );
@@ -237,7 +168,7 @@ public class PlanDao extends Memory {
         // snap
         FileOutputStream out = null;
         try {
-            out = new FileOutputStream( getDataFile() );
+            out = new FileOutputStream( version.getDataFile() );
             exporter.export( out );
         } finally {
             if ( out != null )
@@ -252,61 +183,22 @@ public class PlanDao extends Memory {
      * @throws IOException on errors
      */
     void saveJournal( Exporter exporter ) throws IOException {
-        getJournalFile().delete();
+        version.getJournalFile().delete();
         FileOutputStream out = null;
         try {
-            out = new FileOutputStream( getJournalFile() );
+            out = new FileOutputStream( version.getJournalFile() );
             exporter.export( getJournal(), out );
-            writeLastAssignedId();
+            version.setLastId( idGenerator.getLastAssignedId( plan ) );
         } finally {
             if ( out != null )
                 out.close();
         }
-    }
-
-    private void writeLastAssignedId() throws IOException {
-        File idFile = getLastIdFile();
-
-        idFile.delete();
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter( new FileOutputStream( idFile ) );
-            out.print( idGenerator.getLastAssignedId( plan ) );
-        } finally {
-            if ( out != null )
-                out.close();
-        }
-    }
-
-    private long readLastAssignedId() throws IOException {
-        BufferedReader reader = null;
-        Long lastId = 0L;
-        try {
-            File lastIdFile = getLastIdFile();
-            if ( lastIdFile.length() > 0L ) {
-                reader = new BufferedReader( new FileReader( lastIdFile ) );
-                lastId = Long.parseLong( reader.readLine() );
-            }
-        } finally {
-            if ( reader != null )
-                reader.close();
-        }
-        return lastId;
-    }
-
-    private File getLastIdFile() throws IOException {
-        File data = getPlanStoreDirectory();
-        File lastIdFile = new File( data.getPath(), LAST_ID_FILE );
-        if ( !lastIdFile.exists() )
-            lastIdFile.createNewFile();
-        return lastIdFile;
     }
 
     /**
      * Validate the underlying plan.
-     *
      */
-    public void validate() {
+    void validate() {
         // Make sure there is at least one event per plan
         List<Event> incidents = plan.getIncidents();
         if ( incidents.isEmpty() ) {
@@ -362,7 +254,7 @@ public class PlanDao extends Memory {
      * @param event an event
      * @return an int
      */
-    public int getReferenceCount( Event event ) {
+    private int getReferenceCount( Event event ) {
         int count = 0;
         for ( Event incident : plan.getIncidents() ) {
             if ( incident.equals( event ) ) count++;
@@ -456,21 +348,70 @@ public class PlanDao extends Memory {
 
         return domain;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public List<Issue> findAllUserIssues( ModelObject modelObject ) {
+        List<Issue> foundIssues = new ArrayList<Issue>();
+        for ( UserIssue userIssue : list( UserIssue.class ) ) {
+            if ( userIssue.getAbout().getId() == modelObject.getId() )
+                foundIssues.add( userIssue );
+        }
+        return foundIssues;
+    }
+
 
     /**
      * Define all immutable entities (not plan dependent).
      * @param media predefined media
      */
     public void defineImmutableEntities( List<TransmissionMedium> media ) {
+        // TODO cleanup UNKNOWN mess
+        long id = idGenerator.getLastAssignedId( plan );
         idGenerator.setLastAssignedId( IMMUTABLE_RANGE, plan );
-        Actor.createImmutables( this );
-        Event.createImmutables( this );
-        Organization.createImmutables( this );
-        Place.createImmutables( this );
-        Phase.createImmutables( this );
-        Role.createImmutables( this );
-        TransmissionMedium.createImmutables( media, this );
-        Participation.createImmutables( this );
+        Actor.UNKNOWN = findOrCreate( Actor.class, Actor.UnknownName, null );
+        Actor.UNKNOWN.makeImmutable();
+        Event.UNKNOWN = findOrCreate( Event.class, Event.UnknownName, null );
+        Event.UNKNOWN.makeImmutable();
+        Organization.UNKNOWN = findOrCreate( Organization.class, Organization.UnknownName, null );
+        Organization.UNKNOWN.setActual();
+        Organization.UNKNOWN.makeImmutable();
+        Phase.UNKNOWN = findOrCreate( Phase.class, Phase.UnknownName, null );
+        Phase.UNKNOWN.makeImmutable();
+        // Unknown place
+        Place.UNKNOWN = findOrCreate( Place.class, Place.UnknownPlaceName, null );
+        Place.UNKNOWN.makeImmutable();
+        // Administrative area types
+        Place administrativeArea = findOrCreateType( Place.class, Place.ADMINISTRATIVE_AREA, null );
+        administrativeArea.makeImmutable();
+        Place.Country = findOrCreateType( Place.class, Place.COUNTRY, null );
+        Place.Country.addTag( administrativeArea );
+        Place.Country.makeImmutable();
+        Place.State = findOrCreateType( Place.class, Place.STATE, null );
+        Place.State.addTag( administrativeArea );
+        Place.State.setWithin( Place.Country );
+        Place.State.makeImmutable();
+        Place.County = findOrCreateType( Place.class, Place.COUNTY, null );
+        Place.County.addTag( administrativeArea );
+        Place.County.setWithin( Place.State );
+        Place.County.makeImmutable();
+        Place.City = findOrCreateType( Place.class, Place.CITY, null );
+        Place.City.addTag( administrativeArea );
+        Place.City.setWithin( Place.County );
+        Place.City.makeImmutable();
+        Role.UNKNOWN = findOrCreate( Role.class, Role.UnknownName, null );
+        Role.UNKNOWN.makeImmutable();
+        TransmissionMedium.UNKNOWN = findOrCreateType( TransmissionMedium.class,
+                                                       TransmissionMedium.UnknownName, null );
+        TransmissionMedium.UNKNOWN.makeImmutable();
+        for ( TransmissionMedium medium : media ) {
+            add( medium );
+            medium.makeImmutable();
+        }
+        Participation.UNKNOWN = findOrCreateType( Participation.class,
+                                                  Participation.UnknownName, null );
+        Participation.UNKNOWN.makeImmutable();
 
         // Make sure that there is one participation per user
         if ( userService != null )
@@ -478,39 +419,42 @@ public class PlanDao extends Memory {
                 Participation p = findOrCreate( Participation.class, username, null );
                 p.setActual();
             }
+
+        idGenerator.setLastAssignedId( id, plan );
     }
 
     /**
-     * Import persisted plan.
-     * @param importExportFactory the factory
-     * @param builtInMedia prebuilt media
+     * Load persisted plan.
+     * @param importer what to use for importing
+     * @return the loaded plan
+     * @throws IOException on error
      */
-    public void importPlan(
-            ImportExportFactory importExportFactory, List<TransmissionMedium> builtInMedia ) {
-
+    public synchronized Plan load( Importer importer ) throws IOException {
+        FileInputStream in = null;
         try {
-            // set last id to start of mutable range
-            idGenerator.setLastAssignedId( readLastAssignedId(), plan );
-            Importer importer = importExportFactory.createImporter( this );
-
-            File dataFile = getDataFile();
-            if ( dataFile.length() > 0L ) {
-                LOG.info( "Importing snapshot for plan {} from {}", plan, dataFile.getAbsolutePath() );
-                FileInputStream in = null;
-                try {
-                    in = new FileInputStream( dataFile );
-                    importer.importPlan( in );
-                } finally {
-                    if ( in != null )
-                        in.close();
-                }
+            idGenerator.setLastAssignedId( version.getLastId(), plan );
+            File dataFile = version.getDataFile();
+            if ( dataFile.exists() ) {
+                LOG.info( "Importing snapshot for plan {} from {}",
+                          plan, dataFile.getAbsolutePath() );
+                in = new FileInputStream( dataFile );
+                importer.importPlan( in );
 
                 journal = loadJournal( importer );
             }
-        } catch ( IOException e ) {
-            String msg = MessageFormat.format( "Unable to import plan {0}", plan.getName() );
-            LOG.error( msg, e );
-            throw new RuntimeException( msg, e );
+            add( plan, plan.getId() );
+            validate();
+
+
+        } finally {
+            if ( in != null )
+                in.close();
         }
+
+        return plan;
+    }
+
+    void resetPlan() {
+        plan = version.createPlan( idGenerator );
     }
 }

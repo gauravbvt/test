@@ -2,9 +2,9 @@ package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -144,7 +144,7 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
             int scrollLeft,
             AjaxRequestTarget target ) {
         EntityRelationship<T> entityRelationship = new EntityRelationship<T>();
-        entityRelationship.setId( Long.valueOf( edgeId ), segment, getQueryService() );
+        entityRelationship.setId( Long.valueOf( edgeId ), segment, getQueryService(), getAnalyst() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, entityRelationship );
         change.setScript( js );

@@ -111,6 +111,7 @@ public class AdminPage extends WebPage {
                         } catch ( IOException e ) {
                             LOG.error( "Unable to save user definitions", e );
                         }
+                        setResponsePage( AdminPage.class );
                     }
                 }
                         .add(
@@ -215,8 +216,6 @@ PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS
     enum Access {
         Admin, Planner, User, Disabled, LPlanner, LUser, LDisabled
     }
-
-    ;
 
     //==================================================================
     /**

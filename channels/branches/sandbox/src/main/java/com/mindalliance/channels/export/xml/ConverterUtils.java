@@ -1,12 +1,12 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.export.PartSpecification;
 import com.mindalliance.channels.export.SegmentSpecification;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.util.Matcher;
+import com.mindalliance.channels.nlp.Matcher;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
@@ -111,21 +111,24 @@ public class ConverterUtils {
                                        String organizationName,
                                        String task,
                                        String taskDescription ) {
+        Matcher matcher = Matcher.getInstance();
         if ( roleName != null ) {
             if ( part.getRole() == null
-                    || !Matcher.same( part.getRole().getName(), roleName ) ) return false;
+                    || !matcher.same( part.getRole().getName(), roleName ) ) return false;
         }
         if ( organizationName != null ) {
             if ( part.getOrganization() == null
-                    || !Matcher.same( part.getOrganization().getName(), organizationName ) )
+                    || !matcher.same( part.getOrganization().getName(),
+                                                     organizationName ) )
                 return false;
         }
         if ( task != null ) {
-            if ( part.getTask() == null || !Matcher.same( part.getTask(), task ) )
+            if ( part.getTask() == null || !matcher.same( part.getTask(), task ) )
                 return false;
         }
         if ( taskDescription != null ) {
-            if ( part.getDescription() == null || !Matcher.same( part.getDescription(), taskDescription ) )
+            if ( part.getDescription() == null || !matcher.same( part.getDescription(),
+                                                                                taskDescription ) )
                 return false;
         }
         return true;

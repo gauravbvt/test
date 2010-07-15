@@ -5,12 +5,12 @@ import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.FilterableModelObjectLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
 import com.mindalliance.channels.util.ChannelsUtils;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -736,7 +736,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {
-                        if ( Matcher.matches( s, choice ) ) candidates.add( choice );
+                        if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
                     }
                     return candidates.iterator();
                 }

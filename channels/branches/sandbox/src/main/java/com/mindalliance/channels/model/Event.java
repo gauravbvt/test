@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.model.Attachment;
-import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.query.QueryService;
@@ -32,10 +30,11 @@ public class Event extends ModelEntity implements GeoLocatable {
      * Bogus event used to signify that the event is not known...
      */
     public static Event UNKNOWN;
+
     /**
      * Name of unknown event.
      */
-    private static String UnknownName = "(unknown)";
+    public static String UnknownName = "(unknown)";
 
     public Event() {
 
@@ -44,17 +43,6 @@ public class Event extends ModelEntity implements GeoLocatable {
     public Event( String name ) {
         super( name );
     }
-
-    /**
-     * Create immutables.
-     *
-     * @param dao a query service
-     */
-    public static void createImmutables( PlanDao dao ) {
-        UNKNOWN = dao.findOrCreate( Event.class, UnknownName, null );
-        UNKNOWN.makeImmutable();
-    }
-
 
     public Place getScope() {
         return scope;
@@ -83,9 +71,9 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
         return isSelfTerminating() == ( (Event) entityType ).isSelfTerminating()
-                && ModelEntity.implies( getScope(), ( (Event) entityType ).getScope() );
+                && ModelEntity.implies( getScope(), ( (Event) entityType ).getScope(), plan );
     }
 
     /**
@@ -106,10 +94,11 @@ public class Event extends ModelEntity implements GeoLocatable {
 
     /**
      * {@inheritDoc}
+     * @param queryService
      */
-    public String getGeoMarkerLabel() {
+    public String getGeoMarkerLabel( QueryService queryService ) {
         return scope != null
-                ? getName() + " in " + scope.getGeoMarkerLabel()
+                ? getName() + " in " + scope.getGeoMarkerLabel( queryService )
                 : "";
     }
 

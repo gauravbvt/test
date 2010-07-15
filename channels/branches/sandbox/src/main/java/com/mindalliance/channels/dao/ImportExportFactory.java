@@ -1,9 +1,5 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.dao.Importer;
-import com.mindalliance.channels.dao.PlanDao;
-
 /**
  * A generator of importers and exporters.
  */

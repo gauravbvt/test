@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div wicket:id="socialItem">
+        <!-- class = "joining", "leaving", "doing", "undoing", "redoing", "broadcast" or "private" -->
+
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td valign="top" class="photo-cont">
+		            <img class="photo" wicket:id="pic" width="32" height="32" src="" alt="Picture">
+				</td>
+				<td valign="top">
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td class="name-title-icon-menu">
+					            <span class="name" wicket:id="name">name</span>
+            					<img wicket:id="icon" src="/images/present.png" class="present" alt="present">
+						        <span class="menubar">
+    						         <span wicket:id="menu">[planner action menu]</span>
+        						</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="jobtitle">
+	           					<span class="titles" wicket:id="titles">job titles</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="info-container">
+					            <wicket:child/>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+    </div>
+</wicket:panel>
+</body>
+</html>

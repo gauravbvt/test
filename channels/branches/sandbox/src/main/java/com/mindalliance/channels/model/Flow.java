@@ -1,8 +1,7 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.Memory;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.util.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -197,10 +196,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public void setEois( List<ElementOfInformation> elements ) {
-        eois = new ArrayList<ElementOfInformation>();
-        for ( ElementOfInformation eoi : elements ) {
-            addEoi( eoi );
-        }
+        eois = new ArrayList<ElementOfInformation>( elements );
     }
 
     public boolean isClassificationsLinked() {
@@ -401,13 +397,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @see com.mindalliance.channels.query.QueryService#connect(Node, Node, String)
      */
     abstract void setTarget( Node target );
-
-    /**
-     * Disconnect from source and target.
-     *
-     * @param planDao
-     */
-    public abstract void disconnect( Memory planDao );
 
     /**
      * @return true for internal flows; false for external flows.
@@ -906,15 +895,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public boolean isSatisfied() {
         assert isNeed();
-        return CollectionUtils.exists(
-                IteratorUtils.toList( getTarget().receives() ),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        Flow flow = (Flow) obj;
-                        return flow.isSharing() && Matcher.same( getName(), flow.getName() );
-                    }
-                }
-        );
+        for ( Iterator<Flow> it = getTarget().receives(); it.hasNext(); ) {
+            Flow flow = it.next();
+            if ( flow.isSharing() && Matcher.getInstance().same( getName(), flow.getName() ) )
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -931,7 +917,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                         new Predicate() {
                             public boolean evaluate( Object obj ) {
                                 Flow flow = (Flow) obj;
-                                return flow.isSharing() && Matcher.same( getName(), flow.getName() );
+                                return flow.isSharing() && Matcher.getInstance().same( getName(),
+                                                                                        flow.getName() );
                             }
                         }
                 );
@@ -954,7 +941,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * {@inheritDoc}
      */
     public List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService ) {
-        if ( isEssential( assumeFails ) ) {
+        if ( isEssential( assumeFails, queryService ) ) {
             return new ArrayList<Flow>( getTarget().getEssentialFlows( assumeFails, queryService ) );
         } else {
             return new ArrayList<Flow>();
@@ -973,66 +960,32 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
-     * Whether the target part is target of another flow with same information and same or more elements.
-     *
-     * @return a boolean
-     */
-    public boolean hasAlternate() {
-        return !getAlternates().isEmpty();
-    }
-
-    /**
-     * Get alternate flows.
-     *
-     * @return a list of flows
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Flow> getAlternates() {
-        if ( isSharing() ) {
-            Part target = (Part) getTarget();
-            return (List<Flow>) CollectionUtils.select(
-                    target.getReceives().values(),
-                    new Predicate() {
-                        public boolean evaluate( Object object ) {
-                            Flow alternate = (Flow) object;
-                            return !alternate.equals( Flow.this )
-                                    && alternate.isSharing()
-                                    && Matcher.same( getName(), alternate.getName() )
-                                    && Matcher.subsetOf(
-                                    getEois(), alternate.getEois(), getSegment().getQueryService()
-                            );
-                        }
-                    } );
-        } else {
-            return new ArrayList<Flow>();
-        }
-    }
-
-    /**
      * Whether the flow could be essential to risk mitigation.
      *
      * @param assumeFails whether alternate flows are assumed
+     * @param queryService
      * @return a boolean
      */
-    public boolean isEssential( boolean assumeFails ) {
+    public boolean isEssential( boolean assumeFails, QueryService queryService ) {
         return isImportant()
-                && ( assumeFails || !hasAlternate() )
-                && !isSharingWithSelf();
+                && ( assumeFails || queryService.getAlternates( this ).isEmpty() )
+                && !isSharingWithSelf( queryService );
     }
 
     /**
      * Whether this is a sharing flow where source actor is target actor.
      *
      * @return a boolean
+     * @param queryService
      */
-    public boolean isSharingWithSelf() {
+    public boolean isSharingWithSelf( QueryService queryService ) {
         boolean sharingWithSelf = false;
         if ( isSharing() ) {
             Part sourcePart = (Part) getSource();
             Part targetPart = (Part) getTarget();
-            Actor onlySource = sourcePart.getKnownActualActor();
+            Actor onlySource = sourcePart.getKnownActualActor( queryService );
             if ( onlySource != null ) {
-                Actor onlyTarget = targetPart.getKnownActualActor();
+                Actor onlyTarget = targetPart.getKnownActualActor( queryService );
                 if ( onlyTarget != null ) {
                     sharingWithSelf = onlySource.equals( onlyTarget );
                 }
@@ -1064,6 +1017,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
+    /**
+     * Get a copy of the elements fo information in a flow.
+     * @return a list of elements of information
+     */
+    public List<ElementOfInformation> copyEois() {
+        return new ArrayList<ElementOfInformation>( eois );
+    }
 
     /**
      * The significance of a flow.

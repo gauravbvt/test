@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -81,8 +82,9 @@ public class PartShowMenuPanel extends MenuPanel {
     private List<ModelObjectWrapper> getModelObjectWrappers() {
         List<ModelObjectWrapper> modelObjects = new ArrayList<ModelObjectWrapper>();
         Part part = getPart();
-        if ( part.getKnownActor() != null )
-            modelObjects.add( new ModelObjectWrapper( "Agent", part.getKnownActor() ) );
+        QueryService queryService = getQueryService();
+        if ( part.getKnownActor( queryService ) != null )
+            modelObjects.add( new ModelObjectWrapper( "Agent", part.getKnownActor( queryService ) ) );
         if ( part.getRole() != null )
             modelObjects.add( new ModelObjectWrapper( "Role", part.getRole() ) );
         if ( part.getOrganization() != null )

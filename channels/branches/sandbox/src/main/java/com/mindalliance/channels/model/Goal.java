@@ -1,8 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.command.MappedObject;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -200,16 +198,14 @@ public class Goal implements Serializable, Mappable {
     }
 
     /**
-     * {inheritDoc}
+     * {@inheritDoc}
      */
-    public MappedObject map() {
-        MappedObject mappedObject = new MappedObject( this.getClass() );
-        mappedObject.set( "category", category );
-        mappedObject.set( "positive", positive );
-        mappedObject.set( "level", level );
-        mappedObject.set( "organization", organization );
-        mappedObject.set( "description", description );
-        return mappedObject;
+    public void map( Map<String, Object> map ) {
+        map.put( "category", category );
+        map.put( "positive", positive );
+        map.put( "level", level );
+        map.put( "organization", organization );
+        map.put( "description", description );
     }
 
     /**
@@ -310,7 +306,7 @@ public class Goal implements Serializable, Mappable {
     }
 
     /**
-     * Instantiate a gaol from a serialization map.
+     * Create goal from mapped state.
      *
      * @param map          a map
      * @param queryService a query service
@@ -318,19 +314,19 @@ public class Goal implements Serializable, Mappable {
      */
     public static Goal fromMap( Map<String, Object> map, QueryService queryService ) {
         Goal goal = new Goal();
-        goal.setCategory( Category.valueOf( (String) map.get( "category" ) ) );
+        goal.setCategory( Goal.Category.valueOf( (String) map.get( "category" ) ) );
         goal.setDescription( (String) map.get( "description" ) );
         goal.setLevel( Level.valueOf( (String) map.get( "level" ) ) );
         goal.setPositive( (Boolean) map.get( "positive" ) );
         goal.setEndsWithSegment( (Boolean) map.get( "ends" ) );
-        goal.setOrganization( ChannelsUtils.retrieveEntity(
-                Organization.class,
-                map,
-                "organization",
-                queryService ) );
+        List orgSpec = (List) map.get( "organization" );
+        boolean isType = (Boolean) orgSpec.get( 1 );
+        Organization org = isType
+                ? queryService.findOrCreateType( Organization.class, (String) orgSpec.get( 0 ) )
+                : queryService.findOrCreate( Organization.class, (String) orgSpec.get( 0 ) );
+        goal.setOrganization( org );
         return goal;
     }
-
 
     /**
      * Type of risk.

@@ -20,6 +20,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -116,7 +117,8 @@ public class IssuesPanel extends AbstractCommandablePanel {
      * @return list of issues
      */
     public List<Issue> getModelObjectIssues() {
-        List<Issue> issues = getAnalyst().listIssues( model.getObject(), false );
+        List<Issue> issues = new ArrayList<Issue>(
+                getAnalyst().listIssues( model.getObject(), false ) );
         Collections.sort(
                 issues,
                 new Comparator<Issue>(){

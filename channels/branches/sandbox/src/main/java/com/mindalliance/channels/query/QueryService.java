@@ -1,11 +1,7 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.Dao;
-import com.mindalliance.channels.dao.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
@@ -15,6 +11,7 @@ import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
@@ -26,6 +23,7 @@ import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Participation;
@@ -37,10 +35,10 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.nlp.Proximity;
-import com.mindalliance.channels.util.Play;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Data query interface.
@@ -75,7 +73,7 @@ public interface QueryService {
      * @param id    the id
      * @param <T>   a subclass of modelObject
      * @return the object
-     * @throws com.mindalliance.channels.dao.NotFoundException
+     * @throws com.mindalliance.channels.model.NotFoundException
      *          when not found
      */
     <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
@@ -559,15 +557,6 @@ public interface QueryService {
     void onDestroy();
 
     /**
-     * Find all issues attributable to entities and parts matching a resource spec.
-     *
-     * @param resourceSpec a resource spec
-     * @param specific     a boolean -- true -> equality match, false -> marrow or equals
-     * @return a list of issues
-     */
-    List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, boolean specific );
-
-    /**
      * Find all responsibilities of an actor.
      * A responsibility is a found resourceSpec that includes the actor, but with the actor removed.
      *
@@ -577,37 +566,6 @@ public interface QueryService {
     List<ResourceSpec> findAllResponsibilitiesOf( Actor actor );
 
     /**
-     * Find any relationship between a plan segment and another.
-     * A relationship is one or more external flow in the from-segment referencing a connector in the to-segment.
-     *
-     * @param fromSegment a plan segment
-     * @param toSegment   a plan segment
-     * @return a segment relationship or null if no link exists
-     */
-    SegmentRelationship findSegmentRelationship( Segment fromSegment, Segment toSegment );
-
-    /**
-     * Find any relationship between an entity and an other.
-     * A relationship is one or more flow from the entity to the other.
-     *
-     * @param fromEntity an entity
-     * @param toEntity   an entity
-     * @return an entity relationship or null if no link exists
-     */
-    <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity );
-
-    /**
-     * Find any relationship between an entity and an other within a segment.
-     * A relationship is one or more flow from the entity to the other.
-     *
-     * @param fromEntity an entity
-     * @param toEntity   an entity
-     * @param segment    a segment
-     * @return an entity relationship or null if no link exists
-     */
-    <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( T fromEntity, T toEntity, Segment segment );
-
-    /**
      * Find all actual entities of a given class that are involved in the execution of tasks in a segment.
      *
      * @param entityClass a model entity class
@@ -615,7 +573,7 @@ public interface QueryService {
      * @param kind actual or type
      * @return a list of model entities
      */
-    <T extends ModelEntity> List<T> listEntitiesTaskedInSegment( 
+    <T extends ModelEntity> List<T> listEntitiesTaskedInSegment(
             Class<T> entityClass,
             Segment segment,
             ModelEntity.Kind kind);
@@ -845,22 +803,6 @@ public interface QueryService {
     List<String> findAllFlowNames();
 
     /**
-     * Find all issues on all model objects in the plan.
-     *
-     * @param analyst an analyst
-     * @return a list of issues.
-     */
-    List<Issue> findAllIssues( Analyst analyst );
-
-    /**
-     * Find all unwaived issues on all model objects in the plan.
-     *
-     * @param analyst an analyst
-     * @return a list of issues.
-     */
-    List<Issue> findAllUnwaivedIssues( Analyst analyst );
-
-    /**
      * List all entities of a given class, plus the unmnown entity of this class.
      *
      * @param clazz a class extending ModelObject
@@ -1060,24 +1002,6 @@ public interface QueryService {
      * @return a plan
      */
     Plan getCurrentPlan();
-
-    /**
-     * Find icon name for given part.
-     *
-     * @param part          a part
-     * @param imagesDirName the name of the directory with the default icons
-     * @return a string
-     */
-    String findIconName( Part part, String imagesDirName );
-
-    /**
-     * Find icon name for given model object.
-     *
-     * @param modelObject   a model object
-     * @param imagesDirName the name of the directory with the default icons
-     * @return a string
-     */
-    String findIconName( ModelObject modelObject, String imagesDirName );
 
     /**
      * Find user names of all planners for current plan.
@@ -1363,29 +1287,65 @@ public interface QueryService {
     Participation findParticipation( String username );
 
     /**
-     * Find relationships with entities of same kind.
-     * @param entity  a model entity
-     * @return  a list of relationships with other model entities
+     * Whether an agreement covers a sharing commitment.
+     *
+     * @param agreement the agreement
+     * @param commitment   a commitment
+     * @return a boolean
      */
-     List<EntityRelationship> findEntityRelationships( ModelEntity entity );
+    boolean covers( Agreement agreement, Commitment commitment );
 
     /**
-     * Find relationships with entities of same kind.
-     * @param segment  a segment
-     * @param entity  a model entity
-     * @return  a list of relationships with other model entities
+     * Whether an agreement encompasses another.
+     *
+     * @param agreement the agreement
+     * @param other the other agreement
+     * @return a boolean
      */
-     List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity );
+    boolean encompasses( Agreement agreement, Agreement other );
+
     /**
-     * Find relationships with entities of same kind referenced in a segment.
-     * @param segment  a segment
-     * @param entityClass  an entity class
-     * @param kind  a kind of entity (actual or type)
-     * @return  a list of relationships with other model entities
+     * Whether there are common EOIs in two free-form texts.
+     *
+     * @param flow         a flow
+     * @param otherFlow    a flow
+     * @return a boolean
      */
-     List<EntityRelationship> findEntityRelationships(
+    boolean hasCommonEOIs( Flow flow, Flow otherFlow );
+
+    /**
+     * Whether none in a list eois is without a strong match with some in another list.
+     *
+     * @param eois         a list of elements of information
+     * @param superset     a list of elements of information
+     * @return a boolean
+     */
+    boolean subsetOf(
+            List<ElementOfInformation> eois, List<ElementOfInformation> superset );
+
+    <T extends ModelEntity> T retrieveEntity(
+            Class<T> entityClass, Map<String, Object> state, String key );
+
+    boolean isExecutedBy( Part part, ModelEntity entity );
+
+    @SuppressWarnings( "unchecked" )
+    List<ModelEntity> findEntities(
             Segment segment,
-            Class<? extends ModelEntity> entityClass,
-            ModelEntity.Kind kind);
+            Class entityClass,
+            ModelEntity.Kind kind );
 
+    /**
+     * Get alternate flows.
+     *
+     * @return a list of flows @param flow
+     */
+    List<Flow> getAlternates( Flow flow );
+
+    /**
+     * Instantiate a gaol from a serialization map.
+     *
+     * @param map          a map
+     * @return a goal
+     */
+    Goal goalFromMap( Map<String, Object> map );
 }

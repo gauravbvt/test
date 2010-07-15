@@ -1,12 +1,14 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.query.QueryService;
 
 /**
  * Create an entity if it does not already exist.
@@ -31,7 +33,20 @@ public class CreateEntityIfNew extends AbstractCommand {
      * {@inheritDoc}
      */
     public String getName() {
-        return "create entity if new";
+        return "create new " + getSimpleSort();
+    }
+
+    private String getSimpleSort() {
+        try {
+            Class clazz = Class.forName( (String) get( "class" ) );
+            ModelEntity.Kind kind = ModelEntity.Kind.valueOf( (String)get("kind") );
+            return ( clazz.getSimpleName()
+                    + ( clazz != Role.class && clazz != Event.class && kind == ModelEntity.Kind.Type
+                        ? " type "
+                        : " ") ).toLowerCase();
+        } catch ( ClassNotFoundException e ) {
+            throw new RuntimeException( e );
+        }
     }
 
     /**
@@ -53,6 +68,7 @@ public class CreateEntityIfNew extends AbstractCommand {
                 entity = queryService.safeFindOrCreateType( clazz, name, priorId );
             }
             set( "id", entity.getId() );
+            describeTarget( entity );
             return exists
                     ? new Change( Change.Type.None, entity )
                     : new Change( Change.Type.Added, entity );

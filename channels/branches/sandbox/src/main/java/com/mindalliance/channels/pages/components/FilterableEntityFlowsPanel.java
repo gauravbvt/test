@@ -254,12 +254,10 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
             ModelEntity entity = getEntity();
             if ( entity != null ) {
                 // relationships with a given entity
-                rels.addAll( getQueryService().findEntityRelationships(
-                        segment,
-                        entity ) );
+                rels.addAll( getAnalyst().findEntityRelationships( segment, entity ) );
             } else {
                 // relationships between all actual entities of given class in a segment or entire plan if segment is null
-                rels.addAll( getQueryService().findEntityRelationships(
+                rels.addAll( getAnalyst().findEntityRelationships(
                         segment,
                         entityClass,
                         ModelEntity.Kind.Actual ) );
