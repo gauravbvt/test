@@ -249,8 +249,8 @@ public class Channel implements Serializable, Comparable<Channel> {
      */
     public static Channel merge( Channel channel, Channel other ) {
         Channel merged = new Channel();
-        channel.setMedium( channel.getMedium() );
-        channel.setAddress(
+        merged.setMedium( channel.getMedium() );
+        merged.setAddress(
                 !channel.getAddress().isEmpty()
                         ? channel.getAddress()
                         : other.getAddress()
