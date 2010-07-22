@@ -54,8 +54,7 @@ public class SetPartFromCopy extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Part part = (Part) segment.getNode( (Long) get( "part" ) );
-        Map<String, Object> copy;
-        copy = (Map<String, Object>) get( "partCopy" );
+        Map<String, Object> copy = (Map<String, Object>)get( "partCopy" );
         if ( copy == null ) {
             // not replaying or redoing
             copy = commander.getCopy();
@@ -65,7 +64,7 @@ public class SetPartFromCopy extends AbstractCommand {
         if ( multi == null ) {
             multi = makeSubCommands( copy );
             set( "subCommands", multi );
-        } // TODO - attachment TICKETS are also copied - problem
+        }
         commander.initPartFrom( part, (Map<String, Object>) copy.get( "partState" ) );
         multi.execute( commander );
         describeTarget( part );        

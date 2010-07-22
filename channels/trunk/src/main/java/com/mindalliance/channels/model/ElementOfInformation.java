@@ -4,7 +4,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Element of information.
@@ -179,5 +181,33 @@ public class ElementOfInformation implements Classifiable {
      */
     public boolean isClassified() {
         return !getClassifications().isEmpty();
+    }
+
+    /**
+     * Merge two synonymous eois.
+     *
+     * @param eoi   an EOI
+     * @param other an EOI
+     * @return an EOI
+     */
+    public static ElementOfInformation merge(
+            ElementOfInformation eoi,
+            ElementOfInformation other ) {
+        ElementOfInformation merged = new ElementOfInformation();
+        merged.setContent( eoi.getContent() );
+        Set<Classification> mergedClassifications = new HashSet<Classification>( eoi.getClassifications() );
+        mergedClassifications.addAll( other.getClassifications() );
+        merged.setClassifications( new ArrayList<Classification>( mergedClassifications ) );
+        String mergedHandling =
+                other.getSpecialHandling().length() > eoi.getSpecialHandling().length()
+                        ? other.getSpecialHandling()
+                        : eoi.getSpecialHandling();
+        merged.setSpecialHandling( mergedHandling );
+        String mergedSources =
+                other.getSources().length() > eoi.getSources().length()
+                        ? other.getSources()
+                        : eoi.getSources();
+        merged.setSources( mergedSources );
+        return merged;
     }
 }

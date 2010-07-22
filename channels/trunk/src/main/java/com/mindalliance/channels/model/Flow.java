@@ -1,7 +1,7 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -918,7 +918,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                             public boolean evaluate( Object obj ) {
                                 Flow flow = (Flow) obj;
                                 return flow.isSharing() && Matcher.getInstance().same( getName(),
-                                                                                        flow.getName() );
+                                        flow.getName() );
                             }
                         }
                 );
@@ -962,7 +962,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * Whether the flow could be essential to risk mitigation.
      *
-     * @param assumeFails whether alternate flows are assumed
+     * @param assumeFails  whether alternate flows are assumed
      * @param queryService
      * @return a boolean
      */
@@ -975,8 +975,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * Whether this is a sharing flow where source actor is target actor.
      *
-     * @return a boolean
      * @param queryService
+     * @return a boolean
      */
     public boolean isSharingWithSelf( QueryService queryService ) {
         boolean sharingWithSelf = false;
@@ -1019,6 +1019,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     /**
      * Get a copy of the elements fo information in a flow.
+     *
      * @return a list of elements of information
      */
     public List<ElementOfInformation> copyEois() {
@@ -1029,11 +1030,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * The significance of a flow.
      */
     public enum Significance {
-        Triggers( "triggers" ),
-        Critical( "is critical to" ),
-        Useful( "is useful to" ),
         None( "none" ),
-        Terminates( "terminates" );
+        Useful( "is useful to" ),
+        Critical( "is critical to" ),
+        Terminates( "terminates" ),
+        Triggers( "triggers" );
 
         private String label;
 
@@ -1076,6 +1077,21 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
          */
         public String toString() {
             return name();
+        }
+
+        /**
+         * Return the most significant of two significances.
+         *
+         * @param s1 a significance
+         * @param s2 a significance
+         * @return a significance
+         */
+        public static Significance max( Significance s1, Significance s2 ) {
+            return s1.ordinal() > s2.ordinal()
+                    ? s1
+                    : s1.ordinal() < s2.ordinal()
+                    ? s2
+                    : s1;
         }
     }
 }
