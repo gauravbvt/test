@@ -54,7 +54,7 @@ public class MovePart extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Segment fromSegment = commander.resolve( Segment.class, (Long) get( "fromSegment" ) );
         Part part = (Part) fromSegment.getNode( (Long) get( "part" ) );
-        describeTarget( part );
+        describeTarget( part );                
         Segment toSegment = commander.resolve( Segment.class, (Long) get( "toSegment" ) );
         assert !fromSegment.equals( toSegment );
         MultiCommand multi = (MultiCommand) get( "subCommands" );

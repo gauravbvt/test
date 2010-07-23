@@ -269,9 +269,9 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         final Attachment attachment = item.getModelObject();
         AjaxFallbackLink deletelink = new AjaxFallbackLink( "copy" ) {
             public void onClick( AjaxRequestTarget target ) {
-                doCommand( new CopyAttachment( attachment ) );
-                update( target,
-                        new Change( Change.Type.Copied ) );
+                Change change = doCommand( new CopyAttachment( attachment ) );
+                change.setType( Change.Type.Copied );
+                update( target, change );
             }
         };
         item.add( deletelink );

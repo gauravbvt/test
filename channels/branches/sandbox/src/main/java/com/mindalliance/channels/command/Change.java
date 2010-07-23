@@ -133,8 +133,25 @@ public class Change implements Serializable {
      * A script to run because of the change.
      */
     private String script;
+    /**
+     * Message to user about the change.
+     * Null means no message.
+     */
+    private String message;
 
     public Change() {
+    }
+
+    /**
+     * Create a no-change with message.
+     *
+     * @param message a string
+     * @return a change
+     */
+    public static Change message( String message ) {
+        Change change = new Change( Change.Type.None );
+        change.setMessage( message );
+        return change;
     }
 
     public Change( Type type ) {
@@ -194,6 +211,14 @@ public class Change implements Serializable {
 
     public void setScript( String script ) {
         this.script = script;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage( String message ) {
+        this.message = message;
     }
 
     /**

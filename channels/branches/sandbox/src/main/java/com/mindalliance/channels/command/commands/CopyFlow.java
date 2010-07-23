@@ -55,9 +55,11 @@ public class CopyFlow extends AbstractCommand {
             throw new CommandException( "You need to refresh", e );
         }
         commander.setCopy( flow.getTarget() == part
-                ? ChannelsUtils.getNeedState( flow, part )
-                : ChannelsUtils.getCapabilityState( flow, part ) );
-        return new Change( Change.Type.None, flow );
+                ? ChannelsUtils.getReceiveState( flow, part )
+                : ChannelsUtils.getSendState( flow, part ) );
+        Change change = new Change( Change.Type.None, flow );
+        change.setMessage( "Flow copied" );
+        return change;
     }
 
     /**

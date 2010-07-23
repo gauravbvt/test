@@ -13,7 +13,6 @@ import java.util.List;
  * Time: 1:59:28 PM
  */
 public class Delay implements Comparable, Serializable {
-
     /**
      * Time units
      */
@@ -165,35 +164,35 @@ public class Delay implements Comparable, Serializable {
         if ( rest >= 604800 ) {
             int weeks = rest / 604800;
             sb.append( weeks );
-            sb.append( weeks > 1 ? " weeks" : " week");
+            sb.append( weeks > 1 ? " weeks" : " week" );
             rest = rest % 604800;
         }
         if ( rest >= 86400 ) {
             int days = rest / 86400;
-            if ( sb.length() > 0 ) sb.append( ", ");
+            if ( sb.length() > 0 ) sb.append( ", " );
             sb.append( days );
-            sb.append( days > 1 ? " days" : " day");
+            sb.append( days > 1 ? " days" : " day" );
             rest = rest % 86400;
         }
         if ( rest >= 3600 ) {
             int hours = rest / 3600;
-            if ( sb.length() >0 ) sb.append( ", ");
+            if ( sb.length() > 0 ) sb.append( ", " );
             sb.append( hours );
-            sb.append( hours > 1 ? " hours" : " hour");
+            sb.append( hours > 1 ? " hours" : " hour" );
             rest = rest % 3600;
         }
         if ( rest >= 60 ) {
             int mins = rest / 60;
-            if ( sb.length() > 0 ) sb.append( ", ");
+            if ( sb.length() > 0 ) sb.append( ", " );
             sb.append( mins );
-            sb.append( mins > 1 ? " minutes" : " minute");
+            sb.append( mins > 1 ? " minutes" : " minute" );
             rest = rest % 60;
         }
         if ( rest > 0 ) {
-            if ( sb.length() > 0 ) sb.append( ", ");
+            if ( sb.length() > 0 ) sb.append( ", " );
             sb.append( rest );
-            sb.append( rest > 1 ? " seconds" : " second");
-        }        
+            sb.append( rest > 1 ? " seconds" : " second" );
+        }
         return sb.toString();
     }
 
@@ -273,6 +272,16 @@ public class Delay implements Comparable, Serializable {
      */
     public Delay subtract( Delay delay ) {
         return new Delay( Math.max( 0, getSeconds() - delay.getSeconds() ), Unit.seconds );
+    }
+
+    /**
+     * Whether this delay is shorter than another.
+     *
+     * @param other a delay
+     * @return a boolean
+     */
+    public boolean shorterThan( Delay other ) {
+        return this.compareTo( other ) < 0;
     }
 
 

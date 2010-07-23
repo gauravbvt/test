@@ -416,6 +416,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
             }
             refreshMenus( target );
             if ( !stopUpdates ) super.updateWith( target, change, updated );
+        } else {
+            super.updateWith( target, change, updated );
         }
     }
 

@@ -1,16 +1,21 @@
 package com.mindalliance.channels.util;
 
 import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +23,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Utility functions.
@@ -61,6 +68,148 @@ public final class ChannelsUtils {
         attributes.put( "significanceToSource", flow.getSignificanceToSource() );
         return attributes;
     }
+
+    @SuppressWarnings( "unchecked" )
+    private static Map<String, Object> mergeFlowAttributes(
+            Map<String, Object> attributes,
+            Map<String, Object> others ) {
+        Map<String, Object> merged = new HashMap<String, Object>();
+        String desc1 = (String) attributes.get( "description" );
+        String desc2 = (String) others.get( "description" );
+        merged.put(
+                "description",
+                desc2.length() > desc1.length() ? desc2 : desc1 );
+        merged.put( "eois", aggregateEOIs(
+                (List<ElementOfInformation>) attributes.get( "eois" ),
+                (List<ElementOfInformation>) others.get( "eois" ) ) );
+        if ( attributes.containsKey( "all" ) && others.containsKey( "all" ) ) {
+            merged.put(
+                    "all",
+                    (Boolean) attributes.get( "all" ) || (Boolean) others.get( "all" ) );
+        }
+        merged.put(
+                "maxDelay",
+                ( (Delay) others.get( "maxDelay" ) ).shorterThan( (Delay) attributes.get( "maxDelay" ) )
+                        ? others.get( "maxDelay" ) : attributes.get( "maxDelay" )
+        );
+        if ( attributes.containsKey( "channels" ) && others.containsKey( "channels" ) ) {
+            merged.put(
+                    "channels",
+                    aggregateChannels(
+                            (List<Channel>) attributes.get( "channels" ),
+                            (List<Channel>) others.get( "channels" ) )
+            );
+        }
+        merged.put(
+                "attachments",
+                aggregateAttachments(
+                        (List<Attachment>) attributes.get( "attachments" ),
+                        (List<Attachment>) others.get( "attachments" ) )
+        );
+        Set<String> waivers = new HashSet<String>( (List<String>) attributes.get( "waivedIssueDetections" ) );
+        waivers.addAll( (List<String>) others.get( "waivedIssueDetections" ) );
+        merged.put(
+                "waivedIssueDetections",
+                new ArrayList<String>( waivers ) );
+        if ( attributes.containsKey( "significanceToTarget" ) && others.containsKey( "significanceToTarget" ) ) {
+            Flow.Significance significance = Flow.Significance.max(
+                    (Flow.Significance) attributes.get( "significanceToTarget" ),
+                    (Flow.Significance) others.get( "significanceToTarget" ) );
+            merged.put(
+                    "significanceToTarget",
+                    significance
+            );
+        }
+        if ( attributes.containsKey( "significanceToSource" ) && others.containsKey( "significanceToSource" ) ) {
+            Flow.Significance significance = Flow.Significance.max(
+                    (Flow.Significance) attributes.get( "significanceToSource" ),
+                    (Flow.Significance) others.get( "significanceToSource" ) );
+            merged.put(
+                    "significanceToSource",
+                    significance
+            );
+        }
+        return merged;
+    }
+
+    private static List<ElementOfInformation> aggregateEOIs(
+            List<ElementOfInformation> eois,
+            List<ElementOfInformation> others ) {
+        List<ElementOfInformation> aggregate = new ArrayList<ElementOfInformation>();
+        for ( ElementOfInformation eoi : eois ) {
+            aggregate.add( new ElementOfInformation( eoi ) );
+        }
+        for ( final ElementOfInformation eoi : others ) {
+            ElementOfInformation synonymous = (ElementOfInformation) CollectionUtils.find(
+                    eois,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return Matcher.getInstance().same(
+                                    eoi.getContent(),
+                                    ( (ElementOfInformation) object ).getContent() );
+                        }
+                    }
+            );
+            if ( synonymous == null ) {
+                aggregate.add( new ElementOfInformation( eoi ) );
+            } else {
+                aggregate.remove( synonymous );
+                aggregate.add( ElementOfInformation.merge( synonymous, eoi ) );
+            }
+        }
+        return aggregate;
+    }
+
+    private static List<Channel> aggregateChannels( List<Channel> channels, List<Channel> others ) {
+        List<Channel> aggregate = new ArrayList<Channel>();
+        for ( Channel channel : channels ) {
+            aggregate.add( new Channel( channel ) );
+        }
+        for ( final Channel channel : others ) {
+            Channel synonymous = (Channel) CollectionUtils.find(
+                    channels,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return channel.getMedium().equals(
+                                    ( (Channel) object ).getMedium() );
+                        }
+                    }
+            );
+            if ( synonymous == null ) {
+                aggregate.add( new Channel( channel ) );
+            } else {
+                aggregate.remove( synonymous );
+                aggregate.add( Channel.merge( synonymous, channel ) );
+            }
+        }
+        return aggregate;
+    }
+
+    private static List<Attachment> aggregateAttachments( List<Attachment> attachments, List<Attachment> others ) {
+        List<Attachment> aggregate = new ArrayList<Attachment>();
+        for ( Attachment attachment : attachments ) {
+            aggregate.add( new Attachment( attachment ) );
+        }
+        for ( final Attachment attachment : others ) {
+            Attachment synonymous = (Attachment) CollectionUtils.find(
+                    attachments,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return attachment.getUrl().equals(
+                                    ( (Attachment) object ).getUrl() );
+                        }
+                    }
+            );
+            if ( synonymous == null ) {
+                aggregate.add( new Attachment( attachment ) );
+            } else {
+                aggregate.remove( synonymous );
+                aggregate.add( Attachment.merge( synonymous, attachment ) );
+            }
+        }
+        return aggregate;
+    }
+
 
     /**
      * Captures the connection of a flow.
@@ -285,20 +434,64 @@ public final class ChannelsUtils {
         Map<String, Object> copy = new HashMap<String, Object>();
         // copy.put( "segment", part.getSegment().getId() );
         copy.put( "partState", getPartState( part ) );
-        Iterator<Flow> needs = part.receives();
-        List<Map<String, Object>> needStates = new ArrayList<Map<String, Object>>();
-        while ( needs.hasNext() ) {
-            needStates.add( getNeedState( needs.next(), part ) );
-        }
-        copy.put( "needs", needStates );
+        copy.put( "needs", getNeedStates( part ) );
         Iterator<Flow> capabilities = part.sends();
-        List<Map<String, Object>> capabilityStates = new ArrayList<Map<String, Object>>();
-        while ( capabilities.hasNext() ) {
-            capabilityStates.add( getCapabilityState( capabilities.next(), part ) );
-        }
-        copy.put( "capabilities", capabilityStates );
+        copy.put( "capabilities", getCapabilityStates( part ) );
         return copy;
     }
+
+    private static List<Map<String, Object>> getNeedStates( Part part ) {
+        List<Map<String, Object>> needStates = new ArrayList<Map<String, Object>>();
+        Iterator<Flow> receives = part.receives();
+        while ( receives.hasNext() ) {
+            mergeFlowState( needStates, getReceiveState( receives.next(), part ) );
+        }
+        return needStates;
+    }
+
+    private static List<Map<String, Object>> getCapabilityStates( Part part ) {
+        List<Map<String, Object>> capabilityStates = new ArrayList<Map<String, Object>>();
+        Iterator<Flow> sends = part.sends();
+        while ( sends.hasNext() ) {
+            mergeFlowState( capabilityStates, getSendState( sends.next(), part ) );
+        }
+        return capabilityStates;
+    }
+
+    /**
+     * Aggregate EOIs of synonymous flows. Drop "other" node.
+     * Keep strongest attribute values when merging (terminates > triggers> critical > useful ).
+     *
+     * @param flowStates a list of flow states
+     * @param flowState  a flow state to merge
+     */
+    @SuppressWarnings( "unchecked" )
+    private static void mergeFlowState(
+            List<Map<String, Object>> flowStates,
+            final Map<String, Object> flowState ) {
+        Map<String, Object> synonymousState = (Map<String, Object>) CollectionUtils.find(
+                flowStates,
+                new Predicate() {
+                    @SuppressWarnings( "unchecked" )
+                    public boolean evaluate( Object object ) {
+                        String name = (String) ( (Map<String, Object>) object ).get( "name" );
+                        String otherName = (String) flowState.get( "name" );
+                        return Matcher.getInstance().same( name, otherName );
+                    }
+                } );
+        if ( synonymousState == null ) {
+            flowState.put( "other", null );
+            flowState.put( "otherSegment", null );
+            ( (Map<String, Object>) flowState.get( "attributes" ) ).put( "askedFor", false );
+            flowStates.add( flowState );
+        } else {
+            Map<String, Object> mergedAttributes = mergeFlowAttributes(
+                    (Map<String, Object>) synonymousState.get( "attributes" ),
+                    (Map<String, Object>) flowState.get( "attributes" ) );
+            synonymousState.put( "attributes", mergedAttributes );
+        }
+    }
+
 
     /**
      * Get state of a part's capability.
@@ -308,13 +501,13 @@ public final class ChannelsUtils {
      * @return a map
      */
     @SuppressWarnings( "unchecked" )
-    public static Map<String, Object> getCapabilityState( Flow flow, Part part ) {
-        Map<String, Object> capabilityState = getFlowState( flow, part );
-        Map<String, Object> attributes = (Map<String, Object>) capabilityState.get( "attributes" );
+    public static Map<String, Object> getSendState( Flow flow, Part part ) {
+        Map<String, Object> sendState = getFlowState( flow, part );
+        Map<String, Object> attributes = (Map<String, Object>) sendState.get( "attributes" );
         attributes.remove( "significanceToTarget" );
         attributes.remove( "all" );
         if ( !flow.isAskedFor() ) attributes.remove( "channels" );
-        return capabilityState;
+        return sendState;
     }
 
     /**
@@ -325,13 +518,13 @@ public final class ChannelsUtils {
      * @return a map
      */
     @SuppressWarnings( "unchecked" )
-    public static Map<String, Object> getNeedState( Flow flow, Part part ) {
-        Map<String, Object> needState = getFlowState( flow, part );
-        Map<String, Object> attributes = (Map<String, Object>) needState.get( "attributes" );
+    public static Map<String, Object> getReceiveState( Flow flow, Part part ) {
+        Map<String, Object> receiveState = getFlowState( flow, part );
+        Map<String, Object> attributes = (Map<String, Object>) receiveState.get( "attributes" );
         attributes.remove( "significanceToSource" );
         attributes.remove( "all" );
         if ( flow.isAskedFor() ) attributes.remove( "channels" );
-        return needState;
+        return receiveState;
     }
 
     /**

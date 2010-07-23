@@ -71,6 +71,10 @@ public class Attachment implements Serializable, Comparable<Attachment> {
 
     private String name = "";
 
+    public Attachment( Attachment attachment ) {
+        this( attachment.getUrl(), attachment.getType(), attachment.getName() );
+    }
+
     public Attachment( String url, Type type ) {
         this( url, type, "" );
     }
@@ -102,6 +106,10 @@ public class Attachment implements Serializable, Comparable<Attachment> {
 
     public Type getType() {
         return type;
+    }
+
+    private void setType( Type type ) {
+        this.type = type;
     }
 
     public String getName() {
@@ -167,5 +175,22 @@ public class Attachment implements Serializable, Comparable<Attachment> {
     public int compareTo( Attachment o ) {
         return url.compareTo( o.getUrl() );
     }
+
+    /**
+     * Merge two attachments into one.
+     * @param attachment an attachment
+     * @param other an attachment
+     * @return an attachment
+     */
+    public static Attachment merge( Attachment attachment, Attachment other ) {
+        Attachment merged = new Attachment( attachment );
+        if ( other.getType().ordinal() > attachment.getType().ordinal() ) {
+            merged.setType( other.getType() );
+            merged.setName( other.getName() );
+        }
+        return merged;
+    }
+
+
 
 }

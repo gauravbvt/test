@@ -910,23 +910,6 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
-     * Get all capabilities.
-     *
-     * @return a list of flows
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Flow> getCapabilities() {
-        return (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( sends() ),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ( (Flow) obj ).isCapability();
-                    }
-                }
-        );
-    }
-
-    /**
      * {@inheritDoc}
      */
     public List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService ) {

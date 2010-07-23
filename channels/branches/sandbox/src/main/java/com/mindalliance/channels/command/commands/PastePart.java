@@ -57,7 +57,7 @@ public class PastePart extends AbstractCommand {
         }
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
-            multi = makeSubCommands( copy, commander );
+            multi = makeSubCommands( copy );
             set( "subCommands", multi );
         }
         setTargetDescription( makeTargetDescription( copy, commander ) );
@@ -85,7 +85,7 @@ public class PastePart extends AbstractCommand {
     }
 
     @SuppressWarnings( "unchecked" )
-    private MultiCommand makeSubCommands( Map<String, Object> copy, Commander commander ) {
+    private MultiCommand makeSubCommands( Map<String, Object> copy ) {
         MultiCommand subCommands = new MultiCommand( "paste task - extra" );
         subCommands.setMemorable( false );
         Command addPart = new AddPart();

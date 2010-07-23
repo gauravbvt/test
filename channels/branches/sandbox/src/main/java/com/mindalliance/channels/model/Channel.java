@@ -35,10 +35,6 @@ public class Channel implements Serializable, Comparable<Channel> {
      */
     private String address = "";
 
-    /**
-     * An identifier for persistence.
-     */
-    private long id;
 
     public Channel() {
     }
@@ -72,14 +68,6 @@ public class Channel implements Serializable, Comparable<Channel> {
 
     public void setAddress( String address ) {
         this.address = address == null ? "" : address;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId( long id ) {
-        this.id = id;
     }
 
     /**
@@ -177,6 +165,7 @@ public class Channel implements Serializable, Comparable<Channel> {
 
     /**
      * Is the medium unicast?
+     *
      * @return a boolean
      */
     public boolean isUnicast() {
@@ -185,6 +174,7 @@ public class Channel implements Serializable, Comparable<Channel> {
 
     /**
      * Is the medium multicast?
+     *
      * @return a boolean
      */
     public boolean isMulticast() {
@@ -193,6 +183,7 @@ public class Channel implements Serializable, Comparable<Channel> {
 
     /**
      * Is the medium broadcast?
+     *
      * @return a boolean
      */
     public boolean isBroadcast() {
@@ -247,5 +238,23 @@ public class Channel implements Serializable, Comparable<Channel> {
      */
     public boolean isDirect() {
         return medium != null && medium.isDirect();
+    }
+
+    /**
+     * Merge two channels.
+     *
+     * @param channel a channels
+     * @param other   a channels
+     * @return a channels
+     */
+    public static Channel merge( Channel channel, Channel other ) {
+        Channel merged = new Channel();
+        merged.setMedium( channel.getMedium() );
+        merged.setAddress(
+                !channel.getAddress().isEmpty()
+                        ? channel.getAddress()
+                        : other.getAddress()
+        );
+        return merged;
     }
 }
