@@ -3,9 +3,7 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.PlanningEventService;
 import com.mindalliance.channels.social.PresenceEvent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,13 +28,13 @@ import java.util.List;
  * Date: Jul 5, 2010
  * Time: 1:29:02 PM
  */
-public class PlannerPresenceListPanel extends AbstractUpdatablePanel {
+public class PlannerPresenceListPanel extends AbstractSocialListPanel {
 
     @SpringBean
     UserService userService;
 
     @SpringBean
-    PlanningEventService planningEventService;
+    private PlanningEventService planningEventService;
 
     private Updatable updatable;
     private WebMarkupContainer presencesContainer;
@@ -50,23 +48,14 @@ public class PlannerPresenceListPanel extends AbstractUpdatablePanel {
         init();
     }
 
-    private void init() {
-        addHideSocial();
+    protected void init() {
+        super.init();
         addShowHideLink();
         addShowHideLabel();
         presencesContainer = new WebMarkupContainer( "presencesContainer" );
         presencesContainer.setOutputMarkupId( true );
         add( presencesContainer );
         addPresences();
-    }
-
-    private void addHideSocial() {
-        AjaxFallbackLink hideSocialLink = new AjaxFallbackLink( "hideAll" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Collapsed, Channels.SOCIAL_ID ) );
-            }
-        };
-        add( hideSocialLink );
     }
 
     private void addShowHideLink() {
@@ -85,7 +74,7 @@ public class PlannerPresenceListPanel extends AbstractUpdatablePanel {
     private void addShowHideLabel() {
         showHideLabel = new Label(
                 "hideShow",
-                showHereOnly ? "show all users" : "hide inactive users"  );
+                showHereOnly ? "show all users" : "hide inactive users" );
         showHideLabel.setOutputMarkupId( true );
         showHideLink.addOrReplace( showHideLabel );
     }

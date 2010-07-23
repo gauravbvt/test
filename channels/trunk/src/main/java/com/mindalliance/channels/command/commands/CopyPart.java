@@ -1,10 +1,10 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.util.ChannelsUtils;
@@ -48,7 +48,9 @@ public class CopyPart extends AbstractCommand {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Part part = (Part) segment.getNode( (Long) get( "part" ) );
         commander.setCopy( ChannelsUtils.getPartCopy( part ) );
-        return new Change( Change.Type.None );
+        Change change = new Change( Change.Type.None );
+        change.setMessage( "Task copied");
+        return change;
     }
 
     /**

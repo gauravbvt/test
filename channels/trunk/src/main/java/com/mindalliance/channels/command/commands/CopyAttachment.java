@@ -25,7 +25,7 @@ public class CopyAttachment extends AbstractCommand {
     }
 
     public CopyAttachment( Attachment attachment ) {
-        setArguments( ChannelsUtils.getAttachmentState( attachment ));
+        setArguments( ChannelsUtils.getAttachmentState( attachment ) );
     }
 
     /**
@@ -49,7 +49,9 @@ public class CopyAttachment extends AbstractCommand {
         Map<String, Object> copy = new HashMap<String, Object>();
         copy.putAll( getArguments() );
         commander.setCopy( copy );
-        return new Change( Change.Type.None );
+        Change change = new Change( Change.Type.None );
+        change.setMessage( "Attachment copied" );
+        return change;
     }
 
     /**

@@ -19,6 +19,7 @@ import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
+import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.SegmentLink;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
@@ -89,7 +90,10 @@ public final class PlanPage extends WebPage implements Updatable {
      * Delay between refresh check callbacks.
      */
     public static final int REFRESH_DELAY = 10;
-
+    /**
+     * Minimium delay before a change message fades out.
+     */
+    public static final int MESSAGE_FADE_OUT_DELAY = 20;
     /**
      * The 'expand' parameter in the URL.
      */
@@ -268,7 +272,10 @@ public final class PlanPage extends WebPage implements Updatable {
      * Go forward button container.
      */
     private WebMarkupContainer goForwardContainer;
-
+    /**
+     * Message container.
+     */
+    private WebMarkupContainer messageContainer;
     /**
      * When last refreshed.
      */
@@ -301,6 +308,14 @@ public final class PlanPage extends WebPage implements Updatable {
      * Cumulated change to an expanded identifiable.
      */
     private Map<Long, Change> changes = new HashMap<Long, Change>();
+    /**
+     * Message shown in message panel.
+     */
+    private String message;
+    /**
+     * Time at which a message appeared.
+     */
+    private long message_time = 0;
 
     /**
      * Query service.
@@ -399,6 +414,7 @@ public final class PlanPage extends WebPage implements Updatable {
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
         addHeader();
         addRefresh();
+        addChangeMessagePanel();
         addGoBackAndForward();
         commander.resynced();
         addPlanMenubar();
@@ -545,6 +561,19 @@ public final class PlanPage extends WebPage implements Updatable {
         updateRefreshNotice();
     }
 
+    private void addChangeMessagePanel() {
+        messageContainer = new WebMarkupContainer( "message-container" );
+        messageContainer.setOutputMarkupId( true );
+        makeVisible( messageContainer, !getMessage().isEmpty() );
+        form.addOrReplace( messageContainer );
+        messageContainer.add( new MessagePanel( "message", new Model<String>( getMessage() ) ) );
+        message_time = System.currentTimeMillis();
+    }
+
+    private String getMessage() {
+        return message == null ? "" : message;
+    }
+
     private void addGoBackAndForward() {
         goBackContainer = new WebMarkupContainer( "goBack" );
         goBackContainer.setOutputMarkupId( true );
@@ -580,8 +609,21 @@ public final class PlanPage extends WebPage implements Updatable {
         } else {
             updateRefreshNotice();
             target.addComponent( refreshNeededComponent );
+            fadeOutMessagePanel( target );
         }
         segmentPanel.updateSocialPanel( target );
+    }
+
+    private void fadeOutMessagePanel( AjaxRequestTarget target ) {
+        if ( !getMessage().isEmpty() ) {
+            if ( ( System.currentTimeMillis() - message_time ) > ( MESSAGE_FADE_OUT_DELAY * 1000 ) ) {
+                target.appendJavascript( "$('div.change-message').fadeOut('slow');" );
+                message = null;
+            }
+        } else {
+            makeVisible( messageContainer, false );
+        }
+        target.addComponent( messageContainer );
     }
 
     private void updateRefreshNotice() {
@@ -1350,6 +1392,9 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     public void changed( Change change ) {
         getCommander().clearTimeOut();
+        if ( change.getMessage() != null ) {
+            message = change.getMessage();
+        }
         if ( change.isNone() )
             return;
         if ( change.isCollapsed() || change.isRemoved() )
@@ -1371,7 +1416,7 @@ public final class PlanPage extends WebPage implements Updatable {
         else if ( change.isAspectReplaced() ) {
             closeAspect( change, null );
             viewAspect( change, change.getProperty() );
-        }  else if ( change.isCommunicated() ) {
+        } else if ( change.isCommunicated() ) {
             expand( new Change( Change.Type.Expanded, Channels.SOCIAL_ID ) );
         }
         if ( change.isForInstanceOf( Segment.class ) ) {
@@ -1440,6 +1485,11 @@ public final class PlanPage extends WebPage implements Updatable {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        // Hide message panel on changed message ( not null )
+        if ( change.getMessage() != null ) {
+            addChangeMessagePanel();
+            target.addComponent( messageContainer );
+        }
         if ( !change.isNone() ) {
             if ( change.isForInstanceOf( Plan.class ) && change.isSelected() ) {
                 redirectToPlan();

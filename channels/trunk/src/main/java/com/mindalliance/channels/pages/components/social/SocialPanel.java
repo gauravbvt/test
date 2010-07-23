@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.PlannerMessagingService;
+import com.mindalliance.channels.social.PlanningEventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -13,6 +14,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +30,9 @@ public class SocialPanel extends AbstractUpdatablePanel {
     @SpringBean
     private PlannerMessagingService plannerMessagingService;
 
+    @SpringBean
+    private PlanningEventService planningEventService;
+
     public static final String SEND_MESSAGE = "sendMessage";
 
     private AjaxTabbedPanel tabbedPanel;
@@ -37,6 +42,10 @@ public class SocialPanel extends AbstractUpdatablePanel {
     private CommandEventListPanel commandEventListPanel;
 
     private PlannerPresenceListPanel plannerPresenceListPanel;
+    /**
+     * When last refreshed.
+     */
+    private Date whenLastRefreshed = new Date();
 
     public SocialPanel( String id ) {
         super( id );
@@ -77,12 +86,20 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( plannerPresenceListPanel != null && tabbedPanel.getSelectedTab() == 0 )
+        if ( plannerPresenceListPanel != null && tabbedPanel.getSelectedTab() == 0 )  {
             plannerPresenceListPanel.refresh( target, change );
-        if ( commandEventListPanel != null && tabbedPanel.getSelectedTab() == 1 )
+        }
+        if ( commandEventListPanel != null && tabbedPanel.getSelectedTab() == 1 ) {
             commandEventListPanel.refresh( target, change );
-        if ( plannerMessageListPanel != null && tabbedPanel.getSelectedTab() == 2 )
+        }
+        if ( plannerMessageListPanel != null && tabbedPanel.getSelectedTab() == 2 ) {
             plannerMessageListPanel.refresh( target, change );
+        }
+        Date whenLastReceived = plannerMessagingService.getWhenLastReceived();
+        if ( whenLastReceived != null && whenLastReceived.after( whenLastRefreshed ) ) {
+            update( target, Change.message( "New message" ) );
+        }
+        whenLastRefreshed = new Date();
     }
 
     public void update( AjaxRequestTarget target, Object object, String action ) {

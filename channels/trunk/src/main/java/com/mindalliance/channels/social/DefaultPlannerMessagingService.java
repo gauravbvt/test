@@ -52,7 +52,9 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                         .add(
                         Where.or()
                                 .add( Where.equal( "toUsername", getUsername() ) )
-                                .add( Where.isNull( "toUsername" ) )
+                                .add( Where.and()
+                                    .add( Where.isNull( "toUsername" ) )
+                                    .add( Where.not( Where.equal( "fromUsername", getUsername() ) ) ) )
                 ),
                 ODBAccessor.Ordering.Descendant,
                 "date"
@@ -81,6 +83,15 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
 
     public Date getWhenLastChanged() {
         return whenLastChanged;
+    }
+
+    public Date getWhenLastReceived() {
+        Iterator<PlannerMessage> received = getReceivedMessages();
+        if ( received.hasNext() ) {
+            return received.next().getDate();
+        } else {
+            return null;
+        }
     }
 
     private String getUsername() {

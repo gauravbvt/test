@@ -21,4 +21,5 @@ public interface PlannerMessagingService {
 
     Date getWhenLastChanged();
 
+    Date getWhenLastReceived();
 }

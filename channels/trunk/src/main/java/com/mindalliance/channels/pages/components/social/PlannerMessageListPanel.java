@@ -5,10 +5,8 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.PlannerMessage;
 import com.mindalliance.channels.social.PlannerMessagingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -41,7 +39,7 @@ import java.util.List;
  * Date: Jul 5, 2010
  * Time: 1:32:35 PM
  */
-public class PlannerMessageListPanel extends AbstractUpdatablePanel {
+public class PlannerMessageListPanel extends AbstractSocialListPanel {
 
     @SpringBean
     private PlannerMessagingService plannerMessagingService;
@@ -78,8 +76,8 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
         init();
     }
 
-    private void init() {
-        addHideSocial();
+    protected void init() {
+        super.init();
         addShowHideBroadcastsLink();
         addShowHideBroadcastsLabel();
         addShowReceivedSentLink();
@@ -93,15 +91,6 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
         addNewMessage();
         adjustComponents();
         whenLastRefreshed = new Date();
-    }
-
-    private void addHideSocial() {
-        AjaxFallbackLink hideSocialLink = new AjaxFallbackLink( "hideAll" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Collapsed, Channels.SOCIAL_ID ) );
-            }
-        };
-        add( hideSocialLink );
     }
 
     private void addShowHideBroadcastsLink() {
@@ -311,6 +300,7 @@ public class PlannerMessageListPanel extends AbstractUpdatablePanel {
                 resetNewMessage( target );
                 addPlannerMessages();
                 adjustComponents( target );
+                update( target, Change.message( "Message sent" ) );
             }
         };
         newMessageContainer.add( sendLink );

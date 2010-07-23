@@ -3,9 +3,7 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.CommandEvent;
 import com.mindalliance.channels.social.PlanningEventService;
 import com.mindalliance.channels.util.PeekAheadIterator;
@@ -30,7 +28,7 @@ import java.util.List;
  * Date: Jul 5, 2010
  * Time: 1:31:46 PM
  */
-public class CommandEventListPanel extends AbstractUpdatablePanel {
+public class CommandEventListPanel extends AbstractSocialListPanel {
 
     @SpringBean
     private PlanningEventService planningEventService;
@@ -55,8 +53,8 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
         init();
     }
 
-    private void init() {
-        addHideSocial();
+    protected void init() {
+        super.init();
         addShowHideLink();
         addShowHideLabel();
         planningEventsContainer = new WebMarkupContainer( "planningEventsContainer" );
@@ -67,15 +65,6 @@ public class CommandEventListPanel extends AbstractUpdatablePanel {
         addShowAFew();
         adjustComponents();
         whenLastRefreshed = new Date();
-    }
-
-    private void addHideSocial() {
-        AjaxFallbackLink hideSocialLink = new AjaxFallbackLink( "hideAll" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Collapsed, Channels.SOCIAL_ID ) );
-            }
-        };
-        add( hideSocialLink );
     }
 
     private void addShowHideLink() {
