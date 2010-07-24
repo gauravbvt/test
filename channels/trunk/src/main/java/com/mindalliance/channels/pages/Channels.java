@@ -129,6 +129,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "nosops.html", NoAccessPage.class ) );
 
         mount( new IndexedParamUrlCodingStrategy( "uploads", UploadPage.class ) );
+        mount( new IndexedParamUrlCodingStrategy( "icons", IconPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "login.html", LoginPage.class ) );
 
         mount( new QueryStringUrlCodingStrategy( "segment.xml", ExportPage.class ) );

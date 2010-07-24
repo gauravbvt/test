@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.ModelObject;
@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -33,6 +34,9 @@ public class VCardPanel extends Panel {
     /** The query service for resolving the subject. */
     @SpringBean
     private QueryService queryService;
+
+    @SpringBean
+    private ImagingService imagingService;
 
     private String prefix;
 
@@ -66,7 +70,8 @@ public class VCardPanel extends Panel {
 
     private String getPictureUrl( ModelObject object ) {
         if ( object != null ) {
-            String s = object.getImageUrl();
+//            String s = object.getImageUrl();
+            String s = imagingService.getSquareIconUrl( object );
             if ( s != null )
                 try {
                     URI u = new URI( s );

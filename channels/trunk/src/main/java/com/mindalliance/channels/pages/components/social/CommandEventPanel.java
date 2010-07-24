@@ -59,7 +59,7 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
         CommandEvent commandEvent = getCommandEvent();
         Command command = commandEvent.getCommand();
         String eventString = commandEvent.isDone()
-                ? command.getName()
+                ? "Doing " + command.getName()
                 : commandEvent.isUndone()
                 ? ( "Undoing " + command.getUndoes() )
                 : ( "Redoing " + command.getName() );

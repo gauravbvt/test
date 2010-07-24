@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.ResourceSpec;
@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -26,6 +27,10 @@ import java.util.Set;
  * Time: 9:05:57 PM
  */
 public class ActorBannerPanel extends Panel {
+
+    @SpringBean
+    private ImagingService imagingService;
+
     private String prefix;
 
     public ActorBannerPanel(
@@ -68,9 +73,9 @@ public class ActorBannerPanel extends Panel {
     }
 
     private String getPictureUrl( ModelObject modelObject ) {
-        String url = modelObject.getImageUrl();
+        String url = imagingService.getSquareIconUrl( modelObject );
         url = url == null ? "images/actor.user.png" : url;
-        return Attachment.addPrefixIfRelative( url, prefix ) ;
+        return "/" + url;
     }
 
 
