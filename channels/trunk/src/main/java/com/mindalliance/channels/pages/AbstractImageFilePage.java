@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -36,7 +37,7 @@ public abstract class AbstractImageFilePage extends Page {
             throw new AbortWithWebErrorCodeException( 403 );
         File file;
         try {
-            filename = fileNameParam.replaceAll( "\\|", File.separator );
+            filename = URLDecoder.decode( fileNameParam, "UTF-8" );
             file = getFile( filename );
         } catch ( IOException e ) {
             throw new AbortWithHttpStatusException( 404, false );
@@ -63,7 +64,7 @@ public abstract class AbstractImageFilePage extends Page {
             OutputStream outputStream = getResponse().getOutputStream();
             inputStream = new FileInputStream( getFile( filename ) );
 
-            byte[] buffer = new byte[ 10*1024 ];
+            byte[] buffer = new byte[10 * 1024];
             int len = inputStream.read( buffer );
             while ( len != -1 ) {
                 outputStream.write( buffer, 0, len );

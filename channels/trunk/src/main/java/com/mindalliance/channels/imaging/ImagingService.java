@@ -47,7 +47,7 @@ public interface ImagingService {
      * @param modelObject a model object
      * @return a string
      */
-    String getIconPath( ModelObject modelObject );
+    String getModelObjectIconsPath( ModelObject modelObject );
 
     /**
      * Return url of squared icon..
@@ -79,6 +79,7 @@ public interface ImagingService {
     /**
      * Get icon directory.
      * @return  a directory
+     * @throws java.io.IOException an IO exception
      */
     File getIconDirectoryFile() throws IOException;
 }

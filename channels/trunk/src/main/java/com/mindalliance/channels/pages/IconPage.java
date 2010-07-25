@@ -24,7 +24,7 @@ public class IconPage extends AbstractImageFilePage {
     }
 
     protected File getFile( String fileName ) throws IOException {
-        return new File( imagingService.getIconDirectoryFile( ), fileName );
+        return new File( fileName );
     }
 
 }
