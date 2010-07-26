@@ -23,8 +23,8 @@ public class IconPage extends AbstractImageFilePage {
         super( parameters );
     }
 
-    protected File getFile( String fileName ) throws IOException {
-        return imagingService.findIcon(  fileName );
+    protected File getFile( String encodedPath ) throws IOException {
+        return imagingService.findIcon(  encodedPath );
     }
 
 }

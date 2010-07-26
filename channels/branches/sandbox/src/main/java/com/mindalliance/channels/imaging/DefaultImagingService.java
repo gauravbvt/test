@@ -19,7 +19,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLEncoder;
 
 /**
  * Default imaging service.
@@ -237,9 +236,9 @@ public class DefaultImagingService implements ImagingService {
         File squareIconFile = getSquareIconFile( modelObject );
         if ( squareIconFile.exists() ) {
             try {
-                String encodedPath = URLEncoder.encode(
-                        relativeIconPath( squareIconFile ),
-                        "UTF-8" );
+                String relPath =
+                        relativeIconPath( squareIconFile );
+                String encodedPath = relPath.replaceAll( File.separator, "||" );
                 return "/icons"
                         + File.separator
                         + encodedPath;
@@ -276,8 +275,9 @@ public class DefaultImagingService implements ImagingService {
     /**
      * {@inheritDoc}
      */
-    public File findIcon( String fileName ) throws IOException {
-        return new File( getIconFilePrefix() + fileName );
+    public File findIcon( String encodedPath ) throws IOException {
+        String decodedPath = encodedPath.replaceAll( "\\|\\|", File.separator );
+        return new File( getIconFilePrefix() + decodedPath );
     }
 
     private void createNumberedIcons( BufferedImage resized, int width, ModelObject modelObject ) throws IOException {
