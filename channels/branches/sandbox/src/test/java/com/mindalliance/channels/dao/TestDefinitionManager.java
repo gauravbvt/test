@@ -5,20 +5,15 @@ package com.mindalliance.channels.dao;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.wicket.util.file.File;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.util.InMemoryResource;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.util.Properties;
 
 /**

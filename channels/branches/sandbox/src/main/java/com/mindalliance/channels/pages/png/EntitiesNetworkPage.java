@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;

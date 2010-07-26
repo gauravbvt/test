@@ -1,9 +1,9 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 

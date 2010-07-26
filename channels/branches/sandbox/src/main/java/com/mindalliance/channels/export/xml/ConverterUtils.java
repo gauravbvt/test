@@ -1,9 +1,9 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.export.PartSpecification;
 import com.mindalliance.channels.export.SegmentSpecification;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.nlp.Matcher;

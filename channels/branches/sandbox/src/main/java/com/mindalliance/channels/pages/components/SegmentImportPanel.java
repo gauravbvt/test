@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.dao.User;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;

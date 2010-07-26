@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Participation;
@@ -35,6 +36,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     @SpringBean
     private PlanningEventService planningEventService;
+
+    @SpringBean
+    private ImagingService imagingService;
 
     private PresenceEvent latestPresenceEvent = null;
 
@@ -158,6 +162,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 : jobTitles;
     }
 
+/*
     public String getPhotoUrl() {
         String url = null;
         Participation participation = getParticipation();
@@ -171,6 +176,22 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         }
         return url;
     }
+*/
+
+    public String getPhotoUrl() {
+        String url = null;
+        Participation participation = getParticipation();
+        if ( participation != null ) {
+            Actor actor = participation.getActor();
+            if ( actor != null )
+                url = imagingService.getSquareIconUrl( actor );
+        }
+        if ( url == null ) {
+            url = "/images/actor.user.png";
+        }
+        return url;
+    }
+
 
     protected String getUsername() {
         return username;
@@ -203,5 +224,6 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         }
         return latestPresenceEvent;
     }
+
 
 }

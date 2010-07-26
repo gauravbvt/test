@@ -1,12 +1,12 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

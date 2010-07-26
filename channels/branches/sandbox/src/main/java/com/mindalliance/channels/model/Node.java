@@ -1,7 +1,7 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.iterators.IteratorChain;
 
 import java.text.Collator;

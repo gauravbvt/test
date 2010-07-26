@@ -1,9 +1,9 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.dao.User;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.Resource;
 

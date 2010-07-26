@@ -1,16 +1,15 @@
 package com.mindalliance.channels.export;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.dao.Exporter;
-import com.mindalliance.channels.dao.ImportExportFactory;
-import com.mindalliance.channels.dao.Importer;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.dao.Exporter;
+import com.mindalliance.channels.dao.Importer;
+import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

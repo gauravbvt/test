@@ -1,11 +1,11 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.dao.User;
 import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.CacheException;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

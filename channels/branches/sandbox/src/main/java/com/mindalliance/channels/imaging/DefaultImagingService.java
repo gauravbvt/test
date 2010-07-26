@@ -16,14 +16,10 @@ import sun.awt.image.BufferedImageGraphicsConfig;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URLEncoder;
 
 /**
  * Default imaging service.
@@ -91,6 +87,10 @@ public class DefaultImagingService implements ImagingService {
         this.iconPath = iconPath;
     }
 
+    public File getIconDirectoryFile() throws IOException {
+        return getIconDirectory().getFile();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -107,8 +107,10 @@ public class DefaultImagingService implements ImagingService {
     private BufferedImage getImage( String url ) {
         try {
             BufferedImage image;
-            if ( isFileDocument( url ) ) {
-                image = ImageIO.read( getImageFile( url ) );
+            if ( isUploadedFileDocument( url ) ) {
+                image = ImageIO.read( getUploadedImageFile( url ) );
+            } else if ( isFileDocument( url ) ) {
+                image = ImageIO.read( new File( url ) );
             } else {
                 image = ImageIO.read( new URL( url ) );
             }
@@ -120,11 +122,15 @@ public class DefaultImagingService implements ImagingService {
     }
 
     private boolean isFileDocument( String url ) {
+        return url.startsWith( File.separator );
+    }
+
+    private boolean isUploadedFileDocument( String url ) {
         return url.startsWith( attachmentManager.getUploadPath() );
     }
 
 
-    private File getImageFile( String url ) {
+    private File getUploadedImageFile( String url ) {
         return new File(
                 attachmentManager.getUploadDirectory( User.plan() ),
                 url.replaceFirst( attachmentManager.getUploadPath(), "" ) );
@@ -159,22 +165,51 @@ public class DefaultImagingService implements ImagingService {
         return true;
     }
 
+    private boolean squarify( String url, ModelObject modelObject ) {
+        try {
+            BufferedImage image = getImage( url );
+            if ( image == null ) throw new Exception( "Image not found at " + url );
+            int width = image.getWidth();
+            int height = image.getHeight();
+            int max = Math.max( width, height );
+            BufferedImage icon = new BufferedImage( max, max, BufferedImage.TRANSLUCENT );
+            icon.createGraphics();
+            Graphics2D graphics = (Graphics2D) icon.getGraphics();
+            graphics.drawImage(
+                    image,
+                    ( max - width ) / 2,
+                    ( max - height ) / 2,
+                    image.getWidth(),
+                    image.getHeight(),
+                    null );
+            File iconFile = getSquareIconFile( modelObject );
+            ImageIO.write( icon, "png", iconFile );
+            graphics.dispose();
+        } catch ( Exception e ) {
+            LOG.warn( "Failed to squarify image at " + url + " (" + e.getMessage() + ")", e );
+            return false;
+        }
+        return true;
+    }
+
     /**
      * {@inheritDoc}
      */
     public void deiconize( ModelObject modelObject ) {
         File iconFile = getIconFile( modelObject );
-        iconFile.delete();
+        if ( iconFile.exists() ) iconFile.delete();
+        iconFile = getIconFile( modelObject );
+        if ( iconFile.exists() ) iconFile.delete();
         for ( int i = 1; i < ICON_HEIGHTS.length; i++ ) {
             iconFile = getIconFile( modelObject, i );
-            iconFile.delete();
+            if ( iconFile.exists() )iconFile.delete();
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public String getIconPath( ModelObject modelObject ) {
+    public String getModelObjectIconsPath( ModelObject modelObject ) {
         File iconFile = getIconFile( modelObject );
         if ( iconFile.exists() ) {
             String path = iconFile.getAbsolutePath();
@@ -186,7 +221,7 @@ public class DefaultImagingService implements ImagingService {
             if ( modelObject.hasImage() ) {
                 boolean success = iconize( modelObject.getImageUrl(), modelObject );
                 if ( success )
-                    return getIconPath( modelObject );
+                    return getModelObjectIconsPath( modelObject );
                 else
                     return null;
             } else {
@@ -195,8 +230,36 @@ public class DefaultImagingService implements ImagingService {
         }
     }
 
-    private String getIconsSubDirName( ModelObject modelObject ) {
-        return modelObject.getClass().getSimpleName().toLowerCase();
+    /**
+     * {@inheritDoc}
+     */
+    public String getSquareIconUrl( ModelObject modelObject ) {
+        File squareIconFile = getSquareIconFile( modelObject );
+        if ( squareIconFile.exists() ) {
+            try {
+                String encodedPath = URLEncoder.encode(
+                        getIconsPath( modelObject )
+                                + File.separator
+                                + squareIconFile.getName()
+                        , "UTF-8" );
+                return "icons"
+                        + File.separator
+                        + encodedPath;
+            } catch ( Exception e ) {
+                LOG.warn( "Failed to get icon url", e );
+                return null;
+            }
+        } else {
+            String iconPath = getModelObjectIconsPath( modelObject );
+            if ( iconPath != null ) {
+                boolean success = squarify( iconPath + ".png", modelObject );
+                if ( success )
+                    return getSquareIconUrl( modelObject );
+                else
+                    return null;
+            }
+            return null;
+        }
     }
 
     private void createNumberedIcons( BufferedImage resized, int width, ModelObject modelObject ) throws IOException {
@@ -224,8 +287,8 @@ public class DefaultImagingService implements ImagingService {
 
     private BufferedImage resize( BufferedImage image, int width, int height ) {
         BufferedImage modified = createCompatibleImage( image );
-        modified = basicResize( modified, width * 4, height * 4 );
-        modified = blurImage( modified );
+        //modified = basicResize( modified, width * 4, height * 4 );
+        //modified = blurImage( modified );
         modified = basicResize( modified, width, height );
         return modified;
     }
@@ -257,7 +320,7 @@ public class DefaultImagingService implements ImagingService {
         return result;
     }
 
-    private BufferedImage blurImage( BufferedImage image ) {
+/*    private BufferedImage blurImage( BufferedImage image ) {
         float ninth = 1.0f / 9.0f;
         float[] blurKernel = {
                 ninth, ninth, ninth,
@@ -272,26 +335,35 @@ public class DefaultImagingService implements ImagingService {
         RenderingHints hints = new RenderingHints( map );
         BufferedImageOp op = new ConvolveOp( new Kernel( 3, 3, blurKernel ), ConvolveOp.EDGE_NO_OP, hints );
         return op.filter( image, null );
-    }
+    }*/
 
     private File getIconFile( ModelObject modelObject ) {
-        String path = getIconDirectory( modelObject ).getAbsolutePath()
+        String path = getIconsDirectory( modelObject ).getAbsolutePath()
                 + File.separator
-                + sanitize( modelObject.getName() )
+                + sanitizeFileName( modelObject.getName() )
                 + ".png";
         return new File( path );
     }
 
     private File getIconFile( ModelObject modelObject, int index ) {
-        String path = getIconDirectory( modelObject ).getAbsolutePath()
+        String path = getIconsDirectory( modelObject ).getAbsolutePath()
                 + File.separator
-                + sanitize( modelObject.getName() )
+                + sanitizeFileName( modelObject.getName() )
                 + index
                 + ".png";
         return new File( path );
     }
 
-    private String sanitize( String fileName ) {
+    private File getSquareIconFile( ModelObject modelObject ) {
+        String path = getIconsDirectory( modelObject ).getAbsolutePath()
+                + File.separator
+                + sanitizeFileName( modelObject.getName() )
+                + "_squared.png";
+        return new File( path );
+    }
+
+
+    private String sanitizeFileName( String fileName ) {
         if ( File.separator.equals( "\\" ) ) {
             return fileName.replaceAll( "\\\\", "" );
         } else {
@@ -300,27 +372,57 @@ public class DefaultImagingService implements ImagingService {
     }
 
     /**
+     * Return a "directory-safe" equivalent name.
+     *
+     * @param name original name
+     * @return safe version
+     */
+    public static String uriToDirName( String name ) {
+        return name.replaceAll( "\\W", "_" );
+    }
+
+
+    /**
      * Get the location of the generated icons for a given model object.
      *
      * @param modelObject a model object
      * @return a directory
      */
-    private File getIconDirectory( ModelObject modelObject ) {
+    private File getIconsDirectory( ModelObject modelObject ) {
         try {
-            File iconDir = iconDirectory.getFile();
-            if ( !iconDir.exists() ) {
-                iconDir.mkdir();
-            }
-            String subDirName = getIconsSubDirName( modelObject );
-            File subDir = new File( iconDir.getAbsolutePath() + File.separator + subDirName );
-            if ( !subDir.exists() ) {
-                subDir.mkdir();
-            }
-            return subDir;
+            String moIconsSubDirName = getIconsPath( modelObject );
+            return new File( moIconsSubDirName );
         } catch ( IOException e ) {
             throw new RuntimeException( e );
         }
     }
+
+    private File getBaseIconDirectory() throws IOException {
+        File iconDir = iconDirectory.getFile();
+        if ( !iconDir.exists() ) {
+            iconDir.mkdir();
+        }
+        return iconDir;
+    }
+
+    private String getIconsPath( ModelObject modelObject ) throws IOException {
+        File iconDir = getBaseIconDirectory();
+        String planSpecificDirName = iconDir.getAbsolutePath()
+                + File.separator
+                + uriToDirName( User.current().getPlan().getVersionUri() );
+        File subDir = new File( planSpecificDirName );
+        if ( !subDir.exists() ) {
+            subDir.mkdir();
+        }
+        String moDirName = modelObject.getClass().getSimpleName().toLowerCase();
+        String moDirPath = subDir.getAbsolutePath() + File.separator + moDirName;
+        File moSubDir = new File( moDirPath );
+        if ( !moSubDir.exists() ) {
+            moSubDir.mkdir();
+        }
+        return moDirPath;
+    }
+
 
     /**
      * Find icon name for given model object.
@@ -330,11 +432,11 @@ public class DefaultImagingService implements ImagingService {
      * @return a string
      */
     public String findIconName( ModelObject modelObject, String imagesDirName ) {
-        String iconName = getIconPath( modelObject );
+        String iconName = getModelObjectIconsPath( modelObject );
         if ( iconName == null ) {
             if ( modelObject instanceof Actor ) {
                 iconName = imagesDirName + '/'
-                           + ( ( (Actor) modelObject ).isSystem() ? "system" : "person" );
+                        + ( ( (Actor) modelObject ).isSystem() ? "system" : "person" );
             } else if ( modelObject instanceof Role ) {
                 iconName = imagesDirName + '/' + "role";
             } else if ( modelObject instanceof Organization ) {
@@ -346,18 +448,20 @@ public class DefaultImagingService implements ImagingService {
         return iconName;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String findIconName( Part part, String imagesDirName, QueryService queryService ) {
         String iconName = null;
         if ( part.getActor() != null ) {
             if ( part.getActor().isType() ) {
                 Actor knownActor = part.getKnownActualActor( queryService );
                 if ( knownActor != null ) {
-                    iconName = getIconPath( knownActor );
+                    iconName = getModelObjectIconsPath( knownActor );
                 }
             }
             if ( iconName == null ) {
-                iconName = getIconPath( part.getActor() );
+                iconName = getModelObjectIconsPath( part.getActor() );
             }
             if ( iconName == null ) {
                 iconName = this + "/" + ( part.isSystem() ? "system" : "person" );
@@ -366,18 +470,18 @@ public class DefaultImagingService implements ImagingService {
             Actor knownActor = part.getKnownActualActor( queryService );
             boolean onePlayer = knownActor != null;
             if ( onePlayer ) {
-                iconName = getIconPath( knownActor );
+                iconName = getModelObjectIconsPath( knownActor );
                 if ( iconName == null ) {
                     iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "person" );
                 }
             } else {
-                iconName = getIconPath( part.getRole() );
+                iconName = getModelObjectIconsPath( part.getRole() );
                 if ( iconName == null ) {
                     iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "role" );
                 }
             }
         } else if ( part.getOrganization() != null ) {
-            iconName = getIconPath( part.getOrganization() );
+            iconName = getModelObjectIconsPath( part.getOrganization() );
             if ( iconName == null ) {
                 iconName = imagesDirName + "/" + "organization";
             }

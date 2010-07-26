@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
@@ -8,7 +9,6 @@ import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;

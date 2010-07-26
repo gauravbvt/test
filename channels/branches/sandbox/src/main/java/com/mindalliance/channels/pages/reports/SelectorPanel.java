@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;

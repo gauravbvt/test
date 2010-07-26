@@ -1,9 +1,9 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.dao.User;
 
 import java.io.Serializable;
 

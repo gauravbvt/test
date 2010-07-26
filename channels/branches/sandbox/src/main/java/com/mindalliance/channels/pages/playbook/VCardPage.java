@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.ElementOfInformation;
@@ -8,13 +9,12 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.reports.VCardPanel;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.User;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;

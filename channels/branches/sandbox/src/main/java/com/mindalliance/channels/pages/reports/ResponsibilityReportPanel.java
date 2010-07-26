@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.ModelEntity;
@@ -12,6 +11,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.User;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;

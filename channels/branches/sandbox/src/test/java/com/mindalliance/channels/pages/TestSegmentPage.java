@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.PageParameters;

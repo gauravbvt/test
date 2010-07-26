@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.analysis.graph.HierarchyRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

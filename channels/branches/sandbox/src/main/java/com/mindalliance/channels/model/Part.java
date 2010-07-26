@@ -924,8 +924,8 @@ public class Part extends Node implements GeoLocatable {
                     }
                 }
         );
-    }    
-
+    }
+    
     /**
      * {@inheritDoc}
      */

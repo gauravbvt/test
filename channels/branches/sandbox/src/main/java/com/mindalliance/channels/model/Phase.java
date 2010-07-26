@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.dao.PlanDao;
+
 import java.text.Collator;
 
 /**

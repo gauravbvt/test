@@ -1,13 +1,9 @@
 package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import com.mindalliance.channels.model.NotFoundException;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

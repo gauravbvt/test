@@ -1,7 +1,6 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Flow;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.dao.User;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,6 +4,9 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.query.QueryService;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * An image transformation service.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -44,7 +47,15 @@ public interface ImagingService {
      * @param modelObject a model object
      * @return a string
      */
-    String getIconPath( ModelObject modelObject );
+    String getModelObjectIconsPath( ModelObject modelObject );
+
+    /**
+     * Return url of squared icon..
+     *
+     * @param modelObject a model object
+     * @return a string
+     */
+    String getSquareIconUrl( ModelObject modelObject );
 
     /**
      * Find icon name for given model object.
@@ -64,4 +75,11 @@ public interface ImagingService {
      * @return a string
      */
     String findIconName( Part part, String imagesDirName, QueryService queryService );
+
+    /**
+     * Get icon directory.
+     * @return  a directory
+     * @throws java.io.IOException an IO exception
+     */
+    File getIconDirectoryFile() throws IOException;
 }

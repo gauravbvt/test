@@ -1,8 +1,8 @@
 package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;

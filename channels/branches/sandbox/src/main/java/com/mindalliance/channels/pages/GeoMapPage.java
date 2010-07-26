@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.geo.GeoLocatable;
-import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;

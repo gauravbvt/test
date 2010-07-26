@@ -3,9 +3,7 @@ package com.mindalliance.channels.command;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.command.commands.HelloCommand;
 import com.mindalliance.channels.model.Segment;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 

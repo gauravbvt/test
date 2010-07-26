@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.dao.ImportExportFactory;
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;

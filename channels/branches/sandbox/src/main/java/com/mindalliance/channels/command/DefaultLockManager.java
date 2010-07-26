@@ -1,9 +1,9 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

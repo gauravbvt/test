@@ -2,11 +2,11 @@ package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Attachment;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.ModelObject;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 import java.io.File;
 import java.util.List;
