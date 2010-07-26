@@ -16,15 +16,10 @@ import sun.awt.image.BufferedImageGraphicsConfig;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Default imaging service.
@@ -177,11 +172,9 @@ public class DefaultImagingService implements ImagingService {
             int width = image.getWidth();
             int height = image.getHeight();
             int max = Math.max( width, height );
-            BufferedImage icon = new BufferedImage( max, max, BufferedImage.OPAQUE );
+            BufferedImage icon = new BufferedImage( max, max, BufferedImage.TRANSLUCENT );
             icon.createGraphics();
             Graphics2D graphics = (Graphics2D) icon.getGraphics();
-            graphics.setColor( Color.WHITE );
-            graphics.fillRect( 0, 0, max, max );
             graphics.drawImage(
                     image,
                     ( max - width ) / 2,
@@ -294,8 +287,8 @@ public class DefaultImagingService implements ImagingService {
 
     private BufferedImage resize( BufferedImage image, int width, int height ) {
         BufferedImage modified = createCompatibleImage( image );
-        modified = basicResize( modified, width * 4, height * 4 );
-        modified = blurImage( modified );
+        //modified = basicResize( modified, width * 4, height * 4 );
+        //modified = blurImage( modified );
         modified = basicResize( modified, width, height );
         return modified;
     }
@@ -327,7 +320,7 @@ public class DefaultImagingService implements ImagingService {
         return result;
     }
 
-    private BufferedImage blurImage( BufferedImage image ) {
+/*    private BufferedImage blurImage( BufferedImage image ) {
         float ninth = 1.0f / 9.0f;
         float[] blurKernel = {
                 ninth, ninth, ninth,
@@ -342,7 +335,7 @@ public class DefaultImagingService implements ImagingService {
         RenderingHints hints = new RenderingHints( map );
         BufferedImageOp op = new ConvolveOp( new Kernel( 3, 3, blurKernel ), ConvolveOp.EDGE_NO_OP, hints );
         return op.filter( image, null );
-    }
+    }*/
 
     private File getIconFile( ModelObject modelObject ) {
         String path = getIconsDirectory( modelObject ).getAbsolutePath()
