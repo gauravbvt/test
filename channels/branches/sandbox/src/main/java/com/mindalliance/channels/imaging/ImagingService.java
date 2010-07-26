@@ -82,4 +82,11 @@ public interface ImagingService {
      * @throws java.io.IOException an IO exception
      */
     File getIconDirectoryFile() throws IOException;
+
+    /**
+     * Find icon file given relative filename.
+     * @param fileName a string
+     * @return  a file
+     */
+    File findIcon( String fileName ) throws IOException;
 }

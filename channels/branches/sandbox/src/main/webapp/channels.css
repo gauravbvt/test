@@ -415,7 +415,7 @@ ul.menu, div.caption, span.menubar, ul.ranges {
 #history {
     position: absolute;
     top: 14px;
-    right: 500px;
+    right: 35em;
 }
 
 .change-message {
@@ -423,7 +423,7 @@ ul.menu, div.caption, span.menubar, ul.ranges {
     top: 7px;
     width: 200px;
     height: 35px;
-    right: 680px;
+    right: 46em;
     padding: 4px;
     background-color: #e7f0ff;
     border:1px solid #C7C8CA;

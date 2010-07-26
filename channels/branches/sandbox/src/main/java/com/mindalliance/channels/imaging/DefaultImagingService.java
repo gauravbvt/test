@@ -202,7 +202,7 @@ public class DefaultImagingService implements ImagingService {
         if ( iconFile.exists() ) iconFile.delete();
         for ( int i = 1; i < ICON_HEIGHTS.length; i++ ) {
             iconFile = getIconFile( modelObject, i );
-            if ( iconFile.exists() )iconFile.delete();
+            if ( iconFile.exists() ) iconFile.delete();
         }
     }
 
@@ -238,11 +238,9 @@ public class DefaultImagingService implements ImagingService {
         if ( squareIconFile.exists() ) {
             try {
                 String encodedPath = URLEncoder.encode(
-                        getIconsPath( modelObject )
-                                + File.separator
-                                + squareIconFile.getName()
-                        , "UTF-8" );
-                return "icons"
+                        relativeIconPath( squareIconFile ),
+                        "UTF-8" );
+                return "/icons"
                         + File.separator
                         + encodedPath;
             } catch ( Exception e ) {
@@ -260,6 +258,26 @@ public class DefaultImagingService implements ImagingService {
             }
             return null;
         }
+    }
+
+    private String relativeIconPath( File iconFile ) throws IOException {
+        String prefix = getIconFilePrefix();
+        String absolutePath = iconFile.getAbsolutePath();
+        return absolutePath.substring( prefix.length() );
+    }
+
+    private String getIconFilePrefix() throws IOException {
+        return iconDirectory.getFile().getAbsolutePath()
+                + File.separator
+                + getFlattenedPlanUri()
+                + File.separator;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public File findIcon( String fileName ) throws IOException {
+        return new File( getIconFilePrefix() + fileName );
     }
 
     private void createNumberedIcons( BufferedImage resized, int width, ModelObject modelObject ) throws IOException {
@@ -338,7 +356,7 @@ public class DefaultImagingService implements ImagingService {
     }*/
 
     private File getIconFile( ModelObject modelObject ) {
-        String path = getIconsDirectory( modelObject ).getAbsolutePath()
+        String path = getIconsDirectoryFor( modelObject ).getAbsolutePath()
                 + File.separator
                 + sanitizeFileName( modelObject.getName() )
                 + ".png";
@@ -346,7 +364,7 @@ public class DefaultImagingService implements ImagingService {
     }
 
     private File getIconFile( ModelObject modelObject, int index ) {
-        String path = getIconsDirectory( modelObject ).getAbsolutePath()
+        String path = getIconsDirectoryFor( modelObject ).getAbsolutePath()
                 + File.separator
                 + sanitizeFileName( modelObject.getName() )
                 + index
@@ -355,7 +373,7 @@ public class DefaultImagingService implements ImagingService {
     }
 
     private File getSquareIconFile( ModelObject modelObject ) {
-        String path = getIconsDirectory( modelObject ).getAbsolutePath()
+        String path = getIconsDirectoryFor( modelObject ).getAbsolutePath()
                 + File.separator
                 + sanitizeFileName( modelObject.getName() )
                 + "_squared.png";
@@ -388,9 +406,9 @@ public class DefaultImagingService implements ImagingService {
      * @param modelObject a model object
      * @return a directory
      */
-    private File getIconsDirectory( ModelObject modelObject ) {
+    private File getIconsDirectoryFor( ModelObject modelObject ) {
         try {
-            String moIconsSubDirName = getIconsPath( modelObject );
+            String moIconsSubDirName = getIconsAbsolutePathFor( modelObject );
             return new File( moIconsSubDirName );
         } catch ( IOException e ) {
             throw new RuntimeException( e );
@@ -405,11 +423,11 @@ public class DefaultImagingService implements ImagingService {
         return iconDir;
     }
 
-    private String getIconsPath( ModelObject modelObject ) throws IOException {
+    private String getIconsAbsolutePathFor( ModelObject modelObject ) throws IOException {
         File iconDir = getBaseIconDirectory();
         String planSpecificDirName = iconDir.getAbsolutePath()
                 + File.separator
-                + uriToDirName( User.current().getPlan().getVersionUri() );
+                + getFlattenedPlanUri();
         File subDir = new File( planSpecificDirName );
         if ( !subDir.exists() ) {
             subDir.mkdir();
@@ -423,6 +441,9 @@ public class DefaultImagingService implements ImagingService {
         return moDirPath;
     }
 
+    private String getFlattenedPlanUri() {
+        return uriToDirName( User.current().getPlan().getVersionUri() );
+    }
 
     /**
      * Find icon name for given model object.
