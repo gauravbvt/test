@@ -74,8 +74,7 @@ public class ActorBannerPanel extends Panel {
 
     private String getPictureUrl( ModelObject modelObject ) {
         String url = imagingService.getSquareIconUrl( modelObject );
-        url = url == null ? "images/actor.user.png" : url;
-        return "/" + url;
+        return url == null ? "/images/actor.user.png" : url;
     }
 
 
