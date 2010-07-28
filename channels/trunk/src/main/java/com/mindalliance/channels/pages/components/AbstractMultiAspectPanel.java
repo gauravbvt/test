@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
@@ -331,6 +331,12 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      */
     protected abstract Component makeAspectPanel( String aspect );
 
+    /**
+     * {@inheritDoc}
+     */
+    protected String getTitle() {
+        return getObject().getName();
+    }
 
     /**
      * Get entity name plus aspect.
@@ -442,9 +448,9 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      */
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
+        refreshTitle( target );
         refreshMenus( target );
         adjustComponents();
-        target.addComponent( headerTitle );
         target.addComponent( banner );
         if ( change.isModified() ) {
             showAspect( aspect );
@@ -452,11 +458,11 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         }
     }
 
-        /**
+    /**
      * Release locks acquired after initialization.
      */
     public void release() {
-        for (Identifiable identifiable : lockedIdentifiables ) {
+        for ( Identifiable identifiable : lockedIdentifiables ) {
             getCommander().releaseAnyLockOn( identifiable );
         }
         lockedIdentifiables = new HashSet<Identifiable>();
@@ -464,7 +470,8 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
 
     /**
      * Release any lock on an identifiable.
-     * @param identifiable  an identifiable
+     *
+     * @param identifiable an identifiable
      */
     public void releaseAnyLockOn( Identifiable identifiable ) {
         getCommander().releaseAnyLockOn( identifiable );
@@ -473,7 +480,8 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
 
     /**
      * Release any lock on an identifiable.
-     * @param identifiable  an identifiable
+     *
+     * @param identifiable an identifiable
      */
     public void requestLockOn( Identifiable identifiable ) {
         getCommander().requestLockOn( identifiable );

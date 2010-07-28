@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -44,13 +45,25 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
      */
     private static ResourceReference JAVASCRIPT = new JavascriptResourceReference(
             FloatingCommandablePanel.class, "res/FloatingCommandablePanel.js" );
+    /**
+     * Title bar.
+     */
+    private WebMarkupContainer moveBar;
+    /**
+     *  Title label.
+     */
+    private Label titleLabel;
+
+    public FloatingCommandablePanel( String id ) {
+        this( id, null, null );
+    }
 
     public FloatingCommandablePanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
         setOutputMarkupId( true );
         add( JavascriptPackageResource.getHeaderContribution( JAVASCRIPT ) );
         // move
-        WebMarkupContainer moveBar = new WebMarkupContainer( "moveBar" );
+        moveBar = new WebMarkupContainer( "moveBar" );
         String moveScript = MessageFormat.format(
                 "Floater.beginMove(this.parentNode.parentNode,event,{0,number,####},{1,number,####},{2,number,####},{3,number,####});",
                 getPadTop(),
@@ -60,6 +73,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         );
         moveBar.add( new AttributeModifier( "onMouseDown", true, new Model<String>( moveScript ) ) );
         add( moveBar );
+        addTitle();
         // close -- blur any entry field to make sure any change is taken
         String closeScript = "this.focus();";
         AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
@@ -84,6 +98,32 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         // styling
         setLayout();
     }
+
+    /**
+     * Add title to floating panel.
+     */
+    protected void addTitle() {
+        titleLabel = new Label( "title", new Model<String>( getTitle() ) );
+        titleLabel.setOutputMarkupId( true );
+        moveBar.addOrReplace( titleLabel );
+    }
+
+    /**
+     * Get title of floating panel.
+     *
+     * @return a string
+     */
+    protected abstract String getTitle();
+
+    /**
+     *   Refresh title.
+     * @param target  an ajax request target
+     */
+    protected void refreshTitle( AjaxRequestTarget target ) {
+        addTitle();
+        target.addComponent( titleLabel );
+    }
+
 
     /**
      * Get top padding in px.

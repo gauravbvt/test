@@ -74,6 +74,13 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
         addAssignmentsTable();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected String getTitle() {
+        return getPart().getTask();
+    }
+
     private void addAbout() {
         partTitleLabel = new Label(
                 "partTitle",

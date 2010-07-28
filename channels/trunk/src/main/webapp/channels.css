@@ -926,7 +926,7 @@ div.float-header > span.menubar span.dropmenu:hover {
 	color:#000000;
 }
 
-div.float-header > input.close {
+div.float-header > .close {
 	background:none repeat scroll 0 0 #D1D3D4;
 	border:1px solid #BCBEC0;
 	color:#333333;
@@ -937,7 +937,7 @@ div.float-header > input.close {
 	margin:-1px 0 0 0;
 }
 
-div.float-header > input.close:hover {
+div.float-header > .close:hover {
 	border:1px solid #C7C8CA;
 	color:#000000;
     background:#e6e6e6;
@@ -1761,3 +1761,53 @@ div.section-content > div.flow > div > img {
 	color:#333333;
 	font-size:11px;
 }
+
+/* Help */
+
+body.help {
+    font-size: 11pt;
+    margin: 10px;
+    padding: 10px;
+    position: absolute;
+    min-width: 50em;
+    min-height: 20em;
+}
+
+a > img {
+    border: 0;
+}
+
+#docs {
+    position: relative;
+    left: 20px;
+}
+
+#get-satisfaction {
+    float: left;
+}
+
+div#gsfn_search_widget img { border: none; }
+div#gsfn_search_widget { font-size: 12px; width: 280px; border: 6px solid #DDD; padding: 10px;}
+div#gsfn_search_widget a.widget_title { color: #000; display: block; margin-bottom: 10px; font-weight: bold; }
+div#gsfn_search_widget .powered_by { margin-top: 8px; padding-top: 8px; border-top: 1px solid #DDD; }
+div#gsfn_search_widget .powered_by a { color: #333; font-size: 90%; }
+div#gsfn_search_widget form { margin-bottom: 8px; }
+div#gsfn_search_widget form label { margin-bottom: 5px; display: block; }
+div#gsfn_search_widget form #gsfn_search_query { width: 60%; }
+div#gsfn_search_widget div.gsfn_content { }
+div#gsfn_search_widget div.gsfn_content li { text-align:left; margin-bottom:6px; }
+div#gsfn_search_widget div.gsfn_content a.gsfn_link { line-height: 1; }
+div#gsfn_search_widget div.gsfn_content span.time { font-size: 90%; padding-left: 3px; }
+div#gsfn_search_widget div.gsfn_content p.gsfn_summary { margin-top: 2px }
+
+div#gsfn_list_widget img { border: none; }
+div#gsfn_list_widget { font-size: 12px; width: 250px; border: 6px solid #DDD; padding: 10px; }
+div#gsfn_list_widget a.widget_title { color: #000; display: block; margin-bottom: 10px; font-weight: bold; }
+div#gsfn_list_widget .powered_by { margin-top: 8px; padding-top: 8px; border-top: 1px solid #DDD; }
+div#gsfn_list_widget .powered_by a { color: #333; font-size: 90%; }
+div#gsfn_list_widget div#gsfn_content { }
+div#gsfn_list_widget div#gsfn_content li { text-align:left; margin-bottom:6px; }
+div#gsfn_list_widget div#gsfn_content a.gsfn_link { line-height: 1; }
+div#gsfn_list_widget div#gsfn_content span.time { font-size: 90%; padding-left: 3px; }
+div#gsfn_list_widget div#gsfn_content p.gsfn_summary { margin-top: 2px }
+

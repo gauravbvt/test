@@ -104,7 +104,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     }
 
     private void init() {
-        addTitle();
+        addCaption();
         addDoneButton();
         addAssumeFail();
         addFlowViewingControls();
@@ -112,8 +112,12 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         addFailedTasks();
     }
 
-    private void addTitle() {
-        add( new Label( "title", new Model<String>( getTitle() ) ) );
+    protected String getTitle() {
+        return "Failure impacts";
+    }
+
+    private void addCaption() {
+        add( new Label( "caption", new Model<String>( getCaption() ) ) );
     }
 
     private void addDoneButton() {
@@ -211,7 +215,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         addOrReplace( failuresTablePanel );
     }
 
-    private String getTitle() {
+    private String getCaption() {
         SegmentObject so = getSegmentObject();
         StringBuffer sb = new StringBuffer();
         sb.append( "Impacts of failing" );

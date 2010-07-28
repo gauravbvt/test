@@ -148,6 +148,13 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     /**
      * {@inheritDoc}
      */
+    protected String getTitle() {
+        return "Surveys";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected void close( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.Collapsed, Survey.UNKNOWN );
         update( target, change );

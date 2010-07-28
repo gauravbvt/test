@@ -64,6 +64,13 @@ public class SharingCommitmentsPanel extends FloatingCommandablePanel {
         addCommitmentsTable();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected String getTitle() {
+        return getFlow().getName();
+    }
+
     private void addAbout() {
         Label fromTask = new Label( "fromTask", new Model<String>( ( (Part) getFlow().getSource() ).getTask() ) );
         fromTask.setOutputMarkupId( true );
