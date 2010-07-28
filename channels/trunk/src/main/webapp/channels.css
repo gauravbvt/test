@@ -610,62 +610,6 @@ div.header {
     background: transparent url( 'images/logo.png' ) no-repeat 5px 5px;
 }
 
-.role .header {
-    background: transparent url( 'images/role.png' ) no-repeat 5px 2px;
-}
-
-.actor .header {
-    background: transparent url( 'images/actor.png' ) no-repeat 5px 2px;
-}
-
-.medium .header {
-    background: transparent url( 'images/medium.png' ) no-repeat 5px 2px;
-}
-
-.system .header {
-    background: transparent url( 'images/system.png' ) no-repeat 5px 2px;
-}
-
-.phase .header {
-    background: transparent url( 'images/phase.png' ) no-repeat 5px 2px;
-}
-
-.event .header {
-    background: transparent url( 'images/event.png' ) no-repeat 5px 2px;
-}
-
-.organization .header {
-    background: transparent url( 'images/organization.png' ) no-repeat 5px 2px;
-}
-
-.surveys .header {
-    background: transparent url( 'images/survey_big.png' ) no-repeat 5px 2px;
-}
-
-.assignments .header {
-    background: transparent url( 'images/assignment.png' ) no-repeat 5px 2px;
-}
-
-.commitments .header {
-    background: transparent url( 'images/commitment.png' ) no-repeat 5px 2px;
-}
-
-.eois .header {
-    background: transparent url( 'images/eois.png' ) no-repeat 5px 2px;
-}
-
-.failure .header {
-    background: transparent url( 'images/failure.png' ) no-repeat 5px 2px;
-}
-
-.help .header {
-    background: transparent url( 'images/help.png' ) no-repeat 5px 2px;
-}
-
-.segment .header {
-    background: transparent url( 'images/segment.png' ) no-repeat 5px 2px;
-}
-
 #footer {
     border: 1px outset #6fafaf;
 }
@@ -862,7 +806,6 @@ div.import-dialog {
 /* ----- Floating Boxes ----- */
 
 div.float-bar {
-    /*padding-bottom: 18px;*/
 	height:30px;
     width: 100%;
 	background:url( 'images/float-bar-bg.png' ) repeat-x #c3d9ff;
@@ -879,6 +822,7 @@ div.float-bar-title {
 	position:absolute;
 	padding:6px 0 0 30px;
 	background:url( 'images/float-bar-logo.png' ) no-repeat 8px 7px;
+	text-transform:capitalize;
 }
 
 div.float-bar-close {
@@ -900,7 +844,7 @@ div.float-header {
 }
 
 div.float-header > h1 {
-	padding:0;
+	padding:0 20px 0 0;
 	margin:0;
 	text-transform:capitalize;
 	font-size:18px;
@@ -926,18 +870,24 @@ div.float-header > span.menubar span.dropmenu:hover {
 	color:#000000;
 }
 
-div.float-header > .close {
+div.float-header .close,
+div.header .close {
 	background:none repeat scroll 0 0 #D1D3D4;
 	border:1px solid #BCBEC0;
 	color:#333333;
 	float:right;
 	padding:0;
 	text-transform:lowercase;
-	padding:1px 2px 0 2px;
+	padding:3px 4px 0 4px;
 	margin:-1px 0 0 0;
+	font-size:8pt;
+	line-height:100%;
+	height:13px;
+	font-weight:normal;
 }
 
-div.float-header > .close:hover {
+div.float-header .close:hover,
+div.header .close:hover {
 	border:1px solid #C7C8CA;
 	color:#000000;
     background:#e6e6e6;
