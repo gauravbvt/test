@@ -15,7 +15,6 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.ComponentTag;
@@ -105,7 +104,6 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
 
     private void init() {
         addCaption();
-        addDoneButton();
         addAssumeFail();
         addFlowViewingControls();
         addEssentialFlowMap();
@@ -118,15 +116,6 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
 
     private void addCaption() {
         add( new Label( "caption", new Model<String>( getCaption() ) ) );
-    }
-
-    private void addDoneButton() {
-        AjaxFallbackLink doneLink = new AjaxFallbackLink( "done" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                close( target );
-            }
-        };
-        add( doneLink );
     }
 
     private void addAssumeFail() {
