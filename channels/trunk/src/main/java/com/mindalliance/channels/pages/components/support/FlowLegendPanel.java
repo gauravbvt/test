@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.help;
+package com.mindalliance.channels.pages.components.support;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Segment;

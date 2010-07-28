@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
@@ -19,6 +20,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -204,7 +206,19 @@ public class PlanShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Index" ),
                 indexLink ) );
-        
+        // Help
+        Link helpLink = new BookmarkablePageLink( "link", HelpPage.class );
+        helpLink.add( new AttributeModifier( "target", true, new Model<String>( "help" ) ) );
+        helpLink.setPopupSettings( new PopupSettings(
+               PopupSettings.RESIZABLE |
+                        PopupSettings.SCROLLBARS |
+                        PopupSettings.MENU_BAR |
+                       PopupSettings.TOOL_BAR ) );
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Help" ),
+                helpLink ) );
+
         return menuItems;
     }
 
