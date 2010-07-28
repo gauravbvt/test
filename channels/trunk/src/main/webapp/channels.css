@@ -859,29 +859,108 @@ div.import-dialog {
     overflow: auto;
 }
 
+/* ----- Floating Boxes ----- */
+
 div.float-bar {
-    padding-bottom: 18px;
+    /*padding-bottom: 18px;*/
+	height:30px;
     width: 100%;
-    background-color: #718191;
-    border-bottom: 1px solid #464f5a;
+	background:url( 'images/float-bar-bg.png' ) repeat-x #c3d9ff;
+    border-bottom: 1px solid #999999;
     cursor: move;
+}
+
+div.float-bar-title {
+	font-weight:bold;
+	color:#333333;
+	font-size:12px;
+	float:left;
+	height:24px;
+	position:absolute;
+	padding:6px 0 0 30px;
+	background:url( 'images/float-bar-logo.png' ) no-repeat 8px 7px;
+}
+
+div.float-bar-close {
+	position:absolute;
+	float:right;
+	right:4px;
+	top:4px;
+}
+
+div.float-bar-close a {
+	outline:none;
+}
+
+div.float-header {
+	border-bottom:2px solid #999999;
+	height:25px;
+	margin:0 8px;
+	padding:15px 0 0;
+}
+
+div.float-header > h1 {
+	padding:0;
+	margin:0;
+	text-transform:capitalize;
+	font-size:18px;
+	font-weight:bold;
+	color:#333333;
+}
+
+div.float-header > span.menubar {
+	float:right;
+	position:relative;
+	text-transform:lowercase;
+}
+
+div.float-header > span.menubar span.dropmenu {
+	background: url("images/dropmenu.png") no-repeat scroll 90% 56% #D1D3D4;
+	margin-right:5px;
+	border:1px solid #BCBEC0;
+}
+
+div.float-header > span.menubar span.dropmenu:hover {
+    background: url( 'images/dropmenu.high.png' ) no-repeat scroll 90% 56% #e6e6e6;
+	border:1px solid #C7C8CA;
+	color:#000000;
+}
+
+div.float-header > input.close {
+	background:none repeat scroll 0 0 #D1D3D4;
+	border:1px solid #BCBEC0;
+	color:#333333;
+	float:right;
+	padding:0;
+	text-transform:lowercase;
+	padding:1px 2px 0 2px;
+	margin:-1px 0 0 0;
+}
+
+div.float-header > input.close:hover {
+	border:1px solid #C7C8CA;
+	color:#000000;
+    background:#e6e6e6;
 }
 
 div.float-resize {
     position: absolute;
-    bottom: 0;
-    right: 5px;
+    bottom: 3px;
+    right: 3px;
     float: right;
     cursor: se-resize;
+	line-height:0;
 }
 
 div.aspect {
-    right: 5px;
-    top: 6.3em;
-    bottom: 20px;
-    left: 5px;
+    right: 8px;
+    top: 7em;
+    bottom: 8px;
+    left: 8px;
     overflow: auto;
     position: absolute;
+	border:1px solid #c7c8ca;
+	padding:10px;
 }
 
 .aspect table {

@@ -30,15 +30,15 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     /**
      * Background color.
      */
-    private static final String BG_COLOR = "#dde3eb";
+    private static final String BG_COLOR = "#e8e8e8";
     /**
      * Border width.
      */
-    private static final int BORDER_WIDTH = 1;
+    private static final int BORDER_WIDTH = 2;
     /**
      * Border color.
      */
-    private static final String BORDER_COLOR = "#464f5a";
+    private static final String BORDER_COLOR = "#999999";
     /**
      * JavaScript.
      */

@@ -10,13 +10,13 @@
 <wicket:extend>
     <div wicket:id="mo">  <!-- class="entity" or "plan" etc. added programmatically -->
         <div wicket:id="banner">
-            <div class="header">
+            <div class="float-header">
                 <h1 wicket:id="header-title">[Entity name]</h1>
+                <input wicket:id="done" class="close" type="button" value="Done" />
                 <span class="menubar">
                     <span class="menuitem" wicket:id="showMenu">[show menu]</span>
                     <span class="menuitem" wicket:id="actionMenu">[action menu]</span>
                 </span>
-                <input wicket:id="done" class="close" type="button" value="Done"/>
             </div>
         </div>
         <div class="aspect" wicket:id="aspect">[aspect panel]</div>

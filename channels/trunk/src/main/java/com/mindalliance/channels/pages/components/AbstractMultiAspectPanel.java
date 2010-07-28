@@ -339,7 +339,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      */
     public String getHeaderTitle() {
         String abbreviatedName = StringUtils.abbreviate( getObject().getName(), getMaxTitleNameLength() );
-        return abbreviatedName + " - " + getObject().getTypeName() + " " + getAspectShown();
+        return getObject().getTypeName() + " " + getAspectShown();
     }
 
     /**
