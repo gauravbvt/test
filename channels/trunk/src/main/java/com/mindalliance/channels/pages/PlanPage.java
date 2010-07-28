@@ -22,6 +22,8 @@ import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.SegmentLink;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
+import com.mindalliance.channels.pages.components.help.FeedbackWidget;
+import com.mindalliance.channels.pages.components.help.FlowLegendPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanActionsMenuPanel;
@@ -34,7 +36,6 @@ import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentPanel;
 import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
 import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
-import com.mindalliance.channels.pages.help.FlowLegendPanel;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
@@ -55,6 +56,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -303,7 +306,6 @@ public final class PlanPage extends WebPage implements Updatable {
      * Flow legend panel.
      */
     private Component flowLegendPanel;
-
     /**
      * Cumulated change to an expanded identifiable.
      */
@@ -402,7 +404,7 @@ public final class PlanPage extends WebPage implements Updatable {
         expanded.add( Channels.SOCIAL_ID );
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
-
+        // addFeedbackWidget();
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
@@ -414,6 +416,7 @@ public final class PlanPage extends WebPage implements Updatable {
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
         addHeader();
         addRefresh();
+        addHelp();
         addChangeMessagePanel();
         addGoBackAndForward();
         commander.resynced();
@@ -438,6 +441,14 @@ public final class PlanPage extends WebPage implements Updatable {
         updateNavigation();
         LOG.debug( "Segment page generated" );
         rememberState();
+    }
+
+    private void addFeedbackWidget() {
+        FeedbackWidget feedbackWidget = new FeedbackWidget(
+                "feedback-widget",
+                new Model<String>( "mindalliance" ) );
+        makeVisible( feedbackWidget, false );
+        add( feedbackWidget );        
     }
 
     private void addMaximizedFlowPanel( Change change ) {
@@ -466,7 +477,6 @@ public final class PlanPage extends WebPage implements Updatable {
         }
         form.addOrReplace( flowLegendPanel );
     }
-
 
     /**
      * Get aspect of segment shown.
@@ -559,6 +569,18 @@ public final class PlanPage extends WebPage implements Updatable {
         } );
         form.add( refreshNeededComponent );
         updateRefreshNotice();
+    }
+
+    private void addHelp() {
+        BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
+        helpLink.add( new AttributeModifier( "target", true, new Model<String>( "help" ) ) );
+        helpLink.setPopupSettings( new PopupSettings(
+                PopupSettings.RESIZABLE |
+                        PopupSettings.SCROLLBARS |
+                        PopupSettings.MENU_BAR |
+                        PopupSettings.TOOL_BAR ) );
+
+        form.add( helpLink );
     }
 
     private void addChangeMessagePanel() {
