@@ -13,6 +13,7 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
+import com.mindalliance.channels.pages.components.support.FeedbackWidget;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -68,10 +69,10 @@ public class SOPsReportPage extends WebPage {
 
     public SOPsReportPage( PageParameters parameters ) {
         super( parameters );
-        plan = User.current().getPlan();
+        plan = getPlan();
 
         setStatelessHint( true );
-
+        addFeedbackWidget();
         selector = new SelectorPanel( "selector", parameters );
         if ( !selector.isValid() ) {
             setRedirect( true );
@@ -158,6 +159,20 @@ public class SOPsReportPage extends WebPage {
         add( segmentlistContainer );
     }
 
+    private void addFeedbackWidget() {
+        FeedbackWidget feedbackWidget = new FeedbackWidget(
+                "feedback-widget",
+                new Model<String>(
+                        getPlan().getSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
+                true );
+        makeVisible( feedbackWidget, false );
+        add( feedbackWidget );
+    }
+
+    private Plan getPlan() {
+        return User.current().getPlan();
+    }
+
     private void addDiagramPanel( List<Segment> segments ) {
         Component diagramPanel;
         double[] size = {478L, 400L};
@@ -217,4 +232,17 @@ public class SOPsReportPage extends WebPage {
 //        response.setDateHeader( "Expires", now + 24L*60*60*1000 );
         response.setDateHeader( "Last-Modified", longTime );
     }
+
+    /**
+     * Set a component's visibility.
+     *
+     * @param component a component
+     * @param visible   a boolean
+     */
+    private static void makeVisible( Component component, boolean visible ) {
+        component.add( new AttributeModifier( "style", true, new Model<String>(
+                visible ? "" : "display:none" ) ) );
+    }
+
+
 }

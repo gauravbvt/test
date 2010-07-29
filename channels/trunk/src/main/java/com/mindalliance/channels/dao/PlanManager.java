@@ -62,6 +62,10 @@ public class PlanManager {
     private UserService userService;
 
     private ImportExportFactory importExportFactory;
+    /**
+     * Name of the default support community.
+     */
+    private String defaultSupportCommunity;
 
     //------------------------------------------
     /**
@@ -121,6 +125,14 @@ public class PlanManager {
 
     public void setBuiltInMedia( List<TransmissionMedium> builtInMedia ) {
         this.builtInMedia = builtInMedia;
+    }
+
+    public String getDefaultSupportCommunity() {
+        return defaultSupportCommunity;
+    }
+
+    public void setDefaultSupportCommunity( String defaultSupportCommunity ) {
+        this.defaultSupportCommunity = defaultSupportCommunity;
     }
 
     /**

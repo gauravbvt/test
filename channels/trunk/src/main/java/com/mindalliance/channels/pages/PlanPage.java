@@ -404,7 +404,7 @@ public final class PlanPage extends WebPage implements Updatable {
         expanded.add( Channels.SOCIAL_ID );
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
-        // addFeedbackWidget();
+        addFeedbackWidget();
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
@@ -446,9 +446,11 @@ public final class PlanPage extends WebPage implements Updatable {
     private void addFeedbackWidget() {
         FeedbackWidget feedbackWidget = new FeedbackWidget(
                 "feedback-widget",
-                new Model<String>( "mindalliance" ) );
+                new Model<String>(
+                        getPlan().getSupportCommunityUri( planManager.getDefaultSupportCommunity( ) ) ),
+                true );
         makeVisible( feedbackWidget, false );
-        add( feedbackWidget );        
+        add( feedbackWidget );
     }
 
     private void addMaximizedFlowPanel( Change change ) {

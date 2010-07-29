@@ -14,6 +14,17 @@ body {
 body.profile {
 }
 
+
+a > img {
+    border: 0;
+}
+
+div.header .help-icon {
+    position: relative;
+    top: 9px;
+    padding-left: 5px;
+}
+
 .message td {
     white-space: nowrap;
 }
@@ -1022,11 +1033,12 @@ ul.ranges li a.selected {
 }
 
 span.spinner {
-    margin-left: 5px;
-    vertical-align: middle;
+    padding-left: 15px;
 }
 
 span.spinner img {
+    position: relative;
+    top: 5px;
 }
 
 img.filter {
@@ -1714,7 +1726,8 @@ div.section-content > div.flow > div > img {
 
 /* Help */
 
-body.help {
+body.support {
+    background: white;
     font-size: 11pt;
     margin: 10px;
     padding: 10px;
@@ -1723,41 +1736,4 @@ body.help {
     min-height: 20em;
 }
 
-a > img {
-    border: 0;
-}
-
-#docs {
-    position: relative;
-    left: 20px;
-}
-
-#get-satisfaction {
-    float: left;
-}
-
-div#gsfn_search_widget img { border: none; }
-div#gsfn_search_widget { font-size: 12px; width: 280px; border: 6px solid #DDD; padding: 10px;}
-div#gsfn_search_widget a.widget_title { color: #000; display: block; margin-bottom: 10px; font-weight: bold; }
-div#gsfn_search_widget .powered_by { margin-top: 8px; padding-top: 8px; border-top: 1px solid #DDD; }
-div#gsfn_search_widget .powered_by a { color: #333; font-size: 90%; }
-div#gsfn_search_widget form { margin-bottom: 8px; }
-div#gsfn_search_widget form label { margin-bottom: 5px; display: block; }
-div#gsfn_search_widget form #gsfn_search_query { width: 60%; }
-div#gsfn_search_widget div.gsfn_content { }
-div#gsfn_search_widget div.gsfn_content li { text-align:left; margin-bottom:6px; }
-div#gsfn_search_widget div.gsfn_content a.gsfn_link { line-height: 1; }
-div#gsfn_search_widget div.gsfn_content span.time { font-size: 90%; padding-left: 3px; }
-div#gsfn_search_widget div.gsfn_content p.gsfn_summary { margin-top: 2px }
-
-div#gsfn_list_widget img { border: none; }
-div#gsfn_list_widget { font-size: 12px; width: 250px; border: 6px solid #DDD; padding: 10px; }
-div#gsfn_list_widget a.widget_title { color: #000; display: block; margin-bottom: 10px; font-weight: bold; }
-div#gsfn_list_widget .powered_by { margin-top: 8px; padding-top: 8px; border-top: 1px solid #DDD; }
-div#gsfn_list_widget .powered_by a { color: #333; font-size: 90%; }
-div#gsfn_list_widget div#gsfn_content { }
-div#gsfn_list_widget div#gsfn_content li { text-align:left; margin-bottom:6px; }
-div#gsfn_list_widget div#gsfn_content a.gsfn_link { line-height: 1; }
-div#gsfn_list_widget div#gsfn_content span.time { font-size: 90%; padding-left: 3px; }
-div#gsfn_list_widget div#gsfn_content p.gsfn_summary { margin-top: 2px }
 

@@ -101,6 +101,8 @@ public class Plan extends ModelObject {
      */
     private Place locale;
 
+    private String supportCommunity = "";
+
     //-----------------------------
     public Plan() {
         whenVersioned = new Date();
@@ -152,6 +154,21 @@ public class Plan extends ModelObject {
 
     public void setLocale( Place locale ) {
         this.locale = locale;
+    }
+
+    public String getSupportCommunity() {
+        return supportCommunity == null ? "" : supportCommunity;
+    }
+
+    public void setSupportCommunity( String supportCommunity ) {
+        this.supportCommunity = supportCommunity;
+    }
+
+    public String getSupportCommunityUri( String defaultName ) {
+        String name = getSupportCommunity();
+        return name.isEmpty()
+                ? defaultName
+                : name;
     }
 
     /**
@@ -419,31 +436,31 @@ public class Plan extends ModelObject {
      * {@inheritDoc}
      */
     public boolean references( final ModelObject mo ) {
-        return  ModelObject.areIdentical( locale, mo )
+        return ModelObject.areIdentical( locale, mo )
                 ||
                 CollectionUtils.exists(
-                                segments,
-                                new Predicate() {
-                                    public boolean evaluate( Object obj ) {
-                                        return ModelObject.areIdentical( (ModelObject) obj, mo );
-                                    }
-                                } )
-                        ||
-                        CollectionUtils.exists(
-                                incidents,
-                                new Predicate() {
-                                    public boolean evaluate( Object obj ) {
-                                        return ModelObject.areIdentical( (ModelObject) obj, mo );
-                                    }
-                                } )
-                        ||
-                        CollectionUtils.exists(
-                                organizations,
-                                new Predicate() {
-                                    public boolean evaluate( Object obj ) {
-                                        return ModelObject.areIdentical( (ModelObject) obj, mo );
-                                    }
-                                } );
+                        segments,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ModelObject.areIdentical( (ModelObject) obj, mo );
+                            }
+                        } )
+                ||
+                CollectionUtils.exists(
+                        incidents,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ModelObject.areIdentical( (ModelObject) obj, mo );
+                            }
+                        } )
+                ||
+                CollectionUtils.exists(
+                        organizations,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ModelObject.areIdentical( (ModelObject) obj, mo );
+                            }
+                        } );
     }
 
     /**
