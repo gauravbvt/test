@@ -145,7 +145,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * Make sure plans are valid initialized with some proper http://bit.ly/24Reg.
      */
     public void afterPropertiesSet() {
-        planManager.validate();
+        planManager.assignPlans();
     }
 
     /**

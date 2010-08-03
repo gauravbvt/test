@@ -269,6 +269,14 @@ public final class UserInfo implements Serializable {
         }
     }
 
+    /**
+     * Remove any specific access to a plan.
+     * @param uri the plan uri
+     */
+    void clearAuthority( String uri ) {
+        planAccess.remove( uri );       
+    }
+
     private void grantOthers( List<Plan> planList, String role ) {
         for ( Plan plan : planList ) {
             String uri = plan.getUri();

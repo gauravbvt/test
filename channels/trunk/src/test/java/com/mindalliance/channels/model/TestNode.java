@@ -32,7 +32,7 @@ public class TestNode extends TestCase {
         DefinitionManager definitionManager = new DefinitionManager();
         definitionManager.afterPropertiesSet();
         PlanManager planManager = new PlanManager( definitionManager );
-        planManager.validate();
+        planManager.assignPlans();
 
         Plan plan = planManager.getPlans().get( 0 );
         planDao = planManager.getDao( plan );

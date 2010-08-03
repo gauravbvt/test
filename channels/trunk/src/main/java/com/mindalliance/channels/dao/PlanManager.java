@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Persistent store for plans.
@@ -231,7 +233,7 @@ public class PlanManager {
      */
     public void onAfterCommand( Plan plan, JournalCommand command ) {
         // TODO implement proper listener/callback mechanism
-        if ( command.isMemorable() )
+        if ( command != null && command.isMemorable() )
             try {
                 PlanDao dao = getDao( plan );
                 Exporter exporter = importExportFactory.createExporter( dao );
@@ -252,16 +254,27 @@ public class PlanManager {
     }
 
     /**
-     * Load or create defined plans.
-     * Create default plan if none defined.
-     * Called by DefaultQueryService after properties set.
+     * Assign default plans to users.
      */
-    public synchronized void validate() {
+    public synchronized void assignPlans() {
 
         // Assign default plan to users
         if ( userService != null )
-            for ( User user : userService.getUsers() )
-                user.setPlan( getDefaultPlan( user ) );
+            for ( User user : userService.getUsers() ) {
+                Plan plan = user.getPlan();
+                if ( plan == null )
+                    user.setPlan( getDefaultPlan( user ) );
+                else {
+                    String uri = plan.getUri();
+                    if ( plan.isRetired() ) {
+                        // User was connected to an old production plan
+                        user.setPlan( findProductionPlan( uri ) );
+
+                    } else if ( plan.isProduction() && user.isPlanner( uri ) )
+                        // Plan was put in production
+                        user.setPlan( findDevelopmentPlan( uri ) );
+                }
+            }
 
     }
 
@@ -283,7 +296,7 @@ public class PlanManager {
     /**
      * Import segment from browsed file.
      *
-     * @param plan
+     * @param plan the plan to import into
      * @param inputStream where the segment lies
      * @return a segment, or null if not successful
      */
@@ -309,6 +322,33 @@ public class PlanManager {
     }
 
     /**
+     * Remove all traces of a plan.
+     * @param plan the soon to be ex-plan
+     */
+    public void delete( Plan plan ) {
+        String uri = plan.getUri();
+
+        definitionManager.delete( uri );
+        for ( User user : userService.getUsers() )
+            user.getUserInfo().clearAuthority( uri );
+
+        assignPlans();
+
+        synchronized ( daoIndex ) {
+            Set<Map.Entry<PlanDefinition.Version,PlanDao>> entries =
+                    new HashSet<Map.Entry<PlanDefinition.Version, PlanDao>>( daoIndex.entrySet() );
+            for ( Map.Entry<PlanDefinition.Version, PlanDao> entry : entries ) {
+                PlanDefinition.Version version = entry.getKey();
+                PlanDao dao = entry.getValue();
+                if ( uri.equals( version.getPlanDefinition().getUri() ) ) {
+                    listeners.fireAboutToUnload( dao.getPlan() );
+                    daoIndex.remove( version );
+                }
+            }
+        }
+    }
+
+    /**
      * Make a plan in development version and make it a production version.
      * Retire previous production version of the plan if any, and
      * Create a new development version from a copy of the prior development version.
@@ -317,27 +357,11 @@ public class PlanManager {
      *
      * @param oldDevPlan   a plan
      */
-    private void productize( Plan oldDevPlan ) {
+    public void productize( Plan oldDevPlan ) {
 
         // Stop issue scanning
         listeners.fireAboutToProductize( oldDevPlan );
 
-        // Create development plan from copy of old dev plan
-        Plan newDevPlan = makeNewDevPlan( oldDevPlan );
-
-        // Substitute current plans of users as appropriate
-        for ( User user : userService.getUsers() ) {
-            Plan userPlan = user.getPlan();
-            if ( userPlan != null && userPlan.getUri().equals( oldDevPlan.getUri() ) ) {
-                if ( userPlan.isDevelopment() ) {
-                    user.setPlan( newDevPlan );
-                } else {
-                    if ( userPlan.isProduction() ) {
-                        user.setPlan( oldDevPlan );
-                    }
-                }
-            }
-        }
         // Mark loaded production version of plan retired
         Plan oldProductionPlan = findProductionPlan( oldDevPlan.getUri() );
         if ( oldProductionPlan != null ) {
@@ -345,12 +369,19 @@ public class PlanManager {
             oldProductionPlan.setWhenVersioned( new Date() );
             //daoIndex.remove( oldProductionPlan.getUri() );
         }
+
+        // Create development plan from copy of old dev plan
+        Plan newDevPlan = makeNewDevPlan( oldDevPlan );
+
         // Mark loaded development version of plan as production
         oldDevPlan.setProduction();
         oldDevPlan.setWhenVersioned( new Date() );
 
+        assignPlans();
+
         // Restart issue scanning
         listeners.fireCreated( newDevPlan );
+        listeners.fireProductized( oldDevPlan );
     }
 
     /**
@@ -405,13 +436,23 @@ public class PlanManager {
                     "Plan " + plan + " is not a development version" );
 
         plan.addProducer( producer );
-        List<String> producers = plan.getProducers();
 
+        return revalidateProducers( plan );
+    }
+
+    /**
+     * Check if all producers of a plan want to productize.
+     * Productize the plan if so.
+     * @param plan the plan
+     * @return true if the plan was productized as a result
+     */
+    public boolean revalidateProducers( Plan plan ) {
+        List<String> producers = plan.getProducers();
         for ( User user : userService.getUsers() )
             if ( user.isPlanner( plan.getUri() ) && !producers.contains( user.getUsername() ) )
                 return false;
-
-        productize( plan );
+// TODO reenable production voting
+//        productize( plan );
         return true;
     }
 

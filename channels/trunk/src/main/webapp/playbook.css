@@ -355,6 +355,10 @@ div.issues {
     color: darkred;
 }
 
+input.error {
+    background-color: #ffe4c4;
+}
+
 .policycant {
     color: darkred;
     font-weight:bold;

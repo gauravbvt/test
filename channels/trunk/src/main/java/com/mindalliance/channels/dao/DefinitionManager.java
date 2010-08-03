@@ -125,7 +125,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
 
             synchronized ( definitions ) {
                 for ( String uri : properties.stringPropertyNames() )
-                    memorize( uri, new PlanDefinition( uri, properties.getProperty( uri ) ) );
+                    memorize( new PlanDefinition( uri, properties.getProperty( uri ) ) );
 
                 if ( definitions.isEmpty() )
                     getOrCreate( "default", "Default Plan", "Internal" );
@@ -158,7 +158,8 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
             result = definitions.get( uri );
         else {
             result = new PlanDefinition( uri );
-            memorize( uri, result );
+            memorize( result );
+            LOG.info( "Created plan {}", uri );
         }
 
         result.setName( name );
@@ -166,10 +167,27 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
         return result;
     }
 
-    private void memorize( String uri, PlanDefinition definition ) throws IOException {
+    /**
+     * Delete a plan and its versions.
+     * @param uri the plan's uri
+     */
+    public void delete( String uri ) {
+        delete( get( uri ) );
+    }
+
+    private void delete( PlanDefinition definition ) {
+        String uri = definition.getUri();
+
+        definition.deleteObserver( observer );
+        definitions.remove( uri );
+        definition.delete();
+        LOG.info( "Removed plan {}", uri );
+    }
+
+    private void memorize( PlanDefinition definition ) throws IOException {
         definition.initialize( dataDirectory );
         definition.addObserver( observer );
-        definitions.put( uri, definition );
+        definitions.put( definition.getUri(), definition );
     }
 
     private InputStream findInputStream() throws IOException {
@@ -248,7 +266,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
         return idGenerator;
     }
 
-    public void setIdGenerator( IdGenerator idGenerator ) {
+    public synchronized void setIdGenerator( IdGenerator idGenerator ) {
         this.idGenerator = idGenerator;
     }
 
@@ -304,5 +322,13 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
         List<String> answer = new ArrayList<String>( set );
         Collections.sort( answer );
         return answer;
+    }
+
+    /**
+     * Return the number of managed plan definitions.
+     * @return the number of plan definitions
+     */
+    public int getSize() {
+        return definitions.size();
     }
 }

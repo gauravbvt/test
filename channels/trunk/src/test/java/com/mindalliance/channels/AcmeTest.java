@@ -7,6 +7,9 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
+import org.apache.wicket.util.tester.FormTester;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,4 +65,20 @@ public class AcmeTest extends WalkthroughTest {
         assertEquals( 2, issueMap.get( "GeonameButNoLocation" ).size() );
         assertEquals( 1, issueMap.get( "UnconfirmedJob" ).size() );
      }
+
+    @Override
+    @Test
+    public void testPlan() {
+        super.testPlan();
+        // Page is rendered for user guest
+        FormTester formTester = tester.newFormTester( "big-form" );
+        Plan plan = planDao.getPlan();
+
+        // click on "About plan" in Show menu
+        tester.clickLink( "big-form:planShowMenu:items:1:menuItem:link" );
+        tester.assertComponentOnAjaxResponse( "big-form:plan" );
+        tester.assertComponent( "big-form:plan", PlanEditPanel.class );
+        assertEquals( plan.getName(), formTester.getTextComponentValue( "plan:mo:aspect:name" ) );
+        assertEquals( plan.getDescription(), formTester.getTextComponentValue( "plan:mo:aspect:description" ) );
+    }
 }
