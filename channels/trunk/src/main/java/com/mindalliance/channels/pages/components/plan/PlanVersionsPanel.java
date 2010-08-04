@@ -106,7 +106,8 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
     private void addVotes() {
         WebMarkupContainer prodVotesContainer = new WebMarkupContainer( "prodVotes" );
         add( prodVotesContainer );
-        ListView<Vote> voteList = new ListView<Vote>( "votes", getVotes() ) {
+        final List<Vote> votes = getVotes();
+        ListView<Vote> voteList = new ListView<Vote>( "votes", votes ) {
             protected void populateItem( ListItem<Vote> item ) {
                 final Vote vote = item.getModelObject();
                 boolean isCurrentUser = vote.getUsername().equals( User.current().getUsername() );
@@ -136,10 +137,21 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
                 } );
                 item.add( voteCheckBox );
                 voteCheckBox.setEnabled( isCurrentUser );
+                item.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>( itemCssClasses( item.getIndex(), votes.size() ) ) ) );
+
             }
         };
         prodVotesContainer.add( voteList );
         prodVotesContainer.setVisible( getPlan().isDevelopment() );
+    }
+
+    private String itemCssClasses( int index, int count )  {
+        String classes = index % 2 == 0 ? "even" : "odd";
+        if ( index == count -1 ) classes += " last";
+        return classes;
     }
 
     public List<Vote> getVotes() {

@@ -485,7 +485,7 @@ public class DefaultImagingService implements ImagingService {
                 iconName = getModelObjectIconsPath( part.getActor() );
             }
             if ( iconName == null ) {
-                iconName = this + "/" + ( part.isSystem() ? "system" : "person" );
+                iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "person" );
             }
         } else if ( part.getRole() != null ) {
             Actor knownActor = part.getKnownActualActor( queryService );

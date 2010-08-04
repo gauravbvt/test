@@ -7,14 +7,16 @@
         lang="en">
 <body>
 <wicket:panel>
-    Index on
-    <select wicket:id="indexed">
-        <option>Usernames</option>
-    </select>
-    <span wicket:id="ranges">[range panel]</span>
+    <div class="filters">
+        Index on
+        <select wicket:id="indexed">
+            <option>Usernames</option>
+        </select>
+        <span wicket:id="ranges">[range panel]</span>
+        <input wicket:id="withActorsOnly" type="checkbox"/>&nbsp;Only show users who are agents&nbsp;
+        <input wicket:id="withoutActorsOnly" type="checkbox"/>&nbsp;Only show users who are not agents
+    </div>
     <span wicket:id="participationsTable">[participations table]</span>
-    <input wicket:id="withActorsOnly" type ="checkbox"/>&nbsp;Only show users who are agents&nbsp;
-    <input wicket:id="withoutActorsOnly" type ="checkbox"/>&nbsp;Only show users who are not agents
     <p/>
     <span wicket:id="participationDiv">
        <h3>
