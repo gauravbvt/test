@@ -258,13 +258,14 @@ input[type="text"].invalid-address {
 
 div.issues {
     position: relative;
-    border: 1px solid #c3b980;
+    border: 1px solid #C25036;
     padding: 0;
     margin-top: 5px;
 }
 
 div.issues div.section-title {
-	background:#ffee8d;
+	background:#E78569;
+    border-bottom: 1px solid #C25036;
 }
 
 div.issues div.section-title ul.menu {
@@ -279,7 +280,6 @@ div.issues h4 {
     background: transparent url( 'images/warning.png' ) no-repeat 8px 5px;
     padding:5px 0 3px 30px;
 	margin:0;
-    border-bottom: 1px solid #c3b980;
 	text-transform:capitalize;
 }
 
@@ -301,7 +301,7 @@ div.issue-details table {
 }
 
 input.error, div.issues {
-    background-color: #fff7ca;
+    background-color: #ebcabd;
 }
 
 span.error, li.error {
@@ -942,8 +942,12 @@ div.aspect table {
 }
 
 div.aspect h3 {
-	margin-bottom:10px;
+	margin:5px 0 10px 0;
 	padding:5px 0;
+}
+
+div.aspect div.picture {
+	overflow:auto;
 }
 
 
@@ -952,7 +956,8 @@ div.aspect h3 {
 .aspect table.data-table {
     border-collapse: collapse;
 	font-size:11px;
-	margin:5px 0;
+	margin:0 0 5px 0;
+	border-top:1px solid #999999;
 }
 
 .aspect table.data-table td {
@@ -964,7 +969,6 @@ div.aspect h3 {
 .aspect table.data-table tr.headers {
 	background:#DCDDDE;
 	border-bottom:1px solid #999999;
-	border-top:1px solid #999999;
 	height:24px;
     font-weight: bold;
 }
@@ -985,16 +989,40 @@ div.aspect h3 {
 	border-bottom:1px solid #c7c8ca;
 }
 
+.aspect table.data-table tr.odd.last,
+.aspect table.data-table tr.even.last {
+	border-bottom:1px solid #999999;
+}
+
 .aspect table.data-table a.survey-button {
 	display:block;
 	text-align:center;
 }
 
 
-/* ----- Floating Boxes - Data Tables - Pagination ----- */
+/* ----- Floating Boxes - Data Tables - Controls ----- */
+
+.aspect div.filters {
+	background:#E8E8E8;
+	border-top:1px solid #999999;
+	color:#333333;
+	font-size:10px;
+	font-weight:bold;
+	padding:5px;
+}
+
+.aspect div.filters select {
+	background:#FFFFFF;
+	border:1px solid #999999;
+	font-size:10px;
+	margin:0 5px;
+	padding:0;
+	color:#333333;
+}
 
 .aspect thead tr.navigation {
 	background:#E8E8E8;
+	border-bottom:1px solid #999999;
 }
 
 .aspect thead tr.navigation td {
@@ -1007,7 +1035,8 @@ div.aspect h3 {
 	height:21px;
 }
 
-.aspect div.navigator a {
+.aspect div.navigator a,
+.aspect div.filters ul.ranges li a {
 	background:#F6F6F6;
 	border:1px solid #BCBEC0;
 	color:#666666;
@@ -1016,19 +1045,33 @@ div.aspect h3 {
 	padding:0 3px;
 }
 
-.aspect div.navigator a:hover {
+.aspect div.navigator a:hover,
+.aspect div.filters ul.ranges li a:hover {
 	background:#F6F6F6;
 	border:1px solid #999999;
 	color:#333333;
 }
 
-.aspect div.navigator em {
+.aspect div.navigator em,
+.aspect div.filters ul.ranges li a.selected {
 	background:none repeat scroll 0 0 #DCDDDE;
 	border:1px solid #BCBEC0;
 	color:#999999;
 	font-style:normal;
 	font-weight:bold;	
 	padding:0 3px;
+}
+
+.aspect div.filters ul.ranges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+	float:right;
+}
+
+.aspect div.filters ul.ranges li {
+    display: inline;
 }
 
 
