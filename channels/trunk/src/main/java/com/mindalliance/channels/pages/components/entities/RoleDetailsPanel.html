@@ -10,12 +10,14 @@
     <tr>
         <td colspan="2">
             <h3>Who performs this role</h3>
-            Index on
-            <select wicket:id="indexed">
-                <option>Agents</option>
-            </select>
+			<div class="filters">
+	            Index on
+	            <select wicket:id="indexed">
+	                <option>Agents</option>
+	            </select>
+	            <span wicket:id="nameRanges">[name range panel]</span>
+			</div>
             <div>
-                <span wicket:id="nameRanges">[name range panel]</span>
                 <span wicket:id="roleEmployments">[role employments panel]</span>
             </div>
         </td>

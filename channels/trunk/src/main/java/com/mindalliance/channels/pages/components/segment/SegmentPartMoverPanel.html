@@ -8,8 +8,10 @@
 <body>
 <wicket:panel>
     <h3>Move selected tasks to another segment</h3>
-    <div>Move to segment <select wicket:id="destinationSegment"><option>segment</option></select></div>
+    <div class="filters">
     <a wicket:id="selectAllOrNone" href="#"><span wicket:id="allOrNone">Select all</span></a>
+	&nbsp;|&nbsp;Move to segment <select wicket:id="destinationSegment"><option>segment</option></select>
+	</div>
     <span wicket:id="parts">[part selector table]</span>
     <br/>
     <input wicket:id="move" type="button" value="Move"/>

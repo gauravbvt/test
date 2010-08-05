@@ -4,7 +4,7 @@ body {
     padding: 0;
     position: absolute;
     top: 0;
-    bottom: 5px;
+    bottom: 0;
     left: 0;
     right: 0;
     min-width: 94em;
@@ -162,11 +162,7 @@ div.section-title {
 
 div.header {
     height: 5em;
-    padding: 1em 0 0 60px;
-}
-
-form > div.header {
-    margin: 5px 0;
+    padding: 10px 0 0 60px;
 }
 
 div.section, div.form {
@@ -1009,6 +1005,7 @@ div.aspect div.picture {
 	font-size:10px;
 	font-weight:bold;
 	padding:5px;
+	height:19px;
 }
 
 .aspect div.filters select {
@@ -1084,56 +1081,84 @@ div.aspect div.picture {
 }
 
 
-/* Tabbed panels */
+/* ----- Floating Boxes - Tabs ----- */
 
-div.tabpanel div.tab-row {
-    float: left;
-    width: 100%;
-    background: #DAE0D2 url( "images/tabs/bg.gif" ) repeat-x bottom;
-    line-height: normal;
+.aspect div.tabpanel > div,
+.aspect div.tabpanel div.tab-panel {
+	clear:both;
 }
 
-div.tabpanel div.tab-row ul {
+.aspect div.tabpanel div.tab-row {
+    float: left;
+    width: 100%;
+    line-height: normal;
+	background:  url( "images/tab-bg-repeat.png" ) repeat-x;
+	margin:10px 0;
+}
+
+.aspect div.tabpanel div.tab-row ul {
     margin: 0;
-    padding: 10px 10px 0;
+    padding: 0;
     list-style: none;
 }
 
-div.tabpanel div.tab-row li {
+.aspect div.tabpanel div.tab-row li {
     float: left;
-    background: url( "images/tabs/left.gif" ) no-repeat left top;
     margin: 0;
-    padding: 0 0 0 9px;
+    padding: 0;
 }
 
-div.tabpanel div.tab-row a {
+.aspect div.tabpanel div.tab-row a {
     display: block;
-    background: url( "images/tabs/right.gif" ) no-repeat right top;
-    padding: 5px 15px 4px 6px;
+    background: #E8E8E8;
+	height:20px;
+    padding: 4px 10px 0 10px;
     text-decoration: none;
     font-weight: bold;
-    color: #776655;
+    color: #666666;
+    white-space: nowrap;
+	border:1px solid #999999;
+	margin:0 0 0 5px;
+}
+
+.aspect div.tabpanel div.tab-row a:hover {
+    color: #333333;
+}
+
+.aspect div.tabpanel div.tab-row li.selected a {
+    display: block;
+    background: #f6f6f6;
+	border-bottom:1px solid #f6f6f6;
+	height: 20px;
+    padding: 4px 10px 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #000000;
     white-space: nowrap;
 }
 
-div.tabpanel div.tab-row a:hover {
-    color: #333333;
+
+/* ----- Floating Boxes - Indices ----- */
+
+.aspect table.indices-table {
+	background:#F3F3F3;
+	border-bottom:1px solid #999999;
+	border-top:1px solid #999999;
+	font-size:11px;	
+	padding:5px;
+	color:#333333;
+	border-collapse:collapse;
+	margin:0 0 5px 0;
 }
 
-div.tabpanel div.tab-row li.selected {
-    background-image: url( "images/tabs/left_on.gif" );
+.aspect table.indices-table ul.index {
+	list-style:square;
+	margin:0;
+	padding:10px 0 10px 25px;
 }
 
-div.tabpanel div.tab-row li.selected a {
-    background-image: url( "images/tabs/right_on.gif" );
-    color: #333333;
-    padding-bottom: 5px;
-}
 
-div.tabpanel table {
-    border: 1px solid transparent;
-    display: block;
-}
+/* ----- Ranges - Default ----- */
 
 ul.ranges {
     list-style: none;

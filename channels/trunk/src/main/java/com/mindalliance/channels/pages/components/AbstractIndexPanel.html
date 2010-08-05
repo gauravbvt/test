@@ -7,14 +7,16 @@
         lang="en">
 <body>
 <wicket:panel>
-    Index
-    <select wicket:id="indexed">
-        <option>All</option>
-    </select>
-    Filter: <input class="filter" wicket:id="filter" type="text" size="30"/>
+	<div class="filters">
+    	Index
+    	<select wicket:id="indexed">
+    	    <option>All</option>
+    	</select>
+    	Filter: <input class="filter" wicket:id="filter" type="text" size="30"/>
+    	<span wicket:id="nameRanges">[name range panel]</span>
+	</div>
     <div>
-        <span wicket:id="nameRanges">[name range panel]</span>
-        <table wicket:id="indices">
+        <table wicket:id="indices" class="indices-table">
             <tr>
                 <td>
                     <ul class="index">
