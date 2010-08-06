@@ -23,6 +23,12 @@
             <organization>Mind-Alliance Inc.</organization>
         </developer>
         <developer>
+             <id>romit</id>
+             <name>Romit Chatterjee</name>
+             <email>rc@mind-alliance.com</email>
+             <organization>Mind-Alliance Inc.</organization>
+         </developer>
+        <developer>
             <id>jf</id>
             <name>Jean-François Cloutier</name>
             <email>jf@mind-alliance.com</email>
@@ -164,9 +170,9 @@
             </exclusions>
         </dependency>
         <dependency>
-          <groupId>maven</groupId>
-          <artifactId>velocity</artifactId>
-          <version>1.5-20060721.044818</version>
+            <groupId>maven</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.5-20060721.044818</version>
             <exclusions>
                 <exclusion>
                     <groupId>avalon-logkit</groupId>
@@ -189,38 +195,38 @@
 
         <!-- SECURITY -->
         <dependency>
-             <groupId>org.springframework.security</groupId>
-             <artifactId>spring-security-core</artifactId>
-             <version>${spring-security.version}</version>
-             <exclusions>
-                 <exclusion>
-                     <groupId>commons-logging</groupId>
-                     <artifactId>commons-logging</artifactId>
-                 </exclusion>
-             </exclusions>
-         </dependency>
-         <dependency>
-             <groupId>org.springframework.security</groupId>
-             <artifactId>spring-security-web</artifactId>
-             <version>${spring.version}</version>
-             <exclusions>
-                 <exclusion>
-                     <groupId>commons-logging</groupId>
-                     <artifactId>commons-logging</artifactId>
-                 </exclusion>
-             </exclusions>
-         </dependency>
-         <dependency>
-             <groupId>org.springframework.security</groupId>
-             <artifactId>spring-security-config</artifactId>
-             <version>${spring.version}</version>
-             <exclusions>
-                 <exclusion>
-                     <groupId>commons-logging</groupId>
-                     <artifactId>commons-logging</artifactId>
-                 </exclusion>
-             </exclusions>
-         </dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring-security.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>org.jgrapht</groupId>
@@ -241,10 +247,10 @@
         </dependency>
 
         <dependency>
-             <groupId>commons-io</groupId>
-             <artifactId>commons-io</artifactId>
-             <version>1.3</version>
-         </dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.3</version>
+        </dependency>
 
         <dependency>
             <groupId>commons-lang</groupId>
@@ -316,9 +322,9 @@
             -->
         </dependency>
         <dependency>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-core</artifactId>
-          <version>1.9.1</version>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>1.9.1</version>
         </dependency>
 
         <!-- LOGGING -->
@@ -367,11 +373,11 @@
 
         <!-- Database -->
         <dependency>
-          <groupId>org.neodatis</groupId>
-          <artifactId>neodatis-odb</artifactId>
-          <version>1.9.24.679</version>
+            <groupId>org.neodatis</groupId>
+            <artifactId>neodatis-odb</artifactId>
+            <version>1.9.24.679</version>
         </dependency>
-        
+
         <!--  JUNIT DEPENDENCY FOR TESTING -->
         <dependency>
             <groupId>junit</groupId>
@@ -388,11 +394,17 @@
 
         <!--  JETTY DEPENDENCIES FOR TESTING  -->
         <!--<dependency>-->
-            <!--<groupId>org.mortbay.jetty</groupId>-->
-            <!--<artifactId>servlet-api-2.5</artifactId>-->
-            <!--<version>${jetty.version}</version>-->
-            <!--<scope>provided</scope>-->
+        <!--<groupId>org.mortbay.jetty</groupId>-->
+        <!--<artifactId>servlet-api-2.5</artifactId>-->
+        <!--<version>${jetty.version}</version>-->
+        <!--<scope>provided</scope>-->
         <!--</dependency>-->
+
+        <dependency>
+            <groupId>com.agilejava.docbkx</groupId>
+            <artifactId>docbkx-maven-plugin</artifactId>
+            <version>2.0.10</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -423,7 +435,7 @@
                     <exclude>**/*.java</exclude>
                 </excludes>
             </testResource>
-       </testResources>
+        </testResources>
         <plugins>
             <plugin>
                 <inherited>true</inherited>
@@ -471,48 +483,39 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <!-- Plugin shading for Doxia integration with Maven 2.0 -->
-
-              <!-- Doxia -->
-<!--
+            <!-- Docbkx -->
             <plugin>
-              <groupId>org.apache.maven.doxia</groupId>
-              <artifactId>doxia-maven-plugin</artifactId>
-              <version>${doxiaVersion}</version>
-              <executions>
-                <execution>
-                  <phase>pre-site</phase>
-                  <goals>
-                    <goal>render-books</goal>
-                  </goals>
-                </execution>
-              </executions>
-              <configuration>
-                <generatedDocs>target/books</generatedDocs>
-                <books>
-                  <book>
-                    <directory>src/main/books/user_manual</directory>
-                    <descriptor>src/main/books/user_manual/user_manual.xml</descriptor>
-                    <formats>
-                      <format>
-                        <id>xhtml</id>
-                      </format>
--->
-<!--
-                      <format>
-                        <id>pdf</id>
-                      </format>
--->
-<!--
-                      <format>
-                        <id>rtf</id>
-                      </format>
-                    </formats>
-                  </book>
-                </books>
-              </configuration>
+                <groupId>com.agilejava.docbkx</groupId>
+                <artifactId>docbkx-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <configuration>
+                           <!--<ignoreImageScaling>false</ignoreImageScaling>-->
+                            <!--<generateToc>true</generateToc>
+                            <generateIndex>true</generateIndex>-->
+                            <!--<targetDirectory>${basedir}/src/webapp/doc</targetDirectory>-->
+                        </configuration>
+                        <goals>
+                            <goal>generate-html</goal>
+                            <goal>generate-pdf</goal>
+                        </goals>
+                        <phase>pre-site</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.docbook</groupId>
+                        <artifactId>docbook-xml</artifactId>
+                        <version>4.4</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <chunkedOutput>true</chunkedOutput>
+                    <targetDirectory>${basedir}/src/main/webapp/doc</targetDirectory>
+                    <ignoreImageScaling>true</ignoreImageScaling>
+                </configuration>
             </plugin>
--->
         </plugins>
     </build>
 
@@ -609,8 +612,5 @@
         <spring-security.version>3.0.1.RELEASE</spring-security.version>
         <wicket.version>1.4.1</wicket.version>
         <jetty.version>6.1.4</jetty.version>
-<!--
-        <doxiaVersion>1.1.3</doxiaVersion>
--->
     </properties>
 </project>

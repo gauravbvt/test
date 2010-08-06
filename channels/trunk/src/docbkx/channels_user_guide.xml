@@ -1,0 +1,2801 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book version="5.0" xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:m="http://www.w3.org/1998/Math/MathML"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      xmlns:db="http://docbook.org/ns/docbook">
+  <info>
+    <title>Information Sharing Planning with Channels</title>
+
+    <copyright>
+      <year>2010</year>
+    </copyright>
+
+    <author>
+      <personname><firstname>Jean-Francois</firstname><surname>Cloutier</surname></personname>
+
+      <affiliation>
+        <orgname>Mind-Alliance Systems</orgname>
+      </affiliation>
+    </author>
+
+    <pubdate>July 31, 2010</pubdate>
+
+    <abstract>
+      <para>This document introduces the key concepts of Information Sharing
+      Planning, gives a tour of the Channels ISP web application, outlines a
+      planning method, and briefly compares Information Sharing Planning with
+      Business Process Management.</para>
+    </abstract>
+  </info>
+
+  <chapter>
+    <title>Motivation and definitions</title>
+
+    <para>Organizations operate in an increasingly inter-connected and
+    inter-dependent world. Systemic risks are growing. Organizations must
+    network to compete in a global marketplace. They can no longer respond to
+    major crisis nor can they seize global business opportunities on their
+    own. Success now largely depends on the timely and targeted sharing of
+    information within and between organizations.</para>
+
+    <para>During a crisis, information will not spontaneously flow as needed.
+    Maintaining contact lists is not enough; organizations must plan ahead and
+    create actionable information sharing procedures.</para>
+
+    <para>Information Sharing Planning provides a framework and method for
+    designing and improving the information sharing procedures required to
+    successfully manage systemic risks and seize opportunities.</para>
+
+    <section>
+      <title>In a nutshell</title>
+
+      <para><emphasis>Information Sharing Planning captures, analyzes and
+      deploys knowledge of how organizations need to share information to
+      mitigate systemic risks and seize opportunities from anticipated
+      events.</emphasis></para>
+
+      <para>Information Sharing Planning (ISP) produces information sharing
+      procedures for event preparedness, response and recovery. Information
+      Sharing Plans capture commitments to share the information required for
+      organizations to fulfill their missions.</para>
+
+      <para>ISP uncovers:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>who needs what information, and why and when,</para>
+        </listitem>
+
+        <listitem>
+          <para>who has or can produce needed information, and how and
+          when,</para>
+        </listitem>
+
+        <listitem>
+          <para>what information should flow, and when and how,</para>
+        </listitem>
+
+        <listitem>
+          <para>the consequences of not sharing according to Plan.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>The deliverables of ISP are:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>documented information sharing procedures</para>
+        </listitem>
+
+        <listitem>
+          <para>individualized information sharing 'playbooks',</para>
+        </listitem>
+
+        <listitem>
+          <para>information flow analytics and visualizations,</para>
+        </listitem>
+
+        <listitem>
+          <para>detected information sharing gaps, bottlenecks and single
+          points of failure.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>It is important understand that an Information Sharing Plan is not
+      an action plan. Its objective is not to dictate a sequence of actions.
+      Information sharing planning concerns itself exclusively with capturing
+      the information sharing required according to circumstance so that
+      necessary tasks can be carried out successfully.</para>
+
+      <para>However, task sequencing is not entirely absent from ISP. A task
+      may require information produced by another task that would then
+      necessarily precede it. These sequencing constraints do not typically
+      apply to all tasks and they certainly do not dictate a unique ordering
+      for all tasks. In any case, attempting to define an action plan for
+      organizations that don't have a central authority is more often than not
+      an exercise in futility. What really matters here is capturing what
+      needs to be done, what information is required and produced, and how and
+      when it should or should not be shared.</para>
+    </section>
+
+    <section>
+      <title>Definitions</title>
+
+      <para>An <glossterm>Information Sharing Plan</glossterm> captures the
+      information sharing procedures that people and systems in roles of
+      responsibility are expected to apply in order to fulfill the missions of
+      their organizations before, during and/or after certain types of events.
+      A Plan is comprised of tasks and information flows. Tasks manage risks,
+      achieve gains and/or contribute information to other tasks. Information
+      flows connect tasks that produce information with tasks that require
+      it.</para>
+
+      <para>An Information Sharing Plan can be abstracted from a specific
+      context (a context is a collection of organizations with people and
+      systems in their employ) so as to make the Plan generally
+      applicable.</para>
+
+      <para>An <glossterm>event</glossterm> in ISP is something that happens
+      or has happened somewhere and that introduces risks to organizations or
+      to their missions.</para>
+
+      <para>A <glossterm>goal</glossterm> is either a risk or a gain. A goal
+      is associated with the pre-, co- or post- event phase of an anticipated
+      event. A <glossterm>risk</glossterm> is a possible, negative outcome and
+      it is categorized according to an actuarial taxonomy of risks, and it is
+      rated as more or less severe. A <glossterm>gain</glossterm> is the flip
+      side of a risk. It is a possible positive outcome, and it is categorized
+      by a taxonomy that mirrors the risk taxonomy. A gain is rated as either
+      low, medium or high.</para>
+
+      <para>A goal is either a risk or a gain. A goal is associated with the
+      pre-, co- or post- event phase of an anticipated event. A risk is a
+      possible, negative outcome and it is categorized according to an
+      actuarial taxonomy of risks, and it is rated as more or less severe. A
+      gain is the flip side of a risk. It is a possible positive outcome, and
+      it is categorized by a taxonomy that mirrors the risk taxonomy. A gain
+      is rated as either low, medium or high.</para>
+
+      <para>Information sharing plans will typically deal with more than one
+      phase of more that one type of event. Because plans can become quite
+      large, planners break them into smaller, more manageable units of
+      planning called segments.</para>
+
+      <para>An information sharing <glossterm>segment</glossterm> covers one
+      phase of one type of event, and it will typically focus on just a few
+      goals of organizations. Segments usually depend on other segments. Two
+      segments are co-dependent when information produced by a task in one
+      segment is consumed by a task in the other, or when a task in one
+      segment initiates the event phase covered by the other segment.</para>
+
+      <para>Segments are planning artifacts. They are not meaningful to
+      non-planners. An information sharing playbook ignores segment boundaries
+      when aggregating a person or system's task assignments and sharing
+      commitments.</para>
+
+      <para>A <glossterm>task</glossterm> in ISP describes something done
+      somewhere for some purpose by a person or system in a role of
+      responsibility on behalf of an organization. The people or systems
+      carrying out tasks are profiled by name, role, jurisdiction and/or
+      organization. The executor of a task may be profiled only partially so
+      that more than one person or system match the profile and get assigned
+      to the task. According to a tasks' definition, those assigned to the
+      task are expected to carry it out either as a team or on their
+      own.</para>
+
+      <para>Tasks are considered useful if they:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>achieve risk mitigation or gains,</para>
+        </listitem>
+
+        <listitem>
+          <para>initiate or terminate (phases of) events,</para>
+        </listitem>
+
+        <listitem>
+          <para>or produce information needed by other useful tasks.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Tasks can be triggered or terminated by:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>awareness of events,</para>
+        </listitem>
+
+        <listitem>
+          <para>notifications they receive,</para>
+        </listitem>
+
+        <listitem>
+          <para>requests for information they receive.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><glossterm>Information flows</glossterm> link tasks that produce
+      information to tasks that consume it. A flow is characterized by:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>the information communicated (down to its elements, each with
+          optional secrecy classifications and optional sourcing and handling
+          instructions),</para>
+        </listitem>
+
+        <listitem>
+          <para>the mode of communication (request vs notification, unicast vs
+          broadcast),</para>
+        </listitem>
+
+        <listitem>
+          <para>a list of preferred communication media (phone, face-to-face
+          etc.),</para>
+        </listitem>
+
+        <listitem>
+          <para>the impacts, if any, the communication may have (it might
+          trigger or terminate a task),</para>
+        </listitem>
+
+        <listitem>
+          <para>policies that mandate or prohibit sharing.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><glossterm>Task assignments</glossterm> are determined by matching
+      the tasks specified in the Plan with the people and systems profiled in
+      a context. People and systems are bound by <glossterm>information
+      sharing commitments</glossterm> when they are assigned tasks that
+      produce information consumed by other tasks.</para>
+
+      <para>The <glossterm>information sharing procedures</glossterm> captured
+      by a Plan are the task assignments plus the information sharing
+      commitments of all persons and systems in context.</para>
+
+      <para>An <glossterm>information sharing playbook</glossterm> is the sum
+      of all information sharing procedures in a Plan for a given person or
+      system.</para>
+
+      <para>Plans, segments, tasks, information needs, capabilities and flows
+      are defined in terms of actual or types of agents, places, roles,
+      organizations, events, communication media and phases of events. These
+      are called entities. An entity in ISP is grab-all concept for something
+      not planned that can be unambiguously referenced by name. Entities may
+      themselves be defined in terms of other entities (an organization
+      assigns roles to the persons it employs and systems it administers,
+      etc.).</para>
+
+      <para>Actual entities (“Jane Smith”, “ACME Inc.”, “Morristown, Morris
+      County, NJ, USA” etc.) are categorized by types of entities (“Senior
+      executive”, “Corporation”, “City” etc.). Entity types can refine other
+      entity types (a “Senior executive” is an “Executive”).</para>
+
+      <para>An <glossterm>agent</glossterm> is either a person or an
+      information processing system (system for short). A system is capable of
+      sending notifications, answering queries, receiving notifications or
+      sending queries. An agent has contact information. An agent's clearance
+      is a list of secrecy classifications. A secrecy classification has a
+      name (“NATO”) and an ordered list of secrecy levels (“Restricted”,
+      “Confidential”, “Secret”, “Focal Top Secret”, “Cosmic Top
+      Secret”).</para>
+
+      <para>An <glossterm>organization</glossterm> is a group of agents
+      organized to accomplish a mission. An organization assigns roles of
+      responsibility to the persons and systems that act on its behalf. An
+      organization has contact information and may contain other
+      organizations. An organization may have information sharing agreements
+      with other organizations to formalize the sharing commitments its
+      members has with members of other organizations.</para>
+
+      <para>A <glossterm>role</glossterm> is a set of powers and
+      responsibilities assigned by an organization to an agent acting on
+      behalf of the organization. A role assignment may be restricted to a
+      jurisdiction.</para>
+
+      <para>A <glossterm>place</glossterm> is either a geographical area (some
+      city, county, state, country, natural preserve etc.) or a known location
+      (some train station, building etc.). A place can be contained in another
+      (for example, a building can be in a campus). An event and an event type
+      can both be scoped to a place.</para>
+
+      <para>A <glossterm>phase</glossterm> names a time period relative to an
+      event. A phase of an event is either CONFIDENTIAL - Copyright (C) 2010
+      Mind-Alliance Systems. All Rights Reserved. 8 set to before, during or
+      after the event. Typical phases are “Preparing”, “Responding” and
+      “Recovering”.</para>
+
+      <para>A <glossterm>communication medium</glossterm> is how agents
+      transmit information. A medium is either unicast (transmits to a single,
+      known agent), multicast (transmits to multiple, known agents) or
+      broadcast (little to no control over who receives the transmission).
+      Communication media may or may not be technology-based. “Telephone”,
+      “Email”, “Instant Messaging” are examples of unicast communication
+      media, and so is “Face-to-face”. “Notification system” and “Meeting” are
+      both multicast media. “Television”, “Radio” and “PA System” are examples
+      of broadcast media. A communication medium can delegate transmissions to
+      other media (for example, VoIP can interface with Telephones). The
+      security of a medium is expressed in terms of secrecy
+      classifications.</para>
+
+      <para>ISP identifies more than 60 different kinds of
+      <glossterm>issues</glossterm> about tasks, information flows, entities
+      and entire segments and plans. There are issues of validity (definition
+      errors), completeness (missing Plan elements) and robustness (something
+      that makes the Plan failure-prone). An issue has a description, a list
+      of suggested remediations, and a severity level.</para>
+    </section>
+</chapter>
+<chapter>
+    <title>Using Channels</title>
+
+    <section>
+      <title>Channels basics</title>
+
+      <para>Channels is a collaborative Web application for building,
+      analyzing and deploying Information Sharing Plans.</para>
+
+      <para>Each Information Sharing Plan has one development version (the
+      only one that can be modified), possibly one production version (the
+      only one participants can access to view their playbooks), and zero or
+      more retired versions (prior production versions).</para>
+
+      <section>
+        <title>User roles</title>
+
+        <para>Channels recognizes three user roles: administrators, planners
+        and Plan participants. Administrators assign planners and participants
+        to plans hosted by a Channels instance. Planners jointly develop,
+        review and deploy information sharing plans. Participants view their
+        playbooks and respond to surveys from planners about issue
+        resolutions.</para>
+
+        <para>An administrator can:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>add new plans to Channels,</para>
+          </listitem>
+
+          <listitem>
+            <para>assign users to plans and change their user roles,</para>
+          </listitem>
+
+          <listitem>
+            <para>do what any planner or participant can do, but for all
+            Plans.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>A planner can:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>view assigned plans (all versions),</para>
+          </listitem>
+
+          <listitem>
+            <para>modify the development version of an assigned Plan,</para>
+          </listitem>
+
+          <listitem>
+            <para>view the reports from an assigned Plan (all
+            versions),</para>
+          </listitem>
+
+          <listitem>
+            <para>view all playbooks from an assigned Plan (all
+            versions),</para>
+          </listitem>
+
+          <listitem>
+            <para>vote with other planners to put the development version of
+            an assigned Plan into production,</para>
+          </listitem>
+
+          <listitem>
+            <para>launch, access and close online surveys of selected planners
+            and participants about issues in an assigned Plan.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>A participant can:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>view his/her playbook from the production version of an
+            assigned Plan,</para>
+          </listitem>
+
+          <listitem>
+            <para>access and respond to online surveys.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Logging in and selecting a Plan and segment</title>
+
+        <para>When accessing Channels, an unrecognized user is presented with
+        a login screen.</para>
+
+        <screenshot>
+          <info>
+            <title>Login screen</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_50.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>After logging in, a user with planning privileges (a planner)
+        accesses the Plan Editor. A participant is directed to his/her
+        playbook (see section 3.15). For a planner, the editor opens on the
+        development version of an assigned Plan.</para>
+
+        <para>When the Plan Editor is first accessed, Channels pre-selects a
+        segment and a task within it. The task with its “receive” and “send”
+        information flows are shown “collapsed” and summarized.</para>
+
+        <para>A planner can at any time select to see another version of the
+        Plan, if any. A planner can also switch to another assigned Plan. Only
+        the development version of a Plan can be modified; retired and
+        production versions are “read-only” (all form fields are disabled, no
+        survey can be launched).</para>
+
+        <para>A planner can at any time select which segment within a Plan to
+        view or work on. The tasks and information flows of the selected
+        segment are visualized as a flow map (a directed graph). The selected
+        task is highlighted (by a gray rectangle) in the flow map.</para>
+
+        <screenshot>
+          <info>
+            <title>Plan editor</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_1.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Flow maps can be quite large. A planner can maximize a flow map
+        to see more of it without needing to scroll. Whether maximized or not,
+        a flow map can be zoomed out to fit within the available space.</para>
+
+        <screenshot>
+          <info>
+            <title>Plan editor with flow map made to fit</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_1a.png" scale="50"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Tasks and flows are drawn in red if they have known issues.
+        Green and red traffic lights represent the start and end of the event
+        phase covered by the segment. Tasks that are triggered by the start of
+        the segment are connected to the green traffic light icon. Tasks that
+        terminate the event phase are linked to the red traffic light.</para>
+
+        <para>Information flows (information shared), information needs
+        (information needed for carrying out a task) and information
+        capabilities (shareable information produced by carrying out a task)
+        are shown as arrows. Single-headed arrows represent notifications.
+        Double-headed arrows are requests, with the empty arrow head pointing
+        to the task that consumes the information request, and with the full
+        arrow head pointing to the task that consumes the answer (the
+        requested information flows to it).</para>
+
+        <para>Dots indicate to-be-determined tasks. An arrow from a task to a
+        dot represents an information capability of the task (information
+        produced by the task that can be shared for use in other tasks). An
+        arrow from a dot to a task represents an information need of the task
+        (the task needs information possibly produced by other tasks).</para>
+
+        <para>Tasks with a blue background denote remote tasks, that is, tasks
+        from another segment that are connected by sharing flows to tasks in
+        the selected segment.</para>
+
+        <screenshot>
+          <info>
+            <title>Maximized flow map</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_2.png" scale="50"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>When a task is selected in a maximized flow map, the flow map is
+        automatically de-maximized to show the summaries of the selected task
+        and those of its flows.</para>
+      </section>
+
+      <section>
+        <title>Editing tasks and flows</title>
+
+        <para>When a task is expanded, its summary is replaced by a form with
+        fields for the editable attributes of the task. The “sends” of the
+        task (information shared by the task plus its information
+        capabilities) and the “receives” of the task (information shared with
+        the task plus its information needs) can also each be expanded into
+        their edit forms.</para>
+
+        <screenshot>
+          <info>
+            <title>Task and flow editors</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_3.png" scale="50"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>A task is defined by first naming it. It is further defined by
+        stating where it is to be executed, by whom, in what role, for what
+        jurisdiction, and on behalf of what organization. Any of the location,
+        agent, jurisdiction, role, and organization (entities) that specify a
+        task can be left unnamed so as to imply that more than one agent can
+        be assigned to the task. When the entities are named, the names can
+        identify actual entities (Morritown, NJ, John Doe, ACME etc.) or types
+        of entities (a city, a certified technician, a corporation
+        etc.).</para>
+
+        <para>The execution of a task can be set to be “as a team” to indicate
+        that all assignees are to work together when carrying out the task. By
+        default, assignees are each to execute the task independently.</para>
+
+        <para>A task is also described by how long it normally takes to
+        complete, whether it repeats and how quickly, and whether it starts
+        automatically with the segment (implying that the assigned agents
+        would become aware of the onset of the event phase on their
+        own).</para>
+
+        <para>The purpose of a task can be stated as terminating the event
+        phase of the segment, mitigating one or more risks or achieve gains
+        within the segment's scope.</para>
+
+        <para>Related reference and policy documents can be attached to the
+        task either by URL or by uploading them. Finally, the task can be
+        given a brief, informal description.</para>
+
+        <para>When editing a “receive” or a “send”, the information needed,
+        produced or to be shared is named and its elements are enumerated, and
+        each assigned individual secrecy classifications and optional sourcing
+        and handling instructions.</para>
+
+        <screenshot>
+          <info>
+            <title>Editing elements of information</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_57.png" scale="50"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>The mode of communication is given as either notification or
+        by-request (push or pull).</para>
+
+        <para>If an information flow (information that's shared) is a
+        notification, then it can be made a broadcast (information will be
+        shared with all agents assigned to the target task) or a unicast
+        (information will be shared with at least one agent assigned to the
+        target task).</para>
+
+        <para>Keep in mind that an information flow that is a “send” to a task
+        producing shared information is the same information flow that is a
+        ”receive” to the task consuming the shared information. One is looking
+        at one flow from its two ends.</para>
+
+        <para>An information flow is created by first adding an information
+        need to a task (if necessary), then adding an information capability
+        of the same name in another (also if necessary), and then connecting
+        the need to the capability or vice-versa by setting the “from” or “to”
+        field to the other task.</para>
+
+        <para>A communication delay is set either to zero (communication is to
+        happen without delay) or to some finite time interval. For an
+        information need, the delay represents the timeliness requirement for
+        being notified or for getting a response to a request. For an
+        information capability, the delay represents how quickly the
+        information could be produced and communicated. For a sharing flow,
+        the delay represents a “quality of service” commitment.</para>
+
+        <para>The communication channels over which the information is to flow
+        can be set for both an information need, and for a notification
+        information flow but only when viewed from the notified task. The same
+        is true for a requested information flow when viewed from the task
+        that responds to a request. Alternate communication channels are
+        listed in order of preference.</para>
+
+        <para>The communication channels over which the information is to flow
+        can be set for both an information need, and for a notification
+        information flow but only when viewed from the notified task. The same
+        is true for a requested information flow when viewed from the task
+        that responds to a request. Alternate communication channels are
+        listed in order of preference.</para>
+
+        <para>When editing a “send” or “receive”, a planner can set whether
+        sharing would normally trigger or terminate a task. A notification
+        could trigger or terminate the receiving task. It could also terminate
+        the sending task, if sending the notification concludes the task that
+        produced the information. A request could trigger the task that
+        produces the requested response.</para>
+
+        <para>Planners can attach documents to a “send” or “receive”. A
+        document can be a reference (it documents), a mandating policy (it
+        obligates sharing), a prohibiting policy (it prohibits sharing), a
+        multiple policy (contains language that imposes obligations and
+        restrictions) or it can be an image provided as an illustration (for
+        example, a screenshot). If an information flow has a prohibiting
+        policy attached to it then there can not be any implied sharing
+        commitment.</para>
+
+        <para>As with any Plan elements, a planner can add issues to those
+        detected about tasks or its “sends” or “receives”. Manually added
+        issues can be removed.</para>
+      </section>
+
+      <section>
+        <title>Segment scoping</title>
+
+        <para>Planners can edit the scope, name and description of a segment.
+        A segment's edit form is accessed by selecting “About segment” from
+        the top-most “Show” menu.</para>
+
+        <screenshot>
+          <info>
+            <title>Accessing segment definition</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_4.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>This opens a Details view on the selected segment where it can
+        be renamed and where the phase and event it references can be changed.
+        As with any other kind of Plan element, reference and policy documents
+        can be attached to a segment.</para>
+
+        <screenshot>
+          <info>
+            <title>Segment details</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_5.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>The scope of a segment is further defined by identifying and
+        describing a set of goals of organizations that relate to the
+        segment's event phase. Goals can be risks to be mitigated or gains to
+        be achieved. These goals are expected to be realized by tasks in the
+        segment. Risks can also be curtailed by tasks that terminate the event
+        phase. To be considered useful, tasks that do not curtail nor mitigate
+        a risk or do not make gains are expected to at least provide
+        information that is directly or indirectly needed by tasks that
+        do.</para>
+
+        <para>The <emphasis>Goals view</emphasis> of a segment lets planners
+        define the goals of organizations that are in scope. Goals can be
+        added and removed. A goal is for an organization either to mitigate a
+        risk or to make a gain. A goal is given a type (picked from a taxonomy
+        of risks or gains), an importance (minor, major, severe for risks,
+        low, medium or high for gains), the identity of the organization
+        (either an actual organization or a type of organization), and whether
+        the goal goes away when the event phase covered by the segment
+        terminates.</para>
+
+        <para>The tasks that mitigate a given risk or achieve a goal in scope
+        can be listed, sorted and navigated to.</para>
+
+        <screenshot>
+          <info>
+            <title>Segment goals</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_6.png" scale="75"
+                         scalefit="0"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>The <emphasis>Map view</emphasis> locates on a Google® map all
+        tasks in the segment that specify geo-locatable locations. The
+        geo-mapping of elements is available throughout Channels.</para>
+
+        <screenshot>
+          <info>
+            <title>Map view</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_7.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Editing and analyzing entities</title>
+
+        <para>A new entity (an agent, role, organization, place, event, phase
+        or communication medium) is automatically created whenever it is first
+        referenced by name. Channels requires that all entities of a given
+        kind be assigned unique names (John Smith, John Smith (1), John Smith
+        (2) etc.).</para>
+
+        <para>Recall that the definitions of Plan elements can reference
+        actual entities (ACME Corporation, Peter Sanchez, Morristown NJ) and
+        types of entities (a corporation, a certified emergency technician, a
+        city). An entity can only be tagged with entity types of its own kind
+        (Warehouse A can be tagged as a building but not as a senior
+        executive). Both actual entities and entity types can be edited. An
+        editable and analytical view of an actual entity or type of entity can
+        be opened from wherever it is referenced.</para>
+
+        <screenshot>
+          <info>
+            <title>Showing an entity</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_8.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Keep in mind that events, roles and communication media in a
+        Plan are always types. There is no actual event in a Plan because
+        events are always anticipated. There is no such thing as an “actual
+        role” because roles are always concepts. Communication media are also
+        always types because a Plan only cares about the class of a
+        communication medium.</para>
+
+        <para>The <emphasis>Details view</emphasis> of an entity enables a
+        planner to change the entity's name, description, and types.</para>
+
+        <para>Each kind of entity has additional, specific attributes that can
+        also be set. For example, a planner editing an actual organization can
+        define its mission, and set its location, contact information, and
+        parent organization. A planner can enforce that any sharing commitment
+        by the organization with another be covered by an agreement, and that
+        there be at least one known agent for each referenced role assigned by
+        the organization. A planner edits the organization's employment roster
+        of agents by either confirming employment implied by task in segments
+        and assigning titles. A planner can also directly add new employees
+        with their titles, roles and jurisdictions.</para>
+
+        <screenshot>
+          <info>
+            <title>Organization details view</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_9.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Cross-organizational sharing commitments are inferred from
+        information flows in the Plan. A sharing agreement may or may not
+        exist for a sharing commitment that crosses organizational boundaries.
+        An unconfirmed agreement for a cross-organizational sharing commitment
+        is an issue if such agreements are required for the organization. When
+        viewing an organization, a planner can see the sharing commitments the
+        organization makes with other organizations and confirm whether each
+        commitment is covered or not by an agreement.</para>
+
+        <para>In the Details view of any kind of entity, references to the
+        entity are listed as a filterable and paged index. Issues about the
+        entity, if any, are enumerated at the bottom of the view.</para>
+
+        <screenshot>
+          <info>
+            <title>Organization details view (cont.)</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_10.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>In the Details view of an actual agent (as opposed to a type of
+        agent), the agent, if it is a person and not a system, can be related
+        to a user. The user, if not a planner, will be able to request to view
+        his or her playbook (the agent's playbook) from the production version
+        of the Plan. The agent can be declared to be a person or system, and
+        given contact information (communication media with addresses where
+        applicable) as well as clearances (secrecy classifications).</para>
+
+        <screenshot>
+          <info>
+            <title>Agent details view</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_68.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>When editing a place from within the Details view, a planner can
+        identify what other place, if any, contains it. A planner can also
+        give the place a street address, postal code and a geoname. If the
+        geoname is ambiguous, more specific geonames are offered for
+        selection.</para>
+
+        <screenshot>
+          <info>
+            <title>Geolocating an organization</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_55.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>When editing a communication medium, a planner can set the
+        transmission mode to either unicast (one -to-one), multicast
+        (one-to-many) or broadcast (one-to-any), unless the mode is already
+        implied by another medium this one is tagged with (to make it a
+        special case of the tagging medium). The address pattern is a “regular
+        expression”1 that constrains the form an “address” can take for this
+        medium. A planner can identify the media, if any, this one interfaces
+        with as it carries out transmissions from sender to receiver. Here
+        again, some of the interfaced media might be implied from another
+        medium this one is tagged with. Finally, a planner can describe the
+        security of the communication medium in terms of security
+        classifications. Qualifying a medium as “US Gov/Top Secret” means that
+        Top Secret information can be transmitted securely over this
+        medium.</para>
+
+        <screenshot>
+          <info>
+            <title>Medium type details</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_67.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>The <emphasis>Network view</emphasis> is available on agents,
+        roles, and organizations. It displays a network graph depicting how
+        the entity is connected by information flows to other entities of the
+        same kind. This analytical view allows a planner to filter the
+        information flows to, say, show only the ones from tasks executed by a
+        specific role. The network graph is navigable. The list of flows can
+        be further filtered, sorted and paged. Listed flows can also be
+        navigated to.</para>
+
+        <screenshot>
+          <info>
+            <title>Role network view</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_11.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <screenshot>
+          <info>
+            <title>Organization network view</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_11a.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>The <emphasis>Issues view</emphasis> collects and filters issues
+        that are about an entity or that are related to it. Waived issues can
+        be included in or excluded from the sortable, page-able list of
+        issues.</para>
+
+        <para>Surveys, whether ongoing, closed, or to-be-created, are
+        accessible from each listed issue. Only planners can launch or close
+        surveys. A survey gathers the opinions of planners and non-planners
+        alike on how a particular issue should be remediated.</para>
+
+        <screenshot>
+          <info>
+            <title>Role issues view</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_12.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Acquiring and releasing edit locks</title>
+
+        <para>More than one planner can concurrently work on a Plan. To
+        prevent “collisions” where two planners are attempting to modify the
+        same Plan element at the same time, only one planner is permitted to
+        modify any given task, flow or entity at a time.</para>
+
+        <para>When a planner opens an edit form on a Plan element, Channels
+        attempts to grab an edit lock on behalf of the planner for that Plan
+        element. If another planner already owns the lock, the form is shown
+        to the first planner with the editable fields disabled.</para>
+
+        <para>A lock on a task, flow or entity owned by a planner is released
+        when the planner collapses or closes its edit form. An inactive or
+        logged out planner eventually loses all acquired locks.</para>
+
+        <screenshot>
+          <info>
+            <title>Locked task and flow</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_40.png" scale="70"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>A planner waiting for edit locks is notified when the locks are
+        released. The planner is then instructed to refresh the editor in
+        order to acquire the locks and enable disabled edit forms.</para>
+
+        <screenshot>
+          <info>
+            <title>Refresh to unlock</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_53.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Viewing task assignments and sharing commitments</title>
+
+        <para>Recall that tasks are defined in terms of agents, roles, places,
+        and organizations, and that these entities can be actual or types. A
+        task specification may reference entity types or omit to identify by
+        name an actual agent, role, jurisdiction, etc. so as to encompass more
+        than one possible agent as executor of the task. A task thus defined
+        could be assigned to more than one agent.</para>
+
+        <para>A planner can look up the list of agents that are assigned to
+        the task (the task assignments).</para>
+
+        <screenshot>
+          <info>
+            <title>Accessing task assignments</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_51.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <screenshot>
+          <info>
+            <title>Task assignments</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_22.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Agents are implicitly bound by sharing commitments when they are
+        assigned to tasks that are sources of information flows. A planner can
+        look up the list of sharing commitments inferred by an information
+        flow.</para>
+
+        <screenshot>
+          <info>
+            <title>Accessing sharing commitments</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_52.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <screenshot>
+          <info>
+            <title>Sharing commitments</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_23.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Assessing the impacts of failure</title>
+
+        <para>Planners can assess what might happen should someone fail at an
+        assigned task or should a commitment to share information be broken.
+        The consequences could be a number of “downstream” tasks failing to
+        make gains or mitigate or eliminate risks as planned.</para>
+
+        <screenshot>
+          <info>
+            <title>Accessing failure impacts</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_60.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>For the sake of analysis, it is assumed that a failure is always
+        complete; a failed task does not produce any information that may be
+        required by others, and a failed information flow does not transfer
+        any information whatsoever.</para>
+
+        <para>A failure can cause a cascade of task failures if tasks directly
+        or indirectly depend critically on or are triggered by information
+        that fails to be produced or to be shared.</para>
+
+        <para>Not all sharing failures matter. If an information flow is not
+        critical to a task or does not trigger it, then its failure does not
+        propagate to other tasks. Furthermore, if the target of a flow can get
+        the same information via another, non-failing flow, then the flow's
+        failure does not matter. Finally, if information produced by an agent
+        is necessarily consumed by the same agent then, clearly, failure to
+        share is meaningless.</para>
+
+        <para>Failure analysis only concerns itself with the failure of useful
+        tasks, that is, tasks that either achieve stated goals or produce
+        information that triggers or is critical to other tasks that are
+        themselves useful. (Useless tasks are flagged as issues.) Note that a
+        task will terminate a risk if it causes a segment to end (or, more to
+        the point, if it causes the event phase the segment is about to end)
+        and if the risk is said to terminate with the segment.</para>
+
+        <para>A planner does “what-if”, failure analysis by selecting a task
+        or by selecting an information flow (“send” or “receive”) and then
+        looking at the consequences should it fail. The planner can take a
+        pessimistic outlook and assume that all redundant information flows
+        would also fail, no matter what.</para>
+
+        <para>The result of the analysis is a cascade of failures visualized
+        as a directed graph of information flows, tasks, gains and risks.
+        Risks that would otherwise be mitigated or terminated by failed tasks
+        are shown as color-coded flags. Orange is for severe risks, yellow for
+        major risks and blue for minor risks. Risks that would normally be
+        mitigated by successful tasks are shown connected to these tasks.
+        Risks that would be terminated, should a segment end, are shown
+        connected to red stop lights. Each stop light is itself connected to a
+        failed task that would normally end the segment.</para>
+
+        <para>Missed gains are shown as stars and are similarly color-coded by
+        importance, with orange for high, yellow for medium and blue for
+        low.</para>
+
+        <para>In addition to the visual map, a tabular list of failed,
+        goal-oriented tasks (the failures that matter) is compiled and
+        presented. The table is paginated and the columns (failing task,
+        segment, impact, goal, magnitude of the loss, and organization
+        impacted) can be sorted.</para>
+
+        <screenshot>
+          <info>
+            <title>Task failure impacts</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_58.png" scale="50"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Failure analysis crosses segment boundaries. A failed task in
+        one segment can cause tasks to fail in other segments. Tasks, flows
+        and goals in segments other than the selected segment are grouped in
+        blue boxes.</para>
+
+        <screenshot>
+          <info>
+            <title>Sharing failure impacts</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_59.png" scale="50"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Actions</title>
+
+        <para>Planners can create and remove segments; add, cut, copy and
+        paste tasks, needs, capabilities and flows, connect tasks together
+        with information flows or disconnect them. These actions are all
+        available from “action” menus associated with editable Plan
+        elements.</para>
+
+        <para>High-level actions can also be taken whenever applicable. They
+        include “disintermediate” which removes a task that acts as a
+        middleman in a flow, “intermediate” which adds a middleman task to a
+        flow, and “satisfy needs” which automatically connects information
+        needs of a task to matching but untapped information capabilities from
+        other tasks.</para>
+
+        <para>Most actions can be undone and redone up and until a planner
+        takes an action that conflicts with the undoing or redoing.</para>
+
+        <screenshot>
+          <info>
+            <title>Duplicating a task</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_14.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <screenshot>
+          <info>
+            <title>Adding an intermediate task to a flow</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_15.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Adding and building a segment</title>
+
+        <para>When a planner creates a new segment, it is given a default name
+        and a scope.</para>
+
+        <screenshot>
+          <info>
+            <title>Adding a segment to a plan</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_16a.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>It is also initially populated with a single, unspecified task.
+        A task can not be removed if it is the last task in a segment.</para>
+
+        <screenshot>
+          <info>
+            <title>New plan segment</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_16.png" scale="60"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>A planner would typically first name and describe the segment,
+        set its scope (identify an event phase and goals to be achieved), and
+        edit the lone task. Then, additional tasks would be added, together
+        with their information needs and capabilities. These tasks would be
+        connected via information flows with other tasks in the selected
+        segment or other segments.</para>
+
+        <screenshot>
+          <info>
+            <title>Defining a plan segment</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_17.png" scale="60"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Issue detection and management</title>
+
+        <para>Channels automatically detects more than 60 different kinds of
+        issues. Planners can manually add issues to Plan elements, describe
+        these issues and suggest remediations. Manually added issues can later
+        be removed.</para>
+
+        <para>Issue detection and remediation can provide guidance to planners
+        as to what to do next when building a Plan. For example, a newly
+        created segment with its lone task will immediately cause the
+        detection of incompleteness issues. Resolving these incompleteness
+        issues drives the planning process forward.</para>
+
+        <para>Some detected issues can be waived by planners if they are
+        considered moot. When waiving an issue of a certain kind about a Plan
+        element, all issues of this kind are also waived for the same
+        element.</para>
+
+        <screenshot>
+          <info>
+            <title>Task and segment issues</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_18.png" scale="60"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Connecting tasks with sharing flows</title>
+
+        <para>After adding a task, a planner may want to give it one or more
+        information needs, and, for each need, name the information required
+        and list the elements of information.</para>
+
+        <screenshot>
+          <info>
+            <title>Unconnected flow with its elements of information</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_19.png" scale="60"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>When a planner names an information, Channels suggests a list of
+        already used information names that look like or mean something
+        similar to the name being entered. This “semantic proximity”-based,
+        auto-suggest capability leverages the WordNet lexical database and is
+        available throughout Channels.</para>
+
+        <para>A planner may want to add an information capability to a task
+        (shareable information produced by the specified task) and then
+        connect it to a matching information need from another task in the
+        selected segment or in another segment.</para>
+
+        <para>Connecting a capability with a need is done by selecting a task
+        with a matching need from the “From” drop-down menu in the flow form
+        (and vice-versa). Connecting a need with a capability creates a new
+        information flow but does not remove the connected tasks' capability
+        and need.</para>
+
+        <screenshot>
+          <info>
+            <title>Info capability</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_20a.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <screenshot>
+          <info>
+            <title>Info capability (details)</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_20b.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>When a task has unsatisfied information needs (arrows to red
+        dots), a planner may want to apply the “Satisfy needs” action. This
+        automatically creates information flows with the other tasks in the
+        Plan that can share the needed information.</para>
+
+        <screenshot>
+          <info>
+            <title>Satisfied info need</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_21a.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <screenshot>
+          <info>
+            <title>Satisfied info need (details)</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_21b.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Plan definition and analytics</title>
+
+        <para>A planner selects the item “About Plan” in the top “Show” menu
+        to access views about the entire Plan.</para>
+
+        <screenshot>
+          <info>
+            <title>Accessing plan details</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_24.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>The default Plan view is the <emphasis>Details view</emphasis>.
+        Here, planners can change the name of a Plan, add phases and remove
+        unreferenced phases. Planners can also add or view issues about the
+        Plan as a whole.</para>
+
+        <screenshot>
+          <info>
+            <title>Plan details</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_25.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>In the <emphasis>All events view</emphasis>, a planner can add
+        events to the scope of the Plan. A planner can mark an event as an
+        incident if it is caused “outside” of the Plan and not (always) as an
+        outcome of a planned task. There is at least one event defined in a
+        Plan.</para>
+
+        <screenshot>
+          <info>
+            <title>Plan events</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_28.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>In the <emphasis>Secrecy classification view</emphasis>, a
+        planner can define secrecy classifications that are then used to
+        qualify elements of information and to set individual clearances.
+        References to a classification can be listed. Unreferenced
+        classifications can be removed.</para>
+
+        <screenshot>
+          <info>
+            <title>Secrecy classifications</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_26.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>In the <emphasis>All organizations view</emphasis>, a planner
+        can identify the organizations that are in the default context of the
+        Plan.</para>
+
+        <screenshot>
+          <info>
+            <title>Organizations in scope</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_27.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>In the <emphasis>All segments view</emphasis>, planners can look
+        at a map of all segments in the Plan. The segments can be grouped by
+        phase or by event. Planners can browse all cross-segment sharing flows
+        as well as all tasks in one segment that start or terminate another
+        segment.</para>
+
+        <screenshot>
+          <info>
+            <title>Plan segments</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_29.png" scale="65"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>In the <emphasis>Who's who view</emphasis>, planners can browse
+        a directory of all agents involved in the Plan.</para>
+
+        <screenshot>
+          <info>
+            <title>Who's who</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_30.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>In the <emphasis>All issues view</emphasis>, planners can sort,
+        filter and browse all issues currently detected or manually added
+        within the Plan. Surveys on individual issues can be created or
+        accessed from this view.</para>
+
+        <screenshot>
+          <info>
+            <title>Plan issues</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_31.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>In the <emphasis>Bibliography view</emphasis>, planners browse
+        all the documents that are attached to Plan elements anywhere in the
+        Plan.</para>
+
+        <screenshot>
+          <info>
+            <title>Bibliography</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_32.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>In the <emphasis>Index view</emphasis>, planners can find,
+        filter, sort and navigate to all entities referenced in the
+        Plan.</para>
+
+        <screenshot>
+          <info>
+            <title>Plan index</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_33.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>The <emphasis>Evaluation view</emphasis> gives a summary
+        evaluation of the Plan in terms of categories of issues detected and
+        added by planners.</para>
+
+        <screenshot>
+          <info>
+            <title>Plan evaluation</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_34.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Finally, the <emphasis>Version view</emphasis> is where planners
+        vote to move the development version of the Plan into production. A
+        unanimous vote is required. Moving a development version into
+        production creates a development version from a copy of the new
+        production version. Planners can be contacted by email from within the
+        view to prompt them to vote.</para>
+
+        <screenshot>
+          <info>
+            <title>Plan versions</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_35.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Secrecy, security and clearances</title>
+
+        <para>Information classification, the security of communications and
+        the clearances of agents can be important elements of information
+        sharing planning in domains of human endeavor that require the
+        compartmentalization of information. Planners can introduce one or
+        more classification systems to a Plan.</para>
+
+        <screenshot>
+          <info>
+            <title>Adding secrecy classifications</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_71.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Each classification system has a unique name and consists of a
+        list of classifications (secrecy levels) ranked from highest to
+        lowest.</para>
+
+        <para>Agents can be given clearances. Clearances are expressed as
+        classifications (no more than one per classification system).</para>
+
+        <screenshot>
+          <info>
+            <title>Security clearances</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_68.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>How secure a communication media type is is defined by the
+        highest classification levels of the information it can transmit
+        without infringing security requirements.</para>
+
+        <screenshot>
+          <info>
+            <title>Transmission medium security</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_67.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Elements of information shared or to be shared can each be given
+        classification levels as well as indications of the source and special
+        handling instructions.</para>
+
+        <screenshot>
+          <info>
+            <title>Classified elements of information</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_65.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Secrecy and security issues are automatically detected such
+        as:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Classified information transmitted over an insufficiently
+            secure channel</para>
+          </listitem>
+
+          <listitem>
+            <para>A commitment to share classified information with an agent
+            who has insufficient clearances</para>
+          </listitem>
+
+          <listitem>
+            <para>Receiving classified information and then disseminating it
+            with reduced classification</para>
+          </listitem>
+        </itemizedlist>
+
+        <screenshot>
+          <info>
+            <title>A flow's security issues</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_66.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Surveying planners and participants</title>
+
+        <para>Planners can survey other planners and participants assigned to
+        the current Plan about their preferred remediations for issues that
+        are detected by Channels or that are manually entered by
+        planners.</para>
+
+        <screenshot>
+          <info>
+            <title>Accessing surveys</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_61.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Channels interfaces with the SurveyGizmo® web service to create,
+        launch, and retire surveys, and to collect responses.</para>
+
+        <screenshot>
+          <info>
+            <title>Surveys</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_36.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>The content of a survey is automatically taken from the issue's
+        description and CONFIDENTIAL - Copyright (C) 2010 Mind-Alliance
+        Systems. All Rights Reserved. 66 suggested remediations.</para>
+
+        <screenshot>
+          <info>
+            <title>A survey</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_37.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Publishing information sharing procedures</title>
+
+        <para>Channels produces on demand an information sharing procedures
+        report and individualized information sharing playbooks for the
+        current Plan. The report is accessible to planners but not to
+        participants.</para>
+
+        <screenshot>
+          <info>
+            <title>Accessing information sharing procedures</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_39.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>The report organizes by segments and agents the Plan's task
+        assignments, sharing commitments and related issues, and presents them
+        in a single HTML document suitable for browsing and printing.</para>
+
+        <screenshot>
+          <info>
+            <title>Information sharing procedures report</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_41.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <screenshot>
+          <info>
+            <title>Information sharing procedures report (cont.)</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_43a.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>The Plan map and the information flow maps shown in the report
+        are reduced to fit. Full-sized Plan map and flow maps can be retrieved
+        as PNGs.</para>
+
+        <screenshot>
+          <info>
+            <title>Map of a plan's segments</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_41a.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>From the header of the report, a planner can narrow the focus to
+        a single segment and/or agent. The inclusion of issues can also be
+        turned on or off.</para>
+
+        <screenshot>
+          <info>
+            <title>Adjusting the report's focus</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_44.png" scale="75"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>A participant can only access the information sharing procedures
+        for the agent he or she represents, and only from the production
+        version of a Plan.</para>
+      </section>
+
+      <section>
+        <title>Logging out</title>
+
+        <para>A planner logs out to terminate a Plan editing session. Any edit
+        locks still held at that time are automatically released. The user is
+        then presented with a login page.</para>
+
+        <screenshot>
+          <info>
+            <title>Logout action</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_78.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+    </section>
+</chapter>
+<chapter>
+    <title>An information sharing planning method</title>
+    <section>
+      <title>Overview</title>
+
+      <para>Channels encourages and supports a methodical approach to
+      information sharing planning.</para>
+
+      <para>The main activities of this method are:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>setting the scope of the Plan,</para>
+        </listitem>
+
+        <listitem>
+          <para>dividing the Plan into segments,</para>
+        </listitem>
+
+        <listitem>
+          <para>defining tasks and information flows,</para>
+        </listitem>
+
+        <listitem>
+          <para>defining referenced entities,</para>
+        </listitem>
+
+        <listitem>
+          <para>closing gaps in the Plan,</para>
+        </listitem>
+
+        <listitem>
+          <para>addressing other issues,</para>
+        </listitem>
+
+        <listitem>
+          <para>deploying the current version to participants.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>The method here outlined does not address the politics and project
+      logistics of information sharing planning.</para>
+
+      <para>When building a new Information Sharing Plan, planners must first
+      decide on the scope of the Plan. The scope is set by choosing:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>the anticipated types of events planned for,</para>
+        </listitem>
+
+        <listitem>
+          <para>the specific phases (before, during or after) to be covered
+          for each event,</para>
+        </listitem>
+
+        <listitem>
+          <para>the organizations and roles which involvement is
+          expected.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Planners divide the Plan into segments. Each segment covers one
+      phase of one event and a small list of risks to organizations. Two
+      segments can cover the same event phase, but not the same goal for the
+      same phase of the same event.</para>
+
+      <para>A planner works on one segment at a time and can switch attention
+      to another segment at any time. When working on a segment, tasks and
+      information flows linking tasks are identified and defined so that they
+      together address the risks covered by the segment.</para>
+
+      <para>Events, phases, agents, roles, organizations, places, and
+      communication media are collectively called entities. Entities are
+      referenced by name in the definitions of a plan's scope, a segment's
+      coverage, tasks, information flows, and other entities. An entity can be
+      referenced by name prior to being defined. An entity should be defined
+      soon after having first been referenced.</para>
+
+      <para>The Plan is best grown by progressively closing gaps (completeness
+      issues) such as those caused by:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>events or goals not addressed,</para>
+        </listitem>
+
+        <listitem>
+          <para>unsatisfied task information needs,</para>
+        </listitem>
+
+        <listitem>
+          <para>information produced by tasks that is not shared,</para>
+        </listitem>
+
+        <listitem>
+          <para>tasks to which no known agents are assigned,</para>
+        </listitem>
+
+        <listitem>
+          <para>information flows with no listed communication media.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Planners can also be presented with issues other than completeness
+      issues, namely, validity and robustness issues. Planners prioritize the
+      resolution of issues possibly on the basis of their severity. Some types
+      of issues can be waived if deemed “false positives”. When tackling an
+      issue, planners may choose to first survey their peers and participants
+      involved in the Plan about alternate remediation strategies.</para>
+
+      <para>The planning process is iterative and non-linear. At any point in
+      time, planners can:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>change the scope of a Plan,</para>
+        </listitem>
+
+        <listitem>
+          <para>add/modify/remove new Plan segments,</para>
+        </listitem>
+
+        <listitem>
+          <para>add/modify/remove tasks and flows in a segment,</para>
+        </listitem>
+
+        <listitem>
+          <para>resolve issues,</para>
+        </listitem>
+
+        <listitem>
+          <para>(re)define referenced entities.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>At any point during the development of a Plan, planners may decide
+      to deploy the current version to participants. If a previous version had
+      already been deployed, it is immediately retired and superseded by the
+      new one. Keep in mind that a Plan is never complete and planning is
+      never done.</para>
+
+      <section>
+        <title>Deciding on the scope of the Plan</title>
+
+        <itemizedlist>
+          <listitem>
+            <para>What anticipated events are being being planned for?</para>
+          </listitem>
+
+          <listitem>
+            <para>For each anticipated event:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>What type of event is it?</para>
+              </listitem>
+
+              <listitem>
+                <para>At what place or type of place would the event
+                happen?</para>
+              </listitem>
+
+              <listitem>
+                <para>What phase of the event is being planned for? Before,
+                during or after the event?</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>What specific organizations are expected to be
+            involved?</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>What are their names?</para>
+              </listitem>
+
+              <listitem>
+                <para>What are their respective missions?</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>What organizational roles are expected to be assigned tasks
+            in the Plan?</para>
+          </listitem>
+
+          <listitem>
+            <para>What classification systems will be referenced in the Plan
+            and what are their respective classification levels?</para>
+          </listitem>
+        </itemizedlist>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Dividing the Plan into segments</title>
+
+        <itemizedlist>
+          <listitem>
+            <para>For each planned-for event phase, what goals must be
+            achieved (risks addressed and gains made)?</para>
+          </listitem>
+
+          <listitem>
+            <para>For each risk:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Select the nature of the risk among:</para>
+
+                <itemizedlist>
+                  <listitem>
+                    <para>property damage, property loss , injury, disablement
+                    or death , or environmental degradation (a material
+                    risk)</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>or cost increase, lost revenue, asset devaluation,
+                    reduced liquidity, reduced credit, increased liability, or
+                    fines or penalties (a financial risk)</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>or delayed delivery, impaired quality, process
+                    inefficiency, or supply chain disruption (an operational
+                    risk)</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>or opportunity loss, damage to reputation, loss of
+                    competitiveness, or product obsolescence (a strategic
+                    risk)</para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+
+              <listitem>
+                <para>How severe is the risk (minor, major or extreme)?</para>
+              </listitem>
+
+              <listitem>
+                <para>What organizations or types of organization are at risk,
+                in themselves or their missions?</para>
+              </listitem>
+
+              <listitem>
+                <para>Does the risk go away when the event phase is
+                over?</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>For each goal:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Select the nature of the goal among:</para>
+
+                <itemizedlist>
+                  <listitem>
+                    <para>property improvement, property acquisition, better
+                    health , or environmental improvement (a material
+                    gain)</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>or cost decrease, increased revenue, asset value
+                    increase, increased liquidity, increased credit, reduced
+                    liability, or reward (a financial gain)</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>or faster delivery, better quality, improved process
+                    efficiency, or improved supply chain (an operational
+                    gain)</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>or opportunity gain, improved reputation, greater
+                    competitiveness, or longer product life (a strategic
+                    gain)</para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+
+              <listitem>
+                <para>How great is the gain (low, medium or high)?</para>
+              </listitem>
+
+              <listitem>
+                <para>What organization or type of organization seeks to
+                achieve a gain, for itself or to further its mission?</para>
+              </listitem>
+
+              <listitem>
+                <para>Does the goal to achieve a gain go away when the event
+                phase is over?</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>If the list of goals is long, how should it broken into
+            cohesive sub-lists?</para>
+          </listitem>
+
+          <listitem>
+            <para>Create and name a segment for each (sub-)list of goals for
+            an event phase in scope.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Defining tasks and flows in each segment</title>
+
+        <para>A task is either some activity or an act of decision making. A
+        task is expected to either mitigate a risk, end or trigger a a phase
+        of an event or produce information needed by another task. People and
+        systems in scope are assigned to a task based on its
+        specifications.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>What tasks could terminate the segment's event phase? (Keep
+            in mind that a task causing an event initiates the its co-event
+            phase and terminates its pre-event phase, and that a task that
+            terminates an event also initiates its post-event phase.)</para>
+          </listitem>
+
+          <listitem>
+            <para>What tasks would achieve one or more of the Plan's segment's
+            goals?</para>
+          </listitem>
+
+          <listitem>
+            <para>What tasks start on their own with the event phase of a
+            segment? (It is implied that assignees would not require
+            notification of the event to become aware of it.)</para>
+          </listitem>
+
+          <listitem>
+            <para>For each task:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Name and describe each identified task.</para>
+              </listitem>
+
+              <listitem>
+                <para>Specify who would carry out a task:</para>
+
+                <itemizedlist>
+                  <listitem>
+                    <para>Give the identity or type of an assigned agent, or
+                    not.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Give the organizational role of the explicitly or
+                    implicitly assigned agent(s), or not.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Give the jurisdiction for the role, or not.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Give the identity or type of organization of the
+                    agent, or not.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>How long does it normally take to complete the task?
+                    Is the task self-repeating? How long does it take before
+                    it repeats?</para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+
+              <listitem>
+                <para>Where is the task executed?</para>
+              </listitem>
+
+              <listitem>
+                <para>What goals does it achieve?</para>
+              </listitem>
+
+              <listitem>
+                <para>What are the information needs of a task?</para>
+              </listitem>
+
+              <listitem>
+                <para>For each information need of a task:</para>
+
+                <itemizedlist>
+                  <listitem>
+                    <para>Name the information needed.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>List the elements of information.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>For each element of information:</para>
+
+                    <itemizedlist>
+                      <listitem>
+                        <para>Is the element classified?</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Are there special instructions regarding the
+                        source or the handling of the element?</para>
+                      </listitem>
+                    </itemizedlist>
+                  </listitem>
+
+                  <listitem>
+                    <para>State whether the task's assignees expect to receive
+                    the needed information via notifications or as answers to
+                    requests.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>List the communication media by which the needed
+                    information will be transmitted.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Give the time constraint for providing the
+                    information.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>State what effect, if any, getting the information
+                    would have on the task:</para>
+
+                    <itemizedlist>
+                      <listitem>
+                        <para>Is it critical to its success?</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Would it start the task?</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Could it terminate the task?</para>
+                      </listitem>
+                    </itemizedlist>
+                  </listitem>
+
+                  <listitem>
+                    <para>What information does a task produce?</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>For each information produced:</para>
+
+                    <itemizedlist>
+                      <listitem>
+                        <para>Name the information.</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>List the elements of information and describe
+                        them as above.</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>State how quickly the information could be
+                        shared once available or requested.</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>State whether or not sharing the information
+                        would terminate the task.</para>
+                      </listitem>
+                    </itemizedlist>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>Connect with information flows tasks that produce
+            information with other tasks that need it and are allowed to use
+            it.</para>
+          </listitem>
+
+          <listitem>
+            <para>For each information flow, identify any policy that either
+            mandates it or forbids it.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Defining named entities</title>
+
+        <para>Entities are usually defined right after they are first
+        referenced by name. In the definitions of tasks, flows, other entities
+        etc. entities is referenced either as types (e.g. a Corporation) or as
+        actual entities (e.g. ACME Inc.). An entity type can not be converted
+        into an actual entity, and vice versa. Note that in ISP, there are no
+        “actual” roles or events. Roles are always types and only types of
+        events can be anticipated and planned for.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>For each named actual entity or entity type to be
+            defined:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Give a short description.</para>
+              </listitem>
+
+              <listitem>
+                <para>Name the entity types, if any, that categorize
+                it.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>For an agent (actual, not type):</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Is the agent a person or an information system?</para>
+              </listitem>
+
+              <listitem>
+                <para>What are the agent's clearances, if any?</para>
+              </listitem>
+
+              <listitem>
+                <para>List the agent's contact information.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>For an organization:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>What is the organization's mission?</para>
+              </listitem>
+
+              <listitem>
+                <para>Does the organization have a parent organization?</para>
+              </listitem>
+
+              <listitem>
+                <para>Where is the organization located?</para>
+              </listitem>
+
+              <listitem>
+                <para>List the organization's contact information.</para>
+              </listitem>
+
+              <listitem>
+                <para>Who are the members of the organization that are
+                expected to be involved in the Plan?</para>
+              </listitem>
+
+              <listitem>
+                <para>For each member:</para>
+
+                <itemizedlist>
+                  <listitem>
+                    <para>What's the agent's title?</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>What roles does the agent play and within what
+                    jurisdictions, if any?</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Is a formal sharing agreement required for each
+                    sharing commitment with another organization?</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Is is acceptable for anonymous members of the
+                    organization to be assigned to tasks (e.g. “Some account
+                    manager at Nadir Insurance Inc. evaluates the
+                    claim”?)</para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>For a place:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Is it within another?</para>
+              </listitem>
+
+              <listitem>
+                <para>Does it have a street address?</para>
+              </listitem>
+
+              <listitem>
+                <para>Can it be located geographically? If so, where?</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>For a type of place:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Are places of this type inside where a given planned
+                event happens? Does a given planned event happen inside places
+                of this type?</para>
+              </listitem>
+
+              <listitem>
+                <para>Are places of this type always inside some given place?
+                Is a given place always inside places of this type?</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>For a type of communication medium:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Is the medium meant for unicast (transmission to one
+                agent), multicast (transmission to many identified agents), or
+                for broadcast (transmission to any and all agents)?</para>
+              </listitem>
+
+              <listitem>
+                <para>How are agents identified within this medium (e.g. via
+                email addresses, phone numbers, IM handles etc.)?</para>
+              </listitem>
+
+              <listitem>
+                <para>Does this medium delegate to or interfaces with other
+                media? Which ones?</para>
+              </listitem>
+
+              <listitem>
+                <para>How secure is the medium in terms of secrecy
+                classifications?</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Growing the Plan by closing gaps</title>
+
+        <para>A Plan can be grown by methodically systematically resolving
+        completeness issues.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>If no Plan segment addresses a phase of an event in scope,
+            create such a segment.</para>
+          </listitem>
+
+          <listitem>
+            <para>If no goal is within the scope of a segment, add one.</para>
+          </listitem>
+
+          <listitem>
+            <para>If a risk is not mitigated or by any task and no task
+            eliminates it (by terminating the event phase of the segment),
+            then identify or introduce a task that does either. Or consider
+            removing the risk from the scope of the segment.</para>
+          </listitem>
+
+          <listitem>
+            <para>If a stated gain with the scope of a segment is not achieved
+            by any task, then identify or introduce a task that does so. Or
+            consider removing the gain from the scope of the segment.</para>
+          </listitem>
+
+          <listitem>
+            <para>If an information need of a task is unsatisfied, identify or
+            introduce a task that produces the needed information and would
+            share it. (Then connect the tasks with a flow.)</para>
+          </listitem>
+
+          <listitem>
+            <para>If a task produces information that's never shared, identify
+            or introduce a task that needs it and would consume it. Then
+            connect with a flow. Or consider removing this capability from the
+            task.</para>
+          </listitem>
+
+          <listitem>
+            <para>If a task is not useful (it produces no shared information
+            and achieves no goal), see if it should achieve a goal, or could
+            terminate the event phase, or share information it produces with a
+            task that is useful. If not, consider removing the task.</para>
+          </listitem>
+
+          <listitem>
+            <para>If a task has no assignment (no known agent matches it),
+            consider adding task-matching members to known organizations, or
+            consider adding organizations to the plan with task-matching
+            members.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Resolving validity and robustness issues</title>
+
+        <para>Validity issues are caused by incorrect definitions (they are
+        bugs in the Plan). Robustness issues are detected weaknesses in a Plan
+        that make it failure-prone.</para>
+
+        <para>Validity issues should be corrected as soon as they are
+        detected.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>What are the most pressing issues?</para>
+          </listitem>
+
+          <listitem>
+            <para>For a given issue:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Can the issue be waived? Should it be waived (false
+                positive)?</para>
+              </listitem>
+
+              <listitem>
+                <para>What are the options for remediation?</para>
+              </listitem>
+
+              <listitem>
+                <para>Should other planners and selected participants be
+                surveyed about remediation?</para>
+              </listitem>
+
+              <listitem>
+                <para>What's the appropriate remediation?</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Deploying to participants</title>
+
+        <para>Work on a Plan is always done on its development version. There
+        is always one and only one development version of a Plan. At some
+        point the planners may agree that the development version should be
+        deployed into production. Note that participants can only get their
+        playbooks from the production version of a Plan.</para>
+
+        <para>When all planners vote in favor of deployment, a new production
+        version is released, superseding any prior production version which is
+        then retired. A copy is taken and made the new development
+        version.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Is the development version of the Plan ready for release
+            into production?</para>
+          </listitem>
+
+          <listitem>
+            <para>Is a new production release warranted?</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+</chapter>
+<chapter>
+	<title> FAQs </title>
+    <section>
+      <title>Information Sharing Planning and Business Process
+      Management</title>
+
+      <para>The most frequently asked question about Information Sharing
+      Planning is How does it differ from Business Process Management?</para>
+
+      <para>To answer this question, one must first consider that Information
+      Sharing Planning (ISP) is part of something larger called Information
+      Sharing Management.</para>
+
+      <para><emphasis>Information Sharing Management</emphasis> (ISM) is a set
+      of technologies and best practices that help communities of
+      organizations share information more effectively in order to manage
+      risks when preparing for, responding to, and recovering from actual
+      events. Information Sharing Planning (ISP) produces the information
+      sharing procedures that organizations apply when doing ISM. ISP analyzes
+      these procedures for continuous improvement.</para>
+
+      <para><emphasis>Business Process Management</emphasis> (BPM) helps
+      enterprises become more efficient, more effective and more agile in how
+      they operate. Business Process Modeling captures and analyzes their
+      business processes for continuous improvement.</para>
+
+      <para>Because ISP relates most closely to Business Process Modeling, the
+      question should be recast to How does Information Sharing Management
+      differ from Business Process Management?</para>
+
+      <para>Other questions are Can ISM and BPM be used together?, and How do
+      the markets for BPM and ISM compare?</para>
+
+      <section>
+        <title>Differences</title>
+
+        <para>BPM and ISM tackle different problems from different
+        perspectives.</para>
+
+        <para>BPM focuses 'inward' on a single (but possibly extended)
+        enterprise. It looks at how the enterprise responds internally to
+        events, and at how it renders services to its customers. The end is
+        maximizing value creation while minimizing costs. The means is
+        business process improvement.</para>
+
+        <para>ISM focuses 'outward' on (often ad hoc) communities of
+        organizations. It looks at how organizations depend on one another to
+        get the information they need to execute tasks that achieve
+        organizational goals. The end is minimizing the impacts of systemic
+        risks and maximizing the capture of opportunities. The means is better
+        information sharing procedures.</para>
+
+        <para>While there is conceptual overlap (both ISM and BPM involve
+        tasks, events and communications) and even though they both use
+        somewhat similar-looking visualizations (directed graphs), ISM and BPM
+        have very different world views. BPM looks at the operations of an
+        enterprise, whereas ISM looks at the information flows within a
+        community of organizations. They also differ in their goals. BPM
+        optimizes enterprise value creation whereas ISM reduces the impacts of
+        systemic risks.</para>
+      </section>
+
+      <section>
+        <title>Similarities</title>
+
+        <para>ISM and BPM are structurally similar in a number of ways.</para>
+
+        <para>Both BPM and ISM are concerned with optimization. BPM optimizes
+        the design and execution of business processes, whereas ISM optimizes
+        information sharing procedures and their application.</para>
+
+        <para>BPM and ISM each has a modeling component (business process
+        modeling, information sharing planning) and a deployment component
+        (modeled business processed are deployed as work flows, information
+        sharing plans are deployed as information sharing procedures).</para>
+
+        <para>Both BPM and ISM integrate with existing systems and
+        technologies. BPM integrates with EAI (Enterprise Application
+        Integration), SOA (Service-Oriented Architecture) and EBA (Event-Based
+        Architecture) technologies. ISM integrates primarily with
+        Communication Technologies, Enterprise Directories and SOA.</para>
+
+        <para>Finally, both BPM and ISM require the participation of analysts.
+        BPM involves 'business process engineers' and ISM involves
+        'information sharing planners'.</para>
+      </section>
+
+      <section>
+        <title>Integration</title>
+
+        <para>Because BPM and ISM have such different world views, we should
+        not expect either to eventually absorb the other.</para>
+
+        <para>There are however significant points of interaction between BPM
+        and ISM. To name a few, business processes can be driven by events
+        that become known through information sharing, and the business
+        processes executed when carrying out risk-mitigating tasks can be
+        optimized.</para>
+
+        <para>It is reasonable to assume that BPM and ISM products will, in
+        some future, work together to their mutual benefit.</para>
+      </section>
+
+      <section>
+        <title>Markets</title>
+
+        <para>“The BPM market is one of the fastest growing software markets,
+        estimated to grow tenfold in five years, from approximately US$500
+        million in 2006 to US$6 billion in 2011.” <footnote>
+            <para>See
+            <uri>http://www.oracle.com/technologies/bpm/docs/state-of-bpm-market-whitepaper.pdf</uri></para>
+          </footnote></para>
+
+        <para>While BPM is a maturing field, ISM is still in its infancy. It
+        is too early to attempt an estimate of how fast the market for ISM
+        could grow or how big it could ultimately become.</para>
+
+        <para>However, ISM is applicable to all domains of joint human
+        endeavor, from emergency response to business risk management. With
+        the explosive growth in systemic risks, as underscored by the recent
+        financial crisis, the value proposition of ISM in an increasingly
+        inter-connected world is bound to become compelling.</para>
+
+        <para>As BPM products become consolidated among a small number of
+        large vendors, ISM may represent a unique opportunity for small firms
+        to enter and define a new market space. Established BPM vendors might
+        also want to offer BPMintegrated ISM products in order to
+        differentiate themselves from their competitors.</para>
+      </section>
+    </section>
+</chapter>
+<chapter>
+	<title>Appendix</title>
+    <section>
+      <title>About Mind-Alliance Systems</title>
+
+      <para>Mind-Alliance Systems is pioneering the field of Information
+      Sharing Management.</para>
+
+      <para>Mind-Alliance Systems is the developer of Channels, a
+      collaborative Information Sharing Planning Web application.</para>
+
+      <para>For more information, please contact David Kamien, CEO, at
+      david@mindalliance. com, or visit www.mind-alliance.com.</para>
+    </section>
+  </chapter>
+</book>

@@ -38,6 +38,7 @@
         <sec:intercept-url pattern="/static/**" filters="none"/>
         <sec:intercept-url pattern="/images/**" filters="none"/>
         <sec:intercept-url pattern="/resources/**" filters="none"/>
+        <sec:intercept-url pattern="/doc/**" filters="none"/>
 
         <sec:intercept-url pattern="/login.html" filters="none"/>
         <sec:intercept-url pattern="/plan" access="ROLE_PLANNER"/>

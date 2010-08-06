@@ -28,7 +28,6 @@ public class HelpPage extends WebPage {
     public HelpPage() {
         setStatelessHint( true );
         addFeedbackWidget();
-        //       add( new HelpPanel( "help-tabs" ) );
     }
 
     private void addFeedbackWidget() {
