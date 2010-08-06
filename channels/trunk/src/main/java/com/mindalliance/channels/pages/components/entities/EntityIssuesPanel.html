@@ -7,18 +7,15 @@
         lang="en">
 <body>
 <wicket:extend>
-    <div>
-        <span wicket:id="containmentContainer">
-            <input wicket:id="includeContained" type="checkbox"/> Include issues about
-            <span wicket:id="containment">agents in this role</span>
-        </span>
-        &nbsp;
-        <span wicket:id="inSegmentContainer">
-            <input wicket:id="includeFromSegments" type="checkbox"/> Include related issues from segments
-        </span>
-        &nbsp;<input wicket:id="includeWaived" type="checkbox"/> Include waived issues
-    </div>
-    <br/>
+    <span wicket:id="containmentContainer">
+        <input wicket:id="includeContained" type="checkbox"/> Include issues about
+        <span wicket:id="containment">agents in this role</span>
+    </span>
+    &nbsp;
+    <span wicket:id="inSegmentContainer">
+        <input wicket:id="includeFromSegments" type="checkbox"/> Include related issues from segments
+    </span>
+    &nbsp;<input wicket:id="includeWaived" type="checkbox"/> Include waived issues
 </wicket:extend>
 </body>
 </html>

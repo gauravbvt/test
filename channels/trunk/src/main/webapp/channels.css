@@ -1493,7 +1493,7 @@ div.section-content > div.flow > div > img {
 	top:0;
 	position:absolute;
     width: 100%;
-    background: #c3d9ff;
+	background: url( "images/socialtab-bg-repeat.png" ) repeat-x #c3d9ff;
     line-height: normal;
 }
 
