@@ -134,7 +134,9 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     }
 
     private void addFlowViewingControls() {
-        WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
+        Label reduceToFit = new Label(
+                "fit",
+                new Model<String>( resizedToFit ? "Full size" : "Reduce to fit" ) );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
@@ -177,7 +179,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     }
 
     private Segment getSegment() {
-        return ((SegmentObject)getModel().getObject()).getSegment();
+        return ( (SegmentObject) getModel().getObject() ).getSegment();
     }
 
     private void addEssentialFlowMap() {

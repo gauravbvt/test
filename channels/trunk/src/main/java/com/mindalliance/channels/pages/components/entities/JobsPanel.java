@@ -11,18 +11,19 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.util.ChannelsUtils;
-import com.mindalliance.channels.nlp.Matcher;
-import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.query.Play;
+import com.mindalliance.channels.util.ChannelsUtils;
+import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -153,6 +154,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
     private ListView<JobWrapper> makeJobsTable() {
         List<JobWrapper> jobWrappers = getJobWrappers();
+        final int count = jobWrappers.size();
         return new ListView<JobWrapper>(
                 "jobs",
                 jobWrappers
@@ -166,8 +168,19 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 addEntityCell( item, "jurisdiction" );
                 addEntityCell( item, "supervisor" );
                 addShowFlowsCell( item );
+                item.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>( cssClasses( item, count ) ) ) );
             }
         };
+    }
+
+    private String cssClasses( ListItem<JobWrapper> item, int count ) {
+        int index = item.getIndex();
+        String cssClasses = index % 2 == 0 ? "even" : "odd";
+        if ( index == count - 1 ) cssClasses += " last";
+        return cssClasses;
     }
 
     private void addJobTransfers() {
@@ -220,7 +233,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             }
         };
         doTransfer.setOutputMarkupId( true );
-        makeVisible(doTransfer, isTransferring());
+        makeVisible( doTransfer, isTransferring() );
         jobTransferDiv.add( doTransfer );
         CheckBox transferCheckBox = new CheckBox(
                 "transfer",
