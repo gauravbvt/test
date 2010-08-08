@@ -1888,4 +1888,39 @@ body.support {
     min-height: 20em;
 }
 
+/* ----- BETA - Floating Panel Header ----- */
 
+.aspect h3.float-header {
+	border:none;
+	color:#333333;
+	display:block;
+	font-size:13px;
+	margin:0 0 11px;
+	padding:2px 0;
+}
+
+.aspect span.float-title {
+	background:#F6F6F6;
+	display:block;
+	float:left;
+	font-size:13px;
+	line-height:18px;
+	padding-right:6px;
+	position:relative;
+	text-transform:uppercase;
+	z-index:2;
+}
+
+.aspect span.float-link {
+	background:#F6F6F6;
+	display:block;
+	float:left;
+	padding-right:6px;
+	position:relative;
+}
+
+.aspect div.float-divider {
+	border-bottom:1px solid #999999;
+	margin:-4px 0 0;
+	z-index:0;
+}
