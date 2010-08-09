@@ -512,8 +512,10 @@
                 </dependencies>
                 <configuration>
                     <chunkedOutput>true</chunkedOutput>
+                    <!--<chunkSectionDepth>5</chunkSectionDepth>-->
                     <targetDirectory>${basedir}/src/main/webapp/doc</targetDirectory>
                     <ignoreImageScaling>true</ignoreImageScaling>
+                    <htmlStylesheet>${doc.css}</htmlStylesheet>
                 </configuration>
             </plugin>
         </plugins>
@@ -612,5 +614,6 @@
         <spring-security.version>3.0.1.RELEASE</spring-security.version>
         <wicket.version>1.4.1</wicket.version>
         <jetty.version>6.1.4</jetty.version>
+        <doc.css>/doc.css</doc.css>
     </properties>
 </project>
