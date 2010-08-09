@@ -7,7 +7,10 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h3>This is version <span wicket:id="currentVersion">1</span></h3>
+    <h3>
+		<span>This is version <span wicket:id="currentVersion">1</span></span>
+		<div>&nbsp;</div>
+	</h3>
     <div wicket:id="prod"><b>Version
         <span wicket:id="prodVersion">1</span></b>
         is in production since <span wicket:id="prodDate">today</span>
@@ -18,7 +21,10 @@
     </div>
     <br/>
     <span wicket:id="prodVotes">
-        <h3>Votes to move this version to production</h3>
+        <h3>
+			<span>Votes to move this version to production</span>
+			<div>&nbsp;</div>
+		</h3>
         <table class="data-table">
             <tr wicket:id="votes">
                 <td align="right">

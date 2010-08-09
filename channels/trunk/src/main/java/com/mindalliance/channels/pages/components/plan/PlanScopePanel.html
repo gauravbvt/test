@@ -7,7 +7,10 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h3>Organizations in scope</h3>
+    <h3>
+		<span>Organizations in scope</span>
+		<div>&nbsp;</div>
+	</h3>
 	<div class="filters">
     Show only organizations that
     &nbsp;&nbsp;<input wicket:id="expected" type="checkbox"/> are expected to have tasks in this plan
@@ -21,7 +24,10 @@
         <br/><br/>
     </div>
     <span wicket:id="organizationContainer">
-        <h3>About <span wicket:id="nameInTitle">ACME</span></h3>
+        <h3>
+			<span>About <span wicket:id="nameInTitle">ACME</span></span>
+			<div>&nbsp;</div>
+		</h3>
         <span wicket:id="name">[organization name]</span>
         <span wicket:id="involvement">has tasks as expected</span>
         &nbsp;<a wicket:id="expectationActionLink" href="#">

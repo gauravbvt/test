@@ -7,7 +7,10 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h3> Goals for this plan segment </h3>
+    <h3>
+		<span>Goals for this plan segment</span>
+		<div>&nbsp;</div>
+	</h3>
 
     <div class="goals" wicket:id=goalsDiv>
         <table class="data-table">
@@ -55,7 +58,10 @@
         </table>
     </div>
     <div wicket:id="moreDiv">
-        <h3> About the <span wicket:id="goalLabel">[goal label]</span></h3>
+        <h3>
+			<span>About the <span wicket:id="goalLabel">[goal label]</span></span>
+			<div>&nbsp;</div>
+		</h3>
         <h4>Description</h4>
         <textarea wicket:id="description" rows="2" cols="40">description</textarea>
         <h4> Tasks with goal </h4>
