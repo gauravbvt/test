@@ -7,20 +7,43 @@
 <head>
     <title wicket:id="title">[Title]</title>
     <style type="text/css">
-        v\:* {
-          behavior:url(#default#VML);
-        }
-    </style>
+		v\:* {
+			behavior:url(#default#VML);
+		}
+		body {
+			margin:10px 0 0 0;
+			padding:0;
+			text-align:center;
+			font-family:Arial, Helvetica, sans-serif;
+			color:#333333;
+			background:#F6F6F6;
+		}
+		body > div {
+			width:600px;
+			margin:0px auto;
+			text-align:left;
+			background:#D1D3D4;
+			border:1px solid #666666;
+		}
+		div.map {
+			width:600px;
+			height:400px;
+			border-bottom:1px solid #666666;
+		}
+		span.caption {
+			font-size:12px;
+			font-weight:bold;
+			display:block;
+			text-align:center;
+			padding:5px 0;
+		}
+	</style>
 </head>
 
 <body>
-<div wicket:id="map" style="margin-left: auto; margin-right: auto; width: 600px; height: 400px;">Map</div>
-<table width="100%">
-    <tr>
-        <td align="center">
-            <span wicket:id="caption">caption</span> 
-        </td>
-    </tr>
-</table>
+<div>
+	<div class="map" wicket:id="map">Map</div>
+	<span class="caption" wicket:id="caption">caption</span> 
+</div>
 </body>
 </html>

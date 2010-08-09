@@ -10,14 +10,14 @@
     <div class="picture" wicket:id="plan-map">
         [plan map diagram panel]
     </div>
-    <div class="filters">
-        <div class="zoom">
-            <span wicket:id="full">Full size</span>
-            <span wicket:id="fit">Reduce to fit</span>
-        </div>
-        Group plan segments
-        <input wicket:id="groupByEvent" type="checkbox"> by event
+    <div class="zoom">
+	    <div class="filters">
+        Group plan segments&nbsp;
+        <input wicket:id="groupByEvent" type="checkbox"> by event&nbsp
         <input wicket:id="groupByPhase" type="checkbox"> or by phase
+	    </div>
+        <span wicket:id="full">Full size</span>
+        <span wicket:id="fit">Reduce to fit</span>
     </div>
     <h3 wicket:id="flows-title">[All inter-segment flows]</h3>
     <span wicket:id="flows">[external flows panel]</span>

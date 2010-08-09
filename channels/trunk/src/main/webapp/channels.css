@@ -1081,6 +1081,51 @@ div.aspect div.picture {
 }
 
 
+/* ----- Floating Boxes - Flowmaps ----- */
+
+.aspect div.picture {
+	background:#ffffff;
+	border-top:5px solid #E8E8E8;
+	border-right:5px solid #E8E8E8;
+	border-bottom:none;
+	border-left:5px solid #E8E8E8;
+}
+
+.aspect div.zoom {
+	background:#E8E8E8;
+	cursor:auto;
+	height:23px;
+	line-height:22px;
+	padding:0 5px;
+	text-align:right;
+	text-transform:uppercase;
+	left:0;
+	top:0;
+	z-index:1;
+	position:relative;
+	margin-bottom:10px;
+}
+
+.aspect div.zoom span {
+	padding:0 5px;
+	cursor:pointer;
+	color:#666666;
+	font-size:10px;
+	font-weight:bold;
+}
+
+.aspect div.zoom span:hover {
+	color:#333333;
+}
+
+.aspect div.zoom div.filters {
+	float:left;
+	border:none;
+	text-transform:none;
+	padding:0;
+}
+
+
 /* ----- Floating Boxes - Tabs ----- */
 
 .aspect div.tabpanel > div,
