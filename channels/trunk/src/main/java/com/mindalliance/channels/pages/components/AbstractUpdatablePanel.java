@@ -65,6 +65,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     public AbstractUpdatablePanel( String id ) {
         super( id );
+        setOutputMarkupId( true );
     }
 
     public AbstractUpdatablePanel(

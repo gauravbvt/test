@@ -236,7 +236,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     }
 
     private Component getPlanClassificationsPanel() {
-        return new PlanClassificationsPanel( "aspect", getModel(), getExpansions() );
+        return new PlanClassificationSystemsPanel( "aspect" );
     }
 
     public Plan getPlan() {

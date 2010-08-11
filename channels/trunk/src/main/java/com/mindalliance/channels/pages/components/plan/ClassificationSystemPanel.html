@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <h4>
+        <span wicket:id="system-name">US Gov</span> classifications
+    </h4>
+    <div wicket:id="classifications-container">
+        <table class="data-table">
+            <tr wicket:id="classifications">
+                <td>
+                    <span wicket:id="classification-name">Secret</span>
+                </td>
+                <td>
+                    <a wicket:id="move-to-top" href="#">
+                        <img border="0" src="images/up.png" alt="Move to top" title="Move to top"/>
+                    </a>
+                </td>
+                <td>
+                    <a wicket:id="more" href="#">more...</a>
+                </td>
+                <td>
+                    <a wicket:id="delete" href="#">
+                        <img  border="0" src="images/delete.png" alt="delete"
+                             title="Delete this classification"/>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    New classification: <input wicket:id="new-classification" type="text" size="40"/> (press return)
+    <div wicket:id="index-container">
+        <h4>
+            References to classification <span wicket:id="classification">US Gov/Secret</span>
+        </h4>
+        <span wicket:id="index">[classification index panel]</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

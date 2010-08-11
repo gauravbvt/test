@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+<!--
+    <h3>
+        <span>All secrecy classifications in this plan</span>
+        <div>&nbsp;</div>
+    </h3>
+-->
+    <div wicket:id="classification-systems-container">
+        <table class="data-table">
+            <tr wicket:id="classification-systems">
+                <td wicket:id="name">US Gov</td>
+                <td>
+                    <a wicket:id="details" href="#">details...</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    New classification system: <input wicket:id="new-classification-system" type="text" size="40"/> (press return)
+    <span wicket:id="classification-system">[classification system panel]</span>
+</wicket:panel>
+</body>
+</html>
