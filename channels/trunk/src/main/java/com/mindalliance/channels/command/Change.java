@@ -93,7 +93,7 @@ public class Change implements Serializable {
          */
         Unexplained,
         /**
-         * Communicated.
+         * Communication requested to other planner..
          */
         Communicated,
         /**

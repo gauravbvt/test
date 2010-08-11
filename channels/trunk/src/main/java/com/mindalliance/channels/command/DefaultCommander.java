@@ -440,7 +440,7 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public boolean requestLockOn( Identifiable identifiable ) {
-        if ( isTimedOut() ) return false;
+        if ( isTimedOut() || identifiable == null ) return false;
         updateUserActive( User.current().getUsername() );
         return lockManager.requestLockOn( identifiable );
     }

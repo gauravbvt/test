@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
@@ -32,53 +31,53 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * Participations aspect.
      */
-    public static final String PARTICIPATIONS = "participations";
+    public static final String PARTICIPATIONS = "Participations";
     /**
      * Incidents aspect.
      */
-    public static final String EVENTS = "events";
+    public static final String EVENTS = "All events";
 
     /**
      * Classifications aspect.
      */
-    public static final String CLASSIFICATIONS = "classifications";
+    public static final String CLASSIFICATIONS = "Secrecy classifications";
 
     /**
      * Map aspect.
      */
-    public static final String MAP = "map";
+    public static final String MAP = "All segments";
 
     /**
      * Who's who aspect.
      */
-    public static final String WHOSWHO = "who's who";
+    public static final String WHOSWHO = "Who's who";
 
     /**
      * All issues aspect.
      */
-    public static final String ISSUES = "all issues";
+    public static final String ISSUES = "All issues";
 
     /**
      * Index aspect.
      */
-    public static final String INDEX = "index";
+    public static final String INDEX = "Index";
     /**
      * Evaluation aspect.
      */
-    public static final String EVAL = "evaluation";
+    public static final String EVAL = "Evaluation";
     /**
      * Versions aspect.
      */
-    public static final String VERSIONS = "versions";
+    public static final String VERSIONS = "Versions";
 
     /**
      * Bibliography aspect.
      */
-    public static final String BIBLIOGRAPHY = "bibliography";
+    public static final String BIBLIOGRAPHY = "Bibliography";
     /**
      * Organizations in scope.
      */
-    public static final String ORGANIZATIONS = "organizations";
+    public static final String ORGANIZATIONS = "All organizations";
 
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -89,9 +88,11 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
         super( id, iModel, expansions, aspect );
     }
 
+/*
     protected void annotateHeaderTitle( ModelObject object, Analyst analyst ) {
         // Show no issue indicator - too costly! --todo : review
     }
+*/
 
     /**
      * {@inheritDoc}

@@ -17,6 +17,7 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.query.Play;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
@@ -43,6 +44,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -62,6 +64,9 @@ import java.util.Set;
  * Time: 7:45:01 PM
  */
 public class JobsPanel extends AbstractCommandablePanel implements NameRangeable {
+
+    @SpringBean
+    private QueryService queryService;
     /**
      * Maximum number of jobs to show at a time.
      */
@@ -194,12 +199,13 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 new PropertyModel<List<? extends Organization>>( this, "transferFromOrganizations" ),
                 new IChoiceRenderer<Organization>() {
                     public Object getDisplayValue( Organization org ) {
-                        if ( !JobsPanel.this.isLockedByOtherUser( org ) )
+                        if ( !JobsPanel.this.isLockedByOtherUser( org ) ) {
                             return org.getLabel();
-                        else
+                        } else {
                             return org.getLabel()
                                     + " (edited by "
-                                    + JobsPanel.this.getLockOwner( org ) + ")";
+                                    + queryService.findUserFullName( JobsPanel.this.getLockOwner( org ) ) + ")";
+                        }
                     }
 
                     public String getIdValue( Organization org, int index ) {

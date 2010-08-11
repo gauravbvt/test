@@ -5,7 +5,8 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
 
 import java.util.Set;
 
@@ -39,7 +40,11 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
     /**
      * Whether the flow map was resized to fit.
      */
-    private boolean resizedToFit = false;
+    private boolean reducedToFit = false;
+    /**
+     * Sizing toggle label..
+     */
+    private Label sizingLabel;
 
 
     public AbstractResizableDiagramPanel(
@@ -66,14 +71,25 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
 
 
     private void addDiagramSizing() {
-        WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
-        reduceToFit.add( new AbstractDefaultAjaxBehavior() {
+        sizingLabel = new Label(
+                "fit",
+                new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
+        sizingLabel.setOutputMarkupId( true );
+        sizingLabel.add( new AbstractDefaultAjaxBehavior() {
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                String script = "wicketAjaxGet('"
-                        + getCallbackUrl( true )
-                        + "&width='+$('" + getDomIdentifier() + "').width()+'"
-                        + "&height='+$('" + getDomIdentifier() + "').height()";
+                String script;
+                if ( !reducedToFit ) {
+                    String domIdentifier = DOM_IDENTIFIER;
+                    script = "wicketAjaxGet('"
+                            + getCallbackUrl( true )
+                            + "&width='+$('" + domIdentifier + "').width()+'"
+                            + "&height='+$('" + domIdentifier + "').height()";
+                } else {
+                    script = "wicketAjaxGet('"
+                            + getCallbackUrl( true )
+                            + "'";
+                }
                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
                         .replaceAll( "&amp;", "&" );
                 tag.put( "onclick", onclick );
@@ -81,20 +97,22 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
 
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
-                String swidth = requestCycle.getRequest().getParameter( "width" );
-                String sheight = requestCycle.getRequest().getParameter( "height" );
-                if ( !resizedToFit ) {
+                if ( !reducedToFit ) {
+                    String swidth = requestCycle.getRequest().getParameter( "width" );
+                    String sheight = requestCycle.getRequest().getParameter( "height" );
                     diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
                     diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
                 } else {
                     diagramSize = new double[2];
                 }
-                resizedToFit = !resizedToFit;
+                reducedToFit = !reducedToFit;
                 addDiagramPanel();
                 target.addComponent( getDiagramPanel() );
+                addDiagramSizing();
+                target.addComponent( sizingLabel );
             }
         } );
-        add( reduceToFit );
+        addOrReplace( sizingLabel );
     }
 
     /**

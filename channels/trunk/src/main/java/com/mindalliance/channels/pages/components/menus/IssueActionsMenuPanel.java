@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.commands.PasteAttachment;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
+import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -60,8 +60,8 @@ public class IssueActionsMenuPanel extends MenuPanel {
     public List<Component> getMenuItems() throws CommandException {
         List<Component> menuItems = new ArrayList<Component>();
         // Undo and redo
-            menuItems.add( this.getUndoMenuItem( "menuItem" ) );
-            menuItems.add( this.getRedoMenuItem( "menuItem" ) );
+        menuItems.add( this.getUndoMenuItem( "menuItem" ) );
+        menuItems.add( this.getRedoMenuItem( "menuItem" ) );
         // Show/hide details
         if ( isCollapsed ) {
             AjaxFallbackLink showLink = new AjaxFallbackLink( "link" ) {
@@ -118,7 +118,19 @@ public class IssueActionsMenuPanel extends MenuPanel {
             }
             menuItems.add( menuItem );
         }
-        // Commands
+        if ( isLockedByUser( getIssue() ) ) {
+            // Commands
+            menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
+        } else if ( !isCollapsed ) {
+            if ( getCommander().isTimedOut() || getLockOwner( getIssue() ) == null ) {
+                Label label = new Label( "menuItem", "Timed out" );
+                label.add( new AttributeModifier( "class", true, new Model<String>( "disabled locked" ) ) );
+                menuItems.add( label );
+            } else {
+                menuItems.add( editedByLabel( "menuItem", getIssue(), getLockOwner( getIssue() ) ) );
+            }
+        }
+/*
         String disablement =
                 isLockedByUser( getIssue() )
                         ? null
@@ -130,12 +142,17 @@ public class IssueActionsMenuPanel extends MenuPanel {
             menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
         } else {
             if ( !isCollapsed ) {
-                // Commands disabled
-                Label label = new Label( "menuItem", disablement );
-                label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
-                menuItems.add( label );
+                if ( disablement.equals( "Timed out" ) ) {
+                    // Commands disabled
+                    Label label = new Label( "menuItem", disablement );
+                    label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+                    menuItems.add( label );
+                } else {
+                    menuItems.add( editedByLabel( "menuItem", getLockOwner( getIssue() ) ) );
+                }
             }
         }
+*/
         return menuItems;
     }
 

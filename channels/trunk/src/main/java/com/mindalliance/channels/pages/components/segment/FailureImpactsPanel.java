@@ -85,7 +85,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
      * In inches.
      * None if any is 0.
      */
-    private double[] flowDiagramDim = new double[2];
+    private double[] diagramSize = new double[2];
     /**
      * Diagram container dom identifier.
      */
@@ -94,7 +94,11 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     /**
      * Whether the flow map was resized to fit.
      */
-    private boolean resizedToFit = false;
+    private boolean reducedToFit = false;
+    /**
+     * Sizing toggle label..
+     */
+    private Label sizingLabel;
 
 
     public FailureImpactsPanel( String id, IModel<SegmentObject> model, Set<Long> expansions ) {
@@ -106,6 +110,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         addCaption();
         addAssumeFail();
         addFlowViewingControls();
+        addLegend();
         addEssentialFlowMap();
         addFailedTasks();
     }
@@ -134,40 +139,53 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     }
 
     private void addFlowViewingControls() {
-        Label reduceToFit = new Label(
+        sizingLabel = new Label(
                 "fit",
-                new Model<String>( resizedToFit ? "Full size" : "Reduce to fit" ) );
-        reduceToFit.add( new AbstractDefaultAjaxBehavior() {
-            @Override
+                new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
+        sizingLabel.setOutputMarkupId( true );
+        sizingLabel.add( new AbstractDefaultAjaxBehavior() {
+             @Override
             protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-                String domIdentifier = DOM_IDENTIFIER;
-                String script = "wicketAjaxGet('"
-                        + getCallbackUrl( true )
-                        + "&width='+$('" + domIdentifier + "').width()+'"
-                        + "&height='+$('" + domIdentifier + "').height()";
-                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
-                        .replaceAll( "&amp;", "&" );
-                tag.put( "onclick", onclick );
+                 super.onComponentTag( tag );
+                 String script;
+                 if ( !reducedToFit ) {
+                     String domIdentifier = DOM_IDENTIFIER;
+                     script = "wicketAjaxGet('"
+                             + getCallbackUrl( true )
+                             + "&width='+$('" + domIdentifier + "').width()+'"
+                             + "&height='+$('" + domIdentifier + "').height()";
+                 } else {
+                     script = "wicketAjaxGet('"
+                             + getCallbackUrl( true )
+                             + "'";
+                 }
+                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
+                         .replaceAll( "&amp;", "&" );
+                 tag.put( "onclick", onclick );
             }
 
             @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
-                String swidth = requestCycle.getRequest().getParameter( "width" );
-                String sheight = requestCycle.getRequest().getParameter( "height" );
-                if ( !resizedToFit ) {
-                    flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
-                    flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
+                if ( !reducedToFit ) {
+                    String swidth = requestCycle.getRequest().getParameter( "width" );
+                    String sheight = requestCycle.getRequest().getParameter( "height" );
+                    diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
+                    diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
                 } else {
-                    flowDiagramDim = new double[2];
+                    diagramSize = new double[2];
                 }
-                resizedToFit = !resizedToFit;
+                reducedToFit = !reducedToFit;
                 addEssentialFlowMap();
                 target.addComponent( failureImpactsDiagramPanel );
+                addFlowViewingControls();
+                target.addComponent( sizingLabel );
             }
         } );
-        add( reduceToFit );
+        addOrReplace( sizingLabel );
+    }
+
+    private void addLegend() {
         WebMarkupContainer legend = new WebMarkupContainer( "legend" );
         legend.add( new AjaxEventBehavior( "onclick" ) {
             @Override
@@ -183,7 +201,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     }
 
     private void addEssentialFlowMap() {
-        double[] dim = flowDiagramDim[0] <= 0.0 || flowDiagramDim[1] <= 0.0 ? null : flowDiagramDim;
+        double[] dim = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? null : diagramSize;
         Settings settings = new Settings( DOM_IDENTIFIER, null, dim, true, true );
 
         failureImpactsDiagramPanel = new FailureImpactsDiagramPanel(

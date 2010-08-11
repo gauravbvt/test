@@ -116,8 +116,9 @@ public class SocialPanel extends AbstractUpdatablePanel {
 
     public void newMessage( AjaxRequestTarget target, Change change ) {
         ModelObject about = (ModelObject) change.getSubject( getQueryService() );
+        String sendTo = change.getProperty();
         tabbedPanel.setSelectedTab( 2 );
-        plannerMessageListPanel.newMessage( "", about, target );
+        plannerMessageListPanel.newMessage( sendTo == null ? "" : sendTo, about, target );
         target.addComponent( tabbedPanel );
     }
 }

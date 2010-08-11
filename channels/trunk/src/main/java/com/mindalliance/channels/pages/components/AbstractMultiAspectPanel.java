@@ -9,7 +9,7 @@ import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import org.apache.commons.lang.StringUtils;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +34,9 @@ import java.util.Set;
  * Time: 7:56:27 PM
  */
 public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel implements Releaseable {
+
+    @SpringBean
+    private QueryService queryService;
 
     /**
      * Pad top on move.
@@ -255,17 +259,12 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         if ( !objectNeedsLocking() || lockManager.isLockedByUser( getObject() ) ) {
             menu = makeActionMenu( menuId );
         } else if ( getCommander().isTimedOut() || getLockOwner( getObject() ) == null ) {
-            menu = new Label(
-                    menuId, new Model<String>( "Timed out" ) );
+            menu = timeOutLabel( menuId ) ;
         } else if ( getObject().isImmutable() ) {
             menu = new Label(
                     menuId, new Model<String>( "Immutable" ) );
         } else {
-            String otherUser = lockManager.getLockOwner( getObject().getId() );
-            menu = new Label(
-                    menuId, new Model<String>( "Edited by " + otherUser ) );
-            menu.add(
-                    new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
+            menu = editedByLabel( menuId, getObject(), lockManager.getLockOwner( getObject().getId() ) );
         }
         return menu;
     }
@@ -335,7 +334,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      * {@inheritDoc}
      */
     protected String getTitle() {
-        return getObject().getName();
+        return "About " + getObject().getTypeName().toLowerCase() + ": " + getObject().getName();
     }
 
     /**
@@ -344,8 +343,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      * @return a string
      */
     public String getHeaderTitle() {
-        String abbreviatedName = StringUtils.abbreviate( getObject().getName(), getMaxTitleNameLength() );
-        return getObject().getTypeName() + " " + getAspectShown();
+        return getAspectShown();
     }
 
     /**
