@@ -225,13 +225,13 @@ span.entityReference {
 
 span.entityReference select {
     position: absolute;
-    width: 21%;
+    width: 25%;
     padding: 1px;
 }
 
 span.entityReference input[type='text'] {
-    width: 76%;
-    margin-left: 22%;
+    width: 73%;
+    margin-left: 27%;
 }
 
 input[type="text"].no-expand {
