@@ -13,6 +13,7 @@ import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -107,6 +108,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.CLASSIFICATIONS ) );
             }
         };
+        classificationsLink.add( new AttributeModifier( "class", true, new Model<String>( "plan-link" ) ) );
         add( classificationsLink );
     }
 

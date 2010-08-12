@@ -14,6 +14,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
@@ -21,7 +22,6 @@ import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -188,6 +188,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.AspectViewed, getFlow(), "eois" ) );
             }
         };
+        editEOIsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );
         add( editEOIsLink );
         ListView<String> eoisList = new ListView<String>(
                 "eois",
@@ -533,6 +534,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 new PropertyModel<Part>( this, "otherPart" ),
                 new Model<String>( isSend() ? "To" : "From" ) );
         otherLink.setOutputMarkupId( true );
+        otherLink.add( new AttributeModifier( "class", true, new Model<String>( "part-link" ) ) );
         addOrReplace( otherLink );
 
         otherChoice = new OtherNodeSelectorPanel(
