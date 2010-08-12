@@ -7,24 +7,33 @@
         lang="en">
 <body>
 <wicket:panel>
-<!--
     <h3>
-        <span>All secrecy classifications in this plan</span>
+        <span>Classification systems</span>
         <div>&nbsp;</div>
     </h3>
--->
     <div wicket:id="classification-systems-container">
         <table class="data-table">
+            <thead>
+                <tr class="header">
+                    <td>Classification system</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </thead>
             <tr wicket:id="classification-systems">
                 <td wicket:id="name">US Gov</td>
                 <td>
                     <a wicket:id="details" href="#">details...</a>
                 </td>
             </tr>
+            <tr wicket:id="new-classification-system-container">
+                <td>
+                    <input wicket:id="new-classification-system" type="text" title="Name new classification system and press enter"/>
+                </td>
+                <td>&nbsp;</td>
+            </tr>
         </table>
     </div>
-    New classification system: <input wicket:id="new-classification-system" type="text" size="40"/> (press return to add)
-    <span wicket:id="classification-system">[classification system panel]</span>
+    <span wicket:id="classification-system">[classification system panel]</span>    
 </wicket:panel>
 </body>
 </html>

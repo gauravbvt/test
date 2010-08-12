@@ -60,8 +60,11 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        addNameLabel();
+        classificationsContainer = new WebMarkupContainer( "classifications-container" );
+        classificationsContainer.setOutputMarkupId( true );
+        add( classificationsContainer );
         addClassificationsList();
+        addNameLabel();
         addNewClassification();
         addClassificationIndex();
     }
@@ -72,9 +75,6 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
     }
 
     private void addClassificationsList() {
-        classificationsContainer = new WebMarkupContainer( "classifications-container" );
-        classificationsContainer.setOutputMarkupId( true );
-        addOrReplace( classificationsContainer );
         ListView<Classification> classificationsListView = new ListView<Classification>(
                 "classifications",
                 new PropertyModel<List<Classification>>( this, "classifications" )
@@ -131,7 +131,8 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                         new Model<String>( itemCssClasses( item.getIndex(), count ) ) ) );
             }
         };
-        classificationsContainer.add( classificationsListView );
+        classificationsListView.setOutputMarkupId( true );
+        classificationsContainer.addOrReplace( classificationsListView );
     }
 
     private String itemCssClasses( int index, int count ) {
@@ -168,10 +169,19 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
 
 
     private void addNewClassification() {
+        WebMarkupContainer newClassificationContainer = new WebMarkupContainer( "new-classification-container" );
+        String cssClasses = "last "
+                + ( ( getPlan().classificationsFor( classificationSystem).size() ) % 2 == 0 ? "even" : "odd" );
+        newClassificationContainer.add( new AttributeModifier(
+                "class",
+                true,
+                new Model<String>( cssClasses ) ) );
+        classificationsContainer.add( newClassificationContainer );
         // input field
         newClassificationField = new TextField<String>(
                 "new-classification",
                 new PropertyModel<String>( this, "newClassificationName" ) );
+        newClassificationField.setOutputMarkupId( true );
         newClassificationField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 Classification classification = addClassification();
@@ -186,7 +196,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 }
             }
         } );
-        add( newClassificationField );
+        newClassificationContainer.add( newClassificationField );
     }
 
     private boolean isNewClassificationNamed() {

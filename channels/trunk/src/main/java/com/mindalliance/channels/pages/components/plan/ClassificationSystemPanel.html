@@ -7,11 +7,17 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h4>
-        <span wicket:id="system-name">US Gov</span> classifications
-    </h4>
+    <h4><span wicket:id="system-name">US Gov</span> classifications</h4>
     <div wicket:id="classifications-container">
         <table class="data-table">
+            <thead>
+                <tr class="header">
+                    <td>Classification</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </thead>
             <tr wicket:id="classifications">
                 <td>
                     <span wicket:id="classification-name">Secret</span>
@@ -31,9 +37,16 @@
                     </a>
                 </td>
             </tr>
+            <tr wicket:id="new-classification-container">
+                <td>
+                   <input wicket:id="new-classification" type="text" title="Name new classification and press enter"/>
+                </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
         </table>
     </div>
-    New classification: <input wicket:id="new-classification" type="text" size="40"/> (press return to add)
     <div wicket:id="index-container">
         <h4>
             References to classification <span wicket:id="classification">US Gov/Secret</span>

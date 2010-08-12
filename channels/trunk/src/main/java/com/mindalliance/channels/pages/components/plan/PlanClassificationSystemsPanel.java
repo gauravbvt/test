@@ -48,15 +48,15 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
+        classificationSystemsContainer = new WebMarkupContainer( "classification-systems-container" );
+        classificationSystemsContainer.setOutputMarkupId( true );
+        add( classificationSystemsContainer );
         addClassificationSystemsList();
         addNewClassificationSystem();
         addClassificationSystemPanel( null );
     }
 
     private void addClassificationSystemsList() {
-        classificationSystemsContainer = new WebMarkupContainer( "classification-systems-container" );
-        classificationSystemsContainer.setOutputMarkupId( true );
-        addOrReplace( classificationSystemsContainer );
         ListView<String> classificationSystemsListView = new ListView<String>(
                 "classification-systems",
                 new PropertyModel<List<String>>( this, "classificationSystems" )
@@ -81,7 +81,8 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
                         new Model<String>( itemCssClasses( item.getIndex(), count ) ) ) );
             }
         };
-        classificationSystemsContainer.add( classificationSystemsListView );
+        classificationSystemsListView.setOutputMarkupId( true );
+        classificationSystemsContainer.addOrReplace( classificationSystemsListView );
     }
 
     private String itemCssClasses( int index, int count ) {
@@ -104,6 +105,13 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
     }
 
     private void addNewClassificationSystem() {
+        WebMarkupContainer newSystemContainer = new WebMarkupContainer( "new-classification-system-container" );
+        String cssClasses = "last " + ( ( getClassificationSystems().size() ) % 2 == 0 ? "even" : "odd" );
+        newSystemContainer.add( new AttributeModifier(
+                "class",
+                true,
+                new Model<String>( cssClasses ) ) );
+        classificationSystemsContainer.add( newSystemContainer );
         classificationSystemField = new TextField<String>(
                 "new-classification-system",
                 new PropertyModel<String>( this, "newClassificationSystemName" ) );
@@ -117,7 +125,7 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
                 target.addComponent( classificationSystemField );
             }
         } );
-        add( classificationSystemField );
+        newSystemContainer.add( classificationSystemField );
     }
 
     private void addClassificationSystemPanel( String classificationSystemName ) {
