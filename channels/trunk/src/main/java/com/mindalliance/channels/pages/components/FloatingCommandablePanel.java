@@ -16,6 +16,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.text.MessageFormat;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -41,6 +42,10 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
      */
     private static final String BORDER_COLOR = "#999999";
     /**
+     * Bounds on random delta of opening position.
+     */
+    private static final int NON_OVERLAP_DELTA = 20;
+    /**
      * JavaScript.
      */
     private static ResourceReference JAVASCRIPT = new JavascriptResourceReference(
@@ -53,6 +58,8 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
      *  Title label.
      */
     private Label titleLabel;
+
+    private Random random = new Random();
 
     public FloatingCommandablePanel( String id ) {
         this( id, null, null );
@@ -196,12 +203,16 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         } ) );
     }
 
+    private int randomDelta() {
+       return (NON_OVERLAP_DELTA / 2) - random.nextInt( NON_OVERLAP_DELTA );
+    }
+
     protected int getTop() {
-        return 120;
+        return 120 + randomDelta();
     }
 
     protected int getLeft() {
-        return 35;
+        return 35  + randomDelta();
     }
 
     protected int getBottom() {
