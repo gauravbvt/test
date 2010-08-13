@@ -32,7 +32,7 @@
     <sec:http auto-config='true' access-denied-page="/static/403.html" create-session="always"
               disable-url-rewriting="false">
 
-        <sec:intercept-url pattern="/*.css" filters="none"/>
+        <sec:intercept-url pattern="/css/*.css" filters="none"/>
         <sec:intercept-url pattern="/*.js" filters="none"/>
         <sec:intercept-url pattern="/*.ico" filters="none"/>
         <sec:intercept-url pattern="/static/**" filters="none"/>
