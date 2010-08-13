@@ -7,11 +7,14 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h3 wicket:id="flows-title">
-        [All inter-org flows]
+    <h3>
+        <span wicket:id="flows-title">[All inter-org flows]</span>
+		<div>&nbsp;</div>
     </h3>
+	<div class="filters">
     Filter on information: <input wicket:id="infoFilter" type="text" class="filter-small"/>
     and task: <input wicket:id="taskFilter" type="text" class="filter-small"/>
+	</div>
     <span wicket:id="flows">[flows panel]</span>
 </wicket:panel>
 </body>

@@ -99,7 +99,11 @@ public class Channels extends WebApplication
      * Expansion id for social panel.
      */
     public static final long SOCIAL_ID = -1;
-    
+    /**
+     *  URI of support community.
+     */
+    private String supportCommunityUri;
+
     /**
      * Default Constructor.
      */
@@ -304,5 +308,13 @@ public class Channels extends WebApplication
 
     public void setPlanManager( PlanManager planManager ) {
         this.planManager = planManager;
+    }
+
+    public void setSupportCommunityUri( String supportCommunityUri ) {
+        this.supportCommunityUri = supportCommunityUri;
+    }
+
+    public String getSupportCommunityUri() {
+        return supportCommunityUri;
     }
 }

@@ -244,15 +244,11 @@ public class SegmentPanel extends AbstractCommandablePanel {
                     getExpansions() );
         } else if ( getCommander().isTimedOut()
                 || getLockOwner( getPart() ) == null ) {
-            partActionsMenu = new Label(
-                    "partActionsMenu", new Model<String>( "Timed out" ) );
+            partActionsMenu = timeOutLabel( "partActionsMenu" );
 
         } else {
             String otherUser = getLockOwner( getPart() );
-            partActionsMenu = new Label(
-                    "partActionsMenu", new Model<String>( "Edited by " + otherUser ) );
-            partActionsMenu.add(
-                    new AttributeModifier( "class", true, new Model<String>( "locked" ) ) );
+            partActionsMenu = editedByLabel( "partActionsMenu", getPart(), otherUser );
         }
         partActionsMenu.setOutputMarkupId( true );
         makeVisible( partActionsMenu, getPlan().isDevelopment() && isExpanded( getPart() ) );
@@ -642,18 +638,19 @@ public class SegmentPanel extends AbstractCommandablePanel {
     /**
      * Have social panel create a new message.
      *
-     * @param target  an ajax request target
+     * @param target an ajax request target
      * @param change a change referencing what the communication is about
      */
-    public void newMessage(  AjaxRequestTarget target, Change change ) {
+    public void newMessage( AjaxRequestTarget target, Change change ) {
         socialPanel.newMessage( target, change );
     }
 
     /**
      * Refresh social panel.
-     * @param target  an ajax request target
+     *
+     * @param target an ajax request target
      * @param change a change referencing what the communication is about
-      */
+     */
     public void refreshSocialPanel( AjaxRequestTarget target, Change change ) {
         resizeSocialPanel( target, change );
         updateSocialPanel( target );

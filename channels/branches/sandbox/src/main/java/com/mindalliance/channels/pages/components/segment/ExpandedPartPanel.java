@@ -209,7 +209,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addPartDescription() {
         partDescription = new TextArea<String>( "description",                            // NON-NLS
                 new PropertyModel<String>( this, "description" ) );
-        partDescription.add( new AjaxFormComponentUpdatingBehavior( "onchange") {
+        partDescription.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "description" ) );
             }
@@ -497,6 +497,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                                 SegmentEditPanel.GOALS ) );
             }
         };
+        segmentGoalsLink.add( new AttributeModifier( "class", true, new Model<String>( "segment-link" ) ) );
         segmentGoalsLink.setOutputMarkupId( true );
         addOrReplace( segmentGoalsLink );
     }
@@ -866,6 +867,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         refresh( target );
     }
+
     /**
      * {@inheritDoc}
      */

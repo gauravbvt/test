@@ -29,7 +29,7 @@ public class TestExternalFlow extends TestCase {
         DefinitionManager definitionManager = new DefinitionManager();
         definitionManager.afterPropertiesSet();
         PlanManager planManager = new PlanManager( definitionManager );
-        planManager.validate();
+        planManager.assignPlans();
 
         assertEquals( 1, planManager.getDefinitionManager().getPlanNames().size() );
         Plan plan = planManager.getPlans().get( 0 );

@@ -85,8 +85,9 @@ public interface ImagingService {
 
     /**
      * Find icon file given relative filename.
-     * @param fileName a string
+     * @param encodedPath a string
      * @return  a file
+     * @throws java.io.IOException if fails
      */
-    File findIcon( String fileName ) throws IOException;
+    File findIcon( String encodedPath ) throws IOException;
 }

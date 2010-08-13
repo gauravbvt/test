@@ -6,13 +6,14 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
-import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -94,12 +95,20 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         addLinkToClassifications();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected String getTitle() {
+        return getFlow().getName();
+    }
+
     private void addLinkToClassifications() {
         AjaxFallbackLink classificationsLink = new AjaxFallbackLink( "classifications" ) {
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.CLASSIFICATIONS ) );
             }
         };
+        classificationsLink.add( new AttributeModifier( "class", true, new Model<String>( "plan-link" ) ) );
         add( classificationsLink );
     }
 
@@ -392,7 +401,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return Matcher.getInstance().same( ( (Flow) obj ).getName(),
-                                                            flow.getName() );
+                                flow.getName() );
                     }
                 }
         ) );

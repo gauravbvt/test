@@ -8,9 +8,10 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
-import com.mindalliance.channels.nlp.Matcher;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -20,6 +21,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -70,17 +72,17 @@ public class EventListPanel extends AbstractCommandablePanel {
     }
 
     private ListView<EventWrapper> makeEventsTable() {
-        List<EventWrapper> eventWrappers = getWrappedEvents();
+        final List<EventWrapper> eventWrappers = getWrappedEvents();
         return new ListView<EventWrapper>( "event", eventWrappers ) {
             /** {@inheritDoc} */
             protected void populateItem( ListItem<EventWrapper> item ) {
-                addEventCell( item );
+                addEventCell( item, eventWrappers.size() );
                 addConfirmedCell( item );
             }
         };
     }
 
-    private void addEventCell( final ListItem<EventWrapper> item ) {
+    private void addEventCell( final ListItem<EventWrapper> item, int count ) {
         item.setOutputMarkupId( true );
         final EventWrapper wrapper = item.getModelObject();
         WebMarkupContainer nameContainer = new WebMarkupContainer( "name-container" );
@@ -112,9 +114,19 @@ public class EventListPanel extends AbstractCommandablePanel {
             }
         } );
         nameContainer.add( nameField );
-        EntityLink eventLink = new EntityLink("event-link", new PropertyModel<Event>(wrapper, "event"));
+        EntityLink eventLink = new EntityLink( "event-link", new PropertyModel<Event>( wrapper, "event" ) );
         eventLink.setVisible( !wrapper.isMarkedForCreation() );
         nameContainer.add( eventLink );
+        item.add( new AttributeModifier(
+                "class",
+                true,
+                new Model<String>( itemCssClasses( item.getIndex(), count ) ) ) );
+    }
+
+    private String itemCssClasses( int index, int count )  {
+        String classes = index % 2 == 0 ? "even" : "odd";
+        if ( index == count -1 ) classes += " last";
+        return classes;
     }
 
     private void addConfirmedCell( ListItem<EventWrapper> item ) {

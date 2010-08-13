@@ -16,11 +16,14 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -38,6 +41,9 @@ import java.util.regex.Pattern;
  * Time: 7:30:31 PM
  */
 public class AbstractUpdatablePanel extends Panel implements Updatable {
+
+    @SpringBean
+    private QueryService queryService;
 
     /**
      * String comparator for equality tests.
@@ -59,6 +65,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     public AbstractUpdatablePanel( String id ) {
         super( id );
+        setOutputMarkupId( true );
     }
 
     public AbstractUpdatablePanel(
@@ -198,7 +205,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * {@inheritDoc}
      */
-     protected void update( AjaxRequestTarget target, Change change ) {
+    protected void update( AjaxRequestTarget target, Change change ) {
         changed( change );
         updateWith( target, change, new ArrayList<Updatable>() );
     }
@@ -223,12 +230,13 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated, String aspect ) {
         if ( !updated.contains( this ) && !change.isNone() ) {
             refresh( target, change, aspect );
-         //   target.addComponent( this );
+            //   target.addComponent( this );
         }
     }
 
     /**
      * Refresh given change
+     *
      * @param target an ajax request target
      * @param change the nature of the change
      * @param aspect aspect shown
@@ -330,6 +338,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     /**
      * Whether or not the idenfiable is collapsed.
+     *
      * @param identifiable an identifiable
      * @return a boolean
      */
@@ -339,11 +348,47 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     /**
      * Whether or not the idenfiable is expanded.
+     *
      * @param identifiable an identifiable
      * @return a boolean
      */
     protected boolean isExpanded( Identifiable identifiable ) {
         return getExpansions().contains( identifiable.getId() );
+    }
+
+    /**
+     * Return an actionalble label declaring that another user is editing.
+     *
+     * @param id       a string
+     * @param username a string
+     * @return a label
+     */
+    protected Label editedByLabel( String id, final Identifiable identifiable, final String username ) {
+        Label label = new Label(
+                id, "(Edited by " + queryService.findUserFullName( username ) + ")" );
+        label.add(
+                new AttributeModifier( "class", true, new Model<String>( "disabled pointer" ) ) );
+        label.add(
+                new AttributeModifier( "title", true, new Model<String>( "Click to send a message" ) ) );
+        label.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Communicated, identifiable, username ) );
+            }
+        } );
+        return label;
+    }
+
+    /**
+     * Return a label indicating a time out.
+     *
+     * @param id a string
+     * @return a label
+     */
+    protected Label timeOutLabel( String id ) {
+        Label label = new Label(
+                id, new Model<String>( "Timed out" ) );
+        label.add( new AttributeModifier( "class", true, new Model<String>( "disabled timed-out" ) ) );
+        return label;
     }
 
 }

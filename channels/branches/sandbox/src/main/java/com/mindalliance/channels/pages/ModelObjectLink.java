@@ -1,7 +1,9 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -37,9 +39,9 @@ public class ModelObjectLink extends AbstractUpdatablePanel {
     }
 
     private void init() {
+        final ModelObject mo = moModel.getObject();
         AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {
-                ModelObject mo = moModel.getObject();
                 if ( mo != null ) {
                     if ( mo.isEntity() ) {
                         update( target, new Change( Change.Type.Expanded, mo ) );
@@ -52,6 +54,20 @@ public class ModelObjectLink extends AbstractUpdatablePanel {
         add( link );
         if ( hint != null && !hint.isEmpty() ) {
             link.add( new AttributeModifier( "title", true, new Model<String>( hint ) ) );
+        }
+        if ( mo != null ) {
+            link.add( new AttributeModifier(
+                    "class",
+                    true,
+                    new Model<String>(
+                            mo.isEntity()
+                                    ? "entity-link"
+                                    : mo instanceof Part
+                                    ? "part-link"
+                                    : mo instanceof Flow
+                                    ? "flow-link"
+                                    : "model-object-link"
+                    ) ) );
         }
         Label textLabel = new Label( "text", textModel );
         link.add( textLabel );

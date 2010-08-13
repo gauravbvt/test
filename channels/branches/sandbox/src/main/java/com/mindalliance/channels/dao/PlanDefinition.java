@@ -149,12 +149,17 @@ public class PlanDefinition extends Observable {
 
             File oldVersionDir = productionVersion.getVersionDirectory();
             // Copy files from old to new
-            FileUtils.copyFileToDirectory( new File( oldVersionDir, DATA_FILE ),
-                                           result.getVersionDirectory() );
-            FileUtils.copyFileToDirectory( new File( oldVersionDir, "surveys" ),
-                                           result.getVersionDirectory() );
-            FileUtils.copyDirectoryToDirectory( new File( oldVersionDir, "uploads" ),
-                                                result.getVersionDirectory() );
+            File data = new File( oldVersionDir, DATA_FILE );
+            if ( data.exists() )
+                FileUtils.copyFileToDirectory( data, result.getVersionDirectory() );
+
+            File surveys = new File( oldVersionDir, "surveys" );
+            if ( surveys.exists() )
+                FileUtils.copyFileToDirectory( surveys, result.getVersionDirectory() );
+
+            File uploads = new File( oldVersionDir, "uploads" );
+            if ( uploads.exists() )
+                FileUtils.copyDirectoryToDirectory( uploads, result.getVersionDirectory() );
         }
 
         developmentVersion = result;
@@ -243,6 +248,18 @@ public class PlanDefinition extends Observable {
      */
     public static String sanitize( String name ) {
         return name.replaceAll( "\\W", "_" );
+    }
+
+    /**
+     * Delete the physical files for this definition.
+     */
+    public void delete() {
+        try {
+            FileUtils.deleteDirectory( planDirectory );
+            LOG.info( "Deleted plan {}", uri );
+        } catch ( IOException e ) {
+            LOG.error( "Unable to delete directory " + planDirectory, e );
+        }
     }
 
     //===========================================================
@@ -404,6 +421,7 @@ public class PlanDefinition extends Observable {
             plan.setUri( uri );
             plan.setVersion( number );
             plan.setStatus( status );
+            plan.setClient( client );
 
             return plan;
         }

@@ -16,6 +16,7 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import com.mindalliance.channels.util.SortableBeanProvider;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -112,8 +113,9 @@ public class GoalListPanel extends AbstractCommandablePanel {
 
 
     private ListView<GoalWrapper> makeGoalsTable() {
-        List<GoalWrapper> riskWrappers = getWrappedGoals();
-        return new ListView<GoalWrapper>( "goal", riskWrappers ) {
+        List<GoalWrapper> goalWrappers = getWrappedGoals();
+        final int count = goalWrappers.size();
+        return new ListView<GoalWrapper>( "goal", goalWrappers ) {
             /** {@inheritDoc} */
             protected void populateItem( ListItem<GoalWrapper> item ) {
                 item.setOutputMarkupId( true );
@@ -124,15 +126,27 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 addEndsWithSegment( item );
                 addDeleteImage( item );
                 addShowMoreCell( item );
+                item.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>( cssClasses( item, count ) ) ) );
+
             }
         };
+    }
+
+    private String cssClasses( ListItem<GoalWrapper> item, int count ) {
+        int index = item.getIndex();
+        String cssClasses = index % 2 == 0 ? "even" : "odd";
+        if ( index == count - 1 ) cssClasses += " last";
+        return cssClasses;
     }
 
     private void addKindCell( final ListItem<GoalWrapper> item ) {
         final GoalWrapper wrapper = item.getModelObject();
         final List<String> candidateKinds = Arrays.asList( INTENTS );
         DropDownChoice<String> kindDropDownChoice = new DropDownChoice<String>(
-               "kind",
+                "kind",
                 new PropertyModel<String>( wrapper, "kind" ),
                 candidateKinds
         );
@@ -221,7 +235,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 new Model<GoalWrapper>( wrapper ),
                 choices,
                 "organization",
-                Organization.class);
+                Organization.class );
         orgRefField.enable( getPlan().isDevelopment() );
         item.add( orgRefField );
     }
@@ -230,15 +244,15 @@ public class GoalListPanel extends AbstractCommandablePanel {
         final GoalWrapper wrapper = item.getModelObject();
         CheckBox endsWithSegmentCheckBox = new CheckBox(
                 "endsWithSegment",
-                new PropertyModel<Boolean>(wrapper, "endsWithSegment"));
+                new PropertyModel<Boolean>( wrapper, "endsWithSegment" ) );
         endsWithSegmentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-                    @Override
-                    protected void onUpdate( AjaxRequestTarget target ) {
-                        if ( !wrapper.isUndergoingCreation() ) {
-                            update( target, new Change( Change.Type.Updated, getSegment(), "goals" ) );
-                        }
-                    }
-                });
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                if ( !wrapper.isUndergoingCreation() ) {
+                    update( target, new Change( Change.Type.Updated, getSegment(), "goals" ) );
+                }
+            }
+        } );
         endsWithSegmentCheckBox.setEnabled( getPlan().isDevelopment() );
         item.add( endsWithSegmentCheckBox );
     }
@@ -309,7 +323,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
     }
 
     private List<Goal.Category> getCandidateCategories( final GoalWrapper wrapper ) {
-        List<Goal.Category> categories = Arrays.asList(Goal.Category.values() );
+        List<Goal.Category> categories = Arrays.asList( Goal.Category.values() );
         Collections.sort( categories, new Comparator<Goal.Category>() {
             public int compare( Goal.Category r1, Goal.Category r2 ) {
                 return collator.compare( wrapper.categoryLabel( r1 ), wrapper.categoryLabel( r2 ) );
@@ -526,7 +540,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
         }
 
         public Organization getOrganization() {
-            return  goal.getOrganization();
+            return goal.getOrganization();
         }
 
         public void setOrganization( Organization org ) {
@@ -570,27 +584,35 @@ public class GoalListPanel extends AbstractCommandablePanel {
         }
 
 
-       public String getOrganizationName() {
+        public String getOrganizationName() {
             Organization org = goal.getOrganization();
             return org != null ? org.getName() : "";
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public long getId() {
             return 0;
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public String getDescription() {
             return goal.getDescription();
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public String getName() {
             return goal.toString();
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public String getTypeName() {
             return "Goal wrapper";
         }
@@ -623,7 +645,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
         }
 
         public String categoryLabel( Goal.Category category ) {
-            return category.getLabel( goal.isPositive() ) ;
+            return category.getLabel( goal.isPositive() );
         }
     }
 

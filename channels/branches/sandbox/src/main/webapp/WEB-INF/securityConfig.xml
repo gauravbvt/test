@@ -32,12 +32,13 @@
     <sec:http auto-config='true' access-denied-page="/static/403.html" create-session="always"
               disable-url-rewriting="false">
 
-        <sec:intercept-url pattern="/*.css" filters="none"/>
+        <sec:intercept-url pattern="/css/*.css" filters="none"/>
         <sec:intercept-url pattern="/*.js" filters="none"/>
         <sec:intercept-url pattern="/*.ico" filters="none"/>
         <sec:intercept-url pattern="/static/**" filters="none"/>
         <sec:intercept-url pattern="/images/**" filters="none"/>
         <sec:intercept-url pattern="/resources/**" filters="none"/>
+        <sec:intercept-url pattern="/doc/**" filters="none"/>
 
         <sec:intercept-url pattern="/login.html" filters="none"/>
         <sec:intercept-url pattern="/plan" access="ROLE_PLANNER"/>

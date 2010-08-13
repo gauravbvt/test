@@ -3,7 +3,9 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.util.tester.FormTester;
@@ -51,8 +53,8 @@ public class TestAdminPage extends AbstractChannelsTest {
         assertRendered( "admin", AdminPage.class );
         try {
             User u = (User) userService.loadUserByUsername( "aaaa" );
-            // fail( "side-effect from previous run" );
             userService.deleteUser( u );
+            fail( "side-effect from previous run" );
         } catch ( UsernameNotFoundException ignored ) {
             // OK
         }
@@ -120,17 +122,23 @@ public class TestAdminPage extends AbstractChannelsTest {
         tester.assertNoErrorMessage();
         assertFalse( aaaa.isPlanner( DEMO ) );
         assertTrue( aaaa.isPlanner( ACME ) );
+
+        form = tester.newFormTester( "users" );
+        form.setValue( "new", "aaaa" );
+        form.submit();
+        tester.assertErrorMessages( new String[]{ "User aaaa already exists" } );
+
     }
 
     @Test
-    public void testDelete() {
+    public void testDeleteUser() {
         // Note:  side-effect from testUserCreation()
         User aaaa = (User) userService.loadUserByUsername( "aaaa" );
         assertNotNull( aaaa );
 
         try {
             userService.loadUserByUsername( "aaaa2" );
-            // fail( "side-effect from previous run" );
+            fail( "side-effect from previous run" );
         } catch ( UsernameNotFoundException ignored ) {
             userService.createUser( "aaaa2" );
         }
@@ -158,5 +166,100 @@ public class TestAdminPage extends AbstractChannelsTest {
         }
     }
 
+    @Test
+    public void testCreatePlan() {
+        assertRendered( "admin", AdminPage.class );
+
+        FormTester form = tester.newFormTester( "users" );
+        form.setValue( "newPlanUri", DEMO );
+        form.submit();
+        tester.assertRenderedPage( AdminPage.class );
+        tester.assertErrorMessages( new String[]{ "A plan with that uri already exists" } );
+
+        String uri = "brand.spanking.new.plan";
+        String client = "Bob Customer";
+
+        form = tester.newFormTester( "users" );
+        form.setValue( "newPlanUri", uri );
+        form.setValue( "newPlanClient", client );
+        form.submit();
+        tester.assertRenderedPage( AdminPage.class );
+        tester.assertNoErrorMessage();
+
+        PlanDao dao = planManager.getDao( uri, true );
+        Plan plan = dao.getPlan();
+
+        assertEquals( client, plan.getClient() );
+        assertEquals( uri, plan.getUri() );
+        assertNotNull( plan.getDefaultEvent() );
+        assertNotNull( plan.getDefaultPhase() );
+        assertNotNull( plan.getDefaultSegment() );
+    }
+
+    @Test
+    public void testDeletePlan() {
+        assertRendered( "admin", AdminPage.class );
+        FormTester form = tester.newFormTester( "users" );
+        form.select( "plan-sel", 1 );
+        tester.executeAjaxEvent( "users:plan-sel", "onchange" );
+        AdminPage page = (AdminPage) tester.getLastRenderedPage();
+        assertEquals( DEMO, page.getPlan().getUri() );
+
+        PlanDefinition planDefinition = planManager.getDefinitionManager().get( DEMO );
+
+        form = tester.newFormTester( "users" );
+        form.submit( "deletePlan" );
+
+        assertRendered( "admin", AdminPage.class );
+        assertEquals( 0, planManager.getPlansWithUri( DEMO ).size() );
+        assertFalse( planDefinition.getPlanDirectory().exists() );
+    }
+
+    @Test
+    public void testProductize() {
+        User guest = userService.getUserNamed( "guest" );
+        planManager.setAuthorities( guest, "ROLE_USER", null  );
+
+        assertRendered( "admin", AdminPage.class );
+
+        FormTester form = tester.newFormTester( "users" );
+        form.select( "plan-sel", 0 );
+        tester.executeAjaxEvent( "users:plan-sel", "onchange" );
+        AdminPage page = (AdminPage) tester.getLastRenderedPage();
+        assertEquals( ACME, page.getPlan().getUri() );
+
+        PlanDefinition planDefinition = planManager.getDefinitionManager().get( ACME );
+
+        form = tester.newFormTester( "users" );
+        assertNull( planDefinition.getProductionVersion() );
+        form.submit( "productize" );
+
+        assertRendered( "admin", AdminPage.class );
+        assertEquals( 2, planManager.getPlansWithUri( ACME ).size() );
+        assertTrue( planDefinition.getPlanDirectory().exists() );
+
+        Plan newDev = planManager.findDevelopmentPlan( ACME );
+        assertNotNull( newDev );
+        assertEquals( 2, newDev.getVersion() );
+
+        Plan newProd = planManager.findProductionPlan( ACME );
+        assertNotNull( newProd );
+        assertSame( newProd, guest.getPlan() );
+        assertEquals( 1, newProd.getVersion() );
+
+        // Productize again
+        form = tester.newFormTester( "users" );
+        form.submit( "productize" );
+
+        Plan newestProd = planManager.findProductionPlan( ACME );
+        assertNotNull( newestProd );
+        assertSame( newestProd, guest.getPlan() );
+        assertEquals( 2, newestProd.getVersion() );
+
+        assertTrue( newProd.isRetired() );
+        assertEquals( 3, planManager.findDevelopmentPlan( ACME ).getVersion() );
+
+
+    }
 
 }

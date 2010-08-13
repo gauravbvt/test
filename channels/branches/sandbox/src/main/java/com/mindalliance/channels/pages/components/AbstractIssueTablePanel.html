@@ -7,10 +7,12 @@
         lang="en">
 <body>
 <wicket:panel>
-    Show <select wicket:id="issueType">
+    <div class="filters">
+        Show <select wicket:id="issueType">
         <option>All</option>
     </select> issues
-    <wicket:child/>
+        <wicket:child/>
+    </div>
     <span wicket:id="issuesTable">[issues table]</span>
 </wicket:panel>
 </body>

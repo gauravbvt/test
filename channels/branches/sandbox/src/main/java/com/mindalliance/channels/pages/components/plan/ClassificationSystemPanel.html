@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <h3>
+		<span><span wicket:id="system-name">US Gov</span> classifications</span>
+		<div>&nbsp;</div>
+	</h3>
+    <div wicket:id="classifications-container">
+        <table class="data-table">
+            <thead>
+                <tr class="headers">
+                    <td>Classification</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </thead>
+            <tr wicket:id="classifications">
+                <td>
+                    <span wicket:id="classification-name">Secret</span>
+                </td>
+                <td>
+                    <a wicket:id="move-to-top" href="#">
+                        <img border="0" src="images/up.png" alt="Move to top" title="Move to top"/>
+                    </a>
+                </td>
+                <td>
+                    <a wicket:id="more" href="#" class="more">more</a>
+                </td>
+                <td>
+                    <a wicket:id="delete" href="#">
+                        <img  border="0" src="images/delete.png" alt="delete"
+                             title="Delete this classification"/>
+                    </a>
+                </td>
+            </tr>
+            <tr wicket:id="new-classification-container">
+                <td>
+                   <input wicket:id="new-classification" type="text" title="Name new classification and press enter"/>
+                </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    <div wicket:id="index-container">
+        <h3>
+            <span>References to classification <span wicket:id="classification">US Gov/Secret</span></span>
+			<div>&nbsp;</div>
+        </h3>
+        <span wicket:id="index">[classification index panel]</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

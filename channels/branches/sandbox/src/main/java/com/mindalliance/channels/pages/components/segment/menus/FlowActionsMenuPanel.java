@@ -14,11 +14,9 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -126,6 +124,14 @@ public class FlowActionsMenuPanel extends MenuPanel {
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );
+        if ( isLockedByUser( getFlow() ) || isCollapsed && getLockOwner( getFlow() ) == null ) {
+            menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
+        } else if ( getCommander().isTimedOut() || !isCollapsed && getLockOwner( getFlow() ) == null ) {
+            menuItems.add( timeOutLabel( "menuItem" ) );
+        } else {
+            menuItems.add( editedByLabel( "menuItem", getFlow(), getLockOwner( getFlow() ) ) );
+        }
+/*
         String disablement =
                 ( isLockedByUser( getFlow() ) || isCollapsed && getLockOwner( getFlow() ) == null )
                         ? null
@@ -138,9 +144,10 @@ public class FlowActionsMenuPanel extends MenuPanel {
         } else {
             // Commands disabled
             Label label = new Label( "menuItem", disablement );
-            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled locked" ) ) );
             menuItems.add( label );
         }
+*/
         return menuItems;
     }
 

@@ -1,0 +1,385 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;2.&nbsp;Using Channels</title><link rel="stylesheet" href="/css/doc.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="channels_user_guide.html" title="Information Sharing Planning with Channels"><link rel="up" href="channels_user_guide.html" title="Information Sharing Planning with Channels"><link rel="prev" href="ch01s02.html" title="Definitions"><link rel="next" href="ch03.html" title="Chapter&nbsp;3.&nbsp;An information sharing planning method"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;2.&nbsp;Using Channels</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch01s02.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;2.&nbsp;Using Channels"><div class="titlepage"><div><div><h2 class="title"><a name="d0e215"></a>Chapter&nbsp;2.&nbsp;Using Channels</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch02.html#d0e218">Channels basics</a></span></dt><dd><dl><dt><span class="section"><a href="ch02.html#d0e225">User roles</a></span></dt><dt><span class="section"><a href="ch02.html#d0e272">Logging in and selecting a Plan and segment</a></span></dt><dt><span class="section"><a href="ch02.html#d0e325">Editing tasks and flows</a></span></dt><dt><span class="section"><a href="ch02.html#d0e376">Segment scoping</a></span></dt><dt><span class="section"><a href="ch02.html#d0e425">Editing and analyzing entities</a></span></dt><dt><span class="section"><a href="ch02.html#d0e526">Acquiring and releasing edit locks</a></span></dt><dt><span class="section"><a href="ch02.html#d0e551">Viewing task assignments and sharing commitments</a></span></dt><dt><span class="section"><a href="ch02.html#d0e588">Assessing the impacts of failure</a></span></dt><dt><span class="section"><a href="ch02.html#d0e632">Actions</a></span></dt><dt><span class="section"><a href="ch02.html#d0e655">Adding and building a segment</a></span></dt><dt><span class="section"><a href="ch02.html#d0e685">Issue detection and management</a></span></dt><dt><span class="section"><a href="ch02.html#d0e701">Connecting tasks with sharing flows</a></span></dt><dt><span class="section"><a href="ch02.html#d0e749">Plan definition and analytics</a></span></dt><dt><span class="section"><a href="ch02.html#d0e893">Secrecy, security and clearances</a></span></dt><dt><span class="section"><a href="ch02.html#d0e953">Surveying planners and participants</a></span></dt><dt><span class="section"><a href="ch02.html#d0e983">Publishing information sharing procedures</a></span></dt><dt><span class="section"><a href="ch02.html#d0e1031">Logging out</a></span></dt></dl></dd></dl></div><div class="section" title="Channels basics"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e218"></a>Channels basics</h2></div></div></div><p>Channels is a collaborative Web application for building,
+      analyzing and deploying Information Sharing Plans.</p><p>Each Information Sharing Plan has one development version (the
+      only one that can be modified), possibly one production version (the
+      only one participants can access to view their playbooks), and zero or
+      more retired versions (prior production versions).</p><div class="section" title="User roles"><div class="titlepage"><div><div><h3 class="title"><a name="d0e225"></a>User roles</h3></div></div></div><p>Channels recognizes three user roles: administrators, planners
+        and Plan participants. Administrators assign planners and participants
+        to plans hosted by a Channels instance. Planners jointly develop,
+        review and deploy information sharing plans. Participants view their
+        playbooks and respond to surveys from planners about issue
+        resolutions.</p><p>An administrator can:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>add new plans to Channels,</p></li><li class="listitem"><p>assign users to plans and change their user roles,</p></li><li class="listitem"><p>do what any planner or participant can do, but for all
+            Plans.</p></li></ul></div><p>A planner can:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>view assigned plans (all versions),</p></li><li class="listitem"><p>modify the development version of an assigned Plan,</p></li><li class="listitem"><p>view the reports from an assigned Plan (all
+            versions),</p></li><li class="listitem"><p>view all playbooks from an assigned Plan (all
+            versions),</p></li><li class="listitem"><p>vote with other planners to put the development version of
+            an assigned Plan into production,</p></li><li class="listitem"><p>launch, access and close online surveys of selected planners
+            and participants about issues in an assigned Plan.</p></li></ul></div><p>A participant can:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>view his/her playbook from the production version of an
+            assigned Plan,</p></li><li class="listitem"><p>access and respond to online surveys.</p></li></ul></div></div><div class="section" title="Logging in and selecting a Plan and segment"><div class="titlepage"><div><div><h3 class="title"><a name="d0e272"></a>Logging in and selecting a Plan and segment</h3></div></div></div><p>When accessing Channels, an unrecognized user is presented with
+        a login screen.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_50.png"></div></div><p>After logging in, a user with planning privileges (a planner)
+        accesses the Plan Editor. A participant is directed to his/her
+        playbook (see section 3.15). For a planner, the editor opens on the
+        development version of an assigned Plan.</p><p>When the Plan Editor is first accessed, Channels pre-selects a
+        segment and a task within it. The task with its &#8220;receive&#8221; and &#8220;send&#8221;
+        information flows are shown &#8220;collapsed&#8221; and summarized.</p><p>A planner can at any time select to see another version of the
+        Plan, if any. A planner can also switch to another assigned Plan. Only
+        the development version of a Plan can be modified; retired and
+        production versions are &#8220;read-only&#8221; (all form fields are disabled, no
+        survey can be launched).</p><p>A planner can at any time select which segment within a Plan to
+        view or work on. The tasks and information flows of the selected
+        segment are visualized as a flow map (a directed graph). The selected
+        task is highlighted (by a gray rectangle) in the flow map.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_1.png"></div></div><p>Flow maps can be quite large. A planner can maximize a flow map
+        to see more of it without needing to scroll. Whether maximized or not,
+        a flow map can be zoomed out to fit within the available space.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_1a.png"></div></div><p>Tasks and flows are drawn in red if they have known issues.
+        Green and red traffic lights represent the start and end of the event
+        phase covered by the segment. Tasks that are triggered by the start of
+        the segment are connected to the green traffic light icon. Tasks that
+        terminate the event phase are linked to the red traffic light.</p><p>Information flows (information shared), information needs
+        (information needed for carrying out a task) and information
+        capabilities (shareable information produced by carrying out a task)
+        are shown as arrows. Single-headed arrows represent notifications.
+        Double-headed arrows are requests, with the empty arrow head pointing
+        to the task that consumes the information request, and with the full
+        arrow head pointing to the task that consumes the answer (the
+        requested information flows to it).</p><p>Dots indicate to-be-determined tasks. An arrow from a task to a
+        dot represents an information capability of the task (information
+        produced by the task that can be shared for use in other tasks). An
+        arrow from a dot to a task represents an information need of the task
+        (the task needs information possibly produced by other tasks).</p><p>Tasks with a blue background denote remote tasks, that is, tasks
+        from another segment that are connected by sharing flows to tasks in
+        the selected segment.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_2.png"></div></div><p>When a task is selected in a maximized flow map, the flow map is
+        automatically de-maximized to show the summaries of the selected task
+        and those of its flows.</p></div><div class="section" title="Editing tasks and flows"><div class="titlepage"><div><div><h3 class="title"><a name="d0e325"></a>Editing tasks and flows</h3></div></div></div><p>When a task is expanded, its summary is replaced by a form with
+        fields for the editable attributes of the task. The &#8220;sends&#8221; of the
+        task (information shared by the task plus its information
+        capabilities) and the &#8220;receives&#8221; of the task (information shared with
+        the task plus its information needs) can also each be expanded into
+        their edit forms.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_3.png"></div></div><p>A task is defined by first naming it. It is further defined by
+        stating where it is to be executed, by whom, in what role, for what
+        jurisdiction, and on behalf of what organization. Any of the location,
+        agent, jurisdiction, role, and organization (entities) that specify a
+        task can be left unnamed so as to imply that more than one agent can
+        be assigned to the task. When the entities are named, the names can
+        identify actual entities (Morritown, NJ, John Doe, ACME etc.) or types
+        of entities (a city, a certified technician, a corporation
+        etc.).</p><p>The execution of a task can be set to be &#8220;as a team&#8221; to indicate
+        that all assignees are to work together when carrying out the task. By
+        default, assignees are each to execute the task independently.</p><p>A task is also described by how long it normally takes to
+        complete, whether it repeats and how quickly, and whether it starts
+        automatically with the segment (implying that the assigned agents
+        would become aware of the onset of the event phase on their
+        own).</p><p>The purpose of a task can be stated as terminating the event
+        phase of the segment, mitigating one or more risks or achieve gains
+        within the segment's scope.</p><p>Related reference and policy documents can be attached to the
+        task either by URL or by uploading them. Finally, the task can be
+        given a brief, informal description.</p><p>When editing a &#8220;receive&#8221; or a &#8220;send&#8221;, the information needed,
+        produced or to be shared is named and its elements are enumerated, and
+        each assigned individual secrecy classifications and optional sourcing
+        and handling instructions.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_57.png"></div></div><p>The mode of communication is given as either notification or
+        by-request (push or pull).</p><p>If an information flow (information that's shared) is a
+        notification, then it can be made a broadcast (information will be
+        shared with all agents assigned to the target task) or a unicast
+        (information will be shared with at least one agent assigned to the
+        target task).</p><p>Keep in mind that an information flow that is a &#8220;send&#8221; to a task
+        producing shared information is the same information flow that is a
+        &#8221;receive&#8221; to the task consuming the shared information. One is looking
+        at one flow from its two ends.</p><p>An information flow is created by first adding an information
+        need to a task (if necessary), then adding an information capability
+        of the same name in another (also if necessary), and then connecting
+        the need to the capability or vice-versa by setting the &#8220;from&#8221; or &#8220;to&#8221;
+        field to the other task.</p><p>A communication delay is set either to zero (communication is to
+        happen without delay) or to some finite time interval. For an
+        information need, the delay represents the timeliness requirement for
+        being notified or for getting a response to a request. For an
+        information capability, the delay represents how quickly the
+        information could be produced and communicated. For a sharing flow,
+        the delay represents a &#8220;quality of service&#8221; commitment.</p><p>The communication channels over which the information is to flow
+        can be set for both an information need, and for a notification
+        information flow but only when viewed from the notified task. The same
+        is true for a requested information flow when viewed from the task
+        that responds to a request. Alternate communication channels are
+        listed in order of preference.</p><p>The communication channels over which the information is to flow
+        can be set for both an information need, and for a notification
+        information flow but only when viewed from the notified task. The same
+        is true for a requested information flow when viewed from the task
+        that responds to a request. Alternate communication channels are
+        listed in order of preference.</p><p>When editing a &#8220;send&#8221; or &#8220;receive&#8221;, a planner can set whether
+        sharing would normally trigger or terminate a task. A notification
+        could trigger or terminate the receiving task. It could also terminate
+        the sending task, if sending the notification concludes the task that
+        produced the information. A request could trigger the task that
+        produces the requested response.</p><p>Planners can attach documents to a &#8220;send&#8221; or &#8220;receive&#8221;. A
+        document can be a reference (it documents), a mandating policy (it
+        obligates sharing), a prohibiting policy (it prohibits sharing), a
+        multiple policy (contains language that imposes obligations and
+        restrictions) or it can be an image provided as an illustration (for
+        example, a screenshot). If an information flow has a prohibiting
+        policy attached to it then there can not be any implied sharing
+        commitment.</p><p>As with any Plan elements, a planner can add issues to those
+        detected about tasks or its &#8220;sends&#8221; or &#8220;receives&#8221;. Manually added
+        issues can be removed.</p></div><div class="section" title="Segment scoping"><div class="titlepage"><div><div><h3 class="title"><a name="d0e376"></a>Segment scoping</h3></div></div></div><p>Planners can edit the scope, name and description of a segment.
+        A segment's edit form is accessed by selecting &#8220;About segment&#8221; from
+        the top-most &#8220;Show&#8221; menu.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_4.png"></div></div><p>This opens a Details view on the selected segment where it can
+        be renamed and where the phase and event it references can be changed.
+        As with any other kind of Plan element, reference and policy documents
+        can be attached to a segment.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_5.png"></div></div><p>The scope of a segment is further defined by identifying and
+        describing a set of goals of organizations that relate to the
+        segment's event phase. Goals can be risks to be mitigated or gains to
+        be achieved. These goals are expected to be realized by tasks in the
+        segment. Risks can also be curtailed by tasks that terminate the event
+        phase. To be considered useful, tasks that do not curtail nor mitigate
+        a risk or do not make gains are expected to at least provide
+        information that is directly or indirectly needed by tasks that
+        do.</p><p>The <span class="emphasis"><em>Goals view</em></span> of a segment lets planners
+        define the goals of organizations that are in scope. Goals can be
+        added and removed. A goal is for an organization either to mitigate a
+        risk or to make a gain. A goal is given a type (picked from a taxonomy
+        of risks or gains), an importance (minor, major, severe for risks,
+        low, medium or high for gains), the identity of the organization
+        (either an actual organization or a type of organization), and whether
+        the goal goes away when the event phase covered by the segment
+        terminates.</p><p>The tasks that mitigate a given risk or achieve a goal in scope
+        can be listed, sorted and navigated to.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_6.png"></div></div><p>The <span class="emphasis"><em>Map view</em></span> locates on a Google&reg; map all
+        tasks in the segment that specify geo-locatable locations. The
+        geo-mapping of elements is available throughout Channels.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_7.png"></div></div></div><div class="section" title="Editing and analyzing entities"><div class="titlepage"><div><div><h3 class="title"><a name="d0e425"></a>Editing and analyzing entities</h3></div></div></div><p>A new entity (an agent, role, organization, place, event, phase
+        or communication medium) is automatically created whenever it is first
+        referenced by name. Channels requires that all entities of a given
+        kind be assigned unique names (John Smith, John Smith (1), John Smith
+        (2) etc.).</p><p>Recall that the definitions of Plan elements can reference
+        actual entities (ACME Corporation, Peter Sanchez, Morristown NJ) and
+        types of entities (a corporation, a certified emergency technician, a
+        city). An entity can only be tagged with entity types of its own kind
+        (Warehouse A can be tagged as a building but not as a senior
+        executive). Both actual entities and entity types can be edited. An
+        editable and analytical view of an actual entity or type of entity can
+        be opened from wherever it is referenced.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_8.png"></div></div><p>Keep in mind that events, roles and communication media in a
+        Plan are always types. There is no actual event in a Plan because
+        events are always anticipated. There is no such thing as an &#8220;actual
+        role&#8221; because roles are always concepts. Communication media are also
+        always types because a Plan only cares about the class of a
+        communication medium.</p><p>The <span class="emphasis"><em>Details view</em></span> of an entity enables a
+        planner to change the entity's name, description, and types.</p><p>Each kind of entity has additional, specific attributes that can
+        also be set. For example, a planner editing an actual organization can
+        define its mission, and set its location, contact information, and
+        parent organization. A planner can enforce that any sharing commitment
+        by the organization with another be covered by an agreement, and that
+        there be at least one known agent for each referenced role assigned by
+        the organization. A planner edits the organization's employment roster
+        of agents by either confirming employment implied by task in segments
+        and assigning titles. A planner can also directly add new employees
+        with their titles, roles and jurisdictions.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_9.png"></div></div><p>Cross-organizational sharing commitments are inferred from
+        information flows in the Plan. A sharing agreement may or may not
+        exist for a sharing commitment that crosses organizational boundaries.
+        An unconfirmed agreement for a cross-organizational sharing commitment
+        is an issue if such agreements are required for the organization. When
+        viewing an organization, a planner can see the sharing commitments the
+        organization makes with other organizations and confirm whether each
+        commitment is covered or not by an agreement.</p><p>In the Details view of any kind of entity, references to the
+        entity are listed as a filterable and paged index. Issues about the
+        entity, if any, are enumerated at the bottom of the view.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_10.png"></div></div><p>In the Details view of an actual agent (as opposed to a type of
+        agent), the agent, if it is a person and not a system, can be related
+        to a user. The user, if not a planner, will be able to request to view
+        his or her playbook (the agent's playbook) from the production version
+        of the Plan. The agent can be declared to be a person or system, and
+        given contact information (communication media with addresses where
+        applicable) as well as clearances (secrecy classifications).</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_68.png"></div></div><p>When editing a place from within the Details view, a planner can
+        identify what other place, if any, contains it. A planner can also
+        give the place a street address, postal code and a geoname. If the
+        geoname is ambiguous, more specific geonames are offered for
+        selection.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_55.png"></div></div><p>When editing a communication medium, a planner can set the
+        transmission mode to either unicast (one -to-one), multicast
+        (one-to-many) or broadcast (one-to-any), unless the mode is already
+        implied by another medium this one is tagged with (to make it a
+        special case of the tagging medium). The address pattern is a &#8220;regular
+        expression&#8221;1 that constrains the form an &#8220;address&#8221; can take for this
+        medium. A planner can identify the media, if any, this one interfaces
+        with as it carries out transmissions from sender to receiver. Here
+        again, some of the interfaced media might be implied from another
+        medium this one is tagged with. Finally, a planner can describe the
+        security of the communication medium in terms of security
+        classifications. Qualifying a medium as &#8220;US Gov/Top Secret&#8221; means that
+        Top Secret information can be transmitted securely over this
+        medium.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_67.png"></div></div><p>The <span class="emphasis"><em>Network view</em></span> is available on agents,
+        roles, and organizations. It displays a network graph depicting how
+        the entity is connected by information flows to other entities of the
+        same kind. This analytical view allows a planner to filter the
+        information flows to, say, show only the ones from tasks executed by a
+        specific role. The network graph is navigable. The list of flows can
+        be further filtered, sorted and paged. Listed flows can also be
+        navigated to.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_11.png"></div></div><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_11a.png"></div></div><p>The <span class="emphasis"><em>Issues view</em></span> collects and filters issues
+        that are about an entity or that are related to it. Waived issues can
+        be included in or excluded from the sortable, page-able list of
+        issues.</p><p>Surveys, whether ongoing, closed, or to-be-created, are
+        accessible from each listed issue. Only planners can launch or close
+        surveys. A survey gathers the opinions of planners and non-planners
+        alike on how a particular issue should be remediated.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_12.png"></div></div></div><div class="section" title="Acquiring and releasing edit locks"><div class="titlepage"><div><div><h3 class="title"><a name="d0e526"></a>Acquiring and releasing edit locks</h3></div></div></div><p>More than one planner can concurrently work on a Plan. To
+        prevent &#8220;collisions&#8221; where two planners are attempting to modify the
+        same Plan element at the same time, only one planner is permitted to
+        modify any given task, flow or entity at a time.</p><p>When a planner opens an edit form on a Plan element, Channels
+        attempts to grab an edit lock on behalf of the planner for that Plan
+        element. If another planner already owns the lock, the form is shown
+        to the first planner with the editable fields disabled.</p><p>A lock on a task, flow or entity owned by a planner is released
+        when the planner collapses or closes its edit form. An inactive or
+        logged out planner eventually loses all acquired locks.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_40.png"></div></div><p>A planner waiting for edit locks is notified when the locks are
+        released. The planner is then instructed to refresh the editor in
+        order to acquire the locks and enable disabled edit forms.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_53.png"></div></div></div><div class="section" title="Viewing task assignments and sharing commitments"><div class="titlepage"><div><div><h3 class="title"><a name="d0e551"></a>Viewing task assignments and sharing commitments</h3></div></div></div><p>Recall that tasks are defined in terms of agents, roles, places,
+        and organizations, and that these entities can be actual or types. A
+        task specification may reference entity types or omit to identify by
+        name an actual agent, role, jurisdiction, etc. so as to encompass more
+        than one possible agent as executor of the task. A task thus defined
+        could be assigned to more than one agent.</p><p>A planner can look up the list of agents that are assigned to
+        the task (the task assignments).</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_51.png"></div></div><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_22.png"></div></div><p>Agents are implicitly bound by sharing commitments when they are
+        assigned to tasks that are sources of information flows. A planner can
+        look up the list of sharing commitments inferred by an information
+        flow.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_52.png"></div></div><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_23.png"></div></div></div><div class="section" title="Assessing the impacts of failure"><div class="titlepage"><div><div><h3 class="title"><a name="d0e588"></a>Assessing the impacts of failure</h3></div></div></div><p>Planners can assess what might happen should someone fail at an
+        assigned task or should a commitment to share information be broken.
+        The consequences could be a number of &#8220;downstream&#8221; tasks failing to
+        make gains or mitigate or eliminate risks as planned.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_60.png"></div></div><p>For the sake of analysis, it is assumed that a failure is always
+        complete; a failed task does not produce any information that may be
+        required by others, and a failed information flow does not transfer
+        any information whatsoever.</p><p>A failure can cause a cascade of task failures if tasks directly
+        or indirectly depend critically on or are triggered by information
+        that fails to be produced or to be shared.</p><p>Not all sharing failures matter. If an information flow is not
+        critical to a task or does not trigger it, then its failure does not
+        propagate to other tasks. Furthermore, if the target of a flow can get
+        the same information via another, non-failing flow, then the flow's
+        failure does not matter. Finally, if information produced by an agent
+        is necessarily consumed by the same agent then, clearly, failure to
+        share is meaningless.</p><p>Failure analysis only concerns itself with the failure of useful
+        tasks, that is, tasks that either achieve stated goals or produce
+        information that triggers or is critical to other tasks that are
+        themselves useful. (Useless tasks are flagged as issues.) Note that a
+        task will terminate a risk if it causes a segment to end (or, more to
+        the point, if it causes the event phase the segment is about to end)
+        and if the risk is said to terminate with the segment.</p><p>A planner does &#8220;what-if&#8221;, failure analysis by selecting a task
+        or by selecting an information flow (&#8220;send&#8221; or &#8220;receive&#8221;) and then
+        looking at the consequences should it fail. The planner can take a
+        pessimistic outlook and assume that all redundant information flows
+        would also fail, no matter what.</p><p>The result of the analysis is a cascade of failures visualized
+        as a directed graph of information flows, tasks, gains and risks.
+        Risks that would otherwise be mitigated or terminated by failed tasks
+        are shown as color-coded flags. Orange is for severe risks, yellow for
+        major risks and blue for minor risks. Risks that would normally be
+        mitigated by successful tasks are shown connected to these tasks.
+        Risks that would be terminated, should a segment end, are shown
+        connected to red stop lights. Each stop light is itself connected to a
+        failed task that would normally end the segment.</p><p>Missed gains are shown as stars and are similarly color-coded by
+        importance, with orange for high, yellow for medium and blue for
+        low.</p><p>In addition to the visual map, a tabular list of failed,
+        goal-oriented tasks (the failures that matter) is compiled and
+        presented. The table is paginated and the columns (failing task,
+        segment, impact, goal, magnitude of the loss, and organization
+        impacted) can be sorted.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_58.png"></div></div><p>Failure analysis crosses segment boundaries. A failed task in
+        one segment can cause tasks to fail in other segments. Tasks, flows
+        and goals in segments other than the selected segment are grouped in
+        blue boxes.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_59.png"></div></div></div><div class="section" title="Actions"><div class="titlepage"><div><div><h3 class="title"><a name="d0e632"></a>Actions</h3></div></div></div><p>Planners can create and remove segments; add, cut, copy and
+        paste tasks, needs, capabilities and flows, connect tasks together
+        with information flows or disconnect them. These actions are all
+        available from &#8220;action&#8221; menus associated with editable Plan
+        elements.</p><p>High-level actions can also be taken whenever applicable. They
+        include &#8220;disintermediate&#8221; which removes a task that acts as a
+        middleman in a flow, &#8220;intermediate&#8221; which adds a middleman task to a
+        flow, and &#8220;satisfy needs&#8221; which automatically connects information
+        needs of a task to matching but untapped information capabilities from
+        other tasks.</p><p>Most actions can be undone and redone up and until a planner
+        takes an action that conflicts with the undoing or redoing.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_14.png"></div></div><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_15.png"></div></div></div><div class="section" title="Adding and building a segment"><div class="titlepage"><div><div><h3 class="title"><a name="d0e655"></a>Adding and building a segment</h3></div></div></div><p>When a planner creates a new segment, it is given a default name
+        and a scope.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_16a.png"></div></div><p>It is also initially populated with a single, unspecified task.
+        A task can not be removed if it is the last task in a segment.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_16.png"></div></div><p>A planner would typically first name and describe the segment,
+        set its scope (identify an event phase and goals to be achieved), and
+        edit the lone task. Then, additional tasks would be added, together
+        with their information needs and capabilities. These tasks would be
+        connected via information flows with other tasks in the selected
+        segment or other segments.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_17.png"></div></div></div><div class="section" title="Issue detection and management"><div class="titlepage"><div><div><h3 class="title"><a name="d0e685"></a>Issue detection and management</h3></div></div></div><p>Channels automatically detects more than 60 different kinds of
+        issues. Planners can manually add issues to Plan elements, describe
+        these issues and suggest remediations. Manually added issues can later
+        be removed.</p><p>Issue detection and remediation can provide guidance to planners
+        as to what to do next when building a Plan. For example, a newly
+        created segment with its lone task will immediately cause the
+        detection of incompleteness issues. Resolving these incompleteness
+        issues drives the planning process forward.</p><p>Some detected issues can be waived by planners if they are
+        considered moot. When waiving an issue of a certain kind about a Plan
+        element, all issues of this kind are also waived for the same
+        element.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_18.png"></div></div></div><div class="section" title="Connecting tasks with sharing flows"><div class="titlepage"><div><div><h3 class="title"><a name="d0e701"></a>Connecting tasks with sharing flows</h3></div></div></div><p>After adding a task, a planner may want to give it one or more
+        information needs, and, for each need, name the information required
+        and list the elements of information.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_19.png"></div></div><p>When a planner names an information, Channels suggests a list of
+        already used information names that look like or mean something
+        similar to the name being entered. This &#8220;semantic proximity&#8221;-based,
+        auto-suggest capability leverages the WordNet lexical database and is
+        available throughout Channels.</p><p>A planner may want to add an information capability to a task
+        (shareable information produced by the specified task) and then
+        connect it to a matching information need from another task in the
+        selected segment or in another segment.</p><p>Connecting a capability with a need is done by selecting a task
+        with a matching need from the &#8220;From&#8221; drop-down menu in the flow form
+        (and vice-versa). Connecting a need with a capability creates a new
+        information flow but does not remove the connected tasks' capability
+        and need.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_20a.png"></div></div><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_20b.png"></div></div><p>When a task has unsatisfied information needs (arrows to red
+        dots), a planner may want to apply the &#8220;Satisfy needs&#8221; action. This
+        automatically creates information flows with the other tasks in the
+        Plan that can share the needed information.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_21a.png"></div></div><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_21b.png"></div></div></div><div class="section" title="Plan definition and analytics"><div class="titlepage"><div><div><h3 class="title"><a name="d0e749"></a>Plan definition and analytics</h3></div></div></div><p>A planner selects the item &#8220;About Plan&#8221; in the top &#8220;Show&#8221; menu
+        to access views about the entire Plan.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_24.png"></div></div><p>The default Plan view is the <span class="emphasis"><em>Details view</em></span>.
+        Here, planners can change the name of a Plan, add phases and remove
+        unreferenced phases. Planners can also add or view issues about the
+        Plan as a whole.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_25.png"></div></div><p>In the <span class="emphasis"><em>All events view</em></span>, a planner can add
+        events to the scope of the Plan. A planner can mark an event as an
+        incident if it is caused &#8220;outside&#8221; of the Plan and not (always) as an
+        outcome of a planned task. There is at least one event defined in a
+        Plan.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_28.png"></div></div><p>In the <span class="emphasis"><em>Secrecy classification view</em></span>, a
+        planner can define secrecy classifications that are then used to
+        qualify elements of information and to set individual clearances.
+        References to a classification can be listed. Unreferenced
+        classifications can be removed.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_26.png"></div></div><p>In the <span class="emphasis"><em>All organizations view</em></span>, a planner
+        can identify the organizations that are in the default context of the
+        Plan.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_27.png"></div></div><p>In the <span class="emphasis"><em>All segments view</em></span>, planners can look
+        at a map of all segments in the Plan. The segments can be grouped by
+        phase or by event. Planners can browse all cross-segment sharing flows
+        as well as all tasks in one segment that start or terminate another
+        segment.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_29.png"></div></div><p>In the <span class="emphasis"><em>Who's who view</em></span>, planners can browse
+        a directory of all agents involved in the Plan.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_30.png"></div></div><p>In the <span class="emphasis"><em>All issues view</em></span>, planners can sort,
+        filter and browse all issues currently detected or manually added
+        within the Plan. Surveys on individual issues can be created or
+        accessed from this view.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_31.png"></div></div><p>In the <span class="emphasis"><em>Bibliography view</em></span>, planners browse
+        all the documents that are attached to Plan elements anywhere in the
+        Plan.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_32.png"></div></div><p>In the <span class="emphasis"><em>Index view</em></span>, planners can find,
+        filter, sort and navigate to all entities referenced in the
+        Plan.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_33.png"></div></div><p>The <span class="emphasis"><em>Evaluation view</em></span> gives a summary
+        evaluation of the Plan in terms of categories of issues detected and
+        added by planners.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_34.png"></div></div><p>Finally, the <span class="emphasis"><em>Version view</em></span> is where planners
+        vote to move the development version of the Plan into production. A
+        unanimous vote is required. Moving a development version into
+        production creates a development version from a copy of the new
+        production version. Planners can be contacted by email from within the
+        view to prompt them to vote.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_35.png"></div></div></div><div class="section" title="Secrecy, security and clearances"><div class="titlepage"><div><div><h3 class="title"><a name="d0e893"></a>Secrecy, security and clearances</h3></div></div></div><p>Information classification, the security of communications and
+        the clearances of agents can be important elements of information
+        sharing planning in domains of human endeavor that require the
+        compartmentalization of information. Planners can introduce one or
+        more classification systems to a Plan.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_71.png"></div></div><p>Each classification system has a unique name and consists of a
+        list of classifications (secrecy levels) ranked from highest to
+        lowest.</p><p>Agents can be given clearances. Clearances are expressed as
+        classifications (no more than one per classification system).</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_68.png"></div></div><p>How secure a communication media type is is defined by the
+        highest classification levels of the information it can transmit
+        without infringing security requirements.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_67.png"></div></div><p>Elements of information shared or to be shared can each be given
+        classification levels as well as indications of the source and special
+        handling instructions.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_65.png"></div></div><p>Secrecy and security issues are automatically detected such
+        as:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Classified information transmitted over an insufficiently
+            secure channel</p></li><li class="listitem"><p>A commitment to share classified information with an agent
+            who has insufficient clearances</p></li><li class="listitem"><p>Receiving classified information and then disseminating it
+            with reduced classification</p></li></ul></div><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_66.png"></div></div></div><div class="section" title="Surveying planners and participants"><div class="titlepage"><div><div><h3 class="title"><a name="d0e953"></a>Surveying planners and participants</h3></div></div></div><p>Planners can survey other planners and participants assigned to
+        the current Plan about their preferred remediations for issues that
+        are detected by Channels or that are manually entered by
+        planners.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_61.png"></div></div><p>Channels interfaces with the SurveyGizmo&reg; web service to create,
+        launch, and retire surveys, and to collect responses.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_36.png"></div></div><p>The content of a survey is automatically taken from the issue's
+        description and CONFIDENTIAL - Copyright (C) 2010 Mind-Alliance
+        Systems. All Rights Reserved. 66 suggested remediations.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_37.png"></div></div></div><div class="section" title="Publishing information sharing procedures"><div class="titlepage"><div><div><h3 class="title"><a name="d0e983"></a>Publishing information sharing procedures</h3></div></div></div><p>Channels produces on demand an information sharing procedures
+        report and individualized information sharing playbooks for the
+        current Plan. The report is accessible to planners but not to
+        participants.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_39.png"></div></div><p>The report organizes by segments and agents the Plan's task
+        assignments, sharing commitments and related issues, and presents them
+        in a single HTML document suitable for browsing and printing.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_41.png"></div></div><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_43a.png"></div></div><p>The Plan map and the information flow maps shown in the report
+        are reduced to fit. Full-sized Plan map and flow maps can be retrieved
+        as PNGs.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_41a.png"></div></div><p>From the header of the report, a planner can narrow the focus to
+        a single segment and/or agent. The inclusion of issues can also be
+        turned on or off.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_44.png"></div></div><p>A participant can only access the information sharing procedures
+        for the agent he or she represents, and only from the production
+        version of a Plan.</p></div><div class="section" title="Logging out"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1031"></a>Logging out</h3></div></div></div><p>A planner logs out to terminate a Plan editing session. Any edit
+        locks still held at that time are automatically released. The user is
+        then presented with a login page.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_78.png"></div></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch01s02.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Definitions&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="channels_user_guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;3.&nbsp;An information sharing planning method</td></tr></table></div></body></html>

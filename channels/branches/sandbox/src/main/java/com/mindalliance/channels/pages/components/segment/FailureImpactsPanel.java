@@ -15,7 +15,6 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.ComponentTag;
@@ -86,7 +85,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
      * In inches.
      * None if any is 0.
      */
-    private double[] flowDiagramDim = new double[2];
+    private double[] diagramSize = new double[2];
     /**
      * Diagram container dom identifier.
      */
@@ -95,7 +94,11 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     /**
      * Whether the flow map was resized to fit.
      */
-    private boolean resizedToFit = false;
+    private boolean reducedToFit = false;
+    /**
+     * Sizing toggle label..
+     */
+    private Label sizingLabel;
 
 
     public FailureImpactsPanel( String id, IModel<SegmentObject> model, Set<Long> expansions ) {
@@ -104,25 +107,20 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     }
 
     private void init() {
-        addTitle();
-        addDoneButton();
+        addCaption();
         addAssumeFail();
         addFlowViewingControls();
+        addLegend();
         addEssentialFlowMap();
         addFailedTasks();
     }
 
-    private void addTitle() {
-        add( new Label( "title", new Model<String>( getTitle() ) ) );
+    protected String getTitle() {
+        return "Failure impacts";
     }
 
-    private void addDoneButton() {
-        AjaxFallbackLink doneLink = new AjaxFallbackLink( "done" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                close( target );
-            }
-        };
-        add( doneLink );
+    private void addCaption() {
+        add( new Label( "caption", new Model<String>( getCaption() ) ) );
     }
 
     private void addAssumeFail() {
@@ -141,38 +139,53 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     }
 
     private void addFlowViewingControls() {
-        WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
-        reduceToFit.add( new AbstractDefaultAjaxBehavior() {
-            @Override
+        sizingLabel = new Label(
+                "fit",
+                new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
+        sizingLabel.setOutputMarkupId( true );
+        sizingLabel.add( new AbstractDefaultAjaxBehavior() {
+             @Override
             protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-                String domIdentifier = DOM_IDENTIFIER;
-                String script = "wicketAjaxGet('"
-                        + getCallbackUrl( true )
-                        + "&width='+$('" + domIdentifier + "').width()+'"
-                        + "&height='+$('" + domIdentifier + "').height()";
-                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
-                        .replaceAll( "&amp;", "&" );
-                tag.put( "onclick", onclick );
+                 super.onComponentTag( tag );
+                 String script;
+                 if ( !reducedToFit ) {
+                     String domIdentifier = DOM_IDENTIFIER;
+                     script = "wicketAjaxGet('"
+                             + getCallbackUrl( true )
+                             + "&width='+$('" + domIdentifier + "').width()+'"
+                             + "&height='+$('" + domIdentifier + "').height()";
+                 } else {
+                     script = "wicketAjaxGet('"
+                             + getCallbackUrl( true )
+                             + "'";
+                 }
+                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
+                         .replaceAll( "&amp;", "&" );
+                 tag.put( "onclick", onclick );
             }
 
             @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
-                String swidth = requestCycle.getRequest().getParameter( "width" );
-                String sheight = requestCycle.getRequest().getParameter( "height" );
-                if ( !resizedToFit ) {
-                    flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
-                    flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
+                if ( !reducedToFit ) {
+                    String swidth = requestCycle.getRequest().getParameter( "width" );
+                    String sheight = requestCycle.getRequest().getParameter( "height" );
+                    diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
+                    diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
                 } else {
-                    flowDiagramDim = new double[2];
+                    diagramSize = new double[2];
                 }
-                resizedToFit = !resizedToFit;
+                reducedToFit = !reducedToFit;
                 addEssentialFlowMap();
                 target.addComponent( failureImpactsDiagramPanel );
+                addFlowViewingControls();
+                target.addComponent( sizingLabel );
             }
         } );
-        add( reduceToFit );
+        addOrReplace( sizingLabel );
+    }
+
+    private void addLegend() {
         WebMarkupContainer legend = new WebMarkupContainer( "legend" );
         legend.add( new AjaxEventBehavior( "onclick" ) {
             @Override
@@ -184,11 +197,11 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     }
 
     private Segment getSegment() {
-        return ((SegmentObject)getModel().getObject()).getSegment();
+        return ( (SegmentObject) getModel().getObject() ).getSegment();
     }
 
     private void addEssentialFlowMap() {
-        double[] dim = flowDiagramDim[0] <= 0.0 || flowDiagramDim[1] <= 0.0 ? null : flowDiagramDim;
+        double[] dim = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? null : diagramSize;
         Settings settings = new Settings( DOM_IDENTIFIER, null, dim, true, true );
 
         failureImpactsDiagramPanel = new FailureImpactsDiagramPanel(
@@ -211,7 +224,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         addOrReplace( failuresTablePanel );
     }
 
-    private String getTitle() {
+    private String getCaption() {
         SegmentObject so = getSegmentObject();
         StringBuffer sb = new StringBuffer();
         sb.append( "Impacts of failing" );

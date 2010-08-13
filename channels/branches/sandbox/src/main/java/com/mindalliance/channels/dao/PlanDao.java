@@ -90,12 +90,10 @@ public class PlanDao extends AbstractDao {
         return plan != null;
     }
 
-    private void unload( Exporter exporter ) {
+    public void unload( Exporter exporter ) {
         try {
-            synchronized ( this ) {
-                save( exporter );
-                plan = null;
-            }
+            save( exporter );
+            plan = null;
         } catch ( IOException e ) {
             LOG.warn( "Unable to unload " + version + ". Plan remains in memory.", e );
         }
@@ -348,7 +346,7 @@ public class PlanDao extends AbstractDao {
 
         return domain;
     }
-    
+
     /**
      * {@inheritDoc}
      */

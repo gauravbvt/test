@@ -167,6 +167,7 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         if ( userName != null )
             logout();
         RequestContextHolder.resetRequestAttributes();
+        planManager.onAfterCommand( null, null );   // clear cache
     }
 
     /**

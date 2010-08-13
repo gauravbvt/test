@@ -8,10 +8,10 @@
 <body>
 <wicket:extend>
     <div class="eois">
-        <div class="header">
+        <div class="float-header">
             <h1>
                 Elements of information
-                <input wicket:id="done" class="close" type="button" value="Done"/>                                     
+                <a wicket:id="done" class="close" href="#">Done</a>
             </h1>
         </div>
         <div class="aspect">
@@ -19,10 +19,13 @@
                 <tr>
                     <td>
                         <h3>
-                            In <span wicket:id="flowType">need for</span>
+                            <span>
+							In <span wicket:id="flowType">need for</span>
                             &quot;<span wicket:id="flowName">Flow name</span>&quot;
                             <span wicket:id="source">by actor X</span>
                             <span wicket:id="target">with actor Y</span>
+							</span>
+							<div>&nbsp;</div>
                        </h3>
                     </td>
                 </tr>
@@ -40,7 +43,7 @@
                                             <img border="0" src="images/link.png" valign="middle" alt="link" title="Make classifications the same for all. Click to make them independent."/>
                                         </a>
                                         <a wicket:id="unlinkClassifications" href="#">
-                                            <img border="0" src="images/broken_link.png" valign="middle" alt="unlink" title="Independent classifications. Click for all elements to have the same classification."/>
+                                            <img border="0" src="images/link_broken.png" valign="middle" alt="unlink" title="Independent classifications. Click for all elements to have the same classification."/>
                                         </a>
                                     </td>
                                     <td wicket:id="sourcingHeaderContainer">Sourcing</td>

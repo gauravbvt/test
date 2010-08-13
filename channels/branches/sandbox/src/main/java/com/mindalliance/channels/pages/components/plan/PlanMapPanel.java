@@ -20,14 +20,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -47,9 +46,17 @@ import java.util.Set;
 public class PlanMapPanel extends AbstractUpdatablePanel {
 
     /**
+     * Expected screen resolution.
+     */
+    static private double DPI = 96.0;
+    /**
      * Default page size for external flows panel.
      */
     private static final int PAGE_SIZE = 10;
+    /**
+     * DOM identifier for resizeable element.
+     */
+    private static final String DOM_IDENTIFIER = ".plan .picture";
     /**
      * Whether to group segments by phase.
      */
@@ -83,6 +90,14 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
 
     @SpringBean
     private Analyst analyst;
+    /**
+     * Whether plan map is reduced to fit.
+     */
+    private boolean reducedToFit = false;
+    /**
+     * Sizing toggle label..
+     */
+    private Label sizingLabel;
 
     public PlanMapPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -141,16 +156,26 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addPlanSizing() {
-        WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
-        reduceToFit.add( new AbstractDefaultAjaxBehavior() {
+        sizingLabel = new Label(
+                "fit",
+                new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
+        sizingLabel.setOutputMarkupId( true );
+        sizingLabel.add( new AbstractDefaultAjaxBehavior() {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                String domIdentifier = ".plan .picture";
-                String script = "wicketAjaxGet('"
-                        + getCallbackUrl( true )
-                        + "&width='+$('" + domIdentifier + "').width()+'"
-                        + "&height='+$('" + domIdentifier + "').height()";
+                String script;
+                if ( !reducedToFit ) {
+                    String domIdentifier = DOM_IDENTIFIER;
+                    script = "wicketAjaxGet('"
+                            + getCallbackUrl( true )
+                            + "&width='+$('" + domIdentifier + "').width()+'"
+                            + "&height='+$('" + domIdentifier + "').height()";
+                } else {
+                    script = "wicketAjaxGet('"
+                            + getCallbackUrl( true )
+                            + "'";
+                }
                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
                         .replaceAll( "&amp;", "&" );
                 tag.put( "onclick", onclick );
@@ -159,25 +184,22 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
             @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
-                String swidth = requestCycle.getRequest().getParameter( "width" );
-                String sheight = requestCycle.getRequest().getParameter( "height" );
-                diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / 96.0;
-                diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / 96.0;
+                if ( !reducedToFit ) {
+                    String swidth = requestCycle.getRequest().getParameter( "width" );
+                    String sheight = requestCycle.getRequest().getParameter( "height" );
+                    diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
+                    diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
+                } else {
+                    diagramSize = new double[2];
+                }
+                reducedToFit = !reducedToFit;
                 addPlanMapDiagramPanel();
                 target.addComponent( planMapDiagramPanel );
+                addPlanSizing();
+                target.addComponent( sizingLabel );
             }
         } );
-        add( reduceToFit );
-        WebMarkupContainer fullSize = new WebMarkupContainer( "full" );
-        fullSize.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                diagramSize = new double[2];
-                addPlanMapDiagramPanel();
-                target.addComponent( planMapDiagramPanel );
-            }
-        } );
-        add( fullSize );
+        addOrReplace( sizingLabel );
     }
 
 
@@ -405,7 +427,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 for ( Segment other : allSegments ) {
                     if ( !segment.equals( other )
                             && ( segmentsInGroup.contains( segment )
-                                    || segmentsInGroup.contains( other ) ) ) {
+                            || segmentsInGroup.contains( other ) ) ) {
                         SegmentRelationship scRel = analyst.findSegmentRelationship( segment, other );
                         if ( scRel != null ) scRels.add( scRel );
                     }

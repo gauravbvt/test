@@ -7,24 +7,32 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h3>Organizations in scope</h3>
+    <h3>
+		<span>Organizations in scope</span>
+		<div>&nbsp;</div>
+	</h3>
+	<div class="filters">
     Show only organizations that
     &nbsp;&nbsp;<input wicket:id="expected" type="checkbox"/> are expected to have tasks in this plan
     &nbsp;&nbsp;<input wicket:id="involved" type="checkbox"/> have tasks
     &nbsp;&nbsp;<input wicket:id="uninvolved" type="checkbox"/> don't have tasks
+	</div>
     <div wicket:id="scopeIndex">[index panel]</div>
-    <h4>Name another organization that should be assigned tasks (and press return)</h4>
+    <h4>Other organization that should be assigned tasks</h4>
     <div class="entityReference">
-        <input wicket:id="newInvolved" type="text"/>
+        <input wicket:id="newInvolved" type="text" title="Name an organization and press enter"/>
         <br/><br/>
     </div>
     <span wicket:id="organizationContainer">
-        <h3>About <span wicket:id="nameInTitle">ACME</span></h3>
+        <h3>
+			<span>About <span wicket:id="nameInTitle">ACME</span></span>
+			<div>&nbsp;</div>
+		</h3>
         <span wicket:id="name">[organization name]</span>
         <span wicket:id="involvement">has tasks as expected</span>
         &nbsp;<a wicket:id="expectationActionLink" href="#">
         <span wicket:id="expectationAction">Add expectation</span></a>
-        &nbsp;<a wicket:id="detailsLink" href="#">See details...</a>
+        &nbsp;<a wicket:id="detailsLink" href="#" class="entity-link">About organization...</a>
         <div wicket:id="tasksContainer">
             <br/>
             <h4>Tasks</h4>

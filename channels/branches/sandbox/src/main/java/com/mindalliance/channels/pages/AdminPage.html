@@ -7,8 +7,8 @@
         lang="en">
 <head>
     <title>Channels - Administration</title>
-    <link rel="stylesheet" href="playbook.css" type="text/css">
-    <link rel="stylesheet" href="iPhone.css" type="text/css" media="only screen and (max-device-width: 480px)">
+    <link rel="stylesheet" href="css/playbook.css" type="text/css">
+    <link rel="stylesheet" href="css/iPhone.css" type="text/css" media="only screen and (max-device-width: 480px)">
 </head>
 <body>
 <div id="top">
@@ -33,6 +33,10 @@
             <ul>
                 <li><a wicket:id="report">Info Sharing Procedures</a></li>
                 <li><a wicket:id="plan">Modify plan</a></li>
+                <li><input type="button" wicket:id="productize" value="Productize plan"/></li>
+                <li><input type="submit" wicket:id="deletePlan" value="Delete plan"/></li>
+                <li>New plan uri: <input type="text" wicket:id="newPlanUri" value=""/> for client: <input type="text" wicket:id="newPlanClient"/></li>
+
             </ul>
 
             <table>
@@ -74,10 +78,11 @@
                             </span>
                     </tr>
                     <tr>
-                        <td align="right">New:</td>
+                        <td align="right">New User:</td>
                         <td align="left"><input type="text" wicket:id="new"></td>
-                        <td colspan="9" align="right"><input type="submit" value="Submit" name="Submit"/></td>
+                        <td colspan="10" align="right"><input type="submit" value="Submit" name="Submit"/></td>
                     </tr>
+                    <tr><td colspan="12"><div class="issues" wicket:id="feedback">(error messages)</div></td></tr>
                 </tbody>
             </table>
             <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>

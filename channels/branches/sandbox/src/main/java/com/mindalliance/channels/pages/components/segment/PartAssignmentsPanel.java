@@ -9,7 +9,6 @@ import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.basic.Label;
@@ -70,8 +69,14 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
 
     private void init() {
         addAbout();
-        addDoneButton();
         addAssignmentsTable();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected String getTitle() {
+        return getPart().getTask();
     }
 
     private void addAbout() {
@@ -81,15 +86,6 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
         );
         partTitleLabel.setOutputMarkupId( true );
         addOrReplace( partTitleLabel );
-    }
-
-    private void addDoneButton() {
-        AjaxFallbackLink doneLink = new AjaxFallbackLink( "done" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                close( target );
-            }
-        };
-        add( doneLink );
     }
 
     private void addAssignmentsTable() {
