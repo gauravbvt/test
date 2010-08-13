@@ -204,7 +204,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         ModelObjectLink detailsLink = new ModelObjectLink(
                 "detailsLink",
                 new Model<Organization>( selectedOrganization ),
-                new Model<String>( "About " + selectedOrganization.getName() + "..." ),
+                new Model<String>( "See details" ),
                 "View the details of the organization" );
         organizationContainer.add( detailsLink );
         Link expectationActionLink = new AjaxFallbackLink( "expectationActionLink" ) {
