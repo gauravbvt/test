@@ -81,6 +81,10 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
                         new Model<ModelObject>( mo ),
                         new Model<String>( subject ) );
             }
+            String property = change.getProperty();
+            if ( property != null ) {
+                subject += " (" + property + ")";
+            }
         }
         if ( modelObjectComponent == null ) {
             modelObjectComponent = new Label( "modelObject", subject );

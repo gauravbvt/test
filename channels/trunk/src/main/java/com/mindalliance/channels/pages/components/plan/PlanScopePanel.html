@@ -18,9 +18,9 @@
     &nbsp;&nbsp;<input wicket:id="uninvolved" type="checkbox"/> don't have tasks
 	</div>
     <div wicket:id="scopeIndex">[index panel]</div>
-    <h4>Name another organization that should be assigned tasks (and press return)</h4>
+    <h4>Other organization that should be assigned tasks</h4>
     <div class="entityReference">
-        <input wicket:id="newInvolved" type="text"/>
+        <input wicket:id="newInvolved" type="text" title="Name an organization and press enter"/>
         <br/><br/>
     </div>
     <span wicket:id="organizationContainer">
@@ -32,7 +32,7 @@
         <span wicket:id="involvement">has tasks as expected</span>
         &nbsp;<a wicket:id="expectationActionLink" href="#">
         <span wicket:id="expectationAction">Add expectation</span></a>
-        &nbsp;<a wicket:id="detailsLink" href="#">See details...</a>
+        &nbsp;<a wicket:id="detailsLink" href="#" class="entity-link">About organization...</a>
         <div wicket:id="tasksContainer">
             <br/>
             <h4>Tasks</h4>
