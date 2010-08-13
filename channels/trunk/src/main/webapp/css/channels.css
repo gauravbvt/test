@@ -1965,8 +1965,8 @@ body.support {
 
 /* ----- ALPHA - Links ----- */
 
-a.more {
-	background: url( '../images/link.expand.png' ) no-repeat 2px 3px #DCDDDE;
+a.more,
+a.window {
 	border:1px solid #C7C8CA;
 	color:#666666;
 	padding:0 3px 0 14px;
@@ -1974,7 +1974,16 @@ a.more {
 	text-transform:lowercase;
 }
 
-a.more:hover {
+a.more {
+	background: url( '../images/link.more.png' ) no-repeat 2px 3px #DCDDDE;
+}
+
+a.window {
+	background: url( '../images/link.window.png' ) no-repeat 2px 3px #DCDDDE;
+}
+
+a.more:hover,
+a.window:hover {
 	border:1px solid #999999;
 	color:#333333;
 }
