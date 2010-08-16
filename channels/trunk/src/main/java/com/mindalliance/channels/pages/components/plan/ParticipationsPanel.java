@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
@@ -13,6 +12,7 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
@@ -493,6 +493,8 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                     "",
                     "Contact...",
                     "select",
+                    null,
+                    "more",
                     ParticipationsPanel.this
             ) );
             // provider and table

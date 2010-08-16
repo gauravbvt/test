@@ -1,12 +1,13 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.geo.GeoService;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.geo.GeoService;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -90,8 +91,13 @@ public class GeoMapPage extends WebPage {
     }
 
     private void addMap() {
+        WebMarkupContainer nothing = new WebMarkupContainer( "nothing" );
+        nothing.setVisible( geoMarkers.isEmpty() );
+        add( nothing );
         if ( geoMarkers.isEmpty() ) {
-            add( new Label( "map", "Nothing to map" ) );
+            Label label = new Label( "map", "" );
+            label.setVisible( false );
+            add( label );
         } else {
             GMap2 map = new GMap2( "map", getGoogleMapsAPIkey() );
             map.addControl( GControl.GMapTypeControl );

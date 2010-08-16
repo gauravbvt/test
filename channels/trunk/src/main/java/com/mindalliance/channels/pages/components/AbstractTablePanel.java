@@ -5,12 +5,12 @@ import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.FilterableModelObjectLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
 import com.mindalliance.channels.util.ChannelsUtils;
-import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -470,13 +470,35 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             final String property,
             final Updatable updatable
     ) {
+        return makeActionLinkColumn( name, label, action, property, null, updatable );
+    }
+
+    /**
+     * Make actionlink column.
+     *
+     * @param name       column name
+     * @param label      cell content
+     * @param action     action to call on row object
+     * @param property   if not null, property which value must be non-null for a link to appear
+     * @param updatable  target of call
+     * @param cssClasses a string
+     * @return a column
+     */
+    protected AbstractColumn<T> makeActionLinkColumn(
+            String name,
+            final String label,
+            final String action,
+            final String property,
+            final String cssClasses,
+            final Updatable updatable
+    ) {
         return new AbstractColumn<T>( new Model<String>( name ), label ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
                 T bean = model.getObject();
                 if ( property == null || ChannelsUtils.getProperty( bean, property, null ) != null ) {
-                    ActionLinkPanel cellContent = new ActionLinkPanel( id, label, bean, action, updatable );
+                    ActionLinkPanel cellContent = new ActionLinkPanel( id, label, bean, action, cssClasses, updatable );
                     cellItem.add( cellContent );
                 } else {
                     cellItem.add( new Label( id, "" ) );
@@ -581,12 +603,25 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 final T bean,
                 final String action,
                 final Updatable updatable ) {
+            this( id, label, bean, action, null, updatable );
+        }
+
+        public ActionLinkPanel(
+                String id,
+                String label,
+                final T bean,
+                final String action,
+                final String cssClasses,
+                final Updatable updatable ) {
             super( id );
             AjaxLink link = new AjaxLink<String>( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     updatable.update( target, bean, action );
                 }
             };
+            if ( cssClasses != null ) {
+                link.add( new AttributeModifier( "class", true, new Model<String>( cssClasses ) ) );
+            }            
             add( link );
             link.add( new Label( "label", new Model<String>( label ) ) );
         }

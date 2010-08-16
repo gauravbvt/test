@@ -205,7 +205,8 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                 "detailsLink",
                 new Model<Organization>( selectedOrganization ),
                 new Model<String>( "See details" ),
-                "View the details of the organization" );
+                "View the details of the organization",
+                "window" );
         organizationContainer.add( detailsLink );
         Link expectationActionLink = new AjaxFallbackLink( "expectationActionLink" ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -439,7 +440,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     private class ScopeIndexPanel extends AbstractIndexPanel {
 
         private ScopeIndexPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
-            super( id, model, expansions );
+            super( id, model, "more", expansions );
         }
 
         /**

@@ -225,13 +225,13 @@ span.entityReference {
 
 span.entityReference select {
     position: absolute;
-    width: 60px;
+    width: 65px;
     padding: 1px;
 }
 
 span.entityReference input[type='text'] {
-    width: 73%;
-    margin-left: 65px;
+    width: 70%;
+    margin-left: 70px;
 	position: relative;
 	min-width: 150px;
 }
@@ -1986,7 +1986,7 @@ a.window {
 	color:#666666;
 	padding:0 3px 0 14px;
 	font-size:11px;
-	text-transform:lowercase;
+	/* text-transform:lowercase;*/
 }
 
 a.more {
