@@ -225,13 +225,15 @@ span.entityReference {
 
 span.entityReference select {
     position: absolute;
-    width: 25%;
+    width: 60px;
     padding: 1px;
 }
 
 span.entityReference input[type='text'] {
     width: 73%;
-    margin-left: 27%;
+    margin-left: 65px;
+	position: relative;
+	min-width: 150px;
 }
 
 input[type="text"].no-expand {
@@ -752,6 +754,30 @@ div.wicket-aa ul li:hover {
     background: #c3d9ff;
 }
 
+div.import-dialog {
+    background: #c3d9ff;
+    border: 1px outset #c3dede;
+    padding: 5px;
+    position: absolute;
+    width: 300px;
+    top: 8em;
+    left: 25em;
+    z-index: 10000;
+    overflow: auto;
+}
+
+
+/* ----- Header - History ----- */
+
+.refresh, .navigation {
+    cursor: pointer;
+    vertical-align: baseline;
+	margin:0 0 0 -3px;
+}
+
+
+/* ----- Dropdown Menu - Default ----- */
+
 .menubar .dropmenu {
     width: auto;
     cursor: pointer;
@@ -789,18 +815,6 @@ div.wicket-aa ul li:hover {
 	border-bottom:1px solid #D1D3D4;
 }
 
-/*
-
-#part .menubar .dropmenu.first:before {
-    content: " ";
-}
-
-.menubar .menuitem:before {
-    content: " \2015  ";
-}
-
-*/
-
 .menubar .dropmenu li span.disabled {
     font-style: oblique;
     color: #808080;
@@ -812,18 +826,6 @@ div.wicket-aa ul li:hover {
 
 .menubar .dropmenu ul li:hover {
     background-color: #ccccff;
-}
-
-div.import-dialog {
-    background: #c3d9ff;
-    border: 1px outset #c3dede;
-    padding: 5px;
-    position: absolute;
-    width: 300px;
-    top: 8em;
-    left: 25em;
-    z-index: 10000;
-    overflow: auto;
 }
 
 
@@ -1072,15 +1074,6 @@ div.aspect div.picture {
 }
 
 
-/* ----- Header - History ----- */
-
-.refresh, .navigation {
-    cursor: pointer;
-    vertical-align: baseline;
-	margin:0 0 0 -3px;
-}
-
-
 /* ----- Floating Panels - Flowmaps ----- */
 
 .aspect div.picture {
@@ -1137,7 +1130,7 @@ div.aspect div.picture {
     float: left;
     width: 100%;
     line-height: normal;
-	background:  url( '../images/tab-bg.png' ) repeat-x;
+	background: url( '../images/tab-bg.png' ) repeat-x;
 	margin:10px 0;
 }
 
@@ -1233,6 +1226,24 @@ div.aspect div.picture {
 }
 
 
+/* ----- Floating Panels - Fieldset ----- */
+
+.aspect fieldset {
+	border:1px solid #cccccc;
+}
+
+.aspect fieldset legend {
+	color:#333333;
+	font-weight:bold;
+	padding:0 5px;
+}
+
+.aspect fieldset textarea {
+	padding:5px;
+	width:98%;
+}
+
+
 /* ----- Ranges - Default ----- */
 
 ul.ranges {
@@ -1258,6 +1269,8 @@ ul.ranges li a.selected {
     background-color: #c3d9ff;
     color: #000000;
 }
+
+
 
 span.spinner {
     padding-left: 15px;
@@ -1397,6 +1410,7 @@ input[disabled] {
     margin: 0;
 	padding-bottom:7px;
 }
+
 
 /* ----- Add New Task, Info Received-Sent Link ----- */
 
@@ -1962,6 +1976,7 @@ body.support {
     min-width: 50em;
     min-height: 20em;
 }
+
 
 /* ----- ALPHA - Links ----- */
 

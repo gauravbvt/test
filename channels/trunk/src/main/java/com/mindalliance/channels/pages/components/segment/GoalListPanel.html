@@ -48,7 +48,7 @@
                 <td>
                     <input wicket:id="endsWithSegment" type ="checkbox"/>
                 </td>
-                <td><a wicket:id="more-link" href="#" title="Show more" class="more">More...</a></td>
+                <td><a wicket:id="more-link" href="#" title="Show more" class="more">More</a></td>
                 <td>
                     <a wicket:id="delete" href="#">
                         <img style="border:0" src="images/delete.png" title="Delete" alt="Delete goal"/>
@@ -62,8 +62,10 @@
 			<span>About the <span wicket:id="goalLabel">[goal label]</span></span>
 			<div>&nbsp;</div>
 		</h3>
-        <h4>Description</h4>
-        <textarea wicket:id="description" rows="2" cols="40">description</textarea>
+		<fieldset>
+	        <legend>Description</legend>
+	        <textarea wicket:id="description" rows="2" cols="40">description</textarea>
+		</fieldset>
         <h3>
 			<span>Tasks with goal</span>
 			<div>&nbsp;</div>
