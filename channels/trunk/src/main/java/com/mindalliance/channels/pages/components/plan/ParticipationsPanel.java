@@ -491,7 +491,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             ) );
             columns.add( makeActionLinkColumn(
                     "",
-                    "Contact...",
+                    "contact",
                     "select",
                     null,
                     "more",

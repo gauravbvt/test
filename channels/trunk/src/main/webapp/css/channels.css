@@ -593,8 +593,8 @@ span.suggest {
 }
 
 span.note {
-    font-style: italic;
-    font-size: x-small;
+	color:#666666;
+	font-size:10px;
 }
 
 div.picture {
@@ -1219,6 +1219,16 @@ div.aspect div.picture {
 	z-index:2;
 }
 
+.aspect h3.large {
+	margin:0;
+	padding:0;
+}
+
+.aspect h3.large > span {
+	line-height:22px;
+	padding-bottom:5px;
+}
+
 .aspect h3 div {
 	border-bottom:1px solid #999999;
 	margin:-4px 0 0;
@@ -1270,7 +1280,7 @@ ul.ranges li a.selected {
     color: #000000;
 }
 
-
+.floatl {float:left;}
 
 span.spinner {
     padding-left: 15px;
@@ -1338,10 +1348,11 @@ body.message div {
     top: 45%;
 }
 
+/*
 .classifications {
     background-color: #e6e6e6;
 }
-
+*/
 textarea[disabled] {
     color: #555555;
 }

@@ -440,7 +440,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     private class ScopeIndexPanel extends AbstractIndexPanel {
 
         private ScopeIndexPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
-            super( id, model, "more", expansions );
+            super( id, model, expansions );
         }
 
         /**

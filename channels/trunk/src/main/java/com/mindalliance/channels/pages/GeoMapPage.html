@@ -30,6 +30,17 @@
 			height:400px;
 			border-bottom:1px solid #666666;
 		}
+		div.nothing-to-map {
+			width:600px;
+			height:200px;
+			padding:200px 0 0 0;
+			color:#666666;
+			font-weight:bold;
+			font-size:14px;
+			border-bottom:1px solid #666666;
+			text-align:center;
+			background:#E8E8E8;
+		} 
 		span.caption {
 			font-size:12px;
 			font-weight:bold;
@@ -43,8 +54,8 @@
 <body>
 <div>
 	<div class="map" wicket:id="map">Map</div>
-    <span wicket:id="nothing" class="nothing-to-map">Nothing to map</span>
-    <span class="caption" wicket:id="caption">caption</span>
+	<div class="nothing-to-map" wicket:id="nothing">Nothing to map</div>
+	<span class="caption" wicket:id="caption">caption</span>
 </div>
 </body>
 </html>
