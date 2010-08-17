@@ -411,7 +411,7 @@ ul.flows li ul {
 
 	ul.flows li ul li {
 		padding: 0 0 7px 15px;
-		background: url('../images/bullet_black.png') no-repeat 0 5px; }
+		background: url('../images/bullet-black.png') no-repeat 0 5px; }
 
 ul.flows li ul.channels-only {
 	clear:both;
@@ -432,7 +432,7 @@ div.issues {
 		div.issues ul li.severe {
 			margin: 0;
 			padding: 0 0 7px 15px;
-			background: url('../images/bullet_red.png') no-repeat 0 5px; }
+			background: url('../images/bullet-red.png') no-repeat 0 5px; }
 
 		div.issues ul li.minor p,
 		div.issues ul li.major p,
@@ -459,7 +459,7 @@ div#contents > div.segment > div.top-organization > div > ul > li.image,
 div#contents > div.segment > div.top-organization > div > div > ul > li.image,
 div#contents div.doccont > ul > li.image {
 	padding: 0 0 7px 15px;
-	background: url('../images/bullet_black.png') no-repeat 0 5px;
+	background: url('../images/bullet-black.png') no-repeat 0 5px;
 	line-height: 18px; }
 
 li.channel { float: none; }
@@ -479,7 +479,7 @@ div.segment > ul {
 
 	div.segment > ul li {
 		padding: 0 0 7px 15px;
-		background: url('../images/bullet_black.png') no-repeat 0 4px; }
+		background: url('../images/bullet-black.png') no-repeat 0 4px; }
 
 p.plangoalstitle {
 	padding-top: 7px;
@@ -502,49 +502,49 @@ ul.flows > li.receive-notification > p.description { padding: 0; }
 
 ul.flows li.receive-notification,
 ul.flows li.send-answer {
-	background: url('../images/arrow_left_green.bullet.png') no-repeat 10px 3px;
+	background: url('../images/arrow-left.png') no-repeat 10px 3px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.receive-notification.trigger,
 ul.flows li.send-answer.trigger {
-	background: url('../images/left_plus.bullet.png') no-repeat 10px 2px;
+	background: url('../images/arrow-left-plus.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.receive-notification.trigger.terminate,
 ul.flows li.send-answer.trigger.terminate {
-	background: url('../images/left_both.bullet.png') no-repeat 10px 2px;
+	background: url('../images/arrow-left-minus-plus.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.receive-notification.terminate,
 ul.flows li.send-answer.terminate {
-	background: url('../images/left_box.bullet.png') no-repeat 10px 2px;
+	background: url('../images/arrow-left-minus.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.send-notification,
 ul.flows li.receive-answer {
-	background: url('../images/arrow_right_green.bullet.png') no-repeat 10px 3px;
+	background: url('../images/arrow-right.png') no-repeat 10px 3px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.send-notification.trigger,
 ul.flows li.receive-answer.trigger {
-	background: url('../images/right_plus.bullet.png') no-repeat 10px 2px;
+	background: url('../images/arrow-right-plus.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.send-notification.trigger.terminate,
 ul.flows li.receive-answer.trigger.terminate {
-	background: url('../images/right_both.bullet.png') no-repeat 10px 2px;
+	background: url('../images/arrow-right-minus-plus.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
 ul.flows li.send-notification.terminate,
 ul.flows li.receive-answer.terminate {
-	background: url('../images/right_box.bullet.png') no-repeat 10px 2px;
+	background: url('../images/arrow-right-minus.png') no-repeat 10px 2px;
 	clear: both;
 	padding-left: 35px; }
 
@@ -595,7 +595,7 @@ div.section-head h2 a.toplink {
 	text-decoration: none;
 	float: right;
 	padding: 4px 13px 0 13px;
-	background: url('../images/backtotop.png') 0 8px no-repeat; }
+	background: url('../images/bullet-arrow-top.png') 0 8px no-repeat; }
 
 div.section-head h2 a.toplink:hover {
 	font-size: 11px;
@@ -603,7 +603,7 @@ div.section-head h2 a.toplink:hover {
 	text-decoration: none;
 	float: right;
 	padding: 4px 13px 0 13px;
-	background: url('../images/backtotop.png') 0 8px no-repeat; }
+	background: url('../images/bullet-arrow-top.png') 0 8px no-repeat; }
 
 
 div.flow-map img {
@@ -667,23 +667,23 @@ ul.impacts-container > li.cascading-failures > ul.impacts {
 ul.impacts-container > li.cascading-failures > ul.impacts > li { float: none; }
 
 ul.impacts-container > li.cascading-failures > ul.impacts > li.minor {
-	background: url( "../images/bullet_minor.png" ) no-repeat 0px 4px;
+	background: url( "../images/bullet-blue.png" ) no-repeat 0px 4px;
 }
 
 ul.impacts-container > li.cascading-failures > ul.impacts > li.major {
-	background: url( "../images/bullet_major.png" ) no-repeat 0px 4px;
+	background: url( "../images/bullet-yellow.png" ) no-repeat 0px 4px;
 }
 
 ul.impacts-container > li.cascading-failures > ul.impacts > li.severe {
-	background: url( "../images/bullet_severe.png" ) no-repeat 0px 4px;
+	background: url( "../images/bullet-orange.png" ) no-repeat 0px 4px;
 }
 
 ul.impacts-container > li.cascading-failures > ul.impacts > li.extreme {
-	background: url( "../images/bullet_extreme.png" ) no-repeat 0px 4px;
+	background: url( "../images/bullet-red.png" ) no-repeat 0px 4px;
 }
 
 ul.impacts-container > li.cascading-failures > ul.impacts > li.none {
-	background: url( "../images/bullet_unknown.png" ) no-repeat 0px 4px;
+	background: url( "../images/bullet-black.png" ) no-repeat 0px 4px;
 }
 
 /* ----- Organization Contacts ----- */

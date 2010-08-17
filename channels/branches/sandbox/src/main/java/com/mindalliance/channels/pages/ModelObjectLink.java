@@ -20,6 +20,7 @@ public class ModelObjectLink extends AbstractUpdatablePanel {
     private IModel<? extends ModelObject> moModel;
     private IModel<String> textModel;
     private String hint;
+    private String css;
 
     public ModelObjectLink( String id, IModel<? extends ModelObject> mo ) {
         this( id, mo, null );
@@ -31,10 +32,16 @@ public class ModelObjectLink extends AbstractUpdatablePanel {
 
     public ModelObjectLink(
             String id, final IModel<? extends ModelObject> mo, IModel<String> text, String hint ) {
+        this( id, mo, text, hint, null );
+    }
+
+    public ModelObjectLink(
+            String id, final IModel<? extends ModelObject> mo, IModel<String> text, String hint, String css ) {
         super( id );
         moModel = mo;
         textModel = text;
         this.hint = hint;
+        this.css = css;
         init();
     }
 
@@ -55,19 +62,23 @@ public class ModelObjectLink extends AbstractUpdatablePanel {
         if ( hint != null && !hint.isEmpty() ) {
             link.add( new AttributeModifier( "title", true, new Model<String>( hint ) ) );
         }
-        if ( mo != null ) {
-            link.add( new AttributeModifier(
-                    "class",
-                    true,
-                    new Model<String>(
-                            mo.isEntity()
-                                    ? "entity-link"
-                                    : mo instanceof Part
-                                    ? "part-link"
-                                    : mo instanceof Flow
-                                    ? "flow-link"
-                                    : "model-object-link"
-                    ) ) );
+        if ( css != null ) {
+            link.add( new AttributeModifier( "class", true, new Model<String>( css ) ) );
+        } else {
+            if ( mo != null ) {
+                link.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>(
+                                mo.isEntity()
+                                        ? "entity-link"
+                                        : mo instanceof Part
+                                        ? "part-link"
+                                        : mo instanceof Flow
+                                        ? "flow-link"
+                                        : "model-object-link"
+                        ) ) );
+            }
         }
         Label textLabel = new Label( "text", textModel );
         link.add( textLabel );

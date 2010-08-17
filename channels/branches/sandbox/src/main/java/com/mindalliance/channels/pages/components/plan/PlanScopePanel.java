@@ -205,7 +205,8 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                 "detailsLink",
                 new Model<Organization>( selectedOrganization ),
                 new Model<String>( "See details" ),
-                "View the details of the organization" );
+                "View the details of the organization",
+                "window" );
         organizationContainer.add( detailsLink );
         Link expectationActionLink = new AjaxFallbackLink( "expectationActionLink" ) {
             public void onClick( AjaxRequestTarget target ) {

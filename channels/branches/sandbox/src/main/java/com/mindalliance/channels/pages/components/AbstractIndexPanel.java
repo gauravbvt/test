@@ -133,9 +133,15 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * Cached index entries.
      */
     private List<IndexEntry> indices;
+    private String css;
 
     public AbstractIndexPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+       this( id, model, null, expansions );
+    }
+
+    public AbstractIndexPanel( String id, IModel<? extends Identifiable> model, String css, Set<Long> expansions ) {
         super( id, model, expansions );
+        this.css = css;
         init();
     }
 
@@ -203,8 +209,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             protected void populateItem( ListItem<IndexEntry> item ) {
                 IndexEntry indexEntry = item.getModelObject();
                 item.add( indexEntry.isRepeated()
-                        ? new RepeatedIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ) )
-                        : new SingleIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ) ) );
+                        ? new RepeatedIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ), css )
+                        : new SingleIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ), css ) );
             }
         };
         indicesContainer.addOrReplace( indices1 );
@@ -215,8 +221,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             protected void populateItem( ListItem<IndexEntry> item ) {
                 IndexEntry indexEntry = item.getModelObject();
                 item.add( indexEntry.isRepeated()
-                        ? new RepeatedIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ) )
-                        : new SingleIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ) ) );
+                        ? new RepeatedIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ), css )
+                        : new SingleIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ), css ) );
             }
         };
         indicesContainer.addOrReplace( indices2 );
@@ -227,8 +233,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             protected void populateItem( ListItem<IndexEntry> item ) {
                 IndexEntry indexEntry = item.getModelObject();
                 item.add( indexEntry.isRepeated()
-                        ? new RepeatedIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ) )
-                        : new SingleIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ) ) );
+                        ? new RepeatedIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ), css )
+                        : new SingleIndexEntryPanel( "indexEntry", new Model<IndexEntry>( indexEntry ), css ) );
             }
         };
         indicesContainer.addOrReplace( indices3 );
@@ -649,9 +655,16 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      */
     public class SingleIndexEntryPanel extends IndexEntryPanel {
 
+        private String css;
+
 
         public SingleIndexEntryPanel( String id, IModel<IndexEntry> model ) {
+            this( id, model, null );
+        }
+
+        public SingleIndexEntryPanel( String id, IModel<IndexEntry> model, String css ) {
             super( id, model );
+            this.css = css;
             initialize();
         }
 
@@ -660,7 +673,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     "moLink",
                     new Model<ModelObject>( getIndexedModelObject() ),
                     new Model<String>( getAbbreviatedName() ),
-                    getTitle() );
+                    getTitle(),
+                    css );
             italicizeIfEntityType( moLink, getIndexedModelObject() );
             add( moLink );
         }
@@ -672,8 +686,15 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      */
     public class RepeatedIndexEntryPanel extends IndexEntryPanel {
 
+        private String css;
+
+
         public RepeatedIndexEntryPanel( String id, IModel<IndexEntry> model ) {
+            this( id, model, null );
+        }
+        public RepeatedIndexEntryPanel( String id, IModel<IndexEntry> model, String css ) {
             super( id, model );
+            this.css = css;
             initialize();
         }
 
@@ -691,7 +712,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                             "moLink",
                             new Model<ModelObject>( item.getModelObject() ),
                             new Model<String>( getRank( item.getModelObject() ) ),
-                            getKind() );
+                            getKind(),
+                            css );
                     item.add( moLink );
                 }
             };

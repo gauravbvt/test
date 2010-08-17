@@ -7,13 +7,18 @@
         lang="en">
 <body>
 <wicket:panel>
-    <h4>Send survey to</h4>
+    <h3>
+		<span>Send survey to</span>
+		<div>&nbsp;</div>
+	</h3>
     <div>
+		<div class="filters">
         Show <select wicket:id="usersScope">
                 <option>Users surveyed</option>
                 <option>User not surveyed</option>
                 <option>All users</option>
             </select>
+		</div>
         <span wicket:id="contacts">[contacts table]</span>
         <input wicket:id="updateContacts" type="button" value="Apply"/>
     </div>

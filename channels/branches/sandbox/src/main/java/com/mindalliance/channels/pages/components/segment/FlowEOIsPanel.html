@@ -18,28 +18,28 @@
             <table>
                 <tr>
                     <td>
-                        <h3>
+                        <h3 class="large">
                             <span>
 							In <span wicket:id="flowType">need for</span>
                             &quot;<span wicket:id="flowName">Flow name</span>&quot;
                             <span wicket:id="source">by actor X</span>
                             <span wicket:id="target">with actor Y</span>
 							</span>
-							<div>&nbsp;</div>
                        </h3>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <table wicket:id="eoisContainer">
+                        <table class="data-table" wicket:id="eoisContainer">
                             <thead>
-                                <tr>
+                                <tr class="headers">
                                     <td><a wicket:id="autoPopulate" href="#">
                                             <img border="0" src="images/magic.png" alt="auto-populate" title="Click to auto-populate elements"/>
                                         </a></td>
                                     <td>Content</td>
-                                    <td wicket:id="classificationsHeaderContainer">Classifications
-                                        <a wicket:id="linkClassifications" href="#">
+                                    <td wicket:id="classificationsHeaderContainer">
+										<span class="floatl">Classifications&nbsp;</span>
+                                        <a class="floatl" wicket:id="linkClassifications" href="#">
                                             <img border="0" src="images/link.png" valign="middle" alt="link" title="Make classifications the same for all. Click to make them independent."/>
                                         </a>
                                         <a wicket:id="unlinkClassifications" href="#">
@@ -61,7 +61,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="5"><a wicket:id="classifications" href = "#">Edit the classification systems</a></td>
+                    <td colspan="5"><a class="window" wicket:id="classifications" href="#">Edit the classification systems</a></td>
                 </tr>
              </table>
 

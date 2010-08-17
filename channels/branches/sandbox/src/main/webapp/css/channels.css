@@ -225,13 +225,15 @@ span.entityReference {
 
 span.entityReference select {
     position: absolute;
-    width: 25%;
+    width: 65px;
     padding: 1px;
 }
 
 span.entityReference input[type='text'] {
-    width: 73%;
-    margin-left: 27%;
+    width: 70%;
+    margin-left: 70px;
+	position: relative;
+	min-width: 150px;
 }
 
 input[type="text"].no-expand {
@@ -591,8 +593,8 @@ span.suggest {
 }
 
 span.note {
-    font-style: italic;
-    font-size: x-small;
+	color:#666666;
+	font-size:10px;
 }
 
 div.picture {
@@ -656,7 +658,7 @@ td.link.notify, td.link.answer {
 }
 
 .receives h3 span {
-    background: transparent url( '../images/arrow_left_green.bullet.png' ) no-repeat 100% 50%;
+    background: transparent url( '../images/arrow-left.png' ) no-repeat 100% 50%;
     padding-right: 22px;
 }
 
@@ -666,12 +668,12 @@ td.link.ask, td.link.receive {
 }
 
 .sends h3 span {
-    background: transparent url( '../images/arrow_right_green.bullet.png' ) no-repeat 100% 50%;
+    background: transparent url( '../images/arrow-right.png' ) no-repeat 100% 50%;
     padding-right: 22px;
 }
 
 th.wicket_orderDown a {
-    background: transparent url( '../images/navigate_open.png' ) no-repeat 100% 4px;
+    background: transparent url( '../images/bullet-arrow-top.png' ) no-repeat 100% 4px;
     padding-right: 12px;
 }
 
@@ -752,18 +754,42 @@ div.wicket-aa ul li:hover {
     background: #c3d9ff;
 }
 
+div.import-dialog {
+    background: #c3d9ff;
+    border: 1px outset #c3dede;
+    padding: 5px;
+    position: absolute;
+    width: 300px;
+    top: 8em;
+    left: 25em;
+    z-index: 10000;
+    overflow: auto;
+}
+
+
+/* ----- Header - History ----- */
+
+.refresh, .navigation {
+    cursor: pointer;
+    vertical-align: baseline;
+	margin:0 0 0 -3px;
+}
+
+
+/* ----- Dropdown Menu - Default ----- */
+
 .menubar .dropmenu {
     width: auto;
     cursor: pointer;
     padding: 1px 16px 1px 5px;
     position: relative;
 	border:1px solid transparent;
-    background: url( '../images/dropmenu.png' ) no-repeat scroll 90% 56%;
+    background: url( '../images/bullet-arrow-bottom.png' ) no-repeat scroll 90% 56%;
 	color:#333333;
 }
 
 .menubar .dropmenu:hover {
-    background: url( '../images/dropmenu.high.png' ) no-repeat scroll 90% 56% #e6e6e6;
+    background: url( '../images/bullet-arrow-bottom-high.png' ) no-repeat scroll 90% 56% #e6e6e6;
 	border:1px solid #C7C8CA;
 	color:#000000;
 }
@@ -789,18 +815,6 @@ div.wicket-aa ul li:hover {
 	border-bottom:1px solid #D1D3D4;
 }
 
-/*
-
-#part .menubar .dropmenu.first:before {
-    content: " ";
-}
-
-.menubar .menuitem:before {
-    content: " \2015  ";
-}
-
-*/
-
 .menubar .dropmenu li span.disabled {
     font-style: oblique;
     color: #808080;
@@ -812,18 +826,6 @@ div.wicket-aa ul li:hover {
 
 .menubar .dropmenu ul li:hover {
     background-color: #ccccff;
-}
-
-div.import-dialog {
-    background: #c3d9ff;
-    border: 1px outset #c3dede;
-    padding: 5px;
-    position: absolute;
-    width: 300px;
-    top: 8em;
-    left: 25em;
-    z-index: 10000;
-    overflow: auto;
 }
 
 
@@ -879,13 +881,13 @@ div.float-header > span.menubar {
 }
 
 div.float-header > span.menubar span.dropmenu {
-	background: url('../images/dropmenu.png') no-repeat scroll 90% 56% #D1D3D4;
+	background: url('../images/bullet-arrow-bottom.png') no-repeat scroll 90% 56% #D1D3D4;
 	margin-right:5px;
 	border:1px solid #BCBEC0;
 }
 
 div.float-header > span.menubar span.dropmenu:hover {
-    background: url( '../images/dropmenu.high.png' ) no-repeat scroll 90% 56% #e6e6e6;
+    background: url( '../images/bullet-arrow-bottom-high.png' ) no-repeat scroll 90% 56% #e6e6e6;
 	border:1px solid #C7C8CA;
 	color:#000000;
 }
@@ -1072,15 +1074,6 @@ div.aspect div.picture {
 }
 
 
-/* ----- Header - History ----- */
-
-.refresh, .navigation {
-    cursor: pointer;
-    vertical-align: baseline;
-	margin:0 0 0 -3px;
-}
-
-
 /* ----- Floating Panels - Flowmaps ----- */
 
 .aspect div.picture {
@@ -1137,7 +1130,7 @@ div.aspect div.picture {
     float: left;
     width: 100%;
     line-height: normal;
-	background:  url( '../images/tab-bg-repeat.png' ) repeat-x;
+	background: url( '../images/tab-bg.png' ) repeat-x;
 	margin:10px 0;
 }
 
@@ -1226,10 +1219,38 @@ div.aspect div.picture {
 	z-index:2;
 }
 
+.aspect h3.large {
+	margin:0;
+	padding:0;
+}
+
+.aspect h3.large > span {
+	line-height:22px;
+	padding-bottom:5px;
+}
+
 .aspect h3 div {
 	border-bottom:1px solid #999999;
 	margin:-4px 0 0;
 	z-index:0;
+}
+
+
+/* ----- Floating Panels - Fieldset ----- */
+
+.aspect fieldset {
+	border:1px solid #cccccc;
+}
+
+.aspect fieldset legend {
+	color:#333333;
+	font-weight:bold;
+	padding:0 5px;
+}
+
+.aspect fieldset textarea {
+	padding:5px;
+	width:98%;
 }
 
 
@@ -1258,6 +1279,8 @@ ul.ranges li a.selected {
     background-color: #c3d9ff;
     color: #000000;
 }
+
+.floatl {float:left;}
 
 span.spinner {
     padding-left: 15px;
@@ -1325,10 +1348,11 @@ body.message div {
     top: 45%;
 }
 
+/*
 .classifications {
     background-color: #e6e6e6;
 }
-
+*/
 textarea[disabled] {
     color: #555555;
 }
@@ -1398,6 +1422,7 @@ input[disabled] {
 	padding-bottom:7px;
 }
 
+
 /* ----- Add New Task, Info Received-Sent Link ----- */
 
 a.add-flow {
@@ -1410,7 +1435,7 @@ a.add-flow {
 	top:0;
 	white-space:nowrap;
 	font-size:8pt;
-	background: url( '../images/bullet_add.png' ) no-repeat 5px 6px ;
+	background: url( '../images/bullet-add.png' ) no-repeat 5px 6px ;
 	color:#333333;
 	text-transform:lowercase;
 }
@@ -1424,13 +1449,13 @@ a.add-task {
 	top:0;
 	white-space:nowrap;
 	font-size:8pt;
-	background: url( '../images/bullet_add.png' ) no-repeat 5px 6px ;
+	background: url( '../images/bullet-add.png' ) no-repeat 5px 6px ;
 	color:#333333;
 	text-transform:lowercase;
 }
 
 a.add-flow:hover, a.add-task:hover {
-	background: url( '../images/bullet_add.high.png' ) no-repeat 5px 6px #E8E8E8 ;
+	background: url( '../images/bullet-add-high.png' ) no-repeat 5px 6px #E8E8E8 ;
 	color:#000000;
 }
 
@@ -1459,63 +1484,63 @@ div.sends > div.section-content > div.flow > div > span.menubar > span > span.dr
 /* ----- Task, Receive and Send Severity Icon ----- */
 
 div.flow div.extreme {
-	background: url( '../images/bullet_extreme.png' ) no-repeat 9px 10px;
+	background: url( '../images/bullet-red.png' ) no-repeat 9px 10px;
 }
 
 div.flow div.extreme.even {
-	background: url( '../images/bullet_extreme.png' ) no-repeat 9px 10px #E8E8E8;
+	background: url( '../images/bullet-red.png' ) no-repeat 9px 10px #E8E8E8;
 }
 
 span.extreme {
-	background: url( '../images/bullet_extreme.png' ) no-repeat 6px 5px;
+	background: url( '../images/bullet-red.png' ) no-repeat 6px 5px;
 }
 
 div.flow div.major {
-	background: url( '../images/bullet_major.png' ) no-repeat 9px 10px;
+	background: url( '../images/bullet-yellow.png' ) no-repeat 9px 10px;
 }
 
 div.flow div.major.even {
-	background: url( '../images/bullet_major.png' ) no-repeat 9px 10px #E8E8E8;
+	background: url( '../images/bullet-yellow.png' ) no-repeat 9px 10px #E8E8E8;
 }
 
 span.major {
-	background: url( '../images/bullet_major.png' ) no-repeat 6px 5px;
+	background: url( '../images/bullet-yellow.png' ) no-repeat 6px 5px;
 }
 
 div.flow div.minor {
-	background: url( '../images/bullet_minor.png' ) no-repeat 9px 10px;
+	background: url( '../images/bullet-blue.png' ) no-repeat 9px 10px;
 }
 
 div.flow div.minor.even {
-	background: url( '../images/bullet_minor.png' ) no-repeat 9px 10px #E8E8E8;
+	background: url( '../images/bullet-blue.png' ) no-repeat 9px 10px #E8E8E8;
 }
 
 span.minor {
-	background: url( '../images/bullet_minor.png' ) no-repeat 6px 5px;
+	background: url( '../images/bullet-blue.png' ) no-repeat 6px 5px;
 }
 
 div.flow div.severe {
-	background: url( '../images/bullet_severe.png' ) no-repeat 9px 10px;
+	background: url( '../images/bullet-orange.png' ) no-repeat 9px 10px;
 }
 
 div.flow div.severe.even {
-	background: url( '../images/bullet_severe.png' ) no-repeat 9px 10px #E8E8E8;
+	background: url( '../images/bullet-orange.png' ) no-repeat 9px 10px #E8E8E8;
 }
 
 span.severe {
-	background: url( '../images/bullet_severe.png' ) no-repeat 6px 5px;
+	background: url( '../images/bullet-orange.png' ) no-repeat 6px 5px;
 }
 
 div.flow div.none {
-	background: url( '../images/bullet_unknown.png' ) no-repeat 9px 10px;
+	background: url( '../images/bullet-black.png' ) no-repeat 9px 10px;
 }
 
 div.flow div.none.even {
-	background: url( '../images/bullet_unknown.png' ) no-repeat 9px 10px #E8E8E8;
+	background: url( '../images/bullet-black.png' ) no-repeat 9px 10px #E8E8E8;
 }
 
 span.none {
-	background: url( '../images/bullet_unknown.png' ) no-repeat 6px 5px;
+	background: url( '../images/bullet-black.png' ) no-repeat 6px 5px;
 }
 
 /* ----- Sends and Receives Channels ----- */
@@ -1568,7 +1593,7 @@ div.section-content > div.flow > div > img {
 	top:0;
 	position:absolute;
     width: 100%;
-	background: url( '../images/socialtab-bg-repeat.png' ) repeat-x #c3d9ff;
+	background: url( '../images/tab-social-bg.png' ) repeat-x #c3d9ff;
     line-height: normal;
 }
 
@@ -1963,18 +1988,28 @@ body.support {
     min-height: 20em;
 }
 
+
 /* ----- ALPHA - Links ----- */
 
-a.more {
-	background: url( '../images/link.expand.png' ) no-repeat 2px 3px #DCDDDE;
+a.more,
+a.window {
 	border:1px solid #C7C8CA;
 	color:#666666;
 	padding:0 3px 0 14px;
 	font-size:11px;
-	text-transform:lowercase;
+	/* text-transform:lowercase;*/
 }
 
-a.more:hover {
+a.more {
+	background: url( '../images/link.more.png' ) no-repeat 2px 3px #DCDDDE;
+}
+
+a.window {
+	background: url( '../images/link.window.png' ) no-repeat 2px 3px #DCDDDE;
+}
+
+a.more:hover,
+a.window:hover {
 	border:1px solid #999999;
 	color:#333333;
 }

@@ -108,7 +108,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.CLASSIFICATIONS ) );
             }
         };
-        classificationsLink.add( new AttributeModifier( "class", true, new Model<String>( "plan-link" ) ) );
+        classificationsLink.add( new AttributeModifier( "class", true, new Model<String>( "window" ) ) );
         add( classificationsLink );
     }
 
@@ -221,9 +221,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     }
 
     private void addEOIs() {
+        final List<EOIWrapper> wrappers = getWrappers();
         ListView<EOIWrapper> eoisListView = new ListView<EOIWrapper>(
                 "eois",
-                getWrappers()
+                wrappers
         ) {
             protected void populateItem( ListItem<EOIWrapper> item ) {
                 item.setOutputMarkupId( true );
@@ -232,9 +233,20 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 addClassifications( item );
                 addSourcing( item );
                 addSpecialHandling( item );
+                item.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>( cssClasses( item, wrappers.size() ) ) ) );
             }
         };
         eoisContainer.addOrReplace( eoisListView );
+    }
+
+    private String cssClasses( ListItem<EOIWrapper> item, int count ) {
+        int index = item.getIndex();
+        String cssClasses = index % 2 == 0 ? "even" : "odd";
+        if ( index == count - 1 ) cssClasses += " last";
+        return cssClasses;
     }
 
     private void addConfirmed( ListItem<EOIWrapper> item ) {
