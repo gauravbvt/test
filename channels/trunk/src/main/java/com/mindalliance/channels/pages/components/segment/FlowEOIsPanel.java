@@ -108,7 +108,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.CLASSIFICATIONS ) );
             }
         };
-        classificationsLink.add( new AttributeModifier( "class", true, new Model<String>( "plan-link" ) ) );
+        classificationsLink.add( new AttributeModifier( "class", true, new Model<String>( "window" ) ) );
         add( classificationsLink );
     }
 

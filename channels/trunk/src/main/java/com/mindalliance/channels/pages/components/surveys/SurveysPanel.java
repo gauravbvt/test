@@ -567,7 +567,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
             columns.add( makeExpandLinkColumn(
                     "",
                     "survey",
-                    "More..."
+                    "more"
             ) );
             // provider and table
             add( new AjaxFallbackDefaultDataTable(
