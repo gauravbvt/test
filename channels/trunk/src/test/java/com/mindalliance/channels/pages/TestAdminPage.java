@@ -49,6 +49,21 @@ public class TestAdminPage extends AbstractChannelsTest {
     }
 
     @Test
+    public void testPlanSupportField() {
+        assertRendered( "admin", AdminPage.class );
+        AdminPage adminPage = (AdminPage) tester.getLastRenderedPage();
+
+        Plan plan = adminPage.getPlan();
+        assertEquals( "", plan.getSupportCommunity() );
+
+        FormTester form = tester.newFormTester( "users" );
+        form.setValue( "supportCommunity", "AA" );
+        form.submit();
+
+        assertEquals( "AA", plan.getSupportCommunity() );
+    }
+
+    @Test
     public void testUserCreation() {
         assertRendered( "admin", AdminPage.class );
         try {
