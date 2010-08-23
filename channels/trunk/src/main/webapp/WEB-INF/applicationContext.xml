@@ -40,7 +40,7 @@ CONFIGURATION NOTES:
     <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager" lazy-init="true">
         <constructor-arg ref="definitionManager" />
         <property name="importDirectory" value="file:${channels.home}${file.separator}import"/>
-        <property name="defaultSupportCommunity" value="273"/>
+        <property name="defaultSupportCommunity" value="296"/>
         <property name="builtInMedia">
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>

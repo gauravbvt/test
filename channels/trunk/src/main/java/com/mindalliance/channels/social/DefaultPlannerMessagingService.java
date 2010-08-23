@@ -44,6 +44,11 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         addSentMessage( message );
     }
 
+    public void deleteMessage( PlannerMessage message ) {
+            getOdb().delete(  PlannerMessage.class, message.getId() );
+            whenLastChanged = new Date();
+    }
+
     public Iterator<PlannerMessage> getReceivedMessages() {
         return getOdb().iterate(
                 PlannerMessage.class,
@@ -53,8 +58,8 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                         Where.or()
                                 .add( Where.equal( "toUsername", getUsername() ) )
                                 .add( Where.and()
-                                    .add( Where.isNull( "toUsername" ) )
-                                    .add( Where.not( Where.equal( "fromUsername", getUsername() ) ) ) )
+                                .add( Where.isNull( "toUsername" ) )
+                                .add( Where.not( Where.equal( "fromUsername", getUsername() ) ) ) )
                 ),
                 ODBAccessor.Ordering.Descendant,
                 "date"

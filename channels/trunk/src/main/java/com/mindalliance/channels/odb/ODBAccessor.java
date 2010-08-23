@@ -4,12 +4,14 @@ import org.neodatis.odb.ODB;
 import org.neodatis.odb.Objects;
 import org.neodatis.odb.core.query.IQuery;
 import org.neodatis.odb.core.query.criteria.ICriterion;
+import org.neodatis.odb.core.query.criteria.Where;
 import org.neodatis.odb.impl.core.query.criteria.CriteriaQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
 
 
 /**
@@ -120,12 +122,25 @@ public class ODBAccessor {
      *
      * @param clazz     a class of persistent objects
      * @param criterion a criterion
-     * @return a persistent object
+     * @return a persistent object or null
      */
     public <T extends PersistentObject> T first(
             Class<T> clazz,
             ICriterion criterion ) {
         return first( clazz, criterion, null, null );
+    }
+
+    /**
+     * Retrieve persistent object given its unique id.
+     *
+     * @param clazz a class of persistent objects
+     * @param id    a string
+     * @return a persistent object or null
+     */
+    public <T extends PersistentObject> T fromId( Class<T> clazz, String id ) {
+        return first(
+                clazz,
+                Where.equal( "id", id ) );
     }
 
     /**
@@ -135,7 +150,7 @@ public class ODBAccessor {
      * @param criterion       a criterion
      * @param ordering        an ordering
      * @param orderedProperty a string
-     * @return a persistent object
+     * @return a persistent object or null
      */
     public <T extends PersistentObject> T first(
             Class<T> clazz,
@@ -149,4 +164,36 @@ public class ODBAccessor {
             return null;
         }
     }
+
+    /**
+     * Delete an object from the database.
+     *
+     * @param clazz a class of persistent objects
+     * @param id a string
+     */
+    public <T extends PersistentObject> void delete( Class<T> clazz, String id ) {
+        synchronized ( odbTxFactory ) {
+                ODB odb = null;
+                try {
+                    odb = odbTxFactory.openDatabase();
+                    IQuery query = new CriteriaQuery(
+                            clazz,
+                             Where.equal( "id", id ) );
+                    try {
+                        Objects<T> objects = odb.getObjects( query );
+                        Iterator<T> answers = objects.iterator();
+                        if ( answers.hasNext() ) {
+                            T object = answers.next();
+                            odb.delete( object );
+                        }
+                    } catch ( Exception e ) {
+                        LOG.warn( "Delete failed", e );
+                    }
+                } finally {
+                    if ( odb != null && !odb.isClosed() )
+                        odb.close();
+                }
+        }
+    }
+
 }

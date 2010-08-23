@@ -31,6 +31,7 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
                 id,
                 getMessageUserName( showReceived, plannerMessageModel),
                 index,
+                plannerMessageModel,
                 updatable );
         this.plannerMessageModel = plannerMessageModel;
         this.showReceived = showReceived;

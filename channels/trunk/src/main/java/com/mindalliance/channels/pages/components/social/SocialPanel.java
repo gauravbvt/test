@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.social.PlannerMessage;
 import com.mindalliance.channels.social.PlannerMessagingService;
 import com.mindalliance.channels.social.PlanningEventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -34,6 +35,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     private PlanningEventService planningEventService;
 
     public static final String SEND_MESSAGE = "sendMessage";
+    public static final String DELETE_MESSAGE = "deleteMessage";
 
     private AjaxTabbedPanel tabbedPanel;
 
@@ -86,7 +88,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( plannerPresenceListPanel != null && tabbedPanel.getSelectedTab() == 0 )  {
+        if ( plannerPresenceListPanel != null && tabbedPanel.getSelectedTab() == 0 ) {
             plannerPresenceListPanel.refresh( target, change );
         }
         if ( commandEventListPanel != null && tabbedPanel.getSelectedTab() == 1 ) {
@@ -110,7 +112,16 @@ public class SocialPanel extends AbstractUpdatablePanel {
                     target.addComponent( tabbedPanel );
                 }
                 plannerMessageListPanel.newMessage( (String) object, target );
+                plannerMessageListPanel.refresh( target, new Change( Change.Type.Communicated ) );
             }
+        }
+        if ( object instanceof PlannerMessage && action.equals( DELETE_MESSAGE ) ) {
+            if ( tabbedPanel.getSelectedTab() != 2 ) {
+                tabbedPanel.setSelectedTab( 2 );
+                target.addComponent( tabbedPanel );
+            }
+            plannerMessageListPanel.deleteMessage( (PlannerMessage) object, target );
+            plannerMessageListPanel.refresh( target, new Change( Change.Type.Communicated ) );
         }
     }
 
