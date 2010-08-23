@@ -100,7 +100,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 addShowHideBroadcastsLabel();
                 addPlannerMessages();
                 target.addComponent( showHideBroadcastsLabel );
-                target.addComponent( plannerMessagesContainer );
+                adjustComponents( target );                
             }
         };
         add( showHideBroadcastsLink );
@@ -121,7 +121,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 addShowReceivedSentLabel();
                 addPlannerMessages();
                 target.addComponent( sentReceivedLabel );
-                target.addComponent( plannerMessagesContainer );
+                adjustComponents( target );
             }
         };
         add( sentReceivedLink );
