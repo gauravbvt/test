@@ -23,12 +23,13 @@ hr { display:none; }
 
 div.navheader {
 	border-bottom:1px solid #cccccc;
-	background:url( '../images/header-bg-help.png' ) no-repeat #C3D9FF ;
+	background: url("../images/header-bg-repeat-report.png") repeat-y scroll 0 0 #C3D9FF
 }
 
 div.navheader table {
-	margin:1.4em 0 0 0;
-	padding-bottom:0.5em;
+	margin:0;
+	padding:25px 0 5px 0 ;
+	background:url("../images/header-bg-help.png") no-repeat top left #C3D9FF;
 }
 
 div.book, div.chapter, div.section { padding:50px; }
