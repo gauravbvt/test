@@ -316,7 +316,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
             ) );
             columns.add( makeActionLinkColumn(
                     "",
-                    "More...",
+                    "more",
                     "select",
                     AgreementsPanel.this
             ) );

@@ -353,6 +353,10 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         target.addComponent( newMessageContainer );
     }
 
+    public void deleteMessage( PlannerMessage message, AjaxRequestTarget target ) {
+        plannerMessagingService.deleteMessage( message );
+    }
+
     public List<PlannerMessage> getPlannerMessages() {
         List<PlannerMessage> plannerMessages = new ArrayList<PlannerMessage>();
         Iterator<PlannerMessage> iterator;

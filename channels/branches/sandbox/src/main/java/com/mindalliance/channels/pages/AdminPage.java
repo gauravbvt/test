@@ -151,6 +151,9 @@ public class AdminPage extends WebPage {
                     }
                         .setEnabled( definitionManager.getSize() > 1 ),
 
+                    new TextField<String>( "supportCommunity",
+                                      new PropertyModel<String>( this, "plan.supportCommunity" ) ),
+
                     new TextField<String>( "newPlanUri",
                                            new PropertyModel<String>( this, "newPlanUri" ) )
                         .add( new AbstractValidator<String>() {

@@ -5,6 +5,7 @@ import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Participation;
+import com.mindalliance.channels.odb.PersistentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.menus.SocialItemMenuPanel;
@@ -14,6 +15,7 @@ import com.mindalliance.channels.social.PresenceEvent;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -44,14 +46,25 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     private String username;
     private int index;
+    private IModel<? extends PersistentObject> poModel;
     private Updatable updatable;
 
     private Label nameLabel;
 
     public AbstractSocialEventPanel( String id, String username, int index, Updatable updatable ) {
+        this( id, username, index, null, updatable );
+    }
+
+    public AbstractSocialEventPanel(
+            String id,
+            String username,
+            int index,
+            IModel<? extends PersistentObject> poModel,
+            Updatable updatable ) {
         super( id );
         this.username = username;
         this.index = index;
+        this.poModel = poModel;
         this.updatable = updatable;
     }
 
@@ -98,6 +111,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 "menu",
                 new PropertyModel<Participation>( this, "participation" ),
                 getUsername(),
+                poModel,
                 updatable );
         menu.setVisible( !menu.isEmpty() );
         socialItemContainer.add( menu );
