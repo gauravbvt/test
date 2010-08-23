@@ -92,10 +92,8 @@ public class SocialItemMenuPanel extends MenuPanel {
         final PersistentObject po = getPersistentObject();
         if ( po != null && po instanceof PlannerMessage ) {
             PlannerMessage message = (PlannerMessage) po;
-            String toUserName = message.getToUsername();
-            if ( message.getFromUsername().equals( currentUsername )
-                    || toUserName != null && toUserName.equals( currentUsername ) ) {
-                Link link = new ConfirmedAjaxFallbackLink( "link", "Delete this message?" ) {
+            if ( message.getFromUsername().equals( currentUsername ) ) {
+                Link link = new ConfirmedAjaxFallbackLink( "link", "Delete this message (unsend it)?" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         updatable.update( target, po, SocialPanel.DELETE_MESSAGE );
                     }
