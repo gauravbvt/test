@@ -280,7 +280,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
         final GoalWrapper wrapper = item.getModel().getObject();
         AjaxFallbackLink<String> moreLink = new AjaxFallbackLink<String>(
                 "more-link",
-                new Model<String>( "More..." ) ) {
+                new Model<String>( "more" ) ) {
             public void onClick( AjaxRequestTarget target ) {
                 selectedGoal = wrapper;
                 moreContainer.addOrReplace( makeTasksTable() );

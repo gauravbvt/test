@@ -1235,6 +1235,18 @@ div.aspect div.picture {
 	z-index:0;
 }
 
+.aspect h4 {
+	background:#DCDDDE;
+	border-bottom:1px solid #666666;
+	border-top:1px solid #666666;
+	color:#333333;
+	font-size:11px;
+	line-height:18px;
+	margin:5px 0 10px;
+	padding:5px 9px;
+	text-transform:uppercase;
+}
+
 
 /* ----- Floating Panels - Fieldset ----- */
 
@@ -1976,16 +1988,18 @@ div.section-content > div.flow > div > img {
 	font-size:11px;
 }
 
-/* Help */
+/* ----- Help ----- */
 
 body.support {
-    background: white;
-    font-size: 11pt;
-    margin: 10px;
-    padding: 10px;
-    position: absolute;
-    min-width: 50em;
-    min-height: 20em;
+	background: #ffffff;
+	margin: 0;
+	padding: 0;
+	min-width: 50em;
+	min-height: 20em;
+}
+
+body.support iframe {
+	border:none;
 }
 
 
