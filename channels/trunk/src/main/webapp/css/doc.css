@@ -4,10 +4,10 @@ html {
 }
 
 body {
-	font-size: 75%;
+	font-size: 100%;
 	color: #222;
 	background: #F6F6F6;
-	font-family: Georgia, Times, “Times New Roman”, serif;
+	font-family: Georgia, Times, "Times New Roman", serif;
 	margin:0 0 50px 0;
 	padding:0;
 	border:1px solid #cccccc;

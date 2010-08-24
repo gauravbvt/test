@@ -36,6 +36,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
 
     public static final String SEND_MESSAGE = "sendMessage";
     public static final String DELETE_MESSAGE = "deleteMessage";
+    public static final String EMAIL_MESSAGE = "emailMessage";
 
     private AjaxTabbedPanel tabbedPanel;
 
@@ -105,23 +106,23 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     public void update( AjaxRequestTarget target, Object object, String action ) {
-        if ( object instanceof String ) {
-            if ( action.equals( SEND_MESSAGE ) ) {
-                if ( tabbedPanel.getSelectedTab() != 2 ) {
-                    tabbedPanel.setSelectedTab( 2 );
-                    target.addComponent( tabbedPanel );
-                }
-                plannerMessageListPanel.newMessage( (String) object, target );
-                plannerMessageListPanel.refresh( target, new Change( Change.Type.Communicated ) );
-            }
-        }
-        if ( object instanceof PlannerMessage && action.equals( DELETE_MESSAGE ) ) {
+        if ( action.equals( SEND_MESSAGE )
+                || action.equals( DELETE_MESSAGE )
+                || action.equals( EMAIL_MESSAGE ) ) {
             if ( tabbedPanel.getSelectedTab() != 2 ) {
                 tabbedPanel.setSelectedTab( 2 );
                 target.addComponent( tabbedPanel );
             }
-            plannerMessageListPanel.deleteMessage( (PlannerMessage) object, target );
-            plannerMessageListPanel.refresh( target, new Change( Change.Type.Communicated ) );
+
+            if ( object instanceof String && action.equals( SEND_MESSAGE ) ) {
+                plannerMessageListPanel.newMessage( (String) object, target );
+            }
+            if ( object instanceof PlannerMessage && action.equals( DELETE_MESSAGE ) ) {
+                plannerMessageListPanel.deleteMessage( (PlannerMessage) object, target );
+            }
+            if ( object instanceof PlannerMessage && action.equals( EMAIL_MESSAGE ) ) {
+                plannerMessageListPanel.emailMessage( (PlannerMessage) object, target );
+            }
         }
     }
 

@@ -12,6 +12,7 @@ import com.mindalliance.channels.social.PlannerMessagingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -59,6 +60,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private User newMessageRecipient = ALL;
     private ModelObject newMessageAbout;
     private String newMessageText = "";
+    private boolean emailIt = false;
     private WebMarkupContainer noMessageContainer;
     private AjaxFallbackLink showAFew;
     private AjaxFallbackLink showMore;
@@ -100,7 +102,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 addShowHideBroadcastsLabel();
                 addPlannerMessages();
                 target.addComponent( showHideBroadcastsLabel );
-                adjustComponents( target );                
+                adjustComponents( target );
             }
         };
         add( showHideBroadcastsLink );
@@ -199,6 +201,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         addMessageText( newMessageContainer );
         addCancel( newMessageContainer );
         addSend( newMessageContainer );
+        addEmailIt( newMessageContainer );
     }
 
     private void addRecipientChoice( WebMarkupContainer newMessageContainer ) {
@@ -300,16 +303,30 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 resetNewMessage( target );
                 addPlannerMessages();
                 adjustComponents( target );
-                update( target, Change.message( "Message sent" ) );
+                update(
+                        target,
+                        Change.message( isEmailIt() ? "Message sent and emailed" : "Message sent" ) );
             }
         };
         newMessageContainer.add( sendLink );
+    }
+
+    private void addEmailIt( final WebMarkupContainer newMessageContainer ) {
+        AjaxCheckBox emailItCheckBox = new AjaxCheckBox(
+                "email",
+                new PropertyModel<Boolean>( this, "emailIt" ) ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        };
+        newMessageContainer.add( emailItCheckBox );
     }
 
     private void resetNewMessage( AjaxRequestTarget target ) {
         newMessageText = "";
         newMessageAbout = null;
         newMessageRecipient = ALL;
+        emailIt = false;
         addNewMessage();
         target.addComponent( newMessageContainer );
     }
@@ -322,7 +339,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 plannerMessage.setToUsername( getNewMessageRecipient().getUsername() );
             if ( getNewMessageAbout() != null )
                 plannerMessage.setAbout( getNewMessageAbout() );
-            plannerMessagingService.sendMessage( plannerMessage );
+            plannerMessagingService.sendMessage( plannerMessage, isEmailIt() );
         }
     }
 
@@ -350,11 +367,22 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         setNewMessageRecipient( userService.getUserNamed( username ) );
         setNewMessageAbout( about );
         addNewMessage();
+        refresh( target, new Change( Change.Type.Communicated ) );
         target.addComponent( newMessageContainer );
     }
 
     public void deleteMessage( PlannerMessage message, AjaxRequestTarget target ) {
         plannerMessagingService.deleteMessage( message );
+        refresh( target, new Change( Change.Type.Communicated ) );
+    }
+
+    public void emailMessage( PlannerMessage message, AjaxRequestTarget target ) {
+        boolean success = plannerMessagingService.email( message );
+        addPlannerMessages();
+        adjustComponents( target );
+        update( target, Change.message( success
+                ? ( "Message emailed to " + ( message.isBroadcast() ? "all planners" : message.getToUsername() ) )
+                : "Message NOT emailed" ) );
     }
 
     public List<PlannerMessage> getPlannerMessages() {
@@ -413,4 +441,11 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         return showReceived;
     }
 
+    public boolean isEmailIt() {
+        return emailIt;
+    }
+
+    public void setEmailIt( boolean emailIt ) {
+        this.emailIt = emailIt;
+    }
 }

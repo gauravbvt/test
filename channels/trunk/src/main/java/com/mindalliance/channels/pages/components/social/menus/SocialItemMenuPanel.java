@@ -103,6 +103,15 @@ public class SocialItemMenuPanel extends MenuPanel {
                         new Model<String>( "Delete message" ),
                         link ) );
             }
+            Link link = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    updatable.update( target, po, SocialPanel.EMAIL_MESSAGE );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( message.isEmailed() ? "Email again" : "Email message" ),
+                    link ) );
         }
         return menuItems;
     }

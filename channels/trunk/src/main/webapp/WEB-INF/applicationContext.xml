@@ -359,6 +359,8 @@ CONFIGURATION NOTES:
     
     <bean id="plannerMessagingService" class="com.mindalliance.channels.social.DefaultPlannerMessagingService">
         <property name="databaseFactory" ref="databaseFactory"/>
+        <property name="mailSender" ref="mailSender"/>
+        <property name="userService" ref="userService"/>
     </bean>
 
     <bean id="planningEventService" class="com.mindalliance.channels.social.DefaultPlanningEventService">

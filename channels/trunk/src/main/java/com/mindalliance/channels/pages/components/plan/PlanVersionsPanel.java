@@ -15,6 +15,7 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -120,14 +121,13 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
                                     new Model<String>( "font-weight: bold" ) ) );
                 }
                 item.add( nameLabel );
-                WebMarkupContainer emailLink = new WebMarkupContainer( "plannerEmailLink" );
-                emailLink.add(
-                        new AttributeModifier(
-                                "href",
-                                true,
-                                new Model<String>( "mailto:" + vote.getEmailAddress() ) ) );
-                emailLink.setVisible( !isCurrentUser );
-                item.add( emailLink );
+                AjaxFallbackLink messageLink = new AjaxFallbackLink( "plannerMessageLink" ) {
+                    public void onClick( AjaxRequestTarget target ) {
+                        update(target, new Change( Change.Type.Communicated, vote.getUsername() ) );
+                    }
+                };
+                messageLink.setVisible( !isCurrentUser );
+                item.add( messageLink );
                 CheckBox voteCheckBox = new CheckBox( "plannerVote", new PropertyModel<Boolean>( vote, "inFavor" ) );
                 voteCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
@@ -180,7 +180,10 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
             // skip directly to plan page since plan has changed
             planPage.updateWith( target, change, updated );
         }
-        // else no need to update UI
+        if ( change.isCommunicated() ) {
+            super.updateWith( target, change, updated );
+        }
+
     }
 
     /**

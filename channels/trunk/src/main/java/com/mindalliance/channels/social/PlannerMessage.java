@@ -20,9 +20,10 @@ public class PlannerMessage extends PersistentObject {
     private String fromUsername;
     // broadcast if null
     private String toUsername;
-    private String text;
+    private String text = "";
     private ModelObjectRef aboutRef;
     private String aboutString = "";
+    private boolean emailed = false;
 
     public PlannerMessage( String text ) {
         super();
@@ -77,7 +78,7 @@ public class PlannerMessage extends PersistentObject {
     private String aboutDescription( ModelObject mo ) {
         String description = "";
         if ( mo != null ) {
-            description = "\"" + mo.getLabel() + "\"";
+            description = mo.getTypeName() + " \"" + mo.getLabel() + "\"";
             if ( mo instanceof SegmentObject ) {
                 description += " in segment \"" + ( (SegmentObject) mo ).getSegment().getLabel() + "\"";
             }
@@ -95,5 +96,13 @@ public class PlannerMessage extends PersistentObject {
 
     public void setAboutString( String aboutString ) {
         this.aboutString = aboutString;
+    }
+
+    public boolean isEmailed() {
+        return emailed;
+    }
+
+    public void setEmailed( boolean emailed ) {
+        this.emailed = emailed;
     }
 }
