@@ -12,7 +12,6 @@ import com.mindalliance.channels.social.PlannerMessagingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -60,12 +59,13 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private User newMessageRecipient = ALL;
     private ModelObject newMessageAbout;
     private String newMessageText = "";
-    private boolean emailIt = false;
     private WebMarkupContainer noMessageContainer;
     private AjaxFallbackLink showAFew;
     private AjaxFallbackLink showMore;
     private Updatable updatable;
     private WebMarkupContainer newMessageContainer;
+    private AjaxFallbackLink sendAndEmailLink;
+    private AjaxFallbackLink sendLink;
     private AjaxFallbackLink showHideBroadcastsLink;
     private Label showHideBroadcastsLabel;
     private AjaxFallbackLink sentReceivedLink;
@@ -199,9 +199,9 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         addRecipientChoice( newMessageContainer );
         addAbout( newMessageContainer );
         addMessageText( newMessageContainer );
-        addCancel( newMessageContainer );
+        addReset( newMessageContainer );
         addSend( newMessageContainer );
-        addEmailIt( newMessageContainer );
+        addSendAndEmail( newMessageContainer );
     }
 
     private void addRecipientChoice( WebMarkupContainer newMessageContainer ) {
@@ -281,14 +281,15 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 new PropertyModel<String>( this, "newMessageText" ) );
         textArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                // do nothing
+                target.addComponent( sendLink );
+                target.addComponent( sendAndEmailLink );
             }
         } );
         newMessageContainer.add( textArea );
     }
 
-    private void addCancel( final WebMarkupContainer newMessageContainer ) {
-        AjaxFallbackLink cancelLink = new AjaxFallbackLink( "cancel" ) {
+    private void addReset( final WebMarkupContainer newMessageContainer ) {
+        AjaxFallbackLink cancelLink = new AjaxFallbackLink( "reset" ) {
             public void onClick( AjaxRequestTarget target ) {
                 resetNewMessage( target );
             }
@@ -297,41 +298,57 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addSend( final WebMarkupContainer newMessageContainer ) {
-        AjaxFallbackLink sendLink = new AjaxFallbackLink( "send" ) {
+        sendLink = new AjaxFallbackLink( "send" ) {
             public void onClick( AjaxRequestTarget target ) {
-                sendNewMessage();
-                resetNewMessage( target );
-                addPlannerMessages();
-                adjustComponents( target );
-                update(
-                        target,
-                        Change.message( isEmailIt() ? "Message sent and emailed" : "Message sent" ) );
+                if ( !getNewMessageText().isEmpty() ) {
+                    sendNewMessage( false );
+                    resetNewMessage( target );
+                    addPlannerMessages();
+                    adjustComponents( target );
+                    update(
+                            target,
+                            Change.message( "Message sent" ) );
+                } else {
+                    update(
+                            target,
+                            Change.message( "Message is empty. Not sent" ) );
+                }
             }
         };
         newMessageContainer.add( sendLink );
     }
 
-    private void addEmailIt( final WebMarkupContainer newMessageContainer ) {
-        AjaxCheckBox emailItCheckBox = new AjaxCheckBox(
-                "email",
-                new PropertyModel<Boolean>( this, "emailIt" ) ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                // do nothing
+    private void addSendAndEmail( final WebMarkupContainer newMessageContainer ) {
+        sendAndEmailLink = new AjaxFallbackLink( "sendAndEmail" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                if ( !getNewMessageText().isEmpty() ) {
+                    sendNewMessage( true );
+                    resetNewMessage( target );
+                    addPlannerMessages();
+                    adjustComponents( target );
+                    update(
+                            target,
+                            Change.message( "Message sent and emailed" ) );
+                } else {
+                    update(
+                            target,
+                            Change.message( "Message is empty. Not sent" ) );
+                }
             }
         };
-        newMessageContainer.add( emailItCheckBox );
+        newMessageContainer.add( sendAndEmailLink );
     }
+
 
     private void resetNewMessage( AjaxRequestTarget target ) {
         newMessageText = "";
         newMessageAbout = null;
         newMessageRecipient = ALL;
-        emailIt = false;
         addNewMessage();
         target.addComponent( newMessageContainer );
     }
 
-    private void sendNewMessage() {
+    private void sendNewMessage( boolean emailIt ) {
         String text = getNewMessageText();
         if ( !text.isEmpty() ) {
             PlannerMessage plannerMessage = new PlannerMessage( text );
@@ -339,7 +356,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 plannerMessage.setToUsername( getNewMessageRecipient().getUsername() );
             if ( getNewMessageAbout() != null )
                 plannerMessage.setAbout( getNewMessageAbout() );
-            plannerMessagingService.sendMessage( plannerMessage, isEmailIt() );
+            plannerMessagingService.sendMessage( plannerMessage, emailIt );
         }
     }
 
@@ -441,11 +458,4 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         return showReceived;
     }
 
-    public boolean isEmailIt() {
-        return emailIt;
-    }
-
-    public void setEmailIt( boolean emailIt ) {
-        this.emailIt = emailIt;
-    }
 }

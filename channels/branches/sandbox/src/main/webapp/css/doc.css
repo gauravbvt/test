@@ -4,10 +4,10 @@ html {
 }
 
 body {
-	font-size: 100%;
+	font-size: 75%;
 	color: #222;
 	background: #F6F6F6;
-	font-family: Georgia, Times, "Times New Roman", serif;
+	font-family: Arial, Helvetica, sans-serif;
 	margin:0 0 50px 0;
 	padding:0;
 	border:1px solid #cccccc;
@@ -67,6 +67,7 @@ img {
 h1, h2, h3, h4, h5, h6 {
 	font-weight: normal;
 	color: #111;
+	font-family: Georgia, Times, "Times New Roman", serif;
 }
 
 h1 {
@@ -108,9 +109,13 @@ h6 {
 
 /* ----- Text Elements ----- */
 
-p			{ margin: 0 0 1em; line-height:1.5em; }
+p {
+	margin: 0 0 1em;
+	line-height:1.5em;
+	font-size:1.2em;
+}
 
-a:focus, 
+a:focus,
 a:hover		{ color: #000; }
 a			{ color: #009; text-decoration: underline; }
 
@@ -120,7 +125,7 @@ em,dfn		{ font-style: italic; }
 dfn			{ font-weight: bold; }
 sup, sub	{ line-height: 0; }
 
-abbr, 
+abbr,
 acronym 	{ border-bottom: 1px dotted #666; }
 address		{ margin: 0 0 1.5em; font-style: italic; }
 del			{ color:#666; }
@@ -131,7 +136,7 @@ pre,code,tt	{ font: 1em 'andale mono', 'lucida console', monospace; line-height:
 
 /* ----- Lists ----- */
 
-li ul, 
+li ul,
 li ol		{ margin:0 1.5em; }
 ul, ol		{ margin: 0 1.5em 1.5em 1.5em; }
 
