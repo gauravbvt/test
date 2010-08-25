@@ -476,11 +476,6 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                     null,
                     "userNormalizedFullName"
             ) );
-            columns.add( makeColumn(
-                    "Email",
-                    "userEmail",
-                    EMPTY
-            ) );
             columns.add( makeEntityReferenceColumn(
                     "Is agent",
                     "actor",

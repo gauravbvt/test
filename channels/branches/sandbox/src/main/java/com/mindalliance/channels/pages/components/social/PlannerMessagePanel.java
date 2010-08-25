@@ -29,7 +29,7 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
             Updatable updatable ) {
         super(
                 id,
-                getMessageUserName( showReceived, plannerMessageModel),
+                getMessageUserName( showReceived, plannerMessageModel ),
                 index,
                 plannerMessageModel,
                 updatable );
@@ -38,18 +38,18 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
         init();
     }
 
-    private static String getInvolvement(boolean showReceived) {
+    private static String getInvolvement( boolean showReceived ) {
         return showReceived ? "From " : "To ";
     }
 
     public String getUserFullName() {
-         return getInvolvement( showReceived ) + super.getUserFullName();
-     }
+        return getInvolvement( showReceived ) + super.getUserFullName();
+    }
 
 
     private static String getMessageUserName(
             boolean showReceived,
-            IModel<PlannerMessage> plannerMessageModel) {
+            IModel<PlannerMessage> plannerMessageModel ) {
         return showReceived
                 ? plannerMessageModel.getObject().getFromUsername()
                 : plannerMessageModel.getObject().getToUsername();
@@ -88,14 +88,14 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
         boolean linked = false;
         String subject = plannerMessage.getAboutString();
         ModelObject mo = plannerMessage.getAbout( getQueryService() );
-            if ( mo != null ) {
-                ModelObjectLink moLink = new ModelObjectLink(
-                        "modelObject",
-                        new Model<ModelObject>( mo ),
-                        new Model<String>( subject ) );
-                subjectContainer.add( moLink );
-                linked = true;
-            }
+        if ( mo != null ) {
+            ModelObjectLink moLink = new ModelObjectLink(
+                    "modelObject",
+                    new Model<ModelObject>( mo ),
+                    new Model<String>( subject ) );
+            subjectContainer.add( moLink );
+            linked = true;
+        }
         if ( !linked ) {
             subjectContainer.add( new Label( "modelObject", subject ) );
         }
@@ -104,7 +104,10 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
     }
 
     private void addTime( WebMarkupContainer socialItemContainer ) {
-        String timeLabelString = "(" + getTime() + ")";
+        String timeLabelString = "("
+                + ( getPlannerMessage().isEmailed() ? "emailed " : "" )
+                + getTime()
+                + ")";
         Label timeLabel = new Label( "time", new Model<String>( timeLabelString ) );
         socialItemContainer.add( timeLabel );
     }

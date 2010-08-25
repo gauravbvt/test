@@ -13,7 +13,7 @@ import java.util.Iterator;
  */
 public interface PlannerMessagingService {
 
-    void sendMessage( PlannerMessage message );
+    void sendMessage( PlannerMessage message, boolean emailIt );
 
     void deleteMessage( PlannerMessage message );
 
@@ -24,4 +24,7 @@ public interface PlannerMessagingService {
     Date getWhenLastChanged();
 
     Date getWhenLastReceived();
+
+    boolean email( PlannerMessage message );
+
 }

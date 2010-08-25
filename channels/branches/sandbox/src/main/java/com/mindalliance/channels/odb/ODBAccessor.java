@@ -1,5 +1,6 @@
 package com.mindalliance.channels.odb;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.neodatis.odb.ODB;
 import org.neodatis.odb.Objects;
 import org.neodatis.odb.core.query.IQuery;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 
-
 /**
  * Access layer to neodatis ODB.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -23,7 +23,6 @@ import java.util.Iterator;
  * Time: 1:18:31 PM
  */
 public class ODBAccessor {
-
     public enum Ordering {
         Ascendant,
         Descendant
@@ -195,5 +194,33 @@ public class ODBAccessor {
                 }
         }
     }
+
+    public <T extends PersistentObject> void update( Class<T> clazz, String id, String property, Object value ) {
+        synchronized ( odbTxFactory ) {
+            ODB odb = null;
+            try {
+                odb = odbTxFactory.openDatabase();
+                IQuery query = new CriteriaQuery(
+                        clazz,
+                        Where.equal( "id", id ) );
+                Objects<T> objects = odb.getObjects( query );
+                Iterator<T> answers = objects.iterator();
+                if ( answers.hasNext() ) {
+                    T object = answers.next();
+                    PropertyUtils.setProperty( object, property, value );
+                    odb.store( object );
+                }
+            } catch( Exception e ) {
+                LOG.error( "Update failed", e );
+                throw new RuntimeException( e );
+            }
+            finally {
+                if ( odb != null && !odb.isClosed() )
+                    odb.close();
+            }
+        }
+    }
+
+    
 
 }

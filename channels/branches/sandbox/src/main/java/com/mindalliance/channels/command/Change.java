@@ -162,6 +162,11 @@ public class Change implements Serializable {
         this( type, subject, null );
     }
 
+    public Change( Type type, String property ) {
+        this.type = type;
+        this.property = property;
+    }
+
     public Change( Type type, Identifiable subject, String property ) {
         this.type = type;
         identifiableRef = new ModelObjectRef( subject );

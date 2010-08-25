@@ -1,12 +1,21 @@
 package com.mindalliance.channels.social;
 
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.odb.ODBAccessor;
 import com.mindalliance.channels.odb.ODBTransactionFactory;
+import org.apache.commons.lang.StringUtils;
 import org.neodatis.odb.core.query.criteria.Where;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Default implementation of the planner messaging service.
@@ -18,8 +27,18 @@ import java.util.Iterator;
  */
 public class DefaultPlannerMessagingService implements PlannerMessagingService {
 
+    /**
+     * The logger.
+     */
+    private final Logger LOG = LoggerFactory.getLogger( DefaultPlannerMessagingService.class );
+    /**
+     * Mail sender.
+     */
+    private MailSender mailSender;
+    private UserService userService;
     private ODBTransactionFactory databaseFactory;
     private Date whenLastChanged;
+    private static final int SUMMARY_MAX = 25;
 
     public DefaultPlannerMessagingService() {
         whenLastChanged = new Date();
@@ -40,13 +59,67 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         whenLastChanged = new Date();
     }
 
-    public void sendMessage( PlannerMessage message ) {
+    public void sendMessage( PlannerMessage message, boolean emailIt ) {
         addSentMessage( message );
+        if ( emailIt ) {
+            email( message );
+        }
+    }
+
+    public boolean email( PlannerMessage message ) {
+        List<User> toPlanners = new ArrayList<User>();
+        String username = message.getToUsername();
+        String text = "";
+        User currentUser = User.current();
+        String summary = StringUtils.abbreviate( message.getText(), SUMMARY_MAX );
+        if ( username == null ) {
+            toPlanners = userService.getPlanners( getPlan().getUri() );
+        } else {
+            toPlanners.add( userService.getUserNamed( username ) );
+        }
+        try {
+            for ( User toPlanner : toPlanners ) {
+                SimpleMailMessage email = new SimpleMailMessage();
+                email.setTo( toPlanner.getEmail() );
+                email.setSubject( "["
+                        + getPlan().getName()
+                        + "] "
+                        + summary );
+                email.setFrom( currentUser.getEmail() );
+                email.setReplyTo( currentUser.getEmail() );
+                String aboutString = message.getAboutString();
+                if ( !aboutString.isEmpty() ) {
+                    text = "About " + aboutString + "\n\n";
+                }
+                text += message.getText();
+                text += "\n\n -- Message first sent in Channels " + message.getLongTimeElapsedString() + " --";
+                email.setText( text );
+                mailSender.send( email );
+                LOG.info( currentUser.getUsername()
+                        + " emailed message to "
+                        + toPlanner.getUsername() );
+            }
+            getOdb().update( message.getClass(), message.getId(), "emailed", true );
+            return true;
+        } catch ( Exception e ) {
+            LOG.warn( currentUser.getUsername()
+                    + " failed to email message to "
+                    + ( username == null ? "all planners" : username ), e );
+            return false;
+        }
+    }
+
+    private Plan getPlan() {
+        return User.current().getPlan();
+    }
+
+    protected User getUser( String username ) {
+        return userService.getUserNamed( username );
     }
 
     public void deleteMessage( PlannerMessage message ) {
-            getOdb().delete(  PlannerMessage.class, message.getId() );
-            whenLastChanged = new Date();
+        getOdb().delete( PlannerMessage.class, message.getId() );
+        whenLastChanged = new Date();
     }
 
     public Iterator<PlannerMessage> getReceivedMessages() {
@@ -103,4 +176,19 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         return User.current().getUsername();
     }
 
+    public MailSender getMailSender() {
+        return mailSender;
+    }
+
+    public void setMailSender( MailSender mailSender ) {
+        this.mailSender = mailSender;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
+    }
 }
