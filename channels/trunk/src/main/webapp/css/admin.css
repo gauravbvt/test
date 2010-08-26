@@ -1,0 +1,213 @@
+body {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+div#top {
+	width: 1000px;
+	background: #f6f6f6;
+	margin: 0px auto;
+	text-align: left;
+	padding: 0px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	outline: none;
+	text-decoration: none;
+	font-weight: bold;
+	text-decoration: none;
+	color: #000000;
+}
+
+div.admin-header {
+	width: 1000px;
+	float: left;
+	background: url('../images/header-bg-repeat-report.png') #c3d9ff repeat-y; 
+	border: 1px solid #cccccc;
+}
+
+div.headerlogo {
+	width: 530px;
+	float: left;
+	background: url('../images/header-bg-report.png') #c3d9ff no-repeat;
+}
+
+div.headertext { padding-left: 60px; }
+
+div.headertext h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 24px;
+	padding: 13px 0 0 0;
+	display: block;
+}
+
+div.headertext h3 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	font-size: 14px;
+	padding: 0 0 10px 0;
+	display: block;
+}
+
+div.headermenu {
+	width: 440px;
+	float: left;
+	background: #c3d9ff;
+	font-size: 10px;
+	padding: 20px 20px 10px 10px;
+	text-align: right;
+}
+
+div.headermenu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+div.headermenu ul li {
+	padding: 8px 0 0 0;
+	display: block;
+}
+
+div#contents {
+	float: left;
+	padding: 10px;
+	width: 980px;
+	background: #f6f6f6;
+	border-left: 1px solid #cccccc;
+	border-right: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	margin-bottom: 50px;
+}
+
+div#contents table {
+	width:100%;
+	float:left;
+	padding:15px 0 0 0;
+}
+
+div#contents th {
+	padding:5px;
+	background:#dcddde;
+	text-align:center;
+}
+
+div#contents td {
+	padding:10px;
+	background:#e8e8e8;
+	text-align:center;
+}
+
+div#contents td.submit {
+	text-align:right;
+}
+
+div#contents td.issues {
+	padding:10px;
+	background:#f6f6f6;
+}
+
+div#contents td input {
+	padding:2px;
+}
+
+div#contents label.planselect {
+	float:left;
+	padding:5px 5px 10px 5px;
+}
+
+ul.toolbar {
+	background:#e8e8e8;
+	border:1px solid #CCCCCC;
+	float:left;
+	font-size:12px;
+	list-style:none;
+	margin:0;
+	padding:5px;
+	width:968px;
+}
+
+ul.toolbar li {
+	float:left;
+	border-right:1px solid #999999;
+	color:#333333;
+	margin:0 7px 0 0;
+	padding:0 7px 0 0;
+	color:#333333;
+	font-weight:bold;
+}
+
+ul.toolbar li.last {
+	border:none;
+	padding:0;
+	margin:0;
+}
+
+ul.toolbar li a {
+	color:#333333;
+}
+
+ul.toolbar li a:hover {
+	color:#666666;
+}
+
+ul.toolbar li input[type=button],
+ul.toolbar li input[type=submit] {
+	background:#e8e8e8;
+	border:none;
+	color:#333333;
+	margin:0;
+	padding:0;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	font-weight:bold;
+	cursor:pointer;
+}
+
+ul.toolbar li input[type=button]:hover,
+ul.toolbar li input[type=submit]:hover {
+	color:#666666;
+}
+
+ul.toolbar li input[type=text] {
+	font-size:11px;
+	color:#000;
+}
+
+input.supportcommunity { width:60px; }
+
+input.newplanuri { width:80px; }
+
+input.newplanclient { width:115px; }
+
+input.submit {
+	background:#d1d3d4;
+	border:1px solid #999999;
+	color:#333333;
+	font-size:14px;
+}
+
+input.submit:hover {
+	background:#DCDDDE;
+	border:1px solid #999999;
+	color:#333333;
+	font-size:14px;
+}
+
+p.notice {
+	font-size: 11px;
+	color: #999999;
+	font-style: italic;
+	display: block;
+	float: right;
+	padding-bottom: 10px;
+}

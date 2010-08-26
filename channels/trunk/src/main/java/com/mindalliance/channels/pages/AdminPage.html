@@ -7,36 +7,45 @@
         lang="en">
 <head>
     <title>Channels - Administration</title>
-    <link rel="stylesheet" href="css/playbook.css" type="text/css">
-    <link rel="stylesheet" href="css/iPhone.css" type="text/css" media="only screen and (max-device-width: 480px)">
+    <link rel="stylesheet" href="css/admin.css" type="text/css">
 </head>
 <body>
+
 <div id="top">
     <div id="header">
-        <div>
-            <div id="nav">
-                <ul>
-                    <li><a href="/logout">Logout <span wicket:id="loggedUser">user</span></a></li>
-                </ul>
-                <hr>
-            </div>
-            <h1>Channels Administration</h1>
+        <div class="admin-header">
+			<div class="headerlogo">
+				<div class="headertext">
+		            <h1>Channels</h1>
+					<h3>Administration</h3>
+				</div>
+			</div>
+			<div class="headermenu">
+	            <div id="nav">
+					<ul>
+						<li>
+							<a href="/logout">Logout <span wicket:id="loggedUser">user</span></a>
+						</li>
+					</ul>
+				</div>
+			</div>
         </div>
     </div>
-
     <div id="contents">
+        <div id="plan">
         <form action="" wicket:id="users">
-            <label>Plan:
+            <label class="planselect">Plan:
                 <select wicket:id="plan-sel" name="plan">
                     <option>Some plan</option>
-                </select></label>
-            <ul>
+                </select>
+			</label>
+            <ul class="toolbar">
                 <li><a wicket:id="report">Info Sharing Procedures</a></li>
                 <li><a wicket:id="plan">Modify plan</a></li>
-                <li>Support Community: <input type="text" wicket:id="supportCommunity"/></li>
+                <li>Support Community: <input type="text" class="supportcommunity" wicket:id="supportCommunity"/></li>
                 <li><input type="button" wicket:id="productize" value="Productize plan"/></li>
                 <li><input type="submit" wicket:id="deletePlan" value="Delete plan"/></li>
-                <li>New plan uri: <input type="text" wicket:id="newPlanUri" value=""/> for client: <input type="text" wicket:id="newPlanClient"/></li>
+                <li class="last">New Plan URI: <input type="text" class="newplanuri" wicket:id="newPlanUri" value=""/> for client: <input type="text" class="newplanclient" wicket:id="newPlanClient"/></li>
 
             </ul>
 
@@ -79,15 +88,20 @@
                             </span>
                     </tr>
                     <tr>
-                        <td align="right">New User:</td>
-                        <td align="left"><input type="text" wicket:id="new"></td>
-                        <td colspan="10" align="right"><input type="submit" value="Submit" name="Submit"/></td>
+                        <td>New User:</td>
+                        <td><input type="text" wicket:id="new"></td>
+                        <td colspan="10" class="submit"><input type="submit" value="Submit" class="submit" name="Submit"/></td>
                     </tr>
-                    <tr><td colspan="12"><div class="issues" wicket:id="feedback">(error messages)</div></td></tr>
+                    <tr>
+						<td colspan="12" class="issues">
+							<div class="issues" wicket:id="feedback">(error messages)</div>
+						</td>
+					</tr>
                 </tbody>
             </table>
             <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
         </form>
+		</div>
     </div>
     <!-- Users -->
 
