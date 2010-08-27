@@ -98,7 +98,7 @@ div#contents {
 div#contents table {
 	width:100%;
 	float:left;
-	padding:15px 0 0 0;
+	padding:12px 0 0 0;
 	width:980px;
 }
 
@@ -134,7 +134,7 @@ ul.toolbar {
 	float:left;
 	font-size:12px;
 	list-style:none;
-	margin:0 0 0 2px;
+	margin:2px 0 0 2px;
 	padding:0;
 	width:974px;
 }
@@ -201,16 +201,16 @@ ul.toolbar li input[type=text] {
 
 /* ----- Toolbar - New ----- */
 
-div.new {
+ul.toolbar.new {
 	float:left;
-	margin:10px 0 0 0;
+	margin:12px 0 0 2px;
 }
 
-div.new ul.toolbar.new li {
+ul.toolbar.new li {
 	padding:0 10px;
 }
 
-div.new ul.toolbar.new li input { width:110px; }
+ul.toolbar.new li input { width:110px; }
 
 
 /* ----- Submit ----- */
