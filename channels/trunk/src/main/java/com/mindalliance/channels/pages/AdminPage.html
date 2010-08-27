@@ -34,21 +34,26 @@
     <div id="contents">
         <div id="plan">
         <form action="" wicket:id="users">
-            <label class="planselect">Plan:
-                <select wicket:id="plan-sel" name="plan">
-                    <option>Some plan</option>
-                </select>
-			</label>
-            <ul class="toolbar">
-                <li><a wicket:id="report">Info Sharing Procedures</a></li>
-                <li><a wicket:id="plan">Modify plan</a></li>
-                <li>Support Community: <input type="text" class="supportcommunity" wicket:id="supportCommunity"/></li>
-                <li><input type="button" wicket:id="productize" value="Productize plan"/></li>
-                <li><input type="submit" wicket:id="deletePlan" value="Delete plan"/></li>
-                <li class="last">New Plan URI: <input type="text" class="newplanuri" wicket:id="newPlanUri" value=""/> for client: <input type="text" class="newplanclient" wicket:id="newPlanClient"/></li>
-
+			<ul class="toolbar">
+	            <li>	
+					<label class="planselect">Plan:
+	                	<select wicket:id="plan-sel" name="plan">
+	                	    <option>Some plan</option>
+	                	</select>
+					</label>
+				</li>
+				<li><a wicket:id="report">Info Sharing Procedures</a></li>
+				<li><a wicket:id="plan">Modify plan</a></li>
+				<li><input type="button" wicket:id="productize" value="Productize plan"/></li>
+				<li><input type="submit" wicket:id="deletePlan" value="Delete plan"/></li>
             </ul>
-
+			<div class="new">
+				<ul class="toolbar new">
+					<li>Support Community: <input type="text" class="supportcommunity" wicket:id="supportCommunity"/></li>
+					<li>New Plan URI: <input type="text" class="newplanuri" wicket:id="newPlanUri" value=""/> for client: <input type="text" class="newplanclient" wicket:id="newPlanClient"/></li>
+					<li>New User: <input type="text" class="newuser" wicket:id="new"></li>
+				</ul>
+			</div>
             <table>
                 <thead>
                     <tr>
@@ -87,18 +92,12 @@
                                 <td align="center"><input type="checkbox" wicket:id="delete"/></td>
                             </span>
                     </tr>
-                    <tr>
-                        <td>New User:</td>
-                        <td><input type="text" wicket:id="new"></td>
-                        <td colspan="10" class="submit"><input type="submit" value="Submit" class="submit" name="Submit"/></td>
-                    </tr>
-                    <tr>
-						<td colspan="12" class="issues">
-							<div class="issues" wicket:id="feedback">(error messages)</div>
-						</td>
-					</tr>
                 </tbody>
             </table>
+			<div class="submit">
+				<input type="submit" value="Submit" class="submit" name="Submit"/>
+			</div>
+			<div class="issues" wicket:id="feedback">(error messages)</div>
             <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
         </form>
 		</div>
