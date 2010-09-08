@@ -41,7 +41,7 @@ public class TestAddAndRemoveNeedAndCapability extends AbstractChannelsTest {
     }
 
     @Test
-    public void testAddRemoveNeed() throws Exception {
+    public void testAddRemoveNeed() {
         Commander commander = getCommander();
         Change change = commander.doCommand( new AddNeed( part ) );
         Flow need = (Flow) change.getSubject( commander.getQueryService() );
@@ -57,7 +57,7 @@ public class TestAddAndRemoveNeedAndCapability extends AbstractChannelsTest {
     }
 
     @Test
-    public void testAddRemoveCapability() throws Exception {
+    public void testAddRemoveCapability() {
         Commander commander = getCommander();
         Change change = commander.doCommand( new AddCapability( part ) );
         assertTrue( change.isAdded() );

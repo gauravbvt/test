@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.model.Identifiable;
@@ -11,7 +10,6 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Releaseable;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.model.IModel;
 
 import java.util.Set;
@@ -46,11 +44,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      */
     protected Change doCommand( Command command ) {
         Commander commander = getCommander();
-        try {
-            return commander.doCommand( command );
-        } catch ( CommandException e ) {
-            throw new WicketRuntimeException( e );
-        }
+        return commander.doCommand( command );
     }
 
     /**
@@ -114,9 +108,9 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     @SuppressWarnings( "unchecked" )
     protected <T extends ModelEntity> T doSafeFindOrCreate( Class<T> clazz, String name ) {
         return (T) doCommand( new CreateEntityIfNew(
-                    clazz,
-                    name,
-                    ModelEntity.Kind.Actual ) ).getSubject( getQueryService() );
+                clazz,
+                name,
+                ModelEntity.Kind.Actual ) ).getSubject( getQueryService() );
     }
 
     /**

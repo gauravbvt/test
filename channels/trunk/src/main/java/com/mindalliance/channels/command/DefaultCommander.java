@@ -328,69 +328,85 @@ public class DefaultCommander implements Commander {
     /**
      * {@inheritDoc}
      */
-    public synchronized Change doCommand( Command command ) throws CommandException {
-        if ( !getPlan().isDevelopment() )
-            throw new CommandException(
-                    "This version is no longer in development. You need to refresh. " );
-        if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
-        LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
-        Change change = execute( command );
-        if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
-        history.recordDone( command );
-        afterExecution( command, change );
-        if ( !isReplaying() && command.isTop() && !change.isNone() ) {
-            for ( CommandListener commandListener : commandListeners ) {
-                commandListener.commandDone( command, change );
+    public synchronized Change doCommand( Command command ) {
+        try {
+            if ( !getPlan().isDevelopment() )
+                throw new CommandException(
+                        "This version is no longer in development. You need to refresh. " );
+            if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
+            LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
+            Change change = execute( command );
+            if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
+            if ( !change.isNone() && !change.isFailed() ) {
+                history.recordDone( command );
+                afterExecution( command, change );
+                if ( !isReplaying() && command.isTop() ) {
+                    for ( CommandListener commandListener : commandListeners ) {
+                        commandListener.commandDone( command, change );
+                    }
+                }
             }
+            return change;
+        } catch ( CommandException e ) {
+            LOG.warn( "Command failed " + command, e );
+            return Change.failed( e.getMessage() );
         }
-        return change;
     }
 
     /**
      * {@inheritDoc}
      */
-    public synchronized Change undo() throws CommandException {
+    public synchronized Change undo() {
         Memento memento = history.getUndo();
-        if ( memento == null )
-            throw new CommandException( "Nothing can be undone right now." );
-
-        Command undoCommand = memento.getCommand().getUndoCommand( this );
-        if ( undoCommand instanceof MultiCommand )
-            LOG.info( "*** START multicommand ***" );
-        LOG.info( "Undoing: " + undoCommand.toString() );
-        Change change = execute( undoCommand );
-        if ( undoCommand instanceof MultiCommand )
-            LOG.info( "*** END multicommand ***" );
-
-        change.setUndoing( true );
-        history.recordUndone( memento, undoCommand );
-        afterExecution( undoCommand, change );
-        for ( CommandListener commandListener : commandListeners ) {
-            commandListener.commandUndone( undoCommand );
+        if ( memento == null ) {
+            return Change.failed( "Nothing can be undone right now." );
         }
-        return change;
+        try {
+            Command undoCommand = memento.getCommand().getUndoCommand( this );
+            if ( undoCommand instanceof MultiCommand ) {
+                LOG.info( "*** START multicommand ***" );
+            }
+            LOG.info( "Undoing: " + undoCommand.toString() );
+            Change change = execute( undoCommand );
+            if ( undoCommand instanceof MultiCommand )
+                LOG.info( "*** END multicommand ***" );
+
+            change.setUndoing( true );
+            history.recordUndone( memento, undoCommand );
+            afterExecution( undoCommand, change );
+            for ( CommandListener commandListener : commandListeners ) {
+                commandListener.commandUndone( undoCommand );
+            }
+            return change;
+        } catch ( CommandException e ) {
+            return Change.failed( "Could not undo" );
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    public synchronized Change redo() throws CommandException {
+    public synchronized Change redo() {
         // Get memento of undoing command
         Memento memento = history.getRedo();
-        if ( memento == null )
-            throw new CommandException( "Nothing can be redone right now." );
-
-        // undo the undoing
-        Command redoCommand = memento.getCommand().getUndoCommand( this );
-        LOG.info( "Redoing: {}", redoCommand.toString() );
-        Change change = execute( redoCommand );
-        change.setUndoing( true );
-        history.recordRedone( memento, redoCommand );
-        afterExecution( redoCommand, change );
-        for ( CommandListener commandListener : commandListeners ) {
-            commandListener.commandRedone( redoCommand );
+        if ( memento == null ) {
+            return Change.failed( "Nothing can be redone right now." );
         }
-        return change;
+        try {
+            // undo the undoing
+            Command redoCommand = memento.getCommand().getUndoCommand( this );
+            LOG.info( "Redoing: {}", redoCommand.toString() );
+            Change change = execute( redoCommand );
+            change.setUndoing( true );
+            history.recordRedone( memento, redoCommand );
+            afterExecution( redoCommand, change );
+            for ( CommandListener commandListener : commandListeners ) {
+                commandListener.commandRedone( redoCommand );
+            }
+            return change;
+        } catch ( CommandException e ) {
+            return Change.failed( "Failed to redo" );
+        }
     }
 
     private void afterExecution( Command command, Change change ) {
@@ -588,8 +604,12 @@ public class DefaultCommander implements Commander {
     public void replay( Journal journal ) throws CommandException {
         setReplaying( true );
         if ( !journal.isEmpty() )
-            for ( JournalCommand command : journal.getCommands() )
-                doCommand( (Command) command );
+            for ( JournalCommand command : journal.getCommands() ) {
+                Change change = doCommand( (Command) command );
+                if ( change.isFailed() ) {
+                    throw new CommandException( "Command failed" );
+                }
+            }
         journal.reset();
         reset();
     }
@@ -713,7 +733,7 @@ public class DefaultCommander implements Commander {
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
         part.setAttachments( new ArrayList<Attachment>( (List<Attachment>) state.get( "attachments" ) ) );
-        List<Map<String, Object>> goalStates =  (List<Map<String, Object>>)state.get( "goals" );
+        List<Map<String, Object>> goalStates = (List<Map<String, Object>>) state.get( "goals" );
         for ( Map<String, Object> goalMap : goalStates ) {
             Goal goal = Goal.fromMap( goalMap, getQueryService() );
             part.addGoal( goal );

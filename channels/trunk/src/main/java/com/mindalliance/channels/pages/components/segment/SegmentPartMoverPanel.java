@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.commands.MoveParts;
 import com.mindalliance.channels.model.Goal;
@@ -201,15 +200,10 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
 
     private Change moveSelectedParts() {
         Change change;
-        try {
-            change = getCommander().doCommand( new MoveParts(
-                    selectedParts,
-                    getSegment(),
-                    destinationSegment ) );
-        } catch ( CommandException e ) {
-            change = new Change( Change.Type.None );
-            change.setScript( "alert(\"Failed to move tasks\")" );
-        }
+        change = getCommander().doCommand( new MoveParts(
+                selectedParts,
+                getSegment(),
+                destinationSegment ) );
         return change;
     }
 

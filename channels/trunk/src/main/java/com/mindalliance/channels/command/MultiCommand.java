@@ -72,9 +72,9 @@ public class MultiCommand extends AbstractCommand {
         /**
          * Process result from command if applicable.
          *
-         * @param command a command
-         * @param change  a change
-         * @param queryService  a query service
+         * @param command      a command
+         * @param change       a change
+         * @param queryService a query service
          */
         private void process( Command command, Change change, QueryService queryService ) {
             if ( command == sourceCommand ) {
@@ -150,18 +150,12 @@ public class MultiCommand extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         for ( Command command : commands ) {
-            try {
-                LOG.info( "--- sub-command --" );
-                Change change = commander.doCommand( command ); // TODO -- command journaled here
-                for ( Link link : links ) {
-                    link.process( command, change, queryService ); // without benefit of link processing
-                }
-                executed.add( command );
+            LOG.info( "--- sub-command --" );
+            Change change = commander.doCommand( command );
+            for ( Link link : links ) {
+                link.process( command, change, queryService ); // without benefit of link processing
             }
-            catch ( CommandException e ) {
-                LOG.warn( " Execution failed", e );
-                // ignore
-            }
+            executed.add( command );
         }
         LOG.info( "END multicommand " + getName() );
         return new Change();
