@@ -49,7 +49,7 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
                                     }
                                 } );
                         if ( !hasValidChannel ) {
-                            Issue issue = makeIssue( Issue.VALIDITY, flow );
+                            Issue issue = makeIssue( Issue.COMPLETENESS, flow );
                             issue.setDescription( "There is no valid channel for contacting "
                                     + contacted.getName()
                                     + " via "
@@ -64,7 +64,7 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
                                     + flowChannel.getMedium()
                                     + " from the flow"
                             );
-                            issue.setSeverity( getQueryService().computePartPriority( (Part) flow.getTarget() ) );
+                            issue.setSeverity( getTaskFailureSeverity( (Part) flow.getTarget() ) );
                             issues.add( issue );
                         }
                     }

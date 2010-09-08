@@ -254,10 +254,7 @@ public class Part extends Node implements GeoLocatable {
      */
     public boolean isSystem() {
         Actor a = getActor();
-        if ( a != null && a.isSystem() ) return true;
-        Role r = getRole();
-        return r != null
-                && r.isSystem();
+        return a != null && a.isSystem();
     }
 
     /**

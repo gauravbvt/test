@@ -3,7 +3,9 @@ package com.mindalliance.channels.command;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.command.commands.HelloCommand;
 import com.mindalliance.channels.model.Segment;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,18 +32,17 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     @Test
     public void testExecuteSimpleCommand() {
         AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
-        try {
-            assertTrue( commander.canDo( command ) );
-            assertFalse( commander.canUndo() );
+        assertTrue( commander.canDo( command ) );
+        assertFalse( commander.canUndo() );
 
-            Change change = commander.doCommand( command );
-            assertTrue( change.isUnknown() );
-            assertTrue( commander.canUndo() );
-            assertTrue( commander.undo().isUnknown() );
-            assertTrue( commander.canRedo() );
-            assertTrue( commander.redo().isUnknown() );
-            assertFalse( commander.canRedo() );
-        } catch ( CommandException e ) {
+        Change change = commander.doCommand( command );
+        assertTrue( change.isUnknown() );
+        assertTrue( commander.canUndo() );
+        assertTrue( commander.undo().isUnknown() );
+        assertTrue( commander.canRedo() );
+        assertTrue( commander.redo().isUnknown() );
+        assertFalse( commander.canRedo() );
+        if ( change.isFailed() ) {
             fail();
         }
     }
@@ -55,18 +56,13 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         lock.setUserName( "bob" );
         command.needLockOn( segment );
         assertFalse( commander.canDo( command ) );
-        try {
-            commander.doCommand( command );
-        }
-        catch ( CommandException e ) {
+        Change change = commander.doCommand( command );
+        if ( change.isFailed() ) {
             lockManager.releaseAllLocks( "bob" );
             assertTrue( commander.canDo( command ) );
             commander.doCommand( command );
             lockManager.grabLockOn( segment.getId() );
-            try {
-                commander.doCommand( command );
-            }
-            catch ( CommandException exc ) {
+            if ( commander.doCommand( command ).isFailed() ) {
                 fail();
             }
         }
@@ -95,12 +91,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         Thread.sleep( 10 );
         commander.doCommand( otherUserCommand );
         assertFalse( commander.canRedo() );
-        try {
-            commander.redo();
+        if ( !commander.redo().isFailed() )
             fail();
-        }
-        catch ( CommandException e ) {
-            // ok
-        }
     }
 }

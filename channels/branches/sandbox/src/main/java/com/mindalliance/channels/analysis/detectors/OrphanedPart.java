@@ -40,7 +40,7 @@ public class OrphanedPart extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Task without flows";
+        return "Task neither consumes nor produces information";
     }
 
     /**
@@ -51,8 +51,8 @@ public class OrphanedPart extends AbstractIssueDetector {
         Part part = (Part) modelObject;
         if ( !part.receives().hasNext() && !part.sends().hasNext() ) {
             DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
-            issue.setDescription( "Does not produce or need information." );
-            issue.setRemediation( "Add sent information\nor add received information." );
+            issue.setDescription( "Does not produce nor need information." );
+            issue.setRemediation( "Add information produced\nor add received consumed." );
             issue.setSeverity( getQueryService().computePartPriority( part ) );
             issues.add( issue );
         }

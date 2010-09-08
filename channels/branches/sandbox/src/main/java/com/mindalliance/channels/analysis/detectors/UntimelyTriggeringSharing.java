@@ -37,30 +37,32 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
-        Flow commitment = (Flow) modelObject;
-        Part target = (Part) commitment.getTarget();
-        List<Flow> triggeredNeeds = getMatchingTriggeredNeeds( target, commitment );
-        if ( !triggeredNeeds.isEmpty() ) {
-            Delay cumulativeDelay = getCumulativeDelay( commitment );
-            for ( Flow triggeredNeed : triggeredNeeds ) {
-                if ( cumulativeDelay.compareTo( triggeredNeed.getMaxDelay() ) > 0 ) {
-                    DetectedIssue issue = makeIssue( Issue.ROBUSTNESS, commitment );
-                    issue.setDescription(
-                            "The needed information \""
-                                    + triggeredNeed.getName()
-                                    + "\" is communicated at least "
-                                    + cumulativeDelay
-                                    + " after it first becomes known, which exceeds the required "
-                                    + triggeredNeed.getMaxDelay()
-                    );
-                    issue.setRemediation(
-                            "Ease the timeliness constraint for \""
-                                    + triggeredNeed.getReceiveTitle()
-                                    + "\",\nor obtain more timely sharing commitments for "
-                                    + "\"" + triggeredNeed.getName() + "\""
-                    );
-                    issue.setSeverity( getQueryService().computePartPriority( target ) );
-                    issues.add( issue );
+        Flow flow = (Flow) modelObject;
+        if ( flow.isSharing() && flow.isTriggeringToTarget() ) {
+            Part target = (Part) flow.getTarget();
+            List<Flow> triggeredNeeds = getMatchingTriggeredNeeds( target, flow );
+            if ( !triggeredNeeds.isEmpty() ) {
+                Delay cumulativeDelay = getCumulativeDelay( flow );
+                for ( Flow triggeredNeed : triggeredNeeds ) {
+                    if ( cumulativeDelay.compareTo( triggeredNeed.getMaxDelay() ) > 0 ) {
+                        DetectedIssue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                        issue.setDescription(
+                                "The needed information \""
+                                        + triggeredNeed.getName()
+                                        + "\" is communicated at least "
+                                        + cumulativeDelay
+                                        + " after it first becomes known, which exceeds the required "
+                                        + triggeredNeed.getMaxDelay()
+                        );
+                        issue.setRemediation(
+                                "Ease the timeliness constraint for \""
+                                        + triggeredNeed.getReceiveTitle()
+                                        + "\",\nor obtain more timely sharing commitments for "
+                                        + "\"" + triggeredNeed.getName() + "\""
+                        );
+                        issue.setSeverity( getQueryService().computePartPriority( target ) );
+                        issues.add( issue );
+                    }
                 }
             }
         }
@@ -80,7 +82,7 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
                 IteratorUtils.toList( ( (Part) commitment.getSource() ).receivesNamed( commitment.getName() ) ),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        return ((Flow)object).isSharing();
+                        return ( (Flow) object ).isSharing();
                     }
                 }
                 //PredicateUtils.invokerPredicate( "isSharingCommitment" )
@@ -121,9 +123,7 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject instanceof Flow
-                && ( (Flow) modelObject ).isSharing()
-                && ( (Flow) modelObject ).isTriggeringToTarget();
+        return modelObject instanceof Flow;
     }
 
     /**
@@ -137,7 +137,7 @@ public class UntimelyTriggeringSharing extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Untimely task-triggering notification";
+        return "Task-triggering notification is not timely";
     }
 
     /**

@@ -29,7 +29,7 @@ public class RedundantPlace extends AbstractIssueDetector {
         Place place = (Place) modelObject;
         List<Place> equivalentPlaces = findPlacesEquivalentTo( place );
         if ( !equivalentPlaces.isEmpty() ) {
-            Issue issue = makeIssue( Issue.VALIDITY, place );
+            Issue issue = makeIssue( Issue.COMPLETENESS, place );
             issue.setSeverity( Level.Low );
             StringBuilder sb = new StringBuilder();
             Iterator<Place> iter = equivalentPlaces.iterator();

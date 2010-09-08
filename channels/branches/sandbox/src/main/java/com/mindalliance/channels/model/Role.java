@@ -33,14 +33,6 @@ public class Role extends ModelEntity {
     }
 
     /**
-     * Whether the role is to be played by a system actor.
-     * @return a boolean
-     */
-    public boolean isSystem() {
-        return getName().toLowerCase().contains( "system" );
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override

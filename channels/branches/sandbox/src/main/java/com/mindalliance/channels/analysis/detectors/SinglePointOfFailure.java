@@ -71,7 +71,10 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
         for ( Actor actor : spofActors ) {
             DetectedIssue issue = makeIssue( DetectedIssue.ROBUSTNESS, plan );
             issue.setDescription( actor.getName() + " appears to be a single point of failure." );
-            issue.setRemediation( "Delegate responsibilities of this agent\nor share them with other agents." );
+            issue.setRemediation( " Generalize task specifications so that "
+                    + actor.getName()
+                    + " is not the only agent assigned to a critical task" +
+                    "\nor add participating agents to the scope with the same role and organization" );
             issue.setSeverity( Level.Medium );
             issues.add( issue );
         }

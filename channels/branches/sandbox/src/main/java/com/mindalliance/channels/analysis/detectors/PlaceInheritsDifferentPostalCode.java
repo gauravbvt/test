@@ -62,7 +62,7 @@ public class PlaceInheritsDifferentPostalCode extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Postal code different from containing place.";
+        return "Postal code different from containing place";
     }
 
 }

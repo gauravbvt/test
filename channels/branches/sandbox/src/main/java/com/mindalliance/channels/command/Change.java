@@ -29,6 +29,10 @@ public class Change implements Serializable {
          */
         None,
         /**
+         * Failed.
+         */
+        Failed,
+        /**
          * An update.
          */
         Updated,
@@ -151,6 +155,18 @@ public class Change implements Serializable {
     public static Change message( String message ) {
         Change change = new Change( Change.Type.None );
         change.setMessage( message );
+        return change;
+    }
+
+    /**
+     * Creates a failed change with alert javascript.
+     *
+     * @param alert a string
+     * @return a change
+     */
+    public static Change failed( String alert ) {
+        Change change = new Change( Change.Type.Failed );
+        change.setScript( "alert('Failed: " + alert + "');" );
         return change;
     }
 
@@ -294,6 +310,15 @@ public class Change implements Serializable {
      */
     public boolean isUnknown() {
         return type == Type.Unknown;
+    }
+
+    /**
+     * Whether type is Failed.
+     *
+     * @return a boolean
+     */
+    public boolean isFailed() {
+        return type == Type.Failed;
     }
 
     /**

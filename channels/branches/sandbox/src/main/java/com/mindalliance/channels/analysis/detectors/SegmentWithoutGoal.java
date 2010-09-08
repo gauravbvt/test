@@ -33,8 +33,8 @@ public class SegmentWithoutGoal extends AbstractIssueDetector {
             DetectedIssue issue = makeIssue( Issue.VALIDITY, segment );
             issue.setSeverity( Level.Medium );
             issue.setDescription( "The plan segment does not have any goal." );
-            issue.setRemediation( "Identify one or more risks this plan segment is meant to eliminate "
-                    + "or mitigate, or gains it is meant to make." );
+            issue.setRemediation( "Add a goal to the segment"
+                    + "\nor remove the segment." );
             issues.add( issue );
         }
         return issues;
@@ -58,6 +58,6 @@ public class SegmentWithoutGoal extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "No stated goal for plan segment";
+        return "Segment has no stated goal";
     }
 }

@@ -49,16 +49,16 @@ public class FlowDeclassifies extends AbstractIssueDetector {
                         && Classification.hasHigherOrEqualClassification(
                         classifiedEOI.getClassifications(),
                         eoi.getClassifications() ) ) {
-                    Issue issue = makeIssue( Issue.COMPLETENESS, flow );
+                    Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
                     issue.setDescription( "Received element of information \""
                             + classifiedEOI
-                            + "\" is declassified to sent element \""
+                            + "\" is declassified when resent \""
                             + eoi + "\"" );
-                    issue.setRemediation( "Set the classification of the element sent to be as strong or"
-                            + " greater as when it is received"
+                    issue.setRemediation( "Set the classification of the element sent to be at least be as high"
+                            + " as when it is received"
                             + "\nor lower the classification of the received element" +
                             "\nor do not send the classified element" );
-                    issue.setSeverity( Level.Low );
+                    issue.setSeverity( Level.Medium );
                     issues.add( issue );
                 }
             }

@@ -43,6 +43,11 @@ public class SegmentNeverStarts extends AbstractIssueDetector {
             Issue issue = makeIssue( Issue.COMPLETENESS, segment );
             issue.setDescription( "The plan segment may never start"
                     + " because it is not in response to an incident and no other plan segment causes it to start." );
+            issue.setRemediation( "If the segment is for a co-event phase, have the event be an incident"
+                    + "\nor if the segment is for a co-event phase, have a task in another segment cause it"
+                    + "\nor if the segment is for a post-event phase, have the event be self-terminating"
+                    + "\nor if the segment is for a post-event phase, "
+                    + "have at least one task in a co-event segment terminate its segment." );
             issue.setRemediation( "Make this plan segment in response to an incident\n"
                     + "or make sure that a task in another plan segment causes this plan segment to start." );
             issue.setSeverity( Level.Medium );
@@ -70,6 +75,13 @@ public class SegmentNeverStarts extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Plan segment may never starts";
+        return "Segment's event phase may never start";
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+    public boolean canBeWaived() {
+        return true;
     }
 }

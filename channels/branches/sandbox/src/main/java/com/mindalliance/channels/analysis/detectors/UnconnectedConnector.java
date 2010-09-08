@@ -42,7 +42,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Information never communicated";
+        return "Ignored information need or capability";
     }
 
     /**
@@ -54,7 +54,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
         for ( Flow capability : getQueryService().findUnusedCapabilities( part ) ) {
             DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
             issue.setDescription( "'" + capability.getName() + "' is produced but never sent." );
-            issue.setRemediation( "Add a commitment to share " + capability.getName() + " produced by the task." );
+            issue.setRemediation( "Share " + capability.getName() + " produced by the task with a task that needs it." );
             issue.setSeverity( Level.Low );
             issues.add( issue );
         }
@@ -65,7 +65,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
                             + "'"
                             + need.getName()
                             + "' is needed but never received." );
-            issue.setRemediation( "Add a commitment to share " + need.getName() + " needed by the task." );
+            issue.setRemediation( "Have a task producing " + need.getName() + " share it with the needing task." );
             issue.setSeverity( need.isRequired() ? Level.Medium : Level.Low );
             issues.add( issue );
         }

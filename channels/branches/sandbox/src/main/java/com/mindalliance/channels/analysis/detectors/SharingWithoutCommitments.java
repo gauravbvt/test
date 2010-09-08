@@ -34,14 +34,14 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
             Issue issue = makeIssue( Issue.COMPLETENESS, flow );
             issue.setDescription( "No commitment is implied by this sharing flow" );
             StringBuilder sb = new StringBuilder();
-            sb.append( "Modify the specifications for source and target tasks so that they have assignments" );
-            sb.append( "\nor profile agents to match source and target task specifications" );
+            sb.append( "Modify the specifications for source and target tasks so that they both imply assignments" );
+            sb.append( "\nor add or redefine participating agents to match source and target task specifications" );
             if ( flow.isClassificationsLinked() ) {
                 sb.append( "\nor declassify elements of information" );
-                sb.append( "\nor make sure otherwise commitable agents have the required clearances" );
+                sb.append( "\nor make sure otherwise committed agents have the required clearances" );
             }
             issue.setRemediation( sb.toString() );
-            issue.setSeverity( Level.Low );
+            issue.setSeverity( Level.Medium );
             issues.add( issue );
         }
         return issues;
@@ -65,7 +65,7 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Sharing flow with no commitments";
+        return "Sharing flow implies no commitments";
     }
 
     /**

@@ -63,7 +63,7 @@ public class PlaceInheritsDifferentStreetAddress extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Street address different from containing place.";
+        return "Street address different from containing place";
     }
 
 }

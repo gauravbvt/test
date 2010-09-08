@@ -52,7 +52,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
         List<Organization> employers = getQueryService().findEmployers( actor );
         if ( employers.size() != 1 ) {
             if ( employers.size() == 0 ) {
-                DetectedIssue issue = makeIssue( Issue.VALIDITY, actor );
+                DetectedIssue issue = makeIssue( Issue.COMPLETENESS, actor );
                 issue.setSeverity( Level.Low );
                 issue.setDescription( actor + " does not belong to any organization." );
                 issue.setRemediation( "Specify an organization in a task played by the agent\n "

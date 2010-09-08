@@ -131,7 +131,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.FromUser"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.NoSegmentRespondsToIncident"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithoutGoal"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedPartWithoutTask"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.StartedOrTerminatedTaskIsUnnamed"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithoutRole"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithActorOrRoleButNoOrganization"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel"/>
@@ -168,7 +168,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.RedundantPlace"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.EmptyNeedOrCapability"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnsatisfiedNeed"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.PersonInSystemRole"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.CommitmentWithoutRequiredAgreement"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UntimelyTriggeringSharing"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UntimelyCriticalSharing"/>

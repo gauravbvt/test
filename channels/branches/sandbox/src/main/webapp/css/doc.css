@@ -115,7 +115,7 @@ p {
 	font-size:1.2em;
 }
 
-a:focus,
+a:focus, 
 a:hover		{ color: #000; }
 a			{ color: #009; text-decoration: underline; }
 
@@ -125,7 +125,7 @@ em,dfn		{ font-style: italic; }
 dfn			{ font-weight: bold; }
 sup, sub	{ line-height: 0; }
 
-abbr,
+abbr, 
 acronym 	{ border-bottom: 1px dotted #666; }
 address		{ margin: 0 0 1.5em; font-style: italic; }
 del			{ color:#666; }
@@ -136,7 +136,7 @@ pre,code,tt	{ font: 1em 'andale mono', 'lucida console', monospace; line-height:
 
 /* ----- Lists ----- */
 
-li ul,
+li ul, 
 li ol		{ margin:0 1.5em; }
 ul, ol		{ margin: 0 1.5em 1.5em 1.5em; }
 

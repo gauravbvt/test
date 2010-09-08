@@ -44,7 +44,7 @@ public class ExternalSupervisor extends AbstractIssueDetector {
                         "Transfer the supervisor to " + organization.getName() + " or its parent (if any)"
                                 + "\nor transfer the job to the supervisor's organization or child organization (if any)"
                 );
-                issue.setSeverity( Level.Medium );
+                issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
         }

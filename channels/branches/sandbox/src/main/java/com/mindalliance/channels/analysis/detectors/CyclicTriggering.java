@@ -30,13 +30,13 @@ public class CyclicTriggering extends AbstractIssueDetector {
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         GraphBuilder<Part, Flow> graphBuilder = new TriggerGraphBuilder( segment );
-        DirectedGraph<Part, Flow> digraph = graphBuilder.buildDirectedGraph( );
+        DirectedGraph<Part, Flow> digraph = graphBuilder.buildDirectedGraph();
         StrongConnectivityInspector<Part, Flow> sci =
                 new StrongConnectivityInspector<Part, Flow>( digraph );
         List<Set<Part>> cycles = sci.stronglyConnectedSets();
@@ -47,22 +47,22 @@ public class CyclicTriggering extends AbstractIssueDetector {
                 if ( cycle.size() > 1 ) {
                     Issue issue = makeIssue( Issue.ROBUSTNESS, segment );
                     StringBuilder sb = new StringBuilder();
-                    sb.append("These tasks trigger each other in a loop: ");
+                    sb.append( "These tasks trigger each other in a loop: " );
                     int count = 0;
-                    for (Part part : cycle) {
+                    for ( Part part : cycle ) {
                         count++;
-                        sb.append("\"");
-                        sb.append(part.getTitle());
-                        sb.append("\"");
-                        if (count < cycle.size())
-                            sb.append(", ");
+                        sb.append( "\"" );
+                        sb.append( part.getTitle() );
+                        sb.append( "\"" );
+                        if ( count < cycle.size() )
+                            sb.append( ", " );
                         else
-                            sb.append(".");
+                            sb.append( "." );
                     }
-                    issue.setDescription(sb.toString());
-                    issue.setRemediation("Break the loop by having one of these tasks not trigger the other.");
-                    issue.setSeverity( Level.Low);
-                    issues.add(issue);
+                    issue.setDescription( sb.toString() );
+                    issue.setRemediation( "Break the loop by having one of these tasks not trigger the other." );
+                    issue.setSeverity( Level.Low );
+                    issues.add( issue );
                 }
             }
         }
@@ -70,22 +70,30 @@ public class CyclicTriggering extends AbstractIssueDetector {
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Segment;
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public String getTestedProperty() {
         return null;
     }
+
     /**
      * {@inheritDoc}
      */
     protected String getLabel() {
         return "Cyclic task triggering";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canBeWaived() {
+        return true;
     }
 }

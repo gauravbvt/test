@@ -35,7 +35,7 @@ public class SegmentNeverEnds extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Plan segment may never end";
+        return "Segment's event phase may never end";
     }
 
     /**
@@ -50,10 +50,11 @@ public class SegmentNeverEnds extends AbstractIssueDetector {
                 || phase.isPreEvent() && getPlan().isIncident( event ) )
                 && getQueryService().findTerminators( segment ).isEmpty() ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, segment );
-            issue.setDescription( "The plan segment may never end." );
-            issue.setRemediation( "Have the event end on its own if the plan segment is for a concurrent phase\n"
-                    +"or have the event be an incident if the plan segment is for a pre-event phase\n "
-                    + "or have at least one task in the plan segment terminate it." );
+            issue.setDescription( "The segment's event phase may never come to an end." );
+            issue.setRemediation( "If the segment is for a co-event phase, have the event end on its own"
+                    + "\nor if the segment is for a pre-event phase, have the event be an incident"
+                    + "\nor if the segment is for a pre-event phase, have a task in another segment cause it"
+                    + "\nor have at least one task in the plan segment terminate it." );
             issue.setSeverity( Level.Medium );
             issues.add( issue );
         }

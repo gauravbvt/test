@@ -46,9 +46,9 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
                     Issue issue = makeIssue( Issue.COMPLETENESS, part );
                     issue.setDescription( "This task starts with the plan segment but no task"
                             + " is ever started that causes the plan segment to happen.");
-                    issue.setRemediation( "Make sure the plan segment is caused by a task"
-                            + " that can start (from another plan segment)\n"
-                            + "or make the plan segment an incident (i.e. happens independently of the plan." );
+                    issue.setRemediation( "Make sure the event phase of the segment can start " +
+                            "(it is a co-event phase of an incident " +
+                            "or the phase is started by a task that itself can start)" );
                     issue.setSeverity( getQueryService().computePartPriority( part ) );
                     issues.add( issue );
                 }
@@ -75,6 +75,6 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Task triggered by never starting task";
+        return "Task is triggered but never started";
     }
 }

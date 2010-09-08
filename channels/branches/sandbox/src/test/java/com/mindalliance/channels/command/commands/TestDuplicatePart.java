@@ -39,7 +39,7 @@ public class TestDuplicatePart extends AbstractChannelsTest {
     }
 
     @Test
-    public void testDuplicatePart() throws Exception {
+    public void testDuplicatePart() {
         int count = countParts();
         Part part = segment.getDefaultPart();
         Command duplicatePart = new DuplicatePart( part );

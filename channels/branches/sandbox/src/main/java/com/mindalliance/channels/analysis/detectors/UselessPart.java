@@ -69,7 +69,7 @@ public class UselessPart extends AbstractIssueDetector {
                         + "nor does it trigger or send information to a useful task." );
                 issue.setRemediation( "Have the task achieve a goal, end the event phase (if it would end a risk)\n" 
                         + "or make sure at least one task that it"
-                        + " directly or indirectly impacts does address a risk." );
+                        + " directly or indirectly triggers does achieve a goal." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             }

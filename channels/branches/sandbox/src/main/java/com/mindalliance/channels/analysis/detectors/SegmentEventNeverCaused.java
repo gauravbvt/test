@@ -37,7 +37,7 @@ public class SegmentEventNeverCaused extends AbstractIssueDetector {
             Issue issue = makeIssue( Issue.COMPLETENESS, segment );
             issue.setDescription( "The plan segment is about an event that may never be caused." );
             issue.setRemediation( "Make the event in question an incident\n"
-                    +"or make sure at least one task in another plan segment causes it." );
+                    +"or make sure at least one task in any segment causes it." );
             issue.setSeverity( Level.Medium );
             issues.add( issue );
         }
@@ -62,6 +62,6 @@ public class SegmentEventNeverCaused extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Event may never be caused";
+        return "Planned-for event may never be caused";
     }
 }

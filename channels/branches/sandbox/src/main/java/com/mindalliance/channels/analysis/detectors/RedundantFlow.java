@@ -44,7 +44,7 @@ public class RedundantFlow extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Redundant flow";
+        return "Redundant sharing flow";
     }
 
     /**
@@ -68,8 +68,8 @@ public class RedundantFlow extends AbstractIssueDetector {
             redundant = ( otherFlow != flow ) && equivalent( flow, otherFlow );
         }
         if ( redundant ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, flow );
-            issue.setDescription( "This flow is redundant." );
+            DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, flow );
+            issue.setDescription( "This sharing flow is redundant." );
             issue.setRemediation( "Change the name of information transmitted\nor break up the flow." );
             issue.setSeverity( Level.Low );
             issues.add( issue );

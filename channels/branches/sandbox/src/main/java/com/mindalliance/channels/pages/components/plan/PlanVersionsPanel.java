@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.commands.AddProducer;
 import com.mindalliance.channels.command.commands.RemoveProducer;
 import com.mindalliance.channels.dao.User;
@@ -123,7 +122,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
                 item.add( nameLabel );
                 AjaxFallbackLink messageLink = new AjaxFallbackLink( "plannerMessageLink" ) {
                     public void onClick( AjaxRequestTarget target ) {
-                        update(target, new Change( Change.Type.Communicated, vote.getUsername() ) );
+                        update( target, new Change( Change.Type.Communicated, vote.getUsername() ) );
                     }
                 };
                 messageLink.setVisible( !isCurrentUser );
@@ -148,9 +147,9 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
         prodVotesContainer.setVisible( getPlan().isDevelopment() );
     }
 
-    private String itemCssClasses( int index, int count )  {
+    private String itemCssClasses( int index, int count ) {
         String classes = index % 2 == 0 ? "even" : "odd";
-        if ( index == count -1 ) classes += " last";
+        if ( index == count - 1 ) classes += " last";
         return classes;
     }
 
@@ -218,11 +217,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
             } else {
                 command = new RemoveProducer( planner.getUsername() );
             }
-            try {
-                change = getCommander().doCommand( command );
-            } catch ( CommandException e ) {
-                LOG.warn( "Voting failed", e );
-            }
+            change = getCommander().doCommand( command );
         }
 
         public Change getChange() {

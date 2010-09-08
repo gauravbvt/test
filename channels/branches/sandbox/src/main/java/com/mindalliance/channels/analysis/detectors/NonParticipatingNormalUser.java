@@ -1,13 +1,13 @@
 package com.mindalliance.channels.analysis.detectors;
 
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class NonParticipatingNormalUser extends AbstractIssueDetector {
                     Issue issue = makeIssue( Issue.COMPLETENESS, getPlan() );
                     issue.setDescription( "Normal user " + username + " does not participate in the plan." );
                     issue.setRemediation(
-                            "Assign an actor to user " + username
+                            "Assign an agent to user " + username
                                     + "\nor unregister user " + username
                     );
                     issue.setSeverity( Level.Low );
@@ -67,6 +67,13 @@ public class NonParticipatingNormalUser extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Normal user not a participant";
+        return "Non-planner user is not a participant";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canBeWaived() {
+        return true;
     }
 }
