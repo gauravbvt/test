@@ -31,7 +31,7 @@ public class PartWithoutRole extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Task without role";
+        return "Task without named role";
     }
 
     /** {@inheritDoc} */

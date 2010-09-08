@@ -41,7 +41,7 @@ public class UnconfirmedJob extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Unconfirmed job";
+        return "Unconfirmed job of agent in organization";
     }
 
     /**
@@ -53,7 +53,7 @@ public class UnconfirmedJob extends AbstractIssueDetector {
         for ( Job job : getQueryService().findUnconfirmedJobs( org ) ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, org );
             issue.setDescription( "Job " + job + " is implied from the plan and not confirmed." );
-            issue.setRemediation( "Edit organization " + org + " and confirm the job (under \"details\")." );
+            issue.setRemediation( "Confirm the job in the profile of " + org.getName() + "." );
             issue.setSeverity( Level.Low );
             issues.add( issue );
         }

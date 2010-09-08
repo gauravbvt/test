@@ -37,11 +37,11 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
             if ( attachment.isPolicyViolation() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, flow );
                 issue.setDescription( "Could violate policy per \"" + attachment.getUrl() + "\"." );
-                issue.setRemediation( "Change the flow\nor remove the flow\nor change the policy." );
+                issue.setRemediation( "Change the sharing flow\nor remove the sharing flow\nor change the policy." );
                 if ( flow.getTarget().isPart() ) {
                     issue.setSeverity( getQueryService().computePartPriority( (Part) flow.getTarget() ) );
                 } else {
-                    issue.setSeverity( Level.Low );
+                    issue.setSeverity( Level.Medium );
                 }
                 issues.add( issue );
             }
@@ -67,7 +67,13 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Policy prohibits flow";
+        return "Policy prohibits sharing";
     }
 
+    /**
+      * {@inheritDoc}
+      */
+    public boolean canBeWaived() {
+        return true;
+    }
 }

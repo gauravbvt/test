@@ -18,7 +18,7 @@ import java.util.List;
  * Date: Dec 2, 2008
  * Time: 12:41:57 PM
  */
-public class StartedOrTerminatedPartWithoutTask extends AbstractIssueDetector {
+public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
@@ -28,22 +28,22 @@ public class StartedOrTerminatedPartWithoutTask extends AbstractIssueDetector {
         if ( part.hasDefaultTask() ) {
             if ( part.isStartsWithSegment() || part.isTriggered() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-                issue.setDescription( "The task is started during the plan segment but is not specified." );
-                issue.setRemediation( "Specify the task." );
+                issue.setDescription( "The task is started during the plan segment but is unnamed." );
+                issue.setRemediation( "Name the task." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
             if ( part.isTerminatesEventPhase() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-                issue.setDescription( "The task can terminate the plan segment but the task is not specified." );
-                issue.setRemediation( "Specify the task." );
+                issue.setDescription( "The task can terminate the plan segment but is unnamed." );
+                issue.setRemediation( "Name the task." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
             if ( part.isTerminated() ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-                issue.setDescription( "The task is terminated during plan segment but is not specified." );
-                issue.setRemediation( "Specify the task." );
+                issue.setDescription( "The task is terminated during plan segment but is unnamed." );
+                issue.setRemediation( "Name the task." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
@@ -69,6 +69,6 @@ public class StartedOrTerminatedPartWithoutTask extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Unspecified task started or terminated";
+        return "Unnamed task started or terminated";
     }
 }

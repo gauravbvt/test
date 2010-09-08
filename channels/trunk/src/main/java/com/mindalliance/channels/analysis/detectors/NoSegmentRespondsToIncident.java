@@ -45,7 +45,7 @@ public class NoSegmentRespondsToIncident extends AbstractIssueDetector {
                 issue.setDescription( "No plan segment responds to incident \"" + incident.getName() + "\"." );
                 issue.setRemediation( "Define a plan segment that responds to it\n"
                         + "remove the event's incident status." );
-                issue.setSeverity( ( Level.Medium ) );
+                issue.setSeverity( ( Level.High ) );
                 issues.add( issue );
             }
         }
@@ -70,6 +70,6 @@ public class NoSegmentRespondsToIncident extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "No plan segment for event";
+        return "No plan segment for incident";
     }
 }

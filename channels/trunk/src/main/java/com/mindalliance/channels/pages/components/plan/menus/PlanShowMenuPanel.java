@@ -196,6 +196,17 @@ public class PlanShowMenuPanel extends MenuPanel {
                     new Model<String>( "Admin page" ),
                     adminLink ) );
         }
+        // Segments
+        Link segmentsLink = new AjaxFallbackLink( "link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, plan, PlanEditPanel.MAP ) );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "All segments" ),
+                segmentsLink ) );
         // Index
         Link indexLink = new AjaxFallbackLink( "link" ) {
             @Override

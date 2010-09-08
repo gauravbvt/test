@@ -34,7 +34,7 @@ public class UnsupervisedJob extends AbstractIssueDetector {
                 Issue issue = makeIssue( Issue.COMPLETENESS, organization );
                 issue.setDescription( "No supervisor for " + job.getLabel() + "." );
                 issue.setRemediation( "Add a supervisor to the job\nor remove the job" );
-                issue.setSeverity( Level.Medium );
+                issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
         }

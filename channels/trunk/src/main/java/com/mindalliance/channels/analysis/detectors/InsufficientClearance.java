@@ -47,7 +47,7 @@ public class InsufficientClearance extends AbstractIssueDetector {
                     if ( flow.isCritical() ) {
                         issue.setSeverity( getQueryService().computePartPriority( (Part) flow.getTarget() ) );
                     } else {
-                        issue.setSeverity( Level.Low );
+                        issue.setSeverity( Level.Medium );
                     }
                     issues.add( issue );
                 } else if ( actor.isUnknown() ) {
@@ -56,7 +56,8 @@ public class InsufficientClearance extends AbstractIssueDetector {
                             + " of classified \"" + flow.getName()
                             + "\" is unknown." );
                     issue.setRemediation( "Declassify the information" +
-                            "\nor change the definition of the task" );
+                            "\nor change the definition of the task to assign only cleared recipients"
+                    + "\nor increase the classification of the intended recipients");
                     if ( flow.isCritical() ) {
                         issue.setSeverity( getQueryService().computePartPriority( (Part) flow.getTarget() ) );
                     } else {

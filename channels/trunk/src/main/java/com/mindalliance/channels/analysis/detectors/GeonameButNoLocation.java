@@ -35,7 +35,7 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
         if ( geoname != null && !geoname.isEmpty() && ( geoLocations == null || geoLocations.isEmpty() ) ) {
             DetectedIssue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
             issue.setSeverity( Level.Medium );
-            issue.setDescription( "No geolocation could be found that might correspond to the place's geoname." );
+            issue.setDescription( "The place's geoname is unknown. No geolocation could be found for it." );
             issue.setRemediation( "Change the geoname\nor remove it." );
             issues.add( issue );
         }

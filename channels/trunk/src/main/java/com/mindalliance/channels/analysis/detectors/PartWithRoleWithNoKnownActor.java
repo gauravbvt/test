@@ -34,7 +34,7 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "No agent in task role";
+        return "No known agent in task's named role";
     }
 
     /**
@@ -62,7 +62,8 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
             if ( part.getOrganization().isActorsRequired() && actorsInRole.isEmpty() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, part );
                 issue.setDescription( "There is no known agent playing this role." );
-                issue.setRemediation( " Identify an agent playing this role." );
+                issue.setRemediation( "Name an agent assigned to the task" +
+                        "\nor add a participating agent to the plan's scope with this role." );
                 issue.setSeverity( Level.Medium );
                 issues.add( issue );
             }

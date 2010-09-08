@@ -107,7 +107,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Inconsistent impact on target task";
+        return "Inconsistent impacts on a target task of sharing";
     }
 
     /**

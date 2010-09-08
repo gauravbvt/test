@@ -60,28 +60,28 @@ public class FlowToSelf extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
-            Part source = (Part)flow.getSource();
-            Part target = (Part)flow.getTarget();
-            if (source.getActor() == target.getActor() && source.getActor() != null ) {
-                Issue issue = makeIssue(Issue.VALIDITY, flow);
-                issue.setDescription(source.getActor() + " is both the source and target.");
-                issue.setRemediation(" Change either the source\n or change target of this flow.");
-                issue.setSeverity( Level.High );
-                issues.add(issue);
+            Part source = (Part) flow.getSource();
+            Part target = (Part) flow.getTarget();
+            if ( ModelObject.areIdentical( source.getActor(), target.getActor() ) ) {
+                Issue issue = makeIssue( Issue.COMPLETENESS, flow );
+                issue.setDescription( source.getActor() + " is both the source and target." );
+                issue.setRemediation( " Change either the source\n or change target of this flow." );
+                issue.setSeverity( Level.Low );
+                issues.add( issue );
             } else {
                 List<Actor> possibleSourceActors = getQueryService().findAllActualActors( source.resourceSpec() );
                 List<Actor> possibleTargetActors = getQueryService().findAllActualActors( target.resourceSpec() );
                 if ( possibleSourceActors.size() == 1
                         && possibleTargetActors.size() == 1
-                        && possibleSourceActors.get(0) == possibleTargetActors.get(0)) {
-                    Issue issue = makeIssue(Issue.VALIDITY, flow);
-                    issue.setDescription(possibleSourceActors.get(0)
-                            + " is both the only potential source and target.");
-                    issue.setRemediation(" If this is not intentional, change the source\n"
-                            + "or change the target of this flow\n"
-                            + "or identify more agents that could be either source or target");
+                        && possibleSourceActors.get( 0 ) == possibleTargetActors.get( 0 ) ) {
+                    Issue issue = makeIssue( Issue.VALIDITY, flow );
+                    issue.setDescription( possibleSourceActors.get( 0 )
+                            + " is both the only potential source and target." );
+                    issue.setRemediation( "Change the source"
+                            + "\nor change the target of this flow"
+                            + "\nor generalize task specifications to assign multiple agents to either source or target task" );
                     issue.setSeverity( Level.Low );
-                    issues.add(issue);
+                    issues.add( issue );
 
                 }
             }

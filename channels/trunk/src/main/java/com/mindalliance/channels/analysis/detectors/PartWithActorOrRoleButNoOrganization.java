@@ -44,7 +44,7 @@ public class PartWithActorOrRoleButNoOrganization extends AbstractIssueDetector 
                     + (part.hasActualActor() ? "an agent" : "")
                     + " but does not specify an organization." );
             issue.setRemediation( "Specify the organization for this task." );
-            issue.setSeverity( Level.Medium );
+            issue.setSeverity( Level.Low );
             issues.add( issue );
         }
         return issues;
@@ -68,6 +68,6 @@ public class PartWithActorOrRoleButNoOrganization extends AbstractIssueDetector 
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Task by agent or role with no organization";
+        return "Task's agent or role is named but not the organization";
     }
 }

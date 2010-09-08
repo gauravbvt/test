@@ -60,4 +60,11 @@ public class AutoStartPartAlsoTriggered extends AbstractIssueDetector {
     protected String getLabel() {
         return "Needlessly triggered task";
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canBeWaived() {
+        return true;
+    }
 }

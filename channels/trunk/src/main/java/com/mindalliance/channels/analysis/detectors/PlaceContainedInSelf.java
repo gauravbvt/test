@@ -37,7 +37,8 @@ public class PlaceContainedInSelf extends AbstractIssueDetector {
                     + loopy.getName()
                     + " which is within "
                     + place.getName() + "." );
-            issue.setRemediation( "Change the place " + loopy.getName() + " is said to be within." );
+            issue.setRemediation( "Change the place " + loopy.getName() + " is said to be within" +
+                    "\nor define the place to be within none." );
             issues.add( issue );
         }
         return issues;
@@ -61,6 +62,6 @@ public class PlaceContainedInSelf extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "The place is contained in itself.";
+        return "Place contained in itself";
     }
 }

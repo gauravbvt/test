@@ -68,7 +68,7 @@ public class UselessActor extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Agent not involved";
+        return "Agent is not assigned any task";
     }
 
     /**

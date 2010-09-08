@@ -2,13 +2,13 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.nlp.Matcher;
-import com.mindalliance.channels.dao.User;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -64,11 +64,11 @@ public class RedundantPart extends AbstractIssueDetector {
         List<Part> equivalentParts = findEquivalentTo( part );
         int count = equivalentParts.size();
         if ( count > 0 ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, part );
+            DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
             issue.setDescription(
                     "This task is restated "
                             + ( ( count == 1 ) ? "once." : count + " times." ) );
-            issue.setRemediation( "Remove redundant task\nor make the repeated tasks different." );
+            issue.setRemediation( "Remove redundant task\nor specify one of the tasks differently." );
             issue.setSeverity( Level.Low );
             issues.add( issue );
         }

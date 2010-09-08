@@ -49,7 +49,7 @@ public class UntimelyCriticalSharing extends AbstractIssueDetector {
                                     + criticalNeed.getMaxDelay()
                     );
                     issue.setRemediation(
-                            "Ease the timeliness constraint for \""
+                            "Ease the time constraint for \""
                                     + criticalNeed.getReceiveTitle()
                                     + "\"\nor obtain a more timely sharing commitment for "
                                     + "\"" + criticalNeed.getName() + "\""

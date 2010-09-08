@@ -31,7 +31,7 @@ public class UnnamedFlow extends AbstractIssueDetector {
         if ( name == null || name.trim().isEmpty() ) {
             DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, "name" );
             issue.setDescription( "The name of the information is missing." );
-            issue.setRemediation( "Name the information." );
+            issue.setRemediation( "Name the information flow." );
             issues = new ArrayList<Issue>();
             issue.setSeverity( Level.High );
             issues.add( issue );
@@ -50,6 +50,6 @@ public class UnnamedFlow extends AbstractIssueDetector {
     }
 
     protected String getLabel() {
-        return "Information is not identified";
+        return "Information flow is not named";
     }
 }

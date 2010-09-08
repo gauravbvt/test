@@ -3,7 +3,6 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 
@@ -38,7 +37,7 @@ public class UnplayedPart extends AbstractIssueDetector {
                         + "\nor profile an agent to match the task specifications"
                         + "\nor modify the task specifications so that it matches at least one agent."
                 );
-                issue.setSeverity( Level.Low );
+                issue.setSeverity( getTaskFailureSeverity( part ) );
                 issues.add( issue );
             }
         }

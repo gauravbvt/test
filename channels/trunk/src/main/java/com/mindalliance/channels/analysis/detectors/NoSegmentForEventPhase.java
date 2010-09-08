@@ -55,8 +55,15 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
                     issue.setRemediation( "Add a plan segment for phase "
                             + phase.getName()
                             + " of event "
-                            + event.getName() );
-                    issue.setSeverity( Level.Medium );
+                            + event.getName()
+                            + "\nor remove "
+                            + event.getName()
+                            + " from the plan scope"
+                            + "\nor remove "
+                            + phase.getName()
+                            + " from the plan scope."
+                    );
+                    issue.setSeverity( Level.Low );
                     issues.add( issue );
                 }
             }

@@ -1,11 +1,11 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.dao.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
                                  + "\n or change the definition of " + type.getName()
                                  + "\n or change the definition of " + otherType.getName()
                          );
-                         issue.setSeverity( Level.Low );
+                         issue.setSeverity( Level.Medium );
                          issues.add( issue );
                     }
                 }
@@ -93,6 +93,6 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Incorrect typing";
+        return "Conflicting entity tag";
     }
 }

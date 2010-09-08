@@ -37,7 +37,7 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Plan segment overlaps another";
+        return "Segment has same goal as another segment";
     }
 
     /**
@@ -68,9 +68,9 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
                             : "all" )
                             + "."
                     );
-                    issue.setRemediation( "Consider merging the two plan segments\n"
-                            + "or moving the tasks that achieve the same goal from one plan segment to the other." );
-                    issue.setSeverity( Level.Low );
+                    issue.setRemediation( "Merge the two segments\n"
+                            + "or move all tasks that achieve the common goal from one segment to the other and remove the goal." );
+                    issue.setSeverity( Level.Medium );
                     issues.add( issue );
                 }
             }
