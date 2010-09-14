@@ -520,6 +520,10 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
                     "flow",
                     "flow.name",
                     EMPTY ) );
+            columns.add( makeColumn(
+                    "With intent",
+                    "flow.intent.label",
+                    EMPTY ) );
             columns.add( makeFilterableLinkColumn(
                     "To agent",
                     "targetActor",

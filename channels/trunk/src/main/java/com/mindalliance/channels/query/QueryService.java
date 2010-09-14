@@ -570,13 +570,13 @@ public interface QueryService {
      *
      * @param entityClass a model entity class
      * @param segment     a segment
-     * @param kind actual or type
+     * @param kind        actual or type
      * @return a list of model entities
      */
     <T extends ModelEntity> List<T> listEntitiesTaskedInSegment(
             Class<T> entityClass,
             Segment segment,
-            ModelEntity.Kind kind);
+            ModelEntity.Kind kind );
 
     /**
      * Find all confirmed jobs with resource spec
@@ -1150,6 +1150,14 @@ public interface QueryService {
     List<Assignment> findAllAssignments( Actor actor );
 
     /**
+     * Find all assignments for an organization.
+     *
+     * @param org an organization
+     * @return a list of assignments
+     */
+    List<Assignment> findAllAssignments( Organization org );
+
+    /**
      * Find all assignments for an actor for a segment..
      *
      * @param actor   an actor
@@ -1289,8 +1297,8 @@ public interface QueryService {
     /**
      * Whether an agreement covers a sharing commitment.
      *
-     * @param agreement the agreement
-     * @param commitment   a commitment
+     * @param agreement  the agreement
+     * @param commitment a commitment
      * @return a boolean
      */
     boolean covers( Agreement agreement, Commitment commitment );
@@ -1299,7 +1307,7 @@ public interface QueryService {
      * Whether an agreement encompasses another.
      *
      * @param agreement the agreement
-     * @param other the other agreement
+     * @param other     the other agreement
      * @return a boolean
      */
     boolean encompasses( Agreement agreement, Agreement other );
@@ -1307,8 +1315,8 @@ public interface QueryService {
     /**
      * Whether there are common EOIs in two free-form texts.
      *
-     * @param flow         a flow
-     * @param otherFlow    a flow
+     * @param flow      a flow
+     * @param otherFlow a flow
      * @return a boolean
      */
     boolean hasCommonEOIs( Flow flow, Flow otherFlow );
@@ -1316,8 +1324,8 @@ public interface QueryService {
     /**
      * Whether none in a list eois is without a strong match with some in another list.
      *
-     * @param eois         a list of elements of information
-     * @param superset     a list of elements of information
+     * @param eois     a list of elements of information
+     * @param superset a list of elements of information
      * @return a boolean
      */
     boolean subsetOf(
@@ -1337,6 +1345,7 @@ public interface QueryService {
     /**
      * Get alternate flows.
      *
+     * @param flow a flow
      * @return a list of flows @param flow
      */
     List<Flow> getAlternates( Flow flow );
@@ -1344,8 +1353,28 @@ public interface QueryService {
     /**
      * Instantiate a gaol from a serialization map.
      *
-     * @param map          a map
+     * @param map a map
      * @return a goal
      */
     Goal goalFromMap( Map<String, Object> map );
+
+    /**
+     * Find the family relationship from an organization to another.
+     *
+     * @param fromOrg an organization
+     * @param toOrg   an organization
+     * @return a organizational family relationship
+     */
+    Organization.FamilyRelationship findFamilyRelationship(
+            Organization fromOrg,
+            Organization toOrg );
+
+    /**
+     * Remove entity with old name if not referenced and if not defined.
+     *
+     * @param clazz a model object class
+     * @param name  a string
+     * @return a boolean - true if the entity was deleted
+     */
+    boolean cleanup( Class<? extends ModelObject> clazz, String name );
 }

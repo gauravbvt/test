@@ -97,6 +97,7 @@ public class AddPart extends AbstractCommand {
         }
     }
 
+    @SuppressWarnings( "unchecked" )
     public static void initFromMap( Part part, Map<String, Object> state, QueryService queryService ) {
         part.setDescription( (String) state.get( "description" ) );
         part.setTask( (String) state.get( "task" ) );
@@ -106,6 +107,7 @@ public class AddPart extends AbstractCommand {
         part.setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
+        part.setCategory( (Part.Category) state.get( "category") );
         part.setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );
         for (Map<String,Object> goalMap : (List<Map<String,Object>>)state.get( "goals" ) ) {
             Goal goal = queryService.goalFromMap( goalMap );

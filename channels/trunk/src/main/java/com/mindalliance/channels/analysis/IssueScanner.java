@@ -208,12 +208,14 @@ public class IssueScanner implements Scanner, PlanListener {
         @Override
         public void run() {
             setupUser();
-
             try {
+                LOG.debug( "Current user = {}, plan = {}", User.current(), User.plan() );
                 long startTime = System.currentTimeMillis();
                 if ( !active ) return;
-                LOG.debug( "Current user = {}, plan = {}", User.current(), User.plan() );
                 for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
+                    if ( !active ) return;
+                    // Garbage-collect unreferenced and undefined entities.
+                    queryService.cleanup( mo.getClass(), mo.getName() );
                     if ( !active ) return;
                     scanIssues( mo );
                 }

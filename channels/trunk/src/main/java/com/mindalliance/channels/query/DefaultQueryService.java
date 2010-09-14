@@ -161,7 +161,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @SuppressWarnings( "unchecked" )
     private <T extends ModelObject> T findUnknown( Class<T> clazz, long id ) throws
-                                                                             NotFoundException {
+            NotFoundException {
         if ( clazz.isAssignableFrom( Actor.class ) && Actor.UNKNOWN.getId() == id )
             return (T) Actor.UNKNOWN;
         else if ( clazz.isAssignableFrom( Event.class ) && Event.UNKNOWN.getId() == id )
@@ -1241,8 +1241,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 /*
     */
 /**
-     * {@inheritDoc}
-     */
+ * {@inheritDoc}
+ */
 /*
     public List<Actor> findActualActors( Organization organization, Role role, Segment segment ) {
         return findActualActors( organization, role, null, segment );
@@ -2138,7 +2138,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         while ( incoming.hasNext() ) {
             Flow in = incoming.next();
             if ( in.getSource().isPart() && Matcher.getInstance().matches( in.getName(),
-                                                                            flowName ) ) {
+                    flowName ) ) {
                 commitments.add( in );
             }
         }
@@ -2437,6 +2437,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     @SuppressWarnings( "unchecked" )
     public List<Part> findAllPartsPlayedBy( final Organization organization ) {
+        Set<Part> allParts = new HashSet<Part>();
+        for (Assignment assignment : findAllAssignments( organization )) {
+            allParts.add( assignment.getPart() );
+        }
+        return new ArrayList<Part>( allParts );
+/*
         return (List<Part>) CollectionUtils.select(
                 findAllParts(),
                 new Predicate() {
@@ -2449,6 +2455,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     }
                 }
         );
+*/
     }
 
     /**
@@ -2473,6 +2480,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Assignment> findAllAssignments( Actor actor ) {
         Set<Assignment> assignments = new HashSet<Assignment>();
         List<Employment> employments = findAllEmploymentsForActor( actor );
+        List<Part> parts = findAllParts();
+        for ( Employment employment : employments ) {
+            for ( Part part : parts ) {
+                if ( employment.playsPart( part, User.current().getPlan() ) )
+                    assignments.add( new Assignment( employment, part ) );
+            }
+        }
+        return new ArrayList<Assignment>( assignments );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Assignment> findAllAssignments( Organization org ) {
+        Set<Assignment> assignments = new HashSet<Assignment>();
+        List<Employment> employments = this.findAllEmploymentsIn( org );
         List<Part> parts = findAllParts();
         for ( Employment employment : employments ) {
             for ( Part part : parts ) {
@@ -2626,7 +2649,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         new Predicate() {
                             public boolean evaluate( Object object ) {
                                 return DefaultQueryService.this.encompasses( Agreement.from( commitment ),
-                                                                             (Agreement) object );
+                                        (Agreement) object );
                             }
                         } )
                 );
@@ -2647,7 +2670,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( Actor actor : actorsInOrganization ) {
             for ( Commitment commitment : findAllCommitmentsOf( actor ) ) {
                 if ( commitment.isBetweenOrganizations() && this.covers( agreement,
-                                                                              commitment ) )
+                        commitment ) )
                     commitments.add( commitment );
             }
         }
@@ -2883,31 +2906,33 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 } );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean covers( Agreement agreement, Commitment commitment ) {
         Flow sharing = commitment.getSharing();
         Assignment beneficiary = commitment.getBeneficiary();
         if ( beneficiary.getOrganization().narrowsOrEquals(
-                    agreement.getBeneficiary(), getDao().getPlan() )
-             && Matcher.getInstance().same( agreement.getInformation(), sharing.getName() ) )
-        {
+                agreement.getBeneficiary(), getDao().getPlan() )
+                && Matcher.getInstance().same( agreement.getInformation(), sharing.getName() ) ) {
             List<ElementOfInformation> eois = agreement.getEois();
             if ( eois.isEmpty() || subsetOf( sharing.getEois(), eois ) ) {
                 String usage = agreement.getUsage();
                 if ( usage.isEmpty()
-                     || isSemanticMatch( usage, beneficiary.getPart().getTask(), Proximity.HIGH ) )
+                        || isSemanticMatch( usage, beneficiary.getPart().getTask(), Proximity.HIGH ) )
                     return true;
             }
         }
         return false;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean encompasses( Agreement agreement, Agreement other ) {
         Plan plan = getDao().getPlan();
         if ( other.getBeneficiary().narrowsOrEquals( agreement.getBeneficiary(), plan )
-             && Matcher.getInstance().same( agreement.getInformation(), other.getInformation() ) )
-        {
+                && Matcher.getInstance().same( agreement.getInformation(), other.getInformation() ) ) {
             String usage = agreement.getUsage();
             if ( usage.isEmpty() || isSemanticMatch( usage, other.getUsage(), Proximity.HIGH ) )
                 return subsetOf( other.getEois(), agreement.getEois() );
@@ -2919,8 +2944,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * Whether there are common EOIs in two free-form texts.
      *
-     * @param flow         a flow
-     * @param otherFlow    a flow
+     * @param flow      a flow
+     * @param otherFlow a flow
      * @return a boolean
      */
     public boolean hasCommonEOIs( Flow flow, Flow otherFlow ) {
@@ -2946,8 +2971,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * Whether none in a list eois is without a strong match with some in another list.
      *
-     * @param eois         a list of elements of information
-     * @param superset     a list of elements of information
+     * @param eois     a list of elements of information
+     * @param superset a list of elements of information
      * @return a boolean
      */
     public boolean subsetOf(
@@ -2974,8 +2999,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public <T extends ModelEntity> T retrieveEntity(
             Class<T> entityClass, Map<String, Object> state, String key ) {
         Object[] vals = ( (Collection<?>) state.get( key ) ).toArray();
-        String name = (String)vals[0];
-        boolean type = (Boolean)vals[1];
+        String name = (String) vals[0];
+        boolean type = (Boolean) vals[1];
         if ( type ) {
             return findOrCreateType( entityClass, name );
         } else {
@@ -2995,8 +3020,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             for ( Iterator<Flow> it = target.receives(); it.hasNext(); ) {
                 Flow alternate = it.next();
                 if ( !alternate.equals( flow ) && alternate.isSharing()
-                     && Matcher.getInstance().same( flow.getName(), alternate.getName() )
-                     && subsetOf( flow.getEois(), alternate.getEois() ) )
+                        && Matcher.getInstance().same( flow.getName(), alternate.getName() )
+                        && subsetOf( flow.getEois(), alternate.getEois() ) )
                     answer.add( alternate );
             }
         }
@@ -3007,7 +3032,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * Instantiate a gaol from a serialization map.
      *
-     * @param map          a map
+     * @param map a map
      * @return a goal
      */
     public Goal goalFromMap( Map<String, Object> map ) {
@@ -3020,5 +3045,46 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         goal.setOrganization( retrieveEntity( Organization.class, map, "organization" ) );
         return goal;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Organization.FamilyRelationship findFamilyRelationship( Organization fromOrg, Organization toOrg ) {
+        if ( ModelObject.areIdentical ( fromOrg, toOrg ) )
+            return Organization.FamilyRelationship.Identity;
+        if ( fromOrg.getParent() == null || toOrg.getParent() == null )
+            return Organization.FamilyRelationship.None;
+        if ( ModelObject.areIdentical( fromOrg, toOrg.getParent() ) )
+            return Organization.FamilyRelationship.Parent;
+        if ( ModelObject.areIdentical( toOrg, fromOrg.getParent() ) )
+            return Organization.FamilyRelationship.Child;
+        if ( ModelObject.areIdentical( fromOrg.getParent(), toOrg.getParent() ) )
+            return Organization.FamilyRelationship.Sibling;
+        List<Hierarchical> toOrgSuperiors = toOrg.getSuperiors();
+        if ( toOrgSuperiors.contains( fromOrg ) )
+            return Organization.FamilyRelationship.Ancestor;
+        List<Hierarchical> fromOrgSuperiors = fromOrg.getSuperiors();
+        if ( fromOrgSuperiors.contains( toOrg ) )
+            return Organization.FamilyRelationship.Descendant;
+        if ( !CollectionUtils.intersection( fromOrgSuperiors, toOrgSuperiors ).isEmpty() )
+            return Organization.FamilyRelationship.Cousin;
+        return Organization.FamilyRelationship.None;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
+        ModelObject mo = getDao().find( clazz, name.trim() );
+        if ( mo == null  || !mo.isEntity() || mo.isUnknown()
+                 || mo.isImmutable() || !mo.isUndefined() 
+                 || isReferenced( mo ) )
+            return false;
+
+        LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );
+        remove( mo );
+        return true;
+    }
+
 }
 

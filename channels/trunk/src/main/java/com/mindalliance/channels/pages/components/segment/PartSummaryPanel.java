@@ -91,7 +91,12 @@ public class PartSummaryPanel extends Panel {
     }
 
     private String getTask() {
-        return getPart().getTask();
+        String task = getPart().getTask();
+        Part.Category category = getPart().getCategory();
+        if ( category != null ) {
+            task += " (" + category.getLabel().toLowerCase() + ")";
+        }
+        return task;
     }
 
     private String getPost() {

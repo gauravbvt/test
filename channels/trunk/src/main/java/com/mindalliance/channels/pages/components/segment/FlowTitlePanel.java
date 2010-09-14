@@ -92,6 +92,10 @@ public class FlowTitlePanel extends Panel {
         String message = flow.getName();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
+        Flow.Intent intent = flow.getIntent();
+        if ( intent != null ) {
+            message += " (" + intent.getLabel() + ")";
+        }
         return message.toLowerCase();
     }
 

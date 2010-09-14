@@ -60,6 +60,10 @@ import java.util.Set;
  * Details of an expanded flow.
  */
 public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
+    /**
+     * Unspecified intent.
+     */
+    private static String NO_INTENT = "Unspecified";
 
     /**
      * True if this flow is marked for deletion.
@@ -137,6 +141,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Link to other linked part
      */
     private ModelObjectLink otherLink;
+    /**
+     * Intent choice.
+     */
+    private DropDownChoice<String> intentChoice;
 
     protected ExpandedFlowPanel(
             String id,
@@ -152,6 +160,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         setOutputMarkupId( true );
         addHeader();
         addNameField();
+        addIntentField();
         addLabeled( "name-label", nameField );
         addEOIs();
         addAskedForRadios();
@@ -181,6 +190,37 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         add( issuesPanel );
         adjustFields( getFlow() );
     }
+
+    private void addIntentField() {
+        intentChoice = new DropDownChoice<String>(
+                "intent",
+                new PropertyModel<String>( this, "intentLabel" ),
+                getAllIntentLabels() );
+        intentChoice.setOutputMarkupId( true );
+        Flow.Intent intent = getFlow().getIntent();
+        if ( intent != null ) {
+            intentChoice.add( new AttributeModifier(
+                    "title",
+                    true,
+                    new Model<String>( intent.getHint() ) ) );
+        }
+        intentChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addIntentField();
+                target.addComponent( intentChoice );
+                update( target, new Change( Change.Type.Updated, getFlow(), "intent" ) );
+            }
+        } );
+        addOrReplace( intentChoice );
+    }
+
+    private List<String> getAllIntentLabels() {
+        List<String> labels = new ArrayList<String>();
+        labels.add( NO_INTENT );
+        labels.addAll( Flow.Intent.getAllLabels() );
+        return labels;
+    }
+
 
     private void addEOIs() {
         AjaxFallbackLink editEOIsLink = new AjaxFallbackLink( "editEOIs" ) {
@@ -232,6 +272,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         boolean lockedByUser = isLockedByUser( f );
 
         nameField.setEnabled( lockedByUser && f.canSetNameAndElements() );
+        intentChoice.setEnabled( lockedByUser && f.canSetNameAndElements() );
         askedForButtons.setEnabled( lockedByUser && f.canSetAskedFor() );
         allField.setVisible( isSend() && f.canGetAll() );
         allField.setEnabled( lockedByUser && isSend() && f.canSetAll() );
@@ -450,9 +491,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addHeader() {
-        FlowTitlePanel titlePanel = new FlowTitlePanel( "title", getFlow() ,isSend() );
+        FlowTitlePanel titlePanel = new FlowTitlePanel( "title", getFlow(), isSend() );
         // Add style classes
-        titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses(  ) ) ) );
+        titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses() ) ) );
         titlePanel.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Collapsed, getFlow() ) );
@@ -1080,6 +1121,29 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             super.changed( change );
         }
     }
+
+    /**
+     * Get label for flow's intent.
+     *
+     * @return a string
+     */
+    public String getIntentLabel() {
+        Flow.Intent intent = getFlow().getIntent();
+        return intent == null ? NO_INTENT : intent.getLabel();
+    }
+
+    /**
+     * Set the flow's intent given the intent's label.
+     *
+     * @param label a string
+     */
+    public void setIntentLabel( String label ) {
+        if ( label != null ) {
+            Flow.Intent intent = label.equals( NO_INTENT ) ? null : Flow.Intent.valueOfLabel( label );
+            doCommand( new UpdateSegmentObject( getFlow(), "intent", intent ) );
+        }
+    }
+
 
     /**
      * {@inheritDoc}

@@ -29,6 +29,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -86,6 +87,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * The empty string.
      */
     private static final String EMPTY_STRING = "";
+    /**
+     * Null category
+     */
+    private static final String NO_CATEGORY = "Unspecified";
 
     /**
      * String comparator for equality tests.
@@ -168,6 +173,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Attachments panel.
      */
     private AttachmentPanel attachmentsPanel;
+    /**
+     * Category choice.
+     */
+    private DropDownChoice<String> categoryChoice;
 
 
     //====================================
@@ -179,6 +188,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addSummaryPanel();
         addPartDescription();
         addTaskField();
+        addCategoryField();
         addEntityFields();
         addEventInitiation();
         addAsTeam();
@@ -216,6 +226,37 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         } );
         partDescription.setOutputMarkupId( true );
         add( partDescription );
+    }
+
+    private void addCategoryField() {
+        categoryChoice = new DropDownChoice<String>(
+                "category",
+                new PropertyModel<String>( this, "categoryLabel" ),
+                getCategoryLabels() );
+        categoryChoice.setOutputMarkupId( true );
+        Part.Category category = getPart().getCategory();
+        if ( category != null ) {
+            categoryChoice.add( new AttributeModifier(
+                    "title",
+                    true,
+                    new Model<String>( category.getHint() )
+            ) );
+        }
+        categoryChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addCategoryField();
+                target.addComponent( categoryChoice );
+                update( target, new Change( Change.Type.Updated, getPart(), "category" ) );
+            }
+        } );
+        addOrReplace( categoryChoice );
+    }
+
+    private List<String> getCategoryLabels() {
+        List<String> labels = new ArrayList<String>();
+        labels.add( NO_CATEGORY );
+        labels.addAll( Part.Category.getAllLabels() );
+        return labels;
     }
 
     private void addEntityFields() {
@@ -265,6 +306,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private void adjustFields() {
         taskField.setEnabled( isLockedByUser( getPart() ) );
+        categoryChoice.setEnabled( isLockedByUser( getPart() ) );
         for ( EntityReferencePanel entityReferencePanel : entityFields ) {
             entityReferencePanel.enable( isLockedByUser( getPart() ) );
         }
@@ -834,6 +876,28 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         doCommand( new UpdateSegmentObject( getPart(), "description", val ) );
     }
 
+    /**
+     * Get label for part's task category.
+     *
+     * @return a string
+     */
+    public String getCategoryLabel() {
+        Part.Category category = getPart().getCategory();
+        return category == null ? NO_CATEGORY : category.getLabel();
+    }
+
+    /**
+     * Set the part's task category given the category's label.
+     *
+     * @param label a string
+     */
+    public void setCategoryLabel( String label ) {
+        if ( label != null ) {
+            Part.Category category;
+            category = label.equals( NO_CATEGORY ) ? null : Part.Category.valueOfLabel( label );
+            doCommand( new UpdateSegmentObject( getPart(), "category", category ) );
+        }
+    }
 
     /**
      * Get edited part.

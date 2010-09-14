@@ -432,17 +432,8 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public synchronized boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
-        if ( name == null || name.trim().isEmpty() )
-            return false;
-
-        ModelObject mo = planDao.find( clazz, name.trim() );
-        if ( mo == null || mo.isUnknown() || !mo.isUndefined()
-                || queryService.isReferenced( mo ) || mo.isImmutable() )
-            return false;
-
-        LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );
-        queryService.remove( mo );
-        return true;
+        return !( name == null || name.trim().isEmpty() )
+                && getQueryService().cleanup( clazz, name );
     }
 
     /**

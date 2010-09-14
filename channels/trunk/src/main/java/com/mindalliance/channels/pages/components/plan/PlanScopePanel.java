@@ -507,11 +507,11 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         }
 
         /**
-          * {@inheritDoc}
-          */
-         protected List<Segment> findIndexedSegments() {
-             return new ArrayList<Segment>();
-         }
+         * {@inheritDoc}
+         */
+        protected List<Segment> findIndexedSegments() {
+            return new ArrayList<Segment>();
+        }
 
     }
 
@@ -550,11 +550,11 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         }
 
         /**
-          * {@inheritDoc}
-          */
-         protected List<TransmissionMedium> findIndexedMedia() {
-             return new ArrayList<TransmissionMedium>();
-         }
+         * {@inheritDoc}
+         */
+        protected List<TransmissionMedium> findIndexedMedia() {
+            return new ArrayList<TransmissionMedium>();
+        }
 
         /**
          * {@inheritDoc}
@@ -578,17 +578,21 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         }
 
         /**
-          * {@inheritDoc}
-          */
-         protected List<Segment> findIndexedSegments() {
-             return new ArrayList<Segment>();
-         }
+         * {@inheritDoc}
+         */
+        protected List<Segment> findIndexedSegments() {
+            return new ArrayList<Segment>();
+        }
 
         /**
          * {@inheritDoc}
          */
         protected List<Part> findIndexedParts() {
-            return getQueryService().findAllPartsPlayedBy( (Organization) getModel().getObject() );
+            Organization org = (Organization) getModel().getObject();
+            if ( org == null )
+                return new ArrayList<Part>();
+            else
+                return getQueryService().findAllPartsPlayedBy( org );
         }
     }
 }

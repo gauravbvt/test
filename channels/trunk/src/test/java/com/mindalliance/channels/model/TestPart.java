@@ -1,11 +1,6 @@
 package com.mindalliance.channels.model;
 
 import junit.framework.TestCase;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Role;
 
 public class TestPart extends TestCase {
 
@@ -111,12 +106,4 @@ public class TestPart extends TestCase {
         assertSame( Part.DEFAULT_ACTOR, part.getName() );
     }
 
-    public void testIsSystem() {
-        assertFalse( part.isSystem() );
-        part.setRole( new Role( "System" ) );
-        assertTrue( part.isSystem() );
-
-        part.setRole( new Role( "Computer system" ) );
-        assertTrue( part.isSystem() );
-    }
 }
