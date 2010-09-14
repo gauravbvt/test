@@ -303,6 +303,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = /*!isAskedFor() && isTriggeringToTarget() ? "do something" :*/ "something";
+        if ( getIntent() != null ) {
+            message += " (" + getIntent().getLabel().toLowerCase() + ")";
+        }
         Node source = getSource();
         if ( source.isConnector() ) {
             return MessageFormat.format(
@@ -345,7 +348,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
-
+        if ( getIntent() != null ) {
+            message += " (" + getIntent().getLabel().toLowerCase() + ")";
+        }
         Node node = getTarget();
         if ( node.isConnector() ) {
             String format = isAskedFor() ? "Can answer with \"{0}\""

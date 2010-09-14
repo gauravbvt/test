@@ -1119,6 +1119,18 @@ public class Part extends Node implements GeoLocatable {
     }
 
     /**
+     * Get task with categor, if any.
+     * @return a string
+     */
+    public String getTaskWithCategory() {
+        String str = getTask();
+        if ( getCategory() != null ) {
+            str += " (" + getCategory().getLabel().toLowerCase() + ")";
+        }
+        return str;
+    }
+
+    /**
      * Category of tasks.
      */
     public enum Category {
