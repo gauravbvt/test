@@ -32,39 +32,41 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
-        Plan plan = (Plan)modelObject;
-        List<Segment> segments = getQueryService().list( Segment.class);
+        Plan plan = (Plan) modelObject;
+        List<Segment> segments = getQueryService().list( Segment.class );
         for ( final Phase phase : plan.getPhases() ) {
-            for ( final Event event : getQueryService().list( Event.class  )) {
-                boolean exists = CollectionUtils.exists(
-                     segments,
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                Segment segment = (Segment)obj;
-                                return segment.getPhase().equals( phase )
-                                        && segment.getEvent().equals(event);
+            for ( final Event event : getQueryService().list( Event.class ) ) {
+                if ( !event.isUnknown() ) {
+                    boolean exists = CollectionUtils.exists(
+                            segments,
+                            new Predicate() {
+                                public boolean evaluate( Object obj ) {
+                                    Segment segment = (Segment) obj;
+                                    return segment.getPhase().equals( phase )
+                                            && segment.getEvent().equals( event );
+                                }
                             }
-                        }
-                );
-                if (!exists) {
-                    Issue issue = makeIssue(Issue.COMPLETENESS, plan);
-                    issue.setDescription( "No plan segment for phase "
-                            + phase.getName()
-                            + " of event "
-                            + event.getName() );
-                    issue.setRemediation( "Add a plan segment for phase "
-                            + phase.getName()
-                            + " of event "
-                            + event.getName()
-                            + "\nor remove "
-                            + event.getName()
-                            + " from the plan scope"
-                            + "\nor remove "
-                            + phase.getName()
-                            + " from the plan scope."
                     );
-                    issue.setSeverity( Level.Low );
-                    issues.add( issue );
+                    if ( !exists ) {
+                        Issue issue = makeIssue( Issue.COMPLETENESS, plan );
+                        issue.setDescription( "No plan segment for phase "
+                                + phase.getName()
+                                + " of event "
+                                + event.getName() );
+                        issue.setRemediation( "Add a plan segment for phase "
+                                + phase.getName()
+                                + " of event "
+                                + event.getName()
+                                + "\nor remove "
+                                + event.getName()
+                                + " from the plan scope"
+                                + "\nor remove "
+                                + phase.getName()
+                                + " from the plan scope."
+                        );
+                        issue.setSeverity( Level.Low );
+                        issues.add( issue );
+                    }
                 }
             }
         }
