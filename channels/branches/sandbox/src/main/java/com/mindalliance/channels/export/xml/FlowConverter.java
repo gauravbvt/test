@@ -108,6 +108,11 @@ public class FlowConverter extends AbstractChannelsConverter {
         if ( flow.isInternal() ) {
             exportUserIssues( flow, writer, context );
         }
+        if ( flow.getIntent() != null ) {
+            writer.startNode( "intent" );
+            writer.setValue( flow.getIntent().name() );
+            writer.endNode();
+        }
     }
 
     private void writeFlowNodes( InternalFlow flow,
@@ -231,6 +236,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setClassificationsLinked( classificationsLinked );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( segment, UserIssue.class );
+            } else if ( nodeName.equals( "intent") ) {
+                flow.setIntent( Flow.Intent.valueOf( reader.getValue() ) );
             } else {
                 throw new ConversionException( "Unknown element " + nodeName );
             }

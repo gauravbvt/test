@@ -10,6 +10,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -56,6 +57,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Whether eois classifications are expected to "share" the same classifications.
      */
     private boolean classificationsLinked = true;
+
+    /**
+     * The intent of a flow.
+     */
+    private Intent intent;
 
     protected Flow() {
     }
@@ -297,6 +303,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = /*!isAskedFor() && isTriggeringToTarget() ? "do something" :*/ "something";
+        if ( getIntent() != null ) {
+            message += " (" + getIntent().getLabel().toLowerCase() + ")";
+        }
         Node source = getSource();
         if ( source.isConnector() ) {
             return MessageFormat.format(
@@ -339,7 +348,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
-
+        if ( getIntent() != null ) {
+            message += " (" + getIntent().getLabel().toLowerCase() + ")";
+        }
         Node node = getTarget();
         if ( node.isConnector() ) {
             String format = isAskedFor() ? "Can answer with \"{0}\""
@@ -409,6 +420,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public void setAll( boolean all ) {
         this.all = all;
+    }
+
+    public Intent getIntent() {
+        return intent;
+    }
+
+    public void setIntent( Intent intent ) {
+        this.intent = intent;
     }
 
     /**
@@ -1094,4 +1113,48 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     : s1;
         }
     }
+
+    /**
+     * Intent of flows.
+     */
+    public enum Intent {
+
+        Alarm,
+        Announcement,
+        Command,
+        Feedback,
+        Report;
+
+        public String getLabel() {
+            return name();
+        }
+
+        public String getHint() {
+            switch( this ) {
+                case Report: return "Summary of facts and conjectures: \"Here's what we know...\"";
+                case Command: return "An injunction: \"Do this!\" \"Stop that!\"";
+                case Announcement: return "Statement, communiqué, advertisement...";
+                case Feedback: return "Thumbs up or down, evaluation, comment...";
+                case Alarm: return "Signal of changes requiring outside intervention";
+                default: return name();
+            }
+        }
+
+        public static List<String> getAllLabels() {
+            List<String> labels = new ArrayList<String>();
+            for ( Intent intent : Intent.values() ) {
+                labels.add( intent.getLabel() );
+            }
+            Collections.sort( labels );
+            return labels;
+        }
+
+        public static Intent valueOfLabel( String label ) {
+            for ( Intent intent : Intent.values() ) {
+                if ( intent.getLabel().equals( label ) ) return intent;
+            }
+            return null;
+        }
+    }
+
 }

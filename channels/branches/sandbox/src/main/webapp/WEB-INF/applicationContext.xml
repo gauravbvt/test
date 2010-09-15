@@ -191,6 +191,11 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.BroadcastOnlyChannels"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.IncorrectMediumDelegation"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PlanLocaleIsRelative"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.AlarmNotANotification"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithoutAssignments"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.OrganizationMissingExpectedCommitment"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ReportFlowWithoutEOIs"/>
             </list>
         </property>
     </bean>

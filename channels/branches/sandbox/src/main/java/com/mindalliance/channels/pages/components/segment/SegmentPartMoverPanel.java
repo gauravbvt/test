@@ -345,6 +345,11 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
                     "part.task",
                     EMPTY
             ) );
+            columns.add( makeColumn(
+                    "Category",
+                    "part.category.label",
+                    EMPTY
+            ) );
             columns.add( makeFilterableLinkColumn(
                     "Agent",
                     "part.actor",

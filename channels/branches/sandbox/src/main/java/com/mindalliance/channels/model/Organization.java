@@ -121,7 +121,7 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
     protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
         // check that location and parent are compatible
         return ModelEntity.implies( location, ( (Organization) entityType ).getLocation(), plan )
-            && ModelEntity.implies( parent, ( (Organization) entityType ).getParent(), plan );
+                && ModelEntity.implies( parent, ( (Organization) entityType ).getParent(), plan );
     }
 
     public boolean isActorsRequired() {
@@ -342,6 +342,7 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
 
     /**
      * {@inheritDoc}
+     *
      * @param queryService
      */
     public String getGeoMarkerLabel( QueryService queryService ) {
@@ -392,6 +393,44 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
                             }
                         }
                 );
+    }
+
+    /**
+     * Family relationships between organizations.
+     */
+    public enum FamilyRelationship {
+        /**
+         * Identity relationship (A equals B).
+         */
+        Identity,
+        /**
+         * Direct parent.
+         */
+        Parent,
+        /**
+         * Direct child.
+         */
+        Child,
+        /**
+         * Parent or parent of parent etc.
+         */
+        Ancestor,
+        /**
+         * Child or child of child etc.
+         */
+        Descendant,
+        /**
+         * Share same parent.
+         */
+        Sibling,
+        /**
+         * Share same ancestor but not same parent.
+         */
+        Cousin,
+        /**
+         * No family relationship.
+         */
+        None
     }
 
 

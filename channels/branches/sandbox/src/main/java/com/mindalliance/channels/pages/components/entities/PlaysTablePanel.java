@@ -82,9 +82,19 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
                 "part.segment.name", "part.segment.name" ) );                  // NON-NLS
         columns.add( makeLinkColumn( "Role", "part.role", "part.role.name", EMPTY ) );
         columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
+        columns.add( makeColumn(
+                "Category",
+                "part.category.label",
+                EMPTY
+        ) );
         columns.add( makeColumn( "Info", "flow.name", "@kind", "?", "flow.description" ) );
         // style class is one of: ask, notify, answer, receive
         // columns.add( makeColumn( "Channels", "flow.channelsString", EMPTY ) );      // NON-NLS
+        columns.add( makeColumn(
+                "Intent",
+                "flow.intent.label",
+                EMPTY
+        ) );
         columns.add( new PropertyColumn<String>(
                 new Model<String>( "Max delay" ),
                 "flow.maxDelay", "flow.maxDelay" ) );                                   // NON-NLS

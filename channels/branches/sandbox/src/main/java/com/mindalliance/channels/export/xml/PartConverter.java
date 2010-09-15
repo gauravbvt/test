@@ -131,6 +131,11 @@ public class PartConverter extends AbstractChannelsConverter {
         writer.startNode( "asTeam" );
         writer.setValue( "" + part.isAsTeam() );
         writer.endNode();
+        if ( part.getCategory() != null ) {
+            writer.startNode( "category" );
+            writer.setValue( part.getCategory().name() );
+            writer.endNode();
+        }
         // Part user issues
         exportUserIssues( part, writer, context );
     }
@@ -229,6 +234,8 @@ public class PartConverter extends AbstractChannelsConverter {
                 part.setAsTeam( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( segment, UserIssue.class );
+            } else if ( nodeName.equals( "category" ) ) {
+                part.setCategory( Part.Category.valueOf( reader.getValue() ) );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }

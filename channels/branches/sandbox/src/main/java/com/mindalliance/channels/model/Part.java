@@ -106,6 +106,11 @@ public class Part extends Node implements GeoLocatable {
      */
     private boolean asTeam;
 
+    /**
+     * Task categorization.
+     */
+    private Category category;
+
     public Part() {
         adjustName();
     }
@@ -233,6 +238,14 @@ public class Part extends Node implements GeoLocatable {
         this.repeatsEvery = repeatsEvery;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory( Category category ) {
+        this.category = category;
+    }
+
     @Override
     public boolean isPart() {
         return true;
@@ -283,7 +296,7 @@ public class Part extends Node implements GeoLocatable {
     public boolean isImpliedBy( ResourceSpec resourceSpec, Plan plan ) {
         ResourceSpec partResourceSpec = resourceSpec();
         return !partResourceSpec.isAnyone() && resourceSpec.narrowsOrEquals( partResourceSpec,
-                                                                             plan );
+                plan );
     }
 
     /**
@@ -389,7 +402,7 @@ public class Part extends Node implements GeoLocatable {
     }
 
     public void addGoal( Goal goal ) {
-        if ( !goals.contains( goal )) {
+        if ( !goals.contains( goal ) ) {
             goals.add( goal );
         }
     }
@@ -397,25 +410,25 @@ public class Part extends Node implements GeoLocatable {
     /**
      * Test if this part is considered belonging to an organization.
      *
-     * @param o the organization
+     * @param o    the organization
      * @param plan a plan
      * @return true if belonging
      */
     public boolean isInOrganization( Organization o, Plan plan ) {
         return organization == null ? Organization.UNKNOWN == o
-                                    : o.narrowsOrEquals( organization, plan );
+                : o.narrowsOrEquals( organization, plan );
     }
 
     /**
      * Test if this part is considered belonging to an organization.
      *
-     * @param j the jurisdiction
+     * @param j    the jurisdiction
      * @param plan
      * @return true if belonging
      */
     public boolean isInJurisdiction( Place j, Plan plan ) {
         return jurisdiction == null ? Place.UNKNOWN == j
-                                    : j.narrowsOrEquals( jurisdiction, plan );
+                : j.narrowsOrEquals( jurisdiction, plan );
     }
 
     /**
@@ -586,8 +599,8 @@ public class Part extends Node implements GeoLocatable {
     /**
      * Find explicit or implicit, single, actual actor, if any.
      *
-     * @return an actor or null
      * @param queryService
+     * @return an actor or null
      */
     public Actor getKnownActor( QueryService queryService ) {
         if ( actor != null ) {
@@ -645,7 +658,7 @@ public class Part extends Node implements GeoLocatable {
     /**
      * Get extended title for the part.
      *
-     * @param sep separator string
+     * @param sep          separator string
      * @param queryService
      * @return a string
      */
@@ -691,8 +704,8 @@ public class Part extends Node implements GeoLocatable {
     /**
      * Get summary of the part.
      *
-     * @return a string
      * @param queryService
+     * @return a string
      */
     public String getSummary( QueryService queryService ) {
         StringBuilder sb = new StringBuilder();
@@ -823,6 +836,7 @@ public class Part extends Node implements GeoLocatable {
 
     /**
      * {@inheritDoc}
+     *
      * @param queryService
      */
     public String getGeoMarkerLabel( QueryService queryService ) {
@@ -922,7 +936,7 @@ public class Part extends Node implements GeoLocatable {
                 }
         );
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -1054,12 +1068,13 @@ public class Part extends Node implements GeoLocatable {
         Level priority = queryService.computePartPriority( this );
         return priority.getNegativeLabel().toLowerCase();
     }
+
     /**
-      * Serialize the state of the part, minus its flows
-      *
-      * @return a map of attribute names and values
-      */
-    public Map<String,Object> mapState() {
+     * Serialize the state of the part, minus its flows
+     *
+     * @return a map of attribute names and values
+     */
+    public Map<String, Object> mapState() {
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "description", getDescription() );
         state.put( "task", getTask() );
@@ -1100,6 +1115,89 @@ public class Part extends Node implements GeoLocatable {
                     "location",
                     Arrays.asList( getLocation().getName(), getLocation().isType() ) );
         return state;
+
+    }
+
+    /**
+     * Get task with categor, if any.
+     * @return a string
+     */
+    public String getTaskWithCategory() {
+        String str = getTask();
+        if ( getCategory() != null ) {
+            str += " (" + getCategory().getLabel().toLowerCase() + ")";
+        }
+        return str;
+    }
+
+    /**
+     * Category of tasks.
+     */
+    public enum Category {
+
+        Audit,
+        Analysis,
+        Direction,
+        InterOperationsCoordination,
+        Operations,
+        OperationsManagement,
+        PlanningPreparing,
+        PolicySetting;
+
+        public String getLabel() {
+            switch ( this ) {
+                case OperationsManagement:
+                    return "Operations management";
+                case InterOperationsCoordination:
+                    return "Operational coordination";
+                case PlanningPreparing:
+                    return "Planning/preparing";
+                case PolicySetting:
+                    return "Policy setting";
+                default:
+                    return name();
+            }
+        }
+
+        public String getHint() {
+            switch ( this ) {
+                case Operations:
+                    return "Primary activities: The work that directly accomplishes the mission of the organization";
+                case OperationsManagement:
+                    return "Control, regulation and measurement of operations";
+                case InterOperationsCoordination:
+                    return "Avoiding and resolving operational conflicts without involving higher ups";
+                case Direction:
+                    return "What higher ups do: Operational cohesion, resource allocation, setting performance targets";
+                case Audit:
+                    return "Verification of operational performance by higher ups";
+                case Analysis:
+                    return "Making sense of the external environment";
+                case PlanningPreparing:
+                    return "Forward looking activities: Market research, forward planning, strategy, R&D...";
+                case PolicySetting:
+                    return "Ultimate authority: mission definition, ethics, balancing current vs future needs...";
+                default:
+                    return name();
+            }
+        }
+
+        public static List<String> getAllLabels() {
+            List<String> labels = new ArrayList<String>();
+            for ( Category category : Category.values() ) {
+                labels.add( category.getLabel() );
+            }
+            Collections.sort( labels );
+            return labels;
+        }
+
+        public static Category valueOfLabel( String label ) {
+            for ( Category category : Category.values() ) {
+                if ( category.getLabel().equals( label ) ) return category;
+            }
+            return null;
+        }
+
 
     }
 }

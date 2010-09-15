@@ -66,6 +66,7 @@ public final class ChannelsUtils {
         attributes.put( "waivedIssueDetections", new ArrayList<String>( flow.getWaivedIssueDetections() ) );
         attributes.put( "significanceToTarget", flow.getSignificanceToTarget() );
         attributes.put( "significanceToSource", flow.getSignificanceToSource() );
+        attributes.put( "intent", flow.getIntent() );
         return attributes;
     }
 
@@ -128,6 +129,14 @@ public final class ChannelsUtils {
                     "significanceToSource",
                     significance
             );
+        }
+        // Make intent null (unknown) if there is a conflict.
+        Flow.Intent intent1 = (Flow.Intent) attributes.get( "intent" );
+        Flow.Intent intent2 = (Flow.Intent) others.get( "intent" );
+        if ( intent1.equals( intent2 ) ) {
+            merged.put( "intent", intent1 );
+        } else {
+            merged.put( "intent", null );
         }
         return merged;
     }
@@ -282,6 +291,7 @@ public final class ChannelsUtils {
         state.put( "repeating", part.isRepeating() );
         state.put( "terminatesEventPhase", part.isTerminatesEventPhase() );
         state.put( "startsWithSegment", part.isStartsWithSegment() );
+        state.put( "category", part.getCategory() );
         state.put( "goals", new ArrayList<Goal>( part.getGoals() ) );
         if ( part.getInitiatedEvent() != null )
             state.put(
@@ -539,5 +549,14 @@ public final class ChannelsUtils {
         identity.put( "flow", flow.getId() );
         identity.put( "state", getFlowState( flow, part ) );
         return identity;
+    }
+
+    /**
+     * Whetehr a string starts with a vowel.
+     * @param str a string
+     * @return a boolean
+     */
+    public static boolean startsWithVowel( String str ) {
+        return !str.isEmpty() && "AEIOUaeiou".indexOf( str.charAt( 0 ) ) != -1;
     }
 }

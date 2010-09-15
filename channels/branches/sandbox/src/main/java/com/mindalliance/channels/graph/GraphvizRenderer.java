@@ -133,10 +133,10 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     private void doRender( String dot, String format,
                            OutputStream output ) throws DiagramException {
         String command = getDotPath()
-                        + System.getProperty( "file.separator" )
-                        + algo
-                        + " -Gcharset=latin1" 
-                        + " -T" + format;
+                + System.getProperty( "file.separator" )
+                + algo
+                + " -Gcharset=latin1"  
+                + " -T" + format;
         Process p = null;
         int exitValue;
         Timer timer = new Timer();

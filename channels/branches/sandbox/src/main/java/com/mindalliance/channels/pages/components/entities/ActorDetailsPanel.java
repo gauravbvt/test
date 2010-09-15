@@ -572,6 +572,11 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     "part.task",
                     EMPTY,
                     AssignmentsTablePanel.this ) );
+            columns.add( makeColumn(
+                    "Category",
+                    "part.category.label",
+                    EMPTY
+            ) );
             columns.add( makeFilterableLinkColumn(
                     "Location",
                     "part.location",
@@ -665,6 +670,11 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     "sharing",
                     "sharing.name",
                     EMPTY ) );
+            columns.add( makeColumn(
+                    "with intent",
+                    "sharing.intent.label",
+                    EMPTY
+            ) );
             columns.add( this.makeFilterableLinkColumn(
                     "with actor",
                     "beneficiary.actor",
