@@ -40,7 +40,7 @@ CONFIGURATION NOTES:
     <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager" lazy-init="true">
         <constructor-arg ref="definitionManager" />
         <property name="importDirectory" value="file:${channels.home}${file.separator}import"/>
-        <property name="defaultSupportCommunity" value="296"/>
+        <property name="defaultSupportCommunity" value="${supportCommunity.default}"/>
         <property name="builtInMedia">
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>
@@ -360,7 +360,7 @@ CONFIGURATION NOTES:
     <bean id="databaseFactory" class="com.mindalliance.channels.odb.DefaultODBTransactionFactory">
         <property name="odbDir" value="${channels.home}${file.separator}data"/>
     </bean>
-    
+
     <bean id="plannerMessagingService" class="com.mindalliance.channels.social.DefaultPlannerMessagingService">
         <property name="databaseFactory" ref="databaseFactory"/>
         <property name="mailSender" ref="mailSender"/>
