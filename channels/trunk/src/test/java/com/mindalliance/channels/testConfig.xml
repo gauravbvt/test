@@ -24,6 +24,7 @@
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="properties"><value>
             channels.home=${user.dir}/target/channel-test-data
+            supportCommunity.default=
         </value></property>
     </bean>
 
