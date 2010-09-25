@@ -326,6 +326,13 @@ public class TransmissionMedium extends ModelEntity {
     /**
      * {@inheritDoc}
      */
+    public String getKindLabel() {
+        return "medium";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
         return getEffectiveCast() == ( (TransmissionMedium) entityType ).getEffectiveCast();

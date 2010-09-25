@@ -36,7 +36,7 @@ public class FlowViolatesPolicy extends AbstractIssueDetector {
         for ( Attachment attachment : attachments ) {
             if ( attachment.isPolicyViolation() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, flow );
-                issue.setDescription( "Could violate policy per \"" + attachment.getUrl() + "\"." );
+                issue.setDescription( "Would violate policy per \"" + attachment.getUrl() + "\"." );
                 issue.setRemediation( "Change the sharing flow\nor remove the sharing flow\nor change the policy." );
                 if ( flow.getTarget().isPart() ) {
                     issue.setSeverity( getQueryService().computePartPriority( (Part) flow.getTarget() ) );

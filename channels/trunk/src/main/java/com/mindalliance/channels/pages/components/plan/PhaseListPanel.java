@@ -5,10 +5,10 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
-import com.mindalliance.channels.nlp.Matcher;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -91,7 +91,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 makePhasesTable();
                 target.addComponent( phasesDiv );
-                update( target, new Change( Change.Type.Added, getPlan(), "phases" ) );
+                update( target, new Change( Change.Type.Updated, getPlan(), "phases" ) );
             }
         } );
         nameContainer.add( nameField );

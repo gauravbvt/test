@@ -2,11 +2,8 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AddUserIssue;
-import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Updatable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -83,10 +80,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
      */
     public String getKind() {
         ModelObject modelObject = model.getObject();
-        if ( modelObject instanceof Segment ) return "Plan segment";
-        else if ( modelObject instanceof Part ) return "Task";
-        else if ( modelObject instanceof Flow ) return "Flow";
-        else return StringUtils.capitalize( modelObject.getTypeName() );
+        return StringUtils.capitalize( modelObject.getKindLabel() );
     }
 
     private void createIssuePanels() {

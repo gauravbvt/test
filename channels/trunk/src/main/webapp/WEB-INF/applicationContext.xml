@@ -186,7 +186,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.AgreementEncompassedByOther"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.MediumWithoutMode"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.CommittmentWithoutRequiredUnicastChannel"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.CommittmentOverUnsecuredChannel"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowOverUndersecuredMedium"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.BroadcastOnlyChannels"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.IncorrectMediumDelegation"/>

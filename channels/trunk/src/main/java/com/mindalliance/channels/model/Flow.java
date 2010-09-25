@@ -67,6 +67,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public String getKindLabel() {
+        return "Flow";
+    }
+
+    /**
      * Whether a flow connecting source and target would be an internal flow.
      *
      * @param source a node
@@ -1046,6 +1053,23 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
+     * Whether flow is prohibited beacuse it has at least one forbidding policy attached.
+     *
+     * @return a boolean
+     */
+    public boolean isProhibited() {
+        return CollectionUtils.exists(
+                getAttachments(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Attachment attachment = (Attachment) object;
+                        return attachment.getType().equals( Attachment.Type.PolicyCant );
+                    }
+                }
+        );
+    }
+
+    /**
      * The significance of a flow.
      */
     public enum Significance {
@@ -1130,13 +1154,19 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
 
         public String getHint() {
-            switch( this ) {
-                case Report: return "Summary of facts and conjectures: \"Here's what we know...\"";
-                case Command: return "An injunction: \"Do this!\" \"Stop that!\"";
-                case Announcement: return "Statement, communiqué, advertisement...";
-                case Feedback: return "Thumbs up or down, evaluation, comment...";
-                case Alarm: return "Signal of changes requiring outside intervention";
-                default: return name();
+            switch ( this ) {
+                case Report:
+                    return "Summary of facts and conjectures: \"Here's what we know...\"";
+                case Command:
+                    return "An injunction: \"Do this!\" \"Stop that!\"";
+                case Announcement:
+                    return "Statement, communiqué, advertisement...";
+                case Feedback:
+                    return "Thumbs up or down, evaluation, comment...";
+                case Alarm:
+                    return "Signal of changes requiring outside intervention";
+                default:
+                    return name();
             }
         }
 

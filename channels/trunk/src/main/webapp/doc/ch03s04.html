@@ -1,0 +1,69 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Editing tasks and flows</title><link rel="stylesheet" href="/css/doc.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="channels_user_guide.html" title="Information Sharing Planning with Channels"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Building and delivering Information Sharing Plans with Channels"><link rel="prev" href="ch03s03.html" title="Plan editor panels"><link rel="next" href="ch03s05.html" title="Segment scoping"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Editing tasks and flows</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03s03.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;3.&nbsp;Building and delivering Information Sharing Plans with
+    Channels</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch03s05.html">Next</a></td></tr></table><hr></div><div class="section" title="Editing tasks and flows"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e1586"></a>Editing tasks and flows</h2></div></div></div><p>Clicking on a summary for a task opens up a form with which to
+      edit the task specifications. Note that the fields of the form are
+      disabled if someone else is currently editing the same task. The listed
+      &#8220;sends&#8221; of the task (information shared by the task plus its information
+      capabilities) and &#8220;receives&#8221; (information shared with the task plus its
+      information needs) can also be edited by clicking on the summaries to
+      open up their respective forms.</p><p>Note that, as a rule, none of the fields of a form anywhere in
+      Channels need to be given a value. Any field can be left blank.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_3.png"></div></div><div class="section" title="Editing a task"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1600"></a>Editing a task</h3></div></div></div><p>A task is specified first by naming it and then by categorizing
+        it. It is further specified by stating where it is to be executed, by
+        whom, in what role, for what jurisdiction, and on behalf of what
+        organization. Any of the location, agent, jurisdiction, role, and
+        organization (entities) that specify a task can be left unnamed so as
+        to imply that more than one agent can be assigned to the task. The
+        names of entities can refer to actual entities (Morritown, NJ, John
+        Doe, ACME etc.) or to types of entities (a city, a certified
+        technician, a corporation etc.).</p><p>The execution of a task can be set to be &#8220;as a team&#8221; to indicate
+        that all assignees are to work together when carrying out the task. By
+        default, assignees are each to execute the task independently.</p><p>A task is also described by how long it normally takes to
+        complete, whether it repeats and how quickly, and whether it starts
+        automatically with the segment (implying that the assigned agents
+        would become aware of the onset of the event phase on their
+        own).</p><p>The purpose of a task can be stated as terminating the event
+        phase of the segment, mitigating one or more risks or achieve gains
+        within the segment's scope.</p><p>Related reference and policy documents can be attached to the
+        task either by URL or by uploading them. Finally, the task can be
+        given a brief, informal description.</p><p>As with any Plan elements, a planner can add issues to those
+        automatically detected about the task. Issues added by a planner can
+        be removed by any planner.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_3a.png"></div></div></div><div class="section" title="Editing a &#34;send&#34; or &#34;receive&#34;"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1622"></a>Editing a "send" or "receive"</h3></div></div></div><p>The information needed, produced or to be shared is named, its
+        intent is identified and its elements are enumerated.</p><p>The mode of communication is given as either notification or
+        by-request (push or pull).</p><p>If an information flow (information that's shared) is a
+        notification, then it can be made a broadcast (information will be
+        shared with all agents assigned to the target task) or a unicast
+        (information will be shared with at least one agent assigned to the
+        target task).</p><p>Keep in mind that an information flow that is a &#8220;send&#8221; to a task
+        producing shared information is the same information flow that is a
+        &#8221;receive&#8221; to the task consuming the shared information. One is looking
+        at one flow from its two ends.</p><p>An information flow is created by first adding an information
+        need to a task (if necessary), then adding an information capability
+        of the same name in another (also if necessary), and then connecting
+        the need to the capability or vice-versa by setting the &#8220;from&#8221; or &#8220;to&#8221;
+        field to the other task.</p><p>A communication delay is set either to zero (communication is to
+        happen without delay) or to some finite time interval. For an
+        information need, the delay represents the timeliness requirement for
+        being notified or for getting a response to a request. For an
+        information capability, the delay represents how quickly the
+        information could be produced and communicated. For a sharing flow,
+        the delay represents a &#8220;quality of service&#8221; commitment.</p><p>The communication channels over which the information is to flow
+        can be set for both an information need, and for a notification
+        information flow but only when viewed from the notified task. The same
+        is true for a requested information flow when viewed from the task
+        that responds to a request. Alternate communication channels are
+        listed in order of preference.</p><p>When editing a &#8220;send&#8221; or &#8220;receive&#8221;, a planner can set whether
+        sharing would normally trigger or terminate a task. A notification
+        could trigger or terminate the receiving task. It could also terminate
+        the sending task, if sending the notification concludes the task that
+        produced the information. A request could trigger the task that
+        produces the requested response.</p><p>Planners can attach documents to a &#8220;send&#8221; or &#8220;receive&#8221;. A
+        document can be a reference (it documents), a mandating policy (it
+        obligates sharing), a prohibiting policy (it prohibits sharing), a
+        multiple policy (contains language that imposes obligations and
+        restrictions) or it can be an image provided as an illustration (for
+        example, a screenshot). If an information flow has a prohibiting
+        policy attached to it then there can not be any implied sharing
+        commitment.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_3b.png"></div></div><p>An element of information can be assigned individual secrecy
+        classifications and optional sourcing and handling
+        instructions.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_57.png"></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03s03.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ch03.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch03s05.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Plan editor panels&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="channels_user_guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Segment scoping</td></tr></table></div></body></html>

@@ -512,7 +512,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
      */
     public String getAboutText( Issue issue ) {
         ModelObject about = issue.getAbout();
-        String type = about.getTypeName();
+        String type = about.getKindLabel();
         return type + " \"<strong>" + about.getLabel() + "</strong>\"";
     }
 
@@ -524,7 +524,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
      */
     public String getAboutPlainText( Issue issue ) {
         ModelObject about = issue.getAbout();
-        String type = about.getTypeName();
+        String type = about.getKindLabel();
         return type + " \"" + about.getLabel() + "\"";
     }
 

@@ -2548,8 +2548,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             for ( Assignment source : sources ) {
                 for ( Assignment beneficiary : beneficiaries ) {
                     Commitment commitment = new Commitment( source, beneficiary, flow );
-                    if ( source.getActor().equals( beneficiary.getActor() )
-                            || commitment.passesClearanceTest() ) {
+                    if ( !source.getActor().equals( beneficiary.getActor() )
+                            && !flow.isProhibited()
+                           // && commitment.passesClearanceTest() 
+                            ) {
                         commitments.add( commitment );
                     }
                 }

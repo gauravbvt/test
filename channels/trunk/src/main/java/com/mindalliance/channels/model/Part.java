@@ -138,6 +138,13 @@ public class Part extends Node implements GeoLocatable {
         return "task";
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String getKindLabel() {
+        return "Task";
+    }
+
     public String getTask() {
         return task;
     }

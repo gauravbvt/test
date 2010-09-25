@@ -386,4 +386,12 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         // default
         return false;
     }
+
+    /**
+     * Get type label.
+     * @return a string
+     */
+    public String getKindLabel() {
+        return getTypeName();
+    }
 }

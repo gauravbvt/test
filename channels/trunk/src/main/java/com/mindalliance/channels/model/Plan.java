@@ -460,7 +460,14 @@ public class Plan extends ModelObject {
                             public boolean evaluate( Object obj ) {
                                 return ModelObject.areIdentical( (ModelObject) obj, mo );
                             }
-                        } );
+                        } )
+                || CollectionUtils.exists(
+                        phases,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ModelObject.areIdentical( (ModelObject) obj, mo );
+                            }
+                } );
     }
 
     /**

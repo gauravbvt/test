@@ -47,7 +47,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
      */
     public Actor( String name ) {
         super( name );
-    }
+    }    
 
     /**
      * {@inheritDoc}
@@ -199,4 +199,5 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
                 }
         );
     }
+
 }
