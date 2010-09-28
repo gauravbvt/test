@@ -25,7 +25,7 @@ CONFIGURATION NOTES:
 
     <!-- =========================== Main Components -->
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels">
-        <property name="supportCommunityUri" value="273"/>
+        <!--<property name="supportCommunityUri" value="273"/>-->
     </bean>
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
     <bean id="issueScanner" class="com.mindalliance.channels.analysis.IssueScanner"/>
@@ -40,7 +40,6 @@ CONFIGURATION NOTES:
     <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager" lazy-init="true">
         <constructor-arg ref="definitionManager" />
         <property name="importDirectory" value="file:${channels.home}${file.separator}import"/>
-        <property name="defaultSupportCommunity" value="${supportCommunity.default}"/>
         <property name="builtInMedia">
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>

@@ -63,7 +63,7 @@ public class TestAdminPage extends AbstractChannelsTest {
         assertEquals( "", plan.getPlannerSupportCommunity() );
 
         FormTester form = tester.newFormTester( "users" );
-        form.setValue( "supportCommunity", "AA" );
+        form.setValue( "plannerSupportCommunity", "AA" );
         form.submit();
 
         assertEquals( "AA", plan.getPlannerSupportCommunity() );
