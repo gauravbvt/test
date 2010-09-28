@@ -3803,7 +3803,7 @@
 
       <para>A planner selects the item “About Plan” in the top “Show” menu to
       access the Plan panel where the planner can edit the name, description,
-      planned phases, locale and attached documentation of the Plan. </para>
+      planned phases, locale and attached documentation of the Plan.</para>
 
       <para>The Plan panel also gives access to:</para>
 
@@ -4404,7 +4404,7 @@
       </screenshot>
 
       <para>The feedback button appearing next to the flow map in the Plan
-      editor is meant to provide feedback about the Plan. </para>
+      editor is meant to provide feedback about the Plan.</para>
 
       <screenshot>
         <info>
@@ -4454,39 +4454,169 @@
     <section>
       <title>Administration</title>
 
-      <para>The Administration page is accessible only to the administrator of
-      Channels. The Administration Page enables an administration to:</para>
+      <para>A Channels administrator (and only an administrator) can create
+      new plans, retire existing plans, register and disable users, and assign
+      plan-access privileges to them. Administrators are also responsible for
+      configuring an installation of Channels.</para>
 
-      <itemizedlist>
-        <listitem>
-          <para>Create a new Plan (must be given a unique and fixed
-          URI)</para>
-        </listitem>
+      <section>
+        <title>Plan creation and user privileges</title>
 
-        <listitem>
-          <para>Retire a Plan</para>
-        </listitem>
+        <para>The Administration page is accessible only to the administrator
+        of Channels. The Administration Page enables an administration
+        to:</para>
 
-        <listitem>
-          <para>Assign privileges to User (per Plan or for all Plans)</para>
-        </listitem>
-      </itemizedlist>
+        <itemizedlist>
+          <listitem>
+            <para>Select a Plan as the current Plan</para>
+          </listitem>
 
-      <screenshot>
-        <info>
-          <title>Administration page</title>
-        </info>
+          <listitem>
+            <para>Access the Plan's Procedures (from the development
+            version)</para>
+          </listitem>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="quick_tour/tour_85.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </screenshot>
+          <listitem>
+            <para>Access the Plan editor (by clicking on "Modify Plan")</para>
+          </listitem>
+
+          <listitem>
+            <para>Create a new Plan by:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Giving it a unique and fixed URI</para>
+              </listitem>
+
+              <listitem>
+                <para>Identifying the sponsor (client)</para>
+              </listitem>
+
+              <listitem>
+                <para>Giving the support community's ID (more on that
+                later)</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>Put the development version of the current Plan into
+            production (by clicking on "Productize Plan")</para>
+          </listitem>
+
+          <listitem>
+            <para>Retire the current Plan</para>
+          </listitem>
+
+          <listitem>
+            <para>Add a user (with user id, email address and password)</para>
+          </listitem>
+
+          <listitem>
+            <para>Assign user privileges (Planner or User) for the current
+            Plan or for all Plans</para>
+          </listitem>
+
+          <listitem>
+            <para>Disable a user</para>
+          </listitem>
+
+          <listitem>
+            <para>Give another user Administrator privileges</para>
+          </listitem>
+
+          <listitem>
+            <para>Identify the support community ID for a Plan</para>
+          </listitem>
+        </itemizedlist>
+
+        <screenshot>
+          <info>
+            <title>Administration page</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_85.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </section>
+
+      <section>
+        <title>Configuring external services</title>
+
+        <para>Channels relies on a number of online services:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Geonames and Google Maps for geolocation</para>
+          </listitem>
+
+          <listitem>
+            <para>SurveyGizmos for launching surveys and collecting the
+            results</para>
+          </listitem>
+
+          <listitem>
+            <para>An email service (SMTP) to send emails</para>
+          </listitem>
+
+          <listitem>
+            <para>BetaEasy for providing feedback and for online community
+            support</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Access to an external service requires account identification,
+        either in the form of user id and password or in the form of an API
+        key. When Channels is used as a service, service configuration is
+        already taken care of. However when installing a new instance of
+        Channels, an Administrator must provide purchase service access and
+        configure Channels to use the correct account information. <footnote>
+            <para>The installation and configuration of Channels is covered in
+            the "Channels Installation and Configuration Guide".</para>
+          </footnote></para>
+
+        <section>
+          <title>BetaEasy</title>
+
+          <para>Before creating a new Plan, the Administrator normally creates
+          two distinct support communities, one for the planners and one for
+          the users of the to-be-created Plan. The administrator creates
+          BetaEasy accounts for all planners and sends out login information
+          to them. </para>
+
+          <para>Each support community is implemented as a BetaEasy project.
+          The community is identified by a BetaEasy project ID. A default
+          support community is pre-defined for all Plans that don't identity
+          their own support communities.</para>
+
+          <para>It is the responsibility of the administrator to give each
+          planner access to the BetaEasy projects that correspond to the Plans
+          they are assigned to. After logging in, the planner can see reports
+          on the feedback of other planners and of users. Users provide their
+          feedback about their Procedures via the feedback widget from within
+          the Information Sharing Procedures report. Planners provide their
+          feedback about the Plan from within the Plan editor. </para>
+
+          <screenshot>
+            <info>
+              <title>Logging into BetaEasy</title>
+            </info>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="???"></imagedata>
+              </imageobject>
+            </mediaobject>
+          </screenshot>
+        </section>
+      </section>
     </section>
 
     <section>
-      <title>Logging out</title>
+      <title>Logging out of Channels</title>
 
       <para>A planner logs out to terminate a Plan editing session. Any edit
       locks still held at that time are automatically released. The user is

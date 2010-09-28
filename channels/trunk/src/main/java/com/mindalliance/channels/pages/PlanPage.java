@@ -448,7 +448,7 @@ public final class PlanPage extends WebPage implements Updatable {
         FeedbackWidget feedbackWidget = new FeedbackWidget(
                 "feedback-widget",
                 new Model<String>(
-                        getPlan().getSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
+                        getPlan().getPlannerSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
                 true );
         makeVisible( feedbackWidget, false );
         add( feedbackWidget );

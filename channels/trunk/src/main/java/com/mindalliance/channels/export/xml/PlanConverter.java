@@ -84,6 +84,12 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( plan.getDescription() );
         writer.endNode();
+        writer.startNode( "plannerSupportCommunity" );
+        writer.setValue( plan.getPlannerSupportCommunity() );
+        writer.endNode();
+        writer.startNode( "userSupportCommunity" );
+        writer.setValue( plan.getUserSupportCommunity() );
+        writer.endNode();
         // Producers - planners who voted to put this version into production
         for ( String producer : plan.getProducers() ) {
             writer.startNode( "producer" );
@@ -178,6 +184,10 @@ public class PlanConverter extends AbstractChannelsConverter {
                 }
             } else if ( nodeName.equals( "client" ) ) {
                 plan.setClient( reader.getValue() );
+            } else if ( nodeName.equals( "plannerSupportCommunity" ) ) {
+                plan.setPlannerSupportCommunity( reader.getValue() );
+            } else if ( nodeName.equals( "userSupportCommunity" ) ) {
+                plan.setUserSupportCommunity( reader.getValue() );
             } else if ( nodeName.equals( "description" ) ) {
                 plan.setDescription( reader.getValue() );
                 // Entities
