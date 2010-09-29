@@ -151,8 +151,10 @@ public class AdminPage extends WebPage {
                     }
                         .setEnabled( definitionManager.getSize() > 1 ),
 
-                    new TextField<String>( "supportCommunity",
-                                      new PropertyModel<String>( this, "plan.supportCommunity" ) ),
+                    new TextField<String>( "plannerSupportCommunity",
+                                      new PropertyModel<String>( this, "plan.plannerSupportCommunity" ) ),
+                        new TextField<String>( "userSupportCommunity",
+                                          new PropertyModel<String>( this, "plan.userSupportCommunity" ) ),
 
                     new TextField<String>( "newPlanUri",
                                            new PropertyModel<String>( this, "newPlanUri" ) )

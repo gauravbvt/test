@@ -14,7 +14,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Commitment implied in a flow is missing a valid channel.
@@ -34,8 +36,11 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
         List<Issue> issues = new ArrayList<Issue>();
         if ( flow.isSharing() ) {
             final QueryService queryService = getQueryService();
+            Set<Channelable> contactedEntities = new HashSet<Channelable>();
             for ( final Commitment commitment : queryService.findAllCommitments( flow ) ) {
-                Channelable contacted = contactedEntity( commitment );
+                contactedEntities.add( contactedEntity( commitment ) );
+            }
+            for ( Channelable contacted : contactedEntities ) {
                 for ( final Channel flowChannel : flow.getEffectiveChannels() ) {
                     if ( flowChannel.isUnicast() && !flowChannel.isDirect() ) {
                         boolean hasValidChannel = CollectionUtils.exists(
@@ -45,7 +50,7 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
                                         Channel channel = (Channel) object;
                                         return channel.isValid()
                                                 && channel.getMedium().narrowsOrEquals( flowChannel.getMedium(),
-                                                                                        User.current().getPlan() );
+                                                User.current().getPlan() );
                                     }
                                 } );
                         if ( !hasValidChannel ) {

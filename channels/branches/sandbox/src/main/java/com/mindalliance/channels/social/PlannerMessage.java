@@ -78,7 +78,7 @@ public class PlannerMessage extends PersistentObject {
     private String aboutDescription( ModelObject mo ) {
         String description = "";
         if ( mo != null ) {
-            description = mo.getTypeName() + " \"" + mo.getLabel() + "\"";
+            description = mo.getKindLabel() + " \"" + mo.getLabel() + "\"";
             if ( mo instanceof SegmentObject ) {
                 description += " in segment \"" + ( (SegmentObject) mo ).getSegment().getLabel() + "\"";
             }

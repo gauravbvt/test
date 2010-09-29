@@ -123,9 +123,9 @@ public class EventListPanel extends AbstractCommandablePanel {
                 new Model<String>( itemCssClasses( item.getIndex(), count ) ) ) );
     }
 
-    private String itemCssClasses( int index, int count )  {
+    private String itemCssClasses( int index, int count ) {
         String classes = index % 2 == 0 ? "even" : "odd";
-        if ( index == count -1 ) classes += " last";
+        if ( index == count - 1 ) classes += " last";
         return classes;
     }
 
@@ -147,6 +147,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 ) );
             }
         } );
+        confirmedCheckBox.setEnabled( wrapper.isMarkedForCreation() || getPlan().getIncidents().size() > 1 );
     }
 
     /**
@@ -229,7 +230,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                         UpdateObject.Action.Add
                 ) );
 
-            } else if ( !markedForCreation ) {
+            } else if ( !markedForCreation && getPlan().getIncidents().size() > 1 ) {
                 Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
                 doCommand( new UpdatePlanObject(
                         plan,

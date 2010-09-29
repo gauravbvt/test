@@ -2,12 +2,14 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
@@ -17,10 +19,8 @@ import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
-import com.mindalliance.channels.dao.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -141,7 +141,9 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void addWithinField() {
-        moDetailsDiv.add(
+        WebMarkupContainer withinContainer = new WebMarkupContainer( "withinContainer" );
+        moDetailsDiv.add( withinContainer );
+        withinContainer.add(
                 new ModelObjectLink( "within-link",
                         new PropertyModel<Place>( getPlace(), "within" ),
                         new Model<String>( "Is within" ) ) );
@@ -168,9 +170,9 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             }
         } );
         addIssues( withinField, getPlace(), "within" );
-        withinField.setEnabled( isLockedByUser( getPlace() ) );
         withinField.setOutputMarkupId( true );
-        moDetailsDiv.add( withinField );
+        withinContainer.add( withinField );
+        withinContainer.setVisible( getPlace().isActual() );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -555,7 +557,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * Find all places directly or indirectly within a given place.
      *
      * @param queryService the query service
-     * @param place a place
+     * @param place        a place
      * @return a list of places
      */
     public static List<Place> findAllPlacesWithin( QueryService queryService, Place place ) {
@@ -565,7 +567,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
         for ( Place p : places ) {
             if ( !p.equals( place ) &&
-                 ( p.isInside( place, User.current().getPlan() ) || place.isRegion() && p.isGeoLocatedIn( geoLocation ) ) )
+                    ( p.isInside( place, User.current().getPlan() ) || place.isRegion() && p.isGeoLocatedIn( geoLocation ) ) )
                 result.add( p );
         }
         return result;

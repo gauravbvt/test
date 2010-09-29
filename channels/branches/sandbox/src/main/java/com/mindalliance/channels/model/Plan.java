@@ -101,7 +101,9 @@ public class Plan extends ModelObject {
      */
     private Place locale;
 
-    private String supportCommunity = "";
+    private String plannerSupportCommunity = "";
+
+    private String userSupportCommunity = "";
 
     //-----------------------------
     public Plan() {
@@ -156,21 +158,36 @@ public class Plan extends ModelObject {
         this.locale = locale;
     }
 
-    public String getSupportCommunity() {
-        return supportCommunity == null ? "" : supportCommunity;
+    public String getPlannerSupportCommunity() {
+        return plannerSupportCommunity == null ? "" : plannerSupportCommunity;
     }
 
-    public void setSupportCommunity( String supportCommunity ) {
-        this.supportCommunity = supportCommunity;
+    public void setPlannerSupportCommunity( String plannerSupportCommunity ) {
+        this.plannerSupportCommunity = plannerSupportCommunity;
     }
 
-    public String getSupportCommunityUri( String defaultName ) {
-        String name = getSupportCommunity();
+    public String getPlannerSupportCommunityUri( String defaultName ) {
+        String name = getPlannerSupportCommunity();
         return name.isEmpty()
                 ? defaultName
                 : name;
     }
 
+
+    public String getUserSupportCommunity() {
+        return userSupportCommunity == null ? "" : userSupportCommunity;
+    }
+
+    public void setUserSupportCommunity( String supportCommunity ) {
+        this.userSupportCommunity = supportCommunity;
+    }
+
+    public String getUserSupportCommunityUri( String defaultName ) {
+        String name = getUserSupportCommunity();
+        return name.isEmpty()
+                ? defaultName
+                : name;
+    }
     /**
      * Name with version.
      *
@@ -460,7 +477,14 @@ public class Plan extends ModelObject {
                             public boolean evaluate( Object obj ) {
                                 return ModelObject.areIdentical( (ModelObject) obj, mo );
                             }
-                        } );
+                        } )
+                || CollectionUtils.exists(
+                        phases,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return ModelObject.areIdentical( (ModelObject) obj, mo );
+                            }
+                } );
     }
 
     /**

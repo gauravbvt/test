@@ -47,7 +47,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
      */
     public Actor( String name ) {
         super( name );
-    }
+    }    
 
     /**
      * {@inheritDoc}
@@ -108,7 +108,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
     public String getNormalizedName() {
         String name = getName().trim();
         if ( this == UNKNOWN || name.indexOf( ',' ) >= 0 ) return name;
-        else if ( isType() ) return name;
+        else if ( isType() || isArchetype() || isSystem() ) return name;
         else {
             int index = name.lastIndexOf( ' ' );
             if ( index >= 0 ) {
@@ -199,4 +199,5 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
                 }
         );
     }
+
 }

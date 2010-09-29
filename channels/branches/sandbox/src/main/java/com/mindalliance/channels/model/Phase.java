@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.PlanDao;
-
 import java.text.Collator;
 
 /**
@@ -127,6 +125,8 @@ public class Phase extends ModelEntity {
     public boolean isPreEvent() {
         return timing == Timing.PreEvent;
     }
+
+    
 
     /**
      * The timing of a phase.

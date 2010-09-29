@@ -71,40 +71,38 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
                     getCommander().cleanup( Place.class, part.getLocation().getName() );
             }
         } );
-        if ( isExpanded( getPart() ) && getCommander().isAttachmentCopied() ) {
+        if ( isExpanded( getPart() ) ) {
             commandWrappers.add( new CommandWrapper( new PasteAttachment( getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-        }
-        if ( isExpanded( getPart() ) && getCommander().isFlowCopied() ) {
             commandWrappers.add( new CommandWrapper( new PasteFlow( getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
+            commandWrappers.add( new CommandWrapper( new AddUserIssue( getPart() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new DuplicatePart( getPart() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new SatisfyAllNeeds( getPart() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new Disintermediate( getPart() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
         }
-        commandWrappers.add( new CommandWrapper( new AddUserIssue( getPart() ) ) {
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new DuplicatePart( getPart() ) ) {
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new SatisfyAllNeeds( getPart() ) ) {
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new Disintermediate( getPart() ) ) {
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
         return commandWrappers;
     }
 

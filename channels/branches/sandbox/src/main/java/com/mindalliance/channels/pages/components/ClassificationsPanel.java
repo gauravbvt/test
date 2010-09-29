@@ -271,7 +271,6 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
         }
 
         public void setSystem( String val ) {
-            assert markedForCreation;
             system = val;
         }
 

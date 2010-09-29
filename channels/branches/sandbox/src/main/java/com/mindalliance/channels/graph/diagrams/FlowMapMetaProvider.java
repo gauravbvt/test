@@ -6,6 +6,7 @@ import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -13,7 +14,6 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.imaging.ImagingService;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
@@ -163,8 +163,12 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
     public EdgeNameProvider<Flow> getEdgeLabelProvider() {
         return new EdgeNameProvider<Flow>() {
             public String getEdgeName( Flow flow ) {
+                String flowName = flow.getName();
+                if ( flow.isProhibited() ) {
+                    flowName += " (PROHIBITED)";
+                }
                 String label = AbstractMetaProvider.separate(
-                        flow.getName(),
+                        flowName,
                         LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
                 if ( flow.isAskedFor() && !label.endsWith( "?" ) ) {
                     label = label + "?";

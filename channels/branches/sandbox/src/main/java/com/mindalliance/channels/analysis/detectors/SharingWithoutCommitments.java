@@ -32,13 +32,12 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
         List<Commitment> commitments = getQueryService().findAllCommitments( flow );
         if ( commitments.isEmpty() ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, flow );
-            issue.setDescription( "No commitment is implied by this sharing flow" );
+            issue.setDescription( "No sharing commitment is implied by this information flow." );
             StringBuilder sb = new StringBuilder();
-            sb.append( "Modify the specifications for source and target tasks so that they both imply assignments" );
-            sb.append( "\nor add or redefine participating agents to match source and target task specifications" );
-            if ( flow.isClassificationsLinked() ) {
-                sb.append( "\nor declassify elements of information" );
-                sb.append( "\nor make sure otherwise committed agents have the required clearances" );
+            sb.append( "Modify the specifications for source and target tasks so that they both get assigned" );
+            sb.append( "\nor add or redefine one or more participating agents to match source and target task specifications" );
+            if ( flow.isProhibited() ) {
+                sb.append( "\nand un-attach all prohibiting policies" );
             }
             issue.setRemediation( sb.toString() );
             issue.setSeverity( Level.Medium );

@@ -78,6 +78,13 @@ public class Segment extends ModelObject {
     public Segment() {
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String getKindLabel() {
+        return "Plan segment";
+    }
+
     public Event getEvent() {
         return event;
     }

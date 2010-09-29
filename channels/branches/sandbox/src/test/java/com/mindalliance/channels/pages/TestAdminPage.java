@@ -4,12 +4,18 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.PlanDefinition;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.util.tester.FormTester;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.TestExecutionListeners;
@@ -54,13 +60,13 @@ public class TestAdminPage extends AbstractChannelsTest {
         AdminPage adminPage = (AdminPage) tester.getLastRenderedPage();
 
         Plan plan = adminPage.getPlan();
-        assertEquals( "", plan.getSupportCommunity() );
+        assertEquals( "", plan.getPlannerSupportCommunity() );
 
         FormTester form = tester.newFormTester( "users" );
-        form.setValue( "supportCommunity", "AA" );
+        form.setValue( "plannerSupportCommunity", "AA" );
         form.submit();
 
-        assertEquals( "AA", plan.getSupportCommunity() );
+        assertEquals( "AA", plan.getPlannerSupportCommunity() );
     }
 
     @Test

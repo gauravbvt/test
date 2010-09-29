@@ -334,7 +334,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      * {@inheritDoc}
      */
     protected String getTitle() {
-        return "About " + getObject().getTypeName().toLowerCase() + ": " + getObject().getName();
+        return "About " + getObject().getKindLabel().toLowerCase() + ": " + getObject().getName();
     }
 
     /**

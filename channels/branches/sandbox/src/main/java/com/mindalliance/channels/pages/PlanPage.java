@@ -415,6 +415,7 @@ public final class PlanPage extends WebPage implements Updatable {
         };
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
         addHeader();
+        addFooter();
         addRefresh();
         addHelp();
         addChangeMessagePanel();
@@ -447,7 +448,7 @@ public final class PlanPage extends WebPage implements Updatable {
         FeedbackWidget feedbackWidget = new FeedbackWidget(
                 "feedback-widget",
                 new Model<String>(
-                        getPlan().getSupportCommunityUri( planManager.getDefaultSupportCommunity( ) ) ),
+                        getPlan().getPlannerSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
                 true );
         makeVisible( feedbackWidget, false );
         add( feedbackWidget );
@@ -499,10 +500,14 @@ public final class PlanPage extends WebPage implements Updatable {
                     }
                 } );
         segmentNameLabel.setOutputMarkupId( true );
-
+        segmentNameLabel.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getSegment() ) );
+            }
+        } );
         // Add style mods from analyst.
         annotateSegmentName();
-        form.add( segmentNameLabel );
+        form.addOrReplace( segmentNameLabel );
 
         // Add link to map of parts
         form.addOrReplace( createPartsMapLink() );
@@ -518,7 +523,10 @@ public final class PlanPage extends WebPage implements Updatable {
                     }
                 } );
         segmentDescriptionLabel.setOutputMarkupId( true );
-        form.add( segmentDescriptionLabel );
+        form.addOrReplace( segmentDescriptionLabel );
+    }
+
+    private void addFooter() {
         form.add( new Label( "user",
                 getUser().getUsername() ) );                              // NON-NLS
     }
@@ -691,8 +699,8 @@ public final class PlanPage extends WebPage implements Updatable {
         Analyst analyst = getApp().getAnalyst();
         String issue = analyst.getIssuesSummary( segment, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         segmentNameLabel.add( new AttributeModifier( "class", true,// NON-NLS
-                new Model<String>( issue.isEmpty() ? "no-error"
-                        : "error" ) ) );  // NON-NLS
+                new Model<String>( issue.isEmpty() ? "no-error pointer"
+                        : "error pointer" ) ) );  // NON-NLS
         segmentNameLabel.add( new AttributeModifier( "title", true,// NON-NLS
                 new Model<String>( issue.isEmpty()
                         ? "No known issue"

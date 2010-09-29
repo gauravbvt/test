@@ -163,7 +163,7 @@ public class SOPsReportPage extends WebPage {
         FeedbackWidget feedbackWidget = new FeedbackWidget(
                 "feedback-widget",
                 new Model<String>(
-                        getPlan().getSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
+                        getPlan().getUserSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
                 true );
         makeVisible( feedbackWidget, false );
         add( feedbackWidget );
