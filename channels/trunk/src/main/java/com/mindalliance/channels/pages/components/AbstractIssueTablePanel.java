@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
+import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -187,7 +187,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             columns.add( makeFilterableLinkColumn(
                     "About",
                     "about",
-                    "about.name",
+                    "about.label",
                     EMPTY,
                     AbstractIssueTablePanel.this ) );
             columns.add( makeColumn(

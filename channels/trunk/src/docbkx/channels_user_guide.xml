@@ -4544,18 +4544,19 @@
       </section>
 
       <section>
-        <title>Configuring external services</title>
+        <title>External services</title>
 
         <para>Channels relies on a number of online services:</para>
 
         <itemizedlist>
           <listitem>
-            <para>Geonames and Google Maps for geolocation</para>
+            <para>Geonames and Google Maps<superscript>TM</superscript> for
+            geolocation</para>
           </listitem>
 
           <listitem>
-            <para>SurveyGizmos for launching surveys and collecting the
-            results</para>
+            <para>SurveyGizmos<superscript>TM</superscript> for launching
+            surveys and collecting the results</para>
           </listitem>
 
           <listitem>
@@ -4563,8 +4564,8 @@
           </listitem>
 
           <listitem>
-            <para>BetaEasy for providing feedback and for online community
-            support</para>
+            <para>BetaEasy<superscript>TM</superscript> for providing feedback
+            and for online community support</para>
           </listitem>
         </itemizedlist>
 
@@ -4578,40 +4579,137 @@
             the "Channels Installation and Configuration Guide".</para>
           </footnote></para>
 
-        <section>
-          <title>BetaEasy</title>
+        <para>Planners can log into the BetaEasy<superscript>TM</superscript>
+        feedback service and the SurveyGizmoTM survey service to browse
+        collected data and get reports.</para>
+      </section>
 
-          <para>Before creating a new Plan, the Administrator normally creates
-          two distinct support communities, one for the planners and one for
-          the users of the to-be-created Plan. The administrator creates
-          BetaEasy accounts for all planners and sends out login information
-          to them. </para>
+      <section>
+        <title>Feedback service: BetaEasy<superscript>TM</superscript></title>
 
-          <para>Each support community is implemented as a BetaEasy project.
-          The community is identified by a BetaEasy project ID. A default
-          support community is pre-defined for all Plans that don't identity
-          their own support communities.</para>
+        <para>Before creating a new Plan, the Administrator normally creates
+        two distinct support communities, one for the planners and one for the
+        users of the to-be-created Plan. The administrator creates BetaEasy
+        accounts for all planners and sends out login information to
+        them.</para>
 
-          <para>It is the responsibility of the administrator to give each
-          planner access to the BetaEasy projects that correspond to the Plans
-          they are assigned to. After logging in, the planner can see reports
-          on the feedback of other planners and of users. Users provide their
-          feedback about their Procedures via the feedback widget from within
-          the Information Sharing Procedures report. Planners provide their
-          feedback about the Plan from within the Plan editor. </para>
+        <para>Each support community is implemented as a BetaEasy project. The
+        community is identified by a BetaEasy project ID. A default support
+        community is pre-defined for all Plans that don't identity their own
+        support communities.</para>
 
-          <screenshot>
-            <info>
-              <title>Logging into BetaEasy</title>
-            </info>
+        <para>It is the responsibility of the administrator to give each
+        planner access to the BetaEasy projects that correspond to the Plans
+        they are assigned to. After logging in, the planner can see reports on
+        the feedback of other planners and of users. Users provide their
+        feedback about their Procedures via the feedback widget from within
+        the Information Sharing Procedures report. Planners provide their
+        feedback about the Plan from within the Plan editor.</para>
 
-            <mediaobject>
-              <imageobject>
-                <imagedata fileref="???"></imagedata>
-              </imageobject>
-            </mediaobject>
-          </screenshot>
-        </section>
+        <para>To browse and mine the feedback of other planners about a Plan
+        or of users about their Procedures, a planner must first log into the
+        BetaEasy service.</para>
+
+        <screenshot>
+          <info>
+            <title>Logging into BetaEasy<superscript>TM</superscript></title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_93.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>After logging in, a BetaEasy<superscript>TM</superscript>
+        manager (and ISP planner), is shown a dashboard summarizing the
+        feedback activity on all authorized projects.</para>
+
+        <screenshot>
+          <info>
+            <title>Feedback dashboard</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_96.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Planners can then browse the collected feedback.</para>
+
+        <screenshot>
+          <info>
+            <title>Browsing feedback</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_95.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Refer to BetaEasy<superscript>TM</superscript>'s online help at
+        <uri>http://www.betaeasy.com/help</uri> for more details on how to use
+        their service.</para>
+      </section>
+
+      <section>
+        <title>Survey service:
+        SurveyGizmo<superscript>TM</superscript></title>
+
+        <para>Surveys launched and managed from within Channels are hosted and
+        managed by the SurveyGizmo<superscript>TM</superscript> service.
+        </para>
+
+        <para>A planner can access a survey sample or a survey report directly
+        from within Channels.</para>
+
+        <screenshot>
+          <info>
+            <title>Accessing survey service from Channels</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_97.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <screenshot>
+          <info>
+            <title>Survey questionnaire</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_37.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>A planner can look at the questionnaire for a particular survey
+        and see a report on the response to that survey.</para>
+
+        <screenshot>
+          <info>
+            <title>Survey report</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_98.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>Refer to the SurveyGizmoTM service's online help at
+        <uri>http://surveygizmo.zendesk.com/home</uri> for more details on how
+        to use their service.</para>
       </section>
     </section>
 
@@ -6342,7 +6440,8 @@
               </row>
 
               <row>
-                <entry><para>Flow over broadcast channels only</para></entry>
+                <entry><para>No guarantee information will be received over
+                broadcast channels.</para></entry>
 
                 <entry><para>Depends on impacted tasks</para></entry>
 

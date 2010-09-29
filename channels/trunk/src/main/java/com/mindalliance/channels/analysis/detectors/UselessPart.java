@@ -65,8 +65,8 @@ public class UselessPart extends AbstractIssueDetector {
         if ( part.receives().hasNext() || part.sends().hasNext() ) {
             if ( !isUseful( part, new HashSet<Part>() ) ) {
                 DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
-                issue.setDescription( "Not useful: it neither makes a gain, ends a risk or mitigates one, "
-                        + "nor does it trigger or send information to a useful task." );
+                issue.setDescription( "The task is not useful: it achieves no goal, "
+                        + "and it does not trigger nor send information to a useful task." );
                 issue.setRemediation( "Have the task achieve a goal, end the event phase (if it would end a risk)\n" 
                         + "or make sure at least one task that it"
                         + " directly or indirectly triggers does achieve a goal." );
