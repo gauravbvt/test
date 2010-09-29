@@ -38,9 +38,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
                          MarshallingContext context ) {
         ModelEntity entity = (ModelEntity) object;
         writer.addAttribute( "id", String.valueOf( entity.getId() ) );
-        if ( entity.getKind() == null ) {
-            System.out.println( "Oops" );
-        }
+        assert( entity.getKind() != null );
         writer.addAttribute( "kind", entity.getKind().name() );
         String name = entity.getName() == null ? "" : entity.getName();
         writer.addAttribute( "name", name );

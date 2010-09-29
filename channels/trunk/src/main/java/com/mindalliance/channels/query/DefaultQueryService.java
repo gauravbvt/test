@@ -2750,7 +2750,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         return !target.isUseful()
                                 && CollectionUtils.intersection(
                                 importantFlows,
-                                IteratorUtils.toList( target.sends() ) ).isEmpty();
+                                target.getAllSharingSends() ).isEmpty();
                     }
                 }
         );
