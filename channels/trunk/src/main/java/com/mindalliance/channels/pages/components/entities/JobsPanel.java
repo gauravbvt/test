@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -337,10 +338,14 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
      *
      * @return a resource spec
      */
-    public ResourceSpec getJobResourceSpec() {
-        ResourceSpec spec = selectedJob.resourceSpec( getOrganization() );
-        spec.setActor( null );
-        return spec;
+    public Specable getJobResourceSpec() {
+        return getJobResourceSpec( selectedJob );
+    }
+
+    private Specable getJobResourceSpec( Job job ) {
+        ResourceSpec spec = job.resourceSpec( getOrganization() );
+        return new ResourceSpec(
+                null, spec.getRole(), spec.getOrganization(), spec.getJurisdiction() );
     }
 
     private void addConfirmedCell( ListItem<JobWrapper> item ) {
@@ -483,9 +488,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     }
 
     private List<Play> findAllPlays( Job job ) {
-        ResourceSpec spec = job.resourceSpec( getOrganization() );
-        spec.setActor( null );
-        return getQueryService().findAllPlays( spec, false );
+        return getQueryService().findAllPlays( getJobResourceSpec( job ), false );
 
     }
 
@@ -578,7 +581,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                         job,
                         UpdateObject.Action.Remove
                 ) );
-                ResourceSpec resourceSpec = job.resourceSpec( getOrganization() );
+                Specable resourceSpec = job.resourceSpec( getOrganization() );
                 if ( resourceSpec.getActor() != null )
                     getCommander().cleanup( Actor.class, resourceSpec.getActor().getName() );
                 if ( resourceSpec.getRole() != null )

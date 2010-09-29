@@ -1,10 +1,9 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.query.QueryService;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,7 @@ import java.util.List;
 /**
  * An actor's job in an organization (or with no job).
  */
-public class Employment implements Serializable, GeoLocatable {
+public class Employment implements GeoLocatable, Specable {
     /**
      * Actor.
      */

@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.query.Play;
 import com.mindalliance.channels.util.SortableBeanProvider;
@@ -27,7 +28,7 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
     /**
      * The player
      */
-    private ResourceSpec player;
+    private Specable player;
     /**
      * Whether the plays are specific to resourceSpec.
      */

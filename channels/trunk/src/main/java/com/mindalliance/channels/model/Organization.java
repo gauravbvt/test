@@ -16,7 +16,8 @@ import java.util.Set;
 /**
  * A company, agency, social club, etc.
  */
-public class Organization extends AbstractUnicastChannelable implements GeoLocatable, Hierarchical {
+public class Organization extends AbstractUnicastChannelable
+        implements GeoLocatable, Hierarchical, Specable {
 
     /**
      * Parent organization. May be null.
@@ -393,6 +394,22 @@ public class Organization extends AbstractUnicastChannelable implements GeoLocat
                             }
                         }
                 );
+    }
+
+    public Actor getActor() {
+        return null;
+    }
+
+    public Role getRole() {
+        return null;
+    }
+
+    public Organization getOrganization() {
+        return this;
+    }
+
+    public Place getJurisdiction() {
+        return null;
     }
 
     /**

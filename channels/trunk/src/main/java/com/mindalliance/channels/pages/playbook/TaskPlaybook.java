@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Specable;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
@@ -66,7 +67,7 @@ public class TaskPlaybook extends PlaybookPage {
     }
 
     private void init( Actor actor, Part part ) {
-        ResourceSpec actorSpec = ResourceSpec.with( actor );
+        ResourceSpec actorSpec = new ResourceSpec( actor );
         String taskName = part.getTask();
         sortFlows( part, actorSpec, getQueryService() );
 
@@ -84,7 +85,7 @@ public class TaskPlaybook extends PlaybookPage {
                         new ListView<ResourceSpec>( "actorSpec", specList ) {
                             @Override
                             protected void populateItem( ListItem<ResourceSpec> item ) {
-                                ResourceSpec resourceSpec = item.getModelObject();
+                                Specable resourceSpec = item.getModelObject();
                                 item.add( new Label( "actorLabel", resourceSpec.toString() )
                                                     .setRenderBodyOnly( true ) );
                             }
@@ -258,8 +259,8 @@ public class TaskPlaybook extends PlaybookPage {
     }
 
     private static String getRoleString( Part part, Actor actor ) {
-        ResourceSpec resourceSpec = new ResourceSpec( part.resourceSpec() );
-        resourceSpec.setActor( actor );
-        return resourceSpec.toString();
+        return new ResourceSpec(
+                actor, part.getRole(), part.getOrganization(), part.getJurisdiction()
+        ).toString();
     }
 }

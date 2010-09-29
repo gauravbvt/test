@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.dao.User;
 import org.apache.commons.collections.CollectionUtils;
@@ -115,22 +116,20 @@ public class OrganizationReportPanel extends Panel {
 
     private List<ResourceSpec> findAllResponsibilities() {
         Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
-        for ( Part p : queryService.findAllParts(
-                segment,
-                ResourceSpec.with( organization ),
-                false ) ) {
-            ResourceSpec spec = p.resourceSpec();
-            Organization specOrg = spec.getOrganization();
-            // Tweak the matching
-            boolean matches = specOrg == null && organization.isUnknown()
-                    || specOrg != null && !organization.isWithin( specOrg, User.current().getPlan() );
-            if ( matches ) {
-                spec.setOrganization( organization );
-                if ( spec.getRole() == null ) {
-                    spec.setRole( Role.UNKNOWN );
-                }
-                specs.add( spec );
-            }
+        Plan plan = User.current().getPlan();
+
+        for ( Part part : queryService.findAllParts( segment, organization, false ) ) {
+
+            Organization partOrg = part.getOrganization();
+
+            if ( partOrg == null && organization.isUnknown()
+                 || partOrg != null && !organization.isWithin( partOrg, plan ) )
+                specs.add(
+                    new ResourceSpec(
+                        part.getActor(),
+                        part.getRole() == null ? Role.UNKNOWN : part.getRole(),
+                        organization,
+                        part.getJurisdiction() ) );
         }
         return new ArrayList<ResourceSpec>( specs );
     }

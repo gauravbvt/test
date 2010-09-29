@@ -12,7 +12,8 @@ import org.apache.commons.lang.StringUtils;
  * Time: 8:26:05 PM
  */
 
-public class ResourceSpec extends ModelObject {   // TODO - remove extends ModelObject
+public final class ResourceSpec extends ModelObject implements Specable {
+    // TODO - remove extends ModelObject
 
     /**
      * The resource spec's actor
@@ -34,107 +35,41 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      */
     private Place jurisdiction;
 
+    public ResourceSpec( Specable specable ) {
+        if ( specable != null ) {
+            actor = specable.getActor();
+            role = specable.getRole();
+            organization = specable.getOrganization();
+            jurisdiction = specable.getJurisdiction();
+        }
+    }
+
     public ResourceSpec() {
+        this( null );
     }
 
-    public ResourceSpec( ResourceSpec resourceSpec ) {
-        actor = resourceSpec.getActor();
-        role = resourceSpec.getRole();
-        organization = resourceSpec.getOrganization();
-        jurisdiction = resourceSpec.getJurisdiction();
+    public ResourceSpec( Actor actor, Role role, Organization organization, Place jurisdiction ) {
+        this.actor = actor;
+        this.role = role;
+        this.organization = organization;
+        this.jurisdiction = jurisdiction;
     }
 
-    public ResourceSpec( Part part ) {
-        fromPart( part );
-    }
-
-    public ResourceSpec( Channelable channelable ) {
-        if ( channelable instanceof Actor )
-            actor = (Actor) channelable;
-        else if ( channelable instanceof Organization )
-            organization = (Organization) channelable;
-        else if ( channelable instanceof Flow ) {
-            fromPart( ( (Flow) channelable ).getContactedPart() );
-        } else {
-            throw new IllegalArgumentException( "Not a channelable: " + channelable );
-        }
-    }
-
-    public ResourceSpec( Assignment assignment ) {
-        actor = assignment.getActor();
-        role = assignment.getRole();
-        jurisdiction = assignment.getJurisdiction();
-        organization = assignment.getOrganization();
-    }
-
-    public ResourceSpec( Employment employment ) {
-        actor = employment.getActor();
-        role = employment.getRole();
-        jurisdiction = employment.getJurisdiction();
-        organization = employment.getOrganization();
-    }
-
-    private void fromPart( Part part ) {
-        if ( part != null ) {
-            actor = part.getActor();
-            role = part.getRole();
-            organization = part.getOrganization();
-            jurisdiction = part.getJurisdiction();
-        }
-    }
-
-    /**
-     * Resource factory.
-     *
-     * @param entity an entity
-     * @return a new resource spec
-     */
-    public static ResourceSpec with( ModelEntity entity ) {
-        ResourceSpec resourceSpec = new ResourceSpec();
-        if ( entity instanceof Actor )
-            resourceSpec.setActor( (Actor) entity );
-        else if ( entity instanceof Organization )
-            resourceSpec.setOrganization( (Organization) entity );
-        else if ( entity instanceof Role )
-            resourceSpec.setRole( (Role) entity );
-        else if ( entity instanceof Place )
-            resourceSpec.setJurisdiction( (Place) entity );
-        else {
-            throw new IllegalArgumentException( "Not a resource entity: " + entity );
-        }
-        return resourceSpec;
-    }
 
     public Actor getActor() {
         return actor;
-    }
-
-    public void setActor( Actor actor ) {
-        this.actor = actor;
     }
 
     public Role getRole() {
         return role;
     }
 
-    public void setRole( Role role ) {
-        this.role = role;
-    }
-
     public Organization getOrganization() {
         return organization;
     }
 
-    public void setOrganization( Organization organization ) {
-        this.organization = organization;
-    }
-
     public Place getJurisdiction() {
         return jurisdiction;
-    }
-
-    public void setJurisdiction( Place jurisdiction ) {
-        this.jurisdiction = jurisdiction;
     }
 
     /**
@@ -142,12 +77,14 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      */
     @Override
     public boolean equals( Object obj ) {
-        if ( !( obj instanceof ResourceSpec ) ) return false;
-        ResourceSpec resourceSpec = (ResourceSpec) obj;
-        return ModelObject.areEqualOrNull( actor, resourceSpec.getActor() )
-                && ModelObject.areEqualOrNull( role, resourceSpec.getRole() )
-                && ModelObject.areEqualOrNull( organization, resourceSpec.getOrganization() )
-                && Place.samePlace( jurisdiction, resourceSpec.getJurisdiction() );
+        if ( obj == null || !Specable.class.isAssignableFrom( obj.getClass() ) )
+            return false;
+
+        Specable specable = (Specable) obj;
+        return ModelObject.areEqualOrNull( actor, specable.getActor() )
+            && ModelObject.areEqualOrNull( role, specable.getRole() )
+            && ModelObject.areEqualOrNull( organization, specable.getOrganization() )
+            && Place.samePlace( jurisdiction, specable.getJurisdiction() );
     }
 
     /**
@@ -169,25 +106,7 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a string
      */
     public String getActorName() {
-        return actor == null ? Actor.UNKNOWN.getName() : actor.getName();
-    }
-
-    /**
-     * Gets the organization's name or an empty string if no organization
-     *
-     * @return a string
-     */
-    public String getOrganizationName() {
-        return organization == null ? Organization.UNKNOWN.getName() : organization.getName();
-    }
-
-    /**
-     * Gets the jurisdiction's name or an empty string if no jurisdiction
-     *
-     * @return a string
-     */
-    public String getJurisdictionName() {
-        return jurisdiction == null ? "" : jurisdiction.getName();
+        return actor == null ? Actor.UnknownName : actor.getName();
     }
 
     /**
@@ -247,7 +166,6 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
 
     /**
      * Resource is not qualified by a jurisdiction
-     *
      * @return a boolean
      */
     public boolean isAnyJurisdiction() {
@@ -256,7 +174,6 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
 
     /**
      * Resource is anyone?
-     *
      * @return a boolean
      */
     public boolean isAnyone() {
@@ -293,9 +210,9 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      */
     public String getReportTitle() {
         return actor != null ? actor.getName()
-                : role != null ? role.getName()
-                : organization != null ? organization.getName()
-                : "Someone";
+             : role != null ? role.getName()
+             : organization != null ? organization.getName()
+             : "Someone";
     }
 
     /**
@@ -311,109 +228,68 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      *
      * @param other     a resource spec
      * @param precisely a boolean - true -> must be equal, false -> must be equal or more narrow
-     * @param plan
+     * @param plan the plan to search
      * @return a boolean
      */
-    public boolean matches( ResourceSpec other, boolean precisely, Plan plan ) {
-        if ( precisely ) {
+    public boolean matches( Specable other, boolean precisely, Plan plan ) {
+        if ( precisely )
+            return matches( actor, other.getActor(), Actor.UNKNOWN )
+                && matches( role, other.getRole(), Role.UNKNOWN )
+                && matches( organization, other.getOrganization(), Organization.UNKNOWN )
+                && Place.samePlace( jurisdiction, other.getJurisdiction() );
 
-            boolean sameActor = ModelObject.areEqualOrNull( actor, other.getActor() )
-                    || actor == null && Actor.UNKNOWN.equals( other.getActor() )
-                    || other.getActor() == null && Actor.UNKNOWN.equals( actor );
-
-            boolean sameRole = ModelObject.areEqualOrNull( role, other.getRole() )
-                    || role == null && Role.UNKNOWN.equals( other.getRole() )
-                    || other.getRole() == null && Role.UNKNOWN.equals( role );
-
-            boolean sameOrganization = ModelObject.areEqualOrNull( organization, other.getOrganization() )
-                    || organization == null && Organization.UNKNOWN.equals( other.getOrganization() )
-                    || other.getOrganization() == null && Organization.UNKNOWN.equals( organization );
-
-            return sameActor
-                    && sameRole
-                    && sameOrganization
-                    && Place.samePlace( jurisdiction, other.getJurisdiction() );
-        } else
+        else
             return compatibleWith( other, plan );
+    }
+
+    private static boolean matches( ModelObject object, ModelObject other, ModelObject unknown ) {
+        return object == null ? other == null || unknown.equals( other )
+             : other  == null ? unknown.equals( object )
+                              : object.equals( other );
     }
 
     /**
      * Whether this resource spec and another could be describing the same resource.
      *
      * @param other a resource spec
-     * @param plan
+     * @param plan the plan to search
      * @return a boolean
      */
-    public boolean compatibleWith( ResourceSpec other, Plan plan ) {
-        return ModelEntity.compatible( getActor(), other.getActor(), plan )
-                && ModelEntity.compatible( getRole(), other.getRole(), plan )
-                && ModelEntity.compatible( getJurisdiction(), other.getJurisdiction(), plan )
-                && ModelEntity.compatible( getOrganization(), other.getOrganization(), plan );
+    private boolean compatibleWith( Specable other, Plan plan ) {
+        return ModelEntity.compatible( actor,        other.getActor(), plan )
+            && ModelEntity.compatible( role,         other.getRole(), plan )
+            && ModelEntity.compatible( jurisdiction, other.getJurisdiction(), plan )
+            && ModelEntity.compatible( organization, other.getOrganization(), plan );
     }
 
     /**
      * Is this resource spec generalized by another resource spec?
      *
      * @param other a resource spec
-     * @param plan
+     * @param plan the plan to search
      * @return a boolean
      */
-    public boolean narrowsOrEquals( ResourceSpec other, Plan plan ) {
-        if ( other.isAnyone() ) return false;
-        if ( equals( other ) ) return true;
-        if ( !( ModelEntity.implies( actor, other.getActor(), plan ) || other.isAnyActor() ) )
-            return false;
-        if ( !( ModelEntity.implies( role, other.getRole(), plan ) || other.isAnyRole() ) )
-            return false;
-        if ( !( ModelEntity.implies( organization, other.getOrganization(), plan )
-                || other.isAnyOrganization() ) )
-            return false;
-        if ( !( ModelEntity.implies( jurisdiction, other.getJurisdiction(), plan )
-                || other.isAnyJurisdiction() ) )
-            return false;
-        return true;
-    }
+    public boolean narrowsOrEquals( Specable other, Plan plan ) {
+        Actor oa = other.getActor();
+        Role or = other.getRole();
+        Organization oo = other.getOrganization();
+        Place oj = other.getJurisdiction();
 
-    /**
-     * Return most specific entity composing this resource specification
-     *
-     * @return an entity
-     */
-    public ModelEntity mostSpecificEntity() {
-        ModelEntity mostSpecific = null;
-        if ( actor != null ) mostSpecific = actor;
-        else if ( jurisdiction != null ) mostSpecific = jurisdiction;
-        else if ( role != null ) mostSpecific = role;
-        else if ( organization != null ) mostSpecific = organization;
-        return mostSpecific;
-    }
+        boolean aoa = oa == null || Actor.UNKNOWN.equals( oa );
+        boolean aor = or == null || Role.UNKNOWN.equals( or );
+        boolean aoo = oo == null || Organization.UNKNOWN.equals( oo );
+        boolean aoj = oj == null || Place.UNKNOWN.equals( oj );
 
-    /**
-     * Whether the resource is defined by a single entity
-     *
-     * @return a boolean
-     */
-    public boolean isEntityOnly() {
-        int count = 0;
-        if ( actor != null ) count++;
-        if ( role != null ) count++;
-        if ( organization != null ) count++;
-        if ( jurisdiction != null ) count++;
-        return count == 1;
-    }
+        if ( aoa && aor && aoo && aoj )
+            return false;
 
-    /**
-     * The higher the specificity, the higher the value.
-     *
-     * @return a specificity value
-     */
-    public int specificity() {
-        int val = 0;
-        if ( !isAnyActor() ) val += 100;
-        if ( !isAnyRole() ) val += 10;
-        if ( !isAnyJurisdiction() ) val += 5;
-        if ( !isAnyOrganization() ) val += 1;
-        return val;
+        if ( equals( other ) )
+            return true;
+
+        return ( aoa || actor != null && actor.narrowsOrEquals( oa, plan ) )
+            && ( aor || role != null && role.narrowsOrEquals( or, plan ) )
+            && ( aoo || organization != null && organization.narrowsOrEquals( oo, plan ) )
+            && ( aoj || jurisdiction != null && jurisdiction.narrowsOrEquals( oj, plan ) );
     }
 
     /**
@@ -423,25 +299,21 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      */
     public boolean hasJob() {
         return actor != null && actor.isActual()
-                && organization != null && organization.isActual();
+            && organization != null && organization.isActual();
     }
 
     /**
-     * Whether this resource spec references the entity ot an entity that broadens it.
+     * Whether this resource spec references the entity or an entity that broadens it.
      *
      * @param entity an entity
-     * @param plan
+     * @param plan the plan to search
      * @return a boolean
      */
     public boolean hasEntityOrBroader( ModelEntity entity, Plan plan ) {
-        return broadensOrEqualsEntity( entity, plan );
-    }
-
-    private boolean broadensOrEqualsEntity( ModelEntity entity, Plan plan ) {
-        return ModelEntity.broadensOrEquals( actor, entity, plan )
-                || ModelEntity.broadensOrEquals( role, entity, plan )
-                || ModelEntity.broadensOrEquals( organization, entity, plan )
-                || ModelEntity.broadensOrEquals( jurisdiction, entity, plan );
+        return entity.narrowsOrEquals( actor, plan )
+            || entity.narrowsOrEquals( role, plan )
+            || entity.narrowsOrEquals( organization, plan )
+            || entity.narrowsOrEquals( jurisdiction, plan );
     }
 
     /**
@@ -451,38 +323,25 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      * @return a boolean
      */
     public boolean hasEntity( ModelEntity entity ) {
-        return ModelEntity.isEquivalentToOrIsA( actor, entity )
-                || ModelEntity.isEquivalentToOrIsA( role, entity )
-                || ModelEntity.isEquivalentToOrIsA( organization, entity )
-                || ModelEntity.isEquivalentToOrIsA( jurisdiction, entity );
-        /*if ( entity instanceof Actor ) {
-            return actor != null && ( actor.equals( entity ) || actor.hasTag( entity ) )
-                    || actor == null && entity.equals( Actor.UNKNOWN );
-        } else if ( entity instanceof Role ) {
-            return role != null && ( role.equals( entity ) || role.hasTag( entity ) )
-                    || role == null && entity.equals( Role.UNKNOWN );
-        } else if ( entity instanceof Organization ) {
-            return organization != null && ( organization.equals( entity ) || organization.hasTag( entity ) )
-                    || organization == null && entity.equals( Organization.UNKNOWN );
-        } else {
-            return jurisdiction != null && ( jurisdiction.equals( entity ) || jurisdiction.hasTag( entity ) )
-                    || jurisdiction == null && entity.equals( Place.UNKNOWN );
-        }*/
+        return entity.isEquivalentToOrIsA( actor, Actor.class )
+            || entity.isEquivalentToOrIsA( role, Role.class )
+            || entity.isEquivalentToOrIsA( organization, Organization.class )
+            || entity.isEquivalentToOrIsA( jurisdiction, Place.class );
     }
 
     @Override
     public String getDescription() {
-        return actor != null ? actor.getDescription()
-                : role != null ? role.getDescription()
-                : organization == null ? ""
-                : organization.getDescription();
+        return actor != null        ? actor.getDescription()
+             : role != null         ? role.getDescription()
+             : organization == null ? ""
+                                    : organization.getDescription();
     }
 
     /**
      * Find the first job that fits this resource spec.
      *
      * @return a job or null
-     * @param plan
+     * @param plan the plan to search
      */
     public Job getJob( Plan plan ) {
         if ( organization != null )
@@ -494,15 +353,6 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
     }
 
     /**
-     * Make display string with no max length.
-     *
-     * @return a string
-     */
-    public String displayString() {
-        return displayString( Integer.MAX_VALUE );
-    }
-
-    /**
      * Make display string with max length.
      *
      * @param maxLength an int
@@ -510,21 +360,23 @@ public class ResourceSpec extends ModelObject {   // TODO - remove extends Model
      */
     public String displayString( int maxLength ) {
         StringBuilder sb = new StringBuilder();
-        if ( !isAnyActor() ) {
-            sb.append( actor.getName() );
-        } else {
-            if ( !isAnyRole() ) {
+        if ( isAnyActor() ) {
+            if ( !isAnyRole() )
                 sb.append( role.getName() );
-            }
+
             if ( !isAnyOrganization() ) {
-                if (sb.length() > 0 ) sb.append( ", " );
+                if ( sb.length() > 0 )
+                    sb.append( ", " );
                 sb.append( organization.getName() );
             }
             if ( !isAnyJurisdiction() ) {
-                if (sb.length() > 0 ) sb.append( ", " );
+                if ( sb.length() > 0 )
+                    sb.append( ", " );
                 sb.append( jurisdiction.getName() );
             }
-        }
+        } else
+            sb.append( actor.getName() );
+
         return StringUtils.abbreviate( sb.toString(), maxLength );
     }
 }

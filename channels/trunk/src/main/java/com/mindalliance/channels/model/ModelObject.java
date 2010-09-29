@@ -146,8 +146,9 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     @Override
     public boolean equals( Object obj ) {
         return this == obj
-                || obj instanceof ModelObject
-                && id == ( (ModelObject) obj ).getId();
+            || obj != null
+               && getClass().equals( obj.getClass() )
+               && id == ( (ModelObject) obj ).getId();
     }
 
     /**

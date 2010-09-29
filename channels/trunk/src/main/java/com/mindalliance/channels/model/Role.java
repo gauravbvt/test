@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A generic role.
  */
-public class Role extends ModelEntity {
+public class Role extends ModelEntity implements Specable {
 
     /**
       * Bogus role used to signify that the role is not known...
@@ -38,10 +38,10 @@ public class Role extends ModelEntity {
     @Override
     public void beforeRemove( QueryService queryService ) {
         super.beforeRemove( queryService );
-        for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
+        for ( Job job : queryService.findAllConfirmedJobs( this ) ) {
             job.setRole( null );
         }
-        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ), true ) ) {
+        for ( Part part : queryService.findAllParts( null, this, true ) ) {
             part.setRole( null );
         }
     }
@@ -65,5 +65,35 @@ public class Role extends ModelEntity {
         return true;
     }
 
+    /**
+     * Get the implied actor.
+     * @return the actor, or null if any
+     */
+    public Actor getActor() {
+        return null;
+    }
 
+    /**
+     * Get the implied role.
+     * @return the role, or null if any
+     */
+    public Role getRole() {
+        return this;
+    }
+
+    /**
+     * Get the implied organization.
+     * @return the organization, or null if any
+     */
+    public Organization getOrganization() {
+        return null;
+    }
+
+    /**
+     * Get the implied jurisdiction.
+     * @return the jurisdiction, or null if any
+     */
+    public Place getJurisdiction() {
+        return null;
+    }
 }

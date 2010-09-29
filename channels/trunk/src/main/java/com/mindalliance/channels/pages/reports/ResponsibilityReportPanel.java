@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.dao.User;
 import org.apache.commons.lang.WordUtils;
@@ -42,13 +43,13 @@ public class ResponsibilityReportPanel extends Panel {
     @SpringBean
     private QueryService queryService;
 
-    private ResourceSpec spec;
+    private Specable spec;
 
     private Actor actor;
 
     public ResponsibilityReportPanel(
             String id,
-            final ResourceSpec spec,
+            final Specable spec,
             Actor actor,
             final Segment segment,
             final boolean showingIssues ) {
@@ -98,17 +99,16 @@ public class ResponsibilityReportPanel extends Panel {
             @Override
             protected void populateItem( ListItem<Actor> item ) {
                 Actor actor = item.getModelObject();
-                ResourceSpec spec = new ResourceSpec();
-                if ( !organization.equals( Organization.UNKNOWN ) )
-                    spec.setOrganization( organization );
-                if ( !role.equals( Role.UNKNOWN ) )
-                    spec.setRole( role );
-                if ( !actor.equals( Actor.UNKNOWN ) )
-                    spec.setActor( actor );
-                item.add( new ActorBannerPanel(
+                item.add(
+                    new ActorBannerPanel(
                         "actor",
                         segment,
-                        spec,
+                        new ResourceSpec(
+                            actor.equals( Actor.UNKNOWN ) ? null : actor,
+                            role.equals( Role.UNKNOWN ) ? null : role,
+                            organization.equals( Organization.UNKNOWN ) ? null : organization,
+                            null
+                        ),
                         false,
                         "../../" ) );
             }
@@ -148,13 +148,10 @@ public class ResponsibilityReportPanel extends Panel {
     private List<Actor> findActualActors( Organization organization, Role role, Place jurisdiction ) {
         Set<Actor> actors = new HashSet<Actor>();
         if ( organization.isActual() ) {
-            ResourceSpec spec = new ResourceSpec();
-            spec.setOrganization( organization );
-            spec.setRole( role );
-            spec.setJurisdiction( jurisdiction );
+            ResourceSpec s = new ResourceSpec( null, role, organization, jurisdiction );
             for ( Employment employment : queryService.findAllEmploymentsIn( organization ) ) {
                 ResourceSpec employmentSpec = new ResourceSpec( employment );
-                if ( employmentSpec.narrowsOrEquals( spec, User.current().getPlan() ) ) {
+                if ( employmentSpec.narrowsOrEquals( s, User.current().getPlan() ) ) {
                     actors.add( employment.getActor() );
                 }
             }

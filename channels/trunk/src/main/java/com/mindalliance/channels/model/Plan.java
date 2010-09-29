@@ -437,8 +437,9 @@ public class Plan extends ModelObject {
     @Override
     public boolean equals( Object obj ) {
         return this == obj
-                || obj instanceof Plan
-                && getVersionUri().equals( ( (Plan) obj ).getVersionUri() );
+                || obj != null
+                   && obj instanceof Plan
+                   && getVersionUri().equals( ( (Plan) obj ).getVersionUri() );
     }
 
     /**
