@@ -34,6 +34,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.nlp.Proximity;
 
 import java.util.Iterator;
@@ -357,10 +358,10 @@ public interface QueryService {
     /**
      * Find all resources that equal or narrow given resource
      *
-     * @param resourceSpec a resource
+     * @param specable
      * @return a list of implied resources
      */
-    List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( ResourceSpec resourceSpec );
+    List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( Specable specable );
 
     /**
      * Find all non-empty resources that equal or broaden given resource
@@ -385,7 +386,7 @@ public interface QueryService {
      * @param resourceSpec a resource
      * @return a list of plays
      */
-    List<Play> findAllPlays( ResourceSpec resourceSpec );
+    List<Play> findAllPlays( Specable resourceSpec );
 
     /**
      * Find all plays for the resource
@@ -394,16 +395,15 @@ public interface QueryService {
      * @param specific     whether the plays are specific to the resourceSpec
      * @return a list of plays
      */
-    List<Play> findAllPlays( ResourceSpec resourceSpec, boolean specific );
+    List<Play> findAllPlays( Specable resourceSpec, boolean specific );
 
     /**
      * Find all contact of specified resources
      *
-     * @param resourceSpec a resource specification
-     * @param isSelf       find resources specified by spec, or else who specified resources need to know
-     * @return a list of ResourceSpec's
+     * @param specable
+     *@param isSelf       find resources specified by spec, or else who specified resources need to know @return a list of ResourceSpec's
      */
-    List<ResourceSpec> findAllContacts( ResourceSpec resourceSpec, boolean isSelf );
+    List<ResourceSpec> findAllContacts( Specable specable, boolean isSelf );
 
     /**
      * Find all user issues about a model object
@@ -557,15 +557,6 @@ public interface QueryService {
     void onDestroy();
 
     /**
-     * Find all responsibilities of an actor.
-     * A responsibility is a found resourceSpec that includes the actor, but with the actor removed.
-     *
-     * @param actor an actor
-     * @return a list of resource specifications
-     */
-    List<ResourceSpec> findAllResponsibilitiesOf( Actor actor );
-
-    /**
      * Find all actual entities of a given class that are involved in the execution of tasks in a segment.
      *
      * @param entityClass a model entity class
@@ -581,10 +572,10 @@ public interface QueryService {
     /**
      * Find all confirmed jobs with resource spec
      *
-     * @param resourceSpec a resource spec
+     * @param specable
      * @return a list of jobs
      */
-    List<Job> findAllConfirmedJobs( ResourceSpec resourceSpec );
+    List<Job> findAllConfirmedJobs( Specable specable );
 
     /**
      * Find all job titles of an actor.
@@ -629,11 +620,10 @@ public interface QueryService {
      * Find all parts that has the specified resource.
      *
      * @param segment      a plan segment
-     * @param resourceSpec a resource spec
-     * @param exactMatch   a boolean
-     * @return a list of parts
+     * @param specable
+     *@param exactMatch   a boolean @return a list of parts
      */
-    List<Part> findAllParts( Segment segment, ResourceSpec resourceSpec, boolean exactMatch );
+    List<Part> findAllParts( Segment segment, Specable specable, boolean exactMatch );
 
     /**
      * Find all parts located at a given place.

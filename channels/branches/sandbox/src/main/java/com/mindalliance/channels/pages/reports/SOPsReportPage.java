@@ -127,16 +127,17 @@ public class SOPsReportPage extends WebPage {
                     selector.isShowingIssues() ) );
 
         }
-        if ( selector.isAllActors() ) {
+        if ( selector.isAllActors() )
             add( new Label( "actor-details", "" ).setVisible( false ) );
-        } else {
-            ResourceSpec actorSpec = ResourceSpec.with( selector.getActor() );
-            if ( !selector.isAllOrganizations() )
-                actorSpec.setOrganization( selector.getOrganization() );
+        else {
             add( new ActorBannerPanel(
                     "actor-details",
                     selector.getSegment(),
-                    actorSpec,
+                    new ResourceSpec(
+                            selector.getActor(),
+                            null,
+                            selector.isAllOrganizations()? null : selector.getOrganization(),
+                            null ),
                     false,
                     "../"
             ) );

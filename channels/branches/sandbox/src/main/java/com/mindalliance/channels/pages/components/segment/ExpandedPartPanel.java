@@ -244,8 +244,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         }
         categoryChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addCategoryField();
-                target.addComponent( categoryChoice );
+                // addCategoryField();
+                // target.addComponent( categoryChoice );
                 update( target, new Change( Change.Type.Updated, getPart(), "category" ) );
             }
         } );

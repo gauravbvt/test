@@ -55,15 +55,17 @@ public class AcmeTest extends WalkthroughTest {
                 kindList.add( issue );
             }
 
-        assertEquals( 8, issueMap.size() );
-        assertEquals( 4, issueMap.get( "UnverifiedPostalCode" ).size() );
-        assertEquals( 1, issueMap.get( "ActorNotInOneOrganization" ).size() );
-        assertEquals( 2, issueMap.get( "CommitmentWithoutRequiredAgreement" ).size() );
-        assertEquals( 1, issueMap.get( "SinglePointOfFailure" ).size() );
-        assertEquals( 1, issueMap.get( "SegmentWithoutGoal" ).size() );
-        assertEquals( 2, issueMap.get( "SegmentNeverEnds" ).size() );
-        assertEquals( 2, issueMap.get( "GeonameButNoLocation" ).size() );
-        assertEquals( 1, issueMap.get( "UnconfirmedJob" ).size() );
+        assertEquals( 10, issueMap.size() );
+        assertEquals( 1,  issueMap.get( "ActorNotInOneOrganization" ).size() );
+        assertEquals( 3,  issueMap.get( "CommitmentWithoutRequiredAgreement" ).size() );
+        assertEquals( 1,  issueMap.get( "GeonameButNoLocation" ).size() );
+        assertEquals( 16, issueMap.get( "OrganizationWithNoAssignmentToCategoryOfTask" ).size() );
+        assertEquals( 1,  issueMap.get( "OrganizationWithoutAssignments" ).size() );
+        assertEquals( 1,  issueMap.get( "SinglePointOfFailure" ).size() );
+        assertEquals( 1,  issueMap.get( "SegmentNeverEnds" ).size() );
+        assertEquals( 4,  issueMap.get( "SegmentWithSameGoal" ).size() );
+        assertEquals( 5,  issueMap.get( "UnverifiedPostalCode" ).size() );
+        assertEquals( 1,  issueMap.get( "UnconfirmedJob" ).size() );
      }
 
     @Override

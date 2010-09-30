@@ -6,6 +6,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import junit.framework.TestCase;
 
+import java.io.File;
 import java.util.Iterator;
 
 /**
@@ -29,7 +30,7 @@ public class TestNode extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        DefinitionManager definitionManager = new DefinitionManager();
+        DefinitionManager definitionManager = new DefinitionManager( new File("target/channel-test-data" ), null );
         definitionManager.afterPropertiesSet();
         PlanManager planManager = new PlanManager( definitionManager );
         planManager.assignPlans();

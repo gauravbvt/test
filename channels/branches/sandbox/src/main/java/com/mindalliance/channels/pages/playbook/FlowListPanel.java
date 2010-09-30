@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.playbook;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Specable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -31,7 +32,7 @@ class FlowListPanel extends Panel {
     private boolean incoming;
 
     FlowListPanel(
-            String id, final Collection<ResourceSpec> actorSpecs, final ResourceSpec exception,
+            String id, final Collection<ResourceSpec> actorSpecs, final Specable exception,
             final List<SynonymFlowSet> synsets, boolean incoming, final int offset ) {
 
         super( id );
@@ -92,10 +93,10 @@ class FlowListPanel extends Panel {
     }
 
     private List<FlowCell> getFlowCells(
-            SynonymFlowSet set, Collection<ResourceSpec> actorSpecs, ResourceSpec exception ) {
+            SynonymFlowSet set, Collection<ResourceSpec> actorSpecs, Specable exception ) {
         List<FlowCell> flowCells = new ArrayList<FlowCell>();
         Map<ResourceSpec,Flow> map = set.getProjection( queryService, exception );
-        for ( ResourceSpec actorSpec : actorSpecs )
+        for ( Specable actorSpec : actorSpecs )
             flowCells.add( new FlowCell( actorSpec.getActor(), map.get( actorSpec ), incoming ) );
         return flowCells;
     }

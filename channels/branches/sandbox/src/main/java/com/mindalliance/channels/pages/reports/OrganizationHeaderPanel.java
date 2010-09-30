@@ -56,7 +56,7 @@ public class OrganizationHeaderPanel extends Panel {
         add( banner );
         banner.add( new ChannelsBannerPanel(
                 "channels",
-                ResourceSpec.with( organization ),
+                new ResourceSpec( organization ),
                 null,
                 new ArrayList<Channel>() ) );
         add( new DocumentsReportPanel( "documents", new Model<ModelObject>( organization ) ) );

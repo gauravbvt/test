@@ -194,6 +194,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.OrganizationMissingExpectedCommitment"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ReportFlowWithoutEOIs"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ActorWithoutContactInfo"/>
             </list>
         </property>
     </bean>

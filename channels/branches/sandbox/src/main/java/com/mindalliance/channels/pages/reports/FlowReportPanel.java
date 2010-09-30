@@ -180,10 +180,12 @@ public class FlowReportPanel extends Panel {
                 localizedActors.addAll( findActors( f, b, u, queryService ) );
             }
         } else {
-            ResourceSpec spec = part.resourceSpec();
-            if ( spec.isOrganization() )
-                spec.setActor( Actor.UNKNOWN );
-            for ( Actor a : queryService.findAllActualActors( spec ) )
+            for ( Actor a : queryService.findAllActualActors(
+                    new ResourceSpec(
+                        part.resourceSpec().isOrganization() ? Actor.UNKNOWN : part.getActor(),
+                        part.getRole(),
+                        part.getOrganization(), part.getJurisdiction() ) ) )
+
                 localizedActors.add( new LocalizedActor( a, part, unicasts, broadcasts ) );
         }
 
@@ -272,10 +274,11 @@ public class FlowReportPanel extends Panel {
         }
 
         public ResourceSpec getActorSpec() {
-            ResourceSpec spec = new ResourceSpec( part );
-            if ( !actor.equals( Actor.UNKNOWN ) )
-                spec.setActor( actor );
-            return spec;
+            return new ResourceSpec(
+                    actor.equals( Actor.UNKNOWN ) ? part.getActor() : actor,
+                    part.getRole(),
+                    part.getOrganization(),
+                    part.getJurisdiction() );
         }
 
         private Segment getOtherSegment( Segment segment ) {

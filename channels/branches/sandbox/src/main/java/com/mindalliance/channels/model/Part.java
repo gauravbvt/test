@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * A part in a segment.
  */
-public class Part extends Node implements GeoLocatable {
+public class Part extends Node implements GeoLocatable, Specable {
 
     /**
      * Default actor label, when unknown.
@@ -43,30 +43,13 @@ public class Part extends Node implements GeoLocatable {
      */
     private String task = DEFAULT_TASK;
 
-    /**
-     * The actor assigned to this task (optional).
-     */
-    private Actor actor;
-
-    /**
-     * The role of this task (optional).
-     */
-    private Role role;
-
-    /**
-     * The organization (optional).
-     */
-    private Organization organization;
+    private ResourceSpec spec = new ResourceSpec();
 
     /**
      * The location (optional).
      */
     private Place location;
 
-    /**
-     * The jurisdiction (optional).
-     */
-    private Place jurisdiction;
     /**
      * Whether the part's task completes on its own after some time.
      */
@@ -166,7 +149,7 @@ public class Part extends Node implements GeoLocatable {
     }
 
     public Actor getActor() {
-        return actor;
+        return spec.getActor();
     }
 
     /**
@@ -175,18 +158,18 @@ public class Part extends Node implements GeoLocatable {
      * @param actor the new actor.
      */
     public void setActor( Actor actor ) {
-        Actor old = this.actor;
-        this.actor = actor;
+        Actor old = getActor();
+        spec = new ResourceSpec( actor, getRole(), getOrganization(), getJurisdiction() );
         if ( old == null || !old.equals( actor ) )
             adjustName();
     }
 
     public Place getJurisdiction() {
-        return jurisdiction;
+        return spec.getJurisdiction();
     }
 
     public void setJurisdiction( Place jurisdiction ) {
-        this.jurisdiction = jurisdiction;
+        spec = new ResourceSpec( getActor(), getRole(), getOrganization(), jurisdiction );
     }
 
     public Place getLocation() {
@@ -198,7 +181,7 @@ public class Part extends Node implements GeoLocatable {
     }
 
     public Organization getOrganization() {
-        return organization;
+        return spec.getOrganization();
     }
 
     /**
@@ -207,14 +190,14 @@ public class Part extends Node implements GeoLocatable {
      * @param organization the new organization.
      */
     public void setOrganization( Organization organization ) {
-        Organization old = this.organization;
-        this.organization = organization;
+        Organization old = getOrganization();
+        spec = new ResourceSpec( getActor(), getRole(), organization, getJurisdiction() );
         if ( old == null || !old.equals( organization ) )
             adjustName();
     }
 
     public Role getRole() {
-        return role;
+        return spec.getRole();
     }
 
     /**
@@ -223,8 +206,8 @@ public class Part extends Node implements GeoLocatable {
      * @param role the new role.
      */
     public void setRole( Role role ) {
-        Role old = this.role;
-        this.role = role;
+        Role old = getRole();
+        spec = new ResourceSpec( getActor(), role, getOrganization(), getJurisdiction() );
         if ( old == null || !old.equals( role ) )
             adjustName();
     }
@@ -259,7 +242,7 @@ public class Part extends Node implements GeoLocatable {
     }
 
     public boolean isEmpty() {
-        return actor == null && role == null && organization == null && location == null;
+        return spec.isAnyone() && spec.getJurisdiction() == null && location == null;
     }
 
     /**
@@ -281,7 +264,7 @@ public class Part extends Node implements GeoLocatable {
      * @return true if part is only specified by a role.
      */
     public boolean isOnlyRole() {
-        return role != null && actor == null;
+        return spec.isRole();
     }
 
     /**
@@ -290,20 +273,19 @@ public class Part extends Node implements GeoLocatable {
      * @return a ResourceSpec
      */
     public ResourceSpec resourceSpec() {
-        return new ResourceSpec( this );
+        return spec;
     }
 
     /**
      * Test whether the resource spec of the part intersects a given resource spec
      *
      * @param resourceSpec a resource
-     * @param plan
+     * @param plan the plan
      * @return a boolean
      */
     public boolean isImpliedBy( ResourceSpec resourceSpec, Plan plan ) {
-        ResourceSpec partResourceSpec = resourceSpec();
-        return !partResourceSpec.isAnyone() && resourceSpec.narrowsOrEquals( partResourceSpec,
-                plan );
+        return !spec.isAnyone()
+            && resourceSpec.narrowsOrEquals( spec, plan );
     }
 
     /**
@@ -421,21 +403,19 @@ public class Part extends Node implements GeoLocatable {
      * @param plan a plan
      * @return true if belonging
      */
-    public boolean isInOrganization( Organization o, Plan plan ) {
-        return organization == null ? Organization.UNKNOWN == o
-                : o.narrowsOrEquals( organization, plan );
+    public boolean isForOrganization( Organization o, Plan plan ) {
+        return o.narrowsOrEquals( spec.getOrganization(), plan );
     }
 
     /**
      * Test if this part is considered belonging to an organization.
      *
      * @param j    the jurisdiction
-     * @param plan
+     * @param plan a plan
      * @return true if belonging
      */
     public boolean isInJurisdiction( Place j, Plan plan ) {
-        return jurisdiction == null ? Place.UNKNOWN == j
-                : j.narrowsOrEquals( jurisdiction, plan );
+        return j.narrowsOrEquals( spec.getJurisdiction(), plan );
     }
 
     /**
@@ -445,8 +425,7 @@ public class Part extends Node implements GeoLocatable {
      * @return true if played
      */
     public boolean isPlayedBy( Role r ) {
-        return role == null ? r == Role.UNKNOWN
-                : role.equals( r );
+        return r.narrowsOrEquals( spec.getRole(), null );
     }
 
     /**
@@ -561,11 +540,14 @@ public class Part extends Node implements GeoLocatable {
     public String getRoleString() {
         StringBuilder b = new StringBuilder( 64 );
 
+        Role role = getRole();
         if ( role != null )
             b.append( role );
-        if ( jurisdiction != null ) {
+
+        Place place = getJurisdiction();
+        if ( place != null ) {
             b.append( " for " );
-            b.append( jurisdiction );
+            b.append( place );
         }
 
         return b.toString();
@@ -577,10 +559,7 @@ public class Part extends Node implements GeoLocatable {
      * @return boolean whether this part describes a resource
      */
     public boolean hasResource() {
-        return !( actor == null
-                && role == null
-                && organization == null
-                && jurisdiction == null );
+        return !spec.isAnyone() || spec.getJurisdiction() != null;
     }
 
     /**
@@ -589,7 +568,7 @@ public class Part extends Node implements GeoLocatable {
      * @return a boolean
      */
     public boolean hasNonActualActorResource() {
-        return hasResource() && ( actor == null || actor.isType() );
+        return hasResource() && ( getActor() == null || getActor().isType() );
     }
 
     /**
@@ -610,15 +589,15 @@ public class Part extends Node implements GeoLocatable {
      * @return an actor or null
      */
     public Actor getKnownActor( QueryService queryService ) {
-        if ( actor != null ) {
-            return actor;
+        if ( getActor() != null ) {
+            return getActor();
         } else {
             return getKnownActualActor( queryService );
         }
     }
 
     public Actor getKnownActualActor( QueryService queryService ) {
-        List<Actor> knownActors = queryService.findAllActualActors( resourceSpec() );
+        List<Actor> knownActors = queryService.findAllActualActors( spec );
         if ( knownActors.size() == 1 ) {
             return knownActors.get( 0 );
         } else {
@@ -632,7 +611,7 @@ public class Part extends Node implements GeoLocatable {
      * @return an organization or null
      */
     public Organization getOrganizationOrUnknown() {
-        return organization == null ? Organization.UNKNOWN : organization;
+        return spec.isAnyOrganization() ? Organization.UNKNOWN : getOrganization();
     }
 
     /**
@@ -641,7 +620,7 @@ public class Part extends Node implements GeoLocatable {
      * @return a role or null
      */
     public Role getRoleOrUnknown() {
-        return role == null ? Role.UNKNOWN : role;
+        return spec.isAnyRole() ? Role.UNKNOWN : getRole();
     }
 
     /**
@@ -650,7 +629,7 @@ public class Part extends Node implements GeoLocatable {
      * @return an actor or null
      */
     public Actor getActorOrUnknown() {
-        return actor == null ? Actor.UNKNOWN : actor;
+        return spec.isAnyActor() ? Actor.UNKNOWN : getActor();
     }
 
     /**
@@ -659,7 +638,7 @@ public class Part extends Node implements GeoLocatable {
      * @return a place or null
      */
     public Place getJurisdictionOrUnknown() {
-        return jurisdiction == null ? Place.UNKNOWN : jurisdiction;
+        return spec.isAnyJurisdiction() ? Place.UNKNOWN : getJurisdiction();
     }
 
     /**
@@ -875,19 +854,19 @@ public class Part extends Node implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean references( final ModelObject mo ) {
-        return ModelObject.areIdentical( actor, mo )
-                || ModelObject.areIdentical( role, mo )
-                || ModelObject.areIdentical( jurisdiction, mo )
-                || ModelObject.areIdentical( organization, mo )
-                || ModelObject.areIdentical( location, mo )
-                || ModelObject.areIdentical( initiatedEvent, mo )
-                ||
-                CollectionUtils.exists(
+        return ModelObject.areIdentical( getActor(), mo )
+            || ModelObject.areIdentical( getRole(), mo )
+            || ModelObject.areIdentical( getJurisdiction(), mo )
+            || ModelObject.areIdentical( getOrganization(), mo )
+            || ModelObject.areIdentical( location, mo )
+            || ModelObject.areIdentical( initiatedEvent, mo )
+            || CollectionUtils.exists(
                         goals,
                         new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return ( (Goal) obj ).references( mo );
+                            public boolean evaluate( Object object ) {
+                                return ( (Goal) object ).references( mo );
                             }
                         } );
     }
@@ -898,7 +877,7 @@ public class Part extends Node implements GeoLocatable {
      * @return a boolean
      */
     public boolean hasActualActor() {
-        return actor != null && actor.isActual();
+        return getActor() != null && getActor().isActual();
     }
 
     /**
@@ -907,7 +886,7 @@ public class Part extends Node implements GeoLocatable {
      * @return a boolean
      */
     public boolean hasActualRole() {
-        return role != null && role.isActual();
+        return getRole() != null && getRole().isActual();
     }
 
     /**

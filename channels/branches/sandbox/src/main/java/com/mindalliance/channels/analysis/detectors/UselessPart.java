@@ -80,7 +80,7 @@ public class UselessPart extends AbstractIssueDetector {
     // A part is useful if it terminates an event, mitigates a risk or sends info to a useful part.
     private boolean isUseful( Part part, Set<Part> visited ) {
         if ( part.isTerminatesEventPhase() || !part.getGoals().isEmpty() ) return true;
-        Iterator<Flow> sends = part.sends();
+        Iterator<Flow> sends = part.getAllSharingSends().iterator();
         boolean useful = false;
         while ( !useful && sends.hasNext() ) {
             Flow send = sends.next();

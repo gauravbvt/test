@@ -185,7 +185,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         if ( entity instanceof Actor ) {
             return queryService.findAllRolesOf( (Actor) entity );
         } else if ( entity instanceof Role ) {
-            return queryService.findAllActualActors( ResourceSpec.with( entity ) );
+            return queryService.findAllActualActors( new ResourceSpec( (Role) entity ) );
         } else if ( entity instanceof Organization ) {
             List<ModelEntity> inOrg = new ArrayList<ModelEntity>();
             inOrg.addAll( queryService.findRolesIn( (Organization) entity ) );
@@ -198,7 +198,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         } else if ( entity instanceof Phase ) {
             return queryService.findAllEntitiesIn( (Phase) entity );
         } else {
-            throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
+            throw new IllegalStateException( "Can't display issue table for " + entity.getClass().getSimpleName() );
         }
     }
 

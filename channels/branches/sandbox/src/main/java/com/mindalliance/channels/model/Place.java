@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * A location or jurisdiction.
  */
-public class Place extends ModelEntity implements GeoLocatable {
+public class Place extends ModelEntity implements GeoLocatable, Specable {
     /**
      * Name of pre-fab administrative area place type.
      */
@@ -519,10 +519,10 @@ public class Place extends ModelEntity implements GeoLocatable {
      */
     public void beforeRemove( QueryService queryService ) {
         super.beforeRemove( queryService );
-        for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
+        for ( Job job : queryService.findAllConfirmedJobs( this ) ) {
             job.setJurisdiction( null );
         }
-        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ), true ) ) {
+        for ( Part part : queryService.findAllParts( null, this, true ) ) {
             part.setJurisdiction( null );
         }
         for ( Part part : queryService.findAllPartsWithExactLocation( this ) ) {
@@ -697,5 +697,37 @@ public class Place extends ModelEntity implements GeoLocatable {
                 || ModelObject.areIdentical( within, mo )
                 || mustBeContainedIn.references( mo )
                 || mustContain.references( mo );
+    }
+
+    /**
+     * Get the implied actor.
+     * @return the actor, or null if any
+     */
+    public Actor getActor() {
+        return null;
+    }
+
+    /**
+     * Get the implied role.
+     * @return the role, or null if any
+     */
+    public Role getRole() {
+        return null;
+    }
+
+    /**
+     * Get the implied organization.
+     * @return the organization, or null if any
+     */
+    public Organization getOrganization() {
+        return null;
+    }
+
+    /**
+     * Get the implied jurisdiction.
+     * @return the jurisdiction, or null if any
+     */
+    public Place getJurisdiction() {
+        return this;
     }
 }

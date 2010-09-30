@@ -129,11 +129,12 @@
       <section>
         <title>In a nutshell</title>
 
-        <para>An <glossterm>Information Sharing Plan</glossterm> captures the
-        information sharing procedures that people and systems (agents) in
-        roles of responsibility are expected to apply, within their
-        jurisdictions, in order to fulfill the missions of their organizations
-        before, during and/or after events of significance.</para>
+        <para>An <firstterm linkend="information_sharing_plan">Information Sharing
+        Plan</firstterm> captures the information sharing
+        procedures that people and systems (agents) in roles of responsibility
+        are expected to apply, within their jurisdictions, in order to fulfill
+        the missions of their organizations before, during and/or after events
+        of significance.</para>
 
         <para>Tasks manage risks, achieve gains and/or produce information
         needed by other tasks. Information flows connect tasks that produce
@@ -4662,8 +4663,8 @@
         SurveyGizmo<superscript>TM</superscript></title>
 
         <para>Surveys launched and managed from within Channels are hosted and
-        managed by the SurveyGizmo<superscript>TM</superscript> service.
-        </para>
+        managed by the SurveyGizmo<superscript>TM</superscript>
+        service.</para>
 
         <para>A planner can access a survey sample or a survey report directly
         from within Channels.</para>
@@ -4876,8 +4877,8 @@
       <para></para>
 
       <glossary>
-        <glossentry>
-          <glossterm>Agent</glossterm>
+        <glossentry xml:id="agent">
+          <glossterm >Agent</glossterm>
 
           <glossdef>
             <para>An agent is a person or system who can be assigned tasks in
@@ -4885,7 +4886,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="archetype">
           <glossterm>Archetype</glossterm>
 
           <glossdef>
@@ -4895,8 +4896,9 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
-          <glossterm>Broadcast transmission</glossterm>
+        <glossentry xml:id="broadcast">
+          <glossterm>Broadcast
+          transmission</glossterm>
 
           <glossdef>
             <para>A transmission that could be received by any number of
@@ -4904,7 +4906,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="channel">
           <glossterm>Channel</glossterm>
 
           <glossdef>
@@ -4914,7 +4916,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="channel_endpoint">
           <glossterm>Channel endpoint</glossterm>
 
           <glossdef>
@@ -4924,8 +4926,9 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
-          <glossterm>Element of information</glossterm>
+        <glossentry xml:id="element_of_information">
+          <glossterm>Element of
+          information</glossterm>
 
           <glossdef>
             <para>An element of information is a named component of
@@ -4934,7 +4937,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="entity">
           <glossterm>Entity</glossterm>
 
           <glossdef>
@@ -4945,7 +4948,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="event">
           <glossterm>Event</glossterm>
 
           <glossdef>
@@ -4954,7 +4957,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="gain">
           <glossterm>Gain</glossterm>
 
           <glossdef>
@@ -4963,7 +4966,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="goal">
           <glossterm>Goal</glossterm>
 
           <glossdef>
@@ -4972,7 +4975,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="immediate_task">
           <glossterm>Immediate task</glossterm>
 
           <glossdef>
@@ -4980,7 +4983,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="incident">
           <glossterm>Incident</glossterm>
 
           <glossdef>
@@ -4989,8 +4992,9 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
-          <glossterm>Information sharing commitment</glossterm>
+        <glossentry xml:id="information_sharing_commitment">
+          <glossterm>Information
+          sharing commitment</glossterm>
 
           <glossdef>
             <para>An information sharing commitment exists between all agents
@@ -4999,8 +5003,9 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
-          <glossterm>Information sharing flow</glossterm>
+        <glossentry xml:id="information_sharing_flow">
+          <glossterm>Information sharing
+          flow</glossterm>
 
           <glossdef>
             <para>An information sharing specifies a commitment to share
@@ -5009,8 +5014,9 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
-          <glossterm>Information sharing plan</glossterm>
+        <glossentry xml:id="information_sharing_plan">
+          <glossterm>Information sharing
+          plan</glossterm>
 
           <glossdef>
             <para>An Information Sharing Plan specifies the Procedures that
@@ -5020,8 +5026,9 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
-          <glossterm>Information sharing procedure</glossterm>
+        <glossentry xml:id="information_sharing_procedure">
+          <glossterm>Information
+          sharing procedure</glossterm>
 
           <glossdef>
             <para>An information sharing procedure for an agent is either a
@@ -5030,7 +5037,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="issue">
           <glossterm>Issue</glossterm>
 
           <glossdef>
@@ -5041,15 +5048,16 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
-          <glossterm>Multicast transmission</glossterm>
+        <glossentry xml:id="multicast_transmission">
+          <glossterm>Multicast
+          transmission</glossterm>
 
           <glossdef>
             <para>A transmission targeting multiple, identified agents.</para>
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="organization">
           <glossterm>Organization</glossterm>
 
           <glossdef>
@@ -5059,7 +5067,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="participant">
           <glossterm>Participant</glossterm>
 
           <glossdef>
@@ -5068,7 +5076,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="permanent_task">
           <glossterm>Permanent task</glossterm>
 
           <glossdef>
@@ -5077,8 +5085,8 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
-          <glossterm>Phase</glossterm>
+        <glossentry xml:id="phase">
+          <glossterm >Phase</glossterm>
 
           <glossdef>
             <para>A phase is time relative to the initiation or termination of
@@ -5089,7 +5097,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="planner">
           <glossterm>Planner</glossterm>
 
           <glossdef>
@@ -5098,7 +5106,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="policy">
           <glossterm>Policy</glossterm>
 
           <glossdef>
@@ -5107,7 +5115,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="role">
           <glossterm>Role</glossterm>
 
           <glossdef>
@@ -5116,7 +5124,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="risk">
           <glossterm>Risk</glossterm>
 
           <glossdef>
@@ -5125,7 +5133,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="scope">
           <glossterm>Scope</glossterm>
 
           <glossdef>
@@ -5136,7 +5144,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="segment">
           <glossterm>Segment</glossterm>
 
           <glossdef>
@@ -5147,7 +5155,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="task">
           <glossterm>Task</glossterm>
 
           <glossdef>
@@ -5156,7 +5164,7 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
+        <glossentry xml:id="task_assignment">
           <glossterm>Task assignment</glossterm>
 
           <glossdef>
@@ -5165,8 +5173,9 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
-          <glossterm>Transmission medium</glossterm>
+        <glossentry xml:id="transmission_medium">
+          <glossterm>Transmission
+          medium</glossterm>
 
           <glossdef>
             <para>A transmission medium is a technological or
@@ -5176,8 +5185,9 @@
           </glossdef>
         </glossentry>
 
-        <glossentry>
-          <glossterm>Unicast transmission</glossterm>
+        <glossentry xml:id="unicast_transmission">
+          <glossterm>Unicast
+          transmission</glossterm>
 
           <glossdef>
             <para>A transmission targeting a single, identified agent.</para>
@@ -6392,6 +6402,19 @@
                     </listitem>
                   </itemizedlist></entry>
 
+                <entry><para>Yes</para></entry>
+              </row>
+              <row>
+                <entry><para>Agent without contact info</para></entry>
+                
+                <entry><para>High</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Add a channel via which to contact the agent</para>
+                  </listitem>                  
+                </itemizedlist></entry>
+                
                 <entry><para>Yes</para></entry>
               </row>
             </tbody>

@@ -172,7 +172,9 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
      * @param uri the plan's uri
      */
     public void delete( String uri ) {
-        delete( get( uri ) );
+        PlanDefinition definition = get( uri );
+        if ( definition != null )
+            delete( definition );
     }
 
     private void delete( PlanDefinition definition ) {

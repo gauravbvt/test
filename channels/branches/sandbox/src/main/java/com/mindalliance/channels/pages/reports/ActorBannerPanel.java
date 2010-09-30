@@ -42,7 +42,7 @@ public class ActorBannerPanel extends Panel {
     public ActorBannerPanel(
             String id,
             Segment segment,
-            ResourceSpec spec,
+            ResourceSpec spec0,
             boolean showSegment,
             Set<TransmissionMedium> unicasts,
             Collection<Channel> broadcasts,
@@ -52,8 +52,13 @@ public class ActorBannerPanel extends Panel {
         this.prefix = prefix;
         setRenderBodyOnly( true );
 
-        if ( spec.getActor() == null )
-            spec.setActor( Actor.UNKNOWN );
+        ResourceSpec spec = new ResourceSpec(
+            spec0.getActor() == null ? Actor.UNKNOWN : spec0.getActor(),
+            spec0.getRole(),
+            spec0.getOrganization(),
+            spec0.getJurisdiction()
+        );
+
         Actor actor = spec.getActor();
         boolean canShowSegment = showSegment && segment != null;
         String segmentName = canShowSegment ?

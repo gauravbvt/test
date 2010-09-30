@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
@@ -195,8 +196,8 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
             } else {
                 // TODO - Does this make sense?
                 List<ResourceSpec> specs = queryService
-                        .findAllResourcesNarrowingOrEqualTo( ResourceSpec.with( actor ) );
-                for ( ResourceSpec spec : specs ) {
+                        .findAllResourcesNarrowingOrEqualTo( actor );
+                for ( Specable spec : specs ) {
                     contactDescriptors.add( new ContactDescriptor( contact, spec ) );
                 }
             }
@@ -322,13 +323,13 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
     public class ContactDescriptor implements Serializable {
         private Contact contact;
         private String fullName;
-        private ResourceSpec resourceSpec;
+        private Specable specable;
         private String userRole;
         private Contact.Status newStatus = null;
 
-        public ContactDescriptor( Contact contact, ResourceSpec resourceSpec ) {
+        public ContactDescriptor( Contact contact, Specable specable ) {
             this.contact = contact;
-            this.resourceSpec = resourceSpec;
+            this.specable = specable;
         }
 
         public String getUsername() {
@@ -341,8 +342,8 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
             return fullName;
         }
 
-        public ResourceSpec getResourceSpec() {
-            return resourceSpec;
+        public Specable getResourceSpec() {
+            return specable;
         }
 
         public String getUserRole() {
@@ -357,24 +358,24 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
         }
 
         public Organization getOrganization() {
-            if ( resourceSpec == null )
+            if ( specable == null )
                 return null;
             else
-                return resourceSpec.getOrganization();
+                return specable.getOrganization();
         }
 
         public Role getRole() {
-            if ( resourceSpec == null )
+            if ( specable == null )
                 return null;
             else
-                return resourceSpec.getRole();
+                return specable.getRole();
         }
 
         public Place getJurisdiction() {
-            if ( resourceSpec == null )
+            if ( specable == null )
                 return null;
             else
-                return resourceSpec.getJurisdiction();
+                return specable.getJurisdiction();
         }
 
         public boolean isContacted() {

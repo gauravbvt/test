@@ -40,7 +40,7 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
      * {@inheritDoc}
      */
     public void addChannel( Channel channel ) {
-        assert channel.isUnicast();
+        // assert channel.isUnicast();
         if ( !channels.contains( channel ) ) channels.add( channel );
     }
 

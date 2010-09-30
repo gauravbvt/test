@@ -122,14 +122,14 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
-     * Whether two entities (either can be null) are compatible.
+     * Whether either entity is null or the first entity is subsumed by the other (it narrows or equals the other).
      *
      * @param entity an entity
      * @param other  an entity
      * @param plan
      * @return a boolean
      */
-    public static boolean compatible( ModelEntity entity, ModelEntity other, Plan plan ) {
+    public static boolean subsumedBy( ModelEntity entity, ModelEntity other, Plan plan ) {
         if ( entity == null
                 || other == null
             //       || entity.isUnknown()
@@ -317,6 +317,19 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
+     * Whether two entity values are equivalent, or the entity is defined in terms of this one.
+     *
+     * @param entity an entity or null
+     * @param aClass type of the 'unknown' object
+     * @return a boolean
+     */
+    public boolean isEquivalentToOrIsA( ModelEntity entity, Class<? extends ModelEntity> aClass ) {
+
+        return entity == null ? isUnknown() && getClass().equals( aClass )
+                              : equals( entity ) || isType() && entity.hasTag( this );
+    }
+
+    /**
      *   Get the list of implicit tags.
      * @return  a list of model entities
      */
@@ -336,35 +349,6 @@ public abstract class ModelEntity extends ModelObject {
         return other == null
                 || entity != null && entity.narrowsOrEquals( other, plan );
     }
-
-    /**
-     * Whether two entity values are equivalent, or the first one is defined in terms of the other.
-     *
-     * @param entity an entity or null
-     * @param other  an entity
-     * @return a boolean
-     */
-    public static boolean isEquivalentToOrIsA( ModelEntity entity, ModelEntity other ) {
-        if ( other == null )
-            return false;
-        else if ( entity == null )
-            return other.isUnknown();
-        else
-            return entity.equals( other ) || ( other.isType() && entity.hasTag( other ) );
-    }
-
-    /**
-     * Whether an entity boradens or is equal to another.
-     *
-     * @param entity an entity
-     * @param other  another entity
-     * @param plan
-     * @return a boolean
-     */
-    public static boolean broadensOrEquals( ModelEntity entity, ModelEntity other, Plan plan ) {
-        return entity != null && other.narrowsOrEquals( entity, plan );
-    }
-
 
     /**
      * Whether two entity values are equivalent, or the first one is defined in terms of the other.
@@ -397,14 +381,16 @@ public abstract class ModelEntity extends ModelObject {
      * or has all the tags (transitively) of the other, type entity.
      *
      * @param other a model entity
-     * @param plan
+     * @param plan the context
      * @return a boolean
      */
     public boolean narrowsOrEquals( ModelEntity other, final Plan plan ) {
-        if ( other == null ) return false;
-        if ( isUnknown() || other.isUnknown() ) return false;
+        if ( other == null || isUnknown() || other.isUnknown() )
+            return false;
+
         // Can't compare apples with oranges
         if ( !getClass().isAssignableFrom( other.getClass() ) ) return false;
+
         // same entity
         if ( equals( other ) ) return true;
         if ( !valid( plan ) || !other.valid( plan ) ) return false;
@@ -414,11 +400,13 @@ public abstract class ModelEntity extends ModelObject {
         if ( other.isActual() ) return false;
         // entity explicitly is classified as other entity type
         if ( hasTag( other ) ) return true;
+
         // entity (actual or type) must at least have all the tags of the other entity type
         boolean isSubCollection = CollectionUtils.isSubCollection(
                 other.getTyping(),
                 getAllTags() );
         if ( !isSubCollection ) return false;
+        
         // meets specific and inherited requirement tests of entity type
         if ( !meetsTypeRequirementTests( other, plan ) ) return false;
         boolean meetsInheritedTests = CollectionUtils.selectRejected(

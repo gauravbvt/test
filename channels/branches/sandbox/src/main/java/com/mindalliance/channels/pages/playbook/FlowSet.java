@@ -4,6 +4,7 @@ import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Specable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -126,7 +127,7 @@ class FlowSet implements Comparable<FlowSet> {
      * @param actorSpec the actor spec
      * @return a sorted list of flows
      */
-    public List<Flow> getFlows( QueryService service, ResourceSpec actorSpec ) {
+    public List<Flow> getFlows( QueryService service, Specable actorSpec ) {
         List<Flow> list = new ArrayList<Flow>();
         for ( SynonymFlowSet set : synonymSets.values() ) {
             Flow flow = set.getFlow( service, actorSpec );

@@ -1,18 +1,18 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.WebPage;
@@ -191,11 +191,9 @@ public abstract class PlaybookPage extends WebPage {
             if ( actors.isEmpty() )
                 result.add( spec );
             else
-                for ( Actor a : actors ) {
-                    ResourceSpec actedSpec = new ResourceSpec( spec );
-                    actedSpec.setActor( a );
-                    result.add( actedSpec );
-                }
+                for ( Actor a : actors )
+                    result.add( new ResourceSpec( a, spec.getRole(), spec.getOrganization(),
+                                                  spec.getJurisdiction() ) );
         }
 
         return result;

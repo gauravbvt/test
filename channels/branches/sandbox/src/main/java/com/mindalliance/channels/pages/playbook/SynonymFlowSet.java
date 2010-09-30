@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Specable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -162,7 +163,7 @@ final class SynonymFlowSet implements Comparable<SynonymFlowSet>, Serializable {
      * @param exception spec to ignore in the indexing, if not null
      * @return flows, indexed by source or target specs
      */
-    public Map<ResourceSpec,Flow> getProjection( QueryService service, ResourceSpec exception ) {
+    public Map<ResourceSpec,Flow> getProjection( QueryService service, Specable exception ) {
         Map<ResourceSpec, Flow> map = new HashMap<ResourceSpec, Flow>();
         for ( Flow flow : flows ) {
             Node node = incoming ? flow.getSource() : flow.getTarget();
@@ -206,7 +207,7 @@ final class SynonymFlowSet implements Comparable<SynonymFlowSet>, Serializable {
      * @param spec the spec
      * @return a flow, or null if none
      */
-    public Flow getFlow( QueryService service, ResourceSpec spec ) {
+    public Flow getFlow( QueryService service, Specable spec ) {
         return getProjection( service, null ).get( spec );
     }
 

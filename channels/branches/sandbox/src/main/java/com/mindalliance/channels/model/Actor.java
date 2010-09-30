@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Someone or something playing a part in a segment.
  */
-public class Actor extends AbstractUnicastChannelable implements Classifiable {
+public class Actor extends AbstractUnicastChannelable implements Classifiable, Specable {
 
     /**
      * The name of the unknown actor.
@@ -47,7 +47,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
      */
     public Actor( String name ) {
         super( name );
-    }    
+    }
 
     /**
      * {@inheritDoc}
@@ -122,12 +122,13 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void beforeRemove( QueryService queryService ) {
         super.beforeRemove( queryService );
-        for ( Job job : queryService.findAllConfirmedJobs( ResourceSpec.with( this ) ) ) {
+        for ( Job job : queryService.findAllConfirmedJobs( this ) ) {
             job.setActor( null );
         }
-        for ( Part part : queryService.findAllParts( null, ResourceSpec.with( this ), true ) ) {
+        for ( Part part : queryService.findAllParts( null, this, true ) ) {
             part.setActor( null );
         }
     }
@@ -198,6 +199,22 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable {
                     }
                 }
         );
+    }
+
+   public Actor getActor() {
+        return this;
+    }
+
+    public Role getRole() {
+        return null;
+    }
+
+    public Organization getOrganization() {
+        return null;
+    }
+
+    public Place getJurisdiction() {
+        return null;
     }
 
 }

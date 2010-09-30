@@ -130,12 +130,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
      * @return a resource spec
      */
     public ResourceSpec resourceSpec( Organization organization ) {
-        ResourceSpec resourceSpec = new ResourceSpec();
-        resourceSpec.setActor( actor );
-        resourceSpec.setRole( role );
-        resourceSpec.setJurisdiction( jurisdiction );
-        resourceSpec.setOrganization( organization );
-        return resourceSpec;
+        return new ResourceSpec( actor, role, organization, jurisdiction );
     }
 
     /**
@@ -190,15 +185,15 @@ public class Job implements Serializable, Mappable, GeoLocatable {
      * Extract a job from a resource spec.
      * Returns null if none implied.
      *
-     * @param resourceSpec a resource spec
+     * @param specable a resource spec
      * @return a job
      */
-    public static Job from( ResourceSpec resourceSpec ) {
-        Actor actor = resourceSpec.getActor();
+    public static Job from( Specable specable ) {
+        Actor actor = specable.getActor();
         if ( actor == null ) return null;
-        Role role = resourceSpec.getRole();
+        Role role = specable.getRole();
         if ( role == null ) role = Role.UNKNOWN;
-        Place jurisdiction = resourceSpec.getJurisdiction();
+        Place jurisdiction = specable.getJurisdiction();
         return new Job(
                 actor,
                 role,

@@ -4,7 +4,6 @@ import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.query.QueryService;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  * Date: Oct 28, 2009
  * Time: 9:55:15 AM
  */
-public class Assignment implements Serializable, GeoLocatable {
+public class Assignment implements GeoLocatable, Specable {
     /**
      * Employment playing a part.
      */
@@ -69,7 +68,7 @@ public class Assignment implements Serializable, GeoLocatable {
      * @param queryService
      */
     public String getGeoMarkerLabel( QueryService queryService ) {
-        return employment.toString() + ", and is assigned to task \"" + part.getTask() + "\"";
+        return employment.toString() + ", and is assigned to task \"" + part.getTask() + '\"';
     }
 
     /**
@@ -77,29 +76,31 @@ public class Assignment implements Serializable, GeoLocatable {
      */
     public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
         List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
-        geoLocatables.addAll( getEmployment().getImpliedGeoLocatables( queryService ) );
-        geoLocatables.addAll( getPart().getImpliedGeoLocatables( queryService ) );
+        geoLocatables.addAll( employment.getImpliedGeoLocatables( queryService ) );
+        geoLocatables.addAll( part.getImpliedGeoLocatables( queryService ) );
         return geoLocatables;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( employment.toString() );
         sb.append( ", doing task \"" );
         sb.append( part.getTask() );
-        sb.append( "\"" );
+        sb.append( '\"' );
         return sb.toString();
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean equals( Object object ) {
-        if ( !( object instanceof Assignment ) ) return false;
-        Assignment other = (Assignment) object;
+    @Override
+    public boolean equals( Object obj ) {
+        if ( !( obj instanceof Assignment ) ) return false;
+        Assignment other = (Assignment) obj;
         return employment.equals( other.getEmployment() )
                 && part.equals( other.getPart() );
     }
@@ -107,6 +108,7 @@ public class Assignment implements Serializable, GeoLocatable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + employment.hashCode();
