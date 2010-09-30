@@ -90,8 +90,8 @@ public class Segment extends ModelObject {
     }
 
     public void setEvent( Event event ) {
-    // TODO avoid setEvent( null ) during import
-    //  assert event.isType();
+        // TODO avoid setEvent( null ) during import
+        //  assert event.isType();
         this.event = event;
     }
 
@@ -220,7 +220,7 @@ public class Segment extends ModelObject {
      * @param node the new node
      */
     public void addNode( Node node ) {
- //       assert !nodeIndex.containsKey( node.getId() );
+        //       assert !nodeIndex.containsKey( node.getId() );
         nodeIndex.put( node.getId(), node );
         node.setSegment( this );
     }
@@ -228,6 +228,7 @@ public class Segment extends ModelObject {
     /**
      * Direct removal of a node.
      * <b>Note:</b> Use dao.removeNode( segment, node ) instead...
+     *
      * @param node the node
      */
     public void removeNode( Node node ) {
@@ -345,7 +346,7 @@ public class Segment extends ModelObject {
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isInOrganization( organization, plan ) && part.getActor() == null && part.getRole() == null )
+            if ( part.isForOrganization( organization, plan ) && part.getActor() == null && part.getRole() == null )
                 partsForRole.add( part );
         }
         return partsForRole;
@@ -366,7 +367,7 @@ public class Segment extends ModelObject {
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isInOrganization( organization, plan )
+            if ( part.isForOrganization( organization, plan )
                     && part.isPlayedBy( role )
                     && ( jurisdiction == null || part.isInJurisdiction( jurisdiction, plan ) ) )
                 partsForRole.add( part );
@@ -388,7 +389,7 @@ public class Segment extends ModelObject {
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isInOrganization( organization, plan ) ) {
+            if ( part.isForOrganization( organization, plan ) ) {
                 if ( part.getRole() == null ) {
                     hasUnknown = true;
                 } else {
@@ -676,7 +677,6 @@ public class Segment extends ModelObject {
     public String displayString( int maxLength ) {
         return StringUtils.abbreviate( getName(), maxLength );
     }
-
 
 
     //=================================================

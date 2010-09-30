@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.dao.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.basic.Label;
@@ -75,7 +75,7 @@ public class OrganizationReportPanel extends Panel {
                 "No information sharing procedures" ).setVisible( responsibilities.isEmpty() ) );
         add( new ListView<ResourceSpec>(
                 "sections",
-                getResponsibilities() ) {
+                responsibilities ) {
             @Override
             protected void populateItem( ListItem<ResourceSpec> item ) {
                 item.add( new ResponsibilityReportPanel(

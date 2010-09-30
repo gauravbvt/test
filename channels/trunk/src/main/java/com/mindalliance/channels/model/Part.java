@@ -403,8 +403,8 @@ public class Part extends Node implements GeoLocatable, Specable {
      * @param plan a plan
      * @return true if belonging
      */
-    public boolean isInOrganization( Organization o, Plan plan ) {
-        return spec.narrowsOrEquals( o, plan );
+    public boolean isForOrganization( Organization o, Plan plan ) {
+        return o.narrowsOrEquals( spec.getOrganization(), plan );
     }
 
     /**
@@ -415,7 +415,7 @@ public class Part extends Node implements GeoLocatable, Specable {
      * @return true if belonging
      */
     public boolean isInJurisdiction( Place j, Plan plan ) {
-        return spec.narrowsOrEquals( j, plan );
+        return j.narrowsOrEquals( spec.getJurisdiction(), plan );
     }
 
     /**
@@ -425,7 +425,7 @@ public class Part extends Node implements GeoLocatable, Specable {
      * @return true if played
      */
     public boolean isPlayedBy( Role r ) {
-        return spec.narrowsOrEquals( r, null );
+        return r.narrowsOrEquals( spec.getRole(), null );
     }
 
     /**

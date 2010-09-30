@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.ModelEntity;
@@ -12,7 +13,6 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.dao.User;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -77,7 +77,9 @@ public class ResponsibilityReportPanel extends Panel {
         add( new IssuesReportPanel( "issues", new Model<ModelObject>( role ) )
                 .setVisible( showingIssues )
         );
-        add( new ListView<Part>( "parts", segment.findParts( organization, role, jurisdiction, User.current().getPlan() ) ) {
+        add( new ListView<Part>(
+                "parts",
+                segment.findParts( organization, role, jurisdiction, User.current().getPlan() ) ) {
             @Override
             protected void populateItem( ListItem<Part> item ) {
                 item.add( new PartReportPanel(

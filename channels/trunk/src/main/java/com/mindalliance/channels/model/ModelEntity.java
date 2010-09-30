@@ -122,14 +122,14 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
-     * Whether two entities (either can be null) are compatible.
+     * Whether either entity is null or the first entity is subsumed by the other (it narrows or equals the other).
      *
      * @param entity an entity
      * @param other  an entity
      * @param plan
      * @return a boolean
      */
-    public static boolean compatible( ModelEntity entity, ModelEntity other, Plan plan ) {
+    public static boolean subsumedBy( ModelEntity entity, ModelEntity other, Plan plan ) {
         if ( entity == null
                 || other == null
             //       || entity.isUnknown()

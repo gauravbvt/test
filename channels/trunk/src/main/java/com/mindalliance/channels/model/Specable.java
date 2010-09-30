@@ -32,4 +32,5 @@ public interface Specable {
      * @return the jurisdiction, or null if any
      */
     Place getJurisdiction();
+
 }

@@ -136,13 +136,6 @@ public interface Analyst {
      */
     String getIssuesSummary( ModelObject modelObject, String property );
 
-    /**
-     * Find all issues related to any of the components of a resource.
-     *
-     * @param resource a resource
-     * @return a list of issues
-     */
-    List<Issue> findAllIssuesFor( ResourceSpec resource );
 
     /**
      * Find all issues related to any of the components of a resource.

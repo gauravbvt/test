@@ -37,8 +37,8 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.nlp.SemanticMatcher;
@@ -754,7 +754,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 if ( Play.hasPlay( flow ) ) {
                     if ( flow.getSource().isPart() ) {
                         Part part = (Part) flow.getSource();
-                        if ( part.resourceSpec().matches( resourceSpec, specific, User.current().getPlan() ) ) {
+                        if ( part.resourceSpec().matchesOrSubsumes( resourceSpec, specific, User.current().getPlan() ) ) {
                             // sends
                             Play play = new Play( part, flow, true );
                             plays.add( play );
@@ -762,7 +762,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     }
                     if ( flow.getTarget().isPart() ) {
                         Part part = (Part) flow.getTarget();
-                        if ( part.resourceSpec().matches( resourceSpec, specific, User.current().getPlan() ) ) {
+                        if ( part.resourceSpec().matchesOrSubsumes( resourceSpec, specific, User.current().getPlan() ) ) {
                             // receives
                             Play play = new Play( part, flow, false );
                             plays.add( play );
@@ -1404,7 +1404,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( Segment seg : segments ) {
             for ( Iterator<Part> parts = seg.parts(); parts.hasNext(); ) {
                 Part part = parts.next();
-                if ( part.resourceSpec().matches( specable, exactMatch, plan ) ) {
+//                if ( part.resourceSpec().matches( specable, exactMatch, plan ) ) {
+                if ( part.resourceSpec().matchesOrSubsumes( specable, exactMatch, plan ) ) {
                     list.add( part );
                 }
             }
@@ -1681,9 +1682,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return (List<Employment>) CollectionUtils.select(
                 findAllEmploymentsWithKnownActors(),
                 new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        Actor empActor = ( (Employment) object ).getActor();
-                        return empActor != null && empActor.equals( actor );
+                    public boolean evaluate( Object obj ) {
+                        Employment employment = (Employment) obj;
+                        Actor empActor = employment.getActor();
+                        return employment.getRole() != null && empActor != null && empActor.equals( actor );
                     }
                 }
         );
@@ -2489,7 +2491,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     Commitment commitment = new Commitment( source, beneficiary, flow );
                     if ( !source.getActor().equals( beneficiary.getActor() )
                             && !flow.isProhibited()
-                           // && commitment.passesClearanceTest() 
+                           // && commitment.passesClearanceTest()
                             ) {
                         commitments.add( commitment );
                     }

@@ -216,4 +216,5 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     public Place getJurisdiction() {
         return null;
     }
+
 }

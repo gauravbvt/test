@@ -225,12 +225,6 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return sb.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec ) {
-        return findAllIssuesFor( resourceSpec, false );
-    }
 
     /**
      * {@inheritDoc}
