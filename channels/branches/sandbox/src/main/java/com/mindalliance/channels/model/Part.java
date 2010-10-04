@@ -280,12 +280,12 @@ public class Part extends Node implements GeoLocatable, Specable {
      * Test whether the resource spec of the part intersects a given resource spec
      *
      * @param resourceSpec a resource
-     * @param plan the plan
+     * @param plan         the plan
      * @return a boolean
      */
     public boolean isImpliedBy( ResourceSpec resourceSpec, Plan plan ) {
         return !spec.isAnyone()
-            && resourceSpec.narrowsOrEquals( spec, plan );
+                && resourceSpec.narrowsOrEquals( spec, plan );
     }
 
     /**
@@ -857,18 +857,18 @@ public class Part extends Node implements GeoLocatable, Specable {
     @Override
     public boolean references( final ModelObject mo ) {
         return ModelObject.areIdentical( getActor(), mo )
-            || ModelObject.areIdentical( getRole(), mo )
-            || ModelObject.areIdentical( getJurisdiction(), mo )
-            || ModelObject.areIdentical( getOrganization(), mo )
-            || ModelObject.areIdentical( location, mo )
-            || ModelObject.areIdentical( initiatedEvent, mo )
-            || CollectionUtils.exists(
-                        goals,
-                        new Predicate() {
-                            public boolean evaluate( Object object ) {
-                                return ( (Goal) object ).references( mo );
-                            }
-                        } );
+                || ModelObject.areIdentical( getRole(), mo )
+                || ModelObject.areIdentical( getJurisdiction(), mo )
+                || ModelObject.areIdentical( getOrganization(), mo )
+                || ModelObject.areIdentical( location, mo )
+                || ModelObject.areIdentical( initiatedEvent, mo )
+                || CollectionUtils.exists(
+                goals,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ( (Goal) object ).references( mo );
+                    }
+                } );
     }
 
     /**
@@ -942,7 +942,7 @@ public class Part extends Node implements GeoLocatable, Specable {
     }
 
     /**
-     * Get all explicit sharing sends from connected capabilities.
+     * Get all explicit sharing sends plus those from connected capabilities.
      *
      * @return a list of flows
      */
@@ -962,6 +962,23 @@ public class Part extends Node implements GeoLocatable, Specable {
             }
         }
         return sharingSends;
+    }
+
+    /**
+     * Get all explicit sharing receives.
+     *
+     * @return a list of flows
+     */
+    public List<Flow> getAllSharingReceives() {
+        List<Flow> sharingReceives = new ArrayList<Flow>();
+        Iterator<Flow> receives = receives();
+        while ( receives.hasNext() ) {
+            Flow flow = receives.next();
+            if ( flow.isSharing() ) {
+                sharingReceives.add( flow );
+            }
+        }
+        return sharingReceives;
     }
 
     /**
@@ -1106,6 +1123,7 @@ public class Part extends Node implements GeoLocatable, Specable {
 
     /**
      * Get task with categor, if any.
+     *
      * @return a string
      */
     public String getTaskWithCategory() {

@@ -18,7 +18,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Default imaging service.
@@ -382,11 +384,18 @@ public class DefaultImagingService implements ImagingService {
 
 
     private String sanitizeFileName( String fileName ) {
+        String sanitized;
         if ( File.separator.equals( "\\" ) ) {
-            return fileName.replaceAll( "\\\\", "" );
+            sanitized = fileName.replaceAll( "\\\\", "" );
         } else {
-            return fileName.replaceAll( File.separator, "" );
+            sanitized = fileName.replaceAll( File.separator, "" );
         }
+        try {
+            sanitized = URLEncoder.encode( sanitized, "UTF-8");
+        } catch ( UnsupportedEncodingException e ) {
+            e.printStackTrace(); // should never happen
+        }
+        return sanitized;
     }
 
     /**

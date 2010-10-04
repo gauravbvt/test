@@ -65,6 +65,7 @@ public class Assignment implements GeoLocatable, Specable {
 
     /**
      * {@inheritDoc}
+     *
      * @param queryService
      */
     public String getGeoMarkerLabel( QueryService queryService ) {
@@ -132,9 +133,17 @@ public class Assignment implements GeoLocatable, Specable {
      * @return a boolean
      */
     public boolean hasEntity( ModelEntity entity ) {
-        return ModelObject.areIdentical( getActor(), entity  )
+        return ModelObject.areIdentical( getActor(), entity )
                 || ModelObject.areIdentical( getRole(), entity )
                 || ModelObject.areIdentical( getOrganization(), entity )
                 || ModelObject.areIdentical( getJurisdiction(), entity );
+    }
+
+    /**
+     * Get known assignee, either an actor or an organization.
+     * @return a model entity
+     */
+    public ModelEntity getKnownAssignee() {
+        return getActor().isUnknown() ? getOrganization() : getActor();
     }
 }
