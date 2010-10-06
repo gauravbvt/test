@@ -120,8 +120,9 @@ public class InternalFlow extends Flow {
      * {@inheritDoc}
      */
     public boolean canSetChannels() {
-        return !( target.isConnector() && isNotification() )
-                && !( source.isConnector() && isAskedFor() );
+        return true;
+        /*return !( target.isConnector() && isNotification() )
+                && !( source.isConnector() && isAskedFor() );*/
     }
 
     /**
@@ -146,8 +147,9 @@ public class InternalFlow extends Flow {
      */
     @Override
     public boolean canGetChannels() {
-        return !( target.isConnector() && isNotification() )
-                && !( source.isConnector() && isAskedFor() );
+        return true;
+        /*return !( target.isConnector() && isNotification() )
+                && !( source.isConnector() && isAskedFor() );*/
     }
 
     /**

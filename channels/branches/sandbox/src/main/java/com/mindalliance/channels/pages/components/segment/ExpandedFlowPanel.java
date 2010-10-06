@@ -64,6 +64,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Unspecified intent.
      */
     private static String NO_INTENT = "Unspecified";
+    /**
+     * Unspecified restriction.
+     */
+    private static String NO_RESTRICTION = "Unspecified";
 
     /**
      * True if this flow is marked for deletion.
@@ -145,6 +149,22 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Intent choice.
      */
     private DropDownChoice<String> intentChoice;
+    /**
+     * Restriction container.
+     */
+    private WebMarkupContainer restrictionContainer;
+    /**
+     * Restricted checkbox.
+     */
+    private CheckBox restrictedCheckBox;
+    /**
+     * Restriction choice.
+     */
+    private DropDownChoice<String> restrictionChoice;
+    /**
+     * Flow is to be restricted.
+     */
+    private boolean restricted;
 
     protected ExpandedFlowPanel(
             String id,
@@ -166,6 +186,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addAskedForRadios();
         addSignificanceToTarget();
         addOtherField();
+        addRestrictionFields();
         addAllField();
 
         Node node = getOther();
@@ -214,10 +235,48 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addOrReplace( intentChoice );
     }
 
+    private void addRestrictionFields() {
+        restrictionContainer = new WebMarkupContainer( "restrictionContainer" );
+        restrictionContainer.setOutputMarkupId( true );
+        addOrReplace( restrictionContainer );
+        restrictedCheckBox = new CheckBox(
+                "restricted",
+                new PropertyModel<Boolean>( this, "restricted" ) );
+        restrictedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                restrictionChoice.setEnabled( isRestricted() );
+                target.addComponent( restrictionChoice );
+                if ( !isRestricted() ) {
+                    update( target, new Change( Change.Type.Updated, getFlow(), "restriction" ) );
+                }
+            }
+        } );
+        restrictionContainer.add( restrictedCheckBox );
+        restrictionChoice = new DropDownChoice<String>(
+                "restriction",
+                new PropertyModel<String>( this, "restrictionLabel" ),
+                getAllRestrictionLabels()
+        );
+        restrictionChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getFlow(), "restriction" ) );
+            }
+        } );
+        restrictionChoice.setEnabled( isRestricted() );
+        restrictionContainer.add( restrictionChoice );
+    }
+
     private List<String> getAllIntentLabels() {
         List<String> labels = new ArrayList<String>();
         labels.add( NO_INTENT );
         labels.addAll( Flow.Intent.getAllLabels() );
+        return labels;
+    }
+
+    private List<String> getAllRestrictionLabels() {
+        List<String> labels = new ArrayList<String>();
+        labels.add( NO_RESTRICTION );
+        labels.addAll( Flow.Restriction.getAllLabels() );
         return labels;
     }
 
@@ -289,6 +348,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( lockedByUser && f.canSetTerminatesSource() );
         otherChoice.setEnabled( lockedByUser );
+        restrictedCheckBox.setEnabled(  lockedByUser );
         flowDescription.setEnabled( ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() )
                 && isLockedByUser( getFlow() ) );
         makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
@@ -1141,6 +1201,50 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         if ( label != null ) {
             Flow.Intent intent = label.equals( NO_INTENT ) ? null : Flow.Intent.valueOfLabel( label );
             doCommand( new UpdateSegmentObject( getFlow(), "intent", intent ) );
+        }
+    }
+
+    /**
+     * Whether the flow is restricted.
+     * @return a boolean
+     */
+    public boolean isRestricted() {
+        return restricted || getFlow().getRestriction() != null;
+    }
+
+    /**
+     * Restrict or unrestrict the flow.
+     * @param val a boolean
+     */
+    public void setRestricted( boolean val ) {
+        this.restricted = val;
+        if ( !val  && getFlow().getRestriction() != null ) {
+           doCommand( new UpdateSegmentObject( getFlow(), "restriction", null ) );
+        }
+    }
+
+
+    /**
+     * Get label for flow's restriction.
+     *
+     * @return a string
+     */
+    public String getRestrictionLabel() {
+        Flow.Restriction restriction = getFlow().getRestriction();
+        return restriction == null ? NO_RESTRICTION : restriction.getLabel();
+    }
+
+    /**
+     * Set the flow's restriction given the restriction's label.
+     *
+     * @param label a string
+     */
+    public void setRestrictionLabel( String label ) {
+        if ( label != null ) {
+            Flow.Restriction restriction = label.equals( NO_RESTRICTION )
+                    ? null
+                    : Flow.Restriction.valueOfLabel( label );
+            doCommand( new UpdateSegmentObject( getFlow(), "restriction", restriction ) );
         }
     }
 

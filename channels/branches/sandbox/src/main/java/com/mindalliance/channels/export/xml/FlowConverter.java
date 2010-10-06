@@ -113,6 +113,11 @@ public class FlowConverter extends AbstractChannelsConverter {
             writer.setValue( flow.getIntent().name() );
             writer.endNode();
         }
+        if ( flow.getRestriction() != null ) {
+            writer.startNode( "restriction" );
+            writer.setValue( flow.getRestriction().name() );
+            writer.endNode();
+        }
     }
 
     private void writeFlowNodes( InternalFlow flow,
@@ -238,6 +243,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                 context.convertAnother( segment, UserIssue.class );
             } else if ( nodeName.equals( "intent") ) {
                 flow.setIntent( Flow.Intent.valueOf( reader.getValue() ) );
+            } else if ( nodeName.equals( "restriction") ) {
+                flow.setRestriction( Flow.Restriction.valueOf( reader.getValue() ) );
             } else {
                 throw new ConversionException( "Unknown element " + nodeName );
             }

@@ -1366,6 +1366,22 @@
             </listitem>
 
             <listitem>
+              <para>whether sharing is to be restricted to<itemizedlist>
+                  <listitem>
+                    <para>within the same overall organization</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>within the same organization</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>within the same task location</para>
+                  </listitem>
+                </itemizedlist></para>
+            </listitem>
+
+            <listitem>
               <para>the impacts on both source and target tasks are
               given</para>
             </listitem>
@@ -5692,6 +5708,27 @@
                 <entry><para>High</para></entry>
 
                 <entry><para>Name the information flow.</para></entry>
+
+                <entry><para>No</para></entry>
+              </row>
+
+              <row>
+                <entry><para>The flow restriction is
+                meaningless</para></entry>
+
+                <entry><para>Low</para></entry>
+
+                <entry><itemizedlist>
+                    <listitem>
+                      <para>Remove the restriction</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or change the source and/or target specification
+                      to use types of organizations or locations, or none at
+                      all</para>
+                    </listitem>
+                  </itemizedlist></entry>
 
                 <entry><para>No</para></entry>
               </row>

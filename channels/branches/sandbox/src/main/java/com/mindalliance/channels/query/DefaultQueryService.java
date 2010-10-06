@@ -935,26 +935,26 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         if ( spec.getActor() != null ) {
             addUniqueChannels( channels, spec.getActor().getEffectiveChannels() );
             addUniqueChannels( channels, findAllChannelsFor(
-                new ResourceSpec( null, spec.getRole(),
-                                  spec.getOrganization(), spec.getJurisdiction() ) ) );
+                    new ResourceSpec( null, spec.getRole(),
+                            spec.getOrganization(), spec.getJurisdiction() ) ) );
         }
 
         if ( spec.getJurisdiction() != null )
             addUniqueChannels( channels, findAllChannelsFor(
-                new ResourceSpec( spec.getActor(), spec.getRole(),
-                                  spec.getOrganization(), null ) ) );
+                    new ResourceSpec( spec.getActor(), spec.getRole(),
+                            spec.getOrganization(), null ) ) );
 
         if ( spec.getRole() != null )
             addUniqueChannels( channels, findAllChannelsFor(
                     new ResourceSpec( spec.getActor(), null,
-                                      spec.getOrganization(), spec.getJurisdiction() ) ) );
+                            spec.getOrganization(), spec.getJurisdiction() ) ) );
 
         Organization organization = spec.getOrganization();
         if ( organization != null ) {
             addUniqueChannels( channels, organization.getEffectiveChannels() );
             addUniqueChannels( channels, findAllChannelsFor(
                     new ResourceSpec( spec.getActor(), spec.getRole(),
-                                      null, spec.getJurisdiction() ) ) );
+                            null, spec.getJurisdiction() ) ) );
         }
 
         return toSortedList( channels );
@@ -2379,7 +2379,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( "unchecked" )
     public List<Part> findAllPartsPlayedBy( final Organization organization ) {
         Set<Part> allParts = new HashSet<Part>();
-        for (Assignment assignment : findAllAssignments( organization )) {
+        for ( Assignment assignment : findAllAssignments( organization ) ) {
             allParts.add( assignment.getPart() );
         }
         return new ArrayList<Part>( allParts );
@@ -2484,21 +2484,42 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Commitment> findAllCommitments( Flow flow ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         if ( flow.isSharing() ) {
-            List<Assignment> sources = findAllAssignments( (Part) flow.getSource(), false );
+            List<Assignment> committers = findAllAssignments( (Part) flow.getSource(), false );
             List<Assignment> beneficiaries = findAllAssignments( (Part) flow.getTarget(), true );
-            for ( Assignment source : sources ) {
+            for ( Assignment committer : committers ) {
                 for ( Assignment beneficiary : beneficiaries ) {
-                    Commitment commitment = new Commitment( source, beneficiary, flow );
-                    if ( !source.getActor().equals( beneficiary.getActor() )
+                    if ( !committer.getActor().equals( beneficiary.getActor() )
                             && !flow.isProhibited()
-                           // && commitment.passesClearanceTest()
+                            && !flowRestrictsCommitment( flow, committer, beneficiary )
                             ) {
-                        commitments.add( commitment );
+                        commitments.add( new Commitment( committer, beneficiary, flow ) );
                     }
                 }
             }
         }
         return new ArrayList<Commitment>( commitments );
+    }
+
+    private boolean flowRestrictsCommitment( Flow flow, Assignment committer, Assignment beneficiary ) {
+        boolean restricted = false;
+        Flow.Restriction restriction = flow.getRestriction();
+        if ( restriction != null ) {
+            if ( restriction == Flow.Restriction.SameLocation ) {
+                restricted = !ModelEntity.areCompatible(
+                            committer.getLocation(),
+                            beneficiary.getLocation(),
+                            User.current().getPlan() );
+            } else if ( restriction == Flow.Restriction.SameTopOrganization ) {
+                restricted = !committer.getOrganization().getTopOrganization().equals(
+                            beneficiary.getOrganization().getTopOrganization() );
+            } else if ( restriction == Flow.Restriction.SameOrganization ) {
+                restricted = !ModelEntity.areCompatible(
+                            committer.getLocation(),
+                            beneficiary.getLocation(),
+                            User.current().getPlan() );
+            }
+        }
+        return restricted;
     }
 
     /**
@@ -2512,11 +2533,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Flow flow = flows.next();
                 if ( flow.isSharing() && flow.getSource().equals( assignment.getPart() ) ) {
                     for ( Assignment beneficiary : findAllAssignments( (Part) flow.getTarget(), true ) ) {
-                        Commitment commitment = new Commitment(
-                                assignment,
-                                beneficiary,
-                                flow );
-                        if ( commitment.passesClearanceTest() ) commitments.add( commitment );
+                        if ( !flowRestrictsCommitment( flow, assignment, beneficiary ) )
+                            commitments.add( new Commitment(
+                                    assignment,
+                                    beneficiary,
+                                    flow ) );
                     }
                 }
             }
@@ -2994,7 +3015,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Organization.FamilyRelationship findFamilyRelationship( Organization fromOrg, Organization toOrg ) {
-        if ( ModelObject.areIdentical ( fromOrg, toOrg ) )
+        if ( ModelObject.areIdentical( fromOrg, toOrg ) )
             return Organization.FamilyRelationship.Identity;
         if ( fromOrg.getParent() == null || toOrg.getParent() == null )
             return Organization.FamilyRelationship.None;
@@ -3020,9 +3041,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
         ModelObject mo = getDao().find( clazz, name.trim() );
-        if ( mo == null  || !mo.isEntity() || mo.isUnknown()
-                 || mo.isImmutable() || !mo.isUndefined()
-                 || isReferenced( mo ) )
+        if ( mo == null || !mo.isEntity() || mo.isUnknown()
+                || mo.isImmutable() || !mo.isUndefined()
+                || isReferenced( mo ) )
             return false;
 
         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );

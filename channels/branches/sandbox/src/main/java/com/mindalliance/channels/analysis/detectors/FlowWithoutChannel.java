@@ -32,16 +32,14 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
 
         Flow flow = (Flow) modelObject;
-        if ( needsAtLeastOneChannel( flow ) ) {
-            // There is no channel in a flow that requires one
-            List<Channel> flowChannels = flow.getEffectiveChannels();
-            if ( flowChannels.isEmpty() ) {
-                issues.add( createIssue( modelObject,
-                        getSeverity( flow ),
-                        "At least one channel is required.",
-                        "Add a channel" ) );
+        // There is no channel in a flow that requires one
+        List<Channel> flowChannels = flow.getEffectiveChannels();
+        if ( flowChannels.isEmpty() ) {
+            issues.add( createIssue( modelObject,
+                    getSeverity( flow ),
+                    "At least one channel is required.",
+                    "Add a channel" ) );
 
-            }
         }
         return issues;
     }
@@ -65,10 +63,6 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         return issue;
     }
 
-    private static boolean needsAtLeastOneChannel( Flow flow ) {
-        return !flow.getTarget().isConnector() && flow.isNotification()
-                || !flow.getSource().isConnector() && flow.isAskedFor();
-    }
 
     /**
      * {@inheritDoc}

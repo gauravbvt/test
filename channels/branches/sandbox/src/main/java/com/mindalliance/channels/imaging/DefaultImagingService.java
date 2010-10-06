@@ -390,6 +390,7 @@ public class DefaultImagingService implements ImagingService {
         } else {
             sanitized = fileName.replaceAll( File.separator, "" );
         }
+        sanitized = sanitized.replaceAll( " ", "_");
         try {
             sanitized = URLEncoder.encode( sanitized, "UTF-8");
         } catch ( UnsupportedEncodingException e ) {

@@ -61,6 +61,15 @@
 
             <tr wicket:id="others">[other node selector]</tr>
 
+            <tr wicket:id="restrictionContainer">
+                <th>&nbsp;</th>
+                <td><input wicket:id="restricted" type="checkbox"/>&nbsp;but only if in
+                    <select wicket:id="restriction">
+                        <option>the same organization</option>
+                    </select>
+                </td>
+            </tr>
+
             <tr wicket:id="channel-row">
                 <th align="right"><span wicket:id="channel-title">Channels:</span></th>
                 <td><span wicket:id="channels">[channels panel]</span></td>

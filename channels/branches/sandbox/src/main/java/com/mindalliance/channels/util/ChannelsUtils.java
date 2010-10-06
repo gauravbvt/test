@@ -67,6 +67,7 @@ public final class ChannelsUtils {
         attributes.put( "significanceToTarget", flow.getSignificanceToTarget() );
         attributes.put( "significanceToSource", flow.getSignificanceToSource() );
         attributes.put( "intent", flow.getIntent() );
+        attributes.put( "restriction", flow.getRestriction() );
         return attributes;
     }
 
@@ -138,6 +139,10 @@ public final class ChannelsUtils {
         } else {
             merged.put( "intent", null );
         }
+        // Make restriction null (unknown) if there is a conflict.
+        merged.put( "restriction", Flow.Restriction.resolve(
+                (Flow.Restriction) attributes.get( "restriction" ),
+                (Flow.Restriction) others.get( "restriction" ) ) );
         return merged;
     }
 
@@ -553,6 +558,7 @@ public final class ChannelsUtils {
 
     /**
      * Whetehr a string starts with a vowel.
+     *
      * @param str a string
      * @return a boolean
      */

@@ -413,6 +413,19 @@ public class Organization extends AbstractUnicastChannelable
     }
 
     /**
+     * Get primordial parent.
+     *
+     * @return an organization
+     */
+    public Organization getTopOrganization() {
+        if ( parent == null ) return this;
+        else {
+            List<Organization> ancestors = ancestors();
+            return ancestors.get( ancestors.size() - 1 );
+        }
+    }
+
+    /**
      * Family relationships between organizations.
      */
     public enum FamilyRelationship {
