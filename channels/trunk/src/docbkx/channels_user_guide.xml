@@ -264,6 +264,12 @@
           </listitem>
 
           <listitem>
+            <para>restrictions, if any, based on shared organization
+            membership or location of the source and/or target of the
+            flow,</para>
+          </listitem>
+
+          <listitem>
             <para>a list of preferred transmission media (phone, face-to-face
             etc.),</para>
           </listitem>
@@ -1252,6 +1258,25 @@
             </listitem>
 
             <listitem>
+              <para>Whether the information must go to/come from an agent
+              in</para>
+
+              <itemizedlist>
+                <listitem>
+                  <para>the same overall organization</para>
+                </listitem>
+
+                <listitem>
+                  <para>the same organization</para>
+                </listitem>
+
+                <listitem>
+                  <para>the same location</para>
+                </listitem>
+              </itemizedlist>
+            </listitem>
+
+            <listitem>
               <para>List the alternate transmission channels to be used</para>
             </listitem>
 
@@ -1363,22 +1388,6 @@
               <para>the source or target of the flow is identified (depending
               on whether the flow is looked at form the perspective of the
               target or source of the flow)</para>
-            </listitem>
-
-            <listitem>
-              <para>whether sharing is to be restricted to<itemizedlist>
-                  <listitem>
-                    <para>within the same overall organization</para>
-                  </listitem>
-
-                  <listitem>
-                    <para>within the same organization</para>
-                  </listitem>
-
-                  <listitem>
-                    <para>within the same task location</para>
-                  </listitem>
-                </itemizedlist></para>
             </listitem>
 
             <listitem>
@@ -2487,6 +2496,14 @@
         of the same name in another (also if necessary), and then connecting
         the need to the capability or vice-versa by setting the “from” or “to”
         field to the other task.</para>
+
+        <para>When specifying or determining the source or target of a flow, a
+        planner can restrict the sources and targets to be within the same
+        overall organization, within the same organization or within the same
+        location. Adding a restriction on a sharing flow may filter out
+        sharing commitments that would otherwise be implied by the flow (e.g.
+        by dropping any sharing commitment that crosses organizational
+        boundaries).</para>
 
         <para>A communication delay is set either to zero (communication is to
         happen without delay) or to some finite time interval. For an
