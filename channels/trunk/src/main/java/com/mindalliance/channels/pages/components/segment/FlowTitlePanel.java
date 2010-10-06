@@ -55,16 +55,17 @@ public class FlowTitlePanel extends Panel {
                         : "Can notify of";
 
             } else {
-                // receive
+                // send
                 Part part = (Part) node;
                 String format = flow.isAskedFor() ? "Answer {0}{1}{2} with"
-                        : "Notify {0}{1}{2} of";
+                        : "Notify {0}{1}{2}{3} of";
 
                 return MessageFormat.format(
                         format,
                         flow.getShortName( node, true ),
                         Flow.getOrganizationString( part ),
-                        Flow.getJurisdictionString( part ) );
+                        Flow.getJurisdictionString( part ) ,
+                        flow.getRestrictionString() );
             }
         } else {
             // receive
@@ -77,10 +78,11 @@ public class FlowTitlePanel extends Panel {
                 Part part = (Part) source;
                 if ( flow.isAskedFor() )
                     return MessageFormat.format(
-                            "Ask {0}{1}{2} for",
+                            "Ask {0}{1}{2}{3} for",
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
-                            Flow.getJurisdictionString( part ) );
+                            Flow.getJurisdictionString( part ) ,
+                            flow.getRestrictionString() );
                 else
                     return "Notified of";
             }
@@ -114,10 +116,11 @@ public class FlowTitlePanel extends Panel {
                     return "";
                 } else {
                     return MessageFormat.format(
-                            " by {0}{1}{2}",
+                            " by {0}{1}{2}{3}",
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
-                            Flow.getJurisdictionString( part ) );
+                            Flow.getJurisdictionString( part ) ,
+                            flow.getRestrictionString() );
                 }
             }
         }

@@ -198,6 +198,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.AgentIsTaskBottleneck"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.TaskHasTooManyCommitments"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.TaskWithTooManyInputs"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.MeaninglessFlowRestriction"/>
             </list>
         </property>
     </bean>

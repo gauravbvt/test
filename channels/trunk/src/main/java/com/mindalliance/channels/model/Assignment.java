@@ -141,9 +141,19 @@ public class Assignment implements GeoLocatable, Specable {
 
     /**
      * Get known assignee, either an actor or an organization.
+     *
      * @return a model entity
      */
     public ModelEntity getKnownAssignee() {
         return getActor().isUnknown() ? getOrganization() : getActor();
+    }
+
+    /**
+     * Get where the task is executed, if specified.
+     *
+     * @return a place
+     */
+    public Place getLocation() {
+        return getPart().getLocation();
     }
 }

@@ -90,15 +90,11 @@ public class SatisfyNeed extends AbstractCommand {
                 fromNode = capability.getTarget();
                 toNode = need.getTarget();
             }
-            describeTarget( toNode );            
+            describeTarget( toNode );
             Long priorId = (Long) get( "satisfy" );
             String name = need.getName().isEmpty() ? capability.getName() : need.getName();
             newFlow = queryService.connect( fromNode, toNode, name, priorId );
-            newFlow.setEois( capability.copyEois() );
-            newFlow.setSignificanceToSource( capability.getSignificanceToSource() );
-            newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
-            newFlow.setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );
-            newFlow.setMaxDelay( need.getMaxDelay() );
+            newFlow.initSharingFrom( capability, need );
             set( "satisfy", newFlow.getId() );
             set( "context", newFlow.getSegment().getId() );
             MultiCommand multi = (MultiCommand) get( "subCommands" );

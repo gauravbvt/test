@@ -328,7 +328,8 @@ public class ExternalFlow extends Flow {
      * {@inheritDoc}
      */
     public boolean canSetChannels() {
-        return !channelsAreInConnectorFlow();
+        return true;
+        /*return !channelsAreInConnectorFlow();*/
     }
 
     /**

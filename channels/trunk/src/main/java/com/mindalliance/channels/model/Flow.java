@@ -62,6 +62,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * The intent of a flow.
      */
     private Intent intent;
+    /**
+     * Restricion on implied sharing commitments.
+     */
+    private Restriction restriction;
 
     protected Flow() {
     }
@@ -437,12 +441,38 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.intent = intent;
     }
 
+    public Restriction getRestriction() {
+        return restriction;
+    }
+
+    public void setRestriction( Restriction restriction ) {
+        this.restriction = restriction;
+    }
+
     /**
      * Initialize relevant properties from another flow.
      *
      * @param flow the other flow
      */
     public abstract void initFrom( Flow flow );
+
+    /**
+     * Initialize relevant properties as a capability satisfying a need.
+     * @param capability a flow
+     * @param need a flow
+     */
+    // TODO -- do better integration
+    public void initSharingFrom( Flow capability, Flow need ) {
+        setEois( capability.copyEois() );
+        setSignificanceToSource( capability.getSignificanceToSource() );
+        setSignificanceToTarget( need.getSignificanceToTarget() );
+        setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );
+        setMaxDelay( need.getMaxDelay() );
+        setIntent( capability.getIntent() );
+        setRestriction( Flow.Restriction.resolve(
+                need.getRestriction(),
+                capability.getRestriction() ) );
+    }
 
     /**
      * Test if a node is at either end of this flow.
@@ -646,7 +676,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public abstract boolean canGetTerminatesSource();
-
 
     /**
      * Whether the flow has a connector as source or target
@@ -1069,6 +1098,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         );
     }
 
+    public String getRestrictionString() {
+        if ( getRestriction() == null ) {
+            return "";
+        } else {
+            return " but only if in " + getRestriction().getLabel();
+        }
+    }
+
     /**
      * The significance of a flow.
      */
@@ -1183,6 +1220,55 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             for ( Intent intent : Intent.values() ) {
                 if ( intent.getLabel().equals( label ) ) return intent;
             }
+            return null;
+        }
+    }
+
+    /**
+     * Restriction on implied sharing commitments.
+     */
+    public enum Restriction {
+
+        SameTopOrganization,
+        SameOrganization,
+        SameLocation;
+
+        public String getLabel() {
+            switch ( this ) {
+                case SameTopOrganization:
+                    return "the same overall organization";
+                case SameOrganization:
+                    return "the same organization";
+                case SameLocation:
+                    return "the same location";
+                default:
+                    return name();
+            }
+        }
+
+        public static List<String> getAllLabels() {
+            List<String> labels = new ArrayList<String>();
+            for ( Restriction restriction : Restriction.values() ) {
+                labels.add( restriction.getLabel() );
+            }
+            Collections.sort( labels );
+            return labels;
+        }
+
+        public static Restriction valueOfLabel( String label ) {
+            for ( Restriction restriction : Restriction.values() ) {
+                if ( restriction.getLabel().equals( label ) ) return restriction;
+            }
+            return null;
+        }
+
+
+        public static Restriction resolve( Restriction restriction, Restriction other ) {
+            if ( restriction == null ) return other;
+            if ( other == null ) return restriction;
+            if ( restriction == other ) return restriction;
+            if ( restriction == SameTopOrganization && other == SameOrganization ) return SameOrganization;
+            if ( other == SameTopOrganization && restriction == SameOrganization ) return SameOrganization;
             return null;
         }
     }

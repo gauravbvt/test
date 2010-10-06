@@ -19,7 +19,6 @@ import java.util.Set;
  * Time: 1:05:30 PM
  */
 public abstract class ModelEntity extends ModelObject {
-
     /**
      * Actual or Type.
      */
@@ -122,21 +121,30 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
+     * Whether two entities are compatible.
+     * @param entity a model entity
+     * @param other a model entity
+     * @param plan a plan
+     * @return a boolean
+     */
+    public static boolean areCompatible( ModelEntity entity, ModelEntity other, Plan plan  ) {
+        return subsumedBy( entity, other, plan ) || subsumedBy( other, entity, plan );
+    }
+
+
+
+    /**
      * Whether either entity is null or the first entity is subsumed by the other (it narrows or equals the other).
      *
      * @param entity an entity
      * @param other  an entity
-     * @param plan
+     * @param plan a plan
      * @return a boolean
      */
     public static boolean subsumedBy( ModelEntity entity, ModelEntity other, Plan plan ) {
-        if ( entity == null
+        return entity == null
                 || other == null
-            //       || entity.isUnknown()
-            //       || other.isUnknown()
-                ) return true;
-        if ( entity.narrowsOrEquals( other, plan ) ) return true;
-        return false;
+                || entity.narrowsOrEquals( other, plan );
     }
 
     /**

@@ -6,6 +6,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Icon page.
@@ -21,6 +23,17 @@ public class IconPage extends AbstractImageFilePage {
 
     public IconPage( PageParameters parameters ) {
         super( parameters );
+    }
+
+    protected String decodeFileName( String fileName ) {
+        try {
+            int i = fileName.lastIndexOf( "||" );
+            String iconName = i >=0 ? fileName.substring( i + 2 ) : fileName;
+            String prefix = i >=0 ? fileName.substring( 0, i ) : "";
+            return prefix + "||" + URLEncoder.encode( iconName, "UTF-8" ); // We actually want to UNDO the automatic URL decoding done by Wicket.
+        } catch ( UnsupportedEncodingException e ) {
+            throw new RuntimeException( e ); // Will never happen
+        }
     }
 
     protected File getFile( String encodedPath ) throws IOException {
