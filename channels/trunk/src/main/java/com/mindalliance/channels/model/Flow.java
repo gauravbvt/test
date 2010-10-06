@@ -458,8 +458,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     /**
      * Initialize relevant properties as a capability satisfying a need.
+     *
      * @param capability a flow
-     * @param need a flow
+     * @param need       a flow
      */
     // TODO -- do better integration
     public void initSharingFrom( Flow capability, Flow need ) {
@@ -1102,7 +1103,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         if ( getRestriction() == null ) {
             return "";
         } else {
-            return " but only if in " + getRestriction().getLabel();
+            return " if in " + getRestriction().getLabel();
         }
     }
 
@@ -1270,6 +1271,20 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             if ( restriction == SameTopOrganization && other == SameOrganization ) return SameOrganization;
             if ( other == SameTopOrganization && restriction == SameOrganization ) return SameOrganization;
             return null;
+        }
+
+        /**
+         * Is a restriction matched by another (null means no restriction)?
+         *
+         * @param restriction a restriction or null
+         * @param other       a restriction or null
+         * @return a boolean
+         */
+        public static boolean matchedBy( Restriction restriction, Restriction other ) {
+            return restriction == null
+                    || other == null
+                    || restriction.equals( other )
+                    || restriction == SameTopOrganization && other == SameOrganization;
         }
     }
 

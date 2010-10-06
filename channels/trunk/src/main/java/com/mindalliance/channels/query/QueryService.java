@@ -952,7 +952,7 @@ public interface QueryService {
      * @param need a flow
      * @return a list of flows
      */
-    List<Flow> findAllSharingsAddressing( Flow need );
+    List<Flow> findAllSharingsAddressingNeed( Flow need );
 
     /**
      * Find parts with anonymous tasks which resourceSpec is narrowed by that of a given part.
