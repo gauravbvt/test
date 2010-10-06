@@ -79,7 +79,7 @@ public class PartReportPanel extends Panel {
                         .setVisible( showingIssues ) );
 
         WebMarkupContainer receivesContainer = new WebMarkupContainer( "receives-container" );
-        List<Flow> receives = getSortedFlows( part, getReceives() );
+        List<Flow> receives = getSortedFlows( part, getReceives(), queryService );
         receivesContainer.add( new ListView<Flow>( "receives", receives ) {
 
             @Override
@@ -98,7 +98,7 @@ public class PartReportPanel extends Panel {
         receivesContainer.setVisible( !receives.isEmpty() );
         add( receivesContainer );
         WebMarkupContainer sendsContainer = new WebMarkupContainer( "sends-container" );
-        List<Flow> sends = getSortedFlows( part, getSends() );
+        List<Flow> sends = getSortedFlows( part, getSends(), queryService );
         sendsContainer.add( new ListView<Flow>( "sends", sends ) {
 
             @Override
@@ -179,12 +179,13 @@ public class PartReportPanel extends Panel {
                 : name;
     }
 
-    private static List<Flow> getSortedFlows( Part part, List<Flow> flows ) {
+    private static List<Flow> getSortedFlows( Part part, List<Flow> flows, QueryService queryService ) {
         List<Flow> heads = new ArrayList<Flow>();
         List<Flow> middle = new ArrayList<Flow>();
         List<Flow> tails = new ArrayList<Flow>();
 
         for ( Flow flow : flows ) {
+            if ( !queryService.findAllCommitments( flow ).isEmpty() )
             switch ( part.equals( flow.getSource() ) ?
                     flow.getSignificanceToSource() : flow.getSignificanceToTarget() ) {
                 case Triggers:

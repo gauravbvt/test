@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.ElementOfInformation;
-import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.ModelObject;
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -78,7 +77,7 @@ public class FlowReportPanel extends Panel {
 
         Set<TransmissionMedium> unicasts = flow.getUnicasts();
         Collection<Channel> broadcasts = flow.getBroadcasts();
-        final List<LocalizedActor> actors = findActors( flow, broadcasts, unicasts, queryService );
+        final List<LocalizedActor> actors = findContactedActors( flow, broadcasts, unicasts, queryService );
         List<Goal> impactList;
         if ( isSource && flow.getTarget().isPart() && flow.isEssential( false, queryService ) ) {
             impactList = queryService.findAllGoalsImpactedByFailure( (Part) flow.getTarget() );
@@ -161,7 +160,8 @@ public class FlowReportPanel extends Panel {
                 : "";
     }
 
-    private static List<LocalizedActor> findActors(
+/*
+    private static List<LocalizedActor> findContactedActors(
             Flow flow,
             Collection<Channel> broadcasts,
             Set<TransmissionMedium> unicasts,
@@ -193,6 +193,29 @@ public class FlowReportPanel extends Panel {
         Collections.sort( result );
         return result;
     }
+*/
+
+    private static List<LocalizedActor> findContactedActors(
+            Flow flow,
+            Collection<Channel> broadcasts,
+            Set<TransmissionMedium> unicasts,
+            QueryService queryService ) {
+
+        Set<LocalizedActor> localizedActors = new HashSet<LocalizedActor>();
+        List<Commitment> commitments = queryService.findAllCommitments( flow );
+        for ( Commitment commitment : commitments ) {
+            Assignment beneficiary = commitment.getBeneficiary();
+            localizedActors.add( new LocalizedActor(
+                    beneficiary.getActor(),
+                    beneficiary.getPart(),
+                    unicasts,
+                    broadcasts ) );
+        }
+        List<LocalizedActor> result = new ArrayList<LocalizedActor>( localizedActors );
+        Collections.sort( result );
+        return result;
+    }
+
 
     /**
      * An actor from a part in a segment.
