@@ -331,7 +331,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
+    public Boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
         ModelEntity entity = ModelEntity.getUniversalType( name, clazz );
         if ( entity == null ) entity = getDao().find( clazz, name );
         return entity != null && entity.getKind().equals( kind );
@@ -442,7 +442,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean isInitiated( Segment segment ) {
+    public Boolean isInitiated( Segment segment ) {
         return !findInitiators( segment ).isEmpty();
     }
 
@@ -811,7 +811,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<T>( result );
     }
 
-    public boolean isExecutedBy( Part part, final ModelEntity entity ) {
+    public Boolean isExecutedBy( Part part, final ModelEntity entity ) {
         if ( entity.isActual() ) {
             List<Assignment> assignments = findAllAssignments( part, false );
             return part.resourceSpec().hasEntity( entity )
@@ -1331,7 +1331,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean findIfPartStarted( Part part ) {
+    public Boolean findIfPartStarted( Part part ) {
         return doFindIfPartStarted( part, new HashSet<ModelObject>() );
     }
 
@@ -1368,7 +1368,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean findIfSegmentStarted( Segment segment ) {
+    public Boolean findIfSegmentStarted( Segment segment ) {
         return doFindIfSegmentStarted( segment, new HashSet<ModelObject>() );
 
     }
@@ -2025,7 +2025,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean isSemanticMatch( String text, String otherText, Proximity proximity ) {
+    public Boolean isSemanticMatch( String text, String otherText, Proximity proximity ) {
         return Matcher.getInstance().same( text, otherText )
                 || semanticMatcher.matches( text.trim(), otherText.trim(), proximity );
     }
@@ -2033,7 +2033,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean likelyRelated( String text, String otherText ) {
+    public Boolean likelyRelated( String text, String otherText ) {
         return Matcher.getInstance().matches( text, otherText )
                 || isSemanticMatch( StringUtils.uncapitalize( text ),
                 StringUtils.uncapitalize( otherText ),
@@ -2875,7 +2875,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean covers( Agreement agreement, Commitment commitment ) {
+    public Boolean covers( Agreement agreement, Commitment commitment ) {
         Flow sharing = commitment.getSharing();
         Assignment beneficiary = commitment.getBeneficiary();
         if ( beneficiary.getOrganization().narrowsOrEquals(
@@ -2895,7 +2895,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean encompasses( Agreement agreement, Agreement other ) {
+    public Boolean encompasses( Agreement agreement, Agreement other ) {
         Plan plan = getDao().getPlan();
         if ( other.getBeneficiary().narrowsOrEquals( agreement.getBeneficiary(), plan )
                 && Matcher.getInstance().same( agreement.getInformation(), other.getInformation() ) ) {
@@ -2914,7 +2914,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @param otherFlow a flow
      * @return a boolean
      */
-    public boolean hasCommonEOIs( Flow flow, Flow otherFlow ) {
+    public Boolean hasCommonEOIs( Flow flow, Flow otherFlow ) {
         List<ElementOfInformation> eois = flow.getEois();
         final List<ElementOfInformation> otherEois = otherFlow.getEois();
         return CollectionUtils.exists(
@@ -2941,7 +2941,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @param superset a list of elements of information
      * @return a boolean
      */
-    public boolean subsetOf(
+    public Boolean subsetOf(
             List<ElementOfInformation> eois, final List<ElementOfInformation> superset ) {
         return !CollectionUtils.exists(
                 eois,

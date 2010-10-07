@@ -260,7 +260,7 @@ public interface QueryService {
      * @param kind  actual or type
      * @return a boolean
      */
-    boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind );
+    Boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind );
 
     /**
      * Create a connector in a plan segment.
@@ -599,7 +599,7 @@ public interface QueryService {
      * @param part a part
      * @return a boolean
      */
-    boolean findIfPartStarted( Part part );
+    Boolean findIfPartStarted( Part part );
 
     /**
      * Whether the plan segment can ever start.
@@ -607,7 +607,7 @@ public interface QueryService {
      * @param segment a plan segment
      * @return a boolean
      */
-    boolean findIfSegmentStarted( Segment segment );
+    Boolean findIfSegmentStarted( Segment segment );
 
     /**
      * Find all parts in the plan.
@@ -690,7 +690,7 @@ public interface QueryService {
      * @param segment a plan segment
      * @return a boolean
      */
-    boolean isInitiated( Segment segment );
+    Boolean isInitiated( Segment segment );
 
     /**
      * Get title for actor.
@@ -935,7 +935,7 @@ public interface QueryService {
      * @param proximity a proximity level
      * @return a boolean
      */
-    boolean isSemanticMatch( String text, String otherText, Proximity proximity );
+    Boolean isSemanticMatch( String text, String otherText, Proximity proximity );
 
     /**
      * Whether two texts have high semantic proximity.
@@ -944,7 +944,7 @@ public interface QueryService {
      * @param otherText a string
      * @return a boolean
      */
-    boolean likelyRelated( String text, String otherText );
+    Boolean likelyRelated( String text, String otherText );
 
     /**
      * Find all sharing flows addressing a given information need.
@@ -1291,7 +1291,7 @@ public interface QueryService {
      * @param commitment a commitment
      * @return a boolean
      */
-    boolean covers( Agreement agreement, Commitment commitment );
+    Boolean covers( Agreement agreement, Commitment commitment );
 
     /**
      * Whether an agreement encompasses another.
@@ -1300,7 +1300,7 @@ public interface QueryService {
      * @param other     the other agreement
      * @return a boolean
      */
-    boolean encompasses( Agreement agreement, Agreement other );
+    Boolean encompasses( Agreement agreement, Agreement other );
 
     /**
      * Whether there are common EOIs in two free-form texts.
@@ -1309,7 +1309,7 @@ public interface QueryService {
      * @param otherFlow a flow
      * @return a boolean
      */
-    boolean hasCommonEOIs( Flow flow, Flow otherFlow );
+    Boolean hasCommonEOIs( Flow flow, Flow otherFlow );
 
     /**
      * Whether none in a list eois is without a strong match with some in another list.
@@ -1318,13 +1318,13 @@ public interface QueryService {
      * @param superset a list of elements of information
      * @return a boolean
      */
-    boolean subsetOf(
+    Boolean subsetOf(
             List<ElementOfInformation> eois, List<ElementOfInformation> superset );
 
     <T extends ModelEntity> T retrieveEntity(
             Class<T> entityClass, Map<String, Object> state, String key );
 
-    boolean isExecutedBy( Part part, ModelEntity entity );
+    Boolean isExecutedBy( Part part, ModelEntity entity );
 
     @SuppressWarnings( "unchecked" )
     List<ModelEntity> findEntities(
