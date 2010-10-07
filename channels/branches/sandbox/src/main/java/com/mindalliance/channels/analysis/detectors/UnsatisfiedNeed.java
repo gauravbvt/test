@@ -38,55 +38,10 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow need = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        // if empty, then need = "give me anything you've got"
-        List<Flow> sharings = getQueryService().findAllSharingsAddressing( need );
-        final Set<ElementOfInformation> sharedEOIs = new HashSet<ElementOfInformation>();
-        for ( Flow sharing : sharings ) {
-            List<ElementOfInformation> eois = sharing.getEois();
-            sharedEOIs.addAll( eois );
-        }
-        if ( !need.getEois().isEmpty() ) {
-            List<ElementOfInformation> neededEOIs = need.getEois();
-            List<ElementOfInformation> unsatisfiedEOIs = (List<ElementOfInformation>) CollectionUtils.select(
-                    neededEOIs,
-                    new Predicate() {
-                        public boolean evaluate( Object obj ) {
-                            final String neededEOI = ( (ElementOfInformation) obj ).getContent();
-                            return !CollectionUtils.exists(
-                                    sharedEOIs,
-                                    new Predicate() {
-                                        public boolean evaluate( Object o ) {
-                                            String sharedEOI = ( (ElementOfInformation) o ).getContent();
-                                            return getQueryService().isSemanticMatch(
-                                                    neededEOI,
-                                                    sharedEOI,
-                                                    Proximity.HIGH );
-                                        }
-                                    }
-                            );
-                        }
-                    } );
-            if ( !unsatisfiedEOIs.isEmpty() ) {
-                DetectedIssue issue = this.makeIssue( Issue.COMPLETENESS, need );
-                if ( need.isCritical() ) {
-                    issue.setSeverity( getQueryService().computePartPriority( (Part) need.getTarget() ) );
-                } else {
-                    issue.setSeverity( Level.Low );
-                }
-                StringBuffer sb = new StringBuffer();
-                for ( ElementOfInformation eoi : unsatisfiedEOIs ) {
-                    sb.append( " -- " );
-                    sb.append( StringUtils.abbreviate( eoi.getContent(), 25 ) );
-                }
-                issue.setDescription( "There is apparently no sharing"
-                        + " of these needed elements of information: "
-                        + sb.toString()
-                        + ".");
-                issue.setRemediation( "Add sharing flows\n "
-                        + "or extend current sharing flows to include the missing elements of information." );
-                issues.add( issue );
-            }
-        } else {
+        if ( !need.getName().isEmpty()
+                && need.isNeed() ) {
+            // if empty, then need = "give me anything you've got"
+            List<Flow> sharings = getQueryService().findAllSharingsAddressingNeed( need );
             if ( sharings.isEmpty() ) {
                 // Open ended need is satisifed by any synonymous commitment.
                 DetectedIssue issue = makeIssue( Issue.COMPLETENESS, need );
@@ -96,8 +51,57 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
                     issue.setSeverity( Level.Low );
                 }
                 issue.setDescription( "The needed information is not shared." );
-                issue.setRemediation( "Add a sharing flow of the same name." );
+                issue.setRemediation( "Add a sharing flow of the same name " +
+                        "with matching elements and restriction, if any." );
                 issues.add( issue );
+            } else {
+                final Set<ElementOfInformation> sharedEOIs = new HashSet<ElementOfInformation>();
+                for ( Flow sharing : sharings ) {
+                    List<ElementOfInformation> eois = sharing.getEois();
+                    sharedEOIs.addAll( eois );
+                }
+                if ( !need.getEois().isEmpty() ) {
+                    List<ElementOfInformation> neededEOIs = need.getEois();
+                    List<ElementOfInformation> unsatisfiedEOIs = (List<ElementOfInformation>) CollectionUtils.select(
+                            neededEOIs,
+                            new Predicate() {
+                                public boolean evaluate( Object obj ) {
+                                    final String neededEOI = ( (ElementOfInformation) obj ).getContent();
+                                    return !CollectionUtils.exists(
+                                            sharedEOIs,
+                                            new Predicate() {
+                                                public boolean evaluate( Object o ) {
+                                                    String sharedEOI = ( (ElementOfInformation) o ).getContent();
+                                                    return getQueryService().isSemanticMatch(
+                                                            neededEOI,
+                                                            sharedEOI,
+                                                            Proximity.HIGH );
+                                                }
+                                            }
+                                    );
+                                }
+                            } );
+                    if ( !unsatisfiedEOIs.isEmpty() ) {
+                        DetectedIssue issue = this.makeIssue( Issue.COMPLETENESS, need );
+                        if ( need.isCritical() ) {
+                            issue.setSeverity( getQueryService().computePartPriority( (Part) need.getTarget() ) );
+                        } else {
+                            issue.setSeverity( Level.Low );
+                        }
+                        StringBuffer sb = new StringBuffer();
+                        for ( ElementOfInformation eoi : unsatisfiedEOIs ) {
+                            sb.append( " -- " );
+                            sb.append( StringUtils.abbreviate( eoi.getContent(), 25 ) );
+                        }
+                        issue.setDescription( "There is apparently no sharing"
+                                + " of these needed elements of information: "
+                                + sb.toString()
+                                + "." );
+                        issue.setRemediation( "Add sharing flows\n "
+                                + "or extend current sharing flows to include the missing elements of information." );
+                        issues.add( issue );
+                    }
+                }
             }
         }
         return issues;
@@ -107,9 +111,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject instanceof Flow
-                && !modelObject.getName().trim().isEmpty()
-                && ( (Flow) modelObject ).getSource().isConnector();
+        return modelObject instanceof Flow;
     }
 
     /**

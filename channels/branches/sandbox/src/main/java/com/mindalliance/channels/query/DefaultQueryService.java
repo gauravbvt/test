@@ -2043,17 +2043,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Flow> findAllSharingsAddressing( Flow need ) {
-        List<Flow> commitments = new ArrayList<Flow>();
-        assert need.getSource().isConnector();
-        // Find all synonymous commitments to the part
+    public List<Flow> findAllSharingsAddressingNeed( Flow need ) {
+        assert need.isNeed();
+        List<Flow> sharings = new ArrayList<Flow>();
+        // Find all synonymous sharings to the part
         Part needyPart = (Part) need.getTarget();
-        commitments.addAll( findMatchingCommitmentsTo( needyPart, need.getName() ) );
-        // Find all synonymous commitments to applicable anonymous parts within the plan segment
-        for ( Part part : findAnonymousPartsMatching( needyPart ) ) {
-            commitments.addAll( findMatchingCommitmentsTo( part, need.getName() ) );
-        }
-        return commitments;
+        sharings.addAll( findSharingFlowsMatchingNeed( needyPart, need ) );
+        // Find all synonymous sharings to applicable anonymous parts within the plan segment
+       /* for ( Part part : findAnonymousPartsMatching( needyPart ) ) {
+            sharings.addAll( findSharingFlowsMatchingNeed( part, need ) );
+        }*/
+        return sharings;
     }
 
     /**
@@ -2073,17 +2073,19 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return anonymousParts;
     }
 
-    private List<Flow> findMatchingCommitmentsTo( Part part, String flowName ) {
-        List<Flow> commitments = new ArrayList<Flow>();
+    private List<Flow> findSharingFlowsMatchingNeed( Part part, Flow need ) {
+        List<Flow> sharings = new ArrayList<Flow>();
+        String info = need.getName();
         Iterator<Flow> incoming = part.receives();
         while ( incoming.hasNext() ) {
             Flow in = incoming.next();
-            if ( in.getSource().isPart() && Matcher.getInstance().matches( in.getName(),
-                    flowName ) ) {
-                commitments.add( in );
+            if ( in.isSharing()
+                    && Matcher.getInstance().same( in.getName(), info ) 
+                    && Flow.Restriction.matchedBy ( need.getRestriction(), in.getRestriction() ) ) {
+                sharings.add( in );
             }
         }
-        return commitments;
+        return sharings;
     }
 
     /**
@@ -2873,7 +2875,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean covers( Agreement agreement, Commitment commitment ) {
+    public Boolean covers( Agreement agreement, Commitment commitment ) {
         Flow sharing = commitment.getSharing();
         Assignment beneficiary = commitment.getBeneficiary();
         if ( beneficiary.getOrganization().narrowsOrEquals(
@@ -2893,7 +2895,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean encompasses( Agreement agreement, Agreement other ) {
+    public Boolean encompasses( Agreement agreement, Agreement other ) {
         Plan plan = getDao().getPlan();
         if ( other.getBeneficiary().narrowsOrEquals( agreement.getBeneficiary(), plan )
                 && Matcher.getInstance().same( agreement.getInformation(), other.getInformation() ) ) {
@@ -2912,7 +2914,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @param otherFlow a flow
      * @return a boolean
      */
-    public boolean hasCommonEOIs( Flow flow, Flow otherFlow ) {
+    public Boolean hasCommonEOIs( Flow flow, Flow otherFlow ) {
         List<ElementOfInformation> eois = flow.getEois();
         final List<ElementOfInformation> otherEois = otherFlow.getEois();
         return CollectionUtils.exists(
@@ -2939,7 +2941,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @param superset a list of elements of information
      * @return a boolean
      */
-    public boolean subsetOf(
+    public Boolean subsetOf(
             List<ElementOfInformation> eois, final List<ElementOfInformation> superset ) {
         return !CollectionUtils.exists(
                 eois,

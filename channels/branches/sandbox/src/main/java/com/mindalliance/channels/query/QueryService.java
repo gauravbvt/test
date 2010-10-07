@@ -952,7 +952,7 @@ public interface QueryService {
      * @param need a flow
      * @return a list of flows
      */
-    List<Flow> findAllSharingsAddressing( Flow need );
+    List<Flow> findAllSharingsAddressingNeed( Flow need );
 
     /**
      * Find parts with anonymous tasks which resourceSpec is narrowed by that of a given part.
@@ -1291,7 +1291,7 @@ public interface QueryService {
      * @param commitment a commitment
      * @return a boolean
      */
-    boolean covers( Agreement agreement, Commitment commitment );
+    Boolean covers( Agreement agreement, Commitment commitment );
 
     /**
      * Whether an agreement encompasses another.
@@ -1300,7 +1300,7 @@ public interface QueryService {
      * @param other     the other agreement
      * @return a boolean
      */
-    boolean encompasses( Agreement agreement, Agreement other );
+    Boolean encompasses( Agreement agreement, Agreement other );
 
     /**
      * Whether there are common EOIs in two free-form texts.
@@ -1309,7 +1309,7 @@ public interface QueryService {
      * @param otherFlow a flow
      * @return a boolean
      */
-    boolean hasCommonEOIs( Flow flow, Flow otherFlow );
+    Boolean hasCommonEOIs( Flow flow, Flow otherFlow );
 
     /**
      * Whether none in a list eois is without a strong match with some in another list.
@@ -1318,7 +1318,7 @@ public interface QueryService {
      * @param superset a list of elements of information
      * @return a boolean
      */
-    boolean subsetOf(
+    Boolean subsetOf(
             List<ElementOfInformation> eois, List<ElementOfInformation> superset );
 
     <T extends ModelEntity> T retrieveEntity(

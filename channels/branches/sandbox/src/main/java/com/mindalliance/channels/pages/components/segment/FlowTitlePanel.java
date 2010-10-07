@@ -35,10 +35,10 @@ public class FlowTitlePanel extends Panel {
     }
 
     private void init() {
-        addTitleLabels( );
+        addTitleLabels();
     }
 
-    private void addTitleLabels( ) {
+    private void addTitleLabels() {
         Label preLabel = new Label( "pre", new Model<String>( getPre() ) );
         add( preLabel );
         Label infoLabel = new Label( "info", new Model<String>( getInfo() ) );
@@ -57,14 +57,14 @@ public class FlowTitlePanel extends Panel {
             } else {
                 // send
                 Part part = (Part) node;
-                String format = flow.isAskedFor() ? "Answer {0}{1}{2} with"
+                String format = flow.isAskedFor() ? "Answer {0}{1}{2}{3} with"
                         : "Notify {0}{1}{2}{3} of";
 
                 return MessageFormat.format(
                         format,
                         flow.getShortName( node, true ),
                         Flow.getOrganizationString( part ),
-                        Flow.getJurisdictionString( part ) ,
+                        Flow.getJurisdictionString( part ),
                         flow.getRestrictionString() );
             }
         } else {
@@ -81,7 +81,7 @@ public class FlowTitlePanel extends Panel {
                             "Ask {0}{1}{2}{3} for",
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
-                            Flow.getJurisdictionString( part ) ,
+                            Flow.getJurisdictionString( part ),
                             flow.getRestrictionString() );
                 else
                     return "Notified of";
@@ -102,13 +102,18 @@ public class FlowTitlePanel extends Panel {
     }
 
     private String getPost() {
+        Node node = flow.getTarget();
         if ( isSend ) {
-            return "";
+            if ( node.isConnector() ) {
+                return flow.getRestrictionString();
+            } else {
+                return "";
+            }
         } else {
             // receive
             Node source = flow.getSource();
             if ( source.isConnector() ) {
-                return "";
+                return flow.getRestrictionString();
 
             } else {
                 Part part = (Part) source;
@@ -119,7 +124,7 @@ public class FlowTitlePanel extends Panel {
                             " by {0}{1}{2}{3}",
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
-                            Flow.getJurisdictionString( part ) ,
+                            Flow.getJurisdictionString( part ),
                             flow.getRestrictionString() );
                 }
             }
