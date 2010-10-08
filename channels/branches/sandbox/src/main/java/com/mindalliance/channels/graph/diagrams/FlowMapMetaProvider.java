@@ -81,26 +81,36 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
      * Whether to show goals.
      */
     private boolean showingGoals;
+    /**
+     * Whether to show connectors.
+     */
+    private boolean showingConnectors;
 
     public FlowMapMetaProvider( ModelObject modelObject,
                                 String outputFormat,
                                 Resource imageDirectory,
                                 Analyst analyst ) {
-        this( modelObject, outputFormat, imageDirectory, analyst, false );
+        this( modelObject, outputFormat, imageDirectory, analyst, false, false );
     }
 
     public FlowMapMetaProvider( ModelObject modelObject,
                                 String outputFormat,
                                 Resource imageDirectory,
                                 Analyst analyst,
-                                boolean showingGoals ) {
+                                boolean showingGoals,
+                                boolean showingConnectors ) {
         super( outputFormat, imageDirectory, analyst );
         this.context = modelObject;
         this.showingGoals = showingGoals;
+        this.showingConnectors = showingConnectors;
     }
 
     public boolean isShowingGoals() {
         return showingGoals;
+    }
+
+    public boolean isShowingConnectors() {
+        return showingConnectors;
     }
 
     /**

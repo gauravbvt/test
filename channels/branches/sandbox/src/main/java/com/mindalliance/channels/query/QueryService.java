@@ -260,7 +260,7 @@ public interface QueryService {
      * @param kind  actual or type
      * @return a boolean
      */
-    boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind );
+    Boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind );
 
     /**
      * Create a connector in a plan segment.
@@ -599,7 +599,7 @@ public interface QueryService {
      * @param part a part
      * @return a boolean
      */
-    boolean findIfPartStarted( Part part );
+    Boolean findIfPartStarted( Part part );
 
     /**
      * Whether the plan segment can ever start.
@@ -607,7 +607,7 @@ public interface QueryService {
      * @param segment a plan segment
      * @return a boolean
      */
-    boolean findIfSegmentStarted( Segment segment );
+    Boolean findIfSegmentStarted( Segment segment );
 
     /**
      * Find all parts in the plan.
@@ -690,7 +690,7 @@ public interface QueryService {
      * @param segment a plan segment
      * @return a boolean
      */
-    boolean isInitiated( Segment segment );
+    Boolean isInitiated( Segment segment );
 
     /**
      * Get title for actor.
@@ -935,7 +935,7 @@ public interface QueryService {
      * @param proximity a proximity level
      * @return a boolean
      */
-    boolean isSemanticMatch( String text, String otherText, Proximity proximity );
+    Boolean isSemanticMatch( String text, String otherText, Proximity proximity );
 
     /**
      * Whether two texts have high semantic proximity.
@@ -944,7 +944,7 @@ public interface QueryService {
      * @param otherText a string
      * @return a boolean
      */
-    boolean likelyRelated( String text, String otherText );
+    Boolean likelyRelated( String text, String otherText );
 
     /**
      * Find all sharing flows addressing a given information need.
@@ -1324,7 +1324,7 @@ public interface QueryService {
     <T extends ModelEntity> T retrieveEntity(
             Class<T> entityClass, Map<String, Object> state, String key );
 
-    boolean isExecutedBy( Part part, ModelEntity entity );
+    Boolean isExecutedBy( Part part, ModelEntity entity );
 
     @SuppressWarnings( "unchecked" )
     List<ModelEntity> findEntities(
@@ -1367,4 +1367,12 @@ public interface QueryService {
      * @return a boolean - true if the entity was deleted
      */
     boolean cleanup( Class<? extends ModelObject> clazz, String name );
+
+    /**
+     * Find the EOIs that appear (or seem to) in two flows.
+     * @param flow a flow
+     * @param otherFlow another flow
+     * @return a list of EOIs
+     */
+    List<ElementOfInformation> findCommonEOIs( Flow flow, Flow otherFlow );
 }

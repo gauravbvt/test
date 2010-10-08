@@ -331,7 +331,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
+    public Boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
         ModelEntity entity = ModelEntity.getUniversalType( name, clazz );
         if ( entity == null ) entity = getDao().find( clazz, name );
         return entity != null && entity.getKind().equals( kind );
@@ -442,7 +442,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean isInitiated( Segment segment ) {
+    public Boolean isInitiated( Segment segment ) {
         return !findInitiators( segment ).isEmpty();
     }
 
@@ -811,7 +811,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<T>( result );
     }
 
-    public boolean isExecutedBy( Part part, final ModelEntity entity ) {
+    public Boolean isExecutedBy( Part part, final ModelEntity entity ) {
         if ( entity.isActual() ) {
             List<Assignment> assignments = findAllAssignments( part, false );
             return part.resourceSpec().hasEntity( entity )
@@ -1331,7 +1331,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean findIfPartStarted( Part part ) {
+    public Boolean findIfPartStarted( Part part ) {
         return doFindIfPartStarted( part, new HashSet<ModelObject>() );
     }
 
@@ -1368,7 +1368,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean findIfSegmentStarted( Segment segment ) {
+    public Boolean findIfSegmentStarted( Segment segment ) {
         return doFindIfSegmentStarted( segment, new HashSet<ModelObject>() );
 
     }
@@ -2025,7 +2025,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean isSemanticMatch( String text, String otherText, Proximity proximity ) {
+    public Boolean isSemanticMatch( String text, String otherText, Proximity proximity ) {
         return Matcher.getInstance().same( text, otherText )
                 || semanticMatcher.matches( text.trim(), otherText.trim(), proximity );
     }
@@ -2033,7 +2033,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public boolean likelyRelated( String text, String otherText ) {
+    public Boolean likelyRelated( String text, String otherText ) {
         return Matcher.getInstance().matches( text, otherText )
                 || isSemanticMatch( StringUtils.uncapitalize( text ),
                 StringUtils.uncapitalize( otherText ),
@@ -2050,7 +2050,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Part needyPart = (Part) need.getTarget();
         sharings.addAll( findSharingFlowsMatchingNeed( needyPart, need ) );
         // Find all synonymous sharings to applicable anonymous parts within the plan segment
-       /* for ( Part part : findAnonymousPartsMatching( needyPart ) ) {
+        /* for ( Part part : findAnonymousPartsMatching( needyPart ) ) {
             sharings.addAll( findSharingFlowsMatchingNeed( part, need ) );
         }*/
         return sharings;
@@ -2080,8 +2080,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         while ( incoming.hasNext() ) {
             Flow in = incoming.next();
             if ( in.isSharing()
-                    && Matcher.getInstance().same( in.getName(), info ) 
-                    && Flow.Restriction.matchedBy ( need.getRestriction(), in.getRestriction() ) ) {
+                    && Matcher.getInstance().same( in.getName(), info )
+                    && Flow.Restriction.matchedBy( need.getRestriction(), in.getRestriction() ) ) {
                 sharings.add( in );
             }
         }
@@ -2508,17 +2508,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         if ( restriction != null ) {
             if ( restriction == Flow.Restriction.SameLocation ) {
                 restricted = !ModelEntity.areCompatible(
-                            committer.getLocation(),
-                            beneficiary.getLocation(),
-                            User.current().getPlan() );
+                        committer.getLocation(),
+                        beneficiary.getLocation(),
+                        User.current().getPlan() );
             } else if ( restriction == Flow.Restriction.SameTopOrganization ) {
                 restricted = !committer.getOrganization().getTopOrganization().equals(
-                            beneficiary.getOrganization().getTopOrganization() );
+                        beneficiary.getOrganization().getTopOrganization() );
             } else if ( restriction == Flow.Restriction.SameOrganization ) {
                 restricted = !ModelEntity.areCompatible(
-                            committer.getLocation(),
-                            beneficiary.getLocation(),
-                            User.current().getPlan() );
+                        committer.getLocation(),
+                        beneficiary.getLocation(),
+                        User.current().getPlan() );
             }
         }
         return restricted;
@@ -3051,6 +3051,50 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );
         remove( mo );
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    public List<ElementOfInformation> findCommonEOIs( Flow flow, Flow otherFlow ) {
+        List<ElementOfInformation> commonEOIs = new ArrayList<ElementOfInformation>();
+        List<ElementOfInformation> shorter;
+        List<ElementOfInformation> longer;
+        if ( flow.getEois().size() <= otherFlow.getEois().size() ) {
+            shorter = flow.getEois();
+            longer = otherFlow.getEois();
+        } else {
+            longer = flow.getEois();
+            shorter = otherFlow.getEois();
+        }
+        for ( final ElementOfInformation eoi : shorter ) {
+            ElementOfInformation matching = (ElementOfInformation) CollectionUtils.find(
+                    longer,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return object.equals( eoi );
+                        }
+                    }
+            );
+            if ( matching == null ) {
+                matching = (ElementOfInformation) CollectionUtils.find(
+                        longer,
+                        new Predicate() {
+                            public boolean evaluate( Object object ) {
+                                return isSemanticMatch(
+                                        ( (ElementOfInformation) object ).getContent(),
+                                        eoi.getContent(),
+                                        Proximity.HIGH );
+                            }
+                        }
+                );
+            }
+            if ( matching != null ) {
+                commonEOIs.add( ElementOfInformation.merge( eoi, matching ) );
+            }
+        }
+        return commonEOIs;
     }
 
 }

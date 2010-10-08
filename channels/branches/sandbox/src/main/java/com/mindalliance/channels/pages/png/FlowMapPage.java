@@ -32,6 +32,10 @@ public class FlowMapPage extends PngWebPage {
      * Whether to show goals.
      */
     private boolean showingGoals;
+    /**
+     * Whether to show connectors.
+     */
+    private boolean showingConnectors;
 
     public FlowMapPage( PageParameters parameters ) {
         super( parameters );
@@ -51,14 +55,23 @@ public class FlowMapPage extends PngWebPage {
                     redirectTo( segment );
             }
         }
-        showingGoals = parameters.containsKey( "showingGoals" ) && parameters.getBoolean( "showingGoals" );
+        showingGoals = parameters.containsKey( "showingGoals" )
+                && parameters.getBoolean( "showingGoals" );
+        showingConnectors = parameters.containsKey( "showingConnectors" )
+                && parameters.getBoolean( "showingConnectors" );
     }
 
     /**
      * {@inheritDoc}
      */
     protected Diagram makeDiagram( double[] diagramSize, String orientation ) throws DiagramException {
-        return getDiagramFactory().newFlowMapDiagram( segment, node, diagramSize, orientation, showingGoals );
+        return getDiagramFactory().newFlowMapDiagram(
+                segment,
+                node,
+                diagramSize,
+                orientation,
+                showingGoals,
+                showingConnectors );
     }
 
 
@@ -72,10 +85,11 @@ public class FlowMapPage extends PngWebPage {
         setResponsePage(
                 new RedirectPage(
                         MessageFormat.format(
-                                "?segment={0,number,0}&node={1,number,0}&showingGoals={2}",
+                                "?segment={0,number,0}&node={1,number,0}&showingGoals={2}&showingConnectors={3}",
                                 sid,
                                 nid,
-                                showingGoals ) ) );  
+                                showingGoals,
+                                showingConnectors ) ) );
     }
 
 }

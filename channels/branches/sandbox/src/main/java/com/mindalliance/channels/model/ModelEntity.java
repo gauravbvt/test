@@ -19,6 +19,7 @@ import java.util.Set;
  * Time: 1:05:30 PM
  */
 public abstract class ModelEntity extends ModelObject {
+
     /**
      * Actual or Type.
      */
@@ -122,15 +123,29 @@ public abstract class ModelEntity extends ModelObject {
 
     /**
      * Whether two entities are compatible.
+     *
      * @param entity a model entity
-     * @param other a model entity
-     * @param plan a plan
+     * @param other  a model entity
+     * @param plan   a plan
      * @return a boolean
      */
-    public static boolean areCompatible( ModelEntity entity, ModelEntity other, Plan plan  ) {
+    public static boolean areCompatible( ModelEntity entity, ModelEntity other, Plan plan ) {
         return subsumedBy( entity, other, plan ) || subsumedBy( other, entity, plan );
     }
 
+    /**
+     * Find the narrowest of two entities, if applicable.
+     *
+     * @param entity      an entity
+     * @param otherEntity an entity
+     * @param plan        a plan
+     * @return an entity or null
+     */
+    public static <T extends ModelEntity> T narrowest( T entity, T otherEntity, Plan plan ) {
+        if ( entity.narrowsOrEquals( otherEntity, plan ) ) return entity;
+        if ( otherEntity.narrowsOrEquals( entity, plan ) ) return otherEntity;
+        return null;
+    }
 
 
     /**
@@ -138,7 +153,7 @@ public abstract class ModelEntity extends ModelObject {
      *
      * @param entity an entity
      * @param other  an entity
-     * @param plan a plan
+     * @param plan   a plan
      * @return a boolean
      */
     public static boolean subsumedBy( ModelEntity entity, ModelEntity other, Plan plan ) {
@@ -334,12 +349,13 @@ public abstract class ModelEntity extends ModelObject {
     public boolean isEquivalentToOrIsA( ModelEntity entity, Class<? extends ModelEntity> aClass ) {
 
         return entity == null ? isUnknown() && getClass().equals( aClass )
-                              : equals( entity ) || isType() && entity.hasTag( this );
+                : equals( entity ) || isType() && entity.hasTag( this );
     }
 
     /**
-     *   Get the list of implicit tags.
-     * @return  a list of model entities
+     * Get the list of implicit tags.
+     *
+     * @return a list of model entities
      */
     public List<ModelEntity> getImplicitTags() {
         return new ArrayList<ModelEntity>();
@@ -389,7 +405,7 @@ public abstract class ModelEntity extends ModelObject {
      * or has all the tags (transitively) of the other, type entity.
      *
      * @param other a model entity
-     * @param plan the context
+     * @param plan  the context
      * @return a boolean
      */
     public boolean narrowsOrEquals( ModelEntity other, final Plan plan ) {
@@ -414,7 +430,7 @@ public abstract class ModelEntity extends ModelObject {
                 other.getTyping(),
                 getAllTags() );
         if ( !isSubCollection ) return false;
-        
+
         // meets specific and inherited requirement tests of entity type
         if ( !meetsTypeRequirementTests( other, plan ) ) return false;
         boolean meetsInheritedTests = CollectionUtils.selectRejected(
@@ -431,8 +447,8 @@ public abstract class ModelEntity extends ModelObject {
     /**
      * Whether the model object can be meaningfully and safely compared to another.
      *
-     * @return a boolean
      * @param plan
+     * @return a boolean
      */
     public boolean valid( Plan plan ) {
         return true; // default

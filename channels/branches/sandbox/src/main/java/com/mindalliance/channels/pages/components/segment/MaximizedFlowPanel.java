@@ -35,7 +35,11 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
     /**
      * Whether to show goals.
      */
-    private boolean showingGoals;
+    private boolean showingGoals = false;
+     /**
+     * Whether to show connectors.
+     */
+    private boolean showingConnectors = false;
     /**
      * Flow diagram panel.
      */
@@ -51,10 +55,11 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
      */
     private boolean resizedToFit = false;
 
-    public MaximizedFlowPanel( String id, IModel<Part> partModel, boolean showingGoals ) {
+    public MaximizedFlowPanel( String id, IModel<Part> partModel, boolean showingGoals, boolean showingConnectors ) {
         super( id );
         this.partModel = partModel;
         this.showingGoals = showingGoals;
+        this.showingConnectors = showingConnectors;
         init();
     }
 
@@ -64,6 +69,18 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
     }
 
     private void addFlowViewControls() {
+        // show hide connectors
+        WebMarkupContainer showConnectors = new WebMarkupContainer( "showConnectors" );
+        showConnectors.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                showingConnectors = !showingConnectors;
+                addFlowDiagram();
+                target.addComponent( flowMapDiagramPanel );
+            }
+        } );
+        add( showConnectors );
+        // show hide goals
         WebMarkupContainer showGoals = new WebMarkupContainer( "showGoals" );
         showGoals.add( new AjaxEventBehavior( "onclick" ) {
             @Override
@@ -107,14 +124,17 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
             }
         } );
         add( reduceToFit );
+        // De-maximize
         WebMarkupContainer minimize = new WebMarkupContainer( "minimized" );
         minimize.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
+                String props = showingGoals ? "showGoals" : "";
+                props += showingConnectors ? " showConnectors" : "";
                 update( target, new Change(
                         Change.Type.Minimized,
                         getSegment(),
-                        showingGoals ? "showGoals" : "" ) );
+                        props ) );
             }
         } );
         add( minimize );
@@ -139,7 +159,8 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
                         new PropertyModel<Segment>( this, "segment" ),
                         partModel,
                         settings,
-                        showingGoals );
+                        showingGoals,
+                        showingConnectors );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
     }

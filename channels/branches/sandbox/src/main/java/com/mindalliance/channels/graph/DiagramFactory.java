@@ -77,6 +77,7 @@ public interface DiagramFactory<Vertex, Edge> {
      * @param diagramSize width and height as array of doubles
      * @param orientation a string
      * @param showingGoals whether to show goals
+     * @param showingConnectors whether to show connectors
      * @return a flow map diagram
      */
     Diagram newFlowMapDiagram(
@@ -84,7 +85,8 @@ public interface DiagramFactory<Vertex, Edge> {
             Node node,
             double[] diagramSize,
             String orientation,
-            boolean showingGoals );
+            boolean showingGoals,
+            boolean showingConnectors );
 
     /**
      * Instantiates a plan map diagram.
