@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -32,24 +32,33 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      * Selected node. Null if none selected.
      */
     private IModel<Part> partModel;
+    /**
+     * Whether to show goals.
+     */
     private boolean showingGoals;
+    /**
+     * Whether to show connectors.
+     */
+    private boolean showingConnectors;
 
     public FlowMapDiagramPanel( String id,
                                 IModel<Segment> segmentModel,
                                 IModel<Part> partModel,
                                 Settings settings ) {
-        this( id, segmentModel, partModel, settings, false );
+        this( id, segmentModel, partModel, settings, false, false );
     }
 
     public FlowMapDiagramPanel( String id,
                                 IModel<Segment> segmentModel,
                                 IModel<Part> partModel,
                                 Settings settings,
-                                boolean showingGoals) {
+                                boolean showingGoals,
+                                boolean showingConnectors ) {
         super( id, settings );
         this.segmentModel = segmentModel;
         this.partModel = partModel;
         this.showingGoals = showingGoals;
+        this.showingConnectors = showingConnectors;
         init();
     }
 
@@ -71,7 +80,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                 getPart(),
                 getDiagramSize(),
                 getOrientation(),
-                showingGoals );
+                showingGoals,
+                showingConnectors );
     }
 
     /**
@@ -103,6 +113,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         if ( showingGoals ) {
             sb.append( "&showingGoals=" );
             sb.append( showingGoals );
+        }
+        if ( showingConnectors ) {
+            sb.append( "&showingConnectors=" );
+            sb.append( showingConnectors );
         }
 
         return sb.toString();

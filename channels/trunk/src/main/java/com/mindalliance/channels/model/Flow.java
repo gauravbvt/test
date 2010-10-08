@@ -461,15 +461,18 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @param capability a flow
      * @param need       a flow
+     * @param queryService a query service
      */
-    // TODO -- do better integration
-    public void initSharingFrom( Flow capability, Flow need ) {
-        setEois( capability.copyEois() );
+    public void initSharingFrom( Flow capability, Flow need, QueryService queryService ) {
+        setEois( queryService.findCommonEOIs( capability, need ) );
         setSignificanceToSource( capability.getSignificanceToSource() );
         setSignificanceToTarget( need.getSignificanceToTarget() );
-        setChannels( need.isAskedFor() ? capability.getChannels() : need.getChannels() );
-        setMaxDelay( need.getMaxDelay() );
-        setIntent( capability.getIntent() );
+        setChannels( Channel.intersect(
+                capability.getChannels(),
+                need.getChannels(),
+                queryService.getCurrentPlan() ) );
+        setMaxDelay( Delay.min( capability.getMaxDelay(), need.getMaxDelay() ) );
+        setIntent( capability.getIntent() != null ? capability.getIntent() : need.getIntent() );
         setRestriction( Flow.Restriction.resolve(
                 need.getRestriction(),
                 capability.getRestriction() ) );

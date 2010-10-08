@@ -3,6 +3,7 @@ package com.mindalliance.channels.model;
 import java.io.Serializable;
 import java.text.Collator;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -256,5 +257,35 @@ public class Channel implements Serializable, Comparable<Channel> {
                         : other.getAddress()
         );
         return merged;
+    }
+
+    /**
+     * Calculate the intersection of two lists of channels.
+     * @param channels a list of channels
+     * @param otherChannels a list of channels
+     * @param plan a plan
+     * @return a list of channels
+     */
+    public static List<Channel> intersect( List<Channel> channels, List<Channel> otherChannels, Plan plan ) {
+        List<Channel> intersection = new ArrayList<Channel>();
+        List<Channel> shorter;
+        List<Channel> longer;
+        if ( channels.size() <= otherChannels.size() ) {
+            shorter = channels;
+            longer = otherChannels;
+        } else {
+            shorter = otherChannels;
+            longer = channels;
+        }
+        for ( Channel channel : shorter ) {
+            for ( Channel other : longer ) {
+                TransmissionMedium narrowest = ModelEntity.narrowest( channel.getMedium(), other.getMedium(), plan );
+                if ( narrowest != null ) {
+                    intersection.add( channel.getMedium().equals( narrowest ) ? channel : other ); 
+                    break;
+                }
+            }
+        }
+        return intersection;
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
  * Time: 1:59:28 PM
  */
 public class Delay implements Comparable, Serializable {
+
     /**
      * Time units
      */
@@ -67,6 +68,17 @@ public class Delay implements Comparable, Serializable {
     public Delay( int amount, Unit unit ) {
         this.amount = amount;
         this.unit = unit;
+    }
+
+    /**
+     * Get the smallest of two delays.
+     *
+     * @param delay a delay
+     * @param other a delay
+     * @return a delay
+     */
+    public static Delay min( Delay delay, Delay other ) {
+        return delay.compareTo( other ) <= 0 ? delay : other;
     }
 
     public int getAmount() {

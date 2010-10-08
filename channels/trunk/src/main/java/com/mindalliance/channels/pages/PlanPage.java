@@ -456,10 +456,16 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void addMaximizedFlowPanel( Change change ) {
         if ( flowMaximized ) {
+            boolean showGoals;
+            boolean showConnectors;
+            String props = change.getProperty();
+            showGoals = props != null && props.contains( "showGoals" );
+            showConnectors = props != null && props.contains( "showConnectors" );
             maximizedFlowPanel = new MaximizedFlowPanel(
                     "maximized-flow",
                     new PropertyModel<Part>( this, "part" ),
-                    change.isForProperty( "showGoals" ) );
+                    showGoals,
+                    showConnectors );
         } else {
             maximizedFlowPanel = new Label( "maximized-flow" );
         }

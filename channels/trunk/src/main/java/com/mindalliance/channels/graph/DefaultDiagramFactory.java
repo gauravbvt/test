@@ -102,7 +102,7 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             Node node,
             double[] diagramSize,
             String orientation ) {
-        return newFlowMapDiagram( segment, node, diagramSize, orientation, false );
+        return newFlowMapDiagram( segment, node, diagramSize, orientation, false, false );
     }
 
     /**
@@ -113,9 +113,10 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             Node node,
             double[] diagramSize,
             String orientation,
-            boolean showingGoals) {
+            boolean showingGoals,
+            boolean showingConnectors ) {
         LOG.debug( "Making flow map on " + segment + "/" + node );
-        return new FlowMapDiagram( segment, node, diagramSize, orientation, showingGoals );
+        return new FlowMapDiagram( segment, node, diagramSize, orientation, showingGoals, showingConnectors );
     }
 
       public Diagram newEntityNetworkDiagram(

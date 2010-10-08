@@ -199,6 +199,8 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.TaskHasTooManyCommitments"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.TaskWithTooManyInputs"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.MeaninglessFlowRestriction"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SharingContradictsCapability"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantChannel"/>
             </list>
         </property>
     </bean>
@@ -272,11 +274,6 @@ CONFIGURATION NOTES:
     <bean id="pager" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Pager"/>
         <property name="kind" value="Type"/>
-        <property name="tags">
-            <list value-type="java.util.ArrayList">
-                <ref bean="phone"/>
-            </list>
-        </property>
         <property name="cast" value="Unicast"/>
     </bean>
     <bean id="conferenceCall" class="com.mindalliance.channels.model.TransmissionMedium">

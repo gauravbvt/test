@@ -2050,7 +2050,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Part needyPart = (Part) need.getTarget();
         sharings.addAll( findSharingFlowsMatchingNeed( needyPart, need ) );
         // Find all synonymous sharings to applicable anonymous parts within the plan segment
-       /* for ( Part part : findAnonymousPartsMatching( needyPart ) ) {
+        /* for ( Part part : findAnonymousPartsMatching( needyPart ) ) {
             sharings.addAll( findSharingFlowsMatchingNeed( part, need ) );
         }*/
         return sharings;
@@ -2080,8 +2080,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         while ( incoming.hasNext() ) {
             Flow in = incoming.next();
             if ( in.isSharing()
-                    && Matcher.getInstance().same( in.getName(), info ) 
-                    && Flow.Restriction.matchedBy ( need.getRestriction(), in.getRestriction() ) ) {
+                    && Matcher.getInstance().same( in.getName(), info )
+                    && Flow.Restriction.matchedBy( need.getRestriction(), in.getRestriction() ) ) {
                 sharings.add( in );
             }
         }
@@ -2508,17 +2508,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         if ( restriction != null ) {
             if ( restriction == Flow.Restriction.SameLocation ) {
                 restricted = !ModelEntity.areCompatible(
-                            committer.getLocation(),
-                            beneficiary.getLocation(),
-                            User.current().getPlan() );
+                        committer.getLocation(),
+                        beneficiary.getLocation(),
+                        User.current().getPlan() );
             } else if ( restriction == Flow.Restriction.SameTopOrganization ) {
                 restricted = !committer.getOrganization().getTopOrganization().equals(
-                            beneficiary.getOrganization().getTopOrganization() );
+                        beneficiary.getOrganization().getTopOrganization() );
             } else if ( restriction == Flow.Restriction.SameOrganization ) {
                 restricted = !ModelEntity.areCompatible(
-                            committer.getLocation(),
-                            beneficiary.getLocation(),
-                            User.current().getPlan() );
+                        committer.getLocation(),
+                        beneficiary.getLocation(),
+                        User.current().getPlan() );
             }
         }
         return restricted;
@@ -3051,6 +3051,50 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );
         remove( mo );
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    public List<ElementOfInformation> findCommonEOIs( Flow flow, Flow otherFlow ) {
+        List<ElementOfInformation> commonEOIs = new ArrayList<ElementOfInformation>();
+        List<ElementOfInformation> shorter;
+        List<ElementOfInformation> longer;
+        if ( flow.getEois().size() <= otherFlow.getEois().size() ) {
+            shorter = flow.getEois();
+            longer = otherFlow.getEois();
+        } else {
+            longer = flow.getEois();
+            shorter = otherFlow.getEois();
+        }
+        for ( final ElementOfInformation eoi : shorter ) {
+            ElementOfInformation matching = (ElementOfInformation) CollectionUtils.find(
+                    longer,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return object.equals( eoi );
+                        }
+                    }
+            );
+            if ( matching == null ) {
+                matching = (ElementOfInformation) CollectionUtils.find(
+                        longer,
+                        new Predicate() {
+                            public boolean evaluate( Object object ) {
+                                return isSemanticMatch(
+                                        ( (ElementOfInformation) object ).getContent(),
+                                        eoi.getContent(),
+                                        Proximity.HIGH );
+                            }
+                        }
+                );
+            }
+            if ( matching != null ) {
+                commonEOIs.add( ElementOfInformation.merge( eoi, matching ) );
+            }
+        }
+        return commonEOIs;
     }
 
 }

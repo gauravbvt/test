@@ -150,10 +150,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     private DropDownChoice<String> intentChoice;
     /**
-     * Restriction container.
-     */
-    private WebMarkupContainer restrictionContainer;
-    /**
      * Restricted checkbox.
      */
     private CheckBox restrictedCheckBox;
@@ -236,7 +232,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addRestrictionFields() {
-        restrictionContainer = new WebMarkupContainer( "restrictionContainer" );
+        WebMarkupContainer restrictionContainer = new WebMarkupContainer( "restrictionContainer" );
         restrictionContainer.setOutputMarkupId( true );
         addOrReplace( restrictionContainer );
         restrictedCheckBox = new CheckBox(
@@ -1002,7 +998,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             change = doCommand( new SatisfyNeed(
                     need,
                     capability,
-                    !SatisfyNeed.KEEP_CAPABILITY,
+                    SatisfyNeed.KEEP_CAPABILITY,
                     SatisfyNeed.KEEP_NEED ) );
         } else {
             change = doCommand( new RedirectFlow( getFlow(), other, isSend() ) );

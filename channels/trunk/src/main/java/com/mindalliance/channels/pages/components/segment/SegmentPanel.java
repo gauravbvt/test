@@ -131,6 +131,10 @@ public class SegmentPanel extends AbstractCommandablePanel {
      */
     private boolean showingGoals = false;
     /**
+     * Whether to show connectors in flow map.
+     */
+    private boolean showingConnectors = false;
+    /**
      * Part panel css identifier.
      */
     private static final String PART_PANEL_ID = ".part-header";
@@ -288,15 +292,18 @@ public class SegmentPanel extends AbstractCommandablePanel {
             }
         } );
         add( reduceToFit );
+        // Maximize
         WebMarkupContainer fullscreen = new WebMarkupContainer( "maximized" );
         fullscreen.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Maximized, getSegment(), showingGoals ? "showGoals" : "" ) );
+                String props = showingGoals ? "showGoals" : "";
+                props += showingConnectors ? " showConnectors" : "";
+                update( target, new Change( Change.Type.Maximized, getSegment(), props ) );
             }
         } );
         add( fullscreen );
-
+        // Show/hide goals
         WebMarkupContainer showGoals = new WebMarkupContainer( "showGoals" );
         showGoals.add( new AjaxEventBehavior( "onclick" ) {
             @Override
@@ -307,6 +314,17 @@ public class SegmentPanel extends AbstractCommandablePanel {
             }
         } );
         add( showGoals );
+        // Show/hide connectors
+        WebMarkupContainer showConnectors = new WebMarkupContainer( "showConnectors" );
+        showConnectors.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                showingConnectors = !showingConnectors;
+                addFlowDiagram();
+                target.addComponent( flowMapDiagramPanel );
+            }
+        } );
+        add( showConnectors );
 
         WebMarkupContainer legend = new WebMarkupContainer( "legend" );
         legend.add( new AjaxEventBehavior( "onclick" ) {
@@ -333,7 +351,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
         Settings settings = new Settings( FLOWMAP_DOM_ID, null, dim, true, true );
 
         flowMapDiagramPanel =
-                new FlowMapDiagramPanel( "flow-map", segmentModel, partModel, settings, showingGoals );
+                new FlowMapDiagramPanel( "flow-map", segmentModel, partModel, settings, showingGoals, showingConnectors );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
     }
@@ -441,6 +459,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
         resizeSocialPanel( target, change );
         Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isModified()
+                || change.isMinimized()
                 || ( change.isDisplay()
                 && identifiable instanceof SegmentObject )
                 || ( change.isSelected()
@@ -453,7 +472,12 @@ public class SegmentPanel extends AbstractCommandablePanel {
             refreshMenus( target );
             // receivesFlowPanel.refresh( target );
             // sendsFlowPanel.refresh( target );
-            if ( change.isModified() || change.isSelected() ) {
+            if ( change.isMinimized() || change.isModified() || change.isSelected() ) {
+                String props = change.getProperty();
+                if ( props != null ) {
+                    showingGoals = props.contains( "showGoals" );
+                    showingConnectors = props.contains( "showConnectors" );
+                }
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
             }

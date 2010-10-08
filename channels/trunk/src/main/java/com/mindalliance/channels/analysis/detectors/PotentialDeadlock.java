@@ -60,7 +60,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         GraphBuilder<Node,Flow> graphBuilder =
-                new FlowMapGraphBuilder( segment, getQueryService() );
+                new FlowMapGraphBuilder( segment, getQueryService(), false );
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( );
         StrongConnectivityInspector<Node, Flow> sci =
                 new StrongConnectivityInspector<Node, Flow>( digraph );

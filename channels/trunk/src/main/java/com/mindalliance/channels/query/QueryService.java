@@ -1367,4 +1367,12 @@ public interface QueryService {
      * @return a boolean - true if the entity was deleted
      */
     boolean cleanup( Class<? extends ModelObject> clazz, String name );
+
+    /**
+     * Find the EOIs that appear (or seem to) in two flows.
+     * @param flow a flow
+     * @param otherFlow another flow
+     * @return a list of EOIs
+     */
+    List<ElementOfInformation> findCommonEOIs( Flow flow, Flow otherFlow );
 }

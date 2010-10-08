@@ -30,12 +30,17 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
      * A segment.
      */
     private Segment segment;
+    /**
+     * Whether to include needs and capabilities.
+     */
+    private boolean includeConnectors;
 
     private QueryService queryService;
 
-    public FlowMapGraphBuilder( Segment segment, QueryService queryService ) {
+    public FlowMapGraphBuilder( Segment segment, QueryService queryService, boolean includeConnectors ) {
         this.segment = segment;
         this.queryService = queryService;
+        this.includeConnectors = includeConnectors;
     }
 
     public DirectedGraph<Node, Flow> buildDirectedGraph() {
@@ -65,8 +70,8 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
         Iterator<Node> nodes = segment.nodes();
         while ( nodes.hasNext() ) {
             final Node node = nodes.next();
-            if ( !node.sends().hasNext() && !node.receives().hasNext() )
-                // added if not part of a flow
+            if ( !node.isConnector() && disconnected( node ) )
+                // will not have edges
                 graph.addVertex( node );
         }
         for ( Part initiator : queryService.findInitiators( segment ) ) {
@@ -75,15 +80,18 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
         for ( Part terminator : queryService.findExternalTerminators( segment ) ) {
             graph.addVertex( terminator );
         }
-        // add flows as edges
+        // add parts/connectors as nodes and flows as edges
         Iterator<Flow> flows = segment.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
-            graph.addVertex( flow.getSource() );
-            graph.addVertex( flow.getTarget() );
-            graph.addEdge( flow.getSource(), flow.getTarget(), flow );
+            if ( includeConnectors || flow.getSource().isPart() )
+                graph.addVertex( flow.getSource() );
+            if ( includeConnectors || flow.getTarget().isPart() )
+                graph.addVertex( flow.getTarget() );
+            if ( includeConnectors || flow.isSharing() )
+                graph.addEdge( flow.getSource(), flow.getTarget(), flow );
             // add flows between capability connectors and external parts
-            if ( flow.hasConnector() && flow.isCapability() ) {
+            if ( flow.isCapability() ) {
                 Connector connector = (Connector) flow.getTarget();
                 Iterator<ExternalFlow> externalFlows = connector.externalFlows();
                 while ( externalFlows.hasNext() ) {
@@ -92,6 +100,23 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
                     graph.addEdge( externalFlow.getSource(), externalFlow.getTarget(), externalFlow );
                 }
             }
+        }
+    }
+
+    private boolean disconnected( Node node ) {
+        if ( includeConnectors ) {
+            return !node.sends().hasNext() && !node.receives().hasNext();
+        } else {
+            boolean connected = false;
+            Iterator<Flow> sends = node.sends();
+            while ( !connected && sends.hasNext() ) {
+                connected = sends.next().isSharing();
+            }
+            Iterator<Flow> receives = node.receives();
+            while ( !connected && receives.hasNext() ) {
+                connected = receives.next().isSharing();
+            }
+            return !connected;
         }
     }
 

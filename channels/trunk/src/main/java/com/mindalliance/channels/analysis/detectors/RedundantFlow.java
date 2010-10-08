@@ -6,7 +6,6 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.nlp.Matcher;
 
 import java.util.ArrayList;
@@ -15,6 +14,8 @@ import java.util.List;
 
 /**
  * Detects redundant flows.
+ * Synonymous needs or capabilities of a part are redundant.
+ * Synonymous sharings between same parts are redundant.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -60,26 +61,44 @@ public class RedundantFlow extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
-        Node source = flow.getSource();
-        Iterator<Flow> flows = source.sends();
+        Iterator<Flow> otherFlows;
+        if ( flow.isNeed() ) {
+            otherFlows = flow.getTarget().receives();
+        } else {
+            otherFlows = flow.getSource().sends();
+        }
         boolean redundant = false;
-        while ( !redundant && flows.hasNext() ) {
-            Flow otherFlow = flows.next();
+        while ( !redundant && otherFlows.hasNext() ) {
+            Flow otherFlow = otherFlows.next();
             redundant = ( otherFlow != flow ) && equivalent( flow, otherFlow );
         }
         if ( redundant ) {
             DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, flow );
-            issue.setDescription( "This sharing flow is redundant." );
-            issue.setRemediation( "Change the name of information transmitted\nor break up the flow." );
+            issue.setDescription( "This " + flowKind( flow ) + " is redundant." );
+            issue.setRemediation( "Change the name of information transmitted\nor "
+                    + ( flow.isSharing() ? "break up" : "remove" )
+                    + " the " + flowKind( flow ) +  "." );
             issue.setSeverity( Level.Low );
             issues.add( issue );
         }
         return issues;
     }
 
+    private String flowKind( Flow flow ) {
+        if ( flow.isCapability() ) return "information capability";
+        if ( flow.isNeed() ) return "information need";
+        else return "sharing flow";
+    }
+
     private boolean equivalent( Flow flow, Flow otherFlow ) {
-        return flow.getTarget().equals( otherFlow.getTarget() )
-                && flow.isAskedFor() == otherFlow.isAskedFor()
-                && Matcher.getInstance().same( flow.getName(), otherFlow.getName() );
+        if ( flowKind( flow ).equals( flowKind( otherFlow ) ) ) {
+            if ( Matcher.getInstance().same( flow.getName(), otherFlow.getName() ) ) {
+                if ( flow.isNeed() && otherFlow.isNeed() ) return true;
+                if ( flow.isCapability() && otherFlow.isCapability() ) return true;
+                if ( flow.getTarget().equals( otherFlow.getTarget() )
+                        && flow.isAskedFor() == otherFlow.isAskedFor() ) return true;
+            }
+        }
+        return false;
     }
 }
