@@ -157,9 +157,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 }
             }
         };
+        autoPopulateLink.setOutputMarkupId( true );
         makeVisible( autoPopulateLink, !isReadOnly() && canBePopulated() );
         // Link classifications
-        eoisContainer.add( autoPopulateLink );
+        eoisContainer.addOrReplace( autoPopulateLink );
         unlinkedClassificationsLink = new AjaxFallbackLink( "unlinkClassifications" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = linkClassifications();
@@ -200,9 +201,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                         : getFlow().isCapability()
                         ? "availability of"
                         : "sharing of" ) );
-        add( flowTypeLabel );
+        flowTypeLabel.setOutputMarkupId( true );
+        addOrReplace( flowTypeLabel );
         Label flowNameLabel = new Label( "flowName", new Model<String>( getFlow().getName() ) );
-        add( flowNameLabel );
+        addOrReplace( flowNameLabel );
         Label sourceLabel = new Label(
                 "source",
                 new Model<String>( getFlow().isNeed()
@@ -212,8 +214,9 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                         : " by " + "\"" + getFlow().getSource().getTitle() + "\""
                 )
         );
+        sourceLabel.setOutputMarkupId( true );
         makeVisible( sourceLabel, !getFlow().isNeed() );
-        add( sourceLabel );
+        addOrReplace( sourceLabel );
         Label targetLabel = new Label(
                 "target",
                 new Model<String>( getFlow().isCapability()
@@ -223,8 +226,9 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                         : "with " + "\"" + getFlow().getTarget().getTitle() + "\""
                 )
         );
+        targetLabel.setOutputMarkupId( true );
         makeVisible( targetLabel, !getFlow().isCapability() );
-        add( targetLabel );
+        addOrReplace( targetLabel );
     }
 
     private void addEOIs() {

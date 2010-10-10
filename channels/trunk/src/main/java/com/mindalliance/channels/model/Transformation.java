@@ -21,7 +21,7 @@ public class Transformation implements Serializable {
     /**
      * The name of what is being transformed.
      */
-    private List<String> subjects = new ArrayList<String>();
+    private List<Subject> subjects = new ArrayList<Subject>();
 
     public Transformation() {
     }
@@ -34,11 +34,11 @@ public class Transformation implements Serializable {
         this.type = type;
     }
 
-    public List<String> getSubjects() {
+    public List<Subject> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects( List<String> subjects ) {
+    public void setSubjects( List<Subject> subjects ) {
         this.subjects = subjects;
     }
 
@@ -46,7 +46,7 @@ public class Transformation implements Serializable {
         return type == Type.Identity;
     }
 
-    public void addSubject( String subject ) {
+    public void addSubject( Subject subject ) {
         if ( !subjects.contains( subject) ) {
             subjects.add( subject );
         }
@@ -55,6 +55,11 @@ public class Transformation implements Serializable {
     public Type getEffectiveType() {
         return getSubjects().isEmpty() ? Type.Identity : type;
     }
+
+    public Subject newSubject() {
+        return new Subject();
+    }
+
 
     /**
      * A type of transformation.
@@ -85,10 +90,13 @@ public class Transformation implements Serializable {
         public static List<String> getAllLabels() {
             List<String> labels = new ArrayList<String>();
             for ( Type type : Type.values() ) {
-                labels.add( type.getLabel() );
+                if (type != Identity) labels.add( type.getLabel() );
             }
             Collections.sort( labels );
-            return labels;
+            List<String> results = new ArrayList<String>();
+            results.add( Identity.getLabel() );
+            results.addAll( labels );
+            return results;
         }
 
         public static Type valueOfLabel( String label ) {
@@ -100,4 +108,5 @@ public class Transformation implements Serializable {
 
 
     }
+
 }

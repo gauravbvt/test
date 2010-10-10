@@ -1,5 +1,6 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.model.Transformation;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -29,9 +30,14 @@ public class TransformationConverter  extends AbstractChannelsConverter {
         Transformation transformation = (Transformation)source;
         Transformation.Type type = transformation.getType();
         writer.addAttribute( "type", type.name() );
-        for ( String subject : transformation.getSubjects() ) {
+        for ( Subject subject : transformation.getSubjects() ) {
             writer.startNode( "subject" );
-            writer.setValue( subject );
+            writer.startNode( "info" );
+            writer.setValue( subject.getInfo() );
+            writer.endNode();
+            writer.startNode( "content" );
+            writer.setValue( subject.getContent() );
+            writer.endNode();
             writer.endNode();
         }
     }
@@ -46,7 +52,17 @@ public class TransformationConverter  extends AbstractChannelsConverter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "subject" ) ) {
-                String subject = reader.getValue();
+                Subject subject = transformation.newSubject();
+                while( reader.hasMoreChildren() ) {
+                    reader.moveDown();
+                    String nn = reader.getNodeName();
+                    if ( nn.equals( "info") ) {
+                       subject.setInfo( reader.getValue() );
+                    } else if ( nn.equals( "content" ) ) {
+                       subject.setContent( reader.getValue() ); 
+                    }
+                    reader.moveUp();
+                }
                 transformation.addSubject( subject );
             }
             reader.moveUp();

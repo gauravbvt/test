@@ -351,23 +351,24 @@ public abstract class Node extends ModelObject implements SegmentObject {
     abstract public String fullDisplayString( int maxItemLength );
 
     /**
-     * List all eoi names shared with the part.
+     * List all subjects (info+eoi content) shared with the part.
      *
-     * @return a sorted list of unique strings
+     * @return a sorted list of unique subjects
      */
-    public List<String> allReceivedEOIContents() {
-        Set<String> eoiContents = new HashSet<String>();
+    public List<Subject> allReceivedSubjects() {
+        Set<Subject> subjects = new HashSet<Subject>();
         Iterator<Flow> receives = receives();
         while ( receives.hasNext() ) {
             Flow receive = receives.next();
             if ( receive.isSharing() ) {
                 for ( ElementOfInformation eoi : receive.getEois() ) {
-                    eoiContents.add( eoi.getContent() );
+                    subjects.add( new Subject( receive.getName(), eoi.getContent() ) );
                 }
             }
         }
-        List<String> results = new ArrayList<String>( eoiContents );
+        List<Subject> results = new ArrayList<Subject>( subjects );
         Collections.sort( results );
         return results;
     }
+
 }
