@@ -2,6 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ElementOfInformation;
+import com.mindalliance.channels.model.Transformation;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -36,8 +37,8 @@ public class ElementOfInformationConverter extends AbstractChannelsConverter {
         writer.startNode( "content" );
         writer.setValue( eoi.getContent() );
         writer.endNode();
-        writer.startNode( "sourceCodes" );
-        writer.setValue( eoi.getSources() );
+        writer.startNode( "description" );
+        writer.setValue( eoi.getDescription() );
         writer.endNode();
         writer.startNode( "specialHandlingCodes" );
         writer.setValue( eoi.getSpecialHandling() );
@@ -45,6 +46,11 @@ public class ElementOfInformationConverter extends AbstractChannelsConverter {
         for ( Classification classification : eoi.getClassifications() ) {
             writer.startNode( "classification" );
             context.convertAnother( classification );
+            writer.endNode();
+        }
+        if ( !eoi.getTransformation().isNone() ) {
+            writer.startNode( "transformation" );
+            context.convertAnother( eoi.getTransformation() );
             writer.endNode();
         }
     }
@@ -59,8 +65,9 @@ public class ElementOfInformationConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "content" ) ) {
                 eoi.setContent( reader.getValue() );
-            } else if ( nodeName.equals( "sourceCodes" ) ) {
-                eoi.setSources( reader.getValue() );
+                // todo -- "sourceCodes is obsolete - substituted by description
+            } else if ( nodeName.equals( "sourceCodes" ) || nodeName.equals( "description" ) ) {
+                eoi.setDescription( reader.getValue() );
             } else if ( nodeName.equals( "specialHandlingCodes" ) ) {
                 eoi.setSpecialHandling( reader.getValue() );
             } else if ( nodeName.equals( "classification" ) ) {
@@ -68,6 +75,11 @@ public class ElementOfInformationConverter extends AbstractChannelsConverter {
                         context.get( "segment" ),
                         Classification.class );
                 eoi.addClassification( classification );
+            } else if ( nodeName.equals( "transformation" ) ) {
+                Transformation transformation = (Transformation) context.convertAnother(
+                        context.get( "segment" ),
+                        Transformation.class );
+                eoi.setTransformation( transformation );
             }
             reader.moveUp();
         }

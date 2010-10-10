@@ -1,7 +1,7 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.iterators.IteratorChain;
 
 import java.text.Collator;
@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A node in the flow graph
@@ -237,7 +239,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
         return getTitle();
     }
 
-   /**
+    /**
      * Test if this node is connected to another node by a flow.
      *
      * @param send test if node is a send, otherwise a receive
@@ -256,7 +258,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
     }
 
 
-   /**
+    /**
      * Test if this node is connected to another node by a flow of a given name.
      *
      * @param send test if node is a send, otherwise a receive
@@ -327,21 +329,45 @@ public abstract class Node extends ModelObject implements SegmentObject {
 
     /**
      * Make display string.
-     * @return  a string
+     *
+     * @return a string
      */
     abstract public String displayString();
 
     /**
      * Make abbreviated  string.
+     *
      * @param maxItemLength an int
-     * @return  a string
+     * @return a string
      */
     abstract public String displayString( int maxItemLength );
 
     /**
      * Make abbreviated  string including info name if connector..
+     *
      * @param maxItemLength an int
-     * @return  a string
+     * @return a string
      */
     abstract public String fullDisplayString( int maxItemLength );
+
+    /**
+     * List all eoi names shared with the part.
+     *
+     * @return a sorted list of unique strings
+     */
+    public List<String> allReceivedEOIContents() {
+        Set<String> eoiContents = new HashSet<String>();
+        Iterator<Flow> receives = receives();
+        while ( receives.hasNext() ) {
+            Flow receive = receives.next();
+            if ( receive.isSharing() ) {
+                for ( ElementOfInformation eoi : receive.getEois() ) {
+                    eoiContents.add( eoi.getContent() );
+                }
+            }
+        }
+        List<String> results = new ArrayList<String>( eoiContents );
+        Collections.sort( results );
+        return results;
+    }
 }

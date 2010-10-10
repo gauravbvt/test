@@ -5749,6 +5749,46 @@
 
                 <entry><para>No</para></entry>
               </row>
+
+              <row>
+                <entry><para>Sharing contradicts capability</para></entry>
+
+                <entry><para>Depends on impacted tasks</para></entry>
+
+                <entry><itemizedlist>
+                    <listitem>
+                      <para>Modify the definition of the contradicted
+                      capability</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or modify the definition of this sharing
+                      flow</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
+                <entry><para>No</para></entry>
+              </row>
+
+              <row>
+                <entry><para>Channel is redundant (e.g. Cell is redundant in a
+                list containing Phone)</para></entry>
+
+                <entry><para>Low</para></entry>
+
+                <entry><itemizedlist>
+                    <listitem>
+                      <para>Remove the redundant channel </para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or remove the channel that makes it
+                      redundant</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
+                <entry><para>No</para></entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>

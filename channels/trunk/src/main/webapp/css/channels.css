@@ -2027,3 +2027,7 @@ a.window:hover {
 	border:1px solid #999999;
 	color:#333333;
 }
+
+.to-be-deleted {
+    text-decoration: line-through;    
+}

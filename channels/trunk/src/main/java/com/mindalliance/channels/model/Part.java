@@ -1135,6 +1135,20 @@ public class Part extends Node implements GeoLocatable, Specable {
     }
 
     /**
+     * Whether a flow is a send of the part.
+     *
+     * @param flow a flow
+     * @return a boolean
+     */
+    public boolean isSend( Flow flow ) {
+        Iterator<Flow> sends = sends();
+        while ( sends.hasNext() ) {
+            if ( sends.next().equals( flow ) ) return true;
+        }
+        return false;
+    }
+
+    /**
      * Category of tasks.
      */
     public enum Category {

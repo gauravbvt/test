@@ -852,6 +852,7 @@ public final class PlanPage extends WebPage implements Updatable {
         } else {
             eoisPanel = new FlowEOIsPanel( "eois",
                     new Model<Flow>( flowViewed ),
+                    getPart().isSend( flowViewed ),
                     getReadOnlyExpansions() );
         }
         form.addOrReplace( eoisPanel );

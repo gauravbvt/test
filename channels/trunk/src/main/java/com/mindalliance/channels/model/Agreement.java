@@ -138,7 +138,7 @@ public class Agreement implements Serializable {
         StringBuilder sb = new StringBuilder();
         Iterator<ElementOfInformation> iter = getEois().iterator();
         while ( iter.hasNext() ) {
-            sb.append( iter.next().toString() );
+            sb.append( iter.next().getLabel() );
             if ( iter.hasNext() ) sb.append( ',' );
         }
         return sb.toString();

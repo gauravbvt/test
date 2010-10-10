@@ -103,22 +103,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 && ( target.isConnector() || source.isConnector() );
     }
 
-    /**
-     * Get EOIs as a string.
-     *
-     * @return a string
-     */
-    public String getEoisSummary() {
-        StringBuilder sb = new StringBuilder();
-        Iterator<ElementOfInformation> iter = getEois().iterator();
-        while ( iter.hasNext() ) {
-            ElementOfInformation eoi = iter.next();
-            sb.append( eoi.toString() );
-            if ( iter.hasNext() ) sb.append( "\n" );
-        }
-        return sb.toString();
-    }
-
     public boolean isAskedFor() {
         return askedFor;
     }
@@ -459,8 +443,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * Initialize relevant properties as a capability satisfying a need.
      *
-     * @param capability a flow
-     * @param need       a flow
+     * @param capability   a flow
+     * @param need         a flow
      * @param queryService a query service
      */
     public void initSharingFrom( Flow capability, Flow need, QueryService queryService ) {
@@ -888,7 +872,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         for ( ElementOfInformation eoi : eois ) {
             ElementOfInformation copy = new ElementOfInformation();
             copy.setContent( eoi.getContent() );
-            copy.setSources( eoi.getSources() );
+            copy.setDescription( eoi.getDescription() );
             copy.setSpecialHandling( eoi.getSpecialHandling() );
             copy.setClassifications( new ArrayList<Classification>( allClassifications ) );
             eoisCopy.add( copy );
@@ -1109,6 +1093,26 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             return " if in " + getRestriction().getLabel();
         }
     }
+
+    /**
+     * Whether ths flow has an EOI of a given name (case insensitive).
+     *
+     * @param content a string
+     * @return a boolean
+     */
+    public boolean hasEoiNamed( final String content ) {
+        return CollectionUtils.exists(
+                getEois(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return Matcher.getInstance().same(
+                                ( (ElementOfInformation) object ).getContent(),
+                                content );
+                    }
+                }
+        );
+    }
+
 
     /**
      * The significance of a flow.

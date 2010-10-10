@@ -6,7 +6,6 @@ import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.nlp.Matcher;
@@ -18,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Information sharing flow contradicts explicit capability.
+ * Information sharing flow contradicts related capability.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -52,7 +51,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                         issue.setRemediation( "Modify the definition " +
                                 "of the contradicted capability" +
                                 "\nor modify the definition of this sharing flow." );
-                        issue.setSeverity( Level.Low );
+                        issue.setSeverity( getSharingFailureSeverity( flow ));
                         issues.add( issue );
                     }
                 }
