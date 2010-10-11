@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.PlanRename;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.dao.DefinitionManager;
@@ -18,12 +19,12 @@ import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.TextArea;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,69 +55,68 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
      */
     private IssuesPanel issuesPanel;
 
-    public PlanEditDetailsPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+    public PlanEditDetailsPanel(
+            String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+
         super( id, model, expansions );
-        init();
+
+        init( getPlan() );
     }
 
-    private void init() {
-        addIdentityFields();
-        addPhaseListPanel();
-        addScopePanel();
-        addIssuesPanel();
-        add( new AttachmentPanel( "attachments", new Model<ModelObject>( getPlan() ) ) );
+    private void init( Plan plan ) {
+        add( new TextField<String>( "name", new PropertyModel<String>( this, "name" ) )
+                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                        @Override
+                        protected void onUpdate( AjaxRequestTarget target ) {
+                            update( target, new Change( Change.Type.Updated, getPlan(), "name" ) );
+                        }
+                    } )
+                .setEnabled( plan.isDevelopment() ),
+
+             new TextArea<String>( "description", new PropertyModel<String>( this, "description" ) )
+                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                        @Override
+                        protected void onUpdate( AjaxRequestTarget target ) {
+                            update( target,
+                                    new Change( Change.Type.Updated, getPlan(), "description" ) );
+                        }
+                    } )
+                .setEnabled( plan.isDevelopment() ),
+
+             new PhaseListPanel( "phases" ),
+
+             new ModelObjectLink( "locale-link",
+                        new PropertyModel<Organization>( plan, "locale" ),
+                        new Model<String>( "Locale" ) ),
+
+             createScopePanel(),
+
+             new AttachmentPanel( "attachments", new Model<ModelObject>( plan ) )
+        );
+
+        addOrReplace( createIssuePanel() );
+        
         adjustComponents();
     }
 
-    private void addPhaseListPanel() {
-        PhaseListPanel phaseListPanel = new PhaseListPanel( "phases" );
-        add( phaseListPanel );
-    }
 
-
-    private void addIdentityFields() {
-        TextField<String> nameField = new TextField<String>( "name",
-                new PropertyModel<String>( this, "plan.name" ) );
-        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPlan(), "name" ) );
-            }
-        } );
-        nameField.setEnabled( getPlan().isDevelopment() );
-        add( nameField );
-        TextArea<String> descriptionField = new TextArea<String>( "description",
-                new PropertyModel<String>( this, "description" ) );
-        descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPlan(), "description" ) );
-            }
-        } );
-        descriptionField.setEnabled( getPlan().isDevelopment() );
-        add( descriptionField );
-    }
-
-    private void addScopePanel() {
-        add(
-                new ModelObjectLink( "locale-link",
-                        new PropertyModel<Organization>( getPlan(), "locale" ),
-                        new Model<String>( "Locale" ) ) );
-        final List<String> choices = getQueryService().findAllEntityNames( Place.class );
+    private EntityReferencePanel<Place> createScopePanel() {
         scopePanel = new EntityReferencePanel<Place>(
                 "localePanel",
-                new Model<Plan>( getPlan() ),
-                choices,
+                new Model<Plan>( getPlan() ), getQueryService().findAllEntityNames( Place.class ),
                 "locale",
                 Place.class
-        );
-        add( scopePanel );
+            );
+        return scopePanel;
     }
-    private void addIssuesPanel() {
-        issuesPanel = new IssuesPanel(
-                "issues",
-                new PropertyModel<ModelObject>( this, "plan" ),
-                getExpansions() );
+
+    private IssuesPanel createIssuePanel() {
+        issuesPanel = new IssuesPanel( "issues",
+                                       new PropertyModel<ModelObject>( this, "plan" ),
+                                       getExpansions() );
         issuesPanel.setOutputMarkupId( true );
-        addOrReplace( issuesPanel );
+
+        return issuesPanel;
     }
 
     protected void adjustComponents() {
@@ -128,6 +128,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
      *
      * @return a plan
      */
+    @Override
     public Plan getPlan() {
         return (Plan) getModel().getObject();
     }
@@ -147,25 +148,8 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
      * @param name a string
      */
     public void setName( String name ) {
-        if ( name != null ) {
-            String oldName = getPlan().getName();
-            String uniqueName = name.trim();
-            if ( !isSame( oldName, name ) ) {
-                List<String> namesTaken = definitionManager.getPlanNames();
-                int count = 2;
-                while ( namesTaken.contains( uniqueName ) ) {
-                    uniqueName = name + "(" + count++ + ")";
-                }
-                doCommand(
-                        new UpdatePlanObject(
-                                getPlan(),
-                                "name",
-                                uniqueName,
-                                UpdateObject.Action.Set
-                        )
-                );
-            }
-        }
+        if ( name != null && !isSame( getName(), name ) )
+            doCommand( new PlanRename( getPlan(), definitionManager.makeUniqueName( name ) ) );
     }
 
     /**
@@ -203,10 +187,11 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
         return phases;
     }
 
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForProperty( "phases" ) ) {
             // Only unused phases can be removed, added ones at not yet referenced.
-            addIssuesPanel();
+            addOrReplace( createIssuePanel() );
             target.addComponent( issuesPanel );
         } else {
             super.updateWith( target, change, updated );
