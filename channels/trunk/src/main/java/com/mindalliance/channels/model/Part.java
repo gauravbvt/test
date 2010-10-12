@@ -280,12 +280,11 @@ public class Part extends Node implements GeoLocatable, Specable {
      * Test whether the resource spec of the part intersects a given resource spec
      *
      * @param resourceSpec a resource
-     * @param plan         the plan
+     * @param locale the default location
      * @return a boolean
      */
-    public boolean isImpliedBy( ResourceSpec resourceSpec, Plan plan ) {
-        return !spec.isAnyone()
-                && resourceSpec.narrowsOrEquals( spec, plan );
+    public boolean isImpliedBy( ResourceSpec resourceSpec, Place locale ) {
+        return !spec.isAnyone() && resourceSpec.narrowsOrEquals( spec, locale );
     }
 
     /**
@@ -400,22 +399,22 @@ public class Part extends Node implements GeoLocatable, Specable {
      * Test if this part is considered belonging to an organization.
      *
      * @param o    the organization
-     * @param plan a plan
+     * @param locale the default location
      * @return true if belonging
      */
-    public boolean isForOrganization( Organization o, Plan plan ) {
-        return o.narrowsOrEquals( spec.getOrganization(), plan );
+    public boolean isForOrganization( Organization o, Place locale ) {
+        return o.narrowsOrEquals( spec.getOrganization(), locale );
     }
 
     /**
      * Test if this part is considered belonging to an organization.
      *
      * @param j    the jurisdiction
-     * @param plan a plan
+     * @param locale the default location
      * @return true if belonging
      */
-    public boolean isInJurisdiction( Place j, Plan plan ) {
-        return j.narrowsOrEquals( spec.getJurisdiction(), plan );
+    public boolean isInJurisdiction( Place j, Place locale ) {
+        return j.narrowsOrEquals( spec.getJurisdiction(), locale );
     }
 
     /**

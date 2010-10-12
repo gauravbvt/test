@@ -5,7 +5,6 @@ import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.PlaceReference;
-import com.mindalliance.channels.model.Plan;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -73,13 +72,13 @@ public class PlaceConverter extends EntityConverter {
             context.convertAnother( place.geoLocate() );
             writer.endNode();
         }
-        Plan plan = getPlan();
-        if ( place.getMustBeContainedIn().isSet( plan ) ) {
+        Place locale = getPlan().getLocale();
+        if ( place.getMustBeContainedIn().isSet( locale ) ) {
             writer.startNode( "mustBeContainedIn" );
             writePlaceReference( writer, place.getMustBeContainedIn() );
             writer.endNode();
         }
-        if ( place.getMustContain().isSet( plan ) ) {
+        if ( place.getMustContain().isSet( locale ) ) {
             writer.startNode( "mustContain" );
             writePlaceReference( writer, place.getMustContain() );
             writer.endNode();

@@ -60,7 +60,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                     issues.add( issue );
                 }
                 // under-secured delegated medium
-                List<TransmissionMedium> delegates = medium.getEffectiveDelegates( User.current().getPlan() );
+                List<TransmissionMedium> delegates = medium.getEffectiveDelegates( User.current().getPlan().getLocale() );
                 for ( TransmissionMedium delegate : delegates ) {
                     List<Classification> delegateClassifications = medium.getEffectiveSecurity();
                     if ( !Classification.hasHigherOrEqualClassification(

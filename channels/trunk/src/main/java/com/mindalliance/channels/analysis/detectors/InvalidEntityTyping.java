@@ -32,7 +32,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
         List<ModelEntity> types = entity.getAllTags();
         // Entity is inherently inconsistent with one of its types
         for ( ModelEntity type : types ) {
-            if ( !entity.isConsistentWith( type, User.current().getPlan() ) ) {
+            if ( !entity.isConsistentWith( type, User.current().getPlan().getLocale() ) ) {
                 Issue issue = makeIssue( Issue.VALIDITY, entity );
                 issue.setDescription( "This " + entity.getKindLabel()
                         + " is tagged as a " + type.getName()
@@ -50,7 +50,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
             // Two types used are mutually inconsistent.
             for (ModelEntity otherType : types ) {
                 if (!type.equals( otherType )) {
-                    if ( !type.isConsistentWith( otherType, User.current().getPlan() )) {
+                    if ( !type.isConsistentWith( otherType, User.current().getPlan().getLocale() )) {
                         Issue issue = makeIssue( Issue.VALIDITY, entity );
                          issue.setDescription( "The type " + type.getName()
                                  + " is inconsistent with other type "

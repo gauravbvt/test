@@ -1,7 +1,6 @@
 package com.mindalliance.channels.model;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,39 +30,39 @@ public abstract class ModelEntity extends ModelObject {
     /**
      * Universal actor type.
      */
-    public static Actor ANY_ACTOR_TYPE;
+    private static Actor ANY_ACTOR_TYPE;
     /**
      * Universal event type.
      */
-    public static Event ANY_EVENT_TYPE;
+    private static Event ANY_EVENT_TYPE;
     /**
      * Universal organization type.
      */
-    public static Organization ANY_ORGANIZATION_TYPE;
+    private static Organization ANY_ORGANIZATION_TYPE;
     /**
      * Universal place type.
      */
-    public static Place ANY_PLACE_TYPE;
+    private static Place ANY_PLACE_TYPE;
     /**
      * Universal role type.
      */
-    public static Role ANY_ROLE_TYPE;
+    private static Role ANY_ROLE_TYPE;
     /**
      * Universal phase type.
      */
-    public static Phase ANY_PHASE_TYPE;
+    private static Phase ANY_PHASE_TYPE;
     /**
      * Universal medium type.
      */
-    public static TransmissionMedium ANY_MEDIUM_TYPE;
+    private static TransmissionMedium ANY_MEDIUM_TYPE;
     /**
      * Universal participation type.
      */
-    public static Participation ANY_PARTICIPATION_TYPE;
+    private static Participation ANY_PARTICIPATION_TYPE;
     /**
      * All universal types.
      */
-    public static List<ModelEntity> UNIVERSAL_TYPES;
+    private static List<ModelEntity> UNIVERSAL_TYPES;
     /**
      * Type set.
      */
@@ -72,7 +71,7 @@ public abstract class ModelEntity extends ModelObject {
     /**
      * Whether the entity is immutable.
      */
-    private boolean immutable = false;
+    private boolean immutable;
     /**
      * Whether the entity is actual, a type or TBD (null).
      */
@@ -114,52 +113,11 @@ public abstract class ModelEntity extends ModelObject {
         UNIVERSAL_TYPES.add( ANY_PARTICIPATION_TYPE );
     }
 
-    public ModelEntity() {
+    protected ModelEntity() {
     }
 
-    public ModelEntity( String name ) {
+    protected ModelEntity( String name ) {
         super( name );
-    }
-
-    /**
-     * Whether two entities are compatible.
-     *
-     * @param entity a model entity
-     * @param other  a model entity
-     * @param plan   a plan
-     * @return a boolean
-     */
-    public static boolean areCompatible( ModelEntity entity, ModelEntity other, Plan plan ) {
-        return subsumedBy( entity, other, plan ) || subsumedBy( other, entity, plan );
-    }
-
-    /**
-     * Find the narrowest of two entities, if applicable.
-     *
-     * @param entity      an entity
-     * @param otherEntity an entity
-     * @param plan        a plan
-     * @return an entity or null
-     */
-    public static <T extends ModelEntity> T narrowest( T entity, T otherEntity, Plan plan ) {
-        if ( entity.narrowsOrEquals( otherEntity, plan ) ) return entity;
-        if ( otherEntity.narrowsOrEquals( entity, plan ) ) return otherEntity;
-        return null;
-    }
-
-
-    /**
-     * Whether either entity is null or the first entity is subsumed by the other (it narrows or equals the other).
-     *
-     * @param entity an entity
-     * @param other  an entity
-     * @param plan   a plan
-     * @return a boolean
-     */
-    public static boolean subsumedBy( ModelEntity entity, ModelEntity other, Plan plan ) {
-        return entity == null
-                || other == null
-                || entity.narrowsOrEquals( other, plan );
     }
 
     /**
@@ -175,6 +133,21 @@ public abstract class ModelEntity extends ModelObject {
                         || Role.class.isAssignableFrom( entityClass )
         );
     }
+
+    /**
+     * Find the narrowest of two entities, if applicable.
+     *
+     * @param entity      an entity
+     * @param otherEntity an entity
+     * @param locale the default location
+     * @return an entity or null
+     */
+    public static <T extends ModelEntity> T narrowest( T entity, T otherEntity, Place locale ) {
+        if ( entity.narrowsOrEquals( otherEntity, locale ) ) return entity;
+        if ( otherEntity.narrowsOrEquals( entity, locale ) ) return otherEntity;
+        return null;
+    }
+
 
     /**
      * Return the default kind when creating a model entity of a given class.
@@ -194,10 +167,12 @@ public abstract class ModelEntity extends ModelObject {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isEntity() {
         return true;
     }
 
+    @Override
     public boolean isImmutable() {
         return immutable;
     }
@@ -212,6 +187,7 @@ public abstract class ModelEntity extends ModelObject {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isUndefined() {
         return super.isUndefined() && tags.isEmpty();
     }
@@ -330,12 +306,15 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     private boolean hasTagSafe( ModelEntity entity, Set<ModelEntity> visited ) {
-        if ( getTags().contains( entity ) ) return true;
-        if ( getImplicitTags().contains( entity ) ) return true;
+        if ( tags.contains( entity ) || getImplicitTags().contains( entity ) )
+            return true;
+
         visited.add( this );
-        for ( ModelEntity tag : getTags() ) {
-            if ( !visited.contains( tag ) && tag.hasTagSafe( entity, visited ) ) return true;
-        }
+
+        for ( ModelEntity tag : tags )
+            if ( !visited.contains( tag ) && tag.hasTagSafe( entity, visited ) )
+                return true;
+
         return false;
     }
 
@@ -349,13 +328,12 @@ public abstract class ModelEntity extends ModelObject {
     public boolean isEquivalentToOrIsA( ModelEntity entity, Class<? extends ModelEntity> aClass ) {
 
         return entity == null ? isUnknown() && getClass().equals( aClass )
-                : equals( entity ) || isType() && entity.hasTag( this );
+                              : equals( entity ) || isType() && entity.hasTag( this );
     }
 
     /**
-     * Get the list of implicit tags.
-     *
-     * @return a list of model entities
+     *   Get the list of implicit tags.
+     * @return  a list of model entities
      */
     public List<ModelEntity> getImplicitTags() {
         return new ArrayList<ModelEntity>();
@@ -366,12 +344,12 @@ public abstract class ModelEntity extends ModelObject {
      *
      * @param entity an entity
      * @param other  an entity
-     * @param plan
+     * @param locale the default location
      * @return a boolean
      */
-    public static boolean implies( ModelEntity entity, ModelEntity other, Plan plan ) {
+    public static boolean implies( ModelEntity entity, ModelEntity other, Place locale ) {
         return other == null
-                || entity != null && entity.narrowsOrEquals( other, plan );
+            || entity != null && entity.narrowsOrEquals( other, locale );
     }
 
     /**
@@ -384,10 +362,11 @@ public abstract class ModelEntity extends ModelObject {
     public static boolean isEquivalentToOrDefinedUsing( ModelEntity entity, ModelEntity other ) {
         if ( other == null )
             return false;
-        else if ( entity == null )
+
+        if ( entity == null )
             return other.isUnknown();
-        else
-            return entity.equals( other ) || entity.isDefinedUsing( other );
+
+        return entity.equals( other ) || entity.isDefinedUsing( other );
     }
 
     /**
@@ -405,52 +384,52 @@ public abstract class ModelEntity extends ModelObject {
      * or has all the tags (transitively) of the other, type entity.
      *
      * @param other a model entity
-     * @param plan  the context
+     * @param locale the default location
      * @return a boolean
      */
-    public boolean narrowsOrEquals( ModelEntity other, final Plan plan ) {
+    public boolean narrowsOrEquals( ModelEntity other, Place locale ) {
         if ( other == null || isUnknown() || other.isUnknown() )
             return false;
 
         // Can't compare apples with oranges
-        if ( !getClass().isAssignableFrom( other.getClass() ) ) return false;
+        if ( !getClass().isAssignableFrom( other.getClass() ) )
+            return false;
 
         // same entity
         if ( equals( other ) ) return true;
-        if ( !valid( plan ) || !other.valid( plan ) ) return false;
-        if ( overrideNarrows( other, plan ) ) return true;
+
+        if ( !valid( locale ) || !other.valid( locale ) )
+            return false;
+
+        if ( overrideNarrows( other, locale ) ) return true;
+
         // a type of entity can't narrow an actual entity
         // and an actual entity can't narrow a different actual entity
         if ( other.isActual() ) return false;
+
         // entity explicitly is classified as other entity type
         if ( hasTag( other ) ) return true;
 
         // entity (actual or type) must at least have all the tags of the other entity type
-        boolean isSubCollection = CollectionUtils.isSubCollection(
-                other.getTyping(),
-                getAllTags() );
-        if ( !isSubCollection ) return false;
+        if ( !CollectionUtils.isSubCollection( other.getTyping(), getAllTags() ) )
+            return false;
 
         // meets specific and inherited requirement tests of entity type
-        if ( !meetsTypeRequirementTests( other, plan ) ) return false;
-        boolean meetsInheritedTests = CollectionUtils.selectRejected(
-                other.getAllTags(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return meetsTypeRequirementTests( (ModelEntity) obj, plan );
-                    }
-                }
-        ).isEmpty();
-        return meetsInheritedTests;
+        if ( !meetsTypeRequirementTests( other, locale ) ) return false;
+
+        for ( ModelEntity item : other.getAllTags() )
+            if ( !meetsTypeRequirementTests( item, locale ) )
+                return false;
+
+        return true;
     }
 
     /**
      * Whether the model object can be meaningfully and safely compared to another.
-     *
-     * @param plan
+     * @param locale default location
      * @return a boolean
      */
-    public boolean valid( Plan plan ) {
+    public boolean valid( Place locale ) {
         return true; // default
     }
 
@@ -458,10 +437,10 @@ public abstract class ModelEntity extends ModelObject {
      * Override test for narrowing.
      *
      * @param other a model entity
-     * @param plan
+     * @param locale the default location
      * @return a boolean
      */
-    protected boolean overrideNarrows( ModelEntity other, Plan plan ) {
+    protected boolean overrideNarrows( ModelEntity other, Place locale ) {
         return false;
     }
 
@@ -469,10 +448,10 @@ public abstract class ModelEntity extends ModelObject {
      * Apply tests specific to the class of entity.
      *
      * @param entityType an entity type
-     * @param plan
+     * @param locale
      * @return a boolean
      */
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Place locale ) {
         // Default
         return true;
     }
@@ -481,12 +460,13 @@ public abstract class ModelEntity extends ModelObject {
      * Is consistent with the definition of an entity type.
      *
      * @param entityType a model entity
-     * @param plan
+     * @param locale the default location
      * @return a boolean
      */
-    public boolean isConsistentWith( ModelEntity entityType, Plan plan ) {
+    public boolean isConsistentWith( ModelEntity entityType, Place locale ) {
         assert entityType.isType();
-        return overrideNarrows( entityType, plan ) || meetsTypeRequirementTests( entityType, plan );
+        return overrideNarrows( entityType, locale )
+            || meetsTypeRequirementTests( entityType, locale );
     }
 
     private List<ModelEntity> getTyping() {
@@ -551,7 +531,7 @@ public abstract class ModelEntity extends ModelObject {
             inheritance.remove( inheritance.size() - 1 );
             for ( ModelEntity t : inheritance ) {
                 sb.append( "from " );
-                sb.append( "\"" );
+                sb.append( '\"' );
                 sb.append( t.getName() );
                 sb.append( "\" " );
             }
@@ -565,7 +545,7 @@ public abstract class ModelEntity extends ModelObject {
      * @param tag a model entity
      * @return a list of model entities
      */
-    public List<ModelEntity> inheritanceTo( ModelEntity tag ) {
+    private List<ModelEntity> inheritanceTo( ModelEntity tag ) {
         return safeInheritanceTo( tag, new HashSet<ModelEntity>() );
     }
 
@@ -585,9 +565,9 @@ public abstract class ModelEntity extends ModelObject {
                     }
                 }
                 Collections.sort( allPaths, new Comparator<List<ModelEntity>>() {
-                    public int compare( List<ModelEntity> path1, List<ModelEntity> path2 ) {
-                        int size1 = path1.size();
-                        int size2 = path2.size();
+                    public int compare( List<ModelEntity> o1, List<ModelEntity> o2 ) {
+                        int size1 = o1.size();
+                        int size2 = o2.size();
                         return size1 < size2 ? -1 : size1 > size2 ? 1 : 0;
                     }
                 } );
@@ -600,22 +580,20 @@ public abstract class ModelEntity extends ModelObject {
     /**
      * {@inheritDoc}
      */
-    public boolean references( final ModelObject mo ) {
-        return CollectionUtils.exists(
-                getTags(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ModelObject.areIdentical( ( (ModelEntity) obj ), mo );
-                    }
-                }
-        );
+    @Override
+    public boolean references( ModelObject mo ) {
+        if ( tags != null && mo != null )
+            for ( ModelEntity tag : tags )
+                if ( tag.equals( mo ) )
+                    return true;
+
+        return false;
     }
 
     /**
-     * Get a label for the kind of entity.
-     *
-     * @return a string
+     * {@inheritDoc}
      */
+    @Override
     public String getKindLabel() {
         return getTypeName();
     }

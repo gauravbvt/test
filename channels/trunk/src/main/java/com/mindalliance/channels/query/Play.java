@@ -149,12 +149,7 @@ public class Play implements Serializable {
      * @return a part
      */
     public Part getPartFor( ResourceSpec resourceSpec ) {
-        Part part = getPart();
-        if ( part.resourceSpec().narrowsOrEquals( resourceSpec, User.plan() ) ) {
-            return part;
-        }
-        else {
-            return getOtherPart();
-        }
+        return part.resourceSpec().narrowsOrEquals( resourceSpec, User.plan().getLocale() ) ?
+                    part : getOtherPart();
     }
 }

@@ -8,7 +8,6 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.PlaceReference;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.dao.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
         Place locale = plan.getLocale();
         if ( locale != null ) {
             PlaceReference ref = locale.getMustBeContainedIn();
-            if ( ref != null && ref.getReferencedPlace( plan ) != null ) {
+            if ( ref != null && ref.getReferencedPlace( locale ) != null ) {
                 Issue issue = makeIssue( Issue.VALIDITY, plan );
                 issue.setSeverity( Level.High );
                 issue.setDescription( "The plan's locale ("
@@ -45,7 +44,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
                 issues.add( issue );
             }
             ref = locale.getMustContain();
-            if ( ref != null && ref.getReferencedPlace( plan ) != null ) {
+            if ( ref != null && ref.getReferencedPlace( locale ) != null ) {
                 Issue issue = makeIssue( Issue.VALIDITY, plan );
                 issue.setSeverity( Level.High );
                 issue.setDescription( "The plan's locale ("
@@ -59,7 +58,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
             }
             Place within = locale.getWithin();
             if ( within != null ) {
-                if ( !within.isAbsolute( User.current().getPlan() ) ) {
+                if ( !within.isAbsolute( locale ) ) {
                     Issue issue = makeIssue( Issue.VALIDITY, plan );
                     issue.setSeverity( Level.High );
                     issue.setDescription( "The plan's locale ("
@@ -78,7 +77,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
             }
             for ( ModelEntity tag : locale.getAllTags() ) {
                 Place placeTag = (Place) tag;
-                if ( !placeTag.isAbsolute( User.current().getPlan() ) ) {
+                if ( !placeTag.isAbsolute( locale ) ) {
                     Issue issue = makeIssue( Issue.VALIDITY, plan );
                     issue.setSeverity( Level.High );
                     issue.setDescription( "The plan's locale ("

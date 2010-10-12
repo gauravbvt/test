@@ -453,8 +453,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         setSignificanceToTarget( need.getSignificanceToTarget() );
         setChannels( Channel.intersect(
                 capability.getChannels(),
-                need.getChannels(),
-                queryService.getCurrentPlan() ) );
+                need.getChannels(), queryService.getCurrentPlan().getLocale() ) );
         setMaxDelay( Delay.min( capability.getMaxDelay(), need.getMaxDelay() ) );
         setIntent( capability.getIntent() != null ? capability.getIntent() : need.getIntent() );
         setRestriction( Flow.Restriction.resolve(
@@ -1113,6 +1112,35 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         );
     }
 
+    public boolean allowsCommitment( Assignment committer, Assignment beneficiary, Place locale ) {
+
+        if ( restriction != null )
+            switch ( restriction ) {
+            case SameTopOrganization:
+                return committer.getOrganization().getTopOrganization()
+                        .equals( beneficiary.getOrganization().getTopOrganization() );
+
+            case SameLocation:
+                ModelEntity committerOrg = committer.getOrganization();
+                ModelEntity beneficiaryOrg = beneficiary.getOrganization();
+
+                return committerOrg == null
+                    || beneficiaryOrg == null
+                    || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
+                    || beneficiaryOrg.narrowsOrEquals( committerOrg, locale );
+
+            case SameOrganization:
+                ModelEntity committerLocation = committer.getLocation();
+                ModelEntity beneficiaryLocation = beneficiary.getLocation();
+
+                return committerLocation == null
+                    || beneficiaryLocation == null
+                    || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
+                    || beneficiaryLocation.narrowsOrEquals( committerLocation, locale );
+            }
+
+        return true;
+    }
 
     /**
      * The significance of a flow.

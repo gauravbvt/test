@@ -14,7 +14,7 @@ public class PlaceReference implements Serializable {
     /**
      * Reference to the plan locale.
      */
-    private boolean planReferenced = false;
+    private boolean planReferenced;
     /**
      * A place.
      */
@@ -52,29 +52,30 @@ public class PlaceReference implements Serializable {
         this.event = event;
     }
 
-    public Place getReferencedPlace( Plan plan ) {
-        return isPlanReferenced() ? plan.getLocale()
+    public Place getReferencedPlace( Place locale ) {
+        return isPlanReferenced() ? locale
              : event != null      ? event.getScope()
                                   : place;
     }
 
-    public boolean narrowsOrEquals( PlaceReference other, Plan plan ) {
-        return narrowsOrEquals( other.getReferencedPlace( plan ), plan );
+    public boolean narrowsOrEquals( PlaceReference other, Place locale ) {
+        return narrowsOrEquals( other.getReferencedPlace( locale ), locale );
     }
 
-    public boolean narrowsOrEquals( Place other, Plan plan ) {
+    public boolean narrowsOrEquals( Place other, Place locale ) {
+        Place referencedPlace = getReferencedPlace( locale );
         return other != null
-                && getReferencedPlace( plan ) != null
-                && getReferencedPlace( plan ).narrowsOrEquals( other, plan );
+            && referencedPlace != null
+            && referencedPlace.narrowsOrEquals( other, locale );
     }
 
     public boolean references( ModelObject entity ) {
         return ModelObject.areIdentical( place, entity )
-                || ModelObject.areIdentical( event, entity );
+            || ModelObject.areIdentical( event, entity );
     }
 
-    public boolean isSet( Plan plan ) {
-        return getReferencedPlace( plan ) != null;
+    public boolean isSet( Place locale ) {
+        return getReferencedPlace( locale ) != null;
     }
 
     public boolean isEventReferenced() {
@@ -86,8 +87,6 @@ public class PlaceReference implements Serializable {
     }
 
     public ModelEntity getReference() {
-        if ( event != null ) return event;
-        if ( place != null ) return place;
-        return null;
+        return event == null ? place : event;
     }
 }

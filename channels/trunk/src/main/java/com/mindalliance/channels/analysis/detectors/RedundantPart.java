@@ -2,12 +2,12 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.nlp.Matcher;
 
 import java.util.ArrayList;
@@ -89,15 +89,13 @@ public class RedundantPart extends AbstractIssueDetector {
 
     // One narrows or equals the other
     private boolean isEquivalent( Part part, Part otherPart ) {
+        Place locale = getPlan().getLocale();
         return Matcher.getInstance().same( part.getTask(), otherPart.getTask() )
-                && (
-                part.resourceSpec().narrowsOrEquals( otherPart.resourceSpec(), User.current().getPlan() )
-                        || otherPart.resourceSpec().narrowsOrEquals( part.resourceSpec(), User.current().getPlan() )
-        )
-                && (
-                ModelEntity.implies( part.getLocation(), otherPart.getLocation(), User.current().getPlan() )
-                        || ModelEntity.implies( otherPart.getLocation(), part.getLocation(), User.current().getPlan() )
-        );
 
+            && ( part.resourceSpec().narrowsOrEquals( otherPart.resourceSpec(), locale )
+                 || otherPart.resourceSpec().narrowsOrEquals( part.resourceSpec(), locale ) )
+
+            && ( ModelEntity.implies( part.getLocation(), otherPart.getLocation(), locale )
+                 || ModelEntity.implies( otherPart.getLocation(), part.getLocation(), locale ) );
     }
 }

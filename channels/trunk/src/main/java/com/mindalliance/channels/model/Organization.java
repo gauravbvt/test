@@ -75,6 +75,7 @@ public class Organization extends AbstractUnicastChannelable
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isDefinedUsing( final ModelEntity entity ) {
         return super.isDefinedUsing( entity )
                 ||
@@ -91,38 +92,26 @@ public class Organization extends AbstractUnicastChannelable
                 || ModelEntity.isEquivalentToOrDefinedUsing( getLocation(), entity );
     }
 
-    public boolean narrowsOrEquals( ModelEntity other, Plan plan ) {
-        return super.narrowsOrEquals( other, plan );
-    }
-
     /**
      * {@inheritDoc}
      */
-    protected boolean overrideNarrows( ModelEntity other, Plan plan ) {
-        if ( isActual() ) {
-            if ( other.isActual() ) {
-                // Any actual organization narrows any of its ancestors
-                return isWithin( (Organization) other, plan );
-            } else {
-                if ( getParent() != null ) {
-                    return getParent().narrowsOrEquals( other, plan );
-                } else {
-                    return false;
-                }
-            }
-        } else {
+    @Override
+    protected boolean overrideNarrows( ModelEntity other, Place locale ) {
+        if ( !isActual() )
             return false;
-        }
+
+        return other.isActual() ? isWithin( (Organization) other, locale )
+                                : parent != null && parent.narrowsOrEquals( other, locale );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Place locale ) {
         // check that location and parent are compatible
-        return ModelEntity.implies( location, ( (Organization) entityType ).getLocation(), plan )
-                && ModelEntity.implies( parent, ( (Organization) entityType ).getParent(), plan );
+        return ModelEntity.implies( location, ( (Organization) entityType ).getLocation(), locale )
+                && ModelEntity.implies( parent, ( (Organization) entityType ).getParent(), locale );
     }
 
     public boolean isActorsRequired() {
@@ -192,30 +181,26 @@ public class Organization extends AbstractUnicastChannelable
      * Whether this organization has an ancestor that narrows or equals a given organization.
      *
      * @param organization an organization
-     * @param plan
+     * @param locale the default location
      * @return a boolean
      */
-    public boolean isWithin( final Organization organization, final Plan plan ) {
-        return CollectionUtils.exists(
-                ancestors(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        Organization ancestor = (Organization) obj;
-                        return ancestor.narrowsOrEquals( organization, plan );
-                    }
-                }
-        );
+    public boolean isWithin( Organization organization, Place locale ) {
+        for ( Organization org : ancestors() )
+            if ( org.narrowsOrEquals( organization, locale ) )
+                return true;
+
+        return false;
     }
 
     /**
      * Whether this is the same or within a given organization
      *
      * @param organization an organization
-     * @param plan
+     * @param locale the default location
      * @return a boolean
      */
-    public boolean isSameOrWithin( Organization organization, Plan plan ) {
-        return equals( organization ) || isWithin( organization, plan );
+    public boolean isSameOrWithin( Organization organization, Place locale ) {
+        return equals( organization ) || isWithin( organization, locale );
     }
 
     /**
@@ -228,7 +213,7 @@ public class Organization extends AbstractUnicastChannelable
         Iterator<Organization> iter = ancestors().iterator();
         while ( iter.hasNext() ) {
             sb.append( iter.next().getName() );
-            if ( iter.hasNext() ) sb.append( "," );
+            if ( iter.hasNext() ) sb.append( ',' );
         }
         return sb.toString();
     }

@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -99,6 +100,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
     }
 
     private void findChannelsMismatch( Flow sharing, Flow capability, List<String> mismatches ) {
+        final Place locale = getPlan().getLocale();
         for ( final Channel sharingChannel : sharing.getEffectiveChannels() ) {
             boolean matched = CollectionUtils.exists(
                     capability.getEffectiveChannels(),
@@ -106,7 +108,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                         public boolean evaluate( Object object ) {
                             return sharingChannel.getMedium().narrowsOrEquals(
                                     ( (Channel) object ).getMedium(),
-                                    getPlan() );
+                                    locale );
                         }
                     }
             );

@@ -71,9 +71,10 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
+    @Override
+    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Place locale ) {
         return isSelfTerminating() == ( (Event) entityType ).isSelfTerminating()
-                && ModelEntity.implies( getScope(), ( (Event) entityType ).getScope(), plan );
+                && ModelEntity.implies( getScope(), ( (Event) entityType ).getScope(), locale );
     }
 
     /**

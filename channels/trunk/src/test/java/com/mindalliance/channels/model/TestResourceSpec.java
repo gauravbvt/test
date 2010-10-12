@@ -210,6 +210,11 @@ public class TestResourceSpec {
     }
 
     @Test
+    public void testDisplayString() {
+        assertEquals( "Bob", new ResourceSpec( bob ).displayString( 123 ) );
+    }
+
+    @Test
     public void testHasEntity() {
         assertTrue( spec.hasEntity( Actor.UNKNOWN ) );
         assertTrue( spec.hasEntity( Organization.UNKNOWN ) );
@@ -261,6 +266,33 @@ public class TestResourceSpec {
     public void testMatches() {
         spec = new ResourceSpec( mas );
         assertFalse( spec.matchesOrSubsumedBy( walmart, true, null ) );
+    }
+
+    @Test
+    public void testMatchesOrSubsumedBy() {
+        assertTrue( spec.matchesOrSubsumedBy( Actor.UNKNOWN, true, null ) );
+        assertTrue( spec.matchesOrSubsumedBy( Role.UNKNOWN, true, null ) );
+        assertTrue( spec.matchesOrSubsumedBy( Organization.UNKNOWN, true, null ) );
+        assertTrue( spec.matchesOrSubsumedBy( Place.UNKNOWN, true, null ) );
+
+        assertFalse( new ResourceSpec( bob ).matchesOrSubsumedBy( Actor.UNKNOWN, true, null ) );
+        assertFalse( new ResourceSpec( walmart ).matchesOrSubsumedBy( mas, true, null ) );
+        assertFalse( new ResourceSpec( peon ).matchesOrSubsumedBy( janitor, true, null ) );
+        assertFalse( new ResourceSpec( building ).matchesOrSubsumedBy( Place.UNKNOWN, true, null ) );
+
+        assertTrue( new ResourceSpec( walmart ).matchesOrSubsumedBy( walmart, false, null ) );
+        assertFalse( new ResourceSpec( bob ).matchesOrSubsumedBy( Actor.UNKNOWN, false, null ) );
+        assertFalse( new ResourceSpec( walmart ).matchesOrSubsumedBy( mas, false, null ) );
+        assertFalse( new ResourceSpec( peon ).matchesOrSubsumedBy( janitor, false, null ) );
+        assertFalse( new ResourceSpec( building ).matchesOrSubsumedBy( Place.UNKNOWN, false, null ) );
+    }
+
+
+    @Test
+    public void testMatchesOrSubsumes() {
+        assertFalse( new ResourceSpec( walmart ).matchesOrSubsumes( mas, true, null ) );
+        assertTrue( new ResourceSpec( cafeteria ).matchesOrSubsumes( cafeteria, true, null ) );
+        assertTrue( new ResourceSpec( walmart ).matchesOrSubsumes( walmart, false, null ) );
     }
 
     @Test

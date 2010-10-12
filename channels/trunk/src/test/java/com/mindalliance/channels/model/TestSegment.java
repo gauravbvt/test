@@ -248,14 +248,14 @@ public class TestSegment extends AbstractChannelsTest {
         Part p2 = planDao.createPart( segment, null );
         Role r2 = planDao.findOrCreate( Role.class, "Plumber", null );
         p2.setRole( r2 );
-
-        List<Role> roleList = segment.findRoles( org, User.current().getPlan() );
+        
+        List<Role> roleList = segment.findRoles( org, null );
         assertEquals( 0, roleList.size() );
 
         p1.setOrganization( org );
         p2.setOrganization( org );
 
-        List<Role> roleList2 = segment.findRoles( org, User.current().getPlan() );
+        List<Role> roleList2 = segment.findRoles( org, null );
         assertEquals( 2, roleList2.size() );
         assertTrue( roleList2.contains( r1 ) );
         assertTrue( roleList2.contains( r2 ) );
