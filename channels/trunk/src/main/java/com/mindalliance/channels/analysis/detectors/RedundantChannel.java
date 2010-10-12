@@ -35,7 +35,9 @@ public class RedundantChannel extends AbstractIssueDetector {
         for ( Channel channel : channels ) {
             for ( Channel other : channels ) {
                 if ( !channel.equals( other ) ) {
-                    if ( channel.getMedium().narrowsOrEquals( other.getMedium(), locale ) ) {
+                    if ( channel.getAddress().isEmpty() &&
+                            other.getAddress().isEmpty()
+                            && channel.getMedium().narrowsOrEquals( other.getMedium(), locale ) ) {
                         Issue issue = makeIssue( Issue.VALIDITY, (ModelObject) channelable );
                         issue.setDescription( "Channel \""
                                 + channel.getLabel()
@@ -46,7 +48,7 @@ public class RedundantChannel extends AbstractIssueDetector {
                                 + channel.getLabel()
                                 + "\"\nor remove channel \""
                                 + other.getLabel()
-                                + "\".");
+                                + "\"." );
                         issue.setSeverity( Level.Low );
                         issues.add( issue );
                     }
