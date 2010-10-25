@@ -125,8 +125,7 @@ public class AdminPage extends WebPage {
                     new Button( "productize" ) {
                         @Override
                         protected String getOnClickScript() {
-                            return "if ( confirm('Are you sure?') ) form.submit(); "
-                                   + "else return false;";
+                            return "if ( !confirm('Are you sure?') ) return false; ";
                         }
 
                         @Override
@@ -139,8 +138,7 @@ public class AdminPage extends WebPage {
                     new Button( "deletePlan" ) {
                         @Override
                         protected String getOnClickScript() {
-                            return "if ( confirm('Are you sure?') ) form.submit(); "
-                                   + "else return false;";
+                            return "if ( !confirm('Are you sure?') ) return false; ";
                         }
 
                         @Override
@@ -172,7 +170,7 @@ public class AdminPage extends WebPage {
 
                     new DropDownChoice<Plan>( "plan-sel",
                             new PropertyModel<Plan>( this, "plan" ),
-                            new PropertyModel<List<? extends Plan>>( planManager, "plans" ) )
+                            new PropertyModel<List<? extends Plan>>( this, "developmentPlans" ) )
                         .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                                 private static final long serialVersionUID = -5466916152047216396L;
 
@@ -256,6 +254,15 @@ public class AdminPage extends WebPage {
      */
     public Plan getPlan() {
         return user.getPlan();
+    }
+
+    public List<Plan> getDevelopmentPlans() {
+        List<Plan> answer = new ArrayList<Plan>();
+        for ( Plan plan : planManager.getPlans() )
+            if ( plan.isDevelopment() )
+                    answer.add( plan );
+
+        return answer;
     }
 
     /**
