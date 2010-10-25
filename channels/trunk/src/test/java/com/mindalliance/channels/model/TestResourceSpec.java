@@ -52,6 +52,14 @@ public class TestResourceSpec {
 
     private Organization company;
 
+    private Organization njCo;
+
+    private Place nj;
+
+    private Organization nyCo;
+
+    private Place ny;
+
     @Before
     /**
      * Quick test data.
@@ -89,9 +97,11 @@ public class TestResourceSpec {
         planDao.add( walmart );
 
         building = new Place( "building" );
+        building.setType();
         planDao.add( building );
         cafeteria = new Place( "cafeteria" );
         cafeteria.setWithin( building );
+        cafeteria.setType();
         planDao.add( cafeteria );
 
         person = new Actor( "person" );
@@ -112,9 +122,29 @@ public class TestResourceSpec {
         bob.addTag( guy );
         planDao.add( bob );
 
+        nj = new Place( "New Jersey" );
+        nj.setActual();
+        planDao.add( nj );
+
+        ny = new Place( "New York" );
+        ny.setActual();
+        planDao.add( ny );
+
+        njCo = new Organization( "NJ company" );
+        njCo.setType();
+        planDao.add( njCo );
+        njCo.addTag( company );
+        njCo.setLocation( nj );
+
+        nyCo = new Organization( "NY company" );
+        nyCo.setType();
+        planDao.add( nyCo );
+        nyCo.addTag( company );
+        nyCo.setLocation( ny );
+
         mas = new Organization( "MAS" );
         mas.setActual();
-        mas.addTag( company );
+        mas.addTag( njCo );
         planDao.add( mas );
         hr = new Organization( "Human Resources" );
         hr.setActual();
@@ -158,6 +188,13 @@ public class TestResourceSpec {
         spec = new ResourceSpec( bob, peon, null, null );
         assertTrue( spec.isActor() );
         assertFalse( spec.isRole() );
+        assertFalse( spec.isOrganization() );
+
+        spec = new ResourceSpec( bob, peon, mas, null );
+        assertFalse( spec.isOrganization() );
+        spec = new ResourceSpec( null, null, mas, null );
+        assertTrue( spec.isOrganization() );
+
     }
 
     @Test
@@ -319,7 +356,80 @@ public class TestResourceSpec {
         assertFalse( spec.narrowsOrEquals( peon, null ) );
         assertFalse( spec.narrowsOrEquals( gal, null ) );
         assertFalse( spec.narrowsOrEquals( new ResourceSpec( bob, null, walmart, null ), null ) );
-
     }
+
+
+    /**
+     * ModelEntity tests... Here to avoid duplication of test data...
+     */
+    @Test
+    public void narrowsOrEqualTest() {
+        assertFalse( mas.narrowsOrEquals( bob, null ) );
+
+        Place loop1 = new Place( "loop1" );
+        planDao.add( loop1 );
+        Place loop2 = new Place( "loop2" );
+        planDao.add( loop2 );
+        loop1.setWithin( loop2 );
+        loop2.setWithin( loop1 );
+        assertTrue( loop1.isInvalid( null ) );
+        assertTrue( loop2.isInvalid( null ) );
+        assertTrue( loop1.narrowsOrEquals( loop1, null ) );
+        assertFalse( loop1.narrowsOrEquals( null, null ) );
+        assertFalse( loop1.narrowsOrEquals( loop2, null ) );
+        assertFalse( loop2.narrowsOrEquals( loop1, null ) );
+        assertFalse( loop2.narrowsOrEquals( mas, null ) );
+
+        assertTrue( guy.narrowsOrEquals( person, null ) );
+        assertFalse( person.narrowsOrEquals( guy, null ) );
+        assertFalse( gal.narrowsOrEquals( guy, null ) );
+        assertFalse( guy.narrowsOrEquals( gal, null ) );
+        assertFalse( mas.narrowsOrEquals( gal, null ) );
+        assertFalse( mas.narrowsOrEquals( null, null ) );
+
+        assertTrue( njCo.narrowsOrEquals( company, null ) );
+        assertFalse( njCo.narrowsOrEquals( nyCo, null ) );
+
+        // njite, company, njCo
+    }
+
+    @Test
+    public void testImplies() {
+        assertTrue( ModelEntity.implies( null, null, null ) );
+        assertTrue( ModelEntity.implies( njCo, company, null ) );
+    }
+
+    @Test
+    public void testValidates() {
+        assertTrue( company.validates( mas, null ) );
+        assertFalse( company.validates( null, null ) );
+        assertFalse( company.validates( Organization.UNKNOWN, null ) );
+        assertFalse( mas.validates( company, null ) );
+
+        assertFalse( cafeteria.validates( mas, null ) );
+
+        building.getMustContain().setPlace( cafeteria );
+        cafeteria.getMustBeContainedIn().setPlace( building );
+        Place office = new Place( "Office" );
+        office.setActual();
+        planDao.add( office );
+        office.addTag( building );
+
+        assertTrue( building.validates( office, null ) );
+        assertFalse( building.validates( cafeteria, null ) );
+        assertTrue( cafeteria.narrowsOrEquals( building, null ) );
+
+        Place resto = new Place( "Restaurant" );
+        planDao.add( resto );
+        resto.setActual();
+        resto.addTag( cafeteria );
+
+        assertFalse( cafeteria.validates( resto, null ) );
+        resto.setWithin( office );
+
+        assertTrue( building.validates( office, null ) );
+        assertTrue( cafeteria.validates( resto, null ) );
+    }
+
 
 }

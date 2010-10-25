@@ -1,11 +1,11 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Place;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +30,11 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         ModelEntity entity = (ModelEntity) modelObject;
         List<ModelEntity> types = entity.getAllTags();
+        Place locale = getPlan().getLocale();
+
         // Entity is inherently inconsistent with one of its types
         for ( ModelEntity type : types ) {
-            if ( !entity.isConsistentWith( type, User.current().getPlan().getLocale() ) ) {
+            if ( !type.validates( entity, locale ) ) {
                 Issue issue = makeIssue( Issue.VALIDITY, entity );
                 issue.setDescription( "This " + entity.getKindLabel()
                         + " is tagged as a " + type.getName()
@@ -50,7 +52,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
             // Two types used are mutually inconsistent.
             for (ModelEntity otherType : types ) {
                 if (!type.equals( otherType )) {
-                    if ( !type.isConsistentWith( otherType, User.current().getPlan().getLocale() )) {
+                    if ( !otherType.validates( type, locale ) ) {
                         Issue issue = makeIssue( Issue.VALIDITY, entity );
                          issue.setDescription( "The type " + type.getName()
                                  + " is inconsistent with other type "

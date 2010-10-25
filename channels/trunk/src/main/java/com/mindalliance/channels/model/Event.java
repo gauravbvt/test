@@ -63,18 +63,12 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    public boolean isDefinedUsing( ModelEntity entity ) {
-        return super.isDefinedUsing( entity )
-                || ModelEntity.isEquivalentToOrDefinedUsing( getScope(), entity );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Place locale ) {
-        return isSelfTerminating() == ( (Event) entityType ).isSelfTerminating()
-                && ModelEntity.implies( getScope(), ( (Event) entityType ).getScope(), locale );
+    public boolean validates( ModelEntity entity, Place locale ) {
+        Event event = (Event) entity;
+        return super.validates( event, locale )
+            && selfTerminating == event.isSelfTerminating()
+            && ModelEntity.implies( event.getScope(), scope, locale );
     }
 
     /**

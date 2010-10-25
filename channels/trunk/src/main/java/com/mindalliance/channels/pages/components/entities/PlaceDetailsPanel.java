@@ -564,9 +564,11 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         List<Place> result = new ArrayList<Place>( places.size() );
         GeoLocation geoLocation = place.geoLocate();
 
+        Place locale = queryService.getCurrentPlan().getLocale();
+
         for ( Place p : places ) {
             if ( !p.equals( place ) &&
-                    ( p.isInside( place, User.current().getPlan().getLocale() ) || place.isRegion() && p.isGeoLocatedIn( geoLocation ) ) )
+                    ( p.isInside( place, locale ) || place.isRegion() && p.isGeoLocatedIn( geoLocation ) ) )
                 result.add( p );
         }
         return result;

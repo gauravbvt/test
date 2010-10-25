@@ -11,14 +11,17 @@ import java.io.Serializable;
  * Time: 9:04:47 PM
  */
 public class PlaceReference implements Serializable {
+
     /**
      * Reference to the plan locale.
      */
     private boolean planReferenced;
+
     /**
      * A place.
      */
     private Place place;
+
     /**
      * Reference to the scope of the event..
      */
@@ -53,25 +56,40 @@ public class PlaceReference implements Serializable {
     }
 
     public Place getReferencedPlace( Place locale ) {
-        return isPlanReferenced() ? locale
-             : event != null      ? event.getScope()
-                                  : place;
+        if ( isPlanReferenced() )
+            return locale;
+        else if ( event == null ) {
+            return place;
+        } else {
+            return event.getScope();
+        }
     }
 
     public boolean narrowsOrEquals( PlaceReference other, Place locale ) {
-        return narrowsOrEquals( other.getReferencedPlace( locale ), locale );
+        Place p = other.getReferencedPlace( locale );
+        return p == null || narrowsOrEquals( p, locale );
     }
 
-    public boolean narrowsOrEquals( Place other, Place locale ) {
+    private boolean narrowsOrEquals( Place other, Place locale ) {
         Place referencedPlace = getReferencedPlace( locale );
-        return other != null
-            && referencedPlace != null
-            && referencedPlace.narrowsOrEquals( other, locale );
+
+        if ( referencedPlace == null )
+            return false;
+        else if ( referencedPlace.narrowsOrEquals( other, locale ) )
+            return true;
+        else
+            return false;
     }
 
     public boolean references( ModelObject entity ) {
-        return ModelObject.areIdentical( place, entity )
-            || ModelObject.areIdentical( event, entity );
+        if ( place != null )
+            if ( place.equals( entity ) )
+                return true;
+
+        if ( event == null )
+            return false;
+
+        return event.equals( entity );
     }
 
     public boolean isSet( Place locale ) {
@@ -87,6 +105,18 @@ public class PlaceReference implements Serializable {
     }
 
     public ModelEntity getReference() {
-        return event == null ? place : event;
+        if ( event == null )
+            return place;
+        else
+            return event;
+    }
+
+    /**
+     * Test if this reference has been assigned to something.
+     * @param locale the default locale
+     * @return false if unspecified...
+     */
+    public boolean isSpecified( Place locale ) {
+        return planReferenced || getReferencedPlace( locale ) != null;
     }
 }

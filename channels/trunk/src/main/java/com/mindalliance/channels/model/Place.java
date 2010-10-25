@@ -4,8 +4,7 @@ import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.query.QueryService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,46 +16,57 @@ import java.util.Set;
  * A location or jurisdiction.
  */
 public class Place extends ModelEntity implements GeoLocatable, Specable {
+
     /**
      * Name of pre-fab administrative area place type.
      */
-    public static String ADMINISTRATIVE_AREA = "Administrative area";
+    public static final String ADMINISTRATIVE_AREA = "Administrative area";
+
     /**
      * Name of pre-fab country place type.
      */
-    public static String COUNTRY = "Country";
+    public static final String COUNTRY = "Country";
+
     /**
      * Name of pre-fab state place type.
      */
-    public static String STATE = "State";
+    public static final String STATE = "State";
+
     /**
      * Name of pre-fab county place type.
      */
-    public static String COUNTY = "County";
+    public static final String COUNTY = "County";
+
     /**
      * Name of pre-fab city place type.
      */
-    public static String CITY = "City";
+    public static final String CITY = "City";
+
     /**
      * Immutable place type.
      */
     public static Place Country;
+
     /**
      * Immutable place type.
      */
     public static Place State;
+
     /**
      * Immutable place type.
      */
     public static Place County;
+
     /**
      * Immutable place type.
      */
     public static Place City;
+
     /**
      * Bogus place used to signify that the place is not known...
      */
     public static Place UNKNOWN;
+
     /**
      * Unknown place's name.
      */
@@ -76,22 +86,27 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * A string denoting a geolocation. Null if not set. Set if empty.
      */
     private String geoname;
+
     /**
      * Geolocation for the geoname, if any.
      */
     private GeoLocation geoLocation;
+
     /**
      * Candidate geolocations for the geoname, if any.
      */
     private List<GeoLocation> geoLocations;
+
     /**
      * The actual place, if any, this place is directly in.
      */
     private Place within;
+
     /**
      * The place a place of this type must contain.
      */
     private PlaceReference mustContain = new PlaceReference();
+
     /**
      * The place a place this type must be contained in.
      */
@@ -112,10 +127,14 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         List<ModelEntity> implicitTags = new ArrayList<ModelEntity>();
         if ( isRegion() ) {
             GeoLocation geo = geoLocate();
-            if ( geo.isCity() ) implicitTags.add( City );
-            else if ( geo.isCounty() ) implicitTags.add( County );
-            else if ( geo.isState() ) implicitTags.add( State );
-            else if ( geo.isCountry() ) implicitTags.add( Country );
+            if ( geo.isCity() )
+                implicitTags.add( City );
+            else if ( geo.isCounty() )
+                implicitTags.add( County );
+            else if ( geo.isState() )
+                implicitTags.add( State );
+            else if ( geo.isCountry() )
+                implicitTags.add( Country );
         }
         return implicitTags;
     }
@@ -194,9 +213,9 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * {@inheritDoc}
      */
     @Override
-    public boolean valid( Place locale ) {
-        return !circularWithin( new HashSet<Place>() )
-                && !circularReference( locale );
+    public boolean isInvalid( Place locale ) {
+        return super.isInvalid( locale )
+            || isCircular( locale );
     }
 
     /**
@@ -207,143 +226,104 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * @return a boolean
      */
     public boolean isAbsolute( Place locale ) {
-        if ( isReferencing( mustContain, locale )
-             && isReferencing( mustBeContainedIn, locale )
-             && ( within == null || within.isAbsolute( locale ) ) ) {
+        if ( mustContain.isSpecified( locale )
+             || mustBeContainedIn.isSpecified( locale )
+             || within != null && !within.isAbsolute( locale ) )
 
-            for ( ModelEntity tag : getAllTags() )
-                if ( !( (Place) tag ).isAbsolute( locale ) )
-                    return false;
+            return false;
 
-            return true;
-        }
+        for ( ModelEntity tag : getAllTags() )
+            if ( !( (Place) tag ).isAbsolute( locale ) )
+                return false;
 
-        return false;
-    }
-
-    private static boolean isReferencing( PlaceReference reference, Place locale ) {
-        return reference == null
-            || !reference.isPlanReferenced() && reference.getReferencedPlace( locale ) == null;
-    }
-
-    private boolean circularReference( Place locale ) {
-        return circularMustContain( new HashSet<Place>(), locale )
-            || circularMustBeContainedIn( new HashSet<Place>(), locale );
-    }
-
-
-    private boolean circularMustContain( Set<Place> visited, Place locale ) {
-        if ( visited.contains( this ) )
-            return true;
-
-        visited.add( this );
-        if ( mustContain != null ) {
-            Place referenced = mustContain.getReferencedPlace( locale );
-            if ( referenced != null && ( !mustContain.isPlanReferenced()
-                                         || referenced.isAbsolute( locale ) ) ) {
-                return referenced.circularMustContain( visited, locale );
-            }
-        }
-
-        return false;
-    }
-
-    private boolean circularMustBeContainedIn( Set<Place> visited, Place locale ) {
-        if ( visited.contains( this ) )
-            return true;
-
-        visited.add( this );
-        if ( mustBeContainedIn != null ) {
-            Place referenced = mustBeContainedIn.getReferencedPlace( locale );
-            if ( referenced != null
-                 && ( !mustBeContainedIn.isPlanReferenced()
-                      || referenced.isAbsolute( locale )
-                         && referenced.circularMustBeContainedIn( visited, locale ) ) )
-                return true;
-        }
-
-        return false;
-    }
-
-
-    private boolean circularWithin( Set<Place> visited ) {
-        if ( visited.contains( this ) )
-            return true;
-
-        visited.add( this );
-        return within != null && within.circularWithin( visited );
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean overrideNarrows( ModelEntity other, Place locale ) {
-        // a place narrows another place if it or one of its parent is within the other place
-        return matchesOrIsInside( (Place) other, locale );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Place locale ) {
-        Place placeType = (Place) entityType;
-        if ( isActual() ) {
-            // Check that this place contains a place that it must contain according to the place type
-            PlaceReference contained = placeType.getMustContain();
-            if ( contained.isSet( locale ) ) {
-                Place placeToContain = contained.getReferencedPlace( locale );
-                if ( placeToContain != null && !placeToContain.matchesOrIsInside( this, locale ) ) return false;
-            }
-            // Check that any place specified by the place type contains this one
-            PlaceReference contain = placeType.getMustBeContainedIn();
-            if ( contain.isSet( locale ) ) {
-                Place placeToBeContainedIn = contain.getReferencedPlace( locale );
-                if ( placeToBeContainedIn != null && !matchesOrIsInside( placeToBeContainedIn,
-                                                                         locale ) ) return false;
-            }
-        } else {
-            // verify that containment relationships, if defined, are consistent between place types
-            // TODO - risk of circularity
-            PlaceReference otherMustContain = placeType.getMustContain();
-            if ( otherMustContain.isSet( locale ) ) {
-                if ( !mustContain.isSet( locale ) ) return false;
-                // other mustContain test must be less stringent
-                // "must contain NJ" is more stringent than "must contain Morristown" because
-                // some places that contain Morristown do not contain NJ, but all places containing
-                // NJ contain Morristown. so "must contain NJ" narrows "must contain Morristown"
-                // because Morristown narrows NJ
-                if ( !otherMustContain.narrowsOrEquals( mustContain, locale ) ) return false;
-            }
-            PlaceReference otherMustBeContainedIn = placeType.getMustBeContainedIn();
-            if ( otherMustBeContainedIn.isSet( locale ) ) {
-                if ( !mustBeContainedIn.isSet( locale ) ) return false;
-                if ( !mustBeContainedIn.narrowsOrEquals( otherMustBeContainedIn, locale ) )
-                    return false;
-            }
-        }
         return true;
     }
 
+    private boolean isCircular( Place locale ) {
+        return isWithinCircular( new HashSet<Place>() )
+            || isMustContainCircular( new HashSet<Place>(), locale )
+            || isMustBeContainedInCircular( new HashSet<Place>(), locale );
+    }
+
+    private boolean isMustContainCircular( Set<Place> visited, Place locale ) {
+        if ( visited.contains( this ) )
+            return true;
+
+        visited.add( this );
+
+        Place content = mustContain.getReferencedPlace( locale );
+        return content != null
+            && ( !mustContain.isPlanReferenced() || content.isAbsolute( locale ) )
+            && content.isMustContainCircular( visited, locale );
+    }
+
+    private boolean isMustBeContainedInCircular( Set<Place> visited, Place locale ) {
+        if ( visited.contains( this ) )
+            return true;
+
+        visited.add( this );
+
+        Place container = mustBeContainedIn.getReferencedPlace( locale );
+        return container != null
+            && ( !mustBeContainedIn.isPlanReferenced() || container.isAbsolute( locale ) )
+            && container.isMustBeContainedInCircular( visited, locale );
+    }
+
+    private boolean isWithinCircular( Set<Place> visited ) {
+        if ( visited.contains( this ) )
+            return true;
+
+        visited.add( this );
+        return within != null && within.isWithinCircular( visited );
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isDefinedUsing( final ModelEntity entity ) {
-        return super.isDefinedUsing( entity )
-                ||
-                CollectionUtils.exists(
-                        containment(),
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return ModelEntity.isEquivalentToOrDefinedUsing(
-                                        (Place) obj,
-                                        entity );
-                            }
-                        }
-                );
+    public boolean narrowsOrEquals( ModelEntity other, Place locale ) {
+        // a place narrows another place if it or one of its parent is within the other place
+        return super.narrowsOrEquals( other, locale )
+            || other instanceof Place && !other.isInvalid( locale )
+                                      && matchesOrIsInside( (Place) other, locale );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean validates( ModelEntity entity, Place locale ) {
+        // other mustContain test must be less stringent
+        // "must contain NJ" is more stringent than "must contain Morristown" because
+        // some places that contain Morristown do not contain NJ, but all places containing
+        // NJ contain Morristown. so "must contain NJ" narrows "must contain Morristown"
+        // because Morristown narrows NJ
+        if ( !super.validates( entity, locale ) )
+            return false;
+
+//            TODO implement a cheap way of getting place.getContents()
+        if ( mustContain.getReferencedPlace( locale ) != null )
+            LoggerFactory.getLogger( getClass() ).warn( "{} has unchecked 'mustContain' specification", this );
+
+        Place place = (Place) entity;
+        if ( place.isActual() ) {
+            // Check that the place contains a place that it must contain according our spec
+
+//            Place mc = mustContain.getReferencedPlace( locale );
+//            if ( mc != null && !mc.matchesOrIsInside( place, locale ) )
+//                return false;
+
+            Place mbci = mustBeContainedIn.getReferencedPlace( locale );
+            return mbci == null || place.matchesOrIsInside( mbci, locale );
+        }
+
+        // assert entity.isType()
+
+        return mustBeContainedIn.narrowsOrEquals( place.getMustBeContainedIn(), locale );
+
+//        Place mc = mustContain.getReferencedPlace( locale );
+//        Place pmc = place.getMustContain().getReferencedPlace( locale );
+//        return pmc == null || mc != null && pmc.narrowsOrEquals( mc, locale );
     }
 
     /**
@@ -383,7 +363,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         return safeContainment( new HashSet<Place>() );
     }
 
-    private List<Place> safeContainment( HashSet<Place> visited ) {
+    private List<Place> safeContainment( Set<Place> visited ) {
         List<Place> containers = new ArrayList<Place>();
         if ( !visited.contains( this ) ) {
             visited.add( this );
@@ -394,7 +374,6 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         }
         return containers;
     }
-
 
     /**
      * {@inheritDoc}
@@ -438,12 +417,14 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         }
         GeoLocation geoLoc = geoLocate();
         if ( geoLoc != null ) {
-            if ( sb.length() > 0 ) sb.append( ", " );
+            if ( sb.length() > 0 )
+                sb.append( ", " );
             sb.append( geoLoc.toString().trim() );
         }
         String code = getActualPostalCode();
         if ( code != null && code.trim().length() > 0 ) {
-            if ( sb.length() > 0 ) sb.append( ", " );
+            if ( sb.length() > 0 )
+                sb.append( ", " );
             sb.append( code.trim() );
         }
         return sb.toString();
@@ -482,16 +463,6 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     }
 
     /**
-     * Test if this place has been validated by a geoservice.
-     *
-     * @return true when validate() has been called.
-     * @see #validate
-     */
-    public boolean isValidated() {
-        return !( geoname == null || geoLocations == null );
-    }
-
-    /**
      * Validate this place using a geoservice.
      *
      * @param service the service
@@ -502,11 +473,9 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
             boolean hasName = !( n == null || n.trim().isEmpty() );
             setGeoname( hasName && service.isLikelyGeoname( n ) ? n : "" );
         }
-
         boolean hasGeoName = !( geoname == null || geoname.trim().isEmpty() );
         if ( hasGeoName && geoLocations == null )
             geoLocations = service.findGeoLocations( geoname );
-
         if ( hasAddress() )
             service.refineWithAddress( geoLocation, streetAddress, postalCode );
     }
@@ -518,23 +487,18 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void beforeRemove( QueryService queryService ) {
         super.beforeRemove( queryService );
-        for ( Job job : queryService.findAllConfirmedJobs( this ) ) {
+        for ( Job job : queryService.findAllConfirmedJobs( this ) )
             job.setJurisdiction( null );
-        }
-        for ( Part part : queryService.findAllParts( null, this, true ) ) {
+        for ( Part part : queryService.findAllParts( null, this, true ) )
             part.setJurisdiction( null );
-        }
-        for ( Part part : queryService.findAllPartsWithExactLocation( this ) ) {
+        for ( Part part : queryService.findAllPartsWithExactLocation( this ) )
             part.setLocation( null );
-        }
-        for ( Place place : queryService.list( Place.class ) ) {
-            Place otherWithin = place.getWithin();
-            if ( otherWithin != null && otherWithin.equals( this ) ) {
+        for ( Place place : queryService.list( Place.class ) )
+            if ( equals( place.getWithin() ) )
                 place.setWithin( null );
-            }
-        }
     }
 
     public GeoLocation getGeoLocation() {
@@ -557,7 +521,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * @param location a location
      */
     public void addGeoLocation( GeoLocation location ) {
-        if ( geoLocations == null ) geoLocations = new ArrayList<GeoLocation>();
+        if ( geoLocations == null )
+            geoLocations = new ArrayList<GeoLocation>();
         geoLocations.add( location );
     }
 
@@ -565,13 +530,19 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * Whether this place is the same as or is inside another by definition or by geolocation.
      *
      * @param place a place
-     * @param locale the default location
+     * @param locale the default locale
      * @return a boolean
      */
     public boolean matchesOrIsInside( Place place, Place locale ) {
-        return equals( place )
-                || isInside( place, locale )
-                || isGeoLocatedIn( place.geoLocate() );
+        if ( equals( place ) ) {
+            return true;
+        } else if ( isInside( place, locale ) ) {
+            return true;
+        } else if ( isActual() && place.isActual() && isGeoLocatedIn( place.geoLocate() ) ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -599,15 +570,13 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     }
 
     private Place getLoopyContainingPlace( Place place ) {
-        if ( within != null ) {
-            if ( within.equals( place ) ) {
-                return this;
-            } else {
-                return within.getLoopyContainingPlace( place );
-            }
-        } else {
+        if ( within == null )
             return null;
-        }
+
+        if ( within.equals( place ) )
+            return this;
+        else
+            return within.getLoopyContainingPlace( place );
     }
 
     /**
@@ -631,15 +600,6 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     }
 
     /**
-     * Whether place has known latitude and longitude.
-     *
-     * @return a boolean
-     */
-    public boolean hasLatLong() {
-        return geoLocate() != null;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -655,7 +615,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     /**
      * Whether this place is within another.
-     * Checks if any of my parent places matches (narrowsOrEquals) a given place.
+     * Checks if any of my parent places is a given place.
      *
      * @param place a place
      * @param locale the default location
@@ -682,6 +642,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )
@@ -693,11 +654,10 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean references( ModelObject mo ) {
-        return super.references( mo )
-                || ModelObject.areIdentical( within, mo )
-                || mustBeContainedIn.references( mo )
-                || mustContain.references( mo );
+        return super.references( mo ) || ModelObject.areIdentical( within, mo )
+               || mustBeContainedIn.references( mo ) || mustContain.references( mo );
     }
 
     /**

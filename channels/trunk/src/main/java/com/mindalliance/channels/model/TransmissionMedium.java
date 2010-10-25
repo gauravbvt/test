@@ -334,8 +334,9 @@ public class TransmissionMedium extends ModelEntity {
      * {@inheritDoc}
      */
     @Override
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Place locale ) {
-        return getEffectiveCast() == ( (TransmissionMedium) entityType ).getEffectiveCast();
+    public boolean validates( ModelEntity entity, Place locale ) {
+        return super.validates( entity, locale )
+            && getEffectiveCast() == ( (TransmissionMedium) entity ).getEffectiveCast();
     }
 
     /**

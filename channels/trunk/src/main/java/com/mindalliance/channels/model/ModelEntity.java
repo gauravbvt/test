@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,39 +28,39 @@ public abstract class ModelEntity extends ModelObject {
     /**
      * Universal actor type.
      */
-    private static Actor ANY_ACTOR_TYPE;
+    private static final Actor ANY_ACTOR_TYPE;
     /**
      * Universal event type.
      */
-    private static Event ANY_EVENT_TYPE;
+    private static final Event ANY_EVENT_TYPE;
     /**
      * Universal organization type.
      */
-    private static Organization ANY_ORGANIZATION_TYPE;
+    private static final Organization ANY_ORGANIZATION_TYPE;
     /**
      * Universal place type.
      */
-    private static Place ANY_PLACE_TYPE;
+    private static final Place ANY_PLACE_TYPE;
     /**
      * Universal role type.
      */
-    private static Role ANY_ROLE_TYPE;
+    private static final Role ANY_ROLE_TYPE;
     /**
      * Universal phase type.
      */
-    private static Phase ANY_PHASE_TYPE;
+    private static final Phase ANY_PHASE_TYPE;
     /**
      * Universal medium type.
      */
-    private static TransmissionMedium ANY_MEDIUM_TYPE;
+    private static final TransmissionMedium ANY_MEDIUM_TYPE;
     /**
      * Universal participation type.
      */
-    private static Participation ANY_PARTICIPATION_TYPE;
+    private static final Participation ANY_PARTICIPATION_TYPE;
     /**
      * All universal types.
      */
-    private static List<ModelEntity> UNIVERSAL_TYPES;
+    private static final List<ModelEntity> UNIVERSAL_TYPES;
     /**
      * Type set.
      */
@@ -353,33 +351,6 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
-     * Whether two entity values are equivalent, or the first one is defined in terms of the other.
-     *
-     * @param entity an entity or null
-     * @param other  an entity
-     * @return a boolean
-     */
-    public static boolean isEquivalentToOrDefinedUsing( ModelEntity entity, ModelEntity other ) {
-        if ( other == null )
-            return false;
-
-        if ( entity == null )
-            return other.isUnknown();
-
-        return entity.equals( other ) || entity.isDefinedUsing( other );
-    }
-
-    /**
-     * Is defined in terms of another entity.
-     *
-     * @param entity an entity
-     * @return a boolean
-     */
-    public boolean isDefinedUsing( ModelEntity entity ) {
-        return entity.isType() && hasTag( entity );
-    }
-
-    /**
      * Whether an entity is the same as the other,
      * or has all the tags (transitively) of the other, type entity.
      *
@@ -388,91 +359,46 @@ public abstract class ModelEntity extends ModelObject {
      * @return a boolean
      */
     public boolean narrowsOrEquals( ModelEntity other, Place locale ) {
+
+        // UNKNOWN does not narrow or equals UNKNOWN
         if ( other == null || isUnknown() || other.isUnknown() )
             return false;
 
-        // Can't compare apples with oranges
-        if ( !getClass().isAssignableFrom( other.getClass() ) )
-            return false;
-
         // same entity
-        if ( equals( other ) ) return true;
+        if ( equals( other ) )
+            return true;
 
-        if ( !valid( locale ) || !other.valid( locale ) )
-            return false;
+        // Can't compare rotten apples with rotten oranges
+        return getClass().isAssignableFrom( other.getClass() )
+            && !isInvalid( locale )
 
-        if ( overrideNarrows( other, locale ) ) return true;
-
-        // a type of entity can't narrow an actual entity
-        // and an actual entity can't narrow a different actual entity
-        if ( other.isActual() ) return false;
-
-        // entity explicitly is classified as other entity type
-        if ( hasTag( other ) ) return true;
-
-        // entity (actual or type) must at least have all the tags of the other entity type
-        if ( !CollectionUtils.isSubCollection( other.getTyping(), getAllTags() ) )
-            return false;
-
-        // meets specific and inherited requirement tests of entity type
-        if ( !meetsTypeRequirementTests( other, locale ) ) return false;
-
-        for ( ModelEntity item : other.getAllTags() )
-            if ( !meetsTypeRequirementTests( item, locale ) )
-                return false;
-
-        return true;
+            && hasTag( other );
     }
 
     /**
-     * Whether the model object can be meaningfully and safely compared to another.
+     * Whether the model object is consistent in its definition.
      * @param locale default location
      * @return a boolean
      */
-    public boolean valid( Place locale ) {
-        return true; // default
-    }
+    public boolean isInvalid( Place locale ) {
+        for ( ModelEntity tag : getAllTags() )
+            if ( !tag.validates( this, locale ) )
+                return true;
 
-    /**
-     * Override test for narrowing.
-     *
-     * @param other a model entity
-     * @param locale the default location
-     * @return a boolean
-     */
-    protected boolean overrideNarrows( ModelEntity other, Place locale ) {
         return false;
     }
 
     /**
-     * Apply tests specific to the class of entity.
+     * Apply type tests to an actual entity.
      *
-     * @param entityType an entity type
-     * @param locale
-     * @return a boolean
-     */
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Place locale ) {
-        // Default
-        return true;
-    }
-
-    /**
-     * Is consistent with the definition of an entity type.
-     *
-     * @param entityType a model entity
+     * @param entity an entity type
      * @param locale the default location
      * @return a boolean
      */
-    public boolean isConsistentWith( ModelEntity entityType, Place locale ) {
-        assert entityType.isType();
-        return overrideNarrows( entityType, locale )
-            || meetsTypeRequirementTests( entityType, locale );
-    }
-
-    private List<ModelEntity> getTyping() {
-        List<ModelEntity> typing = getAllTags();
-        typing.add( this );
-        return typing;
+    public boolean validates( ModelEntity entity, Place locale ) {
+        return isType()
+            && entity != null && !entity.isUnknown()
+            && getClass().isAssignableFrom( entity.getClass() );
     }
 
     /**
