@@ -3125,7 +3125,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         }
                     }
             );
-            if ( !covered ) {
+            if ( !covered && !candidate.isProhibited() ) {
                 Part disseminationPart = (Part) ( showTargets
                         ? candidate.getTarget()
                         : candidate.getSource() );
@@ -3153,7 +3153,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             List<Dissemination> disseminations ) {
         ElementOfInformation eoi = disseminatingEoi( flow, subject );
         List<Dissemination> immediateDisseminations = new ArrayList<Dissemination>();
-        if ( eoi != null ) {
+        if ( !flow.isProhibited() && eoi != null ) {
             if ( showTargets ) {
                 immediateDisseminations.add( new Dissemination(
                         flow,
