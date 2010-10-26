@@ -363,7 +363,7 @@ table {
 
 #part td {
     width: 100%;
-    padding-right: 0;
+    padding:5px;
 }
 
 #part table {
@@ -377,6 +377,16 @@ div.flow-details {
     margin: 5px 0;
     position: relative;
     padding: 5px;
+}
+
+div.flow-details ul {
+	margin:0 0 0 15px;
+	padding:0;
+}
+
+div.flow-details ul li {
+	margin:0;
+	padding:0;
 }
 
 textarea, select, input[type='text'], td, th {
@@ -397,7 +407,7 @@ tbody th {
 }
 
 th.area {
-    vertical-align: top;
+    vertical-align: baseline;
     padding-top: 1px;
     white-space: normal;
 }
@@ -872,6 +882,7 @@ div.float-header > h1 {
 	font-size:18px;
 	font-weight:bold;
 	color:#333333;
+	/*float:left; Temporarily Disabled */
 }
 
 div.float-header > span.menubar {
@@ -964,11 +975,25 @@ div.aspect div.picture {
 	color:#333333;
 }
 
+.aspect table.data-table td table td {
+	padding:0;
+}
+
+.aspect table.data-table td table td.subjects-container {
+	padding:0 0 0 25px;
+}
+
+.aspect table.data-table td table.classifications tr td {
+	padding:0 5px 0 0;
+}
+
 .aspect table.data-table tr.headers {
 	background:#DCDDDE;
-	border-bottom:1px solid #999999;
-	height:24px;
     font-weight: bold;
+}
+
+.aspect table.data-table tr.headers td {
+	border-bottom:1px solid #999999;
 }
 
 .aspect table.data-table tr.headers th {
@@ -979,12 +1004,20 @@ div.aspect div.picture {
 
 .aspect table.data-table tr.even {
     background: #F3F3F3;
-	border-bottom:1px solid #c7c8ca;
 }
 
 .aspect table.data-table tr.odd {
     background: #E8E8E8;
+}
+
+.aspect table.data-table tr.even td,
+.aspect table.data-table tr.odd td {
 	border-bottom:1px solid #c7c8ca;
+}
+
+.aspect table.data-table tr.even td table tr td,
+.aspect table.data-table tr.odd td table td {
+	border:none;
 }
 
 .aspect table.data-table tr.odd.last,
@@ -996,6 +1029,21 @@ div.aspect div.picture {
 	display:block;
 	text-align:center;
 }
+
+.aspect table.data-table > tbody > tr > td > span > table > tbody > tr > td > ul {
+	margin:0;
+	padding:0;
+}
+
+.aspect table.data-table > tbody > tr > td > span > table > tbody > tr > td > ul > li {
+	margin:0;
+	padding:0 0 7px 0;
+}
+
+.aspect table.data-table > tbody > tr > td > span > table > tbody > tr > td > ul > li > a > img {
+	vertical-align:middle;
+}
+
 
 
 /* ----- Floating Panels - Data Tables - Controls ----- */
