@@ -1,18 +1,20 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.analysis.data.Dissemination;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Transformation;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.springframework.core.io.Resource;
 
@@ -21,37 +23,30 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Provider of providers for segments.
+ * Dissemination meta provider.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Nov 25, 2008
- * Time: 2:31:11 PM
- * A provider of graph attribute providers needed for rendering a segment
+ * Date: Oct 22, 2010
+ * Time: 8:27:02 PM
  */
-public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
+public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Dissemination> {
 
-    public FlowMapMetaProvider( ModelObject modelObject,
-                                String outputFormat,
-                                Resource imageDirectory,
-                                Analyst analyst ) {
-        this( modelObject, outputFormat, imageDirectory, analyst, false, false );
-    }
+    private static final int MAX_INFO_LENGTH = 20;
 
-    public FlowMapMetaProvider( ModelObject modelObject,
-                                String outputFormat,
-                                Resource imageDirectory,
-                                Analyst analyst,
-                                boolean showingGoals,
-                                boolean showingConnectors ) {
-        super( modelObject, outputFormat, imageDirectory, analyst, showingGoals, showingConnectors );
+    public DisseminationMetaProvider(
+            SegmentObject segmentObject,
+            String outputFormat,
+            Resource imageDirectory,
+            Analyst analyst ) {
+        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false );
     }
 
     /**
      * {@inheritDoc}
      */
-    public URLProvider<Node, Flow> getURLProvider() {
-        return new URLProvider<Node, Flow>() {
+    public URLProvider<Node, Dissemination> getURLProvider() {
+        return new URLProvider<Node, Dissemination>() {
             /**
              * The URL for the graph that contains the vertex
              *
@@ -84,9 +79,9 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
              * @param edge -- an edge
              * @return a URL string
              */
-            public String getEdgeURL( Flow edge ) {
+            public String getEdgeURL( Dissemination edge ) {
                 // Plan id = 0 for now sice there is only one plan
-                Object[] args = {0, edge.getId()};
+                Object[] args = {0, edge.getFlow().getId()};
                 return MessageFormat.format( EDGE_URL_FORMAT, args );
             }
         };
@@ -95,33 +90,40 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
     /**
      * {@inheritDoc}
      */
-    public EdgeNameProvider<Flow> getEdgeLabelProvider() {
-        return new EdgeNameProvider<Flow>() {
-            public String getEdgeName( Flow flow ) {
-                String flowName = flow.getName();
-                if ( flow.isAskedFor() && !flowName.endsWith( "?" ) ) {
-                    flowName += "?";
+    public EdgeNameProvider<Dissemination> getEdgeLabelProvider() {
+        return new EdgeNameProvider<Dissemination>() {
+            public String getEdgeName( Dissemination edge ) {
+                StringBuilder sb = new StringBuilder();
+                sb.append( edge.getSubject().getLabel( MAX_INFO_LENGTH ) );
+                Transformation.Type xformType = edge.getTransformationType();
+                if ( xformType !=  Transformation.Type.Identity ) {
+                    sb.append( " (" );
+                    sb.append( xformType.getLabel() );
+                    sb.append( " " );
+                    sb.append( edge.getTransformedSubject().getLabel( MAX_INFO_LENGTH ) );
+                    sb.append( ")");
                 }
-                if ( flow.isProhibited() ) {
-                    flowName += " (PROHIBITED)";
+                if ( edge.getFlow().isProhibited() ) {
+                    sb.append( " [PROHIBITED]");
                 }
                 String label = AbstractMetaProvider.separate(
-                        flowName,
+                        sb.toString(),
                         LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
+
                 return sanitize( label );
             }
         };
     }
 
 
-    public DOTAttributeProvider<Node, Flow> getDOTAttributeProvider() {
+    public DOTAttributeProvider<Node, Dissemination> getDOTAttributeProvider() {
         return new SegmentDOTAttributeProvider();
     }
 
     /**
      * A DOTAttributeProvider for segments.
      */
-    private class SegmentDOTAttributeProvider implements DOTAttributeProvider<Node, Flow> {
+    private class SegmentDOTAttributeProvider implements DOTAttributeProvider<Node, Dissemination> {
 
         public SegmentDOTAttributeProvider() {
         }
@@ -168,8 +170,8 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 }
                 // assuming a bitmap format
             } else {
-                list.add( new DOTAttribute( "image", getIcon( FlowMapMetaProvider.this.getAnalyst().getImagingService(),
-                                                              vertex ) ) );
+                list.add( new DOTAttribute( "image", getIcon( DisseminationMetaProvider.this.getAnalyst().getImagingService(),
+                        vertex ) ) );
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
@@ -199,28 +201,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 }
                 list.add( new DOTAttribute( "tooltip", tooltip ) );
             }
-            if ( vertex.isConnector() ) {
-                Connector connector = (Connector) vertex;
-                Iterator<ExternalFlow> externalFlows = connector.externalFlows();
-                list.add( new DOTAttribute( "fontcolor", "white" ) );
-                if ( externalFlows.hasNext() ) {
-                    list.add( new DOTAttribute( "tooltip", "Connected to: " + summarizeExternalFlows( externalFlows ) ) );
-                } else {
-                    if ( connector.isSource() && !connector.getInnerFlow().isSatisfied() ) {
-                        list.add( new DOTAttribute( "tooltip", "Need completely unsatisfied" ) );
-                    } else if ( connector.isTarget() && !connector.getInnerFlow().isSatisfying() ) {
-                        list.add( new DOTAttribute( "tooltip", "Capability unused" ) );
-                    } else {
-                        list.add( new DOTAttribute(
-                                "tooltip",
-                                connector.isTarget() ? "Capability" : "Need" ) );
-                    }
-                }
-            }
             return list;
         }
 
-        public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
+        public List<DOTAttribute> getEdgeAttributes( Dissemination edge, boolean highlighted ) {
+            Flow flow = edge.getFlow();
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
@@ -233,11 +218,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
-            if ( edge.isAskedFor() ) {
+            if ( flow.isAskedFor() ) {
                 list.add( new DOTAttribute( "arrowtail", "onormal" ) );
-                list.add( new DOTAttribute( "style", edge.isCritical() ? "bold" : "solid" ) );
+                list.add( new DOTAttribute( "style", flow.isCritical() ? "bold" : "solid" ) );
             } else {
-                if ( edge.isCritical() ) {
+                if ( flow.isCritical() ) {
                     list.add( new DOTAttribute( "style", "bold" ) );
                     list.add( new DOTAttribute( "style", "bold" ) );
                     list.add( new DOTAttribute( "fontcolor", "black" ) );
@@ -246,24 +231,24 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             // head and tail labels
             String headLabel = null;
             String tailLabel = null;
-            if ( edge.isAll() ) {
-                if ( edge.isTerminatingToTarget() )
+            if ( flow.isAll() ) {
+                if ( flow.isTerminatingToTarget() )
                     headLabel = "(stop all)";
-                else if ( edge.isTriggeringToTarget() )
+                else if ( flow.isTriggeringToTarget() )
                     headLabel = "(start all)";
                 else {
                     headLabel = "(all)";
                 }
             } else {
-                if ( edge.isTerminatingToTarget() )
+                if ( flow.isTerminatingToTarget() )
                     headLabel = "(stop)";
-                else if ( edge.isTriggeringToTarget() )
+                else if ( flow.isTriggeringToTarget() )
                     headLabel = "(start)";
 
             }
-            if ( edge.isTerminatingToSource() ) {
+            if ( flow.isTerminatingToSource() ) {
                 tailLabel = "(stop)";
-            } else if ( edge.isTriggeringToSource() ) {
+            } else if ( flow.isTriggeringToSource() ) {
                 tailLabel = "(start)";
             }
             if ( headLabel != null ) list.add( new DOTAttribute( "headlabel", headLabel ) );
@@ -273,13 +258,13 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
             // Issue coloring
-            if ( getAnalyst().hasUnwaivedIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( getAnalyst().hasUnwaivedIssues( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( edge,
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( flow,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             } else {
-                list.add( new DOTAttribute( "tooltip", sanitize( edge.getTitle() ) ) );
+                list.add( new DOTAttribute( "tooltip", sanitize( flow.getTitle() ) ) );
             }
             return list;
         }
@@ -296,4 +281,10 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         return sanitize( sb.toString() );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public Object getContext() {
+        return ( (SegmentObject) super.getContext() ).getSegment();
+    }
 }

@@ -53,14 +53,12 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
                     }
 
                 } );
-        populateSegmentGraph( digraph, segmentObject, assumeFails );
+        populateSegmentGraph( digraph );
         return digraph;
     }
 
     private void populateSegmentGraph(
-            DirectedGraph<Node, Flow> graph,
-            SegmentObject segmentObject,
-            boolean assumeFails ) {
+            DirectedGraph<Node, Flow> graph ) {
         List<Flow> essentialFlows = segmentObject.getEssentialFlows( assumeFails, queryService );
         if ( segmentObject instanceof Flow ) {
             essentialFlows.add( (Flow) segmentObject );

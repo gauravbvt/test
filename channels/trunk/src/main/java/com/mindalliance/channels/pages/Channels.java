@@ -13,6 +13,7 @@ import com.mindalliance.channels.pages.playbook.ContactPage;
 import com.mindalliance.channels.pages.playbook.PlaybookPage;
 import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.playbook.VCardPage;
+import com.mindalliance.channels.pages.png.DisseminationPage;
 import com.mindalliance.channels.pages.png.EntitiesNetworkPage;
 import com.mindalliance.channels.pages.png.EntityNetworkPage;
 import com.mindalliance.channels.pages.png.FailureImpactsPage;
@@ -144,6 +145,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "hierarchy.png", HierarchyPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "geomap.html", GeoMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "essential.png", FailureImpactsPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "dissemination.png", DisseminationPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );

@@ -280,7 +280,7 @@ public class Part extends Node implements GeoLocatable, Specable {
      * Test whether the resource spec of the part intersects a given resource spec
      *
      * @param resourceSpec a resource
-     * @param locale the default location
+     * @param locale       the default location
      * @return a boolean
      */
     public boolean isImpliedBy( ResourceSpec resourceSpec, Place locale ) {
@@ -398,7 +398,7 @@ public class Part extends Node implements GeoLocatable, Specable {
     /**
      * Test if this part is considered belonging to an organization.
      *
-     * @param o    the organization
+     * @param o      the organization
      * @param locale the default location
      * @return true if belonging
      */
@@ -409,7 +409,7 @@ public class Part extends Node implements GeoLocatable, Specable {
     /**
      * Test if this part is considered belonging to an organization.
      *
-     * @param j    the jurisdiction
+     * @param j      the jurisdiction
      * @param locale the default location
      * @return true if belonging
      */
@@ -1146,6 +1146,25 @@ public class Part extends Node implements GeoLocatable, Specable {
         }
         return false;
     }
+
+    /**
+     * List all subjects (info+eoi content) shared with or by the part.
+     *
+     * @return a sorted list of unique subjects
+     */
+    public List<Subject> getAllSubjectsShared( ) {
+        Set<Subject> subjects = new HashSet<Subject>();
+        List<Flow> flows = getAllSharingReceives();
+        for ( Flow flow : flows ) {
+            for ( ElementOfInformation eoi : flow.getEois() ) {
+                subjects.add( new Subject( flow.getName(), eoi.getContent() ) );
+            }
+        }
+        List<Subject> results = new ArrayList<Subject>( subjects );
+        Collections.sort( results );
+        return results;
+    }
+
 
     /**
      * Category of tasks.

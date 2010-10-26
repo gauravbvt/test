@@ -1,5 +1,6 @@
 package com.mindalliance.channels.query;
 
+import com.mindalliance.channels.analysis.data.Dissemination;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
@@ -38,6 +39,8 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.model.Subject;
+import com.mindalliance.channels.model.Transformation;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.nlp.Proximity;
@@ -756,7 +759,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     if ( flow.getSource().isPart() ) {
                         Part part = (Part) flow.getSource();
                         if ( part.resourceSpec().matchesOrSubsumes( resourceSpec, specific,
-                                                                    getCurrentPlan().getLocale() ) ) {
+                                getCurrentPlan().getLocale() ) ) {
                             // sends
                             Play play = new Play( part, flow, true );
                             plays.add( play );
@@ -765,7 +768,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     if ( flow.getTarget().isPart() ) {
                         Part part = (Part) flow.getTarget();
                         if ( part.resourceSpec().matchesOrSubsumes( resourceSpec, specific,
-                                                                    getCurrentPlan().getLocale() ) ) {
+                                getCurrentPlan().getLocale() ) ) {
                             // receives
                             Play play = new Play( part, flow, false );
                             plays.add( play );
@@ -1088,7 +1091,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( Specable spec : findAllResourceSpecs() ) {
             if ( spec.getRole() != null ) {
                 if ( spec.getActor() != null && actor.narrowsOrEquals( spec.getActor(), place )
-                     || actor.isUnknown() && spec.getActor() == null )
+                        || actor.isUnknown() && spec.getActor() == null )
                     roles.add( spec.getRole() );
             }
         }
@@ -2366,17 +2369,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Boolean isInvolved( final Organization organization ) {
-        return CollectionUtils.exists(
-                findAllParts(),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        Organization partOrg = ( (Part) object ).getOrganization();
-                        return partOrg != null
-                                && ( partOrg.equals( organization )
-                                || partOrg.ancestors().contains( organization ) );
-                    }
-                }
-        );
+        return !findAllAssignments( organization ).isEmpty();
     }
 
     /**
@@ -2425,7 +2418,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Place locale = getCurrentPlan().getLocale();
         for ( Employment employment : employments )
             if ( employment.playsPart( part, locale ) )
-                    assignments.add( new Assignment( employment, part ) );
+                assignments.add( new Assignment( employment, part ) );
 
         return assignments;
     }
@@ -3048,7 +3041,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<ElementOfInformation> findCommonEOIs( Flow flow, Flow otherFlow ) {
         List<ElementOfInformation> commonEOIs = new ArrayList<ElementOfInformation>();
         List<ElementOfInformation> shorter;
@@ -3088,6 +3081,172 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return commonEOIs;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Dissemination> findAllDisseminations(
+            SegmentObject segmentObject,
+            Subject subject,
+            Boolean showTargets ) {
+        List<Dissemination> disseminations = new ArrayList<Dissemination>();
+        if ( segmentObject instanceof Part ) {
+            findAllDisseminationsFromPart(
+                    (Part) segmentObject,
+                    subject,
+                    Transformation.Type.Identity,
+                    showTargets,
+                    disseminations );
+        } else {
+            findAllDisseminationsFromFlow(
+                    (Flow) segmentObject,
+                    subject,
+                    showTargets,
+                    disseminations );
+        }
+        return disseminations;
+    }
+
+    private void findAllDisseminationsFromPart(
+            Part part,
+            Subject subject,
+            Transformation.Type cumulativeTranformation,
+            boolean showTargets,
+            List<Dissemination> disseminations ) {
+        List<Flow> candidates = showTargets
+                ? part.getAllSharingSends()
+                : part.getAllSharingReceives();
+        for ( final Flow candidate : candidates ) {
+            boolean covered = CollectionUtils.exists(
+                    disseminations,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            return ( (Dissemination) object ).getFlow().equals( candidate );
+                        }
+                    }
+            );
+            if ( !covered ) {
+                Part disseminationPart = (Part) ( showTargets
+                        ? candidate.getTarget()
+                        : candidate.getSource() );
+                List<Dissemination> immediateDisseminations = findDisseminationsInFlow( candidate, subject, showTargets );
+                for ( Dissemination immediateDissemination : immediateDisseminations ) {
+                    disseminations.add( immediateDissemination );
+                    Subject nextSubject = showTargets
+                            ? immediateDissemination.getSubject()
+                            : immediateDissemination.getTransformedSubject();
+                    findAllDisseminationsFromPart(
+                            disseminationPart,
+                            nextSubject,
+                            cumulativeTranformation.combineWith( immediateDissemination.getTransformationType() ),
+                            showTargets,
+                            disseminations );
+                }
+            }
+        }
+    }
+
+     private void findAllDisseminationsFromFlow(
+            Flow flow,
+            Subject subject,
+            boolean showTargets,
+            List<Dissemination> disseminations ) {
+        ElementOfInformation eoi = disseminatingEoi( flow, subject );
+        List<Dissemination> immediateDisseminations = new ArrayList<Dissemination>();
+        if ( eoi != null ) {
+            if ( showTargets ) {
+                immediateDisseminations.add( new Dissemination(
+                        flow,
+                        Transformation.Type.Identity,
+                        subject,
+                        subject ) );
+            } else {
+                Transformation xform = eoi.getTransformation();
+                if ( xform.isNone() ) {
+                    immediateDisseminations.add( new Dissemination(
+                            flow,
+                            Transformation.Type.Identity,
+                            subject,
+                            subject ) );
+                } else {
+                    for ( Subject transformedSubject : xform.getSubjects() ) {
+                        immediateDisseminations.add( new Dissemination(
+                                flow,
+                                xform.getType(),
+                                transformedSubject,
+                                subject ) );
+                    }
+                }
+            }
+            Part part = (Part) ( showTargets
+                    ? flow.getTarget()
+                    : flow.getSource() );
+            for ( Dissemination immediateDissemination : immediateDisseminations ) {
+                disseminations.add( immediateDissemination );
+                Subject newSubject = showTargets
+                        ? immediateDissemination.getSubject()
+                        : immediateDissemination.getTransformedSubject();
+                findAllDisseminationsFromPart(
+                        part,
+                        newSubject,
+                        immediateDissemination.getTransformationType(),
+                        showTargets,
+                        disseminations );
+            }
+        }
+    }
+
+    private ElementOfInformation disseminatingEoi( final Flow flow, final Subject subject ) {
+        final Matcher matcher = Matcher.getInstance();
+        return (ElementOfInformation) CollectionUtils.find(
+                flow.getEois(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return matcher.same( flow.getName(), subject.getInfo() )
+                                && matcher.same(
+                                subject.getContent(),
+                                ( (ElementOfInformation) object ).getContent() );
+                    }
+                }
+        );
+    }
+
+    private List<Dissemination> findDisseminationsInFlow( Flow flow, Subject subject, Boolean showTargets ) {
+        List<Dissemination> disseminations = new ArrayList<Dissemination>();
+        Matcher matcher = Matcher.getInstance();
+        for ( ElementOfInformation eoi : flow.getEois() ) {
+            Transformation xform = eoi.getTransformation();
+            if ( xform.isNone() ) {
+                if ( matcher.same( flow.getName(), subject.getInfo() )
+                        && matcher.same( eoi.getContent(), subject.getContent() ) ) {
+                    disseminations.add( new Dissemination( flow, xform.getType(), subject, subject ) );
+                }
+            } else {
+                if ( showTargets ) {
+                    if ( xform.getSubjects().contains( subject ) ) {
+                        disseminations.add( new Dissemination(
+                                flow,
+                                xform.getType(),
+                                subject,
+                                new Subject( flow.getName(), eoi.getContent() ) ) );
+                    }
+                } else {
+                    if ( matcher.same( flow.getName(), subject.getInfo() )
+                            && matcher.same( eoi.getContent(), subject.getContent() ) ) {
+                        for ( Subject transformedSubject : xform.getSubjects() ) {
+                            disseminations.add( new Dissemination(
+                                    flow,
+                                    xform.getType(),
+                                    transformedSubject,
+                                    subject ) );
+                        }
+                    }
+                }
+            }
+        }
+        return disseminations;
+    }
+
 
 }
 

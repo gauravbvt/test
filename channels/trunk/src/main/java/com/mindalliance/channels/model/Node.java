@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A node in the flow graph
@@ -349,26 +347,5 @@ public abstract class Node extends ModelObject implements SegmentObject {
      * @return a string
      */
     abstract public String fullDisplayString( int maxItemLength );
-
-    /**
-     * List all subjects (info+eoi content) shared with the part.
-     *
-     * @return a sorted list of unique subjects
-     */
-    public List<Subject> allReceivedSubjects() {
-        Set<Subject> subjects = new HashSet<Subject>();
-        Iterator<Flow> receives = receives();
-        while ( receives.hasNext() ) {
-            Flow receive = receives.next();
-            if ( receive.isSharing() ) {
-                for ( ElementOfInformation eoi : receive.getEois() ) {
-                    subjects.add( new Subject( receive.getName(), eoi.getContent() ) );
-                }
-            }
-        }
-        List<Subject> results = new ArrayList<Subject>( subjects );
-        Collections.sort( results );
-        return results;
-    }
 
 }

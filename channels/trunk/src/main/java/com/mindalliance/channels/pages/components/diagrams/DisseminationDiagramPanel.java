@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
+import com.mindalliance.channels.analysis.data.Dissemination;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Flow;
@@ -7,76 +8,105 @@ import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.pages.png.FailureImpactsPage;
+import com.mindalliance.channels.model.Subject;
+import com.mindalliance.channels.pages.png.DisseminationPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
- * Critical flows diagram panel.
+ * Dissemination diagram panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Jan 15, 2010
- * Time: 11:24:11 AM
+ * Date: Oct 10, 2010
+ * Time: 8:57:20 PM
  */
-public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
+public class DisseminationDiagramPanel extends AbstractDiagramPanel {
+
 
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( FailureImpactsDiagramPanel.class );
+    private static final Logger LOG = LoggerFactory.getLogger( DisseminationDiagramPanel.class );
+
     /**
-     * Segment object model.
+     * Part of flow.
+     * If flow,  if showTargets, then it's a send, else a receive.
      */
     private IModel<SegmentObject> segmentObjectModel;
     /**
-     * Assume alternate flows to downstream slows all fail?
+     * The subject being traced.
      */
-    private boolean assumeFails;
+    private Subject subject;
+    /**
+     * Dissemination to targets or from sources.
+     */
+    private boolean showTargets;
 
-    public FailureImpactsDiagramPanel(
+    public DisseminationDiagramPanel(
             String id,
-            IModel<SegmentObject> model,
-            boolean assumeFails,
+            IModel<SegmentObject> segmentObjectModel,
+            Subject subject,
+            boolean showTargets,
             Settings settings ) {
         super( id, settings );
-        segmentObjectModel = model;
-        this.assumeFails = assumeFails;
+        this.segmentObjectModel = segmentObjectModel;
+        this.subject = subject;
+        this.showTargets = showTargets;
         init();
     }
 
+    /**
+     * @inheritDoc
+     */
     protected String getContainerId() {
-        return "essentialFlowMap";
+        return "disseminationMap";
     }
 
+    /**
+     * @inheritDoc
+     */
     protected Diagram makeDiagram() {
-        return getDiagramFactory().newEssentialFlowMapDiagram(
+        return getDiagramFactory().newDisseminationDiagram(
                 getSegmentObject(),
-                assumeFails,
+                subject,
+                showTargets,
                 getDiagramSize(),
                 getOrientation() );
     }
 
-    private SegmentObject getSegmentObject() {
-        return segmentObjectModel.getObject();
-    }
-
+    /**
+     * @inheritDoc
+     */
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/essential.png?" );
-        sb.append( FailureImpactsPage.SEGMENT );
+        try {
+        sb.append( "/dissemination.png?" );
+        sb.append( DisseminationPage.SEGMENT );
         sb.append( '=' );
         sb.append( getSegmentObject().getSegment().getId() );
         sb.append( '&' );
-        sb.append( FailureImpactsPage.FAILURE );
+        sb.append( DisseminationPage.OBJECT );
         sb.append( '=' );
         sb.append( getSegmentObject().getId() );
         sb.append( '&' );
-        sb.append( FailureImpactsPage.ASSUME_FAILS );
+        sb.append( DisseminationPage.INFO );
         sb.append( '=' );
-        sb.append( assumeFails );
+        sb.append( URLEncoder.encode( subject.getInfo(), "UTF-8" ) );
+        sb.append( '&' );
+        sb.append( DisseminationPage.CONTENT );
+        sb.append( '=' );
+        sb.append( URLEncoder.encode( subject.getContent(), "UTF-8"  ) );
+        sb.append( '&' );
+        sb.append( DisseminationPage.SHOW_TARGETS );
+        sb.append( '=' );
+        sb.append( showTargets );
+
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
             sb.append( "&size=" );
@@ -89,13 +119,22 @@ public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
             sb.append( "&orientation=" );
             sb.append( orientation );
         }
+        } catch ( UnsupportedEncodingException e ) {
+            // never happens
+        }
         return sb.toString();
     }
 
+    /**
+     * @inheritDoc
+     */
     protected void onClick( AjaxRequestTarget target ) {
         // Do nothing
     }
 
+    /**
+     * @inheritDoc
+     */
     protected void onSelectGraph(
             String graphId,
             String domIdentifier,
@@ -110,6 +149,9 @@ public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     protected void onSelectVertex( String graphId, String vertexId, String domIdentifier, int scrollTop, int scrollLeft, AjaxRequestTarget target ) {
         try {
             Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
@@ -128,8 +170,17 @@ public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
         }
     }
 
-    protected void onSelectEdge( String graphId, String edgeId, String domIdentifier, int scrollTop, int scrollLeft, AjaxRequestTarget target ) {
-        long id =  Long.valueOf( edgeId );
+    /**
+     * @inheritDoc
+     */
+    protected void onSelectEdge(
+            String graphId,
+            String edgeId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            AjaxRequestTarget target ) {
+        long id = Dissemination.extractFlowId( edgeId );
         try {
             Flow flow = getQueryService().find( Flow.class, id );
             String js = scroll( domIdentifier, scrollTop, scrollLeft );
@@ -139,5 +190,9 @@ public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
         } catch ( NotFoundException e ) {
             LOG.warn( "Selected flow not found at id " + id );
         }
+    }
+
+    private SegmentObject getSegmentObject() {
+        return segmentObjectModel.getObject();
     }
 }

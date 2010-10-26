@@ -1,5 +1,6 @@
 package com.mindalliance.channels.query;
 
+import com.mindalliance.channels.analysis.data.Dissemination;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.Dao;
 import com.mindalliance.channels.dao.PlanManager;
@@ -35,6 +36,7 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.nlp.Proximity;
 
 import java.util.Iterator;
@@ -1375,4 +1377,18 @@ public interface QueryService {
      * @return a list of EOIs
      */
     List<ElementOfInformation> findCommonEOIs( Flow flow, Flow otherFlow );
+
+    /**
+     * Find all dissemination from or to a part or flow.
+     * @param segmentObject a part or flow
+     * @param subject  a subject being disseminated
+     * @param showTargets a boolean
+     * @return a list of disseminations
+     */
+    List<Dissemination> findAllDisseminations(
+            SegmentObject segmentObject,
+            Subject subject,
+            Boolean showTargets );
+
+
 }

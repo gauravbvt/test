@@ -5,6 +5,7 @@ import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
@@ -12,19 +13,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * PNG view of an essential flow map.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Jan 20, 2010
- * Time: 7:56:20 PM
+ * Date: Oct 21, 2010
+ * Time: 1:38:08 PM
  */
-public class FailureImpactsPage extends PngWebPage {
+public class DisseminationPage extends PngWebPage {
 
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( FailureImpactsPage.class );
+    private static final Logger LOG = LoggerFactory.getLogger( DisseminationPage.class );
     /**
      * Parameter.
      */
@@ -32,32 +32,34 @@ public class FailureImpactsPage extends PngWebPage {
     /**
      * Parameter.
      */
-    public static final String FAILURE = "failure";
+    public static final String OBJECT = "object";
     /**
      * Parameter.
      */
-    public static final String ASSUME_FAILS = "assume_fails";
-
+    public static final String INFO = "info";
     /**
-     * The hypothetical failure.
+     * Parameter.
      */
+    public static final String CONTENT = "content";
+    /**
+     * Parameter.
+     */
+    public static final String SHOW_TARGETS = "showTargets";
     private SegmentObject segmentObject;
-    /**
-     * WHether alternate flows assumed to fail.
-     */
-    private boolean assumeFails;
+    private boolean showTargets;
+    private Subject subject;
 
-    public FailureImpactsPage( PageParameters parameters ) {
+    public DisseminationPage( PageParameters parameters ) {
         super( parameters );
         QueryService queryService = getQueryService();
         Segment segment = PlanPage.findSegment( queryService, parameters );
-        if ( segment != null && parameters.containsKey( FAILURE ) ) {
+        if ( segment != null && parameters.containsKey( OBJECT ) ) {
             try {
-                long id = parameters.getLong( FAILURE );
+                long id = parameters.getLong( OBJECT );
                 try {
                     segmentObject = segment.findFlow( id );
                 } catch ( NotFoundException e ) {
-                    // ignore
+                    // do nothing
                 }
                 if ( segmentObject == null )
                     segmentObject = segment.getNode( id );
@@ -65,20 +67,25 @@ public class FailureImpactsPage extends PngWebPage {
                 LOG.warn( "Invalid failed segment object specified in parameters." );
             }
         }
-        assumeFails = parameters.getAsBoolean( ASSUME_FAILS, false );
+        showTargets = parameters.getAsBoolean( SHOW_TARGETS );
+        String info = parameters.getString( INFO );
+        String content = parameters.getString( CONTENT );
+        subject = new Subject( info, content );
     }
 
     /**
      * {@inheritDoc}
      */
     protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException {
-        if ( segmentObject == null )
-            throw new DiagramException( "Can't find failed segment object" );
-        else
-            return getDiagramFactory().newEssentialFlowMapDiagram(
+        if ( segmentObject == null || subject == null ) {
+            throw new DiagramException( "Missing parameters" );
+        } else {
+            return getDiagramFactory().newDisseminationDiagram(
                     segmentObject,
-                    assumeFails,
+                    subject,
+                    showTargets,
                     size,
                     orientation );
+        }
     }
 }

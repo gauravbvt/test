@@ -6,6 +6,7 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
@@ -384,14 +385,19 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         }
     }
 
-    private void addTrace( ListItem<EOIWrapper> item ) {
+    private void addTrace( final ListItem<EOIWrapper> item ) {
         WebMarkupContainer traceContainer = new WebMarkupContainer( "traceContainer" );
         traceContainer.setOutputMarkupId( true );
         traceContainer.setVisible( !getFlow().isNeed() && !item.getModelObject().isMarkedForCreation() );
         item.addOrReplace( traceContainer );
         AjaxFallbackLink traceLink = new AjaxFallbackLink( "trace" ) {
             public void onClick( AjaxRequestTarget target ) {
-                // todo
+                Change change = new Change( Change.Type.AspectViewed, getFlow(), "dissemination" );
+                change.addQualifier( "show", isSend ? "targets" : "sources" );
+                change.addQualifier(
+                        "subject",
+                        new Subject( getFlow().getName(), item.getModelObject().getContent() ) );
+                update( target, change );
             }
         };
         traceContainer.add( traceLink );

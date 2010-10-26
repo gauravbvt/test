@@ -3,6 +3,7 @@ package com.mindalliance.channels.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ public class Transformation implements Serializable {
     }
 
     public void addSubject( Subject subject ) {
-        if ( !subjects.contains( subject) ) {
+        if ( !subjects.contains( subject ) ) {
             subjects.add( subject );
         }
     }
@@ -60,6 +61,19 @@ public class Transformation implements Serializable {
         return new Subject();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Iterator<Subject> iter = subjects.iterator();
+        while ( iter.hasNext() ) {
+            sb.append( iter.next() );
+            if ( iter.hasNext() ) sb.append( "," );
+        }
+        sb.append( type.getSymbol() );
+        return sb.toString();
+    }
 
     /**
      * A type of transformation.
@@ -80,17 +94,21 @@ public class Transformation implements Serializable {
 
         public String getLabel() {
             switch ( this ) {
-                case Identity: return "none";
-                case Renaming: return "renames";
-                case Aggregation: return "aggregates";
-                default: return name();
+                case Identity:
+                    return "none";
+                case Renaming:
+                    return "same as";
+                case Aggregation:
+                    return "aggregates";
+                default:
+                    return name();
             }
         }
 
         public static List<String> getAllLabels() {
             List<String> labels = new ArrayList<String>();
             for ( Type type : Type.values() ) {
-                if (type != Identity) labels.add( type.getLabel() );
+                if ( type != Identity ) labels.add( type.getLabel() );
             }
             Collections.sort( labels );
             List<String> results = new ArrayList<String>();
@@ -106,7 +124,36 @@ public class Transformation implements Serializable {
             return null;
         }
 
+        /**
+         * Combine transformation types.
+         * Aggregation absorbs Renaming absorbs Identity.
+         *
+         * @param other a type
+         * @return a type
+         */
+        public Type combineWith( Type other ) {
+            return other.compareTo( this ) >= 0 ? other : this;
+        }
 
+        /**
+         * Symbol representing the transformation type.
+         *
+         * @return a string
+         */
+        public String getSymbol() {
+            String symbol;
+            switch ( this ) {
+                case Renaming:
+                    symbol = "=";
+                    break;
+                case Aggregation:
+                    symbol = "=>";
+                    break;
+                default:
+                    symbol = "";
+            }
+            return symbol;
+        }
     }
 
 }

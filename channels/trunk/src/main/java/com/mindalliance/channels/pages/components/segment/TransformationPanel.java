@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.model.Transformation;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -95,7 +96,8 @@ public class TransformationPanel extends AbstractCommandablePanel {
 
     private void addSubject( ListItem<SubjectWrapper> item ) {
         final SubjectWrapper wrapper = item.getModelObject();
-        final List<Subject> inputSubjects = getFlow().getSource().allReceivedSubjects();
+        Part source =  (Part)getFlow().getSource();
+        final List<Subject> inputSubjects = source.getAllSubjectsShared( );
         if ( getTransformation().getType() == Transformation.Type.Renaming ) {
             inputSubjects.remove( new Subject(
                     getFlow().getName(),

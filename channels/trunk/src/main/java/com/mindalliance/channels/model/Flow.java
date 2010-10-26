@@ -289,6 +289,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 message, getShortName( getSource(), false ), getShortName( getTarget(), false ) );
     }
 
+
     /**
      * Provide a description of the flow, when viewed as a receive.
      *
@@ -1112,35 +1113,53 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         );
     }
 
+    /**
+     * Find all subjects in this flow.
+     *
+     * @return a list of subjects
+     */
+    public List<Subject> getAllSubjects() {
+        Set<Subject> subjects = new HashSet<Subject>();
+        for ( ElementOfInformation eoi : getEois() ) {
+            Subject subject = new Subject( getName(), eoi.getContent() );
+            subjects.add( subject );
+        }
+        List<Subject> results = new ArrayList<Subject>();
+        results.addAll( subjects );
+        Collections.sort( results );
+        return results;
+    }
+
     public boolean allowsCommitment( Assignment committer, Assignment beneficiary, Place locale ) {
 
         if ( restriction != null )
             switch ( restriction ) {
-            case SameTopOrganization:
-                return committer.getOrganization().getTopOrganization()
-                        .equals( beneficiary.getOrganization().getTopOrganization() );
+                case SameTopOrganization:
+                    return committer.getOrganization().getTopOrganization()
+                            .equals( beneficiary.getOrganization().getTopOrganization() );
 
-            case SameLocation:
-                ModelEntity committerOrg = committer.getOrganization();
-                ModelEntity beneficiaryOrg = beneficiary.getOrganization();
+                case SameLocation:
+                    ModelEntity committerOrg = committer.getOrganization();
+                    ModelEntity beneficiaryOrg = beneficiary.getOrganization();
 
-                return committerOrg == null
-                    || beneficiaryOrg == null
-                    || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
-                    || beneficiaryOrg.narrowsOrEquals( committerOrg, locale );
+                    return committerOrg == null
+                            || beneficiaryOrg == null
+                            || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
+                            || beneficiaryOrg.narrowsOrEquals( committerOrg, locale );
 
-            case SameOrganization:
-                ModelEntity committerLocation = committer.getLocation();
-                ModelEntity beneficiaryLocation = beneficiary.getLocation();
+                case SameOrganization:
+                    ModelEntity committerLocation = committer.getLocation();
+                    ModelEntity beneficiaryLocation = beneficiary.getLocation();
 
-                return committerLocation == null
-                    || beneficiaryLocation == null
-                    || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
-                    || beneficiaryLocation.narrowsOrEquals( committerLocation, locale );
+                    return committerLocation == null
+                            || beneficiaryLocation == null
+                            || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
+                            || beneficiaryLocation.narrowsOrEquals( committerLocation, locale );
             }
 
         return true;
     }
+
 
     /**
      * The significance of a flow.
@@ -1321,6 +1340,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     || restriction.equals( other )
                     || restriction == SameTopOrganization && other == SameOrganization;
         }
+
+
     }
 
 }

@@ -31,14 +31,14 @@ public class Matcher {
 
     static {
         String[] words = {
-            "a", "an", "the", "it", "they", "we",
-            "and", "or", "so", "then",
-            "of", "by", "from", "at", "in", "out", "into", "off", "to", "on",
-            "any", "all", "some", "most", "many", "few", "both",
-            "for", "if", "then",
-            "after", "before", "during",
-            "first", "last",
-            "I", "you", "they", "us", "your", "my", "them"
+                "a", "an", "the", "it", "they", "we",
+                "and", "or", "so", "then",
+                "of", "by", "from", "at", "in", "out", "into", "off", "to", "on",
+                "any", "all", "some", "most", "many", "few", "both",
+                "for", "if", "then",
+                "after", "before", "during",
+                "first", "last",
+                "I", "you", "they", "us", "your", "my", "them"
         };
         NOISE_WORDS = Arrays.asList( words );
     }
@@ -58,11 +58,11 @@ public class Matcher {
      * @return -- whether they are similar
      */
     public boolean same( String string, String otherString ) {
-        String trimmed = string.trim();
-        String otherTrimmed = otherString.trim();
+        String trimmed = makeCanonical( string );
+        String otherTrimmed = makeCanonical( otherString );
         return !trimmed.isEmpty()
                 && !otherTrimmed.isEmpty()
-                && COLLATOR.compare( trimmed.toLowerCase(), otherTrimmed.toLowerCase() ) == 0;
+                && COLLATOR.compare( trimmed, otherTrimmed ) == 0;
     }
 
     /**
@@ -82,8 +82,8 @@ public class Matcher {
     }
 
     private int commonWords( String string, String other ) {
-        List<String> words = Arrays.asList( StringUtils.split( string.toLowerCase(), SEPARATORS ) );
-        List<String> otherWords = Arrays.asList( StringUtils.split( other.toLowerCase(), SEPARATORS ) );
+        List<String> words = Arrays.asList( StringUtils.split( makeCanonical( string ), SEPARATORS ) );
+        List<String> otherWords = Arrays.asList( StringUtils.split( makeCanonical( other ), SEPARATORS ) );
         return CollectionUtils.intersection( words, otherWords ).size();
     }
 
@@ -95,7 +95,7 @@ public class Matcher {
      */
     private String removeNoise( String s ) {
         List<String> words = new ArrayList<String>();
-        words.addAll( Arrays.asList( StringUtils.split( s.toLowerCase(), SEPARATORS ) ) );
+        words.addAll( Arrays.asList( StringUtils.split( makeCanonical( s ), SEPARATORS ) ) );
         words.removeAll( NOISE_WORDS );
         return StringUtils.join( words, ' ' );
     }
@@ -113,5 +113,15 @@ public class Matcher {
             if ( !eoi.isEmpty() ) eois.add( eoi );
         }
         return eois;
+    }
+
+    /**
+     * Return canonical form of a string.
+     *
+     * @param s a string
+     * @return a string
+     */
+    public String makeCanonical( String s ) {
+        return s.trim().toLowerCase();
     }
 }

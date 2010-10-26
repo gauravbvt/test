@@ -24,10 +24,11 @@ public interface SegmentObject extends Identifiable {
      * Get the essential downstream sharing flows.
      *
      * @param assumeFails assume alternate downstream flows fail
-     * @param queryService
+     * @param queryService a query service
      * @return a list of flows.
      */
     List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService );
 
     String getTitle();
+
 }

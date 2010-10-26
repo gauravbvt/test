@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -19,7 +20,7 @@ public class Subject implements Serializable, Comparable {
      */
     private String info = "";
     /**
-     *  EOI name,
+     * EOI name,
      */
     private String content = "";
     /**
@@ -27,7 +28,8 @@ public class Subject implements Serializable, Comparable {
      */
     private static final int MAX_INFO_LENGTH_IN_LABEL = 20;
 
-    public Subject() {}
+    public Subject() {
+    }
 
     public Subject( String info, String content ) {
         this.info = info;
@@ -38,7 +40,7 @@ public class Subject implements Serializable, Comparable {
         return info;
     }
 
-   public String getContent() {
+    public String getContent() {
         return content;
     }
 
@@ -50,50 +52,56 @@ public class Subject implements Serializable, Comparable {
         this.content = content;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean equals( Object object ) {
+        Matcher matcher = Matcher.getInstance();
         if ( object instanceof Subject ) {
             Subject other = (Subject) object;
-            return info.equals( other.getInfo() ) && content.equals( other.getContent() );
+            return matcher.same( info, other.getInfo() )
+                    && matcher.same( content, other.getContent() );
         } else {
             return false;
         }
     }
 
     /**
-      * {@inheritDoc}
-      */
-     public int hashCode() {
-         int hash = 1;
-         hash = hash * 31 + info.hashCode();
-         hash = hash * 31 + content.hashCode();
-         return hash;
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        Matcher matcher = Matcher.getInstance();
+        int hash = 1;
+        hash = hash * 31 + matcher.makeCanonical( info ).hashCode();
+        hash = hash * 31 + matcher.makeCanonical( content ).hashCode();
+        return hash;
 
-     }
+    }
 
     public String getLabel( int maxInfoLength ) {
         StringBuilder sb = new StringBuilder();
-        sb.append(content);
-        sb.append( " (");
-        sb.append( StringUtils.abbreviate( info, maxInfoLength ));
-        sb.append( ")");
+        sb.append( "\"");
+        sb.append( content );
+        sb.append( "\" in \"" );
+        sb.append( StringUtils.abbreviate( info, maxInfoLength ) );
+        sb.append( "\"" );
         return sb.toString();
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public String toString() {
-         return getLabel( Integer.MAX_VALUE );
+        return getLabel( Integer.MAX_VALUE );
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public int compareTo( Object other ) {
         return Collator.getInstance().compare(
                 getLabel( Integer.MAX_VALUE ),
-                ((Subject)other).getLabel( Integer.MAX_VALUE ) );
+                ( (Subject) other ).getLabel( Integer.MAX_VALUE ) );
     }
 }
 

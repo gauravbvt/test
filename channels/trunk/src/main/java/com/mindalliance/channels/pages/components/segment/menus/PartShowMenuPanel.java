@@ -74,6 +74,19 @@ public class PartShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Failure impacts" ),
                 failureImpactsLink ) );
+        // Dissemination
+        AjaxFallbackLink disseminationLink = new AjaxFallbackLink( "link" ) {
+             @Override
+             public void onClick( AjaxRequestTarget target ) {
+                 Change change = new Change( Change.Type.AspectViewed, getPart(), "dissemination" );
+                 change.addQualifier( "show", "targets" );
+                 update( target, change );
+             }
+         };
+         menuItems.add( new LinkMenuItem(
+                 "menuItem",
+                 new Model<String>( "Dissemination" ),
+                 disseminationLink ) );
         // View part entities
         menuItems.addAll( getModelObjectMenuItems( "menuItem", getModelObjectWrappers() ) );
         return menuItems;

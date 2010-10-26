@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A description of state change.
@@ -130,6 +132,10 @@ public class Change implements Serializable {
      */
     private String property;
     /**
+     * Property qualifiers.
+     */
+    private Map<String, Serializable> qualifiers = new HashMap<String, Serializable>();
+    /**
      * The change is caused by undoing or redoing.
      */
     private boolean undoing;
@@ -216,6 +222,47 @@ public class Change implements Serializable {
 
     public void setProperty( String property ) {
         this.property = property;
+    }
+
+    public Map<String, Serializable> getQualifiers() {
+        return qualifiers;
+    }
+
+    public void setQualifiers( Map<String, Serializable> qualifiers ) {
+        this.qualifiers = qualifiers;
+    }
+
+    /**
+     * Add a named qualifier.
+     *
+     * @param name a string
+     * @param val a serializable
+     */
+    public void addQualifier( String name, Serializable val ) {
+        qualifiers.put( name, val );
+    }
+
+    /**
+     * Whether qualifier at index, if any, equals given value.
+     *
+     * @param name a string
+     * @param val   a serializable
+     * @return a boolean
+     */
+    public boolean hasQualifier( String name, String val ) {
+        Serializable value = qualifiers.get( name );
+        return value != null && value.equals( val );
+    }
+
+    /**
+     * Get named qualifier, if any.
+     *
+     * @param name a string
+     * @return a serializable
+     */
+    public Serializable getQualifier( String name ) {
+        return qualifiers.get( name );
+
     }
 
     public boolean isUndoing() {
@@ -449,9 +496,8 @@ public class Change implements Serializable {
      * @return a boolean
      */
     public boolean isAspect( String property ) {
-        return isAspect() && this.isForProperty( property );
+        return isAspect() && isForProperty( property );
     }
-
 
     /**
      * Whether type is Selected.
