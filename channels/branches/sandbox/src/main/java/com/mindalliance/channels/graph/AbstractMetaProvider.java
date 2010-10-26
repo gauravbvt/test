@@ -1,9 +1,9 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.dao.User;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.Resource;
 
@@ -144,7 +144,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     public static String separate( String s, int lineWrapSize ) {
         StringBuilder sb = new StringBuilder();
         int count = 0;
-        String separators = "  ,.-_?\"";
+        String separators = "  ,.-_?";
         for ( char c : s.toCharArray() ) {
             if ( count >= lineWrapSize && separators.indexOf( c ) >= 0 ) {
                 if ( c != ' ' ) sb.append( c );

@@ -346,6 +346,7 @@ public class PlanManager {
                 }
             }
         }
+        LOG.info( "Deleted {}", plan );
     }
 
     /**
@@ -382,6 +383,8 @@ public class PlanManager {
         // Restart issue scanning
         listeners.fireCreated( newDevPlan );
         listeners.fireProductized( oldDevPlan );
+
+        LOG.info( "Productized {}", oldDevPlan );
     }
 
     /**

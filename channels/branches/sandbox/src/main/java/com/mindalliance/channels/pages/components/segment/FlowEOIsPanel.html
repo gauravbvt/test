@@ -46,16 +46,20 @@
                                             <img border="0" src="images/link_broken.png" valign="middle" alt="unlink" title="Independent classifications. Click for all elements to have the same classification."/>
                                         </a>
                                     </td>
-                                    <td wicket:id="sourcingHeaderContainer">Sourcing</td>
+                                    <td wicket:id="descriptionHeaderContainer">Description</td>
                                     <td wicket:id="handlingHeaderContainer">Special handling</td>
+                                    <td wicket:id="transformationHeaderContainer">Transformation</td>
+                                    <td>&nbsp;</td>
                                 </tr>
                             </thead>
                             <tr wicket:id="eois">
                                 <td><input wicket:id="confirmed" type="checkbox" title="Uncheck to remove the element"/></td>
                                 <td><input wicket:id="content" size="40"/></td>
                                 <td wicket:id="classificationsContainer"><span wicket:id="classifications">[classifications panel]</span></td>
-                                <td wicket:id="sourcingContainer"><textarea wicket:id="sources" rows="1" cols="20">sourcing</textarea></td>
+                                <td wicket:id="descriptionContainer"><textarea wicket:id="description" rows="1" cols="20">description</textarea></td>
                                 <td wicket:id="handlingContainer"><textarea wicket:id="specialHandling" rows="1" cols="20">handling</textarea></td>
+                                <td wicket:id="transformationContainer"><span wicket:id="transformation">[transformation panel]</span></td>
+                                <td wicket:id="traceContainer"><a class="window" wicket:id="trace" href="#">Trace</a></td>
                             </tr>
                         </table>
                     </td>

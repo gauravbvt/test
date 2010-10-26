@@ -75,54 +75,33 @@ public class Organization extends AbstractUnicastChannelable
     /**
      * {@inheritDoc}
      */
-    public boolean isDefinedUsing( final ModelEntity entity ) {
-        return super.isDefinedUsing( entity )
-                ||
-                CollectionUtils.exists(
-                        ancestors(),
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return ModelEntity.isEquivalentToOrDefinedUsing(
-                                        (Organization) obj,
-                                        entity );
-                            }
-                        }
-                )
-                || ModelEntity.isEquivalentToOrDefinedUsing( getLocation(), entity );
-    }
-
-    public boolean narrowsOrEquals( ModelEntity other, Plan plan ) {
-        return super.narrowsOrEquals( other, plan );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected boolean overrideNarrows( ModelEntity other, Plan plan ) {
-        if ( isActual() ) {
-            if ( other.isActual() ) {
-                // Any actual organization narrows any of its ancestors
-                return isWithin( (Organization) other, plan );
-            } else {
-                if ( getParent() != null ) {
-                    return getParent().narrowsOrEquals( other, plan );
-                } else {
-                    return false;
-                }
-            }
-        } else {
-            return false;
-        }
+    @Override
+    public boolean validates( ModelEntity entity, Place locale ) {
+        Organization org = (Organization) entity;
+        return super.validates( org, locale )
+            && ModelEntity.implies( org.getLocation(), location, locale )
+            && ModelEntity.implies( org.getParent(), parent, locale );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
-        // check that location and parent are compatible
-        return ModelEntity.implies( location, ( (Organization) entityType ).getLocation(), plan )
-                && ModelEntity.implies( parent, ( (Organization) entityType ).getParent(), plan );
+    public boolean narrowsOrEquals( ModelEntity other, Place locale ) {
+        return super.narrowsOrEquals( other, locale )
+            || other instanceof Organization && isWithin( (Organization) other, locale );
+    }
+
+    /**
+     * Is this tagged by the entity? (transitive, ignores circularities)
+     *
+     * @param entity an entity
+     * @return a boolean
+     */
+    @Override
+    public boolean hasTag( ModelEntity entity ) {
+        return super.hasTag( entity )
+            || parent != null && parent.hasTag( entity );
     }
 
     public boolean isActorsRequired() {
@@ -155,9 +134,8 @@ public class Organization extends AbstractUnicastChannelable
      * @param agreement an agreement
      */
     public void addAgreement( Agreement agreement ) {
-        if ( !agreements.contains( agreement ) ) {
+        if ( !agreements.contains( agreement ) )
             agreements.add( agreement );
-        }
     }
 
     public Organization getParent() {
@@ -165,8 +143,7 @@ public class Organization extends AbstractUnicastChannelable
     }
 
     public void setParent( Organization parent ) {
-        assert parent == null
-                || ( isActual() && parent.isActual() )
+        assert parent == null || isActual() && parent.isActual()
                 || isType();
         this.parent = parent;
     }
@@ -192,30 +169,26 @@ public class Organization extends AbstractUnicastChannelable
      * Whether this organization has an ancestor that narrows or equals a given organization.
      *
      * @param organization an organization
-     * @param plan
+     * @param locale the default location
      * @return a boolean
      */
-    public boolean isWithin( final Organization organization, final Plan plan ) {
-        return CollectionUtils.exists(
-                ancestors(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        Organization ancestor = (Organization) obj;
-                        return ancestor.narrowsOrEquals( organization, plan );
-                    }
-                }
-        );
+    public boolean isWithin( Organization organization, Place locale ) {
+        for ( Organization org : ancestors() )
+            if ( org.narrowsOrEquals( organization, locale ) )
+                return true;
+
+        return false;
     }
 
     /**
      * Whether this is the same or within a given organization
      *
      * @param organization an organization
-     * @param plan
+     * @param locale the default location
      * @return a boolean
      */
-    public boolean isSameOrWithin( Organization organization, Plan plan ) {
-        return equals( organization ) || isWithin( organization, plan );
+    public boolean isSameOrWithin( Organization organization, Place locale ) {
+        return equals( organization ) || isWithin( organization, locale );
     }
 
     /**
@@ -228,7 +201,7 @@ public class Organization extends AbstractUnicastChannelable
         Iterator<Organization> iter = ancestors().iterator();
         while ( iter.hasNext() ) {
             sb.append( iter.next().getName() );
-            if ( iter.hasNext() ) sb.append( "," );
+            if ( iter.hasNext() ) sb.append( ',' );
         }
         return sb.toString();
     }
@@ -239,19 +212,19 @@ public class Organization extends AbstractUnicastChannelable
      * @return a list of organizations
      */
     public List<Organization> ancestors() {
-        return safeAncestors( new HashSet<Organization>() );
+        Set<Organization> visited = new HashSet<Organization>();
+        safeAncestors( visited );
+        visited.remove( this );
+
+        return new ArrayList<Organization>( visited );
     }
 
-    private List<Organization> safeAncestors( Set<Organization> visited ) {
-        List<Organization> ancestors = new ArrayList<Organization>();
+    private void safeAncestors( Set<Organization> visited ) {
         if ( !visited.contains( this ) ) {
             visited.add( this );
-            if ( parent != null && !visited.contains( parent ) ) {
-                ancestors.add( parent );
-                ancestors.addAll( parent.safeAncestors( visited ) );
-            }
+            if ( parent != null )
+                parent.safeAncestors( visited );
         }
-        return ancestors;
     }
 
     /**
@@ -362,6 +335,7 @@ public class Organization extends AbstractUnicastChannelable
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )
@@ -374,6 +348,7 @@ public class Organization extends AbstractUnicastChannelable
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isIconized() {
         return true;
     }
@@ -381,6 +356,7 @@ public class Organization extends AbstractUnicastChannelable
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean references( final ModelObject mo ) {
         return super.references( mo )
                 || ModelObject.areIdentical( parent, mo )
@@ -418,7 +394,8 @@ public class Organization extends AbstractUnicastChannelable
      * @return an organization
      */
     public Organization getTopOrganization() {
-        if ( parent == null ) return this;
+        if ( parent == null )
+            return this;
         else {
             List<Organization> ancestors = ancestors();
             return ancestors.get( ancestors.size() - 1 );

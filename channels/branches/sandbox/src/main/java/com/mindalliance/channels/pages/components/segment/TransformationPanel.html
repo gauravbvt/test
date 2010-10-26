@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table>
+        <tr>
+            <td>
+                <select wicket:id="type">
+                    <option>none</option>
+                </select>
+            </td>
+            <td class="subjects-container">
+                <ul wicket:id="subjectsContainer">
+                    <li wicket:id="subjects">
+                        <span wicket:id="subject">subject</span>
+                        <select wicket:id="newSubject">
+                            <option>content (info...)</option>
+                        </select>
+                        <a wicket:id="remove" href="#">
+                            <img style="border:0" src="images/delete.png" alt="Remove subject" title="Remove"/>
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

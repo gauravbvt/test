@@ -16,7 +16,9 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.MessagePanel;
@@ -256,6 +258,12 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     private Component failureImpactsPanel;
 
+
+    /**
+     * Dissemination panel.
+     */
+    private Component disseminationPanel;
+
     /**
      * The aspect for entity panel.
      */
@@ -425,13 +433,13 @@ public final class PlanPage extends WebPage implements Updatable {
         addSegmentSelector();
         addPlanSwitcher();
         addModalDialog();
-        // addSegmentImportDialog();
         addSegmentPanel();
         addEntityPanel();
         addAssignmentsPanel();
         addCommitmentsPanel();
         addEOIsPanel();
         addFailureImpactsPanel();
+        addDisseminationPanel( null, false );
         addSegmentEditPanel();
         addPlanEditPanel();
         addSurveysPanel( Survey.UNKNOWN );
@@ -852,6 +860,7 @@ public final class PlanPage extends WebPage implements Updatable {
         } else {
             eoisPanel = new FlowEOIsPanel( "eois",
                     new Model<Flow>( flowViewed ),
+                    getPart().isSend( flowViewed ),
                     getReadOnlyExpansions() );
         }
         form.addOrReplace( eoisPanel );
@@ -872,6 +881,22 @@ public final class PlanPage extends WebPage implements Updatable {
                     getReadOnlyExpansions() );
         }
         form.addOrReplace( failureImpactsPanel );
+    }
+
+    private void addDisseminationPanel( Subject subject, boolean showTargets ) {
+        SegmentObject segmentObject = (SegmentObject) getModelObjectViewed( ModelObject.class, "dissemination" );
+        if ( segmentObject == null ) {
+            disseminationPanel = new Label( "dissemination", "" );
+            disseminationPanel.setOutputMarkupId( true );
+            makeVisible( disseminationPanel, false );
+        } else {
+            disseminationPanel = new DisseminationPanel( "dissemination",
+                    new Model<SegmentObject>( segmentObject ),
+                    subject,
+                    showTargets,
+                    getReadOnlyExpansions() );
+        }
+        form.addOrReplace( disseminationPanel );
     }
 
     /**
@@ -1667,6 +1692,7 @@ public final class PlanPage extends WebPage implements Updatable {
         refreshSurveysPanel( target, change, updated );
         refreshSegmentPanel( target, change, updated );
         refreshFailureImpactsPanel( target, change, updated );
+        refreshDisseminationPanel( target, change, updated );
     }
 
 
@@ -1786,6 +1812,21 @@ public final class PlanPage extends WebPage implements Updatable {
             target.addComponent( failureImpactsPanel );
         } else if ( failureImpactsPanel instanceof FailureImpactsPanel ) {
             ( (FailureImpactsPanel) failureImpactsPanel ).refresh( target, change, updated );
+        }
+    }
+
+    private void refreshDisseminationPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        Identifiable identifiable = change.getSubject( queryService );
+        if ( change.isUnknown()
+                || identifiable instanceof SegmentObject
+                && change.isAspect( "dissemination" ) ) {
+            boolean showTargets = change.hasQualifier( "show", "targets" );
+            Subject subject = (Subject)change.getQualifier( "subject" );
+            addDisseminationPanel( subject, showTargets);
+            target.addComponent( disseminationPanel );
+        } else if ( disseminationPanel instanceof DisseminationPanel ) {
+            ( (DisseminationPanel) disseminationPanel ).refresh( target, change, updated );
         }
     }
 

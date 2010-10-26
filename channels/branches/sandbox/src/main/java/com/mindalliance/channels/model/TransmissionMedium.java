@@ -334,8 +334,9 @@ public class TransmissionMedium extends ModelEntity {
      * {@inheritDoc}
      */
     @Override
-    protected boolean meetsTypeRequirementTests( ModelEntity entityType, Plan plan ) {
-        return getEffectiveCast() == ( (TransmissionMedium) entityType ).getEffectiveCast();
+    public boolean validates( ModelEntity entity, Place locale ) {
+        return super.validates( entity, locale )
+            && getEffectiveCast() == ( (TransmissionMedium) entity ).getEffectiveCast();
     }
 
     /**
@@ -435,19 +436,18 @@ public class TransmissionMedium extends ModelEntity {
 
     /**
      * Aggregate local and inherited delegated-to mediua, without redundancies.
-     *
+     * @param locale the default location
      * @return a list of transmission media
-     * @param plan
      */
-    public List<TransmissionMedium> getEffectiveDelegates( Plan plan ) {
+    public List<TransmissionMedium> getEffectiveDelegates( Place locale ) {
         List<TransmissionMedium> effectiveMedia = new ArrayList<TransmissionMedium>( delegatedToMedia );
         for ( ModelEntity ancestor : getAllTags() ) {
             for ( TransmissionMedium delegate : ( (TransmissionMedium) ancestor ).getDelegatedToMedia() ) {
                 boolean redundant = false;
                 for ( TransmissionMedium effectiveMedium : effectiveMedia ) {
-                    if ( effectiveMedium.narrowsOrEquals( delegate, plan ) ) {
+                    if ( effectiveMedium.narrowsOrEquals( delegate, locale ) ) {
                         redundant = true;
-                    } else if ( delegate.narrowsOrEquals( effectiveMedium, plan ) ) {
+                    } else if ( delegate.narrowsOrEquals( effectiveMedium, locale ) ) {
                         effectiveMedia.remove( effectiveMedium );
                     }
                 }

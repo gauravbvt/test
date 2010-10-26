@@ -335,7 +335,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                 super.changed( change );
             }
         } else {
-            super.changed( change );
+            super.changed( change );                    
         }
     }
 

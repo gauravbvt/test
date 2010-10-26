@@ -121,6 +121,20 @@ public class FlowActionsMenuPanel extends MenuPanel {
                     new Model<String>( "Show failure impacts" ),
                     failureImpactsLink ) );
         }
+        if ( getFlow().isSharing() && !getFlow().getEois().isEmpty() ) {
+            AjaxFallbackLink disseminationLink = new AjaxFallbackLink( "link" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    Change change = new Change( Change.Type.AspectViewed, getFlow(), "dissemination" );
+                    change.addQualifier( "show", (isSend ? "targets" : "sources") );
+                    update( target, change  );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Show dissemination" ),
+                    disseminationLink ) );
+        }
         // Undo and redo
         menuItems.add( this.getUndoMenuItem( "menuItem" ) );
         menuItems.add( this.getRedoMenuItem( "menuItem" ) );

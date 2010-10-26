@@ -6,7 +6,7 @@ import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Place;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +31,13 @@ public class RedundantChannel extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();
-        Plan plan = getPlan();
+        Place locale = getPlan().getLocale();
         for ( Channel channel : channels ) {
             for ( Channel other : channels ) {
-                if ( channel != other ) {
-                    if ( channel.getMedium().narrowsOrEquals( other.getMedium(), plan ) ) {
+                if ( !channel.equals( other ) ) {
+                    if ( channel.getAddress().isEmpty() &&
+                            other.getAddress().isEmpty()
+                            && channel.getMedium().narrowsOrEquals( other.getMedium(), locale ) ) {
                         Issue issue = makeIssue( Issue.VALIDITY, (ModelObject) channelable );
                         issue.setDescription( "Channel \""
                                 + channel.getLabel()
@@ -46,7 +48,7 @@ public class RedundantChannel extends AbstractIssueDetector {
                                 + channel.getLabel()
                                 + "\"\nor remove channel \""
                                 + other.getLabel()
-                                + "\".");
+                                + "\"." );
                         issue.setSeverity( Level.Low );
                         issues.add( issue );
                     }

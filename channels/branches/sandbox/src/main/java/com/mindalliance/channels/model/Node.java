@@ -1,7 +1,7 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.iterators.IteratorChain;
 
 import java.text.Collator;
@@ -237,7 +237,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
         return getTitle();
     }
 
-   /**
+    /**
      * Test if this node is connected to another node by a flow.
      *
      * @param send test if node is a send, otherwise a receive
@@ -256,7 +256,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
     }
 
 
-   /**
+    /**
      * Test if this node is connected to another node by a flow of a given name.
      *
      * @param send test if node is a send, otherwise a receive
@@ -327,21 +327,25 @@ public abstract class Node extends ModelObject implements SegmentObject {
 
     /**
      * Make display string.
-     * @return  a string
+     *
+     * @return a string
      */
     abstract public String displayString();
 
     /**
      * Make abbreviated  string.
+     *
      * @param maxItemLength an int
-     * @return  a string
+     * @return a string
      */
     abstract public String displayString( int maxItemLength );
 
     /**
      * Make abbreviated  string including info name if connector..
+     *
      * @param maxItemLength an int
-     * @return  a string
+     * @return a string
      */
     abstract public String fullDisplayString( int maxItemLength );
+
 }

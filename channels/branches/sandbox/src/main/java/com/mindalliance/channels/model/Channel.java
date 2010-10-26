@@ -263,10 +263,11 @@ public class Channel implements Serializable, Comparable<Channel> {
      * Calculate the intersection of two lists of channels.
      * @param channels a list of channels
      * @param otherChannels a list of channels
-     * @param plan a plan
+     * @param locale the default location
      * @return a list of channels
      */
-    public static List<Channel> intersect( List<Channel> channels, List<Channel> otherChannels, Plan plan ) {
+    public static List<Channel> intersect(
+            List<Channel> channels, List<Channel> otherChannels, Place locale ) {
         List<Channel> intersection = new ArrayList<Channel>();
         List<Channel> shorter;
         List<Channel> longer;
@@ -279,9 +280,10 @@ public class Channel implements Serializable, Comparable<Channel> {
         }
         for ( Channel channel : shorter ) {
             for ( Channel other : longer ) {
-                TransmissionMedium narrowest = ModelEntity.narrowest( channel.getMedium(), other.getMedium(), plan );
+                TransmissionMedium narrowest = ModelEntity.narrowest( channel.getMedium(), other.getMedium(),
+                                                                      locale );
                 if ( narrowest != null ) {
-                    intersection.add( channel.getMedium().equals( narrowest ) ? channel : other ); 
+                    intersection.add( channel.getMedium().equals( narrowest ) ? channel : other );
                     break;
                 }
             }

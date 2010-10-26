@@ -3,6 +3,7 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.graph.diagrams.DisseminationDiagram;
 import com.mindalliance.channels.graph.diagrams.EntitiesNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.FailureImpactsDiagram;
@@ -14,6 +15,7 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,17 +121,14 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
         return new FlowMapDiagram( segment, node, diagramSize, orientation, showingGoals, showingConnectors );
     }
 
-      public Diagram newEntityNetworkDiagram(
+    public Diagram newEntityNetworkDiagram(
             ModelEntity entity,
             EntityRelationship selectedEntityRel,
             double[] diagramSize,
             String orientation ) {
         LOG.debug( "Making entity network diagram on " + entity );
-        EntityNetworkDiagram diagram =
-                new EntityNetworkDiagram( entity, selectedEntityRel, diagramSize, orientation );
-        return diagram;
+        return new EntityNetworkDiagram( entity, selectedEntityRel, diagramSize, orientation );
     }
-
 
 
     /**
@@ -147,15 +146,14 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             double[] diagramSize,
             String orientation ) {
         LOG.debug( "Making plan diagram" );
-        PlanMapDiagram diagram = new PlanMapDiagram( segments,
-                                                     groupByPhase,
-                                                     groupByEvent,
-                                                     group,
-                                                     segment,
-                                                     scRel,
-                                                     diagramSize,
-                                                     orientation );
-        return diagram;
+        return new PlanMapDiagram( segments,
+                groupByPhase,
+                groupByEvent,
+                group,
+                segment,
+                scRel,
+                diagramSize,
+                orientation );
     }
 
     /**
@@ -166,8 +164,7 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             double[] diagramSize,
             String orientation ) {
         LOG.debug( "Making hierarchy diagram on " + hierarchical.getName() );
-        HierarchyDiagram diagram = new HierarchyDiagram( hierarchical, diagramSize, orientation );
-        return diagram;
+        return new HierarchyDiagram( hierarchical, diagramSize, orientation );
     }
 
     /**
@@ -179,9 +176,7 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             double[] diagramSize,
             String orientation ) {
         LOG.debug( "Making critical flow map diagram" );
-        FailureImpactsDiagram diagram =
-                new FailureImpactsDiagram( segmentObject, assumeFails, diagramSize, orientation );
-        return diagram;
+        return new FailureImpactsDiagram( segmentObject, assumeFails, diagramSize, orientation );
     }
 
     /**
@@ -192,14 +187,29 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
             Segment segment,
             EntityRelationship selectedEntityRel,
             double[] diagramSize,
-            String orientation) {
+            String orientation ) {
         LOG.debug( "Making entities network diagram" );
-        EntitiesNetworkDiagram diagram = new EntitiesNetworkDiagram( entityClass,
-                                                                     segment,
-                                                                     selectedEntityRel,
-                                                                     diagramSize,
-                                                                     orientation );
-        return diagram;
+        return new EntitiesNetworkDiagram( entityClass,
+                segment,
+                selectedEntityRel,
+                diagramSize,
+                orientation );
     }
+
+    public Diagram newDisseminationDiagram(
+            SegmentObject segmentObject,
+            Subject subject,
+            boolean showTargets,
+            double[] diagramSize,
+            String orientation ) {
+        LOG.debug( "Making dissemination diagram" );
+        return new DisseminationDiagram(
+                segmentObject,
+                subject,
+                showTargets,
+                diagramSize,
+                orientation );
+    }
+
 
 }

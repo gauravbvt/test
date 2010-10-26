@@ -79,7 +79,7 @@ public class ResponsibilityReportPanel extends Panel {
         );
         add( new ListView<Part>(
                 "parts",
-                segment.findParts( organization, role, jurisdiction, User.current().getPlan() ) ) {
+                segment.findParts( organization, role, jurisdiction, User.current().getPlan().getLocale() ) ) {
             @Override
             protected void populateItem( ListItem<Part> item ) {
                 item.add( new PartReportPanel(
@@ -150,12 +150,12 @@ public class ResponsibilityReportPanel extends Panel {
     private List<Actor> findActualActors( Organization organization, Role role, Place jurisdiction ) {
         Set<Actor> actors = new HashSet<Actor>();
         if ( organization.isActual() ) {
+            Place location = queryService.getCurrentPlan().getLocale();
             ResourceSpec s = new ResourceSpec( null, role, organization, jurisdiction );
             for ( Employment employment : queryService.findAllEmploymentsIn( organization ) ) {
                 ResourceSpec employmentSpec = new ResourceSpec( employment );
-                if ( employmentSpec.narrowsOrEquals( s, User.current().getPlan() ) ) {
+                if ( employmentSpec.narrowsOrEquals( s, location ) )
                     actors.add( employment.getActor() );
-                }
             }
         }
         return new ArrayList<Actor>( actors );

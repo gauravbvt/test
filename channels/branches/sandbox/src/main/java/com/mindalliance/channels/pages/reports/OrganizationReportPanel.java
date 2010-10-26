@@ -1,11 +1,10 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
@@ -116,14 +115,12 @@ public class OrganizationReportPanel extends Panel {
 
     private List<ResourceSpec> findAllResponsibilities() {
         Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
-        Plan plan = User.current().getPlan();
+        Place locale = queryService.getCurrentPlan().getLocale();
 
         for ( Part part : queryService.findAllParts( segment, organization, false ) ) {
-
             Organization partOrg = part.getOrganization();
-
             if ( partOrg == null && organization.isUnknown()
-                 || partOrg != null && !organization.isWithin( partOrg, plan ) )
+                 || partOrg != null && !organization.isWithin( partOrg, locale ) )
                 specs.add(
                     new ResourceSpec(
                         part.getActor(),
@@ -131,6 +128,7 @@ public class OrganizationReportPanel extends Panel {
                         organization,
                         part.getJurisdiction() ) );
         }
+
         return new ArrayList<ResourceSpec>( specs );
     }
 

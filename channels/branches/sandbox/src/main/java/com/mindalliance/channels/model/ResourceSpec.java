@@ -77,14 +77,14 @@ public final class ResourceSpec extends ModelObject implements Specable {
      */
     @Override
     public boolean equals( Object obj ) {
-        if ( obj == null || !Specable.class.isAssignableFrom( obj.getClass() ) )
+        if ( obj == null || !getClass().isAssignableFrom( obj.getClass() ) )
             return false;
 
         Specable specable = (Specable) obj;
         return ModelObject.areEqualOrNull( actor, specable.getActor() )
-                && ModelObject.areEqualOrNull( role, specable.getRole() )
-                && ModelObject.areEqualOrNull( organization, specable.getOrganization() )
-                && Place.samePlace( jurisdiction, specable.getJurisdiction() );
+            && ModelObject.areEqualOrNull( role, specable.getRole() )
+            && ModelObject.areEqualOrNull( organization, specable.getOrganization() )
+            && Place.samePlace( jurisdiction, specable.getJurisdiction() );
     }
 
     /**
@@ -166,7 +166,6 @@ public final class ResourceSpec extends ModelObject implements Specable {
 
     /**
      * Resource is not qualified by a jurisdiction
-     *
      * @return a boolean
      */
     public boolean isAnyJurisdiction() {
@@ -175,7 +174,6 @@ public final class ResourceSpec extends ModelObject implements Specable {
 
     /**
      * Resource is anyone?
-     *
      * @return a boolean
      */
     public boolean isAnyone() {
@@ -212,9 +210,9 @@ public final class ResourceSpec extends ModelObject implements Specable {
      */
     public String getReportTitle() {
         return actor != null ? actor.getName()
-                : role != null ? role.getName()
-                : organization != null ? organization.getName()
-                : "Someone";
+             : role != null ? role.getName()
+             : organization != null ? organization.getName()
+             : "Someone";
     }
 
     /**
@@ -230,18 +228,21 @@ public final class ResourceSpec extends ModelObject implements Specable {
      *
      * @param other     a resource spec
      * @param precisely a boolean - true -> must be equal, false -> must be equal or more narrow
-     * @param plan      the plan to search
+     * @param locale    the default location
      * @return a boolean
      */
-    public boolean matchesOrSubsumedBy( Specable other, boolean precisely, Plan plan ) {
+    public boolean matchesOrSubsumedBy( Specable other, boolean precisely, Place locale ) {
         if ( precisely )
             return matches( actor, other.getActor(), Actor.UNKNOWN )
-                    && matches( role, other.getRole(), Role.UNKNOWN )
-                    && matches( organization, other.getOrganization(), Organization.UNKNOWN )
-                    && Place.samePlace( jurisdiction, other.getJurisdiction() );
+                && matches( role, other.getRole(), Role.UNKNOWN )
+                && matches( organization, other.getOrganization(), Organization.UNKNOWN )
+                && Place.samePlace( jurisdiction, other.getJurisdiction() );
 
         else
-            return subsumedBy( other, plan );
+            return subsumedBy( actor, other.getActor(), locale )
+                && subsumedBy( role, other.getRole(), locale )
+                && subsumedBy( jurisdiction, other.getJurisdiction(), locale )
+                && subsumedBy( organization, other.getOrganization(), locale );
     }
 
     /**
@@ -249,82 +250,71 @@ public final class ResourceSpec extends ModelObject implements Specable {
      *
      * @param other     a resource spec
      * @param precisely a boolean - true -> must be equal, false -> must be equal or more narrow
-     * @param plan      the plan to search
+     * @param locale    the default location
      * @return a boolean
      */
-    public boolean matchesOrSubsumes( Specable other, boolean precisely, Plan plan ) {
+    public boolean matchesOrSubsumes( Specable other, boolean precisely, Place locale ) {
         if ( precisely )
             return matches( other.getActor(), actor, Actor.UNKNOWN )
-                    && matches( other.getRole(), role, Role.UNKNOWN )
-                    && matches( other.getOrganization(), organization, Organization.UNKNOWN )
-                    && Place.samePlace( other.getJurisdiction(), jurisdiction );
+                && matches( other.getRole(), role, Role.UNKNOWN )
+                && matches( other.getOrganization(), organization, Organization.UNKNOWN )
+                && Place.samePlace( other.getJurisdiction(), jurisdiction );
 
         else
-            return subsumes( other, plan );
+            return subsumedBy( other.getActor(), actor, locale )
+                && subsumedBy( other.getRole(), role, locale )
+                && subsumedBy( other.getJurisdiction(), jurisdiction, locale )
+                && subsumedBy( other.getOrganization(), organization, locale );
     }
 
     private static boolean matches( ModelObject object, ModelObject other, ModelObject unknown ) {
         return object == null ? other == null || unknown.equals( other )
-                : other == null ? unknown.equals( object )
-                : object.equals( other );
+             : other == null  ? unknown.equals( object )
+                              : object.equals( other );
     }
 
     /**
-     * Whether this resource spec and another could be describing the same resource.
+     * Whether either entity is null or the first entity is subsumed by the other
+     * (it narrows or equals the other).
      *
-     * @param other a resource spec
-     * @param plan  the plan to search
+     * @param entity an entity
+     * @param other  an entity
+     * @param locale the default location
      * @return a boolean
      */
-    private boolean subsumedBy( Specable other, Plan plan ) {
-        return ModelEntity.subsumedBy( actor, other.getActor(), plan )
-                && ModelEntity.subsumedBy( role, other.getRole(), plan )
-                && ModelEntity.subsumedBy( jurisdiction, other.getJurisdiction(), plan )
-                && ModelEntity.subsumedBy( organization, other.getOrganization(), plan );
-    }
-
-    /**
-     * Whether another spec could be describing could be describing this.
-     *
-     * @param other a resource spec
-     * @param plan  the plan to search
-     * @return a boolean
-     */
-    private boolean subsumes( Specable other, Plan plan ) {
-        return ModelEntity.subsumedBy( other.getActor(), actor, plan )
-                && ModelEntity.subsumedBy( other.getRole(), role, plan )
-                && ModelEntity.subsumedBy( other.getJurisdiction(), jurisdiction, plan )
-                && ModelEntity.subsumedBy( other.getOrganization(), organization, plan );
+    private static boolean subsumedBy(
+            ModelEntity entity, ModelEntity other, Place locale ) {
+        return entity == null || entity.narrowsOrEquals( other, locale );
     }
 
     /**
      * Is this resource spec generalized by another resource spec?
      *
      * @param other a resource spec
-     * @param plan  the plan to search
+     * @param locale the default location
      * @return a boolean
      */
-    public boolean narrowsOrEquals( Specable other, Plan plan ) {
-        Actor oa = other.getActor();
-        Role or = other.getRole();
-        Organization oo = other.getOrganization();
-        Place oj = other.getJurisdiction();
+    public boolean narrowsOrEquals( Specable other, Place locale ) {
+        Actor oA = other.getActor();
+        Role oR = other.getRole();
+        Organization oO = other.getOrganization();
+        Place oJ = other.getJurisdiction();
 
-        boolean aoa = oa == null || Actor.UNKNOWN.equals( oa );
-        boolean aor = or == null || Role.UNKNOWN.equals( or );
-        boolean aoo = oo == null || Organization.UNKNOWN.equals( oo );
-        boolean aoj = oj == null || Place.UNKNOWN.equals( oj );
+        boolean anyOtherA = oA == null || Actor.UNKNOWN.equals( oA );
+        boolean anyOtherR = oR == null || Role.UNKNOWN.equals( oR );
+        boolean anyOtherO = oO == null || Organization.UNKNOWN.equals( oO );
+        boolean anyOtherJ = oJ == null || Place.UNKNOWN.equals( oJ );
 
-        if ( aoa && aor && aoo && aoj )
+        if ( anyOtherA && anyOtherR && anyOtherO && anyOtherJ )
             return false;
 
         if ( equals( other ) )
             return true;
 
-        return ( aoa || actor != null && actor.narrowsOrEquals( oa, plan ) )
-                && ( aor || role != null && role.narrowsOrEquals( or, plan ) )
-                && ( aoo || organization != null && organization.narrowsOrEquals( oo, plan ) )
-                && ( aoj || jurisdiction != null && jurisdiction.narrowsOrEquals( oj, plan ) );
+        return ( anyOtherA || actor != null && actor.narrowsOrEquals( oA, locale ) )
+            && ( anyOtherR || role != null && role.narrowsOrEquals( oR, locale ) )
+            && ( anyOtherO || organization != null && organization.narrowsOrEquals( oO, locale ) )
+            && ( anyOtherJ || jurisdiction != null && jurisdiction.narrowsOrEquals( oJ, locale ) );
     }
 
     /**
@@ -334,21 +324,21 @@ public final class ResourceSpec extends ModelObject implements Specable {
      */
     public boolean hasJob() {
         return actor != null && actor.isActual()
-                && organization != null && organization.isActual();
+            && organization != null && organization.isActual();
     }
 
     /**
      * Whether this resource spec references the entity or an entity that broadens it.
      *
      * @param entity an entity
-     * @param plan   the plan to search
+     * @param locale the default location
      * @return a boolean
      */
-    public boolean hasEntityOrBroader( ModelEntity entity, Plan plan ) {
-        return entity.narrowsOrEquals( actor, plan )
-                || entity.narrowsOrEquals( role, plan )
-                || entity.narrowsOrEquals( organization, plan )
-                || entity.narrowsOrEquals( jurisdiction, plan );
+    public boolean hasEntityOrBroader( ModelEntity entity, Place locale ) {
+        return entity.narrowsOrEquals( actor, locale )
+            || entity.narrowsOrEquals( role, locale )
+            || entity.narrowsOrEquals( organization, locale )
+            || entity.narrowsOrEquals( jurisdiction, locale );
     }
 
     /**
@@ -359,29 +349,29 @@ public final class ResourceSpec extends ModelObject implements Specable {
      */
     public boolean hasEntity( ModelEntity entity ) {
         return entity.isEquivalentToOrIsA( actor, Actor.class )
-                || entity.isEquivalentToOrIsA( role, Role.class )
-                || entity.isEquivalentToOrIsA( organization, Organization.class )
-                || entity.isEquivalentToOrIsA( jurisdiction, Place.class );
+            || entity.isEquivalentToOrIsA( role, Role.class )
+            || entity.isEquivalentToOrIsA( organization, Organization.class )
+            || entity.isEquivalentToOrIsA( jurisdiction, Place.class );
     }
 
     @Override
     public String getDescription() {
-        return actor != null ? actor.getDescription()
-                : role != null ? role.getDescription()
-                : organization == null ? ""
-                : organization.getDescription();
+        return actor != null        ? actor.getDescription()
+             : role != null         ? role.getDescription()
+             : organization == null ? ""
+                                    : organization.getDescription();
     }
 
     /**
      * Find the first job that fits this resource spec.
      *
-     * @param plan the plan to search
+     * @param locale the default location
      * @return a job or null
      */
-    public Job getJob( Plan plan ) {
+    public Job getJob( Place locale ) {
         if ( organization != null )
             for ( Job job : organization.getJobs() )
-                if ( narrowsOrEquals( job.resourceSpec( organization ), plan ) )
+                if ( narrowsOrEquals( job.resourceSpec( organization ), locale ) )
                     return job;
 
         return null;

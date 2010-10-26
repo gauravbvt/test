@@ -1,7 +1,5 @@
 package com.mindalliance.channels.pages.components.surveys;
 
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Identifiable;
@@ -15,11 +13,12 @@ import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.surveys.Contact;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
+import com.mindalliance.channels.surveys.SurveyService;
 import com.mindalliance.channels.util.SortableBeanProvider;
-import com.mindalliance.channels.dao.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -231,7 +230,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
 
     private boolean isFilteredOut( ContactDescriptor contactDescriptor ) {
         if ( !usersScope.equals( ALL ) ) {
-            final Contact contact = contactDescriptor.getContact();
+            Contact contact = contactDescriptor.getContact();
             boolean isSurveyed = CollectionUtils.exists(
                     getSurvey().getContacts(),
                     PredicateUtils.equalPredicate( contact )
@@ -248,7 +247,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
         Place jurisdiction = (Place) filters.get( "jurisdiction" );
         Place place = contactDescriptor.getJurisdiction();
         return jurisdiction != null
-            && ( place == null || !place.matchesOrIsInside( jurisdiction, User.plan() ) );
+            && ( place == null || !place.matchesOrIsInside( jurisdiction, getPlan().getLocale() ) );
     }
 
     public Survey getSurvey() {

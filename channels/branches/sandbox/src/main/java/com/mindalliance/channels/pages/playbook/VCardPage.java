@@ -59,7 +59,7 @@ public class VCardPage extends WebPage {
             throw new AbortWithHttpStatusException( HttpServletResponse.SC_NOT_FOUND, false );
 
         ResourceSpec actorSpec = getActorSpec( flow.getContactedPart() );
-        init( actorSpec.getOrganization(), actorSpec.getJob( User.current().getPlan() ) );
+        init( actorSpec.getOrganization(), actorSpec.getJob( User.current().getPlan().getLocale() ) );
     }
 
     private ResourceSpec getActorSpec( Part part ) {

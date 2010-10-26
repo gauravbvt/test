@@ -322,6 +322,60 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
         public Part getPart() {
             return part;
         }
+                                                         /**
+     * {@inheritDoc}
+     */
+    protected int getPadTop() {
+        return PAD_TOP;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getPadLeft() {
+        return PAD_LEFT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getPadBottom() {
+        return PAD_BOTTOM;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getPadRight() {
+        return PAD_RIGHT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getMinWidth() {
+        return MIN_WIDTH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected int getMinHeight() {
+        return MIN_HEIGHT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void close( AjaxRequestTarget target ) {
+        Change change = new Change( Change.Type.AspectClosed, getSegmentObject(), "failure" );
+        update( target, change );
+    }
+
+    private SegmentObject getSegmentObject() {
+        return (SegmentObject) getModel().getObject();
+    }
+
 
         public void setPart( Part part ) {
             this.part = part;

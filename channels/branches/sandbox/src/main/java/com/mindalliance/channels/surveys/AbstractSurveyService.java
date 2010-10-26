@@ -485,12 +485,14 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
      * {@inheritDoc}
      */
     public void closeSurvey( Survey survey ) throws SurveyException {
-        if ( !survey.isLaunched() ) throw new SurveyException( "Survey not launched." );
-        if ( survey.isClosed() ) throw new SurveyException( "Survey already closed." );
-        doCloseSurvey( survey );
-        survey.setStatus( Survey.Status.Closed );
-        survey.setClosedDate( new Date() );
-        save();
+        if ( survey.isLaunched() ) {
+            if ( survey.isClosed() )
+                throw new SurveyException( "Survey already closed." );
+            doCloseSurvey( survey );
+            survey.setStatus( Survey.Status.Closed );
+            survey.setClosedDate( new Date() );
+            save();
+        }
     }
 
     /**

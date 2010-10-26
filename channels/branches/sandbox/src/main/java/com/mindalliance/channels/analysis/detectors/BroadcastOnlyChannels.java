@@ -46,7 +46,7 @@ public class BroadcastOnlyChannels extends AbstractIssueDetector {
             if ( allBroadcast ) {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
                 issue.setDescription( "There is no guarantee the information will be received because sharing is done only over broadcast channels." );
-                issue.setRemediation( "Add an alternate, non-broadcast channel to the flow" );
+                issue.setRemediation( "Add an alternate, non-broadcast channel to the flow." );
                 issue.setSeverity( getSharingFailureSeverity( flow ) );
                 issues.add( issue );
             }

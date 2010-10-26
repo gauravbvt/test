@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
@@ -65,7 +65,9 @@ public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
 
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/essential.png?segment=" );
+        sb.append( "/essential.png?" );
+        sb.append( FailureImpactsPage.SEGMENT );
+        sb.append( '=' );
         sb.append( getSegmentObject().getSegment().getId() );
         sb.append( '&' );
         sb.append( FailureImpactsPage.FAILURE );

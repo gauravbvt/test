@@ -103,22 +103,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 && ( target.isConnector() || source.isConnector() );
     }
 
-    /**
-     * Get EOIs as a string.
-     *
-     * @return a string
-     */
-    public String getEoisSummary() {
-        StringBuilder sb = new StringBuilder();
-        Iterator<ElementOfInformation> iter = getEois().iterator();
-        while ( iter.hasNext() ) {
-            ElementOfInformation eoi = iter.next();
-            sb.append( eoi.toString() );
-            if ( iter.hasNext() ) sb.append( "\n" );
-        }
-        return sb.toString();
-    }
-
     public boolean isAskedFor() {
         return askedFor;
     }
@@ -305,6 +289,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 message, getShortName( getSource(), false ), getShortName( getTarget(), false ) );
     }
 
+
     /**
      * Provide a description of the flow, when viewed as a receive.
      *
@@ -459,8 +444,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * Initialize relevant properties as a capability satisfying a need.
      *
-     * @param capability a flow
-     * @param need       a flow
+     * @param capability   a flow
+     * @param need         a flow
      * @param queryService a query service
      */
     public void initSharingFrom( Flow capability, Flow need, QueryService queryService ) {
@@ -469,8 +454,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         setSignificanceToTarget( need.getSignificanceToTarget() );
         setChannels( Channel.intersect(
                 capability.getChannels(),
-                need.getChannels(),
-                queryService.getCurrentPlan() ) );
+                need.getChannels(), queryService.getCurrentPlan().getLocale() ) );
         setMaxDelay( Delay.min( capability.getMaxDelay(), need.getMaxDelay() ) );
         setIntent( capability.getIntent() != null ? capability.getIntent() : need.getIntent() );
         setRestriction( Flow.Restriction.resolve(
@@ -888,7 +872,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         for ( ElementOfInformation eoi : eois ) {
             ElementOfInformation copy = new ElementOfInformation();
             copy.setContent( eoi.getContent() );
-            copy.setSources( eoi.getSources() );
+            copy.setDescription( eoi.getDescription() );
             copy.setSpecialHandling( eoi.getSpecialHandling() );
             copy.setClassifications( new ArrayList<Classification>( allClassifications ) );
             eoisCopy.add( copy );
@@ -1111,6 +1095,73 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
+     * Whether ths flow has an EOI of a given name (case insensitive).
+     *
+     * @param content a string
+     * @return a boolean
+     */
+    public boolean hasEoiNamed( final String content ) {
+        return CollectionUtils.exists(
+                getEois(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return Matcher.getInstance().same(
+                                ( (ElementOfInformation) object ).getContent(),
+                                content );
+                    }
+                }
+        );
+    }
+
+    /**
+     * Find all subjects in this flow.
+     *
+     * @return a list of subjects
+     */
+    public List<Subject> getAllSubjects() {
+        Set<Subject> subjects = new HashSet<Subject>();
+        for ( ElementOfInformation eoi : getEois() ) {
+            Subject subject = new Subject( getName(), eoi.getContent() );
+            subjects.add( subject );
+        }
+        List<Subject> results = new ArrayList<Subject>();
+        results.addAll( subjects );
+        Collections.sort( results );
+        return results;
+    }
+
+    public boolean allowsCommitment( Assignment committer, Assignment beneficiary, Place locale ) {
+
+        if ( restriction != null )
+            switch ( restriction ) {
+                case SameTopOrganization:
+                    return committer.getOrganization().getTopOrganization()
+                            .equals( beneficiary.getOrganization().getTopOrganization() );
+
+                case SameLocation:
+                    ModelEntity committerOrg = committer.getOrganization();
+                    ModelEntity beneficiaryOrg = beneficiary.getOrganization();
+
+                    return committerOrg == null
+                            || beneficiaryOrg == null
+                            || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
+                            || beneficiaryOrg.narrowsOrEquals( committerOrg, locale );
+
+                case SameOrganization:
+                    ModelEntity committerLocation = committer.getLocation();
+                    ModelEntity beneficiaryLocation = beneficiary.getLocation();
+
+                    return committerLocation == null
+                            || beneficiaryLocation == null
+                            || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
+                            || beneficiaryLocation.narrowsOrEquals( committerLocation, locale );
+            }
+
+        return true;
+    }
+
+
+    /**
      * The significance of a flow.
      */
     public enum Significance {
@@ -1289,6 +1340,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     || restriction.equals( other )
                     || restriction == SameTopOrganization && other == SameOrganization;
         }
+
+
     }
 
 }

@@ -28,6 +28,7 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Transformation;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.nlp.Matcher;
@@ -199,6 +200,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new PhaseConverter( this ) );
             stream.registerConverter( new ClassificationConverter( this ) );
             stream.registerConverter( new TransmissionMediumConverter( this ) );
+            stream.registerConverter( new TransformationConverter( this ) );
             stream.registerConverter( new ExportConverter( this ) );
         }
 
@@ -227,6 +229,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "channel", Channel.class );
             stream.alias( "job", Job.class );
             stream.alias( "export", Export.class );
+            stream.alias( "transformation", Transformation.class );
         }
 
         /**

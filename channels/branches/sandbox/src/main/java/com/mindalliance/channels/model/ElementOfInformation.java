@@ -26,13 +26,15 @@ public class ElementOfInformation implements Classifiable {
      */
     private List<Classification> classifications = new ArrayList<Classification>();
     /**
-     * Source codes.
+     * Description.
      */
-    private String sources = "";
+    private String description = "";
     /**
      * Special handling codes.
      */
     private String specialHandling = "";
+
+    private Transformation transformation = new Transformation();
 
     public ElementOfInformation() {
     }
@@ -40,7 +42,7 @@ public class ElementOfInformation implements Classifiable {
     public ElementOfInformation( ElementOfInformation eoi ) {
         content = eoi.getContent();
         classifications = new ArrayList<Classification>( eoi.getClassifications() );
-        sources = eoi.getSources();
+        description = eoi.getDescription();
         specialHandling = eoi.getSpecialHandling();
     }
 
@@ -52,12 +54,12 @@ public class ElementOfInformation implements Classifiable {
         this.content = content;
     }
 
-    public String getSources() {
-        return sources;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSources( String sources ) {
-        this.sources = sources;
+    public void setDescription( String description ) {
+        this.description = description;
     }
 
     public String getSpecialHandling() {
@@ -74,6 +76,14 @@ public class ElementOfInformation implements Classifiable {
 
     public void setClassifications( List<Classification> classifications ) {
         this.classifications = classifications;
+    }
+
+    public Transformation getTransformation() {
+        return transformation;
+    }
+
+    public void setTransformation( Transformation transformation ) {
+        this.transformation = transformation;
     }
 
     /**
@@ -122,6 +132,20 @@ public class ElementOfInformation implements Classifiable {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append( getLabel() );
+        if ( !description.isEmpty() ) {
+            sb.append( ": " );
+            sb.append( description );
+        }
+        if ( !specialHandling.isEmpty() ) {
+            sb.append( " -" );
+            sb.append( specialHandling );
+        }
+        return sb.toString();
+    }
+
+    public String getLabel() {
+        StringBuilder sb = new StringBuilder();
         sb.append( content );
         if ( !classifications.isEmpty() ) {
             sb.append( '[' );
@@ -132,16 +156,12 @@ public class ElementOfInformation implements Classifiable {
             sb.deleteCharAt( sb.length() - 1 );
             sb.append( ']' );
         }
-        if ( !sources.isEmpty() ) {
-            sb.append( ": " );
-            sb.append( sources );
-        }
-        if ( !specialHandling.isEmpty() ) {
-            sb.append( " -" );
-            sb.append( specialHandling );
+        if ( !description.isEmpty() || !specialHandling.isEmpty() ) {
+            sb.append( "...");
         }
         return sb.toString();
     }
+
 
     /**
      * {@inheritDoc}
@@ -169,7 +189,7 @@ public class ElementOfInformation implements Classifiable {
      */
     public void retainContentOnly() {
         setClassifications( new ArrayList<Classification>() );
-        setSources( "" );
+        setDescription( "" );
         setSpecialHandling( "" );
 
     }
@@ -203,11 +223,12 @@ public class ElementOfInformation implements Classifiable {
                         ? other.getSpecialHandling()
                         : eoi.getSpecialHandling();
         merged.setSpecialHandling( mergedHandling );
-        String mergedSources =
-                other.getSources().length() > eoi.getSources().length()
-                        ? other.getSources()
-                        : eoi.getSources();
-        merged.setSources( mergedSources );
+        String mergedDescription =
+                other.getDescription().length() > eoi.getDescription().length()
+                        ? other.getDescription()
+                        : eoi.getDescription();
+        merged.setDescription( mergedDescription );
         return merged;
     }
+
 }

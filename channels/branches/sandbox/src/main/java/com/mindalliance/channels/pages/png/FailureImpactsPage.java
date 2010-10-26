@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.PlanPage;
@@ -25,6 +25,10 @@ public class FailureImpactsPage extends PngWebPage {
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( FailureImpactsPage.class );
+    /**
+     * Parameter.
+     */
+    public static final String SEGMENT = "segment";
     /**
      * Parameter.
      */

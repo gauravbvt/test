@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <div class="dissemination">
+        <div class="float-header">
+            <h1>
+                <span wicket:id="caption">Dissemination of eoi</span>
+            </h1>
+        </div>
+        <div class="aspect">
+            <div class="diagram">
+                <div class="picture">
+                    <span wicket:id="disseminationMap">[Dissemination map]</span>
+                </div>
+            </div>
+            <div class="zoom">
+	            <div class="filters">
+                    Trace: <select wicket:id="subjects"><option>subject</option></select>
+                    showing: <input wicket:id="showSources" type="checkbox"> sources
+                    <input wicket:id="showTargets" type="checkbox"> targets
+	            </div>
+                <span wicket:id="fit">Reduce to fit</span>
+            </div>
+            <h4><span wicket:id="tableCaption">Known recipients|sources</span></h4>
+            <div wicket:id="disseminationTable">[task failures panel]</div>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>

@@ -338,15 +338,15 @@ public class Segment extends ModelObject {
      * Find parts played by a given organization, when no roles or actors have been specified.
      *
      * @param organization the organization, possibly Organization.UNKNOWN
-     * @param plan
+     * @param locale the default location
      * @return the appropriate parts
      */
-    public List<Part> findParts( Organization organization, Plan plan ) {
+    public List<Part> findParts( Organization organization, Place locale ) {
         List<Part> partsForRole = new ArrayList<Part>();
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isForOrganization( organization, plan ) && part.getActor() == null && part.getRole() == null )
+            if ( part.isForOrganization( organization, locale ) && part.getActor() == null && part.getRole() == null )
                 partsForRole.add( part );
         }
         return partsForRole;
@@ -358,18 +358,18 @@ public class Segment extends ModelObject {
      * @param organization the organization, possibly Organization.UNKNOWN
      * @param role         the role, possibly Role.UNKNOWN
      * @param jurisdiction
-     * @param plan
+     * @param locale the default location
      * @return the appropriate parts
      */
     public List<Part> findParts(
-            Organization organization, Role role, Place jurisdiction, Plan plan ) {
+            Organization organization, Role role, Place jurisdiction, Place locale ) {
         List<Part> partsForRole = new ArrayList<Part>();
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isForOrganization( organization, plan )
+            if ( part.isForOrganization( organization, locale )
                     && part.isPlayedBy( role )
-                    && ( jurisdiction == null || part.isInJurisdiction( jurisdiction, plan ) ) )
+                    && ( jurisdiction == null || part.isInJurisdiction( jurisdiction, locale ) ) )
                 partsForRole.add( part );
         }
         return partsForRole;
@@ -379,17 +379,17 @@ public class Segment extends ModelObject {
      * Find roles in a given organization used in this segment.
      *
      * @param organization the organization, possibly Organization.UNKNOWN
-     * @param plan
+     * @param locale the default location
      * @return the appropriate roles.
      */
-    public List<Role> findRoles( Organization organization, Plan plan ) {
+    public List<Role> findRoles( Organization organization, Place locale ) {
         boolean hasUnknown = false;
 
         Set<Role> roles = new HashSet<Role>();
         Iterator<Part> parts = parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( part.isForOrganization( organization, plan ) ) {
+            if ( part.isForOrganization( organization, locale ) ) {
                 if ( part.getRole() == null ) {
                     hasUnknown = true;
                 } else {

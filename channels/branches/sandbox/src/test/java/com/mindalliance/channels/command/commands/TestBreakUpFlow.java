@@ -68,7 +68,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         } );
         ElementOfInformation eoi = new ElementOfInformation();
         eoi.setContent( "content" );
-        eoi.setSources( "sources" );
+        eoi.setDescription( "description" );
         eoi.setSpecialHandling( "handling" );
         flow.addEoi( eoi );
         command = new BreakUpFlow( flow );
@@ -108,7 +108,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         assertSame( 1, eois.size() );
         ElementOfInformation eoi = eois.get( 0 );
         assertEquals( "content", eoi.getContent() );
-        assertEquals( "sources", eoi.getSources() );
+        assertEquals( "description", eoi.getDescription() );
         assertEquals( "handling", eoi.getSpecialHandling() );
         assertSame( 1, countFlows() );
         assertTrue( commander.canRedo() );

@@ -6,7 +6,6 @@ import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -15,10 +14,8 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import org.jgrapht.ext.EdgeNameProvider;
-import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
@@ -32,59 +29,7 @@ import java.util.List;
  * Time: 2:31:11 PM
  * A provider of graph attribute providers needed for rendering a segment
  */
-public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
-    /**
-     * Color for subgraph contour
-     */
-    private static final String SUBGRAPH_COLOR = "azure2";
-    /**
-     * Font for subgraph labels.
-     */
-    private static final String SUBGRAPH_FONT = "Arial Bold Oblique";
-    /**
-     * Font size for subgraph labels.
-     */
-    private static final String SUBGRAPH_FONT_SIZE = "10";
-    /**
-     * Font for node labels
-     */
-    public static final String NODE_FONT = "Arial";
-    /**
-     * Font size for node labels.
-     */
-    public static final String NODE_FONT_SIZE = "10";
-    /**
-     * Distance for edge head and tail labels.
-     */
-    private static final String LABEL_DISTANCE = "1.0";
-    /**
-     * Distance for edge head and tail labels.
-     */
-    private static final String LABEL_ANGLE = "45";
-   /**
-     * Highlight pen width.
-     */
-    private static final String HIGHLIGHT_PENWIDTH = "2.0";
-    /**
-     * Highlight pen color.
-     */
-    private static final String HIGHLIGHT_COLOR = "gray";
-    /**
-     * Font of highlighted node.
-     */
-    private static final String HIGHLIGHT_NODE_FONT = "Arial Bold";
-   /**
-     * Segment in context.
-     */
-    private ModelObject context;
-    /**
-     * Whether to show goals.
-     */
-    private boolean showingGoals;
-    /**
-     * Whether to show connectors.
-     */
-    private boolean showingConnectors;
+public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
 
     public FlowMapMetaProvider( ModelObject modelObject,
                                 String outputFormat,
@@ -99,27 +44,7 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
                                 Analyst analyst,
                                 boolean showingGoals,
                                 boolean showingConnectors ) {
-        super( outputFormat, imageDirectory, analyst );
-        this.context = modelObject;
-        this.showingGoals = showingGoals;
-        this.showingConnectors = showingConnectors;
-    }
-
-    public boolean isShowingGoals() {
-        return showingGoals;
-    }
-
-    public boolean isShowingConnectors() {
-        return showingConnectors;
-    }
-
-    /**
-     * Get context provisioned from.
-     *
-     * @return an object that knows of the vertices and edges
-     */
-    public Object getContext() {
-        return context;
+        super( modelObject, outputFormat, imageDirectory, analyst, showingGoals, showingConnectors );
     }
 
     /**
@@ -174,55 +99,20 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
         return new EdgeNameProvider<Flow>() {
             public String getEdgeName( Flow flow ) {
                 String flowName = flow.getName();
+                if ( flow.isAskedFor() && !flowName.endsWith( "?" ) ) {
+                    flowName += "?";
+                }
                 if ( flow.isProhibited() ) {
                     flowName += " (PROHIBITED)";
                 }
                 String label = AbstractMetaProvider.separate(
                         flowName,
                         LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
-                if ( flow.isAskedFor() && !label.endsWith( "?" ) ) {
-                    label = label + "?";
-                }
                 return sanitize( label );
             }
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public VertexNameProvider<Node> getVertexLabelProvider() {
-        return new VertexNameProvider<Node>() {
-            public String getVertexName( Node node ) {
-                String label = getNodeLabel( node ).replaceAll( "\\|", "\\\\n" );
-                return sanitize( label );
-            }
-        };
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public VertexNameProvider<Node> getVertexIDProvider() {
-        return new VertexNameProvider<Node>() {
-            public String getVertexName( Node node ) {
-                return "" + node.getId();
-            }
-        };
-    }
-
-    protected String getNodeLabel( Node node ) {
-        if ( node.isPart() ) {
-            Part part = (Part) node;
-            return part.getFullTitle( "|", getAnalyst().getQueryService() );
-        } else {
-            return "c";
-        }
-    }
-
-    public static String getDefaultActor() {
-        return Part.DEFAULT_ACTOR;
-    }
 
     public DOTAttributeProvider<Node, Flow> getDOTAttributeProvider() {
         return new SegmentDOTAttributeProvider();
@@ -396,16 +286,6 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
 
     }
 
-    private String listActors( List<Actor> partActors ) {
-        StringBuilder sb = new StringBuilder();
-        Iterator<Actor> actors = partActors.iterator();
-        while ( actors.hasNext() ) {
-            sb.append( actors.next().getName() );
-            if ( actors.hasNext() ) sb.append( ", " );
-        }
-        return sb.toString();
-    }
-
     private String summarizeExternalFlows( Iterator<ExternalFlow> externalFlows ) {
         StringBuilder sb = new StringBuilder();
         while ( externalFlows.hasNext() ) {
@@ -414,36 +294,6 @@ public class FlowMapMetaProvider extends AbstractMetaProvider<Node, Flow> {
             if ( externalFlows.hasNext() ) sb.append( " -- " );
         }
         return sanitize( sb.toString() );
-    }
-
-    private String getIcon( ImagingService imagingService, Node node ) {
-        String iconName;
-        int numLines = 0;
-        String imagesDirName;
-        try {
-            imagesDirName = getImageDirectory().getFile().getAbsolutePath();
-        } catch ( IOException e ) {
-            throw new RuntimeException( "Unable to get image directory location", e );
-        }
-        if ( node.isConnector() ) {
-            Connector connector = (Connector) node;
-            Flow flow = connector.getInnerFlow();
-            if ( flow.isNeed() && flow.isSatisfied()
-                    || flow.isCapability() && flow.isSatisfying() ) {
-                iconName = imagesDirName + "/connector";
-            } else {
-                iconName = imagesDirName + "/connector_red";
-            }
-        }
-        // node is a part
-        else {
-            String label = getNodeLabel( node );
-            String[] lines = label.split( "\\|" );
-            numLines = Math.min( lines.length, 5 );
-            Part part = (Part) node;
-            iconName = imagingService.findIconName( part, imagesDirName, getAnalyst().getQueryService() );
-        }
-        return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
     }
 
 }

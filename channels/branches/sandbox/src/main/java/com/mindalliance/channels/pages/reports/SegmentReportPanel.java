@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.query.QueryService;
@@ -158,13 +159,14 @@ public class SegmentReportPanel extends Panel {
                     }
             );
             if ( !actualized ) {
+                final Place locale = queryService.getCurrentPlan().getLocale();
                 boolean narrowed = CollectionUtils.exists(
                         organizationTypes,
                         new Predicate() {
                             public boolean evaluate( Object object ) {
                                 Organization otherType = (Organization) object;
                                 return !type.equals( otherType ) && otherType.narrowsOrEquals( type,
-                                                                                               User.current().getPlan() );
+                                                                                               locale );
                             }
                         }
                 );

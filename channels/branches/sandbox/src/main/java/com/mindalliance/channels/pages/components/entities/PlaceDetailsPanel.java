@@ -179,13 +179,12 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     private List<String> findWithinCandidates() {
         final Place place = getPlace();
         if ( place.isActual() ) {
+            final Place locale = User.current().getPlan().getLocale();
             List<Place> allCandidatePlaces = (List<Place>) CollectionUtils.select(
-                    ( getPlace().isActual()
-                            ? getQueryService().listActualEntities( Place.class )
-                            : getQueryService().listTypeEntities( Place.class ) ),
+                    getQueryService().listActualEntities( Place.class ),
                     new Predicate() {
                         public boolean evaluate( Object object ) {
-                            return !( (Place) object ).matchesOrIsInside( place, User.current().getPlan() );
+                            return !( (Place) object ).matchesOrIsInside( place, locale );
                         }
                     }
             );
@@ -565,9 +564,11 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         List<Place> result = new ArrayList<Place>( places.size() );
         GeoLocation geoLocation = place.geoLocate();
 
+        Place locale = queryService.getCurrentPlan().getLocale();
+
         for ( Place p : places ) {
             if ( !p.equals( place ) &&
-                    ( p.isInside( place, User.current().getPlan() ) || place.isRegion() && p.isGeoLocatedIn( geoLocation ) ) )
+                    ( p.isInside( place, locale ) || place.isRegion() && p.isGeoLocatedIn( geoLocation ) ) )
                 result.add( p );
         }
         return result;

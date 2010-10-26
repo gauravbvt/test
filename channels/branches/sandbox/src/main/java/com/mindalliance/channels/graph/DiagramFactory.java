@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.query.QueryService;
 import org.springframework.core.io.Resource;
 
@@ -72,11 +73,11 @@ public interface DiagramFactory<Vertex, Edge> {
     /**
      * Instantiates a flow map diagram.
      *
-     * @param segment     a segment
-     * @param node        a selected node
-     * @param diagramSize width and height as array of doubles
-     * @param orientation a string
-     * @param showingGoals whether to show goals
+     * @param segment           a segment
+     * @param node              a selected node
+     * @param diagramSize       width and height as array of doubles
+     * @param orientation       a string
+     * @param showingGoals      whether to show goals
      * @param showingConnectors whether to show connectors
      * @return a flow map diagram
      */
@@ -154,11 +155,11 @@ public interface DiagramFactory<Vertex, Edge> {
     /**
      * Instantiates an entities network diagram.
      *
-     * @param entityClass entity class
-     * @param segment a segment or null
+     * @param entityClass       entity class
+     * @param segment           a segment or null
      * @param selectedEntityRel selected releationship
-     * @param diagramSize    width and height as array of doubles
-     * @param orientation    a string
+     * @param diagramSize       width and height as array of doubles
+     * @param orientation       a string
      * @return an entities network diagram
      */
     <T extends ModelEntity> Diagram newEntitiesNetworkDiagram(
@@ -189,4 +190,20 @@ public interface DiagramFactory<Vertex, Edge> {
      */
     QueryService getQueryService();
 
+    /**
+     * Instnatiates a dissemination diagram.
+     *
+     * @param segmentObject a segment object (part or flow)
+     * @param subject       a subject being disseminated
+     * @param showTargets   a boolean
+     * @param diagramSize   width and height as array of doubles
+     * @param orientation   a string
+     * @return a dissemination diagram
+     */
+    Diagram newDisseminationDiagram(
+            SegmentObject segmentObject,
+            Subject subject,
+            boolean showTargets,
+            double[] diagramSize,
+            String orientation );
 }

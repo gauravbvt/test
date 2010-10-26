@@ -201,17 +201,17 @@ public class Employment implements GeoLocatable, Specable {
      * Employment has known actor and/or organization, and matches part.
      *
      * @param part a part
-     * @param plan
+     * @param locale the default location
      * @return a boolean
      */
-    public boolean playsPart( Part part, Plan plan ) {
+    public boolean playsPart( Part part, Place locale ) {
         return !part.isEmpty()
-                &&!getActor().isUnknown()
+                && !getActor().isUnknown()
                 && !getOrganization().isUnknown()
-                && ModelEntity.implies( getActor(), part.getActor(), plan )
-                && ModelEntity.implies( getRole(), part.getRole(), plan )
-                && ModelEntity.implies( getOrganization(), part.getOrganization(), plan )
-                && ModelEntity.implies( getJurisdiction(), part.getJurisdiction(), plan );
+                && ModelEntity.implies( getActor(), part.getActor(), locale )
+                && ModelEntity.implies( getRole(), part.getRole(), locale )
+                && ModelEntity.implies( getOrganization(), part.getOrganization(), locale )
+                && ModelEntity.implies( getJurisdiction(), part.getJurisdiction(), locale );
     }
 
 }

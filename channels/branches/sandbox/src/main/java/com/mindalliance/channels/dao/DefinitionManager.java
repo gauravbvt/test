@@ -333,4 +333,14 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     public int getSize() {
         return definitions.size();
     }
+
+    public String makeUniqueName( String prefix ) {
+        List<String> namesTaken = getPlanNames();
+        int count = 1;
+        String uniqueName = prefix.trim();
+        while ( namesTaken.contains( uniqueName ) )
+            uniqueName = prefix + '(' + ++count + ')';
+
+        return uniqueName;
+    }
 }

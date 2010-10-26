@@ -280,12 +280,11 @@ public class Part extends Node implements GeoLocatable, Specable {
      * Test whether the resource spec of the part intersects a given resource spec
      *
      * @param resourceSpec a resource
-     * @param plan         the plan
+     * @param locale       the default location
      * @return a boolean
      */
-    public boolean isImpliedBy( ResourceSpec resourceSpec, Plan plan ) {
-        return !spec.isAnyone()
-                && resourceSpec.narrowsOrEquals( spec, plan );
+    public boolean isImpliedBy( ResourceSpec resourceSpec, Place locale ) {
+        return !spec.isAnyone() && resourceSpec.narrowsOrEquals( spec, locale );
     }
 
     /**
@@ -399,23 +398,23 @@ public class Part extends Node implements GeoLocatable, Specable {
     /**
      * Test if this part is considered belonging to an organization.
      *
-     * @param o    the organization
-     * @param plan a plan
+     * @param o      the organization
+     * @param locale the default location
      * @return true if belonging
      */
-    public boolean isForOrganization( Organization o, Plan plan ) {
-        return o.narrowsOrEquals( spec.getOrganization(), plan );
+    public boolean isForOrganization( Organization o, Place locale ) {
+        return o.narrowsOrEquals( spec.getOrganization(), locale );
     }
 
     /**
      * Test if this part is considered belonging to an organization.
      *
-     * @param j    the jurisdiction
-     * @param plan a plan
+     * @param j      the jurisdiction
+     * @param locale the default location
      * @return true if belonging
      */
-    public boolean isInJurisdiction( Place j, Plan plan ) {
-        return j.narrowsOrEquals( spec.getJurisdiction(), plan );
+    public boolean isInJurisdiction( Place j, Place locale ) {
+        return j.narrowsOrEquals( spec.getJurisdiction(), locale );
     }
 
     /**
@@ -1133,6 +1132,42 @@ public class Part extends Node implements GeoLocatable, Specable {
         }
         return str;
     }
+
+    /**
+     * Whether a flow is a send of the part.
+     *
+     * @param flow a flow
+     * @return a boolean
+     */
+    public boolean isSend( Flow flow ) {
+        Iterator<Flow> sends = sends();
+        while ( sends.hasNext() ) {
+            if ( sends.next().equals( flow ) ) return true;
+        }
+        return false;
+    }
+
+    /**
+     * List all subjects (info+eoi content) shared with or by the part.
+     *
+     * @param sent a boolean
+     * @return a sorted list of unique subjects
+     */
+    public List<Subject> getAllSubjectsShared( boolean sent ) {
+        Set<Subject> subjects = new HashSet<Subject>();
+        List<Flow> flows = sent ? getAllSharingSends() : getAllSharingReceives();
+        for ( Flow flow : flows ) {
+            for ( ElementOfInformation eoi : flow.getEois() ) {
+                Subject subject = new Subject( flow.getName(), eoi.getContent() );
+                subject.setRoot( sent );
+                subjects.add( subject );
+            }
+        }
+        List<Subject> results = new ArrayList<Subject>( subjects );
+        Collections.sort( results );
+        return results;
+    }
+
 
     /**
      * Category of tasks.

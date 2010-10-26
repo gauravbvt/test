@@ -6,9 +6,9 @@ import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Information sharing flow contradicts explicit capability.
+ * Information sharing flow contradicts related capability.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -52,7 +52,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                         issue.setRemediation( "Modify the definition " +
                                 "of the contradicted capability" +
                                 "\nor modify the definition of this sharing flow." );
-                        issue.setSeverity( Level.Low );
+                        issue.setSeverity( getSharingFailureSeverity( flow ));
                         issues.add( issue );
                     }
                 }
@@ -100,6 +100,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
     }
 
     private void findChannelsMismatch( Flow sharing, Flow capability, List<String> mismatches ) {
+        final Place locale = getPlan().getLocale();
         for ( final Channel sharingChannel : sharing.getEffectiveChannels() ) {
             boolean matched = CollectionUtils.exists(
                     capability.getEffectiveChannels(),
@@ -107,7 +108,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                         public boolean evaluate( Object object ) {
                             return sharingChannel.getMedium().narrowsOrEquals(
                                     ( (Channel) object ).getMedium(),
-                                    getPlan() );
+                                    locale );
                         }
                     }
             );
