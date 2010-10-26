@@ -34,6 +34,8 @@ div.navheader table {
 
 div.book, div.chapter, div.section { padding:50px; }
 
+div.section > div.section { padding:0; }
+
 div.chapter div.section { padding:0; }
 
 div.author { display:none; }
