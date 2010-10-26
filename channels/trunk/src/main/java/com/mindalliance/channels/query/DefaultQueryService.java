@@ -3146,7 +3146,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
-     private void findAllDisseminationsFromFlow(
+    private void findAllDisseminationsFromFlow(
             Flow flow,
             Subject subject,
             boolean showTargets,
@@ -3216,10 +3216,16 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Matcher matcher = Matcher.getInstance();
         for ( ElementOfInformation eoi : flow.getEois() ) {
             Transformation xform = eoi.getTransformation();
-            if ( xform.isNone() ) {
+            if ( xform.isNone() || subject.isRoot() ) {
                 if ( matcher.same( flow.getName(), subject.getInfo() )
                         && matcher.same( eoi.getContent(), subject.getContent() ) ) {
-                    disseminations.add( new Dissemination( flow, xform.getType(), subject, subject ) );
+                    Dissemination dissemination = new Dissemination(
+                                    flow,
+                                    xform.getType(),
+                                    new Subject( subject ),
+                                    new Subject( subject ) );
+                    dissemination.setRoot( subject.isRoot() );
+                    disseminations.add( dissemination );
                 }
             } else {
                 if ( showTargets ) {
@@ -3238,7 +3244,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                     flow,
                                     xform.getType(),
                                     transformedSubject,
-                                    subject ) );
+                                    new Subject( subject ) ) );
                         }
                     }
                 }

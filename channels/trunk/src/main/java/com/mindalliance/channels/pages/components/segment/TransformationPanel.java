@@ -97,7 +97,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
     private void addSubject( ListItem<SubjectWrapper> item ) {
         final SubjectWrapper wrapper = item.getModelObject();
         Part source =  (Part)getFlow().getSource();
-        final List<Subject> inputSubjects = source.getAllSubjectsShared( );
+        final List<Subject> inputSubjects = source.getAllSubjectsShared( false );
         if ( getTransformation().getType() == Transformation.Type.Renaming ) {
             inputSubjects.remove( new Subject(
                     getFlow().getName(),

@@ -1150,14 +1150,17 @@ public class Part extends Node implements GeoLocatable, Specable {
     /**
      * List all subjects (info+eoi content) shared with or by the part.
      *
+     * @param sent a boolean
      * @return a sorted list of unique subjects
      */
-    public List<Subject> getAllSubjectsShared( ) {
+    public List<Subject> getAllSubjectsShared( boolean sent ) {
         Set<Subject> subjects = new HashSet<Subject>();
-        List<Flow> flows = getAllSharingReceives();
+        List<Flow> flows = sent ? getAllSharingSends() : getAllSharingReceives();
         for ( Flow flow : flows ) {
             for ( ElementOfInformation eoi : flow.getEois() ) {
-                subjects.add( new Subject( flow.getName(), eoi.getContent() ) );
+                Subject subject = new Subject( flow.getName(), eoi.getContent() );
+                subject.setRoot( sent );
+                subjects.add( subject );
             }
         }
         List<Subject> results = new ArrayList<Subject>( subjects );

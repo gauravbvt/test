@@ -24,11 +24,21 @@ public class Subject implements Serializable, Comparable {
      */
     private String content = "";
     /**
+     * "Root" subject from which dissemination is traced.
+     */
+    private boolean root;
+    /**
      * Maximum length of info in label.
      */
     private static final int MAX_INFO_LENGTH_IN_LABEL = 20;
 
     public Subject() {
+    }
+
+    public Subject (Subject subject) {
+        super();
+        this.info = subject.getInfo();
+        this.content = subject.getContent();
     }
 
     public Subject( String info, String content ) {
@@ -50,6 +60,14 @@ public class Subject implements Serializable, Comparable {
 
     public void setContent( String content ) {
         this.content = content;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public void setRoot( boolean root ) {
+        this.root = root;
     }
 
     /**

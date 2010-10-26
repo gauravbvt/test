@@ -339,7 +339,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
     private List<Subject> findAllSubjects() {
         List<Subject> subjects;
         if ( isPart() ) {
-            subjects = ( ( (Part) getSegmentObject() ).getAllSubjectsShared() );
+            subjects = ( ( (Part) getSegmentObject() ).getAllSubjectsShared( showTargets ) );
         } else {
             assert getSegmentObject() instanceof Flow;
             subjects = ( ( (Flow) getSegmentObject() ).getAllSubjects() );
@@ -446,7 +446,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
         List<Subject> subjects;
         assert getSegmentObject() != null;
         if ( isPart() ) {
-            subjects = ( (Part) getSegmentObject() ).getAllSubjectsShared();
+            subjects = ( (Part) getSegmentObject() ).getAllSubjectsShared( showTargets );
         } else {
             subjects = ( (Flow) getSegmentObject() ).getAllSubjects();
         }
@@ -506,7 +506,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initTable() {
-            List<DisseminationAssignment> disseminations = findAllDisseminations(
+            List<DisseminationAssignment> disseminations = findAllAssignedDisseminations(
                     (SegmentObject) getModel().getObject(),
                     subject,
                     showTargets );
@@ -525,7 +525,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                     getPageSize() ) );
         }
 
-        private List<DisseminationAssignment> findAllDisseminations(
+        private List<DisseminationAssignment> findAllAssignedDisseminations(
                 SegmentObject segmentObject,
                 Subject localSubject,
                 boolean showTargets ) {

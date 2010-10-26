@@ -31,6 +31,10 @@ public class Dissemination implements Serializable {
     private Subject transformedSubject;
 
     private Subject subject;
+    /**
+     *  Root dissemination.
+     */
+    private boolean root;
 
     public Dissemination() {
     }
@@ -76,6 +80,14 @@ public class Dissemination implements Serializable {
 
     public void setTransformedSubject( Subject transformedSubject ) {
         this.transformedSubject = transformedSubject;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public void setRoot( boolean root ) {
+        this.root = root;
     }
 
     public String getUniqueId() {

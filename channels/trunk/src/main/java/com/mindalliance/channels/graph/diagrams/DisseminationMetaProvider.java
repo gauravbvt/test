@@ -96,7 +96,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                 StringBuilder sb = new StringBuilder();
                 sb.append( edge.getSubject().getLabel( MAX_INFO_LENGTH ) );
                 Transformation.Type xformType = edge.getTransformationType();
-                if ( xformType !=  Transformation.Type.Identity ) {
+                if ( !(edge.isRoot() || xformType ==  Transformation.Type.Identity ) ) {
                     sb.append( " (" );
                     sb.append( xformType.getLabel() );
                     sb.append( " " );
