@@ -229,7 +229,7 @@ public class Channel implements Serializable, Comparable<Channel> {
     public boolean isSecuredFor( List<Classification> classifications ) {
         return medium != null
                 && ( medium.isDirect()
-                || Classification.hasHigherOrEqualClassification( medium.getSecurity(), classifications ) );
+                || Classification.encompass( medium.getSecurity(), classifications ) );
     }
 
     /**

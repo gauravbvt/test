@@ -76,6 +76,16 @@ public class Transformation implements Serializable {
     }
 
     /**
+     * Whether transformation renames a given subject.
+     *
+     * @param subject a subject
+     * @return a boolean
+     */
+    public boolean renames( Subject subject ) {
+        return type == Type.Renaming && subjects.contains( subject );
+    }
+
+    /**
      * A type of transformation.
      */
     public enum Type {

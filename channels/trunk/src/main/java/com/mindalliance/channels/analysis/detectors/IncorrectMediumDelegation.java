@@ -5,8 +5,8 @@ import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.TransmissionMedium;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,7 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
         List<Classification> mediumSec = medium.getEffectiveSecurity();
         return !mediumSec.isEmpty()
                 &&
-                Classification.hasHigherOrEqualClassification(
+                Classification.hasHigherClassification(
                         mediumSec,
                         delegate.getEffectiveSecurity()
                 );

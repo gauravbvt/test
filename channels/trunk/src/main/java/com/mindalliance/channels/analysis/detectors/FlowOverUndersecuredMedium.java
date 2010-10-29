@@ -45,7 +45,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                 TransmissionMedium medium = channel.getMedium();
                 // under-secured immediate medium
                 List<Classification> mediumClassifications = medium.getEffectiveSecurity();
-                if ( !Classification.hasHigherOrEqualClassification(
+                if ( !Classification.encompass(
                         mediumClassifications,
                         eoiClassifications ) ) {
                     Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
@@ -63,7 +63,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                 List<TransmissionMedium> delegates = medium.getEffectiveDelegates( User.current().getPlan().getLocale() );
                 for ( TransmissionMedium delegate : delegates ) {
                     List<Classification> delegateClassifications = medium.getEffectiveSecurity();
-                    if ( !Classification.hasHigherOrEqualClassification(
+                    if ( !Classification.encompass(
                             delegateClassifications,
                             eoiClassifications ) ) {
                         Issue issue = makeIssue( Issue.ROBUSTNESS, flow );

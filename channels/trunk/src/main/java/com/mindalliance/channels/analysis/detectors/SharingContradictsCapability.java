@@ -73,10 +73,10 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
             for ( ElementOfInformation offeredEoi : capability.getEois() ) {
                 if ( matcher.same( sharedEoi.getContent(), offeredEoi.getContent() ) ) {
                     matched = true;
-                    if ( Classification.hasHigherOrEqualClassification(
+                    if ( Classification.hasHigherClassification(
                             offeredEoi.getClassifications(),
                             sharedEoi.getClassifications() ) ||
-                            Classification.hasHigherOrEqualClassification(
+                            Classification.hasHigherClassification(
                                     sharedEoi.getClassifications(),
                                     offeredEoi.getClassifications() ) ) {
                         mismatches.add( "\""

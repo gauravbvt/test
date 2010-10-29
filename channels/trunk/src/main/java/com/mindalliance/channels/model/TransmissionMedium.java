@@ -84,7 +84,8 @@ public class TransmissionMedium extends ModelEntity {
     private void compilePattern( String addressPattern ) {
         compiledPattern = null;
         try {
-            compiledPattern = Pattern.compile( addressPattern );
+            if ( !addressPattern.isEmpty() )
+                compiledPattern = Pattern.compile( addressPattern );
         } catch ( PatternSyntaxException e ) {
             LOG.warn( "Invalid pattern: " + addressPattern );
         }
@@ -426,7 +427,7 @@ public class TransmissionMedium extends ModelEntity {
         for ( ModelEntity ancestor : getAllTags() ) {
             List<Classification> classifications = ( (TransmissionMedium) ancestor ).getSecurity();
             for ( Classification classification : classifications ) {
-                if ( !Classification.hasHigherOrEqualClassification( effective, classification ) ) {
+                if ( !Classification.encompass( effective, classification ) ) {
                     effective.add( classification );
                 }
             }
