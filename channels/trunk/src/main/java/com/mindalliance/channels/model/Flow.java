@@ -1277,6 +1277,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             }
             return null;
         }
+
+        public static boolean same( Intent intent, Intent other ) {
+            return intent != null && other != null & intent.equals( other );
+        }
     }
 
     /**
