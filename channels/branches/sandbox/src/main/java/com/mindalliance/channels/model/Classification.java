@@ -172,12 +172,12 @@ public class Classification implements Identifiable, Comparable {
      * @param classification  a classification
      * @return a boolean
      */
-    public static boolean hasHigherOrEqualClassification(
+    public static boolean encompass(
             final List<Classification> classifications,
             final Classification classification ) {
         List<Classification> others = new ArrayList<Classification>();
         others.add( classification );
-        return hasHigherOrEqualClassification( classifications, others );
+        return encompass( classifications, others );
     }
 
 
@@ -188,12 +188,16 @@ public class Classification implements Identifiable, Comparable {
      * @param others          a list of classifications
      * @return a boolean
      */
-    public static boolean hasHigherOrEqualClassification(
+    public static boolean hasHigherClassification(
             final List<Classification> classifications,
             final List<Classification> others ) {
-        if ( classifications.isEmpty() && others.isEmpty() ) return false;
-        if ( others.isEmpty() ) return true;
-        // None in the other classifications is not encompassed by at least one of the (first) classifications.
+        if ( classifications.isEmpty() && others.isEmpty() )
+            // equal
+            return false;
+        if ( others.isEmpty() )
+            // higher
+            return true;
+        // At least one of the classifications is higher than one of the others.
         for ( Classification other : others ) {
             for ( Classification classification : classifications ) {
                 if ( classification.isHigherThan( other ) ) return true;
@@ -201,4 +205,44 @@ public class Classification implements Identifiable, Comparable {
         }
         return false;
     }
+
+    /**
+     * Whether classifications encompass others.
+     *
+     * @param classifications a list of classifications
+     * @param others          a list of classifications
+     * @return a boolean
+     */
+    public static boolean encompass(
+            final List<Classification> classifications,
+            final List<Classification> others ) {
+        if ( classifications.isEmpty() && others.isEmpty() )
+            // equal
+            return true;
+        // For each other, there is a higher or equal classification 
+        // and none in the others is higher than any of the classifications.
+        for ( final Classification other : others ) {
+            if ( !CollectionUtils.exists(
+                    classifications,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            Classification c = (Classification) object;
+                            return c.encompasses( other );
+                        }
+                    }
+            ) ||
+                    CollectionUtils.exists(
+                            classifications,
+                            new Predicate() {
+                                public boolean evaluate( Object object ) {
+                                    Classification c = (Classification) object;
+                                    return other.isHigherThan( c );
+                                }
+                            }
+                    ) ) return false;
+        }
+        return true;
+    }
+
+
 }

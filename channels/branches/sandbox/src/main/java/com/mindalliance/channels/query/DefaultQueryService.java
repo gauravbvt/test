@@ -2882,6 +2882,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Boolean encompasses( Agreement agreement, Agreement other ) {
+        // TODO - move to Agreement
         if ( other.getBeneficiary().narrowsOrEquals( agreement.getBeneficiary(), getCurrentPlan().getLocale() )
                 && Matcher.getInstance().same( agreement.getInformation(), other.getInformation() ) ) {
             String usage = agreement.getUsage();
@@ -2901,6 +2902,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public Boolean hasCommonEOIs( Flow flow, Flow otherFlow ) {
         List<ElementOfInformation> eois = flow.getEois();
+        final Matcher matcher = Matcher.getInstance();
         final List<ElementOfInformation> otherEois = otherFlow.getEois();
         return CollectionUtils.exists(
                 eois,
@@ -2912,7 +2914,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 new Predicate() {
                                     public boolean evaluate( Object object ) {
                                         String otherEoi = ( (ElementOfInformation) object ).getContent();
-                                        return isSemanticMatch( eoi, otherEoi, Proximity.HIGH );
+                                        return matcher.same( eoi, otherEoi );
                                     }
                                 } );
                     }
@@ -2920,7 +2922,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     /**
-     * Whether none in a list eois is without a strong match with some in another list.
+     * Whether none in a list eois is without a match with some in another list.
      *
      * @param eois     a list of elements of information
      * @param superset a list of elements of information
@@ -2928,17 +2930,18 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public Boolean subsetOf(
             List<ElementOfInformation> eois, final List<ElementOfInformation> superset ) {
+        final Matcher matcher = Matcher.getInstance();
         return !CollectionUtils.exists(
                 eois,
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        final String eoi = ( (ElementOfInformation) object ).getContent();
+                        final String eoiContent = ( (ElementOfInformation) object ).getContent();
                         return !CollectionUtils.exists(
                                 superset,
                                 new Predicate() {
                                     public boolean evaluate( Object object ) {
-                                        final String otherEoi = ( (ElementOfInformation) object ).getContent();
-                                        return isSemanticMatch( eoi, otherEoi, Proximity.HIGH );
+                                        final String otherEoiContent = ( (ElementOfInformation) object ).getContent();
+                                        return matcher.same( eoiContent, otherEoiContent );
                                     }
                                 }
                         );
@@ -2966,6 +2969,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @return a list of flows @param flow
      */
     public List<Flow> getAlternates( Flow flow ) {
+        // TODO - Revise for transformations
         List<Flow> answer = new ArrayList<Flow>();
         if ( flow.isSharing() ) {
             Part target = (Part) flow.getTarget();
@@ -3046,6 +3050,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<ElementOfInformation> commonEOIs = new ArrayList<ElementOfInformation>();
         List<ElementOfInformation> shorter;
         List<ElementOfInformation> longer;
+        final Matcher matcher = Matcher.getInstance();
         if ( flow.getEois().size() <= otherFlow.getEois().size() ) {
             shorter = flow.getEois();
             longer = otherFlow.getEois();
@@ -3067,10 +3072,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         longer,
                         new Predicate() {
                             public boolean evaluate( Object object ) {
-                                return isSemanticMatch(
+                                return matcher.same(
                                         ( (ElementOfInformation) object ).getContent(),
-                                        eoi.getContent(),
-                                        Proximity.HIGH );
+                                        eoi.getContent() );
                             }
                         }
                 );

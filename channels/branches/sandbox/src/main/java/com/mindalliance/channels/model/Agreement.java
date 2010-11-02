@@ -37,7 +37,12 @@ public class Agreement implements Serializable {
     public Agreement() {
     }
 
-    public static boolean impliesAgreement( Commitment commitment ) {
+    /**
+     * Whether a commitment implies an agreement.
+     * @param commitment a commitment
+     * @return a boolean
+     */
+    public static boolean impliesAnAgreement( Commitment commitment ) {
         return !commitment.getBeneficiary().getOrganization().isUnknown()
                 && !commitment.getSharing().getName().isEmpty();
     }
@@ -49,7 +54,7 @@ public class Agreement implements Serializable {
      * @return an agreement
      */
     public static Agreement from( Commitment commitment ) {
-        assert impliesAgreement( commitment );
+        assert impliesAnAgreement( commitment );
         Agreement agreement = new Agreement();
         agreement.setBeneficiary( commitment.getBeneficiary().getOrganization() );
         agreement.setInformation( commitment.getSharing().getName() );
@@ -173,4 +178,6 @@ public class Agreement implements Serializable {
         }
         return hash;
     }
+
+
 }

@@ -8,9 +8,10 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Subject;
+import com.mindalliance.channels.model.Transformation;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -33,45 +34,63 @@ public class FlowDeclassifies extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        Part source = (Part) flow.getSource();
-        List<ElementOfInformation> classifiedEOIs = new ArrayList<ElementOfInformation>();
-        Iterator<Flow> receives = source.receives();
-        while ( receives.hasNext() ) {
-            Flow receive = receives.next();
-            if ( receive.isClassified() )
-                for ( ElementOfInformation eoi : receive.getEois() ) {
-                    if ( eoi.isClassified() ) classifiedEOIs.add( eoi );
+        if ( flow.isSharing() ) {
+            Part source = (Part) flow.getSource();
+            List<Flow> receives = source.getAllSharingReceives();
+            for ( Flow receive : receives ) {
+                for ( ElementOfInformation inEOI : receive.getEois() ) {
+                    if ( inEOI.isClassified() ) {
+                        for ( ElementOfInformation outEOI : flow.getEois() ) {
+                                if ( declassifies( outEOI, flow, inEOI, receive ) ) {
+                                    Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                                    Subject inSubject = new Subject( receive.getName(), inEOI.getContent() );
+                                    Subject outSubject = new Subject( flow.getName(), outEOI.getContent() );
+                                    issue.setDescription( "Received element of information "
+                                            + inSubject
+                                            + " is declassified when sending "
+                                            + outSubject
+                                            +"." );
+                                    issue.setRemediation( "Set the classification of sent "
+                                            +  outSubject
+                                            + " to be at least be as high"
+                                            + " as received "
+                                            + inSubject
+                                            + "\nor lower the classification of received "
+                                            + inSubject
+                                            + "\nor do not send "
+                                            + outSubject);
+                                    issue.setSeverity( Level.Medium );
+                                    issues.add( issue );
+                                }
+                            }
+                        }
+                    }
                 }
-        }
-        for ( ElementOfInformation eoi : flow.getEois() ) {
-            for ( ElementOfInformation classifiedEOI : classifiedEOIs ) {
-                if ( eoi.equals( classifiedEOI )
-                        && Classification.hasHigherOrEqualClassification(
-                        classifiedEOI.getClassifications(),
-                        eoi.getClassifications() ) ) {
-                    Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
-                    issue.setDescription( "Received element of information \""
-                            + classifiedEOI
-                            + "\" is declassified when resent \""
-                            + eoi + "\"" );
-                    issue.setRemediation( "Set the classification of the element sent to be at least be as high"
-                            + " as when it is received"
-                            + "\nor lower the classification of the received element" +
-                            "\nor do not send the classified element" );
-                    issue.setSeverity( Level.Medium );
-                    issues.add( issue );
-                }
-            }
         }
         return issues;
+    }
+
+    private boolean declassifies( ElementOfInformation outEOI, Flow send, ElementOfInformation inEOI, Flow receive ) {
+        Subject subjectSent = new Subject( send.getName(), outEOI.getContent() );
+        Subject subjectReceived = new Subject( receive.getName(), inEOI.getContent() );
+        boolean isSame;
+        Transformation xform = outEOI.getTransformation();
+        if ( xform.isNone() ) {
+            isSame = subjectSent.equals( subjectReceived );
+        } else {
+            isSame = xform.renames( subjectReceived );
+        }
+        return isSame &&
+                Classification.hasHigherClassification(
+                        inEOI.getClassifications(),
+                        outEOI.getClassifications() );
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return Flow.class.isAssignableFrom( modelObject.getClass() )
-                && !( (Flow) modelObject ).isNeed();
+        return Flow.class.isAssignableFrom( modelObject.getClass() );
     }
 
     /**

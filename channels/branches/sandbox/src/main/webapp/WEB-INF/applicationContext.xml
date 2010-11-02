@@ -201,6 +201,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.MeaninglessFlowRestriction"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SharingContradictsCapability"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.RedundantChannel"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantEOI"/>
             </list>
         </property>
     </bean>
@@ -274,6 +275,8 @@ CONFIGURATION NOTES:
     <bean id="pager" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Pager"/>
         <property name="kind" value="Type"/>
+        <property name="addressPattern"
+                  value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
         <property name="cast" value="Unicast"/>
     </bean>
     <bean id="conferenceCall" class="com.mindalliance.channels.model.TransmissionMedium">

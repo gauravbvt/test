@@ -123,10 +123,10 @@ public class PasteFlow extends AbstractCommand {
      */
     @SuppressWarnings( "unchecked" )
     public String getLabel( Commander commander ) throws CommandException {
-        Map<String, Object> copy = commander.getCopy();
-        if ( copy == null ) {
+        if ( !commander.isFlowCopied() ) {
             return super.getLabel( commander );
         } else {
+            Map<String, Object> copy = commander.getCopy();
             boolean isSend = (Boolean) copy.get( "isSend" );
             return isSend
                     ? "Paste capability"

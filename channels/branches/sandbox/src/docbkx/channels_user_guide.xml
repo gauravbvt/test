@@ -5789,6 +5789,19 @@
 
                 <entry><para>No</para></entry>
               </row>
+              <row>
+                <entry><para>Element of information is repeated</para></entry>
+                
+                <entry><para>Low</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Remove the repeated element of information </para>
+                  </listitem>
+               </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>

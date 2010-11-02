@@ -45,7 +45,7 @@ public class AgreementEncompassedByOther extends AbstractIssueDetector {
             List<Issue> issues ) {
         for ( Agreement otherAgreement : otherOrg.getAgreements() ) {
             if ( !organization.equals( otherOrg ) || !agreement.equals( otherAgreement ) ) {
-                if ( getQueryService().encompasses( otherAgreement, otherAgreement ) ) {
+                if ( getQueryService().encompasses( otherAgreement, agreement ) ) {
                     Issue issue = makeIssue( Issue.COMPLETENESS, organization );
                     issue.setDescription( "\"" + otherAgreement.getSummary( otherOrg )
                             + "\" encompasses \"" + agreement.getSummary( organization ) + "\"" );

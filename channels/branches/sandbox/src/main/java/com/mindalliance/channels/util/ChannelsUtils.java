@@ -134,7 +134,7 @@ public final class ChannelsUtils {
         // Make intent null (unknown) if there is a conflict.
         Flow.Intent intent1 = (Flow.Intent) attributes.get( "intent" );
         Flow.Intent intent2 = (Flow.Intent) others.get( "intent" );
-        if ( intent1.equals( intent2 ) ) {
+        if ( Flow.Intent.same( intent1, intent2 ) ) {
             merged.put( "intent", intent1 );
         } else {
             merged.put( "intent", null );
