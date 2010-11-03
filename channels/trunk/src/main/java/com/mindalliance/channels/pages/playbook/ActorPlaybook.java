@@ -49,7 +49,7 @@ public class ActorPlaybook extends PlaybookPage {
                 new Label( "title", "Playbook: " + name ),
                 new Label( "header", name ).setRenderBodyOnly( true ),
                 new Label( "ess", name.endsWith( "s" ) ? "" : "s" ).setRenderBodyOnly( true ),
-                new Label( "planName", service.getCurrentPlan().getName() ),
+                new Label( "planName", service.getPlan().getName() ),
                 new BookmarkablePageLink<TaskPlaybook>( "top", TaskPlaybook.class ),
 
                 new ListView<EventParts>( "events", classifyParts( service, actor ) ) {

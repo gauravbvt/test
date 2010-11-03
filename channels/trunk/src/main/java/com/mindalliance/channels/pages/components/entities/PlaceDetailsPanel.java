@@ -564,7 +564,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         List<Place> result = new ArrayList<Place>( places.size() );
         GeoLocation geoLocation = place.geoLocate();
 
-        Place locale = queryService.getCurrentPlan().getLocale();
+        Place locale = queryService.getPlan().getLocale();
 
         for ( Place p : places ) {
             if ( !p.equals( place ) &&

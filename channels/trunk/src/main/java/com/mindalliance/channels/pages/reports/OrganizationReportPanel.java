@@ -115,7 +115,7 @@ public class OrganizationReportPanel extends Panel {
 
     private List<ResourceSpec> findAllResponsibilities() {
         Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
-        Place locale = queryService.getCurrentPlan().getLocale();
+        Place locale = queryService.getPlan().getLocale();
 
         for ( Part part : queryService.findAllParts( segment, organization, false ) ) {
             Organization partOrg = part.getOrganization();

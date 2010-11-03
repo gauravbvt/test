@@ -446,7 +446,7 @@ public class Segment extends ModelObject {
     @Override
     public void beforeRemove( QueryService queryService ) {
         super.beforeRemove( queryService );
-        queryService.getCurrentPlan().removeSegment( this );
+        queryService.getPlan().removeSegment( this );
     }
 
     /**

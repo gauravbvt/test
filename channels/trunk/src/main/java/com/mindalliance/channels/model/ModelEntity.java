@@ -360,13 +360,13 @@ public abstract class ModelEntity extends ModelObject {
      */
     public boolean narrowsOrEquals( ModelEntity other, Place locale ) {
 
-        // UNKNOWN does not narrow or equals UNKNOWN
-        if ( other == null || isUnknown() || other.isUnknown() )
-            return false;
-
         // same entity
         if ( equals( other ) )
             return true;
+
+        // UNKNOWN does not narrow or equals UNKNOWN
+        if ( other == null || other.isUnknown() )
+            return false;
 
         // Can't compare rotten apples with rotten oranges
         return getClass().isAssignableFrom( other.getClass() )

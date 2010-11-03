@@ -21,10 +21,10 @@
         <div class="report-header">
 			<div class="headerlogo">
 				<div class="headertext">
-		            <h1 wicket:id="plan-name">plan name</h1>
-		            <span wicket:id="organization-name" class="orgname">ACME</span>
-                    <span wicket:id="actor-name" class="actname">John Doe</span>
-		            <h3 class="client" wicket:id="plan-client">client</h3>
+		            <h1 wicket:id="plan.name">plan name</h1>
+		            <span wicket:id="organizationName" class="orgname">ACME</span>
+                    <span wicket:id="actorName" class="actname">John Doe</span>
+		            <h3 class="client" wicket:id="plan.client">client</h3>
 		            <h3 class="date" wicket:id="date">date</h3>
 				</div>
 			</div>
@@ -36,7 +36,7 @@
     <div id="contents">
         <div id="plan">
             <div class="plandesc">
-				<span class="description" wicket:id="plan-description">description</span>
+				<span class="description" wicket:id="planDescription">description</span>
 			</div>
 
             <div class="flow-map" wicket:id="planMap">[flow diagram panel]</div>
@@ -55,7 +55,7 @@
         <div wicket:id="issues">[issues report panel]</div>
         <span wicket:id="org-details">[selected organization header panel]</span> <!-- invisible if no org selected -->
         <span wicket:id="actor-details">[selected actor header panel]</span> <!-- invisible if no actor selected -->
-        <div class="segment" wicket:id="segments">
+        <div class="segment" wicket:id="selector.segments">
             <span wicket:id="segment">[segment report panel]</span>
         </div>
     </div>

@@ -173,9 +173,10 @@ public class Organization extends AbstractUnicastChannelable
      * @return a boolean
      */
     public boolean isWithin( Organization organization, Place locale ) {
-        for ( Organization org : ancestors() )
-            if ( org.narrowsOrEquals( organization, locale ) )
-                return true;
+        if ( getKind().equals( organization.getKind() ) )
+            for ( Organization org : ancestors() )
+                if ( org.narrowsOrEquals( organization, locale ) )
+                    return true;
 
         return false;
     }
@@ -207,9 +208,9 @@ public class Organization extends AbstractUnicastChannelable
     }
 
     /**
-     * List all ancestors, avoiding circularities
+     * List all ancestors, avoiding circularities.
      *
-     * @return a list of organizations
+     * @return a list of organizations, without this one
      */
     public List<Organization> ancestors() {
         Set<Organization> visited = new HashSet<Organization>();

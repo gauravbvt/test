@@ -58,15 +58,13 @@ public class SegmentReportPanel extends Panel {
     private QueryService queryService;
 
     private Organization organization;
+
     private boolean showingDiagrams;
 
     public SegmentReportPanel(
-            String id,
-            IModel<Segment> model,
-            final Organization organization,
-            final Actor actor,
-            final boolean showingIssues,
-            final boolean showingDiagrams ) {
+            String id, IModel<Segment> model, final Organization organization, final Actor actor,
+            final boolean showingIssues, final boolean showingDiagrams ) {
+
         super( id, model );
         this.organization = organization;
         this.showingDiagrams = showingDiagrams;
@@ -74,31 +72,25 @@ public class SegmentReportPanel extends Panel {
         segment = model.getObject();
 
         addSegmentPage( segment, showingIssues );
-        List<Organization> involvedOrgs = findAllInvolvedOrganizations( segment, actor );
-        add( new Label(
-                "no-procedure",
-                "No information sharing procedures" ).setVisible( involvedOrgs.isEmpty() ) );
-        add( new ListView<Organization>(
-                "organizations",
-                involvedOrgs ) {
 
+        List<Organization> involvedOrgs = findAllInvolvedOrganizations( segment, actor );
+        add(
+            new Label( "no-procedure", "No information sharing procedures" )
+                    .setVisible( involvedOrgs.isEmpty() ) );
+        add( new ListView<Organization>( "organizations", involvedOrgs ) {
             @Override
             protected void populateItem( ListItem<Organization> item ) {
                 Organization org = item.getModelObject();
-                item.add( new AttributeModifier(
-                        "class",
-                        true,
-                        new Model<String>(
-                                org.getParent() == null
-                                        ? "top-organization"
-                                        : "sub-organization" ) ) );
-                item.add( new OrganizationReportPanel(
-                        "organization",
-                        org,
-                        organization == null,
-                        segment,
-                        actor,
-                        showingIssues ) );
+                item.add( new AttributeModifier( "class", true,
+                                    new Model<String>( org.getParent() == null
+                                                                    ? "top-organization"
+                                                                    : "sub-organization" ) ) );
+                item.add( new OrganizationReportPanel( "organization",
+                                                       org,
+                                                       organization == null,
+                                                       segment,
+                                                       actor,
+                                                       showingIssues ) );
             }
         } );
     }
@@ -128,8 +120,8 @@ public class SegmentReportPanel extends Panel {
     private List<Organization> findAllInvolvedOrganizations( Segment segment ) {
         Set<Organization> actualOrganizations = new HashSet<Organization>();
         Set<Organization> organizationTypes = new HashSet<Organization>();
-        Iterator<Part> parts = segment.parts();
         boolean hasUnknown = false;
+        Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
             Organization organization = part.getOrganization();
@@ -137,7 +129,8 @@ public class SegmentReportPanel extends Panel {
                 if ( organization.isActual() ) {
                     actualOrganizations.add( organization );
                 } else {
-                    actualOrganizations.addAll( queryService.findAllActualEntitiesMatching(
+                    actualOrganizations.addAll(
+                        queryService.findAllActualEntitiesMatching(
                             Organization.class,
                             organization ) );
                     organizationTypes.add( organization );
@@ -149,27 +142,21 @@ public class SegmentReportPanel extends Panel {
         // Filter out non-leaf,, non-actualized types.
         List<Organization> leafTypes = new ArrayList<Organization>();
         for ( final Organization type : organizationTypes ) {
-            boolean actualized = CollectionUtils.exists(
-                    actualOrganizations,
-                    new Predicate() {
-                        public boolean evaluate( Object object ) {
-                            Organization actualOrg = (Organization) object;
-                            return actualOrg.getAllTags().contains( type );
-                        }
-                    }
-            );
+            boolean actualized = CollectionUtils.exists( actualOrganizations, new Predicate() {
+                public boolean evaluate( Object object ) {
+                    Organization actualOrg = (Organization) object;
+                    return actualOrg.getAllTags().contains( type );
+                }
+            } );
             if ( !actualized ) {
-                final Place locale = queryService.getCurrentPlan().getLocale();
-                boolean narrowed = CollectionUtils.exists(
-                        organizationTypes,
-                        new Predicate() {
-                            public boolean evaluate( Object object ) {
-                                Organization otherType = (Organization) object;
-                                return !type.equals( otherType ) && otherType.narrowsOrEquals( type,
-                                                                                               locale );
-                            }
-                        }
-                );
+                final Place locale = queryService.getPlan().getLocale();
+                boolean narrowed = CollectionUtils.exists( organizationTypes, new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        Organization otherType = (Organization) object;
+                        return !type.equals( otherType ) && otherType
+                                .narrowsOrEquals( type, locale );
+                    }
+                } );
                 if ( !narrowed )
                     leafTypes.add( type );
             }
@@ -186,57 +173,54 @@ public class SegmentReportPanel extends Panel {
         return results;
     }
 
-
     private void addSegmentPage( Segment s, boolean showIssues ) {
         List<Goal> goalList = s.getGoals();
         add( new Label( "name", s.getName() )
-                .add( new AttributeModifier( "name", true,
-                new Model<String>( String.valueOf( s.getId() ) ) ) ),
+                .add( new AttributeModifier( "name",
+                                             true,
+                                             new Model<String>( String.valueOf( s.getId() ) ) ) ),
+             new Label( "description", getSegmentDesc( s ) )
+                     .setRenderBodyOnly( true )
+                     .setVisible( !getSegmentDesc( s ).isEmpty() ),
+             new Label( "event", s.getPhaseEventTitle() ).setVisible( s.getEvent() != null ),
+             new WebMarkupContainer( "goal-lead" )
+                     .setRenderBodyOnly( true )
+                     .setVisible( !goalList.isEmpty() ),
+             new WebMarkupContainer( "goal-section" )
+                     .add( new ListView<Goal>( "goals", goalList ) {
+                         @Override
+                         protected void populateItem( ListItem<Goal> item ) {
+                             Goal goal = item.getModelObject();
+                             item.add( new Label( "goal", goal.getLabel() )
+                                     .setRenderBodyOnly( true ),
+                                       new Label( "goal-desc", goal.getDescription() )
+                                               .setRenderBodyOnly( true ) );
+                         }
+                     } ).setVisible( !goalList.isEmpty() ),
 
-                new Label( "description", getSegmentDesc( s ) )
-                        .setRenderBodyOnly( true )
-                        .setVisible( !getSegmentDesc( s ).isEmpty() ),
-
-                new Label( "event", s.getPhaseEventTitle() ).setVisible( s.getEvent() != null ),
-
-                new WebMarkupContainer( "goal-lead" )
-                        .setRenderBodyOnly( true )
-                        .setVisible( !goalList.isEmpty() ),
-
-                new WebMarkupContainer( "goal-section" )
-                        .add( new ListView<Goal>( "goals", goalList ) {
-                            @Override
-                            protected void populateItem( ListItem<Goal> item ) {
-                                Goal goal = item.getModelObject();
-                                item.add( new Label( "goal", goal.getLabel() )
-                                        .setRenderBodyOnly( true ),
-                                        new Label( "goal-desc", goal.getDescription() )
-                                                .setRenderBodyOnly( true ) );
-                            }
-                        } ).setVisible( !goalList.isEmpty() ),
-
-
-                new DocumentsReportPanel( "documents", new Model<ModelObject>( s ) ),
-                new IssuesReportPanel( "issues", new Model<ModelObject>( s ) )
-                        .setVisible( showIssues )
-        );
+             new DocumentsReportPanel( "documents", new Model<ModelObject>( s ) ),
+             new IssuesReportPanel( "issues", new Model<ModelObject>( s ) )
+                     .setVisible( showIssues ) );
         addFlowDiagram( s );
         WebMarkupContainer flowMapLink = new WebMarkupContainer( "flow-link" );
         flowMapLink.setVisible( User.current().isPlanner() );
-        flowMapLink.add( new AttributeModifier( "href", true, new Model<String>( getFlowMapLink( s ) ) ) );
+        flowMapLink.add( new AttributeModifier( "href",
+                                                true,
+                                                new Model<String>( getFlowMapLink( s ) ) ) );
         flowMapLink.add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) );
         flowMapLink.setVisible( showingDiagrams );
         add( flowMapLink );
     }
 
-
     private void addFlowDiagram( Segment s ) {
         if ( User.current().isPlanner() && showingDiagrams ) {
-            add( new FlowMapDiagramPanel( "flowMap",
-                    new Model<Segment>( s ),
-                    null,
-                    //size,
-                    new Settings( null, DiagramFactory.LEFT_RIGHT, SIZE, true, false ) ) );
+            add( new FlowMapDiagramPanel( "flowMap", new Model<Segment>( s ), null,
+                                          //size,
+                                          new Settings( null,
+                                                        DiagramFactory.LEFT_RIGHT,
+                                                        SIZE,
+                                                        true,
+                                                        false ) ) );
         } else {
             add( new Label( "flowMap", "" ).setVisible( false ) );
         }
@@ -248,7 +232,6 @@ public class SegmentReportPanel extends Panel {
 
     private static String getSegmentDesc( Segment s ) {
         String desc = s.getDescription();
-        return desc.isEmpty() || !desc.endsWith( "." ) ?
-                desc + "." : desc;
+        return desc.isEmpty() || !desc.endsWith( "." ) ? desc + "." : desc;
     }
 }

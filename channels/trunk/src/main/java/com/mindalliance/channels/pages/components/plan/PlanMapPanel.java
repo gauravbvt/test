@@ -209,7 +209,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
                 : new Settings( ".plan .picture", null, diagramSize, true, true );
         planMapDiagramPanel = new PlanMapDiagramPanel(
                 "plan-map",
-                new PropertyModel<ArrayList<Segment>>( this, "allSegments" ),
+                new PropertyModel<List<Segment>>( this, "allSegments" ),
                 groupByPhase,
                 groupByEvent,
                 selectedGroup,

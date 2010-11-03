@@ -124,6 +124,10 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         this.planUri = planUri;
     }
 
+    public String getPlanUri() {
+        return planUri;
+    }
+
     @Before
     public void setUp() throws IOException {
 

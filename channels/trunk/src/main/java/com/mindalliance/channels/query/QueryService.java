@@ -989,13 +989,6 @@ public interface QueryService {
     List<Goal> findAllGoalsImpactedByFailure( Part part );
 
     /**
-     * Get current plan.
-     *
-     * @return a plan
-     */
-    Plan getCurrentPlan();
-
-    /**
      * Find user names of all planners for current plan.
      *
      * @return a list of strings
@@ -1390,5 +1383,11 @@ public interface QueryService {
             Subject subject,
             Boolean showTargets );
 
+    List<Employment> findAllEmploymentsWithUnknownActors();
 
+    /**
+     * Return the plan used by this service.
+     * @return a plan
+     */
+    Plan getPlan();
 }

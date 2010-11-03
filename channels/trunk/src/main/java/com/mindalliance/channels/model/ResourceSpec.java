@@ -300,31 +300,22 @@ public final class ResourceSpec extends ModelObject implements Specable {
         Organization oO = other.getOrganization();
         Place oJ = other.getJurisdiction();
 
-        boolean anyOtherA = oA == null || Actor.UNKNOWN.equals( oA );
-        boolean anyOtherR = oR == null || Role.UNKNOWN.equals( oR );
-        boolean anyOtherO = oO == null || Organization.UNKNOWN.equals( oO );
-        boolean anyOtherJ = oJ == null || Place.UNKNOWN.equals( oJ );
+        boolean anyOtherA = oA == null ;
+        boolean anyOtherR = oR == null ;
+        boolean anyOtherO = oO == null ;
 
-        if ( anyOtherA && anyOtherR && anyOtherO && anyOtherJ )
+        if ( anyOtherA && anyOtherR && anyOtherO && oJ == null )
             return false;
 
         if ( equals( other ) )
             return true;
 
+        boolean anyOtherJ = oJ == null || oJ.isUnknown() && jurisdiction == null ;
+
         return ( anyOtherA || actor != null && actor.narrowsOrEquals( oA, locale ) )
             && ( anyOtherR || role != null && role.narrowsOrEquals( oR, locale ) )
             && ( anyOtherO || organization != null && organization.narrowsOrEquals( oO, locale ) )
             && ( anyOtherJ || jurisdiction != null && jurisdiction.narrowsOrEquals( oJ, locale ) );
-    }
-
-    /**
-     * Is a job specified (actor and organization set)?
-     *
-     * @return a boolean
-     */
-    public boolean hasJob() {
-        return actor != null && actor.isActual()
-            && organization != null && organization.isActual();
     }
 
     /**

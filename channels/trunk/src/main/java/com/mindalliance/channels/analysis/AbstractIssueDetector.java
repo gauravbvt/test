@@ -163,7 +163,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      * @return a plan
      */
     protected Plan getPlan() {
-        return queryService.getCurrentPlan();
+        return queryService.getPlan();
     }
 
     /**
