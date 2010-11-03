@@ -13,6 +13,7 @@ import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
@@ -3099,6 +3100,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     (Part) segmentObject,
                     subject,
                     Transformation.Type.Identity,
+                    new Delay(),
                     showTargets,
                     disseminations );
         } else {
@@ -3115,6 +3117,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             Part part,
             Subject subject,
             Transformation.Type cumulativeTranformation,
+            Delay cumulativeDelay,
             boolean showTargets,
             List<Dissemination> disseminations ) {
         List<Flow> candidates = showTargets
@@ -3135,6 +3138,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         : candidate.getSource() );
                 List<Dissemination> immediateDisseminations = findDisseminationsInFlow( candidate, subject, showTargets );
                 for ( Dissemination immediateDissemination : immediateDisseminations ) {
+                    immediateDissemination.addToDelay( cumulativeDelay );
                     disseminations.add( immediateDissemination );
                     Subject nextSubject = showTargets
                             ? immediateDissemination.getSubject()
@@ -3143,6 +3147,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                             disseminationPart,
                             nextSubject,
                             cumulativeTranformation.combineWith( immediateDissemination.getTransformationType() ),
+                            immediateDissemination.getDelay(),
                             showTargets,
                             disseminations );
                 }
@@ -3162,6 +3167,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 immediateDisseminations.add( new Dissemination(
                         flow,
                         Transformation.Type.Identity,
+                        flow.getMaxDelay(),
                         subject,
                         subject ) );
             } else {
@@ -3170,6 +3176,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     immediateDisseminations.add( new Dissemination(
                             flow,
                             Transformation.Type.Identity,
+                            flow.getMaxDelay(),
                             subject,
                             subject ) );
                 } else {
@@ -3177,6 +3184,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         immediateDisseminations.add( new Dissemination(
                                 flow,
                                 xform.getType(),
+                                flow.getMaxDelay(),
                                 transformedSubject,
                                 subject ) );
                     }
@@ -3194,6 +3202,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         part,
                         newSubject,
                         immediateDissemination.getTransformationType(),
+                        immediateDissemination.getDelay(),
                         showTargets,
                         disseminations );
             }
@@ -3226,6 +3235,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     Dissemination dissemination = new Dissemination(
                                     flow,
                                     xform.getType(),
+                                    flow.getMaxDelay(),
                                     new Subject( subject ),
                                     new Subject( subject ) );
                     dissemination.setRoot( subject.isRoot() );
@@ -3237,6 +3247,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         disseminations.add( new Dissemination(
                                 flow,
                                 xform.getType(),
+                                flow.getMaxDelay(),
                                 subject,
                                 new Subject( flow.getName(), eoi.getContent() ) ) );
                     }
@@ -3247,6 +3258,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                             disseminations.add( new Dissemination(
                                     flow,
                                     xform.getType(),
+                                    flow.getMaxDelay(),
                                     transformedSubject,
                                     new Subject( subject ) ) );
                         }

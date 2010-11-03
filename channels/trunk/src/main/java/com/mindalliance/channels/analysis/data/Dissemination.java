@@ -1,5 +1,6 @@
 package com.mindalliance.channels.analysis.data;
 
+import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Subject;
@@ -30,6 +31,11 @@ public class Dissemination implements Serializable {
      */
     private Subject transformedSubject;
 
+    /**
+     * Transmission delay.
+     */
+    private Delay delay;
+
     private Subject subject;
     /**
      *  Root dissemination.
@@ -42,9 +48,11 @@ public class Dissemination implements Serializable {
     public Dissemination(
             Flow flow,
             Transformation.Type transformationType,
+            Delay delay,
             Subject transformedSubject,
             Subject subject ) {
         this.flow = flow;
+        this.delay = delay;
         this.transformationType = transformationType;
         this.transformedSubject = transformedSubject;
         this.subject = subject;
@@ -90,6 +98,14 @@ public class Dissemination implements Serializable {
         this.root = root;
     }
 
+    public Delay getDelay() {
+        return delay;
+    }
+
+    public void setDelay( Delay delay ) {
+        this.delay = delay;
+    }
+
     public String getUniqueId() {
         return flow.getId() + ":" + hashCode();
     }
@@ -109,5 +125,9 @@ public class Dissemination implements Serializable {
         return transformedSubject
                 + transformationType.getSymbol()
                 + subject;
+    }
+
+    public void addToDelay( Delay val ) {
+        setDelay( delay.add( val ) );
     }
 }

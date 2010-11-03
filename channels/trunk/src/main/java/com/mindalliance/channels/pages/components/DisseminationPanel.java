@@ -516,8 +516,9 @@ public class DisseminationPanel extends FloatingCommandablePanel {
             columns.add( makeLinkColumn( "Jurisdiction", "assignment.jurisdiction", "assignment.jurisdiction.name", EMPTY ) );
             columns.add( makeLinkColumn( "Organization", "assignment.organization", "assignment.organization.name", EMPTY ) );
             columns.add( makeLinkColumn( "Task", "assignment.part", "assignment.part.task", EMPTY ) );
-            columns.add( makeColumn( "Subject", "dissemination.subject", "dissemination.subject.label", EMPTY ) );
-            columns.add( makeColumn( "Transformation", "dissemination.transformationType", "dissemination.transformationType.label", EMPTY ) );
+            columns.add( makeColumn( "Subject", "dissemination.subject", EMPTY ) );
+            columns.add( makeColumn( "Transformation", "dissemination.transformationType.label", EMPTY ) );
+            columns.add( makeColumn( "Max delay", "dissemination.delay", null, EMPTY, null, "dissemination.delay" ) );
             add( new AjaxFallbackDefaultDataTable(
                     "disseminationTable",
                     columns,
