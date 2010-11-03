@@ -240,7 +240,13 @@ public class Delay implements Comparable, Serializable {
      */
     public int compareTo( Object obj ) {
         Delay other = (Delay) obj;
-        return new Integer( getSeconds() ).compareTo( other.getSeconds() );
+        int seconds = getSeconds();
+        int otherSeconds = other.getSeconds();
+        return seconds == otherSeconds
+                ? 0
+                : seconds < otherSeconds
+                ? -1
+                : 1;
     }
 
     /**

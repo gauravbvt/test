@@ -2,6 +2,7 @@ package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.analysis.data.Dissemination;
+import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.SegmentObject;
@@ -52,7 +53,12 @@ public class DisseminationGraphBuilder implements GraphBuilder<Node, Disseminati
                     public Dissemination createEdge( Node sourceVertex, Node targetVertex ) {
                         InternalFlow flow = new InternalFlow( sourceVertex, targetVertex, "" );
                         flow.setId( IdCounter++ );
-                        return new Dissemination( flow, Transformation.Type.Identity, new Subject(), new Subject() );
+                        return new Dissemination(
+                                flow,
+                                Transformation.Type.Identity, 
+                                new Delay(),
+                                new Subject(),
+                                new Subject() );
                     }
 
                 } );

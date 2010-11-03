@@ -34,13 +34,20 @@ public class PropertyComparator<T> implements Comparator<T> {
     public int compare( T object, T other ) {
         int comp;
         String sortProperty = sortParam.getProperty();
-        String value = evaluatePropertyToString( object, sortProperty );
-        String otherValue = evaluatePropertyToString( other, sortProperty );
-        comp = value.compareTo( otherValue );
+        Comparable value = evaluatePropertyToComparable( object, sortProperty );
+        Comparable otherValue = evaluatePropertyToComparable( other, sortProperty );
+        if ( value == null && otherValue == null )
+            comp = 0;
+        else if ( value == null )
+            comp = -1;
+        else if ( otherValue == null )
+            comp = 1;
+        else
+            comp = value.compareTo( otherValue );
         return sortParam.isAscending() ? comp * -1 : comp;
     }
 
-    private String evaluatePropertyToString( T object, String propPath ) {
+    private Comparable evaluatePropertyToComparable( T object, String propPath ) {
         Object value;
         try {
             value = PropertyUtils.getProperty( object, propPath );
@@ -56,7 +63,15 @@ public class PropertyComparator<T> implements Comparator<T> {
             System.out.println( e );
             value = null;
         }
-        return value == null ? "" : value.toString();
+        if ( value != null ) {
+            if ( value instanceof Comparable ) {
+                return (Comparable)value;
+            } else {
+                return value.toString();
+            }
+        } else {
+            return null;
+        }
     }
 
 }
