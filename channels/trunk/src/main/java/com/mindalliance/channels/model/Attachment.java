@@ -13,6 +13,7 @@ import java.text.MessageFormat;
  * Time: 2:42:35 PM
  */
 public class Attachment implements Serializable, Comparable<Attachment> {
+
     /**
      * The specific kind of document.
      */
@@ -121,6 +122,15 @@ public class Attachment implements Serializable, Comparable<Attachment> {
     }
 
     /**
+     * Get a label.
+     *
+     * @return a string
+     */
+    public String getLabel() {
+        return getName().isEmpty() ? getUrl() : getName();
+    }
+
+    /**
      * Represents policy violation.
      *
      * @return a boolean
@@ -178,8 +188,9 @@ public class Attachment implements Serializable, Comparable<Attachment> {
 
     /**
      * Merge two attachments into one.
+     *
      * @param attachment an attachment
-     * @param other an attachment
+     * @param other      an attachment
      * @return an attachment
      */
     public static Attachment merge( Attachment attachment, Attachment other ) {
@@ -191,6 +202,22 @@ public class Attachment implements Serializable, Comparable<Attachment> {
         return merged;
     }
 
+    /**
+     * Is a prohibiting policy.
+     *
+     * @return a boolean
+     */
+    public boolean isProhibition() {
+        return getType() == Attachment.Type.PolicyCant;
+    }
 
+    /**
+     * Is a mandating policy.
+     *
+     * @return a boolean
+     */
+    public boolean isMandate() {
+        return getType() == Attachment.Type.PolicyMust;
+    }
 
 }

@@ -16,6 +16,7 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
 import org.apache.commons.collections.IteratorUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,7 +32,7 @@ import java.util.Set;
 /**
  * Query facade on a collection of assignments.
  */
-public class Assignments implements Iterable<Assignment> {
+public class Assignments implements Iterable<Assignment>, Serializable {
 
     private Place locale;
 

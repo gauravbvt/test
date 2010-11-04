@@ -118,7 +118,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         waivedContainer.add( waiveCheckBox );
     }
 
-    private void addSummary(  ) {
+    private void addSummary() {
         final Issue issue = getIssue();
         WebMarkupContainer summary = new WebMarkupContainer( "summary" );
         summary.setOutputMarkupId( true );
@@ -128,7 +128,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
                     update( target, new Change( Change.Type.Expanded, getIssue() ) );
             }
         } );
-        if ( !issue.isDetected() )  {
+        if ( !issue.isDetected() ) {
             summary.add( new AttributeModifier( "class", true, new Model<String>( "pointer" ) ) );
         }
         addOrReplace( summary );
@@ -136,7 +136,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         Label suggestion;
         if ( issue.isDetected() ) {
             label = new Label( "issue-label", new PropertyModel( issue, "label" ) );
-            suggestion = new Label( "issue-suggestion", new PropertyModel( issue, "remediation" ) );
+            suggestion = new Label( "issue-suggestion", new PropertyModel( this, "remediation" ) );
         } else {
             label = new Label( "issue-label", new AbstractReadOnlyModel() {
 
@@ -168,6 +168,17 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
      */
     public boolean isWaived() {
         return getIssue().isWaived();
+    }
+
+    /**
+     * get remediation with ending period.
+     *
+     * @return a string
+     */
+    public String getRemediation() {
+        String remediation = getIssue().getRemediation();
+        if ( !remediation.endsWith( "." ) ) remediation += ".";
+        return remediation;
     }
 
     /**
