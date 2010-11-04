@@ -1,4 +1,4 @@
-package com.mindalliance.channels.social;
+package com.mindalliance.channels.command;
 
 /**
  * Presence listener.

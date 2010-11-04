@@ -239,7 +239,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
 
     private Assignments getAssignments() {
         if ( assignments == null )
-            assignments = Assignments.getAssignments( getQueryService() );
+            assignments = getQueryService().getAssignments();
         return assignments;
     }
 

@@ -2,11 +2,11 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.query.Assignments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class UselessActor extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Actor actor = (Actor) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        List<Assignment> assignments = getQueryService().findAllAssignments( actor );
+        Assignments assignments = getQueryService().getAssignments().withSome( actor );
         if ( assignments.isEmpty() ) {
             List<Commitment> commitments = getQueryService().findAllCommitmentsTo( actor );
             if ( commitments.isEmpty() ) {

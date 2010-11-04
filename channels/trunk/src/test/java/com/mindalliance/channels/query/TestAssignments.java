@@ -4,7 +4,9 @@ package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
@@ -31,7 +33,7 @@ public class TestAssignments extends AbstractChannelsTest {
 
     @Before
     public void init() {
-        assignments = Assignments.getAssignments( queryService );
+        assignments = queryService.getAssignments();
     }
 
     @Test
@@ -78,7 +80,7 @@ public class TestAssignments extends AbstractChannelsTest {
                 queryService.findOrCreate( Organization.class, "Metropolis Transit Authority" );
         mta.setParent( bogus );
 
-        assignments = Assignments.getAssignments( queryService );
+        assignments = queryService.getAssignments();
         List<Organization> orgs = assignments.getOrganizations();
         assertEquals( 8, orgs.size() );
     }
@@ -153,11 +155,20 @@ public class TestAssignments extends AbstractChannelsTest {
             total += assignments.withSome( actor ).size();
         assertEquals( size, total );
 
-        List<Place> j = assignments.getJurisdictions();
-        assertEquals( size, assignments.withSome( j ).size() );
+        assertEquals( size, assignments.withSome( assignments.getJurisdictions() ).size() );
         total = 0;
-        for ( Specable place : j )
+        for ( Specable place : assignments.getJurisdictions() )
             total += assignments.withSome( place ).size();
+        assertEquals( size, total );
+
+        total = 0;
+        for ( Event event : assignments.getEvents() )
+            total += assignments.withSome( event ).size();
+        assertEquals( size, total );
+
+        total = 0;
+        for ( Phase phase : assignments.getPhases() )
+            total += assignments.withSome( phase ).size();
         assertEquals( size, total );
     }
 

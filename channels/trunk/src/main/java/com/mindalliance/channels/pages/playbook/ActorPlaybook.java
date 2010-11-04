@@ -119,19 +119,17 @@ public class ActorPlaybook extends PlaybookPage {
         Map<Event, EventParts> rawEvents = new HashMap<Event, EventParts>();
         // ResourceSpec spec = ResourceSpec.with( actor );
         for ( Segment segment : service.list( Segment.class ) ) {
-            for ( Part part : service.findAllAssignedParts( segment, actor ) ) {
-                if ( part.getSegment().equals( segment ) ) {
-                    if ( part.isStartsWithSegment() ) {
-                        Event event = segment.getEvent();
-                        EventParts parts = rawEvents.get( event );
-                        if ( parts == null ) {
-                            parts = new EventParts( segment, event );
-                            rawEvents.put( event, parts );
-                        }
-                        parts.add( part );
+            for ( Part part :
+                    service.getAssignments().withSome( segment ).withSome( actor ).getParts() )
+                if ( part.getSegment().equals( segment ) && part.isStartsWithSegment() ) {
+                    Event event = segment.getEvent();
+                    EventParts parts = rawEvents.get( event );
+                    if ( parts == null ) {
+                        parts = new EventParts( segment, event );
+                        rawEvents.put( event, parts );
                     }
+                    parts.add( part );
                 }
-            }
         }
         List<EventParts> events = new ArrayList<EventParts>( rawEvents.values() );
         Collections.sort( events );
@@ -186,7 +184,7 @@ public class ActorPlaybook extends PlaybookPage {
 
     private static Set<Flow> findInitialFlows( QueryService service, Actor actor ) {
         Set<Flow> flows = new HashSet<Flow>();
-        for ( Part part : service.findAllAssignedParts( actor ) ) {
+        for ( Part part : service.getAssignments().withSome( actor ).getParts() ) {
             for ( Iterator<Flow> iterator = part.flows(); iterator.hasNext(); ) {
                 Flow flow = iterator.next();
                 if ( part.equals( flow.getTarget() ) && flow.isTriggeringToTarget() )

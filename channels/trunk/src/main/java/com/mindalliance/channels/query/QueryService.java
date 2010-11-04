@@ -39,7 +39,6 @@ import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.nlp.Proximity;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -76,8 +75,7 @@ public interface QueryService {
      * @param id    the id
      * @param <T>   a subclass of modelObject
      * @return the object
-     * @throws com.mindalliance.channels.model.NotFoundException
-     *          when not found
+     * @throws NotFoundException when not found
      */
     <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
 
@@ -122,14 +120,7 @@ public interface QueryService {
      * @param entity an entity
      * @return a list of entities
      */
-    <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity );
-
-    /**
-     * Iterate on referenced entities, going through referenced entities first and then referencing entities.
-     *
-     * @return an iterator on  entities
-     */
-    Iterator<ModelEntity> iterateEntities();
+    <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( T entity );
 
     /**
      * Add a model object to the persistence store.
@@ -165,16 +156,6 @@ public interface QueryService {
      * @return a default plan segment
      */
     Segment getDefaultSegment();
-
-    /**
-     * Find an entity type by name. If none, create it for given domain,
-     * renaming it to avoid conflicts if needed.
-     *
-     * @param clazz the kind of model object
-     * @param name  the name
-     * @return the object or null if name is null or empty
-     */
-    <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name );
 
     /**
      * Find an entity type by name. If none, create it for given domain.
@@ -366,14 +347,6 @@ public interface QueryService {
     List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( Specable specable );
 
     /**
-     * Find all non-empty resources that equal or broaden given resource
-     *
-     * @param resourceSpec a resource
-     * @return a list of implied resources
-     */
-    List<ResourceSpec> findAllResourcesBroadeningOrEqualTo( ResourceSpec resourceSpec );
-
-    /**
      * Find all flows in all plan segments where the part applies as specified (as source or target).
      *
      * @param resourceSpec a resource spec
@@ -424,37 +397,12 @@ public interface QueryService {
     List<Channel> findAllChannelsFor( ResourceSpec spec );
 
     /**
-     * Find all flows across all plan segments that contact a matching part.
-     *
-     * @param resourceSpec a resource specification
-     * @return a list of flows
-     */
-    List<Flow> findAllFlowsContacting( ResourceSpec resourceSpec );
-
-    /**
      * Find all known and non-archetype, actual (non-type) actors that belong to a resource spec.
      *
      * @param resourceSpec a resource spec
      * @return a list of actors
      */
     List<Actor> findAllActualActors( ResourceSpec resourceSpec );
-
-    /**
-     * Find all known,, actual (non-type) organizations that belong to a resource spec.
-     *
-     * @param resourceSpec a resource spec
-     * @return a list of organizations
-     */
-    List<Organization> findAllActualOrganizations( ResourceSpec resourceSpec );
-
-    /**
-     * Make a replicate of the flow.
-     *
-     * @param flow   the flow to replicate
-     * @param isSend whether to replicate as send or receive
-     * @return a created flow
-     */
-    Flow replicate( Flow flow, boolean isSend );
 
     /**
      * Find all jobs for an organization that are implied by parts but not confirmed.
@@ -494,39 +442,6 @@ public interface QueryService {
      * @return a list of strings
      */
     List<String> findAllEntityNames( Class<? extends ModelEntity> aClass, ModelEntity.Kind kind );
-
-    /**
-     * Find actors in given organization and role.
-     *
-     * @param organization the organization, possibly Organization.UNKNOWN
-     * @param role         the role, possibly Role.UNKNOWN
-     * @return a sorted list of actors
-     */
-    List<Actor> findActualActors( Organization organization, Role role );
-
-    /**
-     * Find all roles in given organization and across all plan segment.
-     *
-     * @param organization the organization, possibly Organization.UNKNOWN
-     * @return a sorted list of roles
-     */
-    List<Role> findRolesIn( Organization organization );
-
-    /**
-     * Find all organizations in plan, including the UNKNOWN organization, if need be.
-     *
-     * @return a sorted list of organizations
-     */
-    List<Organization> findOrganizations();
-
-    /**
-     * Find actors that should be included in a flow of a part.
-     *
-     * @param part the part
-     * @param flow a flow of the part
-     * @return list of actors in plan that applies
-     */
-    List<Actor> findRelevantActors( Part part, Flow flow );
 
     /**
      * Find all jobs of an actor in an organization or all organizations
@@ -578,14 +493,6 @@ public interface QueryService {
      * @return a list of jobs
      */
     List<Job> findAllConfirmedJobs( Specable specable );
-
-    /**
-     * Find all job titles of an actor.
-     *
-     * @param actor an actor
-     * @return a list of strings
-     */
-    List<String> findJobTitles( Actor actor );
 
     /**
      * Find all organizations employing a given actor.
@@ -719,37 +626,6 @@ public interface QueryService {
     List<Part> findAchievers( Segment segment, Goal goal );
 
     /**
-     * Find plan segment in which an actor is involved.
-     *
-     * @param actor an actor
-     * @return a list of plan segments
-     */
-    List<Segment> findSegments( Actor actor );
-
-    /**
-     * Find all actors participating in a plan segment.
-     *
-     * @param segment the plan segment
-     * @return a sorted list of actors.
-     */
-    List<Actor> findActualActors( Segment segment );
-
-    /**
-     * Find all organizations participating in a plan segment.
-     *
-     * @param segment the plan segment
-     * @return a sorted list of organizations.
-     */
-    List<Organization> findActualOrganizations( Segment segment );
-
-    /**
-     * Find all actor last names.
-     *
-     * @return a list of all actor last names (with duplicates)
-     */
-    List<String> findAllActorLastNames();
-
-    /**
      * Find all jobs, confirmed or not.
      *
      * @return a list of jobs
@@ -788,35 +664,12 @@ public interface QueryService {
     List<Flow> findAllFlows();
 
     /**
-     * Find all distinct flow names.
-     *
-     * @return a list of strings
-     */
-    List<String> findAllFlowNames();
-
-    /**
-     * List all entities of a given class, plus the unmnown entity of this class.
-     *
-     * @param clazz a class extending ModelObject
-     * @return a list of entities
-     */
-    <T extends ModelEntity> List<T> listEntitiesWithUnknown( Class<T> clazz );
-
-    /**
      * Find all roles played by an actor.
      *
      * @param actor an actor
      * @return a list of roles
      */
     List<Role> findAllRolesOf( Actor actor );
-
-    /**
-     * Find all actors in an organization or type of organization.
-     *
-     * @param organization an organization
-     * @return a list of organizations
-     */
-    List<Actor> findAllActorsInOrganization( Organization organization );
 
     /**
      * Find all parts and flows that directly involve a given entity.
@@ -905,15 +758,6 @@ public interface QueryService {
     List<ModelObject> findAllModelObjectsDirectlyRelatedToEvent( Event event );
 
     /**
-     * Find all model objects referencing a given place.
-     *
-     * @param place a place
-     * @param clazz a model object class
-     * @return a list of model objects
-     */
-    <T extends ModelObject> List<T> findAllReferencesTo( Place place, Class<T> clazz );
-
-    /**
      * Find all roots of hierarchy in which a hierarchical object belongs.
      *
      * @param hierarchical a hierarchical object
@@ -955,14 +799,6 @@ public interface QueryService {
      * @return a list of flows
      */
     List<Flow> findAllSharingsAddressingNeed( Flow need );
-
-    /**
-     * Find parts with anonymous tasks which resourceSpec is narrowed by that of a given part.
-     *
-     * @param part a part
-     * @return a list of parts
-     */
-    List<Part> findAnonymousPartsMatching( Part part );
 
     /**
      * Calculate how important a part is in terms of the goals it helps achieve directly or indirectly.
@@ -1069,23 +905,6 @@ public interface QueryService {
     <T extends ModelObject> List<T> findAllReferencing( ModelObject mo, Class<T> clazz );
 
     /**
-     * Find all entities of a given class that reference an entity type.
-     *
-     * @param entityType  a model entity that's a type
-     * @param entityClass a class of entities
-     * @return a list of entities
-     */
-    <T extends ModelEntity> List<T> findAllEntitiesReferencingType( ModelEntity entityType, Class<T> entityClass );
-
-    /**
-     * Find all flows that reference a model entity type.
-     *
-     * @param entityType a model entity that's a type
-     * @return a list of flows
-     */
-    List<Part> findAllPartsReferencingType( ModelEntity entityType );
-
-    /**
      * Find all entities equal or narrowing another.
      *
      * @param entity a model entity
@@ -1121,35 +940,10 @@ public interface QueryService {
      * Find all assignments that match a part.
      *
      * @param part                 a part
-     * @param includeUnknownActors whether to include assignment of unknown actors
+     * @param includeUnknowns whether to include assignment of unknown actors
      * @return a list of assignments
      */
-    List<Assignment> findAllAssignments( Part part, Boolean includeUnknownActors );
-
-    /**
-     * Find all assignments for an actor.
-     *
-     * @param actor an actor
-     * @return a list of assignments
-     */
-    List<Assignment> findAllAssignments( Actor actor );
-
-    /**
-     * Find all assignments for an organization.
-     *
-     * @param org an organization
-     * @return a list of assignments
-     */
-    List<Assignment> findAllAssignments( Organization org );
-
-    /**
-     * Find all assignments for an actor for a segment..
-     *
-     * @param actor   an actor
-     * @param segment segment
-     * @return a list of assignments
-     */
-    List<Assignment> findAllAssignments( Actor actor, Segment segment );
+    List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns );
 
     /**
      * Find all commitments implied by a sharing flow.
@@ -1237,24 +1031,7 @@ public interface QueryService {
      */
     <T extends ModelEntity> List<T> findAllActualEntitiesMatching(
             Class<T> entityClass,
-            final T entityType );
-
-    /**
-     * Find all parts assigned to an actor.
-     *
-     * @param actor an actor
-     * @return a list of parts
-     */
-    List<Part> findAllAssignedParts( Actor actor );
-
-    /**
-     * Find all parts assigned to an actor in a segment.
-     *
-     * @param segment a plan segment
-     * @param actor   an actor
-     * @return a list of parts
-     */
-    List<Part> findAllAssignedParts( Segment segment, Actor actor );
+            T entityType );
 
     /**
      * Find all employments where actors are directly or indirectly supervised by a given actor.
@@ -1383,11 +1160,13 @@ public interface QueryService {
             Subject subject,
             Boolean showTargets );
 
-    List<Employment> findAllEmploymentsWithUnknownActors();
-
     /**
      * Return the plan used by this service.
      * @return a plan
      */
     Plan getPlan();
+
+    List<Employment> findAllEmployments( Part part, Place locale );
+
+    Assignments getAssignments();
 }

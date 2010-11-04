@@ -23,8 +23,7 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.social.CommandListener;
-import com.mindalliance.channels.social.PresenceListener;
+import com.mindalliance.channels.command.PresenceListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

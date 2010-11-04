@@ -5,16 +5,15 @@ package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.Employment;
-import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.model.Job;
 import org.apache.commons.collections.IteratorUtils;
 
 import java.util.ArrayList;
@@ -39,87 +38,17 @@ public class Assignments implements Iterable<Assignment> {
     private Map<Segment, Set<Assignment>> segmentMap = new HashMap<Segment,Set<Assignment>>();
 
     //--------------------------------------
-    private Assignments( Place locale ) {
+    Assignments( Place locale ) {
         this.locale = locale;
     }
 
-    public static Assignments getAssignments( QueryService service ) {
-        Assignments result = new Assignments( service.getPlan().getLocale() );
-
-        for ( Segment segment : service.list( Segment.class ) )
-            for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); )
-                result.add( segment, findAssignments( service, pi.next() ) );
-
-        return result;
-    }
-
-    private void add( Segment segment, Collection<Assignment> assignments ) {
+    void add( Segment segment, Collection<Assignment> assignments ) {
         Set<Assignment> as = segmentMap.get( segment );
         if ( as == null ) {
             as = new HashSet<Assignment>();
             segmentMap.put( segment, as );
         }
         as.addAll( assignments );
-    }
-
-    private static List<Assignment> findAssignments( QueryService service, Part part ) {
-        Place locale = service.getPlan().getLocale();
-        List<Assignment> result = new ArrayList<Assignment>();
-
-        for ( Employment e : findActorEmployments( service, part, locale ) )
-            if (    ModelEntity.implies( e.getActor(),        part.getActor(), locale )
-                 && ModelEntity.implies( e.getRole(),         part.getRole(), locale )
-                 && ModelEntity.implies( e.getOrganization(), part.getOrganization(), locale )
-                 && ModelEntity.implies( e.getJurisdiction(), part.getJurisdiction(), locale ) )
-                result.add( new Assignment( e, part ) );
-
-        // No actor for this part. Add an unknown one.
-        if ( result.isEmpty() && !part.resourceSpec().isAnyone()
-                              && part.getActorOrUnknown().isUnknown() )
-
-            result.add( new Assignment(
-                            new Employment( Actor.UNKNOWN,
-                                            part.getOrganizationOrUnknown(),
-                                            new Job( Actor.UNKNOWN,
-                                                     part.getRoleOrUnknown(),
-                                                     part.getJurisdiction() ) ),
-                            part ) );
-
-        return result;
-    }
-
-    private static List<Employment> findActorEmployments(
-            QueryService service, Part part, Place locale ) {
-
-        Set<Actor> employed = new HashSet<Actor>();
-        List<Employment> employments = new ArrayList<Employment>();
-
-        for ( Organization org : service.listActualEntities( Organization.class ) ) {
-            List<Job> confirmedJobs = org.getJobs();
-
-            for ( Job job : confirmedJobs ) {
-                employments.add( new Employment( job.getActor(), org, job ) );
-                employed.add( job.getActor() );
-            }
-
-            if ( org.narrowsOrEquals( part.getOrganizationOrUnknown(), locale )
-                 && part.hasActualActor() && part.getOrganization() != null ) {
-
-                Actor actor = part.getActor();
-                Job j = new Job( actor, part.getRole(), part.getJurisdiction() );
-                if ( !confirmedJobs.contains( j )
-                     && ( !actor.isArchetype() || !employed.contains( actor ) ) ) {
-                    employments.add( new Employment( actor, org, j ) );
-                    employed.add( actor );
-                }
-            }
-        }
-
-        for ( Actor actor : service.listActualEntities( Actor.class ) )
-            if ( !employed.contains( actor ) )
-                employments.add( new Employment( actor ) );
-
-        return employments;
     }
 
     //--------------------------------------
@@ -193,6 +122,28 @@ public class Assignments implements Iterable<Assignment> {
                 throw new IllegalArgumentException( "Unknown segment" );
             result.add( segment, assignments );
         }
+        return result;
+    }
+
+    public Assignments withSome( Event... events ) {
+        Set<Event> eventSet = new HashSet<Event>( Arrays.asList( events ) );
+        Assignments result = new Assignments( locale );
+
+        for ( Segment segment : segmentMap.keySet() )
+            if ( eventSet.contains( segment.getEvent() ) )
+                result.add( segment, segmentMap.get( segment ) );
+
+        return result;
+    }
+
+    public Assignments withSome( Phase... phases ) {
+        Set<Phase> phaseSet = new HashSet<Phase>( Arrays.asList( phases ) );
+        Assignments result = new Assignments( locale );
+
+        for ( Segment segment : segmentMap.keySet() )
+            if ( phaseSet.contains( segment.getPhase() ) )
+                result.add( segment, segmentMap.get( segment ) );
+
         return result;
     }
 
@@ -312,6 +263,44 @@ public class Assignments implements Iterable<Assignment> {
         return result;
     }
 
+    public List<Event> getEvents() {
+        Collection<Segment> segments = getSegments();
+        Set<Event> events = new HashSet<Event>( segments.size() );
+        for ( Segment segment : segments ) {
+            Event event = segment.getEvent();
+            if ( event != null )
+                events.add( event );
+        }
+
+        List<Event> result = new ArrayList<Event>( events );
+        Collections.sort( result );
+        return result;
+    }
+
+    public List<Phase> getPhases() {
+        Collection<Segment> segments = getSegments();
+        Set<Phase> phases = new HashSet<Phase>( segments.size() );
+        for ( Segment segment : segments ) {
+            Phase phase = segment.getPhase();
+            if ( phase != null )
+                phases.add( phase );
+        }
+
+        List<Phase> result = new ArrayList<Phase>( phases );
+        Collections.sort( result );
+        return result;
+    }
+
+    public List<Part> getParts() {
+        Set<Part> parts = new HashSet<Part>();
+        for ( Assignment assignment : this )
+            parts.add( assignment.getPart() );
+
+        List<Part> result = new ArrayList<Part>( parts );
+        Collections.sort( result );
+        return result;
+    }
+
     //--------------------------------------
     /**
      * Returns an iterator over a set of elements of type T.
@@ -328,10 +317,22 @@ public class Assignments implements Iterable<Assignment> {
         return (Iterator<Assignment>) IteratorUtils.chainedIterator( iterators );
     }
 
+    public boolean isEmpty() {
+        return segmentMap.isEmpty();
+    }
+
     public int size() {
         int result = 0;
         for ( Set<Assignment> assignments : segmentMap.values() )
             result += assignments.size();
+        return result;
+    }
+
+    public List<Assignment> getAssignments() {
+        List<Assignment> result = new ArrayList<Assignment>();
+        for ( Segment s : getSegments() )
+            result.addAll( segmentMap.get( s ) );
+
         return result;
     }
 }

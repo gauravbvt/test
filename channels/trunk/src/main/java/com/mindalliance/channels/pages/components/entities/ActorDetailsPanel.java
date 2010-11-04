@@ -284,7 +284,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * @return a list of assignments
      */
     public List<Assignment> getAssignments() {
-        return getQueryService().findAllAssignments( getActor() );
+        return getQueryService().getAssignments().withSome( getActor() ).getAssignments();
     }
 
     private void addCommitmentsPanel() {

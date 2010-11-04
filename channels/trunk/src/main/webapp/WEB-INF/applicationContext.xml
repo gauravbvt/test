@@ -223,12 +223,12 @@ CONFIGURATION NOTES:
         <property name="importExportFactory" ref="importExportFactory"/>
         <property name="timeout" value="300"/>
         <property name="presenceListeners">
-            <list value-type="com.mindalliance.channels.social.PresenceListener">
+            <list value-type="com.mindalliance.channels.command.PresenceListener">
                 <ref bean="planningEventService"/>
             </list>
         </property>
         <property name="commandListeners">
-            <list value-type="com.mindalliance.channels.social.CommandListener">
+            <list value-type="com.mindalliance.channels.command.CommandListener">
                 <ref bean="planningEventService"/>
             </list>
         </property>

@@ -46,10 +46,8 @@ public class ActorReportPanel extends Panel {
     }
 
     private List<Part> getParts( Segment segment, ResourceSpec spec ) {
-        if (spec.getActor() != null ) {
-            return queryService.findAllAssignedParts( segment, spec.getActor() );
-        } else {
-            return queryService.findAllParts( segment, spec, false );
-        }
+        return spec.getActor() == null ? queryService.findAllParts( segment, spec, false )
+             : queryService.getAssignments().withSome( segment )
+                     .withSome( spec.getActor() ).getParts();
     }
 }

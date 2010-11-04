@@ -50,7 +50,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
-import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.TransformerUtils;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang.StringUtils;
@@ -256,23 +255,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( {"unchecked"} )
-    public Iterator<ModelEntity> iterateEntities() {
-        List<Iterator> entityIterators = new ArrayList<Iterator>();
-        entityIterators.add( listReferencedEntities( TransmissionMedium.class ).iterator() );
-        entityIterators.add( listReferencedEntities( Actor.class ).iterator() );
-        entityIterators.add( listReferencedEntities( Role.class ).iterator() );
-        entityIterators.add( listReferencedEntities( Place.class ).iterator() );
-        entityIterators.add( listReferencedEntities( Organization.class ).iterator() );
-        entityIterators.add( listReferencedEntities( Event.class ).iterator() );
-        entityIterators.add( listReferencedEntities( Phase.class ).iterator() );
-        entityIterators.add( listReferencedEntities( Participation.class ).iterator() );
-        return (Iterator<ModelEntity>) IteratorUtils.chainedIterator( entityIterators );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
         return findOrCreate( clazz, name, null );
     }
@@ -340,13 +322,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         ModelEntity entity = ModelEntity.getUniversalType( name, clazz );
         if ( entity == null ) entity = getDao().find( clazz, name );
         return entity != null && entity.getKind().equals( kind );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name ) {
-        return safeFindOrCreate( clazz, name, null );
     }
 
     /**
@@ -576,20 +551,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Flow replicate( Flow flow, boolean isSend ) {
-        Flow result = isSend ? connect( flow.getSource(),
-                createConnector( flow.getSource().getSegment() ),
-                flow.getName() )
-                : connect( createConnector( flow.getTarget().getSegment() ),
-                flow.getTarget(),
-                flow.getName() );
-        result.initFrom( flow );
-        return result;
-    }
-
     // QUERIES (no change to model)
 
     /**
@@ -702,19 +663,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<ResourceSpec> list = new ArrayList<ResourceSpec>();
         for ( ResourceSpec spec : findAllResourceSpecs() ) {
             if ( spec.narrowsOrEquals( specable, locale ) )
-                list.add( spec );
-        }
-        return list;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<ResourceSpec> findAllResourcesBroadeningOrEqualTo( ResourceSpec resourceSpec ) {
-        Plan plan = getPlan();
-        List<ResourceSpec> list = new ArrayList<ResourceSpec>();
-        for ( ResourceSpec spec : findAllResourceSpecs() ) {
-            if ( resourceSpec.narrowsOrEquals( spec, plan.getLocale() ) )
                 list.add( spec );
         }
         return list;
@@ -895,35 +843,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( {"unchecked"} )
-    public List<Organization> findAllActualOrganizations( ResourceSpec resourceSpec ) {
-        Set<Organization> organizations = new HashSet<Organization>();
-        // If the resource spec is anyone, then return no organization,
-        // else it would return every organization known to the app
-        if ( !resourceSpec.isAnyone() ) {
-            Place locale = getPlan().getLocale();
-            Iterator<ResourceSpec> specs = findAllResourceSpecs().iterator();
-            Iterator<ResourceSpec> orgSpecs = new FilterIterator( specs, new Predicate() {
-                public boolean evaluate( Object object ) {
-                    Organization organization = ( (Specable) object ).getOrganization();
-                    return organization != null && organization.isActual();
-                }
-            } );
-            while ( orgSpecs.hasNext() ) {
-                ResourceSpec orgResourceSpec = orgSpecs.next();
-                if ( orgResourceSpec.narrowsOrEquals( resourceSpec, locale ) ) {
-                    Organization organization = orgResourceSpec.getOrganization();
-                    if ( !organization.isUnknown() ) organizations.add( organization );
-                }
-            }
-        }
-
-        return new ArrayList<Organization>( organizations );
-    }
-
-    /**
      * Find all relevant channels for a given resource spec.
      *
      * @param spec the spec
@@ -980,25 +899,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             if ( channel.getMedium().equals( medium ) && !channel.isValid() )
                 return true;
         return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Flow> findAllFlowsContacting( ResourceSpec resourceSpec ) {
-        List<Flow> flows = new ArrayList<Flow>();
-        Place locale = getPlan().getLocale();
-        for ( Segment segment : list( Segment.class ) ) {
-            Iterator<Flow> segmentFlows = segment.flows();
-            while ( segmentFlows.hasNext() ) {
-                Flow flow = segmentFlows.next();
-                Part contactedPart = flow.getContactedPart();
-                if ( contactedPart != null
-                        && resourceSpec.narrowsOrEquals( contactedPart.resourceSpec(), locale ) )
-                    flows.add( flow );
-            }
-        }
-        return flows;
     }
 
     /**
@@ -1106,17 +1006,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public List<Actor> findAllActorsInOrganization( Organization organization ) {
-        Set<Actor> actors = new HashSet<Actor>();
-        for ( Employment employment : findAllEmploymentsIn( organization ) ) {
-            actors.add( employment.getActor() );
-        }
-        return new ArrayList<Actor>( actors );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public List<ModelObject> findAllSegmentObjectsInvolving( ModelEntity entity ) {
         if ( entity instanceof Event ) {
             return findAllModelObjectsDirectlyRelatedToEvent( (Event) entity );
@@ -1139,88 +1028,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Actor> findActualActors( Organization organization, Role role ) {
-        // Find all actors in role for organization
-        Set<Actor> actors = new HashSet<Actor>();
-        for ( Specable spec : findAllResourceSpecs() ) {
-            if ( spec.getActor() != null ) {
-                boolean sameOrg = Organization.UNKNOWN.equals( organization ) ?
-                        spec.getOrganization() == null
-                        : organization.equals( spec.getOrganization() );
-                boolean sameRole = Role.UNKNOWN.equals( role ) ?
-                        spec.getRole() == null
-                        : role.equals( spec.getRole() );
-                if ( sameOrg && sameRole ) {
-                    Actor actor = spec.getActor();
-                    if ( actor.isActual() )
-                        actors.add( actor );
-                }
-            }
-        }
-
-        if ( actors.isEmpty() )
-            actors.add( Actor.UNKNOWN );
-
-        return toSortedList( actors );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Role> findRolesIn( Organization organization ) {
-        Set<Role> roles = new HashSet<Role>();
-        for ( Organization org : listEntitiesNarrowingOrEqualTo( organization ) ) {
-            for ( Employment employment : findAllEmploymentsIn( org ) ) {
-                roles.add( employment.getRole() );
-            }
-        }
-        boolean hasUnknown = roles.contains( Role.UNKNOWN );
-        roles.remove( Role.UNKNOWN );
-        List<Role> list = toSortedList( roles );
-        if ( hasUnknown )
-            list.add( Role.UNKNOWN );
-        return list;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Organization> findOrganizations() {
-        List<Organization> orgs = toSortedList( list( Organization.class ) );
-
-        if ( !findRolesIn( Organization.UNKNOWN ).isEmpty() )
-            orgs.add( Organization.UNKNOWN );
-
-        return orgs;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Actor> findRelevantActors( Part part, Flow flow ) {
-        Set<Actor> actors = new HashSet<Actor>();
-
-        boolean partIsSource = flow.getSource().equals( part );
-        Node node = partIsSource ? flow.getTarget() : flow.getSource();
-        if ( node.isConnector() ) {
-            Iterator<ExternalFlow> xFlows = ( (Connector) node ).externalFlows();
-            while ( xFlows.hasNext() ) {
-                ExternalFlow xFlow = xFlows.next();
-                actors.addAll( findAllActualActors( xFlow.getPart().resourceSpec() ) );
-            }
-        } else {
-            Part otherPart = (Part) node;
-            if ( otherPart.getActor() == null )
-                actors.addAll( findAllActualActors( otherPart.resourceSpec() ) );
-        }
-
-        return toSortedList( actors );
-    }
-
-/*
+    /*
     */
 /**
  * {@inheritDoc}
@@ -1307,23 +1115,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     jobs.add( job );
 
         return jobs;
-    }
-
-    /**
-     * {@inheritDoc
-     */
-    public List<String> findJobTitles( Actor actor ) {
-        String actorName = actor.getName();
-        List<String> titles = new ArrayList<String>();
-        for ( Organization org : listActualEntities( Organization.class ) ) {
-            for ( Job job : org.getJobs() ) {
-                if ( job.getActorName().equals( actorName ) ) {
-                    String title = job.getTitle();
-                    if ( !title.isEmpty() ) titles.add( title );
-                }
-            }
-        }
-        return titles;
     }
 
     /**
@@ -1567,82 +1358,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
             Part part = parts.next();
-            if ( ( goal.isRiskMitigation() && part.isTerminatesEventPhase() ) || part.getGoals().contains( goal ) ) {
+            if ( goal.isRiskMitigation() && part.isTerminatesEventPhase()
+                 || part.getGoals().contains( goal ) ) {
                 achievers.add( part );
             }
         }
         return achievers;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Segment> findSegments( Actor actor ) {
-        List<Segment> result = new ArrayList<Segment>();
-        Place locale = getPlan().getLocale();
-
-        List<ResourceSpec> specs = findAllResourceSpecs();
-        for ( Segment s : list( Segment.class ) ) {
-            boolean found = false;
-            for ( Iterator<Part> pi = s.parts(); !found && pi.hasNext(); ) {
-                Part p = pi.next();
-                ResourceSpec partSpec = p.resourceSpec();
-
-                // If the resource spec is anyone, then return no actor,
-                // else it would return every actor known to the app
-                if ( !partSpec.isAnyone() )
-                    for ( Iterator<ResourceSpec> it = specs.iterator(); !found && it.hasNext(); ) {
-                        ResourceSpec spec = it.next();
-                        Actor actor2 = spec.getActor();
-                        if ( actor2 != null && actor2.isActual()
-                             && spec.narrowsOrEquals( partSpec, locale ) && actor.equals( actor2 ) )
-                            found = true;
-                    }
-            }
-            if ( found )
-                result.add( s );
-        }
-
-        return result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Actor> findActualActors( Segment segment ) {
-        Set<Actor> actors = new HashSet<Actor>();
-        for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); )
-            for ( Assignment assignment : findAllAssignments( pi.next(), true ) )
-                actors.add( assignment.getActor() );
-
-        List<Actor> result = new ArrayList<Actor>( actors );
-        Collections.sort( result );
-        return result;
-    }
-
-    public List<Organization> findActualOrganizations( Segment segment ) {
-        Set<Organization> organizations = new HashSet<Organization>();
-        for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); )
-            for ( Assignment assignment : findAllAssignments( pi.next(), true ) )
-                organizations.add( assignment.getOrganization() );
-
-        List<Organization> result = new ArrayList<Organization>( organizations );
-        Collections.sort( result );
-        return result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<String> findAllActorLastNames() {
-        return (List<String>) CollectionUtils.collect(
-                listActualEntities( Actor.class ),
-                new Transformer() {
-                    public Object transform( Object input ) {
-                        return ( (Actor) input ).getLastName();
-                    }
-                } );
     }
 
     /**
@@ -1733,38 +1454,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
         }
         return allFlows;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<String> findAllFlowNames() {
-        Set<String> names = new HashSet<String>();
-        for ( Flow flow : findAllFlows() ) {
-            names.add( flow.getName() );
-        }
-        return new ArrayList<String>( names );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( "unchecked" )
-    public <T extends ModelEntity> List<T> listEntitiesWithUnknown( Class<T> clazz ) {
-        List<T> allEntities = new ArrayList<T>( list( clazz ) );
-        ModelEntity unknown =
-                clazz == Actor.class
-                        ? Actor.UNKNOWN
-                        : clazz == Event.class
-                        ? Event.UNKNOWN
-                        : clazz == Organization.class
-                        ? Organization.UNKNOWN
-                        : clazz == Place.class
-                        ? Place.UNKNOWN
-                        : Role.UNKNOWN;
-        allEntities.add( (T) unknown );
-        return allEntities;
     }
 
     /**
@@ -1947,55 +1636,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( "unchecked" )
-    public <T extends ModelObject> List<T> findAllReferencesTo( Place place, Class<T> clazz ) {
-        List<T> references = new ArrayList<T>();
-        if ( clazz.isAssignableFrom( Organization.class ) ) {
-            for ( Organization org : list( Organization.class ) ) {
-                if ( org.getLocation() != null && org.getLocation().equals( place ) )
-                    references.add( (T) org );
-                for ( Job job : org.getJobs() ) {
-                    if ( job.getJurisdiction() != null && job.getJurisdiction().equals( place ) )
-                        references.add( (T) org );
-                }
-            }
-        }
-        if ( clazz.isAssignableFrom( Event.class ) ) {
-            for ( Event event : listReferencedEntities( Event.class ) ) {
-                if ( event.getScope() != null && event.getScope().equals( place ) )
-                    references.add( (T) event );
-            }
-        }
-        if ( clazz.isAssignableFrom( Place.class ) ) {
-            for ( Place p : list( Place.class ) ) {
-                if ( !p.equals( place ) && p.equals( place ) )
-                    references.add( (T) p );
-                if ( p.getWithin() != null && p.getWithin().equals( place ) )
-                    references.add( (T) p );
-                if ( p.getMustBeContainedIn().references( place ) )
-                    references.add( (T) p );
-                if ( p.getMustContain().references( place ) )
-                    references.add( (T) p );
-            }
-        }
-        if ( clazz.isAssignableFrom( Part.class ) ) {
-            for ( Segment segment : list( Segment.class ) ) {
-                Iterator<Part> parts = segment.parts();
-                while ( parts.hasNext() ) {
-                    Part part = parts.next();
-                    if ( part.getLocation() != null && part.getLocation().equals( place ) )
-                        references.add( (T) part );
-                    if ( part.getJurisdiction() != null && part.getJurisdiction().equals( place ) )
-                        references.add( (T) part );
-                }
-            }
-        }
-        return references;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public List<Hierarchical> findRoots( Hierarchical hierarchical ) {
         Set<Hierarchical> roots = findRoots( hierarchical, new HashSet<Hierarchical>() );
         return new ArrayList<Hierarchical>( roots );
@@ -2085,24 +1725,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             sharings.addAll( findSharingFlowsMatchingNeed( part, need ) );
         }*/
         return sharings;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Part> findAnonymousPartsMatching( Part part ) {
-        List<Part> anonymousParts = new ArrayList<Part>();
-        Iterator<Part> parts = part.getSegment().parts();
-        Place locale = getPlan().getLocale();
-        while ( parts.hasNext() ) {
-            Part p = parts.next();
-            if ( !part.equals( p )
-                    && p.getTask().isEmpty()
-                    && part.resourceSpec().narrowsOrEquals( p.resourceSpec(), locale ) ) {
-                anonymousParts.add( p );
-            }
-        }
-        return anonymousParts;
     }
 
     private List<Flow> findSharingFlowsMatchingNeed( Part part, Flow need ) {
@@ -2310,68 +1932,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public <T extends ModelEntity> List<T> findAllEntitiesReferencingType(
-            final ModelEntity entityType,
-            Class<T> entityClass ) {
-        assert entityType.isType();
-        return (List<T>) CollectionUtils.select(
-                list( entityClass ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        if ( ( (ModelEntity) object ).getTags().contains( entityType ) ) {
-                            return true;
-                        } else if ( object instanceof Event ) {
-                            if ( ModelObject.areIdentical(
-                                    ( (Event) object ).getScope(),
-                                    entityType ) )
-                                return true;
-                        } else if ( object instanceof Organization ) {
-                            if ( ModelObject.areIdentical(
-                                    ( (Organization) object ).getLocation(),
-                                    entityType ) )
-                                return true;
-                            if ( ModelObject.areIdentical(
-                                    ( (Organization) object ).getParent(),
-                                    entityType ) )
-                                return true;
-                        } else if ( object instanceof Place ) {
-                            if ( ( (Place) object ).getMustContain().references( entityType ) )
-                                return true;
-                            if ( ( (Place) object ).getMustBeContainedIn().references( entityType ) )
-                                return true;
-                        }
-                        return false;
-                    }
-                }
-        );
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Part> findAllPartsReferencingType( final ModelEntity entityType ) {
-        assert entityType.isType();
-        return (List<Part>) CollectionUtils.select(
-                findAllParts(),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        Part part = (Part) object;
-                        return ModelObject.areIdentical( part.getLocation(), entityType )
-                                || ModelObject.areIdentical( part.getActor(), entityType )
-                                || ModelObject.areIdentical( part.getRole(), entityType )
-                                || ModelObject.areIdentical( part.getOrganization(), entityType )
-                                || ModelObject.areIdentical( part.getJurisdiction(), entityType );
-                    }
-                }
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllNarrowingOrEqualTo( final ModelEntity entity ) {
         final Place locale = getPlan().getLocale();
         return (List<? extends ModelEntity>) CollectionUtils.select(
@@ -2387,8 +1947,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    public Boolean isInvolved( final Organization organization ) {
-        return !findAllAssignments( organization ).isEmpty();
+    public Boolean isInvolved( Organization organization ) {
+        return !getAssignments().withSome( organization ).isEmpty();
     }
 
     /**
@@ -2403,89 +1963,36 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     @SuppressWarnings( "unchecked" )
     public List<Part> findAllPartsPlayedBy( Organization organization ) {
-        Set<Part> allParts = new HashSet<Part>();
-        for ( Assignment assignment : findAllAssignments( organization ) )
-            allParts.add( assignment.getPart() );
-        return new ArrayList<Part>( allParts );
+        return getAssignments().withSome( organization ).getParts();
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<Assignment> findAllAssignments( Part part, Boolean includeUnknownActors ) {
-        List<Assignment> assignments = new ArrayList<Assignment>();
-
-        List<Employment> employments = findAllEmploymentsWithKnownActors();
-        if ( includeUnknownActors )
-            employments.addAll( findAllEmploymentsWithUnknownActors() );
-
+    public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns ) {
         Place locale = getPlan().getLocale();
-        for ( Employment employment : employments )
-            if ( employment.playsPart( part, locale ) )
-                assignments.add( new Assignment( employment, part ) );
+        List<Assignment> result = new ArrayList<Assignment>();
 
-        return assignments;
-    }
+        for ( Employment e : findAllEmployments( part, locale ) )
+            if (    ModelEntity.implies( e.getActor(),        part.getActor(), locale )
+                 && ModelEntity.implies( e.getRole(),         part.getRole(), locale )
+                 && ModelEntity.implies( e.getOrganization(), part.getOrganization(), locale )
+                 && ModelEntity.implies( e.getJurisdiction(), part.getJurisdiction(), locale ) )
+                result.add( new Assignment( e, part ) );
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Assignment> findAllAssignments( Actor actor ) {
-        Place locale = getPlan().getLocale();
-        Set<Assignment> assignments = new HashSet<Assignment>();
-        List<Part> parts = findAllParts();
+        // No actor for this part. Add an unknown one.
+        if ( includeUnknowns && result.isEmpty()
+             && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() )
 
-        for ( Employment employment : findAllEmploymentsForActor( actor ) )
-            for ( Part part : parts )
-                if ( employment.playsPart( part, locale ) )
-                    assignments.add( new Assignment( employment, part ) );
+            result.add( new Assignment(
+                            new Employment( Actor.UNKNOWN,
+                                            part.getOrganizationOrUnknown(),
+                                            new Job( Actor.UNKNOWN,
+                                                     part.getRoleOrUnknown(),
+                                                     part.getJurisdiction() ) ),
+                            part ) );
 
-        return new ArrayList<Assignment>( assignments );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Assignment> findAllAssignments( Organization org ) {
-        Set<Assignment> assignments = new HashSet<Assignment>();
-        Place locale = getPlan().getLocale();
-        List<Part> parts = findAllParts();
-        for ( Employment employment : findAllEmploymentsIn( org ) )
-            for ( Part part : parts )
-                if ( employment.playsPart( part, locale ) )
-                    assignments.add( new Assignment( employment, part ) );
-
-        return new ArrayList<Assignment>( assignments );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Assignment> findAllAssignments( Actor actor, Segment segment ) {
-        Set<Assignment> assignments = new HashSet<Assignment>();
-        Place locale = getPlan().getLocale();
-        List<Part> parts = (List<Part>) IteratorUtils.toList( segment.parts() );
-        for ( Employment employment : findAllEmploymentsForActor( actor ) )
-            for ( Part part : parts )
-                if ( employment.playsPart( part, locale ) )
-                    assignments.add( new Assignment( employment, part ) );
-
-        return new ArrayList<Assignment>( assignments );
-    }
-
-    public List<Employment> findAllEmploymentsWithUnknownActors() {
-        Set<Employment> employments = new HashSet<Employment>();
-        for ( Part p : findAllParts() ) {
-            if ( !p.resourceSpec().isAnyone() && p.getActorOrUnknown().isUnknown() ) {
-                Employment employment = new Employment(
-                        Actor.UNKNOWN,
-                        p.getOrganizationOrUnknown(),
-                        new Job( Actor.UNKNOWN, p.getRoleOrUnknown(), p.getJurisdiction() ) );
-                employments.add( employment );
-            }
-        }
-        return new ArrayList<Employment>( employments );
+        return result;
     }
 
     /**
@@ -2518,12 +2025,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Commitment> findAllCommitmentsOf( Actor actor ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         Place locale = getPlan().getLocale();
-        for ( Assignment assignment : findAllAssignments( actor ) ) {
+        for ( Assignment assignment : getAssignments().withSome( actor ) ) {
             Iterator<Flow> flows = assignment.getPart().flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 if ( flow.isSharing() && flow.getSource().equals( assignment.getPart() ) ) {
-                    for ( Assignment beneficiary : findAllAssignments( (Part) flow.getTarget(), true ) ) {
+                    for ( Assignment beneficiary : findAllAssignments( (Part) flow.getTarget(), false ) ) {
                         if ( flow.allowsCommitment( assignment, beneficiary, locale ) )
                             commitments.add( new Commitment(
                                     assignment,
@@ -2541,14 +2048,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Commitment> findAllCommitmentsOf( Organization organization ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
-        List<Actor> actorsInOrganization = findAllActorsInOrganization( organization );
-        for ( Actor actor : actorsInOrganization ) {
-            for ( Commitment commitment : findAllCommitmentsOf( actor ) ) {
-                if ( commitment.getCommitter().getOrganization().equals( organization ) ) {
+        for ( Actor actor : getAssignments().withSome( organization ).getActualActors() )
+            for ( Commitment commitment : findAllCommitmentsOf( actor ) )
+                if ( commitment.getCommitter().getOrganization().equals( organization ) )
                     commitments.add( commitment );
-                }
-            }
-        }
         return new ArrayList<Commitment>( commitments );
     }
 
@@ -2620,15 +2123,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Commitment> findAllCommitmentsCoveredBy(
             Agreement agreement,
             Organization organization ) {
+
         Set<Commitment> commitments = new HashSet<Commitment>();
-        List<Actor> actorsInOrganization = findAllActorsInOrganization( organization );
-        for ( Actor actor : actorsInOrganization ) {
-            for ( Commitment commitment : findAllCommitmentsOf( actor ) ) {
-                if ( commitment.isBetweenOrganizations() && covers( agreement,
-                        commitment ) )
+        for ( Actor actor : getAssignments().withSome( organization ).getActualActors() )
+            for ( Commitment commitment : findAllCommitmentsOf( actor ) )
+                if ( commitment.isBetweenOrganizations() && covers( agreement, commitment ) )
                     commitments.add( commitment );
-            }
-        }
         return new ArrayList<Commitment>( commitments );
     }
 
@@ -2735,32 +2235,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     }
                 }
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Part> findAllAssignedParts( Actor actor ) {
-        List<Assignment> assignments = findAllAssignments( actor );
-        Set<Part> parts = new HashSet<Part>();
-        for ( Assignment assignment : assignments ) {
-            parts.add( assignment.getPart() );
-        }
-        return new ArrayList<Part>( parts );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<Part> findAllAssignedParts( final Segment segment, Actor actor ) {
-        return (List<Part>) CollectionUtils.select(
-                findAllAssignedParts( actor ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return ( (Part) object ).getSegment().equals( segment );
-                    }
-                } );
     }
 
     /**
@@ -2893,7 +2367,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     /**
-     * Whether none in a list eois is without a match with some in another list.
+     * Whether none in a list eois is without a strong match with some in another list.
      *
      * @param eois     a list of elements of information
      * @param superset a list of elements of information
@@ -2911,7 +2385,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 superset,
                                 new Predicate() {
                                     public boolean evaluate( Object object ) {
-                                        final String otherEoiContent = ( (ElementOfInformation) object ).getContent();
+                                        String otherEoiContent = ( (ElementOfInformation) object ).getContent();
                                         return matcher.same( eoiContent, otherEoiContent );
                                     }
                                 }
@@ -3239,6 +2713,47 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return disseminations;
     }
 
+    public List<Employment> findAllEmployments( Part part, Place locale ) {
 
+        Set<Actor> employed = new HashSet<Actor>();
+        List<Employment> employments = new ArrayList<Employment>();
+
+        for ( Organization org : listActualEntities( Organization.class ) ) {
+            List<Job> confirmedJobs = org.getJobs();
+
+            for ( Job job : confirmedJobs ) {
+                employments.add( new Employment( job.getActor(), org, job ) );
+                employed.add( job.getActor() );
+            }
+
+            if ( org.narrowsOrEquals( part.getOrganizationOrUnknown(), locale )
+                 && part.hasActualActor() && part.getOrganization() != null ) {
+
+                Actor actor = part.getActor();
+                Job j = new Job( actor, part.getRole(), part.getJurisdiction() );
+                if ( !confirmedJobs.contains( j )
+                     && ( !actor.isArchetype() || !employed.contains( actor ) ) ) {
+                    employments.add( new Employment( actor, org, j ) );
+                    employed.add( actor );
+                }
+            }
+        }
+
+        for ( Actor actor : listActualEntities( Actor.class ) )
+            if ( !employed.contains( actor ) )
+                employments.add( new Employment( actor ) );
+
+        return employments;
+    }
+
+    public Assignments getAssignments() {
+        Assignments result = new Assignments( getPlan().getLocale() );
+
+        for ( Segment segment : list( Segment.class ) )
+            for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); )
+                result.add( segment, findAllAssignments( pi.next(), true ) );
+
+        return result;
+    }
 }
 

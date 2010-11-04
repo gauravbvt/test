@@ -3,13 +3,12 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.query.QueryService;
@@ -110,11 +109,8 @@ public class SegmentReportPanel extends Panel {
     }
 
     private List<Organization> findAllAssignedOrganizations( Segment segment, Actor actor ) {
-        Set<Organization> organizations = new HashSet<Organization>();
-        for ( Assignment assignment : queryService.findAllAssignments( actor, segment ) ) {
-            organizations.add( assignment.getOrganization() );
-        }
-        return new ArrayList<Organization>( organizations );
+        return queryService.getAssignments().withSome( segment ).withSome( actor )
+                .getOrganizations();
     }
 
     private List<Organization> findAllInvolvedOrganizations( Segment segment ) {

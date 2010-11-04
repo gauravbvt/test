@@ -5,6 +5,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.query.Assignments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,8 @@ public class OrganizationWithoutAssignments extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         if ( getQueryService().isInvolvementExpected( org ) ) {
-            if ( getQueryService().findAllAssignments( org ).isEmpty() ) {
+            Assignments assignments = getQueryService().getAssignments().withSome( org );
+            if ( assignments.isEmpty() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, org );
                 issue.setSeverity( Level.Low );
                 issue.setDescription( "Organization \""

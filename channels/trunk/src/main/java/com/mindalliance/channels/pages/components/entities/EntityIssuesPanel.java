@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Issue;
@@ -12,7 +11,10 @@ import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
+import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.query.Assignments;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -188,8 +190,9 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             return queryService.findAllActualActors( new ResourceSpec( (Role) entity ) );
         } else if ( entity instanceof Organization ) {
             List<ModelEntity> inOrg = new ArrayList<ModelEntity>();
-            inOrg.addAll( queryService.findRolesIn( (Organization) entity ) );
-            inOrg.addAll( queryService.findAllActorsInOrganization( (Organization) entity ) );
+            Assignments assignments = queryService.getAssignments().withSome( (Specable) entity );
+            inOrg.addAll( assignments.getRoles() );
+            inOrg.addAll( assignments.getActualActors() );
             return inOrg;
         } else if ( entity instanceof Place ) {
             return queryService.findAllEntitiesIn( (Place) entity );
