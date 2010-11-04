@@ -225,7 +225,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         QueryService queryService = getQueryService();
         List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
         for ( String username : queryService.getUserService().getUsernames( getPlan().getUri() ) ) {
-            Participation participation = queryService.findOrCreate( Participation.class, username );
+            Participation participation = doSafeFindOrCreate( Participation.class, username );
             ParticipationWrapper wrapper = new ParticipationWrapper( username );
             wrapper.setParticipation( participation );
             wrappers.add( wrapper );
