@@ -94,7 +94,7 @@ public abstract class PlaybookPage extends WebPage {
     }
 
     final Plan getPlan() {
-        return getQueryService().getCurrentPlan();
+        return getQueryService().getPlan();
     }
 
     final QueryService getQueryService() {

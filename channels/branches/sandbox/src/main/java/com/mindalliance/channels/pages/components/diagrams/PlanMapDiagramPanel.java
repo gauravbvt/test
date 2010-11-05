@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -16,7 +16,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,7 +71,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
 
     public PlanMapDiagramPanel(
             String id,
-            IModel<ArrayList<Segment>> model,
+            IModel<List<Segment>> model,
             boolean groupByPhase,
             boolean groupByEvent,
             ModelObject selectedGroup,
@@ -85,7 +84,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
 
     public PlanMapDiagramPanel(
             String id,
-            IModel<ArrayList<Segment>> model,
+            IModel<List<Segment>> model,
             boolean groupByPhase,
             boolean groupByEvent,
             ModelObject selectedGroup,
@@ -225,7 +224,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             change.setScript( js );
             update( target, change );
         } catch ( NotFoundException e ) {
-            LOG.warn( "Nout found", e );
+            LOG.warn( "Not found", e );
         }
     }
 

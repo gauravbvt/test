@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
@@ -14,6 +15,7 @@ import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.wicket.model.IModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +34,7 @@ public class PlanIndexPanel extends AbstractIndexPanel {
      * Indexing choices.
      */
     private static final String[] indexingChoices =
-            {ALL, ACTORS, EVENTS, FLOWS, MEDIA, PHASES, PLACES, ORGANIZATIONS, ROLES, SEGMENTS, TASKS};
+            {ALL, ACTORS, EOIS, EVENTS, FLOWS, MEDIA, PHASES, PLACES, ORGANIZATIONS, ROLES, SEGMENTS, TASKS};
 
 
     public PlanIndexPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
@@ -100,6 +102,19 @@ public class PlanIndexPanel extends AbstractIndexPanel {
      */
     protected List<Flow> findIndexedFlows() {
         return getQueryService().findAllFlows();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected List<ElementOfInformationInFlow> findIndexedEOIs() {
+        List<ElementOfInformationInFlow> eois = new ArrayList<ElementOfInformationInFlow>();
+        for ( Flow flow : findIndexedFlows() ) {
+            for ( ElementOfInformation eoi : flow.getEois() ) {
+                eois.add( new ElementOfInformationInFlow( flow, eoi ) );
+            }
+        }
+        return eois;
     }
 
     /**

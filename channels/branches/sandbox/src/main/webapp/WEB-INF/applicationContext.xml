@@ -143,7 +143,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.RedundantPart"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.RedundantFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnconnectedConnector"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.FlowViolatesPolicy"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnconfirmedJob"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowToSelf"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.GeonameButNoLocation"/>
@@ -202,6 +201,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.SharingContradictsCapability"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.RedundantChannel"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.RedundantEOI"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ContradictoryPolicies"/>
             </list>
         </property>
     </bean>
@@ -223,12 +223,12 @@ CONFIGURATION NOTES:
         <property name="importExportFactory" ref="importExportFactory"/>
         <property name="timeout" value="300"/>
         <property name="presenceListeners">
-            <list value-type="com.mindalliance.channels.social.PresenceListener">
+            <list value-type="com.mindalliance.channels.command.PresenceListener">
                 <ref bean="planningEventService"/>
             </list>
         </property>
         <property name="commandListeners">
-            <list value-type="com.mindalliance.channels.social.CommandListener">
+            <list value-type="com.mindalliance.channels.command.CommandListener">
                 <ref bean="planningEventService"/>
             </list>
         </property>

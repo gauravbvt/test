@@ -25,13 +25,15 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,6 +60,12 @@ public class SOPsReportPage extends WebPage {
     private QueryService queryService;
 
     /**
+     * The user.
+     */
+    @SpringBean
+    private User user;
+
+    /**
      * The current plan.
      */
     private Plan plan;
@@ -67,138 +75,151 @@ public class SOPsReportPage extends WebPage {
      */
     private SelectorPanel selector;
 
+    private static final double[] DIAGRAM_SIZE = new double[]{ 478L, 400L };
+
     public SOPsReportPage( PageParameters parameters ) {
         super( parameters );
-        plan = getPlan();
 
-        setStatelessHint( true );
-        addFeedbackWidget();
+        setDefaultModel( new CompoundPropertyModel<Object>( this ) );
+
+        plan = user.getPlan();
+        PropertyModel<ModelObject> planModel = new PropertyModel<ModelObject>( this, "plan" );
+
         selector = new SelectorPanel( "selector", parameters );
         if ( !selector.isValid() ) {
             setRedirect( true );
             throw new RestartResponseException( getClass(), selector.getParameters() );
         }
 
-        String reportDate = DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG )
-                .format( new Date() );
-        List<Segment> segments = selector.getSegments();
+        IModel<List<Segment>> segmentsModel =
+                new PropertyModel<List<Segment>>( this, "selector.segments" );
+        add(
+            newFeedbackWidget(),
+            selector,
 
+            new Label( "title" ),
+            new Label( "plan.name" ),
+            new Label( "actorName" ).setVisible( !!selector.isActorSelected() ),
+            new Label( "organizationName" ).setVisible( !!selector.isOrgSelected() ),
+            new Label( "plan.client" ).setVisible( !plan.getClient().isEmpty() ),
+            new Label( "planDescription" ).setRenderBodyOnly( true ),
 
-        add( selector,
-                new Label( "title",
-                        MessageFormat.format( "Report: {0}", plan.getName() ) ),
-                new Label( "plan-name", plan.getName() ),
-                new Label( "actor-name", getActorName() ).setVisible( !selector.isAllActors() ),
-                new Label( "organization-name", getOrganizationName() ).setVisible( !selector.isAllOrganizations() ),
-                new Label( "plan-client", plan.getClient() )
-                        .setVisible( !plan.getClient().isEmpty() ),
-                new Label( "plan-description", getPlanDescription() )
-                        .setRenderBodyOnly( true ),
+            new Label( "date",
+                       DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG )
+                          .format( new Date() ) ),
 
-                new Label( "date", reportDate ),
+            new DocumentsReportPanel( "documents", planModel ),
+            new IssuesReportPanel( "issues", planModel ).setVisible( selector.isShowingIssues() ),
 
-                new DocumentsReportPanel( "documents", new Model<ModelObject>( plan ) ),
-                new IssuesReportPanel( "issues", new Model<ModelObject>( plan ) )
-                        .setVisible( selector.isShowingIssues() ),
+            new ListView<Segment>( "selector.segments" ) {
+                @Override
+                protected void populateItem( ListItem<Segment> item ) {
+                    item.add( new SegmentReportPanel( "segment",
+                            item.getModel(),
+                            !selector.isOrgSelected() ? null : selector.getOrganization(),
+                            !selector.isActorSelected() ? null : selector.getActor(),
+                            selector.isShowingIssues(),
+                            selector.isShowingDiagrams()) );
+                }
+            },
 
-                new ListView<Segment>( "segments", segments ) {
-                    @Override
-                    protected void populateItem( ListItem<Segment> item ) {
-                        item.add( new SegmentReportPanel( "segment",
-                                item.getModel(),
-                                selector.isAllOrganizations() ? null : selector.getOrganization(),
-                                selector.isAllActors() ? null : selector.getActor(),
-                                selector.isShowingIssues(),
-                                selector.isShowingDiagrams()) );
-                    }
-                },
+            new WebMarkupContainer( "plan-map-link" ).setVisible( user.isPlanner() )
+                .add( new AttributeModifier( "href", true, new Model<String>( getPlanMapLink() ) ) )
+                .add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) )
+                .setVisible( selector.isShowingDiagrams() ),
 
-                new WebMarkupContainer( "plan-map-link" ).setVisible( User.current().isPlanner() )
-                        .add( new AttributeModifier( "href", true, new Model<String>( getPlanMapLink() ) ) )
-                        .add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) )
-                        .setVisible( selector.isShowingDiagrams() )
+            newOrgHeaderPanel(),
+            newActorBanner(),
+
+            new WebMarkupContainer( "sg-list-container" )
+                .add( new ListView<Segment>( "sg-list", segmentsModel ) {
+                        @Override
+                        protected void populateItem( ListItem<Segment> item ) {
+                            Segment segment = item.getModelObject();
+                            item.add( new ExternalLink( "sc-link",
+                                                        "#" + segment.getId(),
+                                                        segment.getName() ) );
+                        }
+                    } )
+                .setVisible( !selector.isSegmentSelected() ),
+
+            newDiagramPanel( segmentsModel )
         );
-        if ( selector.isAllOrganizations() ) {
-            add( new Label( "org-details", "" ).setVisible( false ) );
-        } else {
-            add( new OrganizationHeaderPanel(
-                    "org-details",
-                    selector.getOrganization(),
-                    selector.isShowingIssues() ) );
-
-        }
-        if ( selector.isAllActors() )
-            add( new Label( "actor-details", "" ).setVisible( false ) );
-        else {
-            add( new ActorBannerPanel(
-                    "actor-details",
-                    selector.getSegment(),
-                    new ResourceSpec(
-                            selector.getActor(),
-                            null,
-                            selector.isAllOrganizations()? null : selector.getOrganization(),
-                            null ),
-                    false,
-                    "../"
-            ) );
-        }
-        if ( User.current().isPlanner() ) {
-            addDiagramPanel( segments );
-        } else {
-            add( new Label( "planMap", "" ) );
-        }
-        WebMarkupContainer segmentlistContainer = new WebMarkupContainer( "sg-list-container" );
-        segmentlistContainer.setVisible( selector.isAllSegments() );
-        segmentlistContainer.add( new ListView<Segment>( "sg-list", segments ) {
-            @Override
-            protected void populateItem( ListItem<Segment> item ) {
-                Segment segment = item.getModelObject();
-                item.add( new ExternalLink( "sc-link",
-                        "#" + segment.getId(), segment.getName() ) );
-            }
-        } );
-        add( segmentlistContainer );
     }
 
-    private void addFeedbackWidget() {
+    public String getTitle() {
+        return MessageFormat.format( "Report: {0}", plan.getName() );
+    }
+
+    public SelectorPanel getSelector() {
+        return selector;
+    }
+
+    private Component newActorBanner() {
+        return !selector.isActorSelected() ?
+               new Label( "actor-details", "" ).setVisible( false )
+             : new ActorBannerPanel( "actor-details",
+                                     selector.getSegment(),
+                                     new ResourceSpec( selector.getActor(),
+                                                       null,
+                                                       !selector.isOrgSelected() ?
+                                                            null : selector.getOrganization(),
+                                                       null ),
+                                     false,
+                                     "../" );
+    }
+
+    private Component newOrgHeaderPanel() {
+        return !selector.isOrgSelected() ?
+                    new Label( "org-details", "" ).setVisible( false )
+                  : new OrganizationHeaderPanel( "org-details",
+                                                 selector.getOrganization(),
+                                                 selector.isShowingIssues() );
+    }
+
+    private Component newFeedbackWidget() {
         FeedbackWidget feedbackWidget = new FeedbackWidget(
                 "feedback-widget",
                 new Model<String>(
-                        getPlan().getUserSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
+                    plan.getUserSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
                 true );
         makeVisible( feedbackWidget, false );
-        add( feedbackWidget );
+        return feedbackWidget;
     }
 
-    private Plan getPlan() {
-        return User.current().getPlan();
-    }
-
-    private void addDiagramPanel( List<Segment> segments ) {
-        Component diagramPanel;
-        double[] size = {478L, 400L};
-        if ( User.current().isPlanner() && selector.isShowingDiagrams() ) {
-            diagramPanel = new PlanMapDiagramPanel( "planMap",
-                    new Model<ArrayList<Segment>>( (ArrayList<Segment>) segments ),
-                    false, // group segments by phase
-                    true, // group segments by event
-                    null,  // selected phase or event
-                    selector.isAllSegments() ? null : selector.getSegment(),
+    private Component newDiagramPanel( IModel<List<Segment>> segments ) {
+        return user.isPlanner() && selector.isShowingDiagrams() ?
+               new PlanMapDiagramPanel(
+                    "planMap",
+                    segments,
+                    false,                    // group segments by phase
+                    true,                     // group segments by event
+                    null,                    // selected phase or event
+                    !selector.isSegmentSelected() ? null : selector.getSegment(),
                     null,
-                    new Settings( "#plan-map", DiagramFactory.LEFT_RIGHT, size, false, false ) );
-        } else {
-            diagramPanel = new Label( "planMap", "" );
-            diagramPanel.setVisible( false );
-        }
-        add( diagramPanel );
+                    new Settings( "#plan-map",
+                                  DiagramFactory.LEFT_RIGHT,
+                                  DIAGRAM_SIZE,
+                                  false,
+                                  false )
+                    )
+             : new Label( "planMap", "" ).setVisible( false );
     }
 
-    private String getActorName() {
+    public Plan getPlan() {
+        return plan;
+    }
+
+    public void setPlan( Plan plan ) {
+        this.plan = plan;
+    }
+
+    public String getActorName() {
         Actor actor = selector.getActor();
         return actor == null ? "" : actor.getName();
     }
 
-    private String getOrganizationName() {
+    public String getOrganizationName() {
         Organization organization = selector.getOrganization();
         String name = organization == null ? "" : organization.getName();
         if ( !selector.getActor().isUnknown() ) name = name + ",";
@@ -209,7 +230,7 @@ public class SOPsReportPage extends WebPage {
         return "/plan.png";
     }
 
-    private String getPlanDescription() {
+    public String getPlanDescription() {
         String label = plan.getDescription();
         return label.isEmpty() || label.endsWith( "." ) ? label
                 : label + ".";

@@ -2,6 +2,7 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
 
 import java.text.Collator;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * An object with name, id and description, comparable by its toString() values.
  */
-public abstract class ModelObject implements Comparable<ModelObject>, Identifiable {
+public abstract class ModelObject implements Comparable<ModelObject>, Identifiable, Nameable, Modelable {
 
     /**
      * Unique id of this object.
@@ -123,6 +124,13 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         description = val == null ? "" : val;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public ModelObject getModelObject() {
+        return this;
+    }
+
     //=============================
     /**
      * Compare with another named object.
@@ -146,9 +154,9 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     @Override
     public boolean equals( Object obj ) {
         return this == obj
-            || obj != null
-               && getClass().equals( obj.getClass() )
-               && id == ( (ModelObject) obj ).getId();
+                || obj != null
+                && getClass().equals( obj.getClass() )
+                && id == ( (ModelObject) obj ).getId();
     }
 
     /**
@@ -390,9 +398,40 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
 
     /**
      * Get type label.
+     *
      * @return a string
      */
     public String getKindLabel() {
         return getTypeName();
     }
+
+    /**
+     * Whether a prohibiting policy is attached.
+     * @return a boolean
+     */
+    public boolean isProhibited() {
+        return CollectionUtils.exists(
+                attachments,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ((Attachment)object).isProhibition();
+                    }
+                }
+        );
+    }
+    /**
+     * Whether a mandating policy is attached.
+     * @return a boolean
+     */
+    public boolean isMandated() {
+        return CollectionUtils.exists(
+                attachments,
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ((Attachment)object).isMandate();
+                    }
+                }
+        );
+    }
+
 }

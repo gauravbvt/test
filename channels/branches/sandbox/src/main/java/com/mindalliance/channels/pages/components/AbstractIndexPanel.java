@@ -1,11 +1,14 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Modelable;
+import com.mindalliance.channels.model.Nameable;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
@@ -88,6 +91,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     /**
      * Indexing choice.
      */
+    protected static final String EOIS = "Elements of information";
+    /**
+     * Indexing choice.
+     */
     protected static final String PHASES = "Phases";
     /**
      * Indexing choice.
@@ -136,7 +143,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     private String css;
 
     public AbstractIndexPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
-       this( id, model, null, expansions );
+        this( id, model, null, expansions );
     }
 
     public AbstractIndexPanel( String id, IModel<? extends Identifiable> model, String css, Set<Long> expansions ) {
@@ -264,10 +271,12 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             names = indexNamesFor( findIndexedPhases() );
         } else if ( indexedOn.equals( MEDIA ) ) {
             names = indexNamesFor( findIndexedMedia() );
-        }  else if ( indexedOn.equals( TASKS ) ) {
+        } else if ( indexedOn.equals( TASKS ) ) {
             names = indexNamesFor( findIndexedParts() );
         } else if ( indexedOn.equals( FLOWS ) ) {
             names = indexNamesFor( findIndexedFlows() );
+        } else if ( indexedOn.equals( EOIS ) ) {
+            names = indexNamesFor( findIndexedEOIs() );
         } else if ( indexedOn.equals( SEGMENTS ) ) {
             names = indexNamesFor( findIndexedSegments() );
         } else {
@@ -296,15 +305,16 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         names.addAll( indexNamesFor( findIndexedPlaces() ) );
         names.addAll( indexNamesFor( findIndexedRoles() ) );
         names.addAll( indexNamesFor( findIndexedFlows() ) );
+        names.addAll( indexNamesFor( findIndexedEOIs() ) );
         names.addAll( indexNamesFor( findIndexedParts() ) );
         names.addAll( indexNamesFor( findIndexedSegments() ) );
         return new ArrayList<String>( names );
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<String> indexNamesFor( List<? extends ModelObject> modelObjects ) {
+    private List<String> indexNamesFor( List<? extends Nameable> nameables ) {
         return (List<String>) CollectionUtils.collect(
-                modelObjects,
+                nameables,
                 new Transformer() {
                     public Object transform( Object input ) {
                         if ( input instanceof Actor && ( (Actor) input ).isActual() ) {
@@ -314,7 +324,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                         } else if ( input instanceof Flow ) {
                             return ( (ModelObject) input ).getName().toLowerCase();
                         } else {
-                            return ( (ModelObject) input ).getName();
+                            return ( (Nameable) input ).getName();
                         }
                     }
                 }
@@ -409,12 +419,14 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 indices = indicesFor( findIndexedEvents() );
             } else if ( indexedOn.equals( PHASES ) ) {
                 indices = indicesFor( findIndexedPhases() );
-            }  else if ( indexedOn.equals( MEDIA ) ) {
+            } else if ( indexedOn.equals( MEDIA ) ) {
                 indices = indicesFor( findIndexedMedia() );
             } else if ( indexedOn.equals( TASKS ) ) {
                 indices = indicesFor( findIndexedParts() );
             } else if ( indexedOn.equals( FLOWS ) ) {
                 indices = indicesFor( findIndexedFlows() );
+            } else if ( indexedOn.equals( EOIS ) ) {
+                indices = indicesFor( findIndexedEOIs() );
             } else if ( indexedOn.equals( SEGMENTS ) ) {
                 indices = indicesFor( findIndexedSegments() );
             } else {
@@ -440,45 +452,45 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         return indexEntries;
     }
 
-    private String rangeName( ModelObject mo ) {
-        if ( mo instanceof Actor && ( (Actor) mo ).isActual() ) {
-            return ( (Actor) mo ).getLastName();
-        } else if ( mo instanceof Part ) {
-            return ( (Part) mo ).getTask().toLowerCase();
-        } else if ( mo instanceof Flow ) {
-            return mo.getName().toLowerCase();
+    private String rangeName( Nameable nameable ) {
+        if ( nameable instanceof Actor && ( (Actor) nameable ).isActual() ) {
+            return ( (Actor) nameable ).getLastName();
+        } else if ( nameable instanceof Part ) {
+            return ( (Part) nameable ).getTask().toLowerCase();
+        } else if ( nameable instanceof Flow ) {
+            return nameable.getName().toLowerCase();
         } else {
-            return mo.getName();
+            return nameable.getName();
         }
     }
 
-    private String indexName( ModelObject mo ) {
-        if ( mo instanceof Actor && ( (Actor) mo ).isActual() ) {
-            return ( (Actor) mo ).getNormalizedName();
-        } else if ( mo instanceof Part ) {
-            return ( (Part) mo ).getTask().toLowerCase();
-        } else if ( mo instanceof Flow ) {
-            return mo.getName().toLowerCase();
+    private String indexName( Nameable nameable ) {
+        if ( nameable instanceof Actor && ( (Actor) nameable ).isActual() ) {
+            return ( (Actor) nameable ).getNormalizedName();
+        } else if ( nameable instanceof Part ) {
+            return ( (Part) nameable ).getTask().toLowerCase();
+        } else if ( nameable instanceof Flow ) {
+            return nameable.getName().toLowerCase();
         } else {
-            return mo.getName();
+            return nameable.getName();
         }
 
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<IndexEntry> indicesFor( List<? extends ModelObject> modelObjects ) {
+    private List<IndexEntry> indicesFor( List<? extends Modelable> modelables ) {
         Map<String, IndexEntry> entries = new HashMap<String, IndexEntry>();
-        for ( ModelObject mo : modelObjects ) {
-            boolean included = nameRange.contains( rangeName( mo ) ) &&
-                    !isFilteredOut( indexName( mo ) );
+        for ( Modelable modelable : modelables ) {
+            boolean included = nameRange.contains( rangeName( modelable ) ) &&
+                    !isFilteredOut( indexName( modelable ) );
             if ( included ) {
-                String indexName = indexName( mo );
+                String indexName = indexName( modelable );
                 IndexEntry entry = entries.get( indexName );
                 if ( entry == null ) {
-                    entry = new IndexEntry( indexName, mo );
+                    entry = new IndexEntry( indexName, modelable.getModelObject() );
                     entries.put( indexName, entry );
                 } else {
-                    entry.addNameHolder( mo );
+                    entry.addNameHolder( modelable.getModelObject() );
                 }
             }
         }
@@ -620,7 +632,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             String kind = ( mo instanceof Part
                     ? "Task"
                     : ( mo instanceof Flow )
-                    ? "Flow"
+                    ? ( "Flow \"" + mo.getName() + "\"" )
                     : ( mo instanceof Segment )
                     ? "Plan segment"
                     : ( !mo.isEntity() )
@@ -637,14 +649,14 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         /**
          * Get the kind of model oebjct.
          *
+         * @param mo model object
          * @return a string
          */
-        protected String getKind() {
-            ModelObject mo = getIndexedModelObject();
+        protected String getKind( ModelObject mo ) {
             return ( mo instanceof Part
                     ? "Task"
                     : ( mo instanceof Flow )
-                    ? "Flow"
+                    ? ( "Flow \"" + mo.getName() + "\"" )
                     : mo.getClass().getSimpleName()
             );
         }
@@ -692,6 +704,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         public RepeatedIndexEntryPanel( String id, IModel<IndexEntry> model ) {
             this( id, model, null );
         }
+
         public RepeatedIndexEntryPanel( String id, IModel<IndexEntry> model, String css ) {
             super( id, model );
             this.css = css;
@@ -712,7 +725,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                             "moLink",
                             new Model<ModelObject>( item.getModelObject() ),
                             new Model<String>( getRank( item.getModelObject() ) ),
-                            getKind(),
+                            getKind( item.getModelObject() ),
                             css );
                     item.add( moLink );
                 }
@@ -757,6 +770,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         if ( !findIndexedOrganizations().isEmpty() ) choices.add( ORGANIZATIONS );
         if ( !findIndexedRoles().isEmpty() ) choices.add( ROLES );
         if ( !findIndexedParts().isEmpty() ) choices.add( TASKS );
+        if ( !findIndexedFlows().isEmpty() ) choices.add( FLOWS );
+        if ( !findIndexedEOIs().isEmpty() ) choices.add( EOIS );
         if ( !findIndexedSegments().isEmpty() ) choices.add( SEGMENTS );
         return choices;
     }
@@ -766,70 +781,122 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      *
      * @return a list of actors
      */
-    abstract protected List<Actor> findIndexedActors();
+    protected List<Actor> findIndexedActors() {
+        return new ArrayList<Actor>();
+    }
 
     /**
      * Find all events to index.
      *
      * @return a list of events
      */
-    abstract protected List<Event> findIndexedEvents();
+    protected List<Event> findIndexedEvents() {
+        return new ArrayList<Event>();
+    }
 
     /**
      * Find all organizations to index.
      *
      * @return a list of organizations
      */
-    abstract protected List<Organization> findIndexedOrganizations();
+    protected List<Organization> findIndexedOrganizations() {
+        return new ArrayList<Organization>();
+    }
 
     /**
      * Find all phases to index.
      *
      * @return a list of phases
      */
-    abstract protected List<Phase> findIndexedPhases();
+    protected List<Phase> findIndexedPhases() {
+        return new ArrayList<Phase>();
+    }
 
     /**
      * Find all phases to index.
      *
      * @return a list of transmission media
      */
-    abstract protected List<TransmissionMedium> findIndexedMedia();
+    protected List<TransmissionMedium> findIndexedMedia() {
+        return new ArrayList<TransmissionMedium>();
+    }
 
     /**
      * Find all places to index.
      *
      * @return a list of places
      */
-    abstract protected List<Place> findIndexedPlaces();
+    protected List<Place> findIndexedPlaces() {
+        return new ArrayList<Place>();
+    }
 
     /**
      * Find all roles to index.
      *
      * @return a list of roles
      */
-    abstract protected List<Role> findIndexedRoles();
+    protected List<Role> findIndexedRoles() {
+        return new ArrayList<Role>();
+    }
 
     /**
      * Find all flows to index.
      *
      * @return a list of flows
      */
-    abstract protected List<Flow> findIndexedFlows();
+    protected List<Flow> findIndexedFlows() {
+        return new ArrayList<Flow>();
+    }
+
+    /**
+     * Find all Subjects to index.
+     *
+     * @return a list of Elements of Information
+     */
+    protected List<ElementOfInformationInFlow> findIndexedEOIs() {
+        return new ArrayList<ElementOfInformationInFlow>();
+    }
 
     /**
      * Find all parts to index.
      *
      * @return a list of parts
      */
-    abstract protected List<Part> findIndexedParts();
+    protected List<Part> findIndexedParts() {
+        return new ArrayList<Part>();
+    }
 
     /**
      * Find all segments to index.
      *
      * @return a list of segments
      */
-    abstract protected List<Segment> findIndexedSegments();
+    protected List<Segment> findIndexedSegments() {
+        return new ArrayList<Segment>();
+    }
 
+    /**
+     * An element of information in a flow.
+     */
+    public class ElementOfInformationInFlow implements Nameable, Modelable {
 
+        private Flow flow;
+        private ElementOfInformation eoi;
+
+        public ElementOfInformationInFlow( Flow flow, ElementOfInformation eoi ) {
+            this.flow = flow;
+            this.eoi = eoi;
+        }
+
+        public String getName() {
+            return eoi.getContent().toLowerCase();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public ModelObject getModelObject() {
+            return flow;
+        }
+    }
 }

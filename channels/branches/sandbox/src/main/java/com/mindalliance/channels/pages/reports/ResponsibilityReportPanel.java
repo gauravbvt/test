@@ -150,7 +150,7 @@ public class ResponsibilityReportPanel extends Panel {
     private List<Actor> findActualActors( Organization organization, Role role, Place jurisdiction ) {
         Set<Actor> actors = new HashSet<Actor>();
         if ( organization.isActual() ) {
-            Place location = queryService.getCurrentPlan().getLocale();
+            Place location = queryService.getPlan().getLocale();
             ResourceSpec s = new ResourceSpec( null, role, organization, jurisdiction );
             for ( Employment employment : queryService.findAllEmploymentsIn( organization ) ) {
                 ResourceSpec employmentSpec = new ResourceSpec( employment );

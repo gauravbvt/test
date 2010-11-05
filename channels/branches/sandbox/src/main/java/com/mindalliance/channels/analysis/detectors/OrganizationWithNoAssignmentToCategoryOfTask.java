@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.query.Assignments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,8 @@ public class OrganizationWithNoAssignmentToCategoryOfTask extends AbstractIssueD
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         if ( getQueryService().isInvolvementExpected( org ) ) {
-            List<Assignment> assignments = getQueryService().findAllAssignments( org );
+            Assignments assignments = getQueryService().getAssignments().withSome( org );
+
             if ( !assignments.isEmpty() ) {
                 for ( Part.Category category : Part.Category.values() ) {
                     if ( !isCategoryCovered( assignments, category ) ) {
@@ -56,7 +58,7 @@ public class OrganizationWithNoAssignmentToCategoryOfTask extends AbstractIssueD
         return issues;
     }
 
-    private boolean isCategoryCovered( List<Assignment> assignments, Part.Category category ) {
+    private boolean isCategoryCovered( Assignments assignments, Part.Category category ) {
         for ( Assignment assignment : assignments ) {
             Part.Category partCategory = assignment.getPart().getCategory();
             if ( partCategory != null && partCategory.equals( category ) )

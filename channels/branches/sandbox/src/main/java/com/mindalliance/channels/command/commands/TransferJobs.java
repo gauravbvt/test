@@ -59,8 +59,8 @@ public class TransferJobs extends AbstractCommand {
             set("subCommands", multi);
         }
         multi.execute( commander );
-        describeTarget( toOrg );        
-        return new Change( Change.Type.Updated, queryService.getCurrentPlan() );
+        describeTarget( toOrg );
+        return new Change( Change.Type.Updated, queryService.getPlan() );
     }
 
     private MultiCommand makeSubCommands( Organization fromOrg, Organization toOrg, List<Job> jobs ) {

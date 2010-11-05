@@ -3,17 +3,9 @@ package com.mindalliance.channels.pages.components.plan;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
@@ -449,139 +441,12 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         protected List<Organization> findIndexedOrganizations() {
             return getIndexedOrganizations();
         }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Actor> findIndexedActors() {
-            return new ArrayList<Actor>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Event> findIndexedEvents() {
-            return new ArrayList<Event>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Phase> findIndexedPhases() {
-            return new ArrayList<Phase>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<TransmissionMedium> findIndexedMedia() {
-            return new ArrayList<TransmissionMedium>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Place> findIndexedPlaces() {
-            return new ArrayList<Place>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Role> findIndexedRoles() {
-            return new ArrayList<Role>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Flow> findIndexedFlows() {
-            return new ArrayList<Flow>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Part> findIndexedParts() {
-            return new ArrayList<Part>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Segment> findIndexedSegments() {
-            return new ArrayList<Segment>();
-        }
-
     }
 
     private class TaskIndexPanel extends AbstractIndexPanel {
 
         private TaskIndexPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
             super( id, model, expansions );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Organization> findIndexedOrganizations() {
-            return new ArrayList<Organization>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Actor> findIndexedActors() {
-            return new ArrayList<Actor>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Event> findIndexedEvents() {
-            return new ArrayList<Event>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Phase> findIndexedPhases() {
-            return new ArrayList<Phase>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<TransmissionMedium> findIndexedMedia() {
-            return new ArrayList<TransmissionMedium>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Place> findIndexedPlaces() {
-            return new ArrayList<Place>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Role> findIndexedRoles() {
-            return new ArrayList<Role>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Flow> findIndexedFlows() {
-            return new ArrayList<Flow>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Segment> findIndexedSegments() {
-            return new ArrayList<Segment>();
         }
 
         /**

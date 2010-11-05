@@ -9,8 +9,6 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -97,25 +95,18 @@ public class OrganizationReportPanel extends Panel {
 
     @SuppressWarnings( "unchecked" )
     private List<ResourceSpec> findActorResponsibilities() {
-        List<Assignment> assignments =
-                (List<Assignment>) CollectionUtils.select(
-                        queryService.findAllAssignments( actor, segment ),
-                        new Predicate() {
-                            public boolean evaluate( Object object ) {
-                                Assignment assignment = (Assignment) object;
-                                return organization.equals( assignment.getOrganization() );
-                            }
-                        } );
+
         Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
-        for ( Assignment assignment : assignments ) {
+        for ( Assignment assignment :
+                queryService.getAssignments().withSome( segment ).withAll( actor, organization ) )
             specs.add( new ResourceSpec( assignment ) );
-        }
+
         return new ArrayList<ResourceSpec>(specs);
     }
 
     private List<ResourceSpec> findAllResponsibilities() {
         Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
-        Place locale = queryService.getCurrentPlan().getLocale();
+        Place locale = queryService.getPlan().getLocale();
 
         for ( Part part : queryService.findAllParts( segment, organization, false ) ) {
             Organization partOrg = part.getOrganization();

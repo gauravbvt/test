@@ -258,7 +258,7 @@ public class User implements UserDetails {
     public String getRole( String planUri ) {
         return userInfo.isAdmin() ? "Admin"
                 : userInfo.isPlanner( planUri ) ? "Planner"
-                : userInfo.isUser( planUri ) ? "Playbook user"
+                : userInfo.isUser( planUri ) ? "Participant"
                 : "Unauthorized";
     }
 

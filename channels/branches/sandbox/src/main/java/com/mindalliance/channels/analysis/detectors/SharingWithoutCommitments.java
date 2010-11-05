@@ -4,8 +4,8 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Part;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,18 +32,64 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
         List<Commitment> commitments = getQueryService().findAllCommitments( flow );
         if ( commitments.isEmpty() ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, flow );
-            issue.setDescription( "No sharing commitment is implied by this information flow." );
-            StringBuilder sb = new StringBuilder();
-            sb.append( "Modify the specifications for source and target tasks so that they both get assigned" );
-            sb.append( "\nor add or redefine one or more participating agents to match source and target task specifications" );
+            Part source = (Part)flow.getSource();
+            Part target = (Part)flow.getTarget();
+            String description = "No sharing commitment is implied by this information flow";
             if ( flow.isProhibited() ) {
-                sb.append( "\nand un-attach all prohibiting policies" );
+                description += " because sharing is prohibited";
+                issue.setRemediation( "Remove all prohibiting policies\nor remove the flow" );
+            } else {
+                description += " because";
+                boolean noSourceAssignment = isSourceUnassigned( flow );
+                if ( noSourceAssignment ) {
+                    description += " no one is assigned to task \"" + source.getTask() + "\"";
+                }
+                boolean noTargetAssignment = isTargetUnassigned( flow );
+                if ( noTargetAssignment ) {
+                    description += noSourceAssignment ? " and" : "";
+                    description += " no one is assigned to task \"" + target.getTask() + "\"";
+                }
+                StringBuilder sb = new StringBuilder();
+                sb.append( "Modify the specifications for" );
+                if ( noSourceAssignment ) {
+                    sb.append( " task \"" );
+                    sb.append( source.getTask() );
+                    sb.append( "\"" );
+                }
+                if ( noTargetAssignment ) {
+                    if ( noSourceAssignment ) sb.append( " and for" );
+                    sb.append( " task \"" );
+                    sb.append( target.getTask() );
+                    sb.append( "\"" );
+                }
+                sb.append( "\nor add or redefine one or more participating agents so that at least one matches the specifications of" );
+                if ( noSourceAssignment ) {
+                    sb.append( " task \"" );
+                    sb.append( source.getTask() );
+                    sb.append( "\"" );
+                }
+                if ( noTargetAssignment ) {
+                    if ( noSourceAssignment ) sb.append( " and the specifications of" );
+                    sb.append( " task \"" );
+                    sb.append( target.getTask() );
+                    sb.append( "\"" );
+                }
+                issue.setRemediation( sb.toString() );
             }
-            issue.setRemediation( sb.toString() );
-            issue.setSeverity( Level.Medium );
+            description += ".";
+            issue.setDescription( description );
+            issue.setSeverity( this.getSharingFailureSeverity( flow ) );
             issues.add( issue );
         }
         return issues;
+    }
+
+    private boolean isTargetUnassigned( Flow flow ) {
+        return getQueryService().findAllAssignments( (Part) flow.getTarget(), false ).isEmpty();
+    }
+
+    private boolean isSourceUnassigned( Flow flow ) {
+        return getQueryService().findAllAssignments( (Part) flow.getSource(), false ).isEmpty();
     }
 
     /**

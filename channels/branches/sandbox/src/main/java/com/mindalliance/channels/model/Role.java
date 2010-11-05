@@ -96,4 +96,13 @@ public class Role extends ModelEntity implements Specable {
     public Place getJurisdiction() {
         return null;
     }
+
+    /**
+     * Get a standardized print string for reports.
+     * @return "A role"
+     */
+    public String reportString() {
+        String s = toString().toLowerCase();
+        return ( "aeiouy".contains( s.substring( 0, 1 ) ) ? "An " : "A " ) + s ;
+    }
 }

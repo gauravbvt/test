@@ -454,7 +454,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         setSignificanceToTarget( need.getSignificanceToTarget() );
         setChannels( Channel.intersect(
                 capability.getChannels(),
-                need.getChannels(), queryService.getCurrentPlan().getLocale() ) );
+                need.getChannels(), queryService.getPlan().getLocale() ) );
         setMaxDelay( Delay.min( capability.getMaxDelay(), need.getMaxDelay() ) );
         setIntent( capability.getIntent() != null ? capability.getIntent() : need.getIntent() );
         setRestriction( Flow.Restriction.resolve(

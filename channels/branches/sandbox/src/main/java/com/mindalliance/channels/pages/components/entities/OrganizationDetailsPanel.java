@@ -283,7 +283,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      * @return a list of assignments
      */
     public List<Assignment> getAssignments() {
-        return getQueryService().findAllAssignments( getOrganization() );
+        return getQueryService().getAssignments().withSome( getOrganization() ).getAssignments();
     }
 
     private void addCommitmentsPanel( WebMarkupContainer moDetailsDiv ) {

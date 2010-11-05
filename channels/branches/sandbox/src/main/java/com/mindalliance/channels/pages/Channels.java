@@ -264,7 +264,7 @@ public class Channels extends WebApplication
      * @return a lock manager
      */
     public LockManager getLockManager() {
-        Plan plan = queryService.getCurrentPlan();
+        Plan plan = queryService.getPlan();
         return getLockManager( plan );
     }
 

@@ -1,7 +1,4 @@
-package com.mindalliance.channels.social;
-
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.Command;
+package com.mindalliance.channels.command;
 
 /**
  * A listener to command execution.
@@ -31,5 +28,5 @@ public interface CommandListener {
      * @param command   a Command
      */
     void commandRedone( Command command );
-    
+
 }

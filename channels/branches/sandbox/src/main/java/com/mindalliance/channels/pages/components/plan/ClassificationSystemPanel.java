@@ -5,15 +5,7 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Classification;
-import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
@@ -293,54 +285,6 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
             );
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Event> findIndexedEvents() {
-            return new ArrayList<Event>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Organization> findIndexedOrganizations() {
-            return new ArrayList<Organization>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Segment> findIndexedSegments() {
-            return new ArrayList<Segment>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Phase> findIndexedPhases() {
-            return new ArrayList<Phase>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<TransmissionMedium> findIndexedMedia() {
-            return new ArrayList<TransmissionMedium>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Place> findIndexedPlaces() {
-            return new ArrayList<Place>();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Role> findIndexedRoles() {
-            return new ArrayList<Role>();
-        }
 
         /**
          * {@inheritDoc}
@@ -357,12 +301,6 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
             );
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        protected List<Part> findIndexedParts() {
-            return new ArrayList<Part>();
-        }
     }
 
 
