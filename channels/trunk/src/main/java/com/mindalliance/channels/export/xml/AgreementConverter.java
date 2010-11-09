@@ -57,6 +57,7 @@ public class AgreementConverter extends AbstractChannelsConverter {
             context.convertAnother( eoi );
             writer.endNode();
         }
+        exportAttachments( agreement, writer );
     }
 
     public Object unmarshal(
@@ -88,6 +89,8 @@ public class AgreementConverter extends AbstractChannelsConverter {
                         plan,
                         ElementOfInformation.class );
                 agreement.addEoi( eoi );
+            } else if ( nodeName.equals( "attachments" ) ) {
+                importAttachments( agreement, reader );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }

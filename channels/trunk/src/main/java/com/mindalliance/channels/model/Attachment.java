@@ -39,7 +39,11 @@ public class Attachment implements Serializable, Comparable<Attachment> {
         /**
          * A policy document that prohibits whatever the document is attached to.
          */
-        PolicyCant( "Prohibiting policy" );
+        PolicyCant( "Prohibiting policy" ),
+        /**
+         * A memorandum of understanding document.
+         */
+        MOU( "Memorandum of Understanding" );
 
         //--------------------------------
         /**
@@ -131,21 +135,21 @@ public class Attachment implements Serializable, Comparable<Attachment> {
     }
 
     /**
-     * Represents policy violation.
-     *
-     * @return a boolean
-     */
-    public boolean isPolicyViolation() {
-        return type == Type.PolicyCant;
-    }
-
-    /**
      * Represents an image.
      *
      * @return a boolean
      */
     public boolean isPicture() {
         return type == Type.Image;
+    }
+
+    /**
+     * Is MOU.
+     *
+     * @return a boolean
+     */
+    public boolean isMOU() {
+        return type == Type.MOU;
     }
 
     /**

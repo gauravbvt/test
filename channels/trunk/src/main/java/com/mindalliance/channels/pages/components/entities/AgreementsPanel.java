@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.segment.CommitmentsTablePanel;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
@@ -23,7 +24,6 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -43,7 +43,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
     /**
      * Selected agreement.
      */
-    private Agreement selectedAgreement;
+    private AgreementWrapper selectedAgreement;
     /**
      * Commitments panel.
      */
@@ -74,14 +74,29 @@ public class AgreementsPanel extends AbstractCommandablePanel {
      * @return a list of agreement wrappers
      */
     public List<AgreementWrapper> getAgreements() {
-        Set<AgreementWrapper> wrappers = new HashSet<AgreementWrapper>();
+        List<AgreementWrapper> wrappers = new ArrayList<AgreementWrapper>();
         for ( Agreement agreement : getOrganization().getAgreements() ) {
-            wrappers.add( new AgreementWrapper( agreement, true ) );
+            wrappers.add( new AgreementWrapper( agreement, getOrganization(), true ) );
         }
         for ( Agreement agreement : getQueryService().findAllImpliedAgreementsOf( getOrganization() ) ) {
-            wrappers.add( new AgreementWrapper( agreement, false ) );
+            AgreementWrapper wrapper = new AgreementWrapper( agreement, getOrganization(), false );
+            if ( !wrappers.contains( wrapper ) ) wrappers.add( wrapper );
         }
-        return new ArrayList<AgreementWrapper>( wrappers );
+        for ( Organization org : getQueryService().listActualEntities( Organization.class ) ) {
+            if ( !org.equals( getOrganization() ) ) {
+                for ( Agreement agreement : org.getAgreements() ) {
+                    if ( agreement.getBeneficiary().equals( getOrganization() ) ) {
+                        wrappers.add( new AgreementWrapper( agreement, org, true ) );
+                    }
+                }
+                for (Agreement agreement : getQueryService().findAllImpliedAgreementsOf( org ) ) {
+                    if ( agreement.getBeneficiary().equals( getOrganization() ) ) {
+                        wrappers.add( new AgreementWrapper( agreement, org, false ) );
+                    }
+                }
+            }
+        }
+        return wrappers;
     }
 
     private void addCommitmentsContainer() {
@@ -95,6 +110,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
         Label agreementLabel;
         Label coverageQualifierLabel;
         Component commitmentsPanel;
+        Component attachmentPanel;
         if ( selectedAgreement == null ) {
             agreementLabel = new Label( "agreement", "" );
             coverageQualifierLabel = new Label( "coverageQualifier", "" );
@@ -111,17 +127,39 @@ public class AgreementsPanel extends AbstractCommandablePanel {
             commitmentsPanel = new CommitmentsTablePanel(
                     "commitments",
                     new PropertyModel<List<Commitment>>( this, "commitments" ) );
+
+        }
+        int index = getSelectedAgreementIndex();
+        if ( index < 0 ) {
+            attachmentPanel = new Label( "attachments", "" );
+        } else {
+            attachmentPanel = new AttachmentPanel(
+                    "attachments",
+                    new Model<Organization>( selectedAgreement.getOrganization() ),
+                    "agreements[" + index + "]" );
         }
         agreementLabel.setOutputMarkupId( true );
         coverageQualifierLabel.setOutputMarkupId( true );
+        attachmentPanel.setOutputMarkupId( true );
         commitmentsPanel.setOutputMarkupId( true );
         commitmentsContainer.addOrReplace( agreementLabel );
         commitmentsContainer.addOrReplace( coverageQualifierLabel );
+        commitmentsContainer.addOrReplace( attachmentPanel );
         commitmentsContainer.addOrReplace( commitmentsPanel );
     }
 
-    private boolean isImplied( Agreement agreement ) {
-        return !getOrganization().getAgreements().contains( agreement );
+    private int getSelectedAgreementIndex() {
+        if ( selectedAgreement == null || isImplied( selectedAgreement ) ) {
+            return -1;
+        } else {
+            return selectedAgreement.getOrganization().getAgreements()
+                    .indexOf( selectedAgreement.getAgreement() );
+        }
+    }
+
+    private boolean isImplied( AgreementWrapper agreementWrapper ) {
+        return !agreementWrapper.getOrganization().getAgreements()
+                .contains( agreementWrapper.getAgreement() );
     }
 
     private String summarizeAgreement() {
@@ -144,8 +182,8 @@ public class AgreementsPanel extends AbstractCommandablePanel {
             return new ArrayList<Commitment>();
         else
             return getQueryService().findAllCommitmentsCoveredBy(
-                    selectedAgreement,
-                    getOrganization() );
+                    selectedAgreement.getAgreement(),
+                    selectedAgreement.getOrganization() );
     }
 
     public Organization getOrganization() {
@@ -157,8 +195,9 @@ public class AgreementsPanel extends AbstractCommandablePanel {
      */
     public void update( AjaxRequestTarget target, Object object, String action ) {
         if ( object instanceof AgreementWrapper ) {
+            AgreementWrapper wrapper = (AgreementWrapper) object;
             if ( action.equals( "select" ) ) {
-                selectedAgreement = ( (AgreementWrapper) object ).getAgreement();
+                selectedAgreement = (AgreementWrapper) object;
                 makeVisible( commitmentsContainer, true );
                 addCommitments();
                 target.addComponent( commitmentsContainer );
@@ -168,9 +207,13 @@ public class AgreementsPanel extends AbstractCommandablePanel {
                 addCommitments();
                 target.addComponent( commitmentsContainer );
                 if ( ( (AgreementWrapper) object ).isConfirmed() ) {
-                    update( target, new Change( Change.Type.Updated, getOrganization(), "agreements" ) );
+                    update(
+                            target,
+                            new Change( Change.Type.Updated, wrapper.getOrganization(), "agreements" ) );
                 } else {
-                    update( target, new Change( Change.Type.Updated, getOrganization(), "agreements" ) );
+                    update(
+                            target,
+                            new Change( Change.Type.Updated, wrapper.getOrganization(), "agreements" ) );
                 }
             }
         }
@@ -186,17 +229,26 @@ public class AgreementsPanel extends AbstractCommandablePanel {
          */
         private Agreement agreement;
         /**
+         * Organization agreeing.
+         */
+        private Organization organization;
+        /**
          * Whether confirmed vs implied.
          */
         private boolean confirmed;
 
-        public AgreementWrapper( Agreement agreement, boolean confirmed ) {
+        public AgreementWrapper( Agreement agreement, Organization organization, boolean confirmed ) {
             this.agreement = agreement;
+            this.organization = organization;
             this.confirmed = confirmed;
         }
 
         public Agreement getAgreement() {
             return agreement;
+        }
+
+        public Organization getOrganization() {
+            return organization;
         }
 
         public boolean isConfirmed() {
@@ -206,13 +258,13 @@ public class AgreementsPanel extends AbstractCommandablePanel {
         public void setConfirmed( boolean confirmed ) {
             if ( confirmed ) {
                 doCommand( new UpdatePlanObject(
-                        getOrganization(),
+                        organization,
                         "agreements",
                         agreement,
                         UpdateObject.Action.Add ) );
             } else {
                 doCommand( new UpdatePlanObject(
-                        getOrganization(),
+                        organization,
                         "agreements",
                         agreement,
                         UpdateObject.Action.Remove ) );
@@ -236,6 +288,20 @@ public class AgreementsPanel extends AbstractCommandablePanel {
             return agreement.getUsage();
         }
 
+        public String getMouStatus() {
+            if ( isConfirmed() )
+                return agreement.hasMOU() ? "Yes" : "No";
+            else
+                return "-";
+        }
+
+        public String getConfirmedIndex() {
+            if ( isConfirmed() )
+                return ( organization.getAgreements().indexOf( agreement ) + 1 ) + "";
+            else
+                return "-";
+        }
+
         /**
          * {@inheritDoc}
          */
@@ -252,7 +318,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
         }
 
         public long getId() {
-            return getOrganization().getId();
+            return organization.getId();
         }
 
         public String getDescription() {
@@ -293,6 +359,17 @@ public class AgreementsPanel extends AbstractCommandablePanel {
                     isLockedByUser( getOrganization() ),
                     AgreementsPanel.this
             ) );
+            columns.add( makeColumn(
+                    "#",
+                    "confirmedIndex",
+                    ""
+            ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Agreeing",
+                    "organization",
+                    "organization.name",
+                    EMPTY,
+                    AgreementsTable.this ) );
             columns.add( makeFilterableLinkColumn(
                     "Beneficiary",
                     "beneficiary",
@@ -312,6 +389,11 @@ public class AgreementsPanel extends AbstractCommandablePanel {
             columns.add( makeColumn(
                     "For use",
                     "usage",
+                    ""
+            ) );
+            columns.add( makeColumn(
+                    "Has MOU",
+                    "mouStatus",
                     ""
             ) );
             columns.add( makeActionLinkColumn(

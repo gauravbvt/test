@@ -341,9 +341,23 @@ public class Organization extends AbstractUnicastChannelable
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )
             types.add( Attachment.Type.Image );
+        types.add( Attachment.Type.MOU );
         types.addAll( super.getAttachmentTypes() );
         return types;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Attachment.Type> getAttachmentTypes( String attachablePath ) {
+        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
+        if ( attachablePath.startsWith( "agreements" ) )
+            types.add( Attachment.Type.MOU );
+        types.addAll( super.getAttachmentTypes() );
+        return types;
+    }
+
 
 
     /**

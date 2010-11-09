@@ -1,8 +1,10 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
@@ -162,6 +164,18 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
                         attachment ) );
             }
         }
+        for ( Organization organization : getQueryService().listActualEntities( Organization.class ) ) {
+            List<Agreement> agreements = organization.getAgreements();
+            for ( Agreement agreement : agreements ) {
+                for ( Attachment attachment : agreement.getAttachments() ) {
+                    AttachmentRelationship attRel = new AttachmentRelationship(
+                            organization,
+                            " (confirmed agreement #" + ( agreements.indexOf( agreement ) + 1 ) + ")",
+                            attachment );
+                    attachmentRels.add( attRel );
+                }
+            }
+        }
         return (List<AttachmentRelationship>) CollectionUtils.select(
                 attachmentRels,
                 new Predicate() {
@@ -196,11 +210,20 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
          * An attachment of the model object.
          */
         private Attachment attachment;
+        private String attachablePath;
 
         public AttachmentRelationship(
                 ModelObject modelObject,
                 Attachment attachment ) {
+            this( modelObject, "", attachment );
+        }
+
+        public AttachmentRelationship(
+                ModelObject modelObject,
+                String attachablePath,
+                Attachment attachment ) {
             this.modelObject = modelObject;
+            this.attachablePath = attachablePath;
             this.attachment = attachment;
         }
 
@@ -210,6 +233,10 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
 
         public Attachment getAttachment() {
             return attachment;
+        }
+
+        public String getAttachablePath() {
+            return attachablePath;
         }
 
         /**
@@ -240,9 +267,13 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
          * @return a string
          */
         public String getAttacheeLabel() {
-            return ( modelObject instanceof Part )
+            String label = ( modelObject instanceof Part )
                     ? ( (Part) modelObject ).getTitle()
                     : modelObject.getName();
+            if ( attachablePath.isEmpty() )
+                return label;
+            else
+                return label + " " + attachablePath;
         }
     }
 
@@ -271,10 +302,12 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
                     "Type",
                     "attachment.type.label",
                     EMPTY ) );
+/*
             columns.add( makeColumn(
                     "Name",
                     "attachment.name",
                     EMPTY ) );
+*/
             columns.add( makeExternalLinkColumn(
                     "Document",
                     "attachment.url",

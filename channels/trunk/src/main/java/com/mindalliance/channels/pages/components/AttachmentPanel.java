@@ -6,8 +6,10 @@ import com.mindalliance.channels.command.commands.AttachDocument;
 import com.mindalliance.channels.command.commands.CopyAttachment;
 import com.mindalliance.channels.command.commands.DetachDocument;
 import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.model.Attachable;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -106,14 +108,28 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      * Attachment controls container.
      */
     private WebMarkupContainer controlsContainer;
+    /**
+     * Where documents get attached
+     */
+    private String attachablePath;
 
     /**
      * The content of the url field.
      */
     private String url;
 
-    public AttachmentPanel( String id, IModel<? extends ModelObject> model ) {
+    public AttachmentPanel(
+            String id,
+            IModel<? extends ModelObject> model ) {
+        this( id, model, "" );
+    }
+
+    public AttachmentPanel(
+            String id,
+            IModel<? extends ModelObject> model,
+            String attachablePath ) {
         super( id, model, null );
+        this.attachablePath = attachablePath;
         setOutputMarkupId( true );
         addAttachmentList();
         controlsContainer = new WebMarkupContainer( "controls" );
@@ -216,7 +232,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void addTypeChoice() {
         DropDownChoice<Attachment.Type> typeChoice = new DropDownChoice<Attachment.Type>( "type",
                 new PropertyModel<Attachment.Type>( this, "selectedType" ),
-                getAttachee().getAttachmentTypes(),
+                getAttachee().getAttachmentTypes( attachablePath ),
                 new IChoiceRenderer<Attachment.Type>() {
                     public Object getDisplayValue( Attachment.Type object ) {
                         return object.getLabel();
@@ -285,6 +301,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 doCommand( new DetachDocument(
                         getAttachee(),
+                        attachablePath,
                         attachment ) );
                 if ( attachment.isPicture() ) {
                     imagingService.deiconize( getAttachee() );
@@ -337,7 +354,8 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      * @return a list of attachments
      */
     public List<Attachment> getAttachments() {
-        return getAttachee().getAttachments();
+        Attachable attachable = (Attachable) ChannelsUtils.getProperty( getAttachee(), attachablePath, null );
+        return attachable.getAttachments();
     }
 
     public FileUpload getUpload() {
@@ -358,7 +376,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                     getPlan(), getSelectedType(), getName(), upload );
             // Only add non-redundant attachment.
             if ( attachment != null ) {
-                doCommand( new AttachDocument( mo, attachment ) );
+                doCommand( new AttachDocument( mo, attachablePath, attachment ) );
                 postProcess( attachment );
             }
         }
@@ -408,7 +426,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             try {
                 new URL( value );
                 Attachment attachment = new Attachment( value, getSelectedType(), getName() );
-                doCommand( new AttachDocument( mo, attachment ) );
+                doCommand( new AttachDocument( mo, attachablePath, attachment ) );
                 postProcess( attachment );
                 this.url = null;
                 this.name = "";

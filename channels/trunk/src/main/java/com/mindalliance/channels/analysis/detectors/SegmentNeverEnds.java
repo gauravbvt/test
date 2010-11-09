@@ -50,11 +50,22 @@ public class SegmentNeverEnds extends AbstractIssueDetector {
                 || phase.isPreEvent() && getPlan().isIncident( event ) )
                 && getQueryService().findTerminators( segment ).isEmpty() ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, segment );
-            issue.setDescription( "The segment's event phase may never come to an end." );
-            issue.setRemediation( "If the segment is for a co-event phase, have the event end on its own"
-                    + "\nor if the segment is for a pre-event phase, have the event be an incident"
-                    + "\nor if the segment is for a pre-event phase, have a task in another segment cause it"
-                    + "\nor have at least one task in the plan segment terminate it." );
+            issue.setDescription( "\"" + segment.getPhaseEventTitle() + "\" is never ended." );
+            String remediation;
+            if ( segment.getPhase().isConcurrent() ) {
+                remediation = "Have event \"" + segment.getEvent().getName() + "\" end on its own"
+                        + "\nor have at least one task in the plan segment terminate it.";
+            } else if (segment.getPhase().isPreEvent() ) {
+                  remediation = "Make event \"" 
+                          + segment.getEvent().getName()
+                          + "\"  an incident (it can occur on its own)."
+                          + "\nor have at least one task in another segment start event.";
+            } else {
+                // post-event
+                remediation = "Have at least one task in the segment terminate event \""
+                        + segment.getEvent().getName() + "\".";
+            }
+            issue.setRemediation( remediation );
             issue.setSeverity( Level.Medium );
             issues.add( issue );
         }

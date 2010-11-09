@@ -5,8 +5,10 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.model.Attachable;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.util.Map;
 
@@ -24,9 +26,14 @@ public class PasteAttachment extends AbstractCommand {
     }
 
     public PasteAttachment( ModelObject modelObject ) {
+        this( modelObject, "" );
+    }
+
+    public PasteAttachment( ModelObject modelObject, String attachablePath ) {
         assert modelObject != null;
         needLockOn( modelObject );
         set( "attachee", modelObject.getId() );
+        set( "attachablePath", attachablePath );
     }
 
     /**
@@ -69,8 +76,11 @@ public class PasteAttachment extends AbstractCommand {
             set( "copy", copy );
         }
         Attachment attachment = getAttachmentFromCopy( copy );
-        mo.addAttachment( attachment );
-        describeTarget( mo );                
+        String attachablePath = (String) get( "attachablePath" );
+        Attachable attachable = (Attachable) ChannelsUtils.getProperty( mo, attachablePath, null );
+        if ( attachable == null ) throw new CommandException( "Can't find where attachments are" );
+        attachable.addAttachment( attachment );
+        describeTarget( mo );
         return new Change( Change.Type.Updated, mo, "attachmentTickets" );
     }
 
@@ -95,7 +105,8 @@ public class PasteAttachment extends AbstractCommand {
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         Attachment attachment = getAttachmentFromCopy( (Map<String, Object>) get( "copy" ) );
-        return new DetachDocument( mo, attachment );
+        String attachablePath = (String) get( "attachablePath" );
+        return new DetachDocument( mo, attachablePath, attachment );
     }
 
 }

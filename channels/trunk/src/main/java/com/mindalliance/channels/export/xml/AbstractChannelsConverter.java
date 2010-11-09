@@ -3,6 +3,7 @@ package com.mindalliance.channels.export.xml;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.export.ConnectionSpecification;
+import com.mindalliance.channels.model.Attachable;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Issue;
@@ -191,15 +192,15 @@ public abstract class AbstractChannelsConverter implements Converter {
     /**
      * Export attachments.
      *
-     * @param modelObject a model object
+     * @param attachable an attachable
      * @param writer      a writer
      */
     protected void exportAttachments(
-            ModelObject modelObject,
+            Attachable attachable,
             HierarchicalStreamWriter writer ) {
-        if ( !modelObject.getAttachments().isEmpty() ) {
+        if ( !attachable.getAttachments().isEmpty() ) {
             writer.startNode( "attachments" );
-            for ( Attachment attachment : modelObject.getAttachments() ) {
+            for ( Attachment attachment : attachable.getAttachments() ) {
                 writer.startNode( "attachment" );
                 writer.addAttribute( "type", attachment.getType().name() );
                 writer.addAttribute( "url", attachment.getUrl() );
@@ -213,10 +214,10 @@ public abstract class AbstractChannelsConverter implements Converter {
     /**
      * Import attachment tickets.
      *
-     * @param modelObject a model object
+     * @param attachable an attachable
      * @param reader      a reader
      */
-    protected void importAttachments( ModelObject modelObject, HierarchicalStreamReader reader ) {
+    protected void importAttachments( Attachable attachable, HierarchicalStreamReader reader ) {
         AttachmentManager attachmentManager = getAttachmentManager();
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
@@ -235,7 +236,7 @@ public abstract class AbstractChannelsConverter implements Converter {
                     name = "";
                 }
                 if ( attachmentManager.exists( getPlan(), url ) ) {
-                    modelObject.addAttachment( new Attachment( url, type, name ) );
+                    attachable.addAttachment( new Attachment( url, type, name ) );
                 } else {
                     LOG.warn( "Dropping attachment to {} (not found)", url );
                 }

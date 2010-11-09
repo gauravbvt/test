@@ -5802,6 +5802,29 @@
                 
                 <entry><para>No</para></entry>
               </row>
+              <row>
+                <entry><para>Contradictory policies</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Remove all prohibiting policies</para>
+                  </listitem>
+                  
+                  <listitem>
+                    <para>or remove all mandating policies</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>or remove all mandating policies and all prohibiting policies</para>
+                  </listitem>
+                  
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable>
@@ -6031,29 +6054,6 @@
                     <listitem>
                       <para>or generalize task specifications to assign
                       multiple agents to either source or target task.</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>Yes</para></entry>
-              </row>
-
-              <row>
-                <entry><para>Information sharing violates
-                policy</para></entry>
-
-                <entry><para>Medium</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Change the sharing flow</para>
-                    </listitem>
-
-                    <listitem>
-                      <para>or remove the sharing flow</para>
-                    </listitem>
-
-                    <listitem>
-                      <para>or change the policy.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -6546,6 +6546,24 @@
 
                 <entry><para>Yes</para></entry>
               </row>
+              
+              <row>
+                <entry><para>Confirmed sharing agreement without MOU</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Attach an MOU to the sharing agreement</para>
+                  </listitem>
+                  <listitem>
+                    <para>or unconfirm the sharing agreement</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+            
             </tbody>
           </tgroup>
         </informaltable>
@@ -6842,6 +6860,25 @@
 
                 <entry><para>Yes</para></entry>
               </row>
+              
+              <row>
+                <entry><para>Important task has only one assignment</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Profile agents so that more than one match the task specifications</para>
+                  </listitem>
+                  
+                  <listitem>
+                    <para>or modify the task specifications so that it matches more than one agent</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable>

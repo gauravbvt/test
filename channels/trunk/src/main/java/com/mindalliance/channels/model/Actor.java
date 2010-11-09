@@ -161,7 +161,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )
             types.add( Attachment.Type.Image );
-        types.addAll( super.getAttachmentTypes() );
+        types.addAll( super.getAttachmentTypes( ) );
         return types;
     }
 
@@ -201,7 +201,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         );
     }
 
-   public Actor getActor() {
+    public Actor getActor() {
         return this;
     }
 
