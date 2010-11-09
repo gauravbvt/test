@@ -89,7 +89,10 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
             if ( mo.isUnknown() ) {
                 add( new Label( "moLink", new Model<String>( mo.getName() )) );
             } else {
-                add( new EntityLink( "moLink", new Model<ModelEntity>( (ModelEntity)mo ) ) );
+                add( new EntityLink(
+                        "moLink",
+                        new Model<ModelEntity>( (ModelEntity)mo ),
+                        textModel.getObject() ) );
             }
         } else {
             add( new ModelObjectLink( "moLink", moModel, textModel, hint ) );

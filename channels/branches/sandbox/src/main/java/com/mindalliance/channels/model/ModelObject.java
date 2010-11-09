@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * An object with name, id and description, comparable by its toString() values.
  */
-public abstract class ModelObject implements Comparable<ModelObject>, Identifiable, Nameable, Modelable {
+public abstract class ModelObject extends AbstractAttachable implements Comparable<ModelObject>, Identifiable, Nameable, Modelable {
 
     /**
      * Unique id of this object.
@@ -39,10 +39,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      * List of waived issue detections (issue detector class simple names)
      */
     private List<String> waivedIssueDetections = new ArrayList<String>();
-    /**
-     * List of attachments.
-     */
-    private List<Attachment> attachments = new ArrayList<Attachment>();
 
     //=============================
     protected ModelObject() {
@@ -198,14 +194,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
         this.waivedIssueDetections = waivedIssueDetections;
     }
 
-    public List<Attachment> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments( List<Attachment> attachments ) {
-        this.attachments = attachments;
-    }
-
     /**
      * Waive a kind of issue detection.
      *
@@ -273,17 +261,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
     }
 
     /**
-     * Add an attachment.
-     *
-     * @param attachment an attachment
-     */
-    public void addAttachment( Attachment attachment ) {
-        if ( !attachments.contains( attachment ) ) {
-            attachments.add( attachment );
-        }
-    }
-
-    /**
      * Clean up before removal.
      *
      * @param queryService a query service
@@ -299,18 +276,6 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      */
     public String getModelObjectType() {
         return getClass().getSimpleName();
-    }
-
-    /**
-     * Return list of meaningful types of attachments for class of model objects.
-     *
-     * @return a list of attachment types
-     */
-    public List<Attachment.Type> getAttachmentTypes() {
-        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
-        types.add( Attachment.Type.Reference );
-        types.add( Attachment.Type.Policy );
-        return types;
     }
 
     /**
@@ -411,7 +376,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      */
     public boolean isProhibited() {
         return CollectionUtils.exists(
-                attachments,
+                getAttachments(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         return ((Attachment)object).isProhibition();
@@ -425,7 +390,7 @@ public abstract class ModelObject implements Comparable<ModelObject>, Identifiab
      */
     public boolean isMandated() {
         return CollectionUtils.exists(
-                attachments,
+                getAttachments(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         return ((Attachment)object).isMandate();

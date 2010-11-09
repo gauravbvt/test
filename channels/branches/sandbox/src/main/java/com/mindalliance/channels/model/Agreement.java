@@ -15,7 +15,7 @@ import java.util.List;
  * Date: Oct 28, 2009
  * Time: 10:59:27 AM
  */
-public class Agreement implements Serializable {
+public class Agreement extends AbstractAttachable implements Serializable {
 
     /**
      * Organization that is the beneficiary of the agreement.
@@ -39,6 +39,7 @@ public class Agreement implements Serializable {
 
     /**
      * Whether a commitment implies an agreement.
+     *
      * @param commitment a commitment
      * @return a boolean
      */
@@ -179,5 +180,15 @@ public class Agreement implements Serializable {
         return hash;
     }
 
-
+    /**
+     * Whether agreement has MOU.
+     *
+     * @return a boolean
+     */
+    public boolean hasMOU() {
+        for ( Attachment attachment : getAttachments() ) {
+            if ( attachment.isMOU() ) return true;
+        }
+        return false;
+    }
 }

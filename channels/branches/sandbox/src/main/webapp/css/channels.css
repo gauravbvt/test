@@ -389,6 +389,30 @@ div.flow-details ul li {
 	padding:0;
 }
 
+/* ----- Flow Attachment Styling - Start ----- */
+
+div.flow-details ul.attach {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+
+div.flow-details ul.attach li {
+	margin:0 0 2px;
+	padding:0 0 0 20px;
+}
+
+div.flow-details ul.attach li.controls {
+	margin:0;
+	padding:5px 0 0 0;
+}
+
+div.flow-details ul.attach li ul li {
+	padding:0 0 0 5px;
+}
+
+/* ----- Flow Attachment Styling - End ----- */
+
 textarea, select, input[type='text'], td, th {
     font: inherit;
     margin: 0;
