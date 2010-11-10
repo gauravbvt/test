@@ -57,7 +57,6 @@ public class AgreementsPanel extends AbstractCommandablePanel {
     private void init() {
         addAgreementsTable();
         addCommitmentsContainer();
-        addCommitments();
     }
 
     private void addAgreementsTable() {
@@ -102,8 +101,9 @@ public class AgreementsPanel extends AbstractCommandablePanel {
     private void addCommitmentsContainer() {
         commitmentsContainer = new WebMarkupContainer( "commitmentsDiv" );
         commitmentsContainer.setOutputMarkupId( true );
-        makeVisible( commitmentsContainer, false );
-        add( commitmentsContainer );
+        addCommitments();
+        makeVisible( commitmentsContainer, selectedAgreement != null );
+        addOrReplace( commitmentsContainer );
     }
 
     private void addCommitments() {
@@ -142,10 +142,10 @@ public class AgreementsPanel extends AbstractCommandablePanel {
         coverageQualifierLabel.setOutputMarkupId( true );
         attachmentPanel.setOutputMarkupId( true );
         commitmentsPanel.setOutputMarkupId( true );
-        commitmentsContainer.addOrReplace( agreementLabel );
-        commitmentsContainer.addOrReplace( coverageQualifierLabel );
-        commitmentsContainer.addOrReplace( attachmentPanel );
-        commitmentsContainer.addOrReplace( commitmentsPanel );
+        commitmentsContainer.add( agreementLabel );
+        commitmentsContainer.add( coverageQualifierLabel );
+        commitmentsContainer.add( attachmentPanel );
+        commitmentsContainer.add( commitmentsPanel );
     }
 
     private int getSelectedAgreementIndex() {
@@ -197,14 +197,15 @@ public class AgreementsPanel extends AbstractCommandablePanel {
         if ( object instanceof AgreementWrapper ) {
             AgreementWrapper wrapper = (AgreementWrapper) object;
             if ( action.equals( "select" ) ) {
-                selectedAgreement = (AgreementWrapper) object;
-                makeVisible( commitmentsContainer, true );
-                addCommitments();
-                target.addComponent( commitmentsContainer );
+                if ( selectedAgreement == null || !selectedAgreement.equals( object ) ) {
+                     selectedAgreement = (AgreementWrapper) object;
+                     addCommitmentsContainer();
+                     target.addComponent( commitmentsContainer );
+                 }
             } else if ( action.equals( "confirmed" ) ) {
                 addAgreementsTable();
                 target.addComponent( agreementsTable );
-                addCommitments();
+                addCommitmentsContainer();
                 target.addComponent( commitmentsContainer );
                 if ( ( (AgreementWrapper) object ).isConfirmed() ) {
                     update(
