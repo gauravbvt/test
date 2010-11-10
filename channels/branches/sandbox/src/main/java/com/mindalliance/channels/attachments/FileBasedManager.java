@@ -1,11 +1,14 @@
 package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.PlanDefinition;
+import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.model.Agreement;
+import com.mindalliance.channels.model.Attachable;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
@@ -462,7 +465,7 @@ public class FileBasedManager implements AttachmentManager {
         FileDocument fileDocument = getDocumentMap( plan ).get( attachment.getUrl() );
         return !attachment.getName().isEmpty()
                 ? attachment.getName()
-                :fileDocument == null
+                : fileDocument == null
                 ? attachment.getUrl()
                 : fileDocument.getFile().getName();
     }
@@ -502,21 +505,26 @@ public class FileBasedManager implements AttachmentManager {
      */
     private static List<String> findAllAttached( PlanDao planDao ) {
 
-        List<ModelObject> allModelObjects = new ArrayList<ModelObject>();
-        allModelObjects.addAll( planDao.list( ModelObject.class ) );
+        List<Attachable> attachables = new ArrayList<Attachable>();
+        attachables.addAll( planDao.list( ModelObject.class ) );
         for ( Segment segment : planDao.list( Segment.class ) ) {
             Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
-                allModelObjects.add( parts.next() );
+                attachables.add( parts.next() );
             }
             Iterator<Flow> flows = segment.flows();
             while ( flows.hasNext() ) {
-                allModelObjects.add( flows.next() );
+                attachables.add( flows.next() );
+            }
+        }
+        for ( Organization org : planDao.list( Organization.class ) ) {
+            for ( Agreement agreement : org.getAgreements() ) {
+                attachables.add( agreement );
             }
         }
         List<Attachment> allAttachments = new ArrayList<Attachment>();
-        for ( ModelObject mo : allModelObjects )
-            allAttachments.addAll( mo.getAttachments() );
+        for ( Attachable attachable : attachables )
+            allAttachments.addAll( attachable.getAttachments() );
 
         Set<String> allAttachedUrls = new HashSet<String>();
         for ( Attachment attachment : allAttachments )
@@ -525,7 +533,9 @@ public class FileBasedManager implements AttachmentManager {
         return new ArrayList<String>( allAttachedUrls );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public File getUploadDirectory( Plan plan ) {
         PlanDefinition.Version version = planManager.getVersion( plan );
         File uploadsDir = new File( version.getVersionDirectory(), uploadPath );

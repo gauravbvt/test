@@ -107,7 +107,7 @@ import java.util.List;
                     EMPTY,
                     CommitmentsTablePanel.this ) );
             // provider and table
-            addOrReplace( new AjaxFallbackDefaultDataTable(
+            add( new AjaxFallbackDefaultDataTable(
                     "commitments",
                     columns,
                     new SortableBeanProvider<Commitment>(
