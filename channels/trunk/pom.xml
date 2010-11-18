@@ -371,6 +371,18 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>simile-timeline</artifactId>
+            <version>1.4.12</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- Database -->
         <dependency>
             <groupId>org.neodatis</groupId>
@@ -612,7 +624,7 @@
     <properties>
         <spring.version>3.0.0.RELEASE</spring.version>
         <spring-security.version>3.0.1.RELEASE</spring-security.version>
-        <wicket.version>1.4.1</wicket.version>
+        <wicket.version>1.4.13</wicket.version>
         <jetty.version>6.1.4</jetty.version>
         <doc.css>/css/doc.css</doc.css>
     </properties>

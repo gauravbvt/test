@@ -44,6 +44,7 @@ public class ElementOfInformation implements Classifiable {
         classifications = new ArrayList<Classification>( eoi.getClassifications() );
         description = eoi.getDescription();
         specialHandling = eoi.getSpecialHandling();
+        transformation = eoi.getTransformation();
     }
 
     public String getContent() {
@@ -169,7 +170,7 @@ public class ElementOfInformation implements Classifiable {
     public boolean equals( Object object ) {
         if ( object instanceof ElementOfInformation ) {
             ElementOfInformation other = (ElementOfInformation) object;
-            return content.equals( other.getContent() );
+            return content.equals( other.getContent() ) && transformation.equals( other.getTransformation() );
         } else {
             return false;
         }
@@ -181,6 +182,7 @@ public class ElementOfInformation implements Classifiable {
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + content.hashCode();
+        hash = hash * 31 + transformation.hashCode();
         return hash;
     }
 

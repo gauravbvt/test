@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Subject;
+import com.mindalliance.channels.model.Transformation;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
@@ -443,9 +444,17 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     @SuppressWarnings( "unchecked" )
     private List<ElementOfInformation> getNewEOIs() {
         Set<ElementOfInformation> population = new HashSet<ElementOfInformation>();
-        for ( Flow flow : relatedFlows() ) {
-            for ( ElementOfInformation eoi : flow.getEois() ) {
-                population.add( new ElementOfInformation( eoi ) );
+        for ( Flow relatedFlow : relatedFlows() ) {
+            boolean renamed = !Matcher.getInstance().same( relatedFlow.getName(), getFlow().getName() );
+            for ( ElementOfInformation eoi : relatedFlow.getEois() ) {
+                ElementOfInformation newEoi = new ElementOfInformation( eoi );
+                if ( renamed ) {
+                    Transformation xform = new Transformation(
+                            Transformation.Type.Renaming,
+                            new Subject( relatedFlow.getName(), eoi.getContent() ) );
+                    newEoi.setTransformation( xform );
+                }
+                population.add( newEoi );
             }
         }
         return new ArrayList<ElementOfInformation>(
@@ -456,12 +465,11 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private List<Flow> relatedFlows() {
         final Flow flow = getFlow();
         Set<Flow> flows = new HashSet<Flow>();
+        flows.addAll( IteratorUtils.toList( flow.getSource().receives()  ) );
         flows.addAll( (List<Flow>) CollectionUtils.select(
                 IteratorUtils.toList(
                         IteratorUtils.chainedIterator(
-                                IteratorUtils.chainedIterator(
-                                        flow.getSource().sends(),
-                                        flow.getSource().receives() ),
+                                flow.getSource().sends(),
                                 IteratorUtils.chainedIterator(
                                         flow.getTarget().sends(),
                                         flow.getTarget().receives() ) ) ),

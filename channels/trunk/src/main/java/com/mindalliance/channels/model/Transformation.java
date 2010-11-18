@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +28,16 @@ public class Transformation implements Serializable {
 
     public Transformation() {
     }
+
+    public Transformation( Type type ) {
+        this.type = type;
+    }
+
+    public Transformation( Type type, Subject subject ) {
+        this.type = type;
+        subjects.add( subject );
+    }
+
 
     public Type getType() {
         return type;
@@ -84,6 +96,42 @@ public class Transformation implements Serializable {
     public boolean renames( Subject subject ) {
         return type == Type.Renaming && subjects.contains( subject );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals( Object object ) {
+        if ( object instanceof Transformation ) {
+            Transformation other = (Transformation) object;
+            return type.equals( other.getType() )
+                    && CollectionUtils.isEqualCollection( subjects, other.getSubjects() );
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * {inheritDoc}
+     */
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 31 + type.hashCode();
+        hash = hash * 31 + subjectsHashCode();
+        return hash;
+    }
+
+    /**
+     * Order-independent hashCode.
+     * @return an int
+     */
+    private int subjectsHashCode() {
+        int hash = 0;
+        for ( Subject subject : subjects ) {
+            hash += subject.hashCode();
+        }
+        return hash;
+    }
+
 
     /**
      * A type of transformation.

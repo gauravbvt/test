@@ -707,7 +707,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     if ( flow.getSource().isPart() ) {
                         Part part = (Part) flow.getSource();
                         if ( part.resourceSpec().matchesOrSubsumes( resourceSpec, specific,
-                                                                    getPlan().getLocale() ) ) {
+                                getPlan().getLocale() ) ) {
                             // sends
                             Play play = new Play( part, flow, true );
                             plays.add( play );
@@ -716,7 +716,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     if ( flow.getTarget().isPart() ) {
                         Part part = (Part) flow.getTarget();
                         if ( part.resourceSpec().matchesOrSubsumes( resourceSpec, specific,
-                                                                    getPlan().getLocale() ) ) {
+                                getPlan().getLocale() ) ) {
                             // receives
                             Play play = new Play( part, flow, false );
                             plays.add( play );
@@ -915,12 +915,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Actor actor = part.getActor();
                 ResourceSpec partSpec = part.resourceSpec();
                 if ( organization.narrowsOrEquals( part.getOrganizationOrUnknown(), locale )
-                     && actor != null && actor.isActual() && partSpec.getOrganization() != null ) {
+                        && actor != null && actor.isActual() && partSpec.getOrganization() != null ) {
 
                     Job job = Job.from( new ResourceSpec( actor,
-                                                          partSpec.getRole(),
-                                                          organization,
-                                                          partSpec.getJurisdiction() ) );
+                            partSpec.getRole(),
+                            organization,
+                            partSpec.getJurisdiction() ) );
                     if ( !confirmedJobs.contains( job ) )
                         unconfirmedJobs.add( job );
                 }
@@ -1359,7 +1359,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         while ( parts.hasNext() ) {
             Part part = parts.next();
             if ( goal.isRiskMitigation() && part.isTerminatesEventPhase()
-                 || part.getGoals().contains( goal ) ) {
+                    || part.getGoals().contains( goal ) ) {
                 achievers.add( part );
             }
         }
@@ -1974,23 +1974,23 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<Assignment> result = new ArrayList<Assignment>();
 
         for ( Employment e : findAllEmployments( part, locale ) )
-            if (    ModelEntity.implies( e.getActor(),        part.getActor(), locale )
-                 && ModelEntity.implies( e.getRole(),         part.getRole(), locale )
-                 && ModelEntity.implies( e.getOrganization(), part.getOrganization(), locale )
-                 && ModelEntity.implies( e.getJurisdiction(), part.getJurisdiction(), locale ) )
+            if ( ModelEntity.implies( e.getActor(), part.getActor(), locale )
+                    && ModelEntity.implies( e.getRole(), part.getRole(), locale )
+                    && ModelEntity.implies( e.getOrganization(), part.getOrganization(), locale )
+                    && ModelEntity.implies( e.getJurisdiction(), part.getJurisdiction(), locale ) )
                 result.add( new Assignment( e, part ) );
 
         // No actor for this part. Add an unknown one.
         if ( includeUnknowns && result.isEmpty()
-             && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() )
+                && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() )
 
             result.add( new Assignment(
-                            new Employment( Actor.UNKNOWN,
-                                            part.getOrganizationOrUnknown(),
-                                            new Job( Actor.UNKNOWN,
-                                                     part.getRoleOrUnknown(),
-                                                     part.getJurisdiction() ) ),
-                            part ) );
+                    new Employment( Actor.UNKNOWN,
+                            part.getOrganizationOrUnknown(),
+                            new Job( Actor.UNKNOWN,
+                                    part.getRoleOrUnknown(),
+                                    part.getJurisdiction() ) ),
+                    part ) );
 
         return result;
     }
@@ -2634,21 +2634,23 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     }
                 }
             }
-            Part part = (Part) ( showTargets
+            Node node = showTargets
                     ? flow.getTarget()
-                    : flow.getSource() );
-            for ( Dissemination immediateDissemination : immediateDisseminations ) {
-                disseminations.add( immediateDissemination );
-                Subject newSubject = showTargets
-                        ? immediateDissemination.getSubject()
-                        : immediateDissemination.getTransformedSubject();
-                findAllDisseminationsFromPart(
-                        part,
-                        newSubject,
-                        immediateDissemination.getTransformationType(),
-                        immediateDissemination.getDelay(),
-                        showTargets,
-                        disseminations );
+                    : flow.getSource();
+            if ( node.isPart() ) {
+                for ( Dissemination immediateDissemination : immediateDisseminations ) {
+                    disseminations.add( immediateDissemination );
+                    Subject newSubject = showTargets
+                            ? immediateDissemination.getSubject()
+                            : immediateDissemination.getTransformedSubject();
+                    findAllDisseminationsFromPart(
+                            (Part) node,
+                            newSubject,
+                            immediateDissemination.getTransformationType(),
+                            immediateDissemination.getDelay(),
+                            showTargets,
+                            disseminations );
+                }
             }
         }
     }
@@ -2677,11 +2679,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 if ( matcher.same( flow.getName(), subject.getInfo() )
                         && matcher.same( eoi.getContent(), subject.getContent() ) ) {
                     Dissemination dissemination = new Dissemination(
-                                    flow,
-                                    xform.getType(),
-                                    flow.getMaxDelay(),
-                                    new Subject( subject ),
-                                    new Subject( subject ) );
+                            flow,
+                            xform.getType(),
+                            flow.getMaxDelay(),
+                            new Subject( subject ),
+                            new Subject( subject ) );
                     dissemination.setRoot( subject.isRoot() );
                     disseminations.add( dissemination );
                 }
@@ -2727,12 +2729,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
 
             if ( org.narrowsOrEquals( part.getOrganizationOrUnknown(), locale )
-                 && part.hasActualActor() && part.getOrganization() != null ) {
+                    && part.hasActualActor() && part.getOrganization() != null ) {
 
                 Actor actor = part.getActor();
                 Job j = new Job( actor, part.getRole(), part.getJurisdiction() );
                 if ( !confirmedJobs.contains( j )
-                     && ( !actor.isArchetype() || !employed.contains( actor ) ) ) {
+                        && ( !actor.isArchetype() || !employed.contains( actor ) ) ) {
                     employments.add( new Employment( actor, org, j ) );
                     employed.add( actor );
                 }

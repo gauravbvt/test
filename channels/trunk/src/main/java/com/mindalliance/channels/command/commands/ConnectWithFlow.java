@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
@@ -36,7 +37,7 @@ public class ConnectWithFlow extends AbstractCommand {
             final Node source,
             final Node target,
             final String name,
-            final Map<String, Object> state ) {
+            final Map<String, Object> attributes ) {
         super();
         needLockOn( source );
         needLockOn( target );
@@ -59,7 +60,7 @@ public class ConnectWithFlow extends AbstractCommand {
         args.put( "otherSegment", other.getSegment().getId() );
         args.put( "other", other.getId() );
         args.put( "name", name );
-        args.put( "attributes", state );
+        args.put( "attributes", attributes );
         setArguments( args );
     }
 
@@ -85,19 +86,32 @@ public class ConnectWithFlow extends AbstractCommand {
                 (Long) get( "otherSegment" ) );
         Long nodeId = (Long) get( "other" );
         Node other = resolveNode( nodeId, otherSegment, queryService );
+        Node actualOther;
         String name = (String) get( "name" );
         boolean isSend = (Boolean) get( "isSend" );
         Long priorId = (Long) get( "flow" );
+        // Never connect to an internal connector.
+        if ( other.isConnector() && Flow.isInternal( part, other ) ) {
+            Connector internalConnector = (Connector) other;
+            if ( isSend ) {
+                actualOther = internalConnector.getInnerFlow().getTarget();
+            } else {
+                actualOther = internalConnector.getInnerFlow().getSource();
+            }
+            assert actualOther.isPart();
+        } else {
+            actualOther = other;
+        }
         Flow flow = isSend
-                ? queryService.connect( part, other, name, priorId )
-                : queryService.connect( other, part, name, priorId );
+                ? queryService.connect( part, actualOther, name, priorId )
+                : queryService.connect( actualOther, part, name, priorId );
         assert priorId == null || priorId == flow.getId();
         set( "flow", flow.getId() );
         Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
         if ( attributes != null ) {
             ChannelsUtils.initialize( flow, attributes );
         }
-        describeTarget( flow );                
+        describeTarget( flow );
         return new Change( Change.Type.Added, flow );
     }
 
