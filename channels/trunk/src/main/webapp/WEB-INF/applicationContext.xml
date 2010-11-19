@@ -306,7 +306,6 @@ CONFIGURATION NOTES:
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>
                 <ref bean="email"/>
-                <ref bean="im"/>
             </list>
         </property>
     </bean>

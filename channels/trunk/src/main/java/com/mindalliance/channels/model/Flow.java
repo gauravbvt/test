@@ -1160,6 +1160,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return true;
     }
 
+    /**
+     * Get the nature of the flow.
+     * @return a string
+     */
+    public String getNature() {
+        return isSharing() ? "Flow" : isNeed() ? "Need" : "Capability";
+    }
+
 
     /**
      * The significance of a flow.
