@@ -136,9 +136,6 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
 
         applicationContext.getBeanFactory().registerScope("session", new SessionScope());
 
-        wicketApplication.setInjector(
-                new SpringComponentInjector( wicketApplication, applicationContext ) );
-
         tester = new WicketTester( wicketApplication ) {
             @Override
             public ServletContext newServletContext( String path ) {
@@ -154,6 +151,9 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
                 return result;
             }
         };
+
+        wicketApplication.setInjector(
+                new SpringComponentInjector( wicketApplication, applicationContext, true ) );
 
         tester.setParametersForNextRequest( new HashMap<String, String[]>() );
 
