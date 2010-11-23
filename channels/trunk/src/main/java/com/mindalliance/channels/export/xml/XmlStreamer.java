@@ -10,6 +10,7 @@ import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.export.ConnectionSpecification;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Availability;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Connector;
@@ -199,6 +200,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new JobConverter( this ) );
             stream.registerConverter( new PhaseConverter( this ) );
             stream.registerConverter( new ClassificationConverter( this ) );
+            stream.registerConverter( new AvailabilityConverter( this ) );
             stream.registerConverter( new TransmissionMediumConverter( this ) );
             stream.registerConverter( new TransformationConverter( this ) );
             stream.registerConverter( new ExportConverter( this ) );
@@ -211,6 +213,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "journal", Journal.class );
             stream.alias( "plan", Plan.class );
             stream.alias( "classification", Classification.class );
+            stream.alias( "availability", Availability.class );
             stream.alias( "medium", TransmissionMedium.class );
             stream.alias( "planevent", Event.class );
             stream.alias( "actor", Actor.class );

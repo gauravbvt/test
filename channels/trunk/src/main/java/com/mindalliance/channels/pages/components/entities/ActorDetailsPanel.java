@@ -6,6 +6,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
+import com.mindalliance.channels.model.Available;
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Employment;
@@ -136,6 +137,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         nameRange = new NameRange();
         filters = new ArrayList<Identifiable>();
         addContactInfo();
+        addAvailabilityPanel();
         addClearances();
         addRolesMap();
         addIndexedOnChoice();
@@ -153,6 +155,18 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 "channels",
                 new Model<Channelable>( (Actor) getEntity() ) ) );
         contactContainer.setVisible( getEntity().isActual() );
+    }
+
+    private void addAvailabilityPanel() {
+/*
+        moDetailsDiv.add( new Label(
+                "availability",
+                "Under construction" ) );
+
+*/
+        moDetailsDiv.add( new AvailabilityPanel(
+                "availability",
+                new Model<Available>( (Actor) getEntity() ) ) );
     }
 
     private void addClearances() {

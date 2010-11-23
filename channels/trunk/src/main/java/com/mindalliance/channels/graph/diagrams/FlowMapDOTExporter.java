@@ -274,7 +274,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportEventStarts( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part part : eventStarters ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes();
-            attributes.add( new DOTAttribute( "headlabel", "(can start)" ) );
+            attributes.add( new DOTAttribute( "headlabel", "(start)" ) );
             /*attributes.add( new DOTAttribute(
                     "tooltip",
                     sanitize( segment.terminationCause( terminator ) ) ) );*/

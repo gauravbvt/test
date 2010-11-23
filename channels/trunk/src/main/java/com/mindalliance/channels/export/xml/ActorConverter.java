@@ -1,6 +1,7 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Availability;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ModelEntity;
@@ -60,6 +61,11 @@ public class ActorConverter extends EntityConverter {
             writer.setValue( "true" );
             writer.endNode();
         }
+        if ( actor.getAvailability() != null ) {
+            writer.startNode( "availability" );
+            context.convertAnother( actor.getAvailability() );
+            writer.endNode();
+        }
         // channels
         for ( Channel channel : actor.getChannels() ) {
             writer.startNode( "channel" );
@@ -94,6 +100,9 @@ public class ActorConverter extends EntityConverter {
         } else if ( nodeName.equals( "clearance" ) ) {
             Classification clearance = (Classification) context.convertAnother( plan, Classification.class );
             actor.addClearance( clearance );
+        } else if ( nodeName.equals( "availability" ) ) {
+            Availability availability = (Availability) context.convertAnother( plan, Availability.class );
+            actor.setAvailability(  availability );
         } else {
             LOG.warn( "Unknown element " + nodeName );
         }

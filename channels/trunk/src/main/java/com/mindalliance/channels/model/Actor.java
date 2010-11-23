@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Someone or something playing a part in a segment.
  */
-public class Actor extends AbstractUnicastChannelable implements Classifiable, Specable {
+public class Actor extends AbstractUnicastChannelable implements Classifiable, Specable, Available {
 
     /**
      * The name of the unknown actor.
@@ -31,6 +31,11 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * Whether this (actual) agent is an archetype.
      */
     private boolean archetype = false;
+    /**
+     * The actor's time-based availability.
+     * Null means 24/7.
+     */
+    private Availability availability;
 
     /**
      * Clearances.
@@ -75,6 +80,14 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
 
     public void setArchetype( boolean archetype ) {
         this.archetype = archetype;
+    }
+
+    public Availability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability( Availability availability ) {
+        this.availability = availability;
     }
 
     public List<Classification> getClearances() {
