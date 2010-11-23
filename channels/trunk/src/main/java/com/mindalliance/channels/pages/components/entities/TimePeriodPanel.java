@@ -223,7 +223,7 @@ public class TimePeriodPanel extends AbstractCommandablePanel {
         doCommand( new UpdatePlanObject(
                 getAvailable(),
                 pathToTimePeriod(),
-                dayOn ? new TimePeriod() : TimePeriod.nilTimePeriod(),
+                dayOn ? TimePeriod.allDayPeriod() : TimePeriod.nilTimePeriod(),
                 UpdateObject.Action.Set ) );
     }
 

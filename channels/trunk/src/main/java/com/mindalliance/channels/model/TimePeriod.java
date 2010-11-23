@@ -1,10 +1,12 @@
 package com.mindalliance.channels.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
-     * Contiguous timeperiod in a day.
+ * Contiguous timeperiod in a day.
  * From minutes since midnight to minutes from midnight.
  */
 public class TimePeriod implements Serializable {
@@ -13,7 +15,11 @@ public class TimePeriod implements Serializable {
     int toTime = 24 * 60;
 
     public TimePeriod() {
+    }
 
+    public TimePeriod( TimePeriod timePeriod ) {
+        fromTime = timePeriod.getFromTime();
+        toTime = timePeriod.getToTime();
     }
 
     public TimePeriod( int fromTime, int toTime ) {
@@ -22,6 +28,10 @@ public class TimePeriod implements Serializable {
         assert toTime <= 24 * 60;
         this.fromTime = fromTime;
         this.toTime = toTime;
+    }
+
+    public static TimePeriod allDayPeriod() {
+        return new TimePeriod( 0, 24 * 60 );
     }
 
     public static TimePeriod emptyTimePeriod() {
@@ -125,14 +135,19 @@ public class TimePeriod implements Serializable {
         setToTime( ( hours * 60 ) + val );
     }
 
-   public String toString() {
-       return "From "
-               + getFromHour()
-               + ":" + getFromMinute()
-               + " to "
-               + getToHour()
-               + ":" + getToMinute();
-   }
+    public String toString() {
+        return "From "
+                + pad( getFromHour() )
+                + ":" + pad( getFromMinute() )
+                + " to "
+                + pad( getToHour() )
+                + ":" + pad( getToMinute() );
+    }
+
+    private String pad( int val ) {
+        if ( val >= 10 ) return Integer.toString( val );
+        else return "0" + val;
+    }
 
     public int getFromHour() {
         return fromTime / 60;
@@ -148,5 +163,33 @@ public class TimePeriod implements Serializable {
 
     public int getToMinute() {
         return toTime % 60;
+    }
+
+    public List<TimePeriod> subtract( TimePeriod period ) {
+        List<TimePeriod> result = new ArrayList<TimePeriod>();
+        if ( intersects( period ) ) {
+            if ( fromTime < period.getFromTime() ) {
+                result.add( new TimePeriod( fromTime, period.getFromTime() ) );
+            }
+            if ( period.getToTime() < toTime ) {
+                result.add( new TimePeriod( period.getToTime(), toTime ) );
+            }
+        } else {
+            result.add( new TimePeriod( this ) );
+        }
+        return result;
+    }
+
+    public boolean includes( TimePeriod other ) {
+        return !isNil()
+                && !other.isNil()
+                && fromTime <= other.getFromTime()
+                && toTime >= other.getToTime();
+    }
+
+    public boolean intersects( TimePeriod other ) {
+        return !isNil()
+                && !other.isNil()
+                && !( other.getFromTime() >= toTime || other.getToTime() <= fromTime );
     }
 }
