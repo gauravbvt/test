@@ -2103,3 +2103,11 @@ a.window:hover {
 .to-be-deleted {
     text-decoration: line-through;    
 }
+
+.timeDigits {
+    max-width: 2em;
+}
+
+.incDec {
+    min-width: 2em;
+}

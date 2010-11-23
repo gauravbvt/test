@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 /**
  * Redirect a flow to a new target or from a new source.
@@ -69,8 +70,8 @@ public class RedirectFlow extends AbstractCommand {
         MultiCommand multi = new MultiCommand( "reconnect - extra" );
         multi.setMemorable( false );
         ConnectWithFlow connect = nodeIsTarget
-                ? new ConnectWithFlow( flow.getSource(), other, flow.getName() )
-                : new ConnectWithFlow( other, flow.getTarget(), flow.getName() );
+                ? new ConnectWithFlow( flow.getSource(), other, flow.getName(), ChannelsUtils.getFlowAttributes( flow ) )
+                : new ConnectWithFlow( other, flow.getTarget(), flow.getName(), ChannelsUtils.getFlowAttributes( flow ) );
         multi.addCommand( connect );
         // Remove prior flow. Don't carry over attributes to new flow.
         DisconnectFlow disconnect = new DisconnectFlow( flow );

@@ -8,7 +8,6 @@ import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
@@ -19,7 +18,6 @@ import org.jgrapht.ext.EdgeNameProvider;
 import org.springframework.core.io.Resource;
 
 import java.text.MessageFormat;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -114,7 +112,6 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             }
         };
     }
-
 
     public DOTAttributeProvider<Node, Dissemination> getDOTAttributeProvider() {
         return new SegmentDOTAttributeProvider();
@@ -269,16 +266,6 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             return list;
         }
 
-    }
-
-    private String summarizeExternalFlows( Iterator<ExternalFlow> externalFlows ) {
-        StringBuilder sb = new StringBuilder();
-        while ( externalFlows.hasNext() ) {
-            ExternalFlow flow = externalFlows.next();
-            sb.append( flow.getTitle() );
-            if ( externalFlows.hasNext() ) sb.append( " -- " );
-        }
-        return sanitize( sb.toString() );
     }
 
     /**

@@ -234,7 +234,7 @@ public class Organization extends AbstractUnicastChannelable
     @Override
     public String toString() {
         return parent == null ? getName()
-                : MessageFormat.format( "{0} - {1}", parent.toString(), getName() );
+                : MessageFormat.format( "{0} - {1}", parentage(), getName() );
     }
 
     @SuppressWarnings( "unchecked" )

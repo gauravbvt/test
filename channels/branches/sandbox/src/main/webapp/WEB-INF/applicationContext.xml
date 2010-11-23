@@ -204,6 +204,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.ContradictoryPolicies"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ConfirmedAgreementWithoutMOU"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SingleAssignmentToImportantTask"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.AvailabilityGapInTaskAssignments"/>
             </list>
         </property>
     </bean>
@@ -306,7 +307,6 @@ CONFIGURATION NOTES:
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>
                 <ref bean="email"/>
-                <ref bean="im"/>
             </list>
         </property>
     </bean>

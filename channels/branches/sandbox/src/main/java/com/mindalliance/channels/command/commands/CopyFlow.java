@@ -58,7 +58,7 @@ public class CopyFlow extends AbstractCommand {
                 ? ChannelsUtils.getReceiveState( flow, part )
                 : ChannelsUtils.getSendState( flow, part ) );
         Change change = new Change( Change.Type.None, flow );
-        change.setMessage( "Flow copied" );
+        change.setMessage( flow.getNature() + " copied" );
         return change;
     }
 
