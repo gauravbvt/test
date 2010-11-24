@@ -207,6 +207,17 @@ public class PlanShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "All segments" ),
                 segmentsLink ) );
+        // All issues
+        Link allIssuesLink = new AjaxFallbackLink( "link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, plan, PlanEditPanel.ISSUES ) );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "All issues" ),
+                allIssuesLink ) );
         // Index
         Link indexLink = new AjaxFallbackLink( "link" ) {
             @Override

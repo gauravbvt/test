@@ -19,12 +19,13 @@ import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.TextArea;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,7 +65,8 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     }
 
     private void init( Plan plan ) {
-        add( new TextField<String>( "name", new PropertyModel<String>( this, "name" ) )
+        add(    new Label( "uri", plan.getUri() ),
+                new TextField<String>( "name", new PropertyModel<String>( this, "name" ) )
                 .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                         @Override
                         protected void onUpdate( AjaxRequestTarget target ) {

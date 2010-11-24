@@ -26,6 +26,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
     public AvailabilityGapInTaskAssignments() {
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings( "unchecked" )
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
@@ -88,16 +89,22 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         return results;
     }
 
+    /** {@inheritDoc} */
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Part;
     }
 
+    /** {@inheritDoc} */
     public String getTestedProperty() {
         return null;
     }
 
     protected String getLabel() {
         return "Availability gap in assignments";
+    }
+   /** {@inheritDoc} */
+    public boolean canBeWaived() {
+        return true;
     }
 
     private class TimeGap {
