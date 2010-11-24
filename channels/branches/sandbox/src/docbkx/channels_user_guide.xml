@@ -6879,6 +6879,24 @@
                 <entry><para>Yes</para></entry>
               </row>
               
+              <row>
+                <entry><para>Availability gap in task assignments</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Change the availabilities of assigned agents so that they leave no gap</para>
+                  </listitem>
+                  
+                  <listitem>
+                    <para>or change the specification of the task so that more agents are assigned to fill the gaps</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable>

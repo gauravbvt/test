@@ -794,7 +794,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                             ? Place.class
                             // supervisor
                             : Actor.class;
-            final List<String> choices = getQueryService().findAllEntityNames( moClass );
+            final List<String> choices = getQueryService().findAllEntityNames( moClass, ModelEntity.Kind.Actual );
             // text field
             TextField<String> entityField = new AutoCompleteTextField<String>(
                     "entity-field",
