@@ -1,6 +1,9 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.command.commands.DisconnectFlow;
+import com.mindalliance.channels.command.commands.RemoveCapability;
+import com.mindalliance.channels.command.commands.RemoveNeed;
 import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.dao.Journal;
@@ -12,6 +15,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
@@ -23,7 +27,6 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.command.PresenceListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -756,5 +759,18 @@ public class DefaultCommander implements Commander {
             part.setLocation( queryService.retrieveEntity( Place.class, state, "location" ) );
         else
             part.setLocation( null );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Command makeRemoveFlowCommand( Flow flow ) {
+        if ( flow.isSharing() ) {
+            return new DisconnectFlow( flow );
+        } else if ( flow.isNeed() ) {
+            return new RemoveNeed( flow );
+        } else if ( flow.isCapability()) {
+            return new RemoveCapability( flow );
+        } else throw new RuntimeException( "Can't remove unknown kind of flow");
     }
 }

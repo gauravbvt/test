@@ -72,7 +72,7 @@ public class RemovePart extends AbstractCommand {
         set( "partState", part.mapState() );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
-            multi = makeSubCommands( part );
+            multi = makeSubCommands( part, commander );
             set( "subCommands", multi );
         }
         // else this is a replay
@@ -120,15 +120,21 @@ public class RemovePart extends AbstractCommand {
      * Make multi command for adding capabilities and needs in the wake of the part's removal.
      *
      * @param part a part
+     * @param commander a commander
      * @return a multi command
      */
-    private MultiCommand makeSubCommands( Part part ) {
+    private MultiCommand makeSubCommands( Part part, Commander commander ) {
         MultiCommand subCommands = new MultiCommand( "cut task - extra" );
         subCommands.addCommand( new CopyPart( part ) );
         Iterator<Flow> ins = part.receives();
         while ( ins.hasNext() ) {
             Flow in = ins.next();
-            subCommands.addCommand( new DisconnectFlow( in ) );
+            if ( in.isSharing() ) {
+                subCommands.addCommand( commander.makeRemoveFlowCommand( in ) );
+            }
+            else {
+                subCommands.addCommand( new RemoveNeed( in ));
+            }
             // If the node to be removed is a part,
             // preserve the send of the source the flow represents
             if ( in.isInternal()
@@ -145,7 +151,12 @@ public class RemovePart extends AbstractCommand {
         Iterator<Flow> outs = part.sends();
         while ( outs.hasNext() ) {
             Flow out = outs.next();
-            subCommands.addCommand( new DisconnectFlow( out ) );
+            if ( out.isSharing() ) {
+                subCommands.addCommand( commander.makeRemoveFlowCommand( out ) );
+            }
+            else {
+                subCommands.addCommand( new RemoveCapability( out ));
+            }
             // If the node to be removed is a part,
             // preserve the send of the source the flow represents
             if ( out.isInternal()

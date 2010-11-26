@@ -74,7 +74,7 @@ public class Disintermediate extends AbstractCommand {
         describeTarget( part );                
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
-            multi = makeSubCommands( part );
+            multi = makeSubCommands( part, commander );
             set( "subCommands", multi );
         }
         // else this is a replay
@@ -102,7 +102,7 @@ public class Disintermediate extends AbstractCommand {
     }
 
     // Create a capability and/or need if not repetitive
-    private MultiCommand makeSubCommands( Part part ) {
+    private MultiCommand makeSubCommands( Part part, Commander commander ) {
         MultiCommand subCommands = new MultiCommand( "disintermediate - extra" );
         subCommands.setMemorable( false );
         List<Flow[]> inOuts = findIntermediations( part );
@@ -133,7 +133,7 @@ public class Disintermediate extends AbstractCommand {
                 addNeed.set( "name", receive.getName() );
                 addNeed.set( "attributes", ChannelsUtils.getFlowAttributes( receive ) );
                 subCommands.addCommand( addNeed );
-                subCommands.addCommand( new DisconnectFlow( receive ) );
+                subCommands.addCommand( commander.makeRemoveFlowCommand( receive ) );
             }
         }
         for ( Flow send : sendsToDisconnect ) {
@@ -144,7 +144,7 @@ public class Disintermediate extends AbstractCommand {
                 addCapability.set( "name", send.getName() );
                 addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( send ) );
                 subCommands.addCommand( addCapability );
-                subCommands.addCommand( new DisconnectFlow( send ) );
+                subCommands.addCommand( commander.makeRemoveFlowCommand( send ) );
             }
         }
         return subCommands;

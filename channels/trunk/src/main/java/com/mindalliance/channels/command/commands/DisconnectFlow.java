@@ -26,6 +26,7 @@ public class DisconnectFlow extends AbstractCommand {
     }
 
     public DisconnectFlow( Flow flow ) {
+        assert !flow.isNeed() && !flow.isCapability();
         needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
         set( "segment", flow.getSegment().getId() );
         set( "flow", flow.getId() );

@@ -427,21 +427,26 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addEntityLinks() {
         String[] entityProps = {"location", "actor", "role",
                 "jurisdiction", "organization", "initiatedEvent"};
-        Part part = getPart();
         for ( String prop : entityProps ) {
-            ModelObjectLink moLink = new ModelObjectLink(
-                    prop + "-link",
-                    new PropertyModel<ModelEntity>( part, prop ),
-                    new Model<String>(
-                            prop.equals( "initiatedEvent" )
-                                    ? "Causes event"
-                                    : WordUtils.capitalize( prop.equals( "actor" )
-                                    ? "agent"
-                                    : prop ) ) );
-            moLink.setOutputMarkupId( true );
-            entityLinks.put( prop, moLink );
-            addOrReplace( moLink );
+            addEntityLink( prop );
         }
+    }
+
+    private ModelObjectLink addEntityLink( String prop ) {
+        Part part = getPart();
+        ModelObjectLink moLink = new ModelObjectLink(
+                prop + "-link",
+                new PropertyModel<ModelEntity>( part, prop ),
+                new Model<String>(
+                        prop.equals( "initiatedEvent" )
+                                ? "Causes event"
+                                : WordUtils.capitalize( prop.equals( "actor" )
+                                ? "agent"
+                                : prop ) ) );
+        moLink.setOutputMarkupId( true );
+        entityLinks.put( prop, moLink );
+        addOrReplace( moLink );
+        return moLink;
     }
 
     private void addTimingFields() {
@@ -965,8 +970,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private void updateEntityLink( AjaxRequestTarget target, Change change ) {
         String property = change.getProperty();
-        ModelObjectLink moLink = entityLinks.get( property );
-        if ( moLink != null ) target.addComponent( moLink );
+        ModelObjectLink moLink = addEntityLink( property );
+        if ( moLink != null ) {
+            target.addComponent( moLink );
+        }
     }
 
 

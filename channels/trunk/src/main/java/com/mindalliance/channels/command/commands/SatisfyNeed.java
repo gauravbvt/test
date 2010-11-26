@@ -137,7 +137,7 @@ public class SatisfyNeed extends AbstractCommand {
             // Disconnect need satisfying flow
             Segment segment = commander.resolve( Segment.class, (Long) get( "context" ) );
             Flow newFlow = segment.findFlow( (Long) get( "satisfy" ) );
-            multi.addCommand( new DisconnectFlow( newFlow ) );
+            multi.addCommand( commander.makeRemoveFlowCommand( newFlow ) );
             return multi;
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

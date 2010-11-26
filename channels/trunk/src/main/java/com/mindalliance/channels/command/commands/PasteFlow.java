@@ -111,7 +111,7 @@ public class PasteFlow extends AbstractCommand {
                 throw new CommandException( "Can't undo." );
             } else {
                 Flow flow = segment.findFlow( flowId );
-                return new DisconnectFlow( flow );
+                return commander.makeRemoveFlowCommand( flow );
             }
         } catch ( NotFoundException e ) {
             throw new CommandException( "Can't undo", e );

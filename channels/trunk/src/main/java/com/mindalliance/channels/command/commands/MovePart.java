@@ -85,15 +85,15 @@ public class MovePart extends AbstractCommand {
         addReceives( part, toSegment, multi, addPart );
         // disconnect flows to "old" part
         for ( Flow sharingSend :  part.getAllSharingSends() ) {
-            multi.addCommand( new DisconnectFlow( sharingSend ) );
+            multi.addCommand( commander.makeRemoveFlowCommand( sharingSend ) );
         }
         for ( Flow capability : part.getCapabilities()  ) {
-            multi.addCommand( new DisconnectFlow( capability ) );
+            multi.addCommand( new RemoveCapability( capability ) );
         }
         Iterator<Flow> receives = part.receives();
         while ( receives.hasNext() ) {
             Flow receive = receives.next();
-            multi.addCommand( new DisconnectFlow( receive ) );
+            multi.addCommand( commander.makeRemoveFlowCommand( receive ) ); 
         }
         // remove "old" part
         multi.addCommand( new RemovePart( part ) );
@@ -126,7 +126,6 @@ public class MovePart extends AbstractCommand {
             Segment toSegment,
             MultiCommand multi,
             Command addPart ) throws CommandException {
-        Segment fromSegment = partToMove.getSegment();
         Map<String, Command> addCapabilityCommands = new HashMap<String, Command>();
         Iterator<Flow> capabilities = IteratorUtils.filteredIterator(
                 partToMove.sends(),

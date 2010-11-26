@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.segment.menus;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.commands.AddIntermediate;
 import com.mindalliance.channels.command.commands.AddUserIssue;
@@ -9,6 +10,8 @@ import com.mindalliance.channels.command.commands.CopyFlow;
 import com.mindalliance.channels.command.commands.DisconnectFlow;
 import com.mindalliance.channels.command.commands.DuplicateFlow;
 import com.mindalliance.channels.command.commands.PasteAttachment;
+import com.mindalliance.channels.command.commands.RemoveCapability;
+import com.mindalliance.channels.command.commands.RemoveNeed;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
@@ -192,12 +195,18 @@ public class FlowActionsMenuPanel extends MenuPanel {
                     update( target, change );
                 }
             } );
-        if ( !isCollapsed )
-            commandWrappers.add( new CommandWrapper( new DisconnectFlow( flow ), CONFIRM ) {
+        if ( !isCollapsed ) {
+            Command command = flow.isSharing()
+                    ? new DisconnectFlow( flow )
+                    : flow.isNeed()
+                    ? new RemoveNeed( flow )
+                    : new RemoveCapability( flow );
+            commandWrappers.add( new CommandWrapper( command, CONFIRM ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
+        }
         if ( !isCollapsed && flow.isSharing() )
             commandWrappers.add( new CommandWrapper( new AddIntermediate( flow ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {

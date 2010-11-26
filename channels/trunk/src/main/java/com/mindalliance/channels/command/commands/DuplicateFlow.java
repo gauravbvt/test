@@ -75,7 +75,7 @@ public class DuplicateFlow extends AbstractCommand {
                 throw new CommandException( "Can't undo." );
             } else {
                 Flow flow = segment.findFlow( flowId );
-                return new DisconnectFlow( flow );
+                return commander.makeRemoveFlowCommand( flow );
             }
         } catch ( NotFoundException e ) {
             throw new CommandException( "Can't undo", e );
@@ -101,7 +101,7 @@ public class DuplicateFlow extends AbstractCommand {
     /**
      * Make a duplicate of the flow
      *
-     * @param queryService
+     * @param queryService a query service
      * @param flow      a flow to duplicate
      * @param isSend whether to replicate as send or receive
      * @param priorId   Long or null
