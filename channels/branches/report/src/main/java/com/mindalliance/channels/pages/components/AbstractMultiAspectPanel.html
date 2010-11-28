@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+
+<wicket:extend>
+    <div wicket:id="mo">  <!-- class="entity" or "plan" etc. added programmatically -->
+        <div wicket:id="banner">
+            <div class="float-header">
+                <h1 wicket:id="header-title">[Entity name]</h1>
+                <a wicket:id="done" class="close" href="#">Done</a>
+                <span class="menubar">
+                    <span class="menuitem" wicket:id="showMenu">[show menu]</span>
+                    <span class="menuitem" wicket:id="actionMenu">[action menu]</span>
+                </span>
+            </div>
+        </div>
+        <div class="aspect" wicket:id="aspect">[aspect panel]</div>
+    </div>
+</wicket:extend>
+</body>
+</html>

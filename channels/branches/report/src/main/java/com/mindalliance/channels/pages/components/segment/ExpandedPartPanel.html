@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+<table>
+    <tr>
+        <td align="left" class="pointer">
+        <span class="summary" wicket:id="partSummary">
+            [Part summary panel]
+        </span>
+        </td>
+    </tr>
+</table>
+<table summary="Part description">
+    <tr>
+        <th align="right"><label for="task">Name:</label></th>
+        <td><input type="text" size="40" id="task" wicket:id="task" value="investigating fire"></td>
+    </tr>
+    <tr>
+        <th align="right"><label for="category">Category:</label></th>
+        <td><select id="category" wicket:id="category"><option>Operations</option></select></td>
+    </tr>
+    <tr>
+        <th align="right">
+            <label for="location"><span wicket:id="location-link" href="#">Location</span>:</label>
+        </th>
+        <td><span id="location" wicket:id="location">[entity reference panel]</span></td>
+    </tr>
+    <tr>
+        <th align="right">
+            <label for="actor"><span wicket:id="actor-link" href="#">Agent</span>:</label>
+        </th>
+        <td><span id="actor" wicket:id="actor">[entity reference panel]</span></td>
+    </tr>
+    <tr>
+        <th align="right">
+            <label for="role"><span wicket:id="role-link" href="#">Role:</span>
+            </label>
+        </th>
+        <td><span id="role" wicket:id="role">[entity reference panel]</span></td>
+    </tr>
+    <tr>
+        <th align="right">
+            <label for="jurisdiction"><span wicket:id="jurisdiction-link" href="#">Jurisdiction</span>:</label>
+        </th>
+        <td><span id="jurisdiction" wicket:id="jurisdiction">[entity reference panel]</span></td>
+    </tr>
+    <tr>
+        <th align="right">
+            <label for="organization"><span wicket:id="organization-link" href="#">Organization</span>:</label>
+        </th>
+        <td><span id="organization" wicket:id="organization">[entity reference panel]</span></td>
+    </tr>
+    <tr>
+        <th align="right"><label for="asTeam">Execution:</label>
+        </th>
+        <td>
+             <span class="timing">
+                <input id="asTeam" type="checkbox" wicket:id="asTeam"/>
+                Assignees execute task as a team
+             </span>
+        </td>
+    </tr>
+    <tr>
+        <th align="right">
+            <label for="initiatedEvent"><span wicket:id="initiatedEvent-link" href="#">Causes event</span>:</label>
+        </th>
+        <td><input type="text" size="40" id="initiatedEvent" wicket:id="initiatedEvent" value=""></td>
+    </tr>
+    <tr>
+        <th class="area" align="right"><label>Timing:</label></th>
+        <td>
+            <span class="timing">
+                <input type="checkbox" wicket:id="self-terminating"/>Usually completes after <span
+                    wicket:id="completion-time">[Delay panel]</span>
+            </span>
+            <span class="timing">
+                <input type="checkbox" wicket:id="repeating"/>Repeats every <span
+                    wicket:id="repeats-every">[Delay panel]</span>
+            </span>
+            <span class="timing">
+                <input type="checkbox" wicket:id="startsWithSegment"/>Starts with phase
+                <a wicket:id="phase-link" href="#">phase</a>
+                of event
+                <a wicket:id="event-link" href="#">event</a>
+             </span>
+            <span class="timing">
+                <input type="checkbox" wicket:id="terminatesEventPhase"/>Can end this plan segment
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <th align="right">
+            <a wicket:id="segment-goals-link" href="#" title="To the segment's goals">Goals:</a>
+        </th>
+        <td>
+            <span wicket:id="goals">[task goals panel]</span>
+        </td>
+    </tr>
+    <tr>
+        <th class="area" align="right" valign="top"><label
+                for="description">Instructions:</label>
+        </th>
+        <td><textarea id="description" name="description" wicket:id="description"
+                      cols="40" rows="1">Instructions</textarea></td>
+    </tr>
+    <tr wicket:id="attachments">
+        <th align="right" valign="top">Attachments:</th>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+<span wicket:id="issues">[issues panel]</span>
+
+</wicket:panel>
+</body>
+</html>

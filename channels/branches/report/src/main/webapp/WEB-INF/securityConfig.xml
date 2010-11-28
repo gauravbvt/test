@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:sec="http://www.springframework.org/schema/security"
+        xmlns:context="http://www.springframework.org/schema/context"
+
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+
+        default-autowire="byName">
+
+    <bean name="user" class="com.mindalliance.channels.dao.User" factory-method="current"
+          scope="session" autowire="no"/>
+
+    <bean name="plan" class="com.mindalliance.channels.model.Plan" factory-bean="user" factory-method="getPlan"
+          scope="session" />
+
+    <bean id="userService" class="com.mindalliance.channels.dao.FileUserDetailsService">
+        <property name="base" value="${channels.home}"/>
+        <property name="userDefinitions" value="users.properties"/>
+        <property name="defaultDefinitions" value="/WEB-INF/users.properties"/>
+    </bean>
+
+    <sec:http auto-config='true' access-denied-page="/static/403.html" create-session="always"
+              disable-url-rewriting="false">
+
+        <sec:intercept-url pattern="/css/*.css" filters="none"/>
+        <sec:intercept-url pattern="/*.js" filters="none"/>
+        <sec:intercept-url pattern="/*.ico" filters="none"/>
+        <sec:intercept-url pattern="/static/**" filters="none"/>
+        <sec:intercept-url pattern="/images/**" filters="none"/>
+        <sec:intercept-url pattern="/resources/**" filters="none"/>
+        <sec:intercept-url pattern="/doc/**" filters="none"/>
+
+        <sec:intercept-url pattern="/login.html" filters="none"/>
+        <sec:intercept-url pattern="/plan" access="ROLE_PLANNER"/>
+        <sec:intercept-url pattern="/admin" access="ROLE_ADMIN"/>
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+
+        <sec:form-login login-page="/login.html" login-processing-url="/login.do"
+                        default-target-url="/"
+                        authentication-failure-url="/static/failed.html"/>
+        <sec:logout logout-url="/logout" logout-success-url="/"/>
+        <sec:remember-me key="channels"/>
+
+    </sec:http>
+
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider user-service-ref="userService">
+            <sec:password-encoder hash="md5"/>
+        </sec:authentication-provider>
+    </sec:authentication-manager>
+
+    <sec:global-method-security secured-annotations="enabled"/>
+
+    <bean id="runAsManager" class="org.springframework.security.access.intercept.RunAsManagerImpl">
+        <property name="key" value="bla"/>
+    </bean>
+    <bean id="runAsAuthenticationProvider" class="org.springframework.security.access.intercept.RunAsImplAuthenticationProvider">
+        <property name="key" value="bla"/>
+    </bean>
+
+    <bean id="securityInterceptor" class="org.springframework.security.access.intercept.aspectj.AspectJAnnotationSecurityInterceptor">
+        <property name="securityMetadataSource">
+            <bean class="org.springframework.security.access.annotation.SecuredAnnotationSecurityMetadataSource"/>
+        </property>
+        <property name="validateConfigAttributes" value="false"/>
+    </bean>
+
+    <bean id="accessDecisionManager"
+          class="org.springframework.security.access.vote.AffirmativeBased">
+        <property name="decisionVoters">
+            <list>
+                <bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

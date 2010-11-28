@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+
+<wicket:panel>
+    <div class="floating">
+        <div class="float-bar" wicket:id="moveBar">
+			<div class="float-bar-title">
+				<span wicket:id="title">A title</span>
+			</div>
+            <div class="float-bar-close">
+                <a wicket:id="close" href="#">
+                    <img src="images/float-bar-close.png" border="0"/>
+                </a>
+            </div>
+        </div>
+        <wicket:child/>
+        <div class="float-resize" wicket:id="resizer">
+            <img src="images/resize-icon.png" border="0"/>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

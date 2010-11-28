@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:sec="http://www.springframework.org/schema/security"
+        xmlns:context="http://www.springframework.org/schema/context"
+
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+
+        default-autowire="byName">
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="/WEB-INF/ehcache.xml"/>
+    </bean>
+
+    <bean id="resultCache" class="com.mindalliance.channels.query.ResultCache">
+        <property name="cacheKey" value="results"/>
+    </bean>
+
+    <bean id="cacheSet" class="com.mindalliance.channels.query.CacheAdvice">
+        <property name="cache" ref="resultCache"/>
+    </bean>
+
+    <bean id="cacheClear" class="com.mindalliance.channels.query.CacheResetAdvice">
+        <property name="cache" ref="resultCache"/>
+    </bean>
+
+    <bean id="permCache" class="com.mindalliance.channels.query.ResultCache">
+        <property name="cacheKey" value="longTerm"/>
+    </bean>
+
+    <bean id="permSet" class="com.mindalliance.channels.query.CacheAdvice">
+        <property name="cache" ref="permCache"/>
+    </bean>
+    <bean id="permClear" class="com.mindalliance.channels.query.CacheResetAdvice">
+        <property name="cache" ref="permCache"/>
+    </bean>
+
+    <aop:config proxy-target-class="true">
+        <!-- Temporary caching refreshed when model is changed -->
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.query.QueryService.*(..))"
+                       advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.query.Assignments com.mindalliance.channels.query.QueryService.*(..))"
+                       advice-ref="cacheSet"/>
+          <aop:advisor pointcut="execution(com.mindalliance.channels.model.Level com.mindalliance.channels.query.QueryService.*(..))"
+                     advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.query.QueryService.*(..))"
+                     advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.analysis.Detective.*(..))"
+                     advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.analysis.Analyst.*(..))"
+                     advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(String com.mindalliance.channels.analysis.Analyst.*(..))"
+                     advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.analysis.Analyst.*(..))"
+                     advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(Integer com.mindalliance.channels.analysis.Analyst.*(..))"
+                     advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.graph.DiagramFactory.*(..))"
+                     advice-ref="cacheSet"/>
+
+        <!-- Temporary caching trigger -->
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.dao.PlanManager.onAfterCommand(..))"
+                     advice-ref="cacheClear"/>
+
+        <!-- Permanent caching -->
+        <aop:advisor pointcut="execution(String com.mindalliance.channels.geo.GeoService.getGeoCoding(..))"
+                     advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.geo.GeoService.findNearbyPostalCodes(..))"
+                     advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.geo.GeoService.verifyPostalCode(..))"
+                     advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.geo.GeoService.isPostalCodeInGeoLocation(..))"
+                     advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.geo.GeoService.isLikelyGeoname(..))"
+                      advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.geo.GeoService.findGeoLocations(..))"
+                       advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.nlp.SemanticMatcher.matches(..))"
+                     advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.nlp.Proximity com.mindalliance.channels.nlp.SemanticMatcher.semanticProximity(..))"
+                      advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(Double com.mindalliance.channels.nlp.SemanticMatcher.assessSimilarity(..))"
+                       advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(net.didion.jwnl.data.IndexWord com.mindalliance.channels.nlp.SemanticMatcher.lookupBaseForm(..))"
+                       advice-ref="permSet"/>
+    </aop:config>
+
+</beans>

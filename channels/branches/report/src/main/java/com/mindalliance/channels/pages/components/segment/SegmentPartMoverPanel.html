@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <h3>
+		<span>Move selected tasks to another segment</span>
+		<div>&nbsp;</div>
+	</h3>
+    <div class="filters">
+    <a wicket:id="selectAllOrNone" href="#"><span wicket:id="allOrNone">Select all</span></a>
+	&nbsp;|&nbsp;Move to segment <select wicket:id="destinationSegment"><option>segment</option></select>
+	</div>
+    <span wicket:id="parts">[part selector table]</span>
+    <br/>
+    <input wicket:id="move" type="button" value="Move"/>
+</wicket:panel>
+</body>
+</html>

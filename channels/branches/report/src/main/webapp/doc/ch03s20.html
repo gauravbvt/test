@@ -1,0 +1,50 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Administration</title><link rel="stylesheet" href="/css/doc.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="channels_user_guide.html" title="Information Sharing Planning with Channels"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Building and delivering Information Sharing Plans with Channels"><link rel="prev" href="ch03s19.html" title="Help, support and feedback"><link rel="next" href="ch03s21.html" title="Logging out of Channels"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Administration</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03s19.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;3.&nbsp;Building and delivering Information Sharing Plans with
+    Channels</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch03s21.html">Next</a></td></tr></table><hr></div><div class="section" title="Administration"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e2849"></a>Administration</h2></div></div></div><p>A Channels administrator (and only an administrator) can create
+      new plans, retire existing plans, register and disable users, and assign
+      plan-access privileges to them. Administrators are also responsible for
+      configuring an installation of Channels.</p><div class="section" title="Plan creation and user privileges"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2854"></a>Plan creation and user privileges</h3></div></div></div><p>The Administration page is accessible only to the administrator
+        of Channels. The Administration Page enables an administration
+        to:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Select a Plan as the current Plan</p></li><li class="listitem"><p>Access the Plan's Procedures (from the development
+            version)</p></li><li class="listitem"><p>Access the Plan editor (by clicking on "Modify Plan")</p></li><li class="listitem"><p>Create a new Plan by:</p><div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem"><p>Giving it a unique and fixed URI</p></li><li class="listitem"><p>Identifying the sponsor (client)</p></li><li class="listitem"><p>Giving the support community's ID (more on that
+                later)</p></li></ul></div></li><li class="listitem"><p>Put the development version of the current Plan into
+            production (by clicking on "Productize Plan")</p></li><li class="listitem"><p>Retire the current Plan</p></li><li class="listitem"><p>Add a user (with user id, email address and password)</p></li><li class="listitem"><p>Assign user privileges (Planner or User) for the current
+            Plan or for all Plans</p></li><li class="listitem"><p>Disable a user</p></li><li class="listitem"><p>Give another user Administrator privileges</p></li><li class="listitem"><p>Identify the support community ID for a Plan</p></li></ul></div><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_85.png"></div></div></div><div class="section" title="External services"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2910"></a>External services</h3></div></div></div><p>Channels relies on a number of online services:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Geonames and Google Maps<sup>TM</sup> for
+            geolocation</p></li><li class="listitem"><p>SurveyGizmos<sup>TM</sup> for launching
+            surveys and collecting the results</p></li><li class="listitem"><p>An email service (SMTP) to send emails</p></li><li class="listitem"><p>BetaEasy<sup>TM</sup> for providing feedback
+            and for online community support</p></li></ul></div><p>Access to an external service requires account identification,
+        either in the form of user id and password or in the form of an API
+        key. When Channels is used as a service, service configuration is
+        already taken care of. However when installing a new instance of
+        Channels, an Administrator must provide purchase service access and
+        configure Channels to use the correct account information. <sup>[<a name="d0e2939" href="#ftn.d0e2939" class="footnote">2</a>]</sup></p><p>Planners can log into the BetaEasy<sup>TM</sup>
+        feedback service and the SurveyGizmoTM survey service to browse
+        collected data and get reports.</p></div><div class="section" title="Feedback service: BetaEasyTM"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2947"></a>Feedback service: BetaEasy<sup>TM</sup></h3></div></div></div><p>Before creating a new Plan, the Administrator normally creates
+        two distinct support communities, one for the planners and one for the
+        users of the to-be-created Plan. The administrator creates BetaEasy
+        accounts for all planners and sends out login information to
+        them.</p><p>Each support community is implemented as a BetaEasy project. The
+        community is identified by a BetaEasy project ID. A default support
+        community is pre-defined for all Plans that don't identity their own
+        support communities.</p><p>It is the responsibility of the administrator to give each
+        planner access to the BetaEasy projects that correspond to the Plans
+        they are assigned to. After logging in, the planner can see reports on
+        the feedback of other planners and of users. Users provide their
+        feedback about their Procedures via the feedback widget from within
+        the Information Sharing Procedures report. Planners provide their
+        feedback about the Plan from within the Plan editor.</p><p>To browse and mine the feedback of other planners about a Plan
+        or of users about their Procedures, a planner must first log into the
+        BetaEasy service.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_93.png"></div></div><p>After logging in, a BetaEasy<sup>TM</sup>
+        manager (and ISP planner), is shown a dashboard summarizing the
+        feedback activity on all authorized projects.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_96.png"></div></div><p>Planners can then browse the collected feedback.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_95.png"></div></div><p>Refer to BetaEasy<sup>TM</sup>'s online help at
+        <code class="uri">http://www.betaeasy.com/help</code> for more details on how to use
+        their service.</p></div><div class="section" title="Survey service: SurveyGizmoTM"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2998"></a>Survey service:
+        SurveyGizmo<sup>TM</sup></h3></div></div></div><p>Surveys launched and managed from within Channels are hosted and
+        managed by the SurveyGizmo<sup>TM</sup>
+        service.</p><p>A planner can access a survey sample or a survey report directly
+        from within Channels.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_97.png"></div></div><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_37.png"></div></div><p>A planner can look at the questionnaire for a particular survey
+        and see a report on the response to that survey.</p><div class="screenshot"><div class="mediaobject"><img src="quick_tour/tour_98.png"></div></div><p>Refer to the SurveyGizmoTM service's online help at
+        <code class="uri">http://surveygizmo.zendesk.com/home</code> for more details on how
+        to use their service.</p></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.d0e2939" href="#d0e2939" class="para">2</a>] </sup>The installation and configuration of Channels is covered in
+            the "Channels Installation and Configuration Guide".</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03s19.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ch03.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch03s21.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Help, support and feedback&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="channels_user_guide.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Logging out of Channels</td></tr></table></div></body></html>

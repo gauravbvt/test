@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+
+<wicket:panel>
+    <div wicket:id="jobsDiv">
+		<div class="filters">
+	        <span wicket:id="ranges">[range panel]</span>
+		</div>
+        <table class="data-table">
+            <thead>
+                <tr class="headers">
+                    <td>Confirmed</td>
+                    <td>Agent</td>
+                    <td>Title</td>
+                    <td>Role</td>
+                    <td>Jurisdiction</td>
+                    <td>Supervisor</td>
+                    <td/>
+                </tr>
+            </thead>
+            <tr wicket:id="jobs">
+                <td><input wicket:id="confirmed" type="checkbox"/></td>
+                <td><span wicket:id="actor">[entity cell panel]</span></td>
+                <td><input wicket:id="title" type="text" size="25"/></td>
+                <td><span wicket:id="role">[entity cell panel]</span></td>
+                <td><span wicket:id="jurisdiction">[entity cell panel]</span></td>
+                <td><span wicket:id="supervisor">[entity cell panel]</span></td>
+                <td><a wicket:id="flows-link" href="#">Flows</a></td>
+            </tr>
+        </table>
+    </div>
+    <input wicket:id="transfer" type="checkbox"/>&nbsp;Transfer jobs
+    <span wicket:id="transferDiv">
+        from
+        <select wicket:id="fromOrganization">
+            <option>ACME</option>
+        </select>
+        <span wicket:id="jobTransfers">[job transfers table]</span>
+        <input wicket:id="doTransfer" type="button" value="Transfer jobs"/>
+    </span>
+    <span wicket:id="flows">
+        <div class="section-title">
+            Flows involving <span wicket:id="job">job</span>
+        </div>
+        <span wicket:id="playbook">[job flows panel]</span>
+    </span>
+</wicket:panel>
+
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <tr>
+        <th align="right">
+            Mode of transmission:
+        </th>
+        <td>
+            <span wicket:id="castLabel">Broadcast</span>
+            <span wicket:id="castChoiceContainer">
+                <select wicket:id="cast">
+                    <option>Unicast</option>
+                    <option>Multicast</option>
+                    <option>Broadcast</option>
+                </select>
+                <a wicket:id="resetChoice" href="#">(reset)</a>
+            </span>
+        </td>
+    </tr>
+    <tr wicket:id="addressPatternContainer">
+        <th align="right">
+            <label>Address pattern:</label>
+        </th>
+        <td><input wicket:id="addressPattern" type="text"/></td>
+    </tr>
+    <tr>
+        <th align="right">
+            Delegates transmissions to:
+        </th>
+        <td>
+            <span wicket:id="delegatedToMedia">[delegation media panel]</span>
+        </td>
+    </tr>
+    <tr wicket:id="securityContainer">
+        <th align="right">
+            <label for="security">Secure for:</label>
+        </th>
+        <td><span id="security" wicket:id="security">[classifications panel]</span></td>
+    </tr>
+</wicket:extend>
+</body>
+</html>

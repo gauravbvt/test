@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <div class="surveys">
+        <div class="float-header">
+            <h1>Surveys</h1>
+        </div>
+        <div class="aspect">
+            <table>
+                <tr>
+                    <td nowrap="nowrap">
+                        Show all surveys
+                        <input wicket:id="filtered" type="checkbox"/>
+                        that are
+                        <select wicket:id="statusChoice">
+                            <option>not yet launched</option>
+                            <option>launched</option>
+                            <option>closed</option>
+                        </select>
+                        and are
+                        <select wicket:id="relevanceChoice">
+                            <option>relevant</option>
+                            <option>no longer relevant</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h3>
+                            <span wicket:id="tableTitle">All surveys</span>
+							<div>&nbsp;</div>
+                        </h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span wicket:id="surveysTable">[surveys table]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span wicket:id="surveyContainer">
+                            <span wicket:id="survey">[survey panel]</span>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>

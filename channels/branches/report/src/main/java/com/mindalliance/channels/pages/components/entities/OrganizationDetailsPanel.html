@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <tr>
+        <th class="area" align="right" valign="top"><label>Mission:</label></th>
+        <td><textarea cols="40" rows="2" wicket:id="mission">Mission</textarea></td>
+    </tr>
+    <tr>
+        <th align="right">
+            <label for="parent"><span wicket:id="org-link" href=""
+                                   title="Parent organization's details">Parent</span>:</label>
+        </th>
+        <td>
+            <input id="parent" width="40" wicket:id="actualParent" type="text"/>
+            <span wicket:id="parent">[entity reference panel]</span>
+        </td>
+    </tr>
+    <tr wicket:id="locationContainer">
+        <th align="right"><label for="location"><a wicket:id="loc-link" href=""
+                                                   title="Location's details">Location</a>:</label>
+        </th>
+        <td><input type="text" size="40" id="location" wicket:id="location" value=""></td>
+    </tr>
+    <tr wicket:id="contactContainer">
+        <th align="right">
+            <label for="contact-info">Contact info:</label>
+        </th>
+        <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
+    </tr>
+    <tr wicket:id="constraintsContainers">
+        <th align="right">Constraints:</th>
+        <td>
+            <input wicket:id="agreementsRequired" type="checkbox"/> No sharing commitment with other organizations without an agreement
+            <br/>
+            <input wicket:id="actorsRequired" type="checkbox"/> No roles without agents
+        </td>
+    </tr>
+     <tr wicket:id="tabContainer">
+        <td colspan="2"><div wicket:id="tabs" class="tabpanel">[tab panel]</div></td>
+    </tr>
+    <tr wicket:id="assignmentsContainer">
+        <td colspan="2">
+            <h3>
+				<span>Task assignments</span>
+				<div>&nbsp;</div>
+			</h3>
+            <div wicket:id="assignments">[assignments panel]</div>
+        </td>
+    </tr>
+    <tr wicket:id="commitmentsContainer">
+        <td colspan="2">
+            <h3>
+				<span>Sharing commitments</span>
+				<div>&nbsp;</div>
+			</h3>
+            <span wicket:id="commitments">[commitments panel]</span>
+        </td>
+    </tr>
+</wicket:extend>
+</body>
+</html>

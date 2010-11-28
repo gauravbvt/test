@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN"
+        "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<head>
+    <title wicket:id="title">Title</title>
+    <link rel="stylesheet" href="css/playbook.css" type="text/css">
+    <link rel="stylesheet" href="css/iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
+</head>
+<body>
+<div id="top">
+    <div id="header">
+        <div>
+            <div id="nav">
+                <ul>
+                    <li><a wicket:id="top">Playbook</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+                <hr>
+            </div>
+            <h1 wicket:id="header">Header</h1>
+            <h3 wicket:id="role">(role in location)</h3>
+        </div>
+    </div>
+
+    <div id="contents">
+
+        <p wicket:id="all"><span wicket:id="desc">description, if any</span>
+           <span wicket:id="completion-note">Should be completed <span wicket:id="completion">XXX</span>.</span>
+           <span wicket:id="repeat-note">Repeated <span wicket:id="repeat">once in a while</span>.</span>
+           <span wicket:id="goal-note"> <span wicket:id="goals"><span wicket:id="goal"> Mitigates major physical risk to ACME of injury, disablement or death</span></span></span>
+        </p>
+
+        <div wicket:id="attachments">(attachments)</div>
+
+        <div class="other" wicket:id="other">
+            <p>Possible consequences:</p>
+            <ul>
+                <li wicket:id="task"><a wicket:id="task-link"><span wicket:id="task-label">an ensuing task</span></a></li>
+                <li wicket:id="end-event">Cause end of <span wicket:id="event-phase">event-phase</span></li>
+            </ul>
+        </div>
+
+        <div class="table-wrap">
+            <table class="flows" wicket:id="flows">
+                <thead>
+                    <tr><th class="first" align="left">Flows</th><th>&nbsp;</th><th wicket:id="actorSpec"><span wicket:id="actorLabel">Actor</span></th></tr>
+                </thead>
+                <tbody>
+                    <div wicket:id="inputs">(inputs)</div>
+                    <div wicket:id="outputs">(outputs)</div>
+                </tbody>
+            </table>
+        </div>
+        <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
+    </div>
+</div>
+</body>
+</html>

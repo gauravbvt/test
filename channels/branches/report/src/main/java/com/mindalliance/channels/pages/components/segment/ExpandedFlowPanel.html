@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+
+ <!--   <ul class="menu">
+        <li><a wicket:id="hide" href="#">Hide</a></li>
+        <li wicket:id="replicate-item"><a wicket:id="replicate" href="#">Add copy</a></li>
+        <li><a wicket:id="add-issue" href="#">Add issue</a></li>
+        <li><label><input wicket:id="delete" type="checkbox"> Delete</label></li>
+    </ul>
+-->
+    <span class="menubar">
+         <span wicket:id="flowActionsMenu">[flow action menu]</span>
+    </span>
+    
+    <span wicket:id="title" class="pointer">[flow title panel]</span>
+
+    <div class="flow-details">
+        <table summary="Flow list">
+            <tr>
+                <th align="right"><label wicket:id="name-label">Information:</label></th>
+                <td><input wicket:id="name" type="text" value="fire location" size="40"></td>
+            </tr>
+            <tr>
+                <th align="right">Intent:</th>
+                <td><select wicket:id="intent"><option>Report</option></select></td>
+            </tr>
+            <tr>
+                <th class="area" align="right" valign="top">
+                    <a wicket:id="editEOIs" href="#" title="Click to edit the elements">Elements:</a>
+                </th>
+                <td>
+                    <ul>
+                        <li wicket:id="eois"><span wicket:id="summary">eoi</span></li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <th align="right">As:</th>
+                <td>
+                <span wicket:id="askedFor">
+                    <label><input wicket:id="askedForFalse" type="radio"> Notification</label>
+                    <label><input wicket:id="askedForTrue" type="radio"> Reply</label>
+                </span>&nbsp;
+                    <label wicket:id="target-significance-label">that <select wicket:id="significance-to-target"><option>is critical to</option></select> <span wicket:id="target-label">this task</span></label>
+                </td>
+            </tr>
+            <tr>
+                <th align="right"><a wicket:id="other-link" href="#">To</a>:</th>
+                <td><label wicket:id="all-label"><input wicket:id="all" type="checkbox"> Every </label><span
+                        wicket:id="other">[other node selector]</span>
+                </td>
+            </tr>
+
+            <tr wicket:id="others">[other node selector]</tr>
+
+            <tr wicket:id="restrictionContainer">
+                <th>&nbsp;</th>
+                <td><input wicket:id="restricted" type="checkbox"/>&nbsp;but only if in
+                    <select wicket:id="restriction">
+                        <option>the same organization</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr wicket:id="channel-row">
+                <th align="right"><span wicket:id="channel-title">Channels:</span></th>
+                <td><span wicket:id="channels">[channels panel]</span></td>
+            </tr>
+                                         
+            <tr wicket:id="max-delay-row">
+                <th align="right"><label>Within:</label></th>
+                <td>
+                    <span wicket:id="max-delay">[delay panel]</span>
+                </td>
+                <!--<td><input wicket:id="maxDelay" type="text" value=""></td>-->
+            </tr>
+
+            <tr wicket:id="significance-to-source">
+                <th align="right"><span wicket:id="source-task">Sender task</span>:</th>
+                <td>
+                    <label wicket:id="triggers-source-container"><input wicket:id="triggers-source" type="checkbox"/> is triggered by the request</label>
+                    &nbsp;
+                    <label wicket:id="terminates-source-container"><input wicket:id="terminates-source" type="checkbox"/> terminates after <span wicket:id="notifying-or-replying">notifying</span></label>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="area" align="right" valign="top">Instructions:</th>
+                <td><textarea id="description" name="description" wicket:id="description"
+                      cols="40" rows="1">Instructions</textarea></td>
+            </tr>
+
+            <tr wicket:id="attachments">
+                <th align="right" valign="top">Attachments:</th>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+        <span wicket:id="issues">[issues panel]</span>
+    </div>
+    <wicket:child/>
+</wicket:panel>
+</body>
+</html>
