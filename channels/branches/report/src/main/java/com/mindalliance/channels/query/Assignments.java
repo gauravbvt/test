@@ -233,11 +233,8 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     public List<Specable> getActors() {
         Set<Specable> specables = new HashSet<Specable>();
-        for ( Assignment assignment : this ) {
-            Actor actor = assignment.getActor();
-            Role role = assignment.getRole();
-            specables.add( !actor.isUnknown() && actor.isActual() || role == null ? actor : role );
-        }
+        for ( Assignment assignment : this )
+            specables.add( assignment.getSpecableActor() );
 
         List<Specable> result = new ArrayList<Specable>( specables );
         Collections.sort( result, new Comparator<Specable>() {

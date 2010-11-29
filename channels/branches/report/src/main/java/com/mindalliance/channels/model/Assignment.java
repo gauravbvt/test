@@ -156,4 +156,10 @@ public class Assignment implements GeoLocatable, Specable {
     public Place getLocation() {
         return getPart().getLocation();
     }
+
+    public Specable getSpecableActor() {
+        Actor actor = getActor();
+        Role role = getRole();
+        return !actor.isUnknown() && actor.isActual() || role == null ? actor : role;
+    }
 }

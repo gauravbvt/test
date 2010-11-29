@@ -163,8 +163,10 @@ public class AssignmentReportPage extends WebPage {
                                             .setVisible( flow != null )
                                     );
                                 }
-                            }
-                            );
+                            } );
+                        item.add( new AttributeModifier( "class", true,
+                                  new Model<String>( item.getIndex() % 2 == 0 ? "even" : "odd") ) );
+                        
                     }
                 }
             ).setVisible( !getSends().isEmpty() ),
@@ -196,8 +198,9 @@ public class AssignmentReportPage extends WebPage {
                                             .setVisible( flow != null )
                                     );
                                 }
-                            }
-                            );
+                            } );
+                        item.add( new AttributeModifier( "class", true,
+                                  new Model<String>( item.getIndex() % 2 == 0 ? "even" : "odd") ) );
                     }
                 }
             ).setVisible( !getReceives().isEmpty() ),
@@ -207,7 +210,7 @@ public class AssignmentReportPage extends WebPage {
                     Goal goal = item.getModelObject();
                     item.add( new Label( "risk-description", goal.getFullTitle() ) );
                     item.add( new AttributeModifier( "class", true,
-                                            new Model<String>( goal.getLevel().getName() ) ) );
+                                            new Model<String>( goal.getLevel().getName().toLowerCase() ) ) );
                 }
             },
             new WebMarkupContainer( "no-risk" ).setVisible( getRisks().isEmpty() ),
@@ -218,7 +221,7 @@ public class AssignmentReportPage extends WebPage {
                     Goal goal = item.getModelObject();
                     item.add( new Label( "gain-description", goal.getFullTitle() ) );
                     item.add( new AttributeModifier( "class", true,
-                                            new Model<String>( goal.getLevel().getName() ) ) );
+                                            new Model<String>( goal.getLevel().getName().toLowerCase() ) ) );
                 }
             },
             new WebMarkupContainer( "no-gain" ).setVisible( getGains().isEmpty() )

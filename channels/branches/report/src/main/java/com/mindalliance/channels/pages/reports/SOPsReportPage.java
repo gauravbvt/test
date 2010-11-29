@@ -81,13 +81,10 @@ public class SOPsReportPage extends WebPage {
             new ListView<Organization>( "breadcrumbs" ) {
                 @Override
                 protected void populateItem( ListItem<Organization> item ) {
-                    PageParameters parms = new PageParameters();
                     Organization organization = item.getModelObject();
-                    parms.put( SelectorPanel.ORGANIZATION_PARM,
-                               Long.toString( organization.getId() ) );
-                    item.add( new BookmarkablePageLink<SOPsReportPage>(
-                            "crumb", SOPsReportPage.class, parms )
-                                .add( new Label( "text", organization.getName() ) ) );
+                    item.add( new WebMarkupContainer( "crumb" )
+                                .add( new Label( "text", organization.getName() ) )
+                                .setRenderBodyOnly( true ) );
                 }
             },
             new Label( "selector.actor.name" ),
@@ -150,6 +147,8 @@ public class SOPsReportPage extends WebPage {
         List<Assignment> a = assignments.getAssignments();
         Collections.sort( a, new Comparator<Assignment>() {
             public int compare( Assignment o1, Assignment o2 ) {
+
+
                 return o1.getPart().getTask().compareTo( o2.getPart().getTask() );
             }
         } );
@@ -236,9 +235,9 @@ public class SOPsReportPage extends WebPage {
     }
 
     private String getFromLabel( Assignment assignment ) {
-        Assignments all = selector.getAllAssignments();
         Part part = assignment.getPart();
-        return all.getSources( part ).without( assignment.getActor() )
+        return selector.getAllAssignments()
+                .getSources( part ).without( assignment.getActor() )
                 .getCommonSpec( part ).getReportSource();
     }
 
@@ -316,9 +315,7 @@ public class SOPsReportPage extends WebPage {
     }
 
     private static String getToLabel( Assignment assignment ) {
-        Specable spec = assignment.getActor().isUnknown() ? assignment.getRole()
-                                                          : assignment.getActor();
-        return "By " + spec + " - ";
+        return "By " + assignment.getSpecableActor() + " - ";
     }
 
     private static String getSourcesList( Assignments assignments, ResourceSpec prefix ) {
