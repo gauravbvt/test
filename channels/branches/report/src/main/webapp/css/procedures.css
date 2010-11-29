@@ -323,11 +323,12 @@ div#instructions p {
 }
 
 
-/* ----- Task - Role, Location, Timing, Documentation, Policies, Risks, Gains  ----- */
+/* ----- Task - Role, Location, Timing, Repeat, Documentation, Policies, Risks, Gains  ----- */
 
 div#role,
 div#location,
 div#timing,
+div#repeat,
 div#documentation,
 div#policies,
 div#risks,
@@ -339,6 +340,7 @@ div#gains {
 div#role h3,
 div#location h3,
 div#timing h3,
+div#repeat h3,
 div#documentation h3,
 div#policies h3,
 div#risks h3,
@@ -357,6 +359,7 @@ div#gains h3 {
 div#role p,
 div#location p,
 div#timing p,
+div#repeat p,
 div#documentation p,
 div#policies p {
 	padding-left:10px;
@@ -385,6 +388,10 @@ div#location h3 {
 
 div#timing h3 {
 	background:url('../images/timing.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#repeat h3 {
+	background:url('../images/repeat.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#documentation h3 {
@@ -449,7 +456,9 @@ div#sends table,
 div#receives table {
 	border-collapse:collapse;
 	border-top:1px solid #999999;
+	border-right:none;
 	border-bottom:1px solid #999999;
+	border-left:none;
 	width:974px;
 	background:#e8e8e8;
 	margin:5px 0;
