@@ -16,30 +16,26 @@ import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.LoggerFactory;
@@ -49,11 +45,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 /**
  * Task details for an assignment.
@@ -97,17 +93,6 @@ public class AssignmentReportPage extends WebPage {
             SOPsReportPage.newFeedbackWidget( planManager, getService().getPlan() ),
             new Label( "pageTitle" ),
             new Label( "reportTitle" ),
-            new WebMarkupContainer( "switch-plan" )
-                .add( new DropDownChoice<Plan>( "plan-sel",
-                        new PropertyModel<Plan>( this, "plan" ),
-                        new PropertyModel<List<? extends Plan>>( this, "plans" ) )
-                    .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                            @Override
-                            protected void onUpdate( AjaxRequestTarget target ) {
-                                setRedirect( true );
-                                setResponsePage( SOPsReportPage.class, getTopParameters() );
-                            } } ) )
-                .setVisible( getPlans().size() > 1 ),
 
             new BookmarkablePageLink<SOPsReportPage>( "top-link",
                                                       SOPsReportPage.class, getTopParameters() ),
@@ -122,6 +107,7 @@ public class AssignmentReportPage extends WebPage {
 
             new Label( "assignment.employment.job.role" ),
             new Label( "jurisdiction" ),
+            new Label( "timing" ),
             new Label( "repeat" ),
 
             new ListView<Attachment>( "documentation" ) {
@@ -361,6 +347,10 @@ public class AssignmentReportPage extends WebPage {
              : Assignments.isNotification( part ) ? "Information Notified"
              : Assignments.isRequest( part )      ? "Information Requested"
                                                   : "Other";
+    }
+
+    public String getTiming() {
+        return getAssignment().getPart().getCompletionTime().toString();
     }
 
     public PageParameters getTopParameters() {

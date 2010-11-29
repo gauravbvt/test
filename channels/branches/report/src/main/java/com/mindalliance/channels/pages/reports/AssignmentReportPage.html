@@ -7,6 +7,7 @@
         lang="en">
 <head>
     <title wicket:id="pageTitle">[Title]</title>
+    <link rel="stylesheet" href="css/procedures.css" type="text/css">
 </head>
 
 <body>
@@ -14,9 +15,6 @@
 <div id="header">
     <h1 wicket:id="reportTitle">Report Title</h1>
     <ul>
-        <li wicket:id="switch-plan"><label>Plan: <select wicket:id="plan-sel" name="plan">
-                    <option>Some plan</option>
-                </select></label></li>
         <li class="logout"><wicket:link><a href="/logout">Sign out</a></wicket:link></li>
     </ul>
 </div>
@@ -51,6 +49,11 @@
         </div>
 
         <div id="timing">
+            <h3>Timing</h3>
+            <p wicket:id="timing">(Timing information)</p>
+        </div>
+
+        <div id="repeat">
             <h3>Repeat</h3>
             <p wicket:id="repeat">(Repeat information)</p>
         </div>
