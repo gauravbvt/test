@@ -111,6 +111,9 @@ public class AssignmentReportPage extends WebPage {
 
             new BookmarkablePageLink<SOPsReportPage>( "top-link",
                                                       SOPsReportPage.class, getTopParameters() ),
+            new Label( "event" ),
+            new Label( "phase" ),
+            new Label( "type" ),
             new Label( "assignment.part.task" ),
 
             new WebMarkupContainer( "instructions" )
@@ -341,6 +344,23 @@ public class AssignmentReportPage extends WebPage {
 
     public String getPageTitle() {
         return getReportTitle();
+    }
+
+    public String getEvent() {
+        return getAssignment().getPart().getSegment().getEvent().getName();
+    }
+
+    public String getPhase() {
+        return getAssignment().getPart().getSegment().getPhase().getName();
+    }
+
+    public String getType() {
+        Part part = getAssignment().getPart();
+        return Assignments.isImmediate( part )    ? "Immediate Tasks"
+             : Assignments.isOptional( part )     ? "Optional Task"
+             : Assignments.isNotification( part ) ? "Information Notified"
+             : Assignments.isRequest( part )      ? "Information Requested"
+                                                  : "Other";
     }
 
     public PageParameters getTopParameters() {

@@ -318,7 +318,7 @@ public class SOPsReportPage extends WebPage {
     private static String getToLabel( Assignment assignment ) {
         Specable spec = assignment.getActor().isUnknown() ? assignment.getRole()
                                                           : assignment.getActor();
-        return "To " + spec + " - ";
+        return "By " + spec + " - ";
     }
 
     private static String getSourcesList( Assignments assignments, ResourceSpec prefix ) {

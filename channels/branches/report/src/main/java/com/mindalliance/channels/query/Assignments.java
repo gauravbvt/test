@@ -324,7 +324,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-    private static boolean isImmediate( Part part ) {
+    public static boolean isImmediate( Part part ) {
         return part.isStartsWithSegment();
     }
 
@@ -342,7 +342,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-    private static boolean isOptional( Part part ) {
+    public static boolean isOptional( Part part ) {
         return !isImmediate( part ) && !isNotification( part ) && !isRequest( part );
     }
 
@@ -360,7 +360,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-    private static boolean isNotification( Part part ) {
+    public static boolean isNotification( Part part ) {
         boolean found = false;
         Iterator<Flow> flows = part.flows();
         while ( flows.hasNext() && !found ) {
@@ -386,7 +386,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-    private static boolean isRequest( Part part ) {
+    public static boolean isRequest( Part part ) {
         boolean found = false;
         Iterator<Flow> flows = part.flows();
         while ( flows.hasNext() && !found ) {

@@ -23,8 +23,11 @@
 
 <div id="breadcrumbs">
     <ul>
-        <li><a wicket:id="top-link">top</a></li>
-        <li wicket:id="assignment.part.task"><span>(Current)</span></li>
+        <li><a wicket:id="top-link">Home</a></li>
+        <li><span wicket:id="event">Event</span></li>
+        <li><span wicket:id="phase">Phase</span></li>
+        <li><span wicket:id="type">Information Notified</span></li>
+        <li class="last" wicket:id="assignment.part.task"><span>(Current)</span></li>
     </ul>
 </div>
 
@@ -45,6 +48,11 @@
         <div id="location">
             <h3>Location</h3>
             <p wicket:id="jurisdiction">(Location)</p>
+        </div>
+
+        <div id="timing">
+            <h3>Repeat</h3>
+            <p wicket:id="repeat">(Repeat information)</p>
         </div>
 
         <div id="timing">
