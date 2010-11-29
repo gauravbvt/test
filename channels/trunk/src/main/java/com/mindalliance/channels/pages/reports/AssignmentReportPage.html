@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<head>
+    <title wicket:id="pageTitle">[Title]</title>
+</head>
+
+<body>
+<span wicket:id="feedback-widget">[feedback widget]</span>
+<div id="header">
+    <h1 wicket:id="reportTitle">Report Title</h1>
+    <ul>
+        <li wicket:id="switch-plan"><label>Plan: <select wicket:id="plan-sel" name="plan">
+                    <option>Some plan</option>
+                </select></label></li>
+        <li class="logout"><wicket:link><a href="/logout">Sign out</a></wicket:link></li>
+    </ul>
+</div>
+
+<div id="breadcrumbs">
+    <ul>
+        <li><a wicket:id="top-link">top</a></li>
+        <li wicket:id="assignment.part.task"><span>(Current)</span></li>
+    </ul>
+</div>
+
+<div id="contents">
+    <div id="task">
+        <h2><span wicket:id="assignment.part.task">Task</span> - Task</h2>
+
+        <div wicket:id="instructions" id="instructions">
+            <h3>Instructions</h3>
+            <p wicket:id="assignment.part.description">(Instructions)</p>
+        </div>
+
+        <div id="role">
+            <h3>Executed As</h3>
+            <p wicket:id="assignment.employment.job.role">(Role)</p>
+        </div>
+
+        <div id="location">
+            <h3>Location</h3>
+            <p wicket:id="jurisdiction">(Location)</p>
+        </div>
+
+        <div id="timing">
+            <h3>Repeat</h3>
+            <p wicket:id="repeat">(Repeat information)</p>
+        </div>
+
+        <div id="documentation">
+            <h3>Documentation</h3>
+            <ul>
+                <li wicket:id="no-docs">(None)</li>
+                <li wicket:id="documentation"><a wicket:id="doc-link"><span wicket:id="doc-title">(Documentation link)</span></a></li>
+            </ul>
+        </div>
+
+        <div id="policies">
+            <h3>Policies</h3>
+            <ul>
+                <li wicket:id="no-policies">(None)</li>
+                <li wicket:id="policies"><a wicket:id="policy-link"><span wicket:id="policy-title">(Documentation link)</span></a></li>
+            </ul>
+        </div>
+
+        <div wicket:id="sends" id="sends">
+            <h3>Sends</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Flows</th>
+                        <th>&nbsp;</th>
+                        <th wicket:id="sends.headerStrings">To <span wicket:id="header">Someone</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr wicket:id="sends.rows">
+                        <td wicket:id="flowName">(Flow name)</td>
+                        <td>&nbsp;</td>
+                        <td wicket:id="cells">
+                            <a href="#" wicket:id="flow"><span wicket:id="delay">immediately</span></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div wicket:id="receives" id="receives">
+            <h3>Receives</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Flows</th>
+                        <th>&nbsp;</th>
+                        <th wicket:id="receives.headerStrings">From <span wicket:id="header">Someone</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr wicket:id="receives.rows">
+                        <td wicket:id="flowName">(Flow name)</td>
+                        <td>&nbsp;</td>
+                        <td wicket:id="cells">
+                            <a href="#" wicket:id="flow"><span wicket:id="delay">immediately</span></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="risks">
+            <h3>Failure Impacts - Unmitigated Risks</h3>
+            <ul>
+                <li wicket:id="no-risk">(None)</li>
+                <li wicket:id="risks"><span wicket:id="risk-description">(Risk description)</span></li>
+            </ul>
+        </div>
+
+        <div id="gains">
+            <h3>Failure Impacts - Unrealized Gains</h3>
+            <ul>
+                <li wicket:id="no-gain">(None)</li>
+                <li wicket:id="gains"><span wicket:id="gain-description">(Gain description)</span></li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<p id="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
+</body>
+</html>

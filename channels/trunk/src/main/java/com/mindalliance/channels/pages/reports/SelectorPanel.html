@@ -9,34 +9,32 @@
 <wicket:panel>
     <form wicket:id="form" action="" method="GET">
         <ul>
-<!--
-            <li wicket:id="switch-plan"><label>Switch to plan:
+
+            <li wicket:id="switch-plan"><label>Plan:
                 <select wicket:id="plan-sel" name="plan">
                     <option>Some plan</option>
                 </select></label>
             </li>
--->
-            <li>
-                Plan segment: <select name="0" wicket:id="segment">
-                <option>* all *</option></select>
-            </li>
-            <li>
+            <li wicket:id="org-select">
                 Organization: <select name="1" wicket:id="organization">
                      <option>* all *</option>
                  </select>
-                &nbsp;&nbsp;Agent: <select name="1" wicket:id="actor">
+            </li>
+            <li wicket:id="actor-select">
+                Agent: <select name="1" wicket:id="actor">
                     <option>* all *</option>
                 </select>
             </li>
+
             <li wicket:id="optionals">
                 <label><input wicket:id="showingIssues" type="checkbox">&nbsp;Show issues</label>
-                &nbsp;&nbsp;&nbsp;&nbsp;<label><input wicket:id="showingDiagrams" type="checkbox">&nbsp;Show diagrams</label>
-                <span id="apply"> <input type="submit" value="Apply"></span>
+			</li>
+            <li class="logout"><wicket:link><a href="/logout">Sign out</a></wicket:link></li>
+            <li id="apply"><input type="submit" value="Apply"></li>
                 <script type="text/javascript">
                     document.getElementById('apply').style.display = 'none';
                 </script>
-				<a href="/logout" class="logout">Logout</a>
-			</li>
+
         </ul>
     </form>
 </wicket:panel>

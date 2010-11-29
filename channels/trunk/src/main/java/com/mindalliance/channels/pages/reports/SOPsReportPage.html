@@ -4,61 +4,97 @@
         xmlns:wicket="http://wicket.apache.org/"
         lang="en">
 <head>
-    <title wicket:id="title">[Title]</title>
-    <script type="text/javascript" src="jquery-1.3.2.js"></script>
-    <link rel="stylesheet" href="css/report.css" type="text/css" title="Playbook" media="all">
-	<!--[if lte IE 7]>
-    	<link rel="stylesheet" href="css/report-ie7.css" type="text/css" title="Playbook" media="all">
-	<![endif]-->
-    <link rel="stylesheet" href="css/report-print.css" type="text/css" title="Playbook" media="print">
-
+    <title wicket:id="pageTitle">[Title]</title>
+    <link rel="stylesheet" href="css/procedures.css" type="text/css">
 </head>
 
 <body>
+<div id="container">
 <span wicket:id="feedback-widget">[feedback widget]</span>
-<div id="top">
-    <div id="header">
-        <div class="report-header">
-			<div class="headerlogo">
-				<div class="headertext">
-		            <h1 wicket:id="plan.name">plan name</h1>
-		            <span wicket:id="organizationName" class="orgname">ACME</span>
-                    <span wicket:id="actorName" class="actname">John Doe</span>
-		            <h3 class="client" wicket:id="plan.client">client</h3>
-		            <h3 class="date" wicket:id="date">date</h3>
-				</div>
-			</div>
-			<div class="headermenu">
-	            <div id="nav" wicket:id="selector">(Report selector)</div>
-			</div>
-        </div>
+<div id="header">
+    <h1 wicket:id="reportTitle">Report Title</h1>
+    <div id="nav" wicket:id="selector">(Report selector)</div>
+</div>
+
+<div id="breadcrumbs">
+    <ul>
+        <li><a wicket:id="top-link">Home</a></li>
+        <li wicket:id="breadcrumbs"><a wicket:id="crumb"><span wicket:id="text">(Link up)</span></a></li>
+        <li class="last" wicket:id="selector.actor.name"><span>(Current)</span></li>
+    </ul>
+</div>
+
+<div id="contents">
+    <div id="plan">
+        <h2><span wicket:id="selector.plan.name">Plan Title</span></h2>
+        <p class="description" wicket:id="selector.plan.description">(Description)</p>
     </div>
-    <div id="contents">
-        <div id="plan">
-            <div class="plandesc">
-				<span class="description" wicket:id="planDescription">description</span>
-			</div>
 
-            <div class="flow-map" wicket:id="planMap">[flow diagram panel]</div>
-            <a class="plan-map-link" wicket:id="plan-map-link" href="#">+ Zoom</a>
+    <div class="event" wicket:id="selector.assignments.events">
+        <h3>Event - <span wicket:id="name">Event Title</span></h3>
+        <p class="description" wicket:id="description">(Description)</p>
 
-            <span wicket:id="sg-list-container">
-                <span>Plan segments:</span>
+        <div class="phase" wicket:id="phases">
+            <h4>Phase - <span wicket:id="name">Phase Title</span></h4>
+            <p class="description" wicket:id="description">(Description)</p>
+
+            <div class="immediates" wicket:id="immediates">
+                <h5>Immediate Tasks</h5>
                 <ul>
-                    <li wicket:id="sg-list"><a wicket:id="sc-link">A plan segment</a></li>
+                    <li wicket:id="tasks">
+                        <span wicket:id="to">(To actor, planner mode with org selected)</span>
+                        <a wicket:id="task"><span wicket:id="name">(Task name)</span></a>
+                        <ul wicket:id="subtasks">
+                            <li wicket:id="tasks"><a wicket:id="task"><span wicket:id="name">(Task name)</span></a></li>
+                        </ul>
+                    </li>
                 </ul>
-            </span>
-        </div>
-        <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
+            </div>
 
-        <div wicket:id="documents">[documents report panel]</div>
-        <div wicket:id="issues">[issues report panel]</div>
-        <span wicket:id="org-details">[selected organization header panel]</span> <!-- invisible if no org selected -->
-        <span wicket:id="actor-details">[selected actor header panel]</span> <!-- invisible if no actor selected -->
-        <div class="segment" wicket:id="selector.segments">
-            <span wicket:id="segment">[segment report panel]</span>
+            <div class="notified" wicket:id="notified">
+                <h5>Information Received</h5>
+                <ul>
+                    <li wicket:id="tasks">
+                        <span wicket:id="to">(To actor, planner mode with org selected)</span>
+                        <span class="from">From <abbr wicket:id="source">Someone</abbr></span> -
+                        <a wicket:id="task"><span wicket:id="name">(Task name)</span></a>
+                        <ul wicket:id="subtasks">
+                            <li wicket:id="tasks"><a wicket:id="task"><span wicket:id="name">(Task name)</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="requested" wicket:id="requested">
+                <h5>Information Requested</h5>
+                <ul>
+                    <li wicket:id="tasks">
+                        <span wicket:id="to">(To actor, planner mode with org selected)</span>
+                        <span class="from">By <abbr wicket:id="source">Someone</abbr></span> -
+                        <a wicket:id="task"><span wicket:id="name">(Task name)</span></a>
+                        <ul wicket:id="subtasks">
+                            <li wicket:id="tasks"><a wicket:id="task"><span wicket:id="name">(Task name)</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="optionals" wicket:id="optionals">
+                <h5>Optional Tasks</h5>
+                <ul>
+                    <li wicket:id="tasks">
+                        <span wicket:id="to">(To actor, planner mode with org selected)</span>
+                        <a wicket:id="task"><span wicket:id="name">(Task name)</span></a>
+                        <ul wicket:id="subtasks">
+                            <li wicket:id="tasks"><a wicket:id="task"><span wicket:id="name">(Task name)</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
+</div>
+<p id="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
 </div>
 </body>
 </html>
