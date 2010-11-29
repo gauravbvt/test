@@ -147,9 +147,11 @@ public class SOPsReportPage extends WebPage {
         List<Assignment> a = assignments.getAssignments();
         Collections.sort( a, new Comparator<Assignment>() {
             public int compare( Assignment o1, Assignment o2 ) {
+                int i = Assignments.stringify( o1.getSpecableActor() )
+                            .compareTo( Assignments.stringify( o2.getSpecableActor() ) );
 
-
-                return o1.getPart().getTask().compareTo( o2.getPart().getTask() );
+                return i == 0 ? o1.getPart().getTask().compareTo( o2.getPart().getTask() )
+                              : i;
             }
         } );
 

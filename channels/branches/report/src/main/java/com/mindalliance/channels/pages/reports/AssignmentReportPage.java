@@ -27,6 +27,7 @@ import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -61,8 +62,6 @@ public class AssignmentReportPage extends WebPage {
     private transient PlanService service;
 
     private transient Assignment assignment;
-
-    private Plan plan;
 
     @SpringBean
     private User user;
@@ -131,8 +130,7 @@ public class AssignmentReportPage extends WebPage {
                             .add( new Label( "policy-title", attachment.getLabel() ) )
                     );
 
-                    item.add( new AttributeModifier( "class", true,
-                                    new Model<String>( attachment.getType().toString() ) ) );
+                    item.add( newCssClass( attachment.getType().toString().toLowerCase() ) );
                 }
             },
             new WebMarkupContainer( "no-policies" ).setVisible( getPolicies().isEmpty() ),
@@ -152,21 +150,12 @@ public class AssignmentReportPage extends WebPage {
                             new ListView<Flow>( "cells", row.getCells() ) {
                                 @Override
                                 protected void populateItem( ListItem<Flow> item ) {
-                                    Flow flow = item.getModelObject();
-                                    String delay = flow == null ? ""
-                                                                : flow.getMaxDelay().toString();
-                                    item.add(
-                                        new BookmarkablePageLink<FlowReportPage>(
-                                                "flow", FlowReportPage.class,
-                                                getFlowParameters( flow ) )
-                                            .add( new Label( "delay", delay ) )
-                                            .setVisible( flow != null )
+                                    item.add( newFlowLink( item.getModelObject() )
                                     );
                                 }
                             } );
-                        item.add( new AttributeModifier( "class", true,
-                                  new Model<String>( item.getIndex() % 2 == 0 ? "even" : "odd") ) );
-                        
+                        item.add( newCssClass( item.getIndex() % 2 == 0 ? "even" : "odd" ) );
+
                     }
                 }
             ).setVisible( !getSends().isEmpty() ),
@@ -187,30 +176,21 @@ public class AssignmentReportPage extends WebPage {
                             new ListView<Flow>( "cells", row.getCells() ) {
                                 @Override
                                 protected void populateItem( ListItem<Flow> item ) {
-                                    Flow flow = item.getModelObject();
-                                    String delay = flow == null ? ""
-                                                                : flow.getMaxDelay().toString();
-                                    item.add(
-                                        new BookmarkablePageLink<FlowReportPage>(
-                                                "flow", FlowReportPage.class,
-                                                getFlowParameters( flow ) )
-                                            .add( new Label( "delay", delay ) )
-                                            .setVisible( flow != null )
+                                    item.add( newFlowLink( item.getModelObject() )
                                     );
                                 }
                             } );
-                        item.add( new AttributeModifier( "class", true,
-                                  new Model<String>( item.getIndex() % 2 == 0 ? "even" : "odd") ) );
+                        item.add( newCssClass( item.getIndex() % 2 == 0 ? "even" : "odd" ) );
                     }
                 }
             ).setVisible( !getReceives().isEmpty() ),
+
             new ListView<Goal>( "risks" ) {
                 @Override
                 protected void populateItem( ListItem<Goal> item ) {
                     Goal goal = item.getModelObject();
                     item.add( new Label( "risk-description", goal.getFullTitle() ) );
-                    item.add( new AttributeModifier( "class", true,
-                                            new Model<String>( goal.getLevel().getName().toLowerCase() ) ) );
+                    item.add( newCssClass( goal.getLevel().getName().toLowerCase() ) );
                 }
             },
             new WebMarkupContainer( "no-risk" ).setVisible( getRisks().isEmpty() ),
@@ -219,14 +199,42 @@ public class AssignmentReportPage extends WebPage {
                 @Override
                 protected void populateItem( ListItem<Goal> item ) {
                     Goal goal = item.getModelObject();
-                    item.add( new Label( "gain-description", goal.getFullTitle() ) );
-                    item.add( new AttributeModifier( "class", true,
-                                            new Model<String>( goal.getLevel().getName().toLowerCase() ) ) );
+                    item
+                        .add( new Label( "gain-description", goal.getFullTitle() ) )
+                        .add( newCssClass( goal.getLevel().getName().toLowerCase() ) );
                 }
             },
             new WebMarkupContainer( "no-gain" ).setVisible( getGains().isEmpty() )
 
         );
+    }
+
+    private AttributeModifier newCssClass( String cssClass ) {
+        return new AttributeModifier( "class", true, new Model<String>( cssClass ) );
+    }
+
+    private Component newFlowLink( Flow flow ) {
+        PageParameters parms = getTopParameters();
+        parms.put( SelectorPanel.ACTOR_PARM,
+                   Long.toString( ( (Identifiable) getActor() ) .getId() ) );
+
+        String delay;
+        if ( flow == null )
+            delay = "";
+        else {
+            parms.put( "flow", Long.toString( flow.getId() ) );
+            delay = flow.getMaxDelay().toString();
+        }
+
+        Component result =
+                new BookmarkablePageLink<FlowReportPage>( "flow", FlowReportPage.class, parms )
+                        .add( new Label( "delay", delay ) );
+
+        if ( flow != null )
+            result.add( newCssClass( getService().computeSharingPriority( flow )
+                                            .toString().toLowerCase() ));
+
+        return result.setVisible( flow != null );
     }
 
     //--------------------------------
@@ -265,7 +273,7 @@ public class AssignmentReportPage extends WebPage {
                 PageParameters parameters = getPageParameters();
                 service = getService( parameters.getString( SelectorPanel.PLAN_PARM, null ),
                                       parameters.getInt( SelectorPanel.VERSION_PARM, 0 ) );
-                setPlan( service.getPlan() );
+
             } catch ( NotFoundException ignored ) {
                 throw new AbortWithHttpStatusException( HttpServletResponse.SC_NOT_FOUND, false );
             }
@@ -305,26 +313,7 @@ public class AssignmentReportPage extends WebPage {
     }
 
     public Specable getActor() {
-        Actor actor = assignment.getActor();
-        return actor.isUnknown() ? assignment.getRole() : actor;
-    }
-
-    //--------------------------------
-    /**
-     * Get all plans that the current can read.
-     *
-     * @return a list of plans
-     */
-    public final List<Plan> getPlans() {
-        return planManager.getReadablePlans( user );
-    }
-
-    public Plan getPlan() {
-        return plan;
-    }
-
-    public void setPlan( Plan plan ) {
-        this.plan = plan;
+        return getAssignment().getSpecableActor();
     }
 
     public String getReportTitle() {
@@ -347,7 +336,7 @@ public class AssignmentReportPage extends WebPage {
         Part part = getAssignment().getPart();
         return Assignments.isImmediate( part )    ? "Immediate Tasks"
              : Assignments.isOptional( part )     ? "Optional Task"
-             : Assignments.isNotification( part ) ? "Information Notified"
+             : Assignments.isNotification( part ) ? "Information Received"
              : Assignments.isRequest( part )      ? "Information Requested"
                                                   : "Other";
     }
@@ -357,18 +346,11 @@ public class AssignmentReportPage extends WebPage {
     }
 
     public PageParameters getTopParameters() {
+        Plan plan = getService().getPlan();
+
         PageParameters parms = new PageParameters();
         parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
         parms.put( SelectorPanel.VERSION_PARM, plan.getVersion() );
-        return parms;
-    }
-
-    public PageParameters getFlowParameters( Flow flow ) {
-        PageParameters parms = getTopParameters();
-        parms.put( SelectorPanel.ACTOR_PARM,
-                   Long.toString( ( (Identifiable) getActor() ) .getId() ) );
-        if ( flow != null )
-            parms.put( "flow", Long.toString( flow.getId() ) );
         return parms;
     }
 
