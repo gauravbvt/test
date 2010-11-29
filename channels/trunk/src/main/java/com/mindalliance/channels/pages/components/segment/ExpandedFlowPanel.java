@@ -938,12 +938,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 /*
     private boolean hasPartFlowWithSameName( Node n ) {
-        String name = getFlow().getFlowName();
+        String name = getFlow().getName();
         Iterator<Flow> flows = isSend() ? n.receives() : n.sends();
         boolean hasSameName = false;
         while ( !hasSameName && flows.hasNext() ) {
             Flow otherFlow = flows.next();
-            hasSameName = !otherFlow.hasConnector() && Matcher.same( otherFlow.getFlowName(), name );
+            hasSameName = !otherFlow.hasConnector() && Matcher.same( otherFlow.getName(), name );
         }
         return hasSameName;
     }

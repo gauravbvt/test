@@ -1961,6 +1961,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings( "unchecked" )
     public List<Part> findAllPartsPlayedBy( Organization organization ) {
         return getAssignments().withSome( organization ).getParts();
     }
@@ -2714,7 +2715,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return disseminations;
     }
 
-    public List<Employment>  findAllEmployments( Part part, Place locale ) {
+    public List<Employment> findAllEmployments( Part part, Place locale ) {
 
         Set<Actor> employed = new HashSet<Actor>();
         List<Employment> employments = new ArrayList<Employment>();
@@ -2752,7 +2753,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
         for ( Segment segment : list( Segment.class ) )
             for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); )
-                result.add( findAllAssignments( pi.next(), true ) );
+                result.add( segment, findAllAssignments( pi.next(), true ) );
 
         return result;
     }

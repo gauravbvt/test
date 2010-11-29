@@ -687,6 +687,123 @@ public class Part extends Node implements GeoLocatable, Specable {
     }
 
     /**
+     * Get summary of the part.
+     *
+     * @param queryService
+     * @return a string
+     */
+    public String getSummary( QueryService queryService ) {
+        StringBuilder sb = new StringBuilder();
+        if ( getActor() != null ) {
+            sb.append( getActor().getName() );
+            if ( getActor().isType() ) {
+                Actor impliedActor = getKnownActualActor( queryService );
+                if ( impliedActor != null ) {
+                    sb.append( " " );
+                    sb.append( impliedActor.getName() );
+                }
+            }
+        }
+        if ( getRole() != null ) {
+            if ( !sb.toString().isEmpty() ) sb.append( ' ' );
+            if ( getActor() == null ) {
+                Actor impliedActor = getKnownActualActor( queryService );
+                if ( impliedActor != null ) {
+                    sb.append( impliedActor.getName() );
+                } else {
+                    sb.append( "Any " );
+                }
+            }
+            if ( getKnownActualActor( queryService ) != null ) {
+                if ( getActor() != null ) {
+                    sb.append( " as " );
+                } else {
+                    sb.append( " as the only " );
+                }
+            }
+            sb.append( getRole().getName() );
+        }
+        if ( getActor() == null && getRole() == null ) {
+            sb.append( "Someone" );
+        }
+        if ( getJurisdiction() != null ) {
+            if ( !sb.toString().isEmpty() ) sb.append( " for " );
+            sb.append( getJurisdiction().getName() );
+        }
+        if ( getOrganization() != null ) {
+            if ( !sb.toString().isEmpty() ) sb.append( " at " );
+            sb.append( getOrganization().getName() );
+        }
+        sb.append( " is assigned task \"" );
+        sb.append( getTask() );
+        sb.append( "\"" );
+        if ( getLocation() != null ) {
+            sb.append( " at location \"" );
+            sb.append( getLocation().getName() );
+            sb.append( "\"" );
+        }
+        sb.append( "." );
+        if ( isRepeating()
+                || isSelfTerminating()
+                || initiatesEvent()
+                || isStartsWithSegment()
+                || isTerminatesEventPhase() ) {
+            sb.append( " The task" );
+            StringBuilder sb1 = new StringBuilder();
+            if ( isStartsWithSegment() ) {
+                sb1.append( " starts with \"" );
+                sb1.append( getSegment().getPhaseEventTitle().toLowerCase() );
+                sb1.append( "\"" );
+            }
+            if ( isRepeating() ) {
+                if ( !sb1.toString().isEmpty() ) {
+                    if ( !initiatesEvent() && !isSelfTerminating() && !isTerminatesEventPhase() ) {
+                        sb1.append( " and" );
+                    } else {
+                        sb1.append( "," );
+                    }
+                }
+                sb1.append( " is repeated every " );
+                sb1.append( getRepeatsEvery().toString() );
+            }
+            if ( initiatesEvent() ) {
+                if ( !sb1.toString().isEmpty() ) {
+                    if ( !isSelfTerminating() && !isTerminatesEventPhase() ) {
+                        sb1.append( " and" );
+                    } else {
+                        sb1.append( "," );
+                    }
+                }
+                sb1.append( " initiates event \"" );
+                sb1.append( getInitiatedEvent().getName() );
+                sb1.append( "\"" );
+            }
+            if ( isTerminatesEventPhase() ) {
+                if ( !sb1.toString().isEmpty() ) {
+                    if ( !isSelfTerminating() ) {
+                        sb1.append( " and" );
+                    } else {
+                        sb1.append( "," );
+                    }
+                }
+                sb1.append( " can end \"" );
+                sb1.append( getSegment().getPhaseEventTitle().toLowerCase() );
+                sb1.append( "\"" );
+            }
+            if ( isSelfTerminating() ) {
+                if ( !sb1.toString().isEmpty() ) sb1.append( " and" );
+                sb1.append( " terminates by itself" );
+            }
+            sb1.append( "." );
+            sb.append( sb1 );
+        }
+        if ( isAsTeam() ) {
+            sb.append( " Assignees work as a team." );
+        }
+        return sb.toString();
+    }
+
+    /**
      * {@inheritDoc}
      */
     public GeoLocation geoLocate() {
@@ -1004,7 +1121,7 @@ public class Part extends Node implements GeoLocatable, Specable {
     }
 
     /**
-     * Get task with category, if any.
+     * Get task with categor, if any.
      *
      * @return a string
      */

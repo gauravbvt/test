@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
  * Time: 8:26:05 PM
  */
 
-public class ResourceSpec extends ModelObject implements Specable {
+public final class ResourceSpec extends ModelObject implements Specable {
     // TODO - remove extends ModelObject
 
     /**
@@ -194,30 +194,6 @@ public class ResourceSpec extends ModelObject implements Specable {
         }
         if ( !isAnyOrganization() ) {
             sb.append( " from " );
-            sb.append( organization.getName() );
-        }
-        if ( !isAnyJurisdiction() ) {
-            sb.append( " for " );
-            sb.append( jurisdiction.getName() );
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Get a report-formatted description.
-     * @return a string
-     */
-    public String getReportSource() {
-        StringBuilder sb = new StringBuilder();
-        boolean showActor = isActor() && !actor.isArchetype();
-        if ( isAnyRole() )
-            sb.append( showActor ? actor.getName() : "Someone" );
-        else {
-            sb.append( showActor ? actor.getName() + ", " : "" );
-            sb.append( role.getName() );
-        }
-        if ( !isAnyOrganization() ) {
-            sb.append( " at " );
             sb.append( organization.getName() );
         }
         if ( !isAnyJurisdiction() ) {
