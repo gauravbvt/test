@@ -76,30 +76,6 @@
             <name>Wicket Stuff Repository</name>
             <url>http://wicketstuff.org/maven/repository/</url>
         </repository>
-        <repository>
-            <id>openqa.org</id>
-            <name>OpenQA Repository</name>
-            <url>http://archiva.openqa.org/repository/releases</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <!-- for selenium 1.0-SNAPSHOT -->
-        <repository>
-            <id>snapshots.openqa.org</id>
-            <name>OpenQA Snapshots Repository</name>
-            <url>http://archiva.openqa.org/repository/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-
     </repositories>
 
     <dependencies>
@@ -429,12 +405,6 @@
             <version>1.8.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium.client-drivers</groupId>
-            <artifactId>selenium-java-client-driver</artifactId>
-            <version>1.0.1</version>
-            <scope>test</scope>
-        </dependency>
 
         <!--  JETTY DEPENDENCIES FOR TESTING  -->
         <!--<dependency>-->
@@ -562,27 +532,6 @@
                     <htmlStylesheet>${doc.css}</htmlStylesheet>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>selenium-maven-plugin</artifactId>
-                <configuration>
-                    <suite>${basedir}/src/test/integration/suite.html</suite>
-                    <browser>*firefox</browser>
-                    <startURL>http://localhost:8081</startURL>
-                    <port>4445</port>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>run</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>selenese</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
@@ -670,10 +619,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>emma-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </reporting>
