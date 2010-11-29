@@ -1,11 +1,13 @@
+/* ----- Channels Procedures - Styling - 29 Nov 2010 ----- */
+
 * {
 	margin:0;
 	padding:0;
 }
 
 a {
-	color:#333333;
-	border-bottom:1px dotted #666;
+	color:#333333; 
+	border-bottom:1px dotted #666; 
 	text-decoration:none;
 }
 
@@ -81,11 +83,11 @@ div#breadcrumbs ul {
 div#breadcrumbs ul li {
 	display:inline;
 	padding:4px 12px 4px 4px;
-	background:url(../images/breadcrumb-arrow.png) right no-repeat #ededed;
+	background:url('../images/breadcrumb-arrow.png') right no-repeat #ededed;
 }
 
 div#breadcrumbs ul li.last {
-	background:url(../images/breadcrumb-arrow-last.png) right no-repeat #ededed;
+	background:url('../images/breadcrumb-arrow-last.png') right no-repeat #ededed;
 }
 
 div#breadcrumbs a {
@@ -93,8 +95,11 @@ div#breadcrumbs a {
 }
 
 div#breadcrumbs a:hover {
-	border-bottom:1px dotted #666;
+	border-bottom:1px dotted #666; 
 }
+
+
+/* ----- Report Content ----- */
 
 div#contents {
 	padding:13px 13px 23px 13px;
@@ -102,13 +107,18 @@ div#contents {
 	width:974px;
 }
 
-div#plan {
+
+/* ----- Plan - Task - Flow Title ----- */
+
+div#plan,
+div#task {
 	float:left;
 	margin:0 0 10px 0;
 	width:974px;
 }
 
-div#plan h2 {
+div#plan h2,
+div#task h2 {
 	font-size:18px;
 	font-weight:bold;
 	border-bottom:2px solid #999999;
@@ -116,15 +126,19 @@ div#plan h2 {
 	margin:0 0 5px 0;
 }
 
-div#plan p.description {
+div#plan p.description,
+div#task p.description {
 	line-height:18px;
 	clear:both;
 }
 
+
+/* ----- Plan - Event ----- */
+
 div.event {
 	clear:both;
 }
-
+	
 div.event h3 {
 	width:943px;
 	float:left;
@@ -143,6 +157,9 @@ div.event p.description {
 	line-height:18px;
 	clear:both;
 }
+
+
+/* ----- Plan - Event - Phase ----- */
 
 div.phase {
 	width:954px;
@@ -168,6 +185,8 @@ div.phase p.description {
 	line-height:18px;
 	clear:both;
 }
+
+/* ----- Plan - Event - Phase - Immediates, Notified, Requested, Optionals ----- */
 
 div.immediates,
 div.notified,
@@ -230,7 +249,7 @@ div.optionals ul li {
 	border-bottom:1px solid #999999;
 	width:903px;
 	display:block;
-	background:url('../images/p-arrow-right.png') 10px 6px no-repeat;
+	background:url('../images/arrow-right-report.png') 10px 6px no-repeat;
 	padding:6px 0 0 31px;
 	clear:both;
 }
@@ -256,7 +275,7 @@ div.optionals ul li ul li {
 	border-bottom:1px solid #999999;
 	width:887px;
 	display:block;
-	background:url('../images/p-arrow-right.png') 10px 6px no-repeat;
+	background:url('../images/arrow-right-report.png') 10px 6px no-repeat;
 	padding:6px 0 0 31px;
 }
 
@@ -273,6 +292,185 @@ div.requested ul li span.from abbr,
 div.optionals ul li span.from abbr {
 	border:none;
 }
+
+
+/* ----- Task - Instructions, Sends, Receives  ----- */
+
+div#instructions,
+div#sends,
+div#receives {
+	float:left;
+}
+
+div#instructions h3,
+div#sends h3,
+div#receives h3 {
+	width:943px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 5px 0;
+}
+
+div#instructions p {
+	padding-left:10px;
+	line-height:18px;
+	clear:both;
+}
+
+
+/* ----- Task - Role, Location, Timing, Documentation, Policies, Risks, Gains  ----- */
+
+div#role,
+div#location,
+div#timing,
+div#documentation,
+div#policies,
+div#risks,
+div#gains {
+	float:left;
+	width:479px;
+}
+	
+div#role h3,
+div#location h3,
+div#timing h3,
+div#documentation h3,
+div#policies h3,
+div#risks h3,
+div#gains h3 {
+	width:448px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 5px 0;
+}
+
+div#role p,
+div#location p,
+div#timing p,
+div#documentation p,
+div#policies p {
+	padding-left:10px;
+	line-height:18px;
+	clear:both;
+}
+
+div#role,
+div#timing,
+div#documentation,
+div#risks {
+	margin-right:16px;
+}
+
+div#instructions h3 {
+	background:url('../images/instructions.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#role h3 {
+	background:url('../images/role-report.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#location h3 {
+	background:url('../images/location.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#timing h3 {
+	background:url('../images/timing.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#documentation h3 {
+	background:url('../images/documentation.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#policies h3 {
+	background:url('../images/policies.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#sends h3 {
+	background:url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#receives h3 {
+	background:url('../images/receives.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#risks h3 {
+	background:url('../images/risks.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#gains h3 {
+	background:url('../images/gains.png') 10px 6px no-repeat #e8e8e8;
+}
+
+
+/* ----- Task - Unordered Lists - Documentation, Policies, Risks, Gains  ----- */
+
+div#documentation ul,
+div#policies ul,
+div#risks ul,
+div#gains ul {
+	list-style:none;
+	margin:0;
+	padding:0;
+	display:block;
+	float:left;
+}
+
+div#documentation ul li,
+div#policies ul li,
+div#risks ul li,
+div#gains ul li {
+	margin:0;
+	padding:0;
+	display:block;
+	background:url('../images/bullet-black-report.png') 10px 3px no-repeat;
+	padding:3px 0 0 31px;
+	clear:both;
+}
+
+
+/* ----- Task - Unordered Lists - Risks, Gains  ----- */
+
+
+
+
+/* ----- Task - Sends, Receives - Table  ----- */
+
+div#sends table,
+div#receives table {
+	border-collapse:collapse;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	width:974px;
+	background:#e8e8e8;
+	margin:5px 0;
+}
+
+div#sends table thead,
+div#receives table thead {
+	border-bottom:1px solid #999999;
+	background:#d8d8d8;
+}
+
+div#sends table thead tr th,
+div#sends table tbody tr td,
+div#receives table thead tr th,
+div#receives table tbody tr td {
+	padding:7px;
+	border-right:2px solid #f5f5f5;
+}
+
+
+/* ----- Notice ----- */
 
 p#notice {
 	font-size:11px;
