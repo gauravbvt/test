@@ -66,6 +66,7 @@ div#nav ul li select {
 	font-size:11px;
 	background:none repeat scroll 0 0 #f6f6f6;
 	border:1px solid #999999;
+	font-family:Arial, Helvetica, sans-serif;
 }
 
 div#nav ul li#apply input {
@@ -75,6 +76,7 @@ div#nav ul li#apply input {
 	border:1px solid #666;
 	margin:0;
 	padding:0;
+	font-family:Arial, Helvetica, sans-serif;
 }
 
 
