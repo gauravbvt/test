@@ -3,6 +3,8 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Classification;
+import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.NotFoundException;
@@ -44,6 +46,29 @@ public class FlowReportPage extends AbstractReportPage {
             new Label( "flowTitle" ),
             new Label( "flow.maxDelay" ),
             new Label( "agreement" ),
+
+            new WebMarkupContainer( "eoi-div" )
+                .add( new ListView<ElementOfInformation>( "flow.eois" ) {
+                    @Override
+                    protected void populateItem( ListItem<ElementOfInformation> item ) {
+                        ElementOfInformation eoi = item.getModelObject();
+                        item.add(
+                            new ListView<Classification>( "classifications", eoi.getClassifications() ) {
+                                @Override
+                                protected void populateItem( ListItem<Classification> item2 ) {
+                                    Classification classification = item2.getModelObject();
+                                    item2.add(
+                                        new Label( "classification", classification.getLabel() )
+                                    );
+                                }
+                            },
+                            new Label( "specialHandling", eoi.getSpecialHandling() ),
+                            new Label( "description", eoi.getDescription() ),
+                            new Label( "content", eoi.getContent() )
+                        );
+                    }
+                } )
+                .setVisible( !getFlow().getEois().isEmpty() ),
 
             new ListView<Attachment>( "documentation" ) {
                 @Override
