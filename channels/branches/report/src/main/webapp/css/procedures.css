@@ -1,4 +1,11 @@
-/* ----- Channels Procedures - Styling - 29 Nov 2010 ----- */
+/**
+ * Channels Procedures - Styling
+ * Copyright (C) 2010 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: romit
+ * Date: Nov 30, 2010
+ * Time: 07:14:39 PM
+ */
 
 * {
 	margin:0;
@@ -29,6 +36,9 @@ div#container {
 	background-color:#f6f6f6;
 }
 
+
+/* ----- Plan Navigation Bar ----- */
+
 div#nav {
 	background:#D8D8D8;
 	border-bottom:1px solid #CCCCCC;
@@ -52,9 +62,23 @@ div#nav ul li {
 	padding:0 5px 0 0;
 }
 
-div#nav ul select {
+div#nav ul li select {
 	font-size:11px;
+	background:none repeat scroll 0 0 #f6f6f6;
+	border:1px solid #999999;
 }
+
+div#nav ul li#apply input {
+	font-size:10px;
+	background:#cccccc;
+	color:#000;
+	border:1px solid #666;
+	margin:0;
+	padding:0;
+}
+
+
+/* ----- Header ----- */
 
 div#header {
 	width:1000px;
@@ -72,6 +96,9 @@ div#header h1 {
 	font-weight:bold;
 	padding:15px 0 0 60px;
 }
+
+
+/* ----- Header - Sign out ----- */
 
 div#header > ul {
 	float:right;
@@ -101,6 +128,9 @@ div#header > ul li.logout a {
 div#header > ul li.logout a:hover {
 	color:#333333;
 }
+
+
+/* ----- Breadcrumbs ----- */
 
 div#breadcrumbs {
 	width:970px;
@@ -140,7 +170,7 @@ div#breadcrumbs a:hover {
 }
 
 
-/* ----- Report Content ----- */
+/* ----- Report Content - Container ----- */
 
 div#contents {
 	padding:13px 13px 23px 13px;
@@ -544,6 +574,9 @@ div#receives table thead tr th.first,
 div#receives table tbody tr td.first {
 	text-align:left;
 }
+
+
+/* ----- Task - Sends, Receives - Table - Cell Styling  ----- */
 
 div#sends table tbody tr td a,
 div#receives table tbody tr td a {
