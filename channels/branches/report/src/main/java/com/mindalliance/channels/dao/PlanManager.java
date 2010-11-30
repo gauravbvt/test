@@ -241,7 +241,7 @@ public class PlanManager {
                     Journal journal = dao.getJournal();
                     if ( command.forcesSnapshot()
                          || journal.size() >= getDefinitionManager().getSnapshotThreshold() )
-                        dao.save( importExportFactory.createExporter( dao ) );
+                        dao.save( exporter );
                     else {
                         journal.addCommand( command );
                         dao.saveJournal( exporter );
@@ -251,6 +251,20 @@ public class PlanManager {
             } catch ( IOException e ) {
                 throw new RuntimeException( "Failed to save journal", e );
             }
+    }
+
+    /**
+     * Force a full save with journal flush.
+     * @param plan the plan to flush
+     */
+    public void save( Plan plan ) {
+        try {
+            PlanDao dao = getDao( plan );
+            dao.save( importExportFactory.createExporter( dao ) );
+
+        } catch ( IOException e ) {
+            throw new RuntimeException( "Failed to save journal", e );
+        }
     }
 
     /**
@@ -362,6 +376,9 @@ public class PlanManager {
 
         // Stop issue scanning
         listeners.fireAboutToProductize( oldDevPlan );
+
+        // Make sure journal is flushed
+        save( oldDevPlan );
 
         // Mark loaded production version of plan retired
         Plan oldProductionPlan = findProductionPlan( oldDevPlan.getUri() );

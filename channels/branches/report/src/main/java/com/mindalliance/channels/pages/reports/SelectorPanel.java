@@ -5,6 +5,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
@@ -13,16 +14,14 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.IBehavior;
-import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -31,18 +30,19 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The report fine-tuning gizmo.
  */
-public class SelectorPanel extends Panel implements IHeaderContributor {
+public class SelectorPanel extends Panel {
 
     public static final String ACTOR_PARM = "agent";
     public static final String ORGANIZATION_PARM = "org";
@@ -119,12 +119,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         };
 
         form.add(
-            new WebMarkupContainer( "switch-plan" )
-                .add( new DropDownChoice<Plan>( "plan-sel",
-                        new PropertyModel<Plan>( this, "plan" ),
-                        new PropertyModel<List<? extends Plan>>( this, "plans" ) )
-                    .add( newOnChange( "onchange" ) ) )
-                .setVisible( getPlans().size() > 1 ),
+            newPlanSelector().setVisible( getPlans().size() > 1 ),
 
             new WebMarkupContainer( "org-select" )
                 .add( new DropDownChoice<Organization>( "organization",
@@ -165,15 +160,28 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         add( form );
     }
 
+    MarkupContainer newPlanSelector() {
+        return new WebMarkupContainer( "switch-plan" )
+            .add( new DropDownChoice<Plan>(
+                        "plan-sel",
+                         new PropertyModel<Plan>( this, "plan" ),
+                         new PropertyModel<List<? extends Plan>>( this, "plans" ) )
+                    .add( newOnChange( "onchange" ) ) );
+    }
+
     public PlanManager getPlanManager() {
         return planManager;
     }
 
     public final QueryService getQueryService() {
         if ( queryService == null )
-            queryService = new PlanService( planManager, attachmentManager, plan );
+            queryService = getQueryService( plan );
 
         return queryService;
+    }
+
+    private PlanService getQueryService( Plan plan ) {
+        return new PlanService( planManager, attachmentManager, plan );
     }
 
     /**
@@ -327,7 +335,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
             if ( isPlanner() )
                 setValid( false );
             else
-                throw new AbortWithHttpStatusException( HttpServletResponse.SC_FORBIDDEN, false );
+                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
 
         } else
             setActor( a );
@@ -345,10 +353,9 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         int planVersion = parameters.getInt( VERSION_PARM, 0 );
 
         List<Plan> plans = getPlans();
-        if ( plans.isEmpty() ) {
-            setValid( false );
-            return false;
-        }
+        if ( plans.isEmpty() )
+            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
+
         for ( Iterator<Plan> it = plans.iterator(); it.hasNext() && plan == null; ) {
             Plan p = it.next();
             if ( planUri.equals( p.getUri() ) ) {
@@ -373,7 +380,7 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         return true;
     }
 
-    private boolean isPlanner() {
+    public boolean isPlanner() {
         return user.isPlanner( plan.getUri() );
     }
 
@@ -383,7 +390,21 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
      * @return a list of plans
      */
     public final List<Plan> getPlans() {
-        return planManager.getReadablePlans( user );
+        List<Plan> result = new ArrayList<Plan>();
+        for ( Plan p : planManager.getReadablePlans( user ) ) {
+            String uri = p.getUri();
+            if ( user.isPlanner( uri ) )
+                result.add( p );
+
+            else if ( user.isParticipant( uri ) ) {
+                Participation participation =
+                        getQueryService( p ).findParticipation( user.getUsername() );
+                if ( participation != null && participation.getActor() != null )
+                    result.add( p );
+            }
+        }
+
+        return result;
     }
 
     //---------------------------------
@@ -485,6 +506,10 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
         this.showingIssues = showingIssues;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     //---------------------------------
     public boolean isActorSelected() {
         return !ALL_ACTORS.equals( actor );
@@ -492,15 +517,5 @@ public class SelectorPanel extends Panel implements IHeaderContributor {
 
     public boolean isOrgSelected() {
         return !ALL_ORGS.equals( organization );
-    }
-
-    /**
-     * Add something to the page header.
-     *
-     * @param response the header
-     */
-    public void renderHead( IHeaderResponse response ) {
-//        response.renderOnDomReadyJavascript(
-//                "document.getElementById('apply').style.display = \"none\";" );
     }
 }

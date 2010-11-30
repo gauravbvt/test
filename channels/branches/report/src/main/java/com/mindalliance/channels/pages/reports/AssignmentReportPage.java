@@ -2,12 +2,7 @@
 // All rights reserved.
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -15,33 +10,22 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.Assignments;
-import com.mindalliance.channels.query.PlanService;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.Component;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,22 +39,7 @@ import java.util.Set;
 /**
  * Task details for an assignment.
  */
-public class AssignmentReportPage extends WebPage {
-
-    public static final String TASK_PARM = "task";
-
-    private transient PlanService service;
-
-    private transient Assignment assignment;
-
-    @SpringBean
-    private User user;
-
-    @SpringBean
-    private PlanManager planManager;
-
-    @SpringBean
-    private AttachmentManager attachmentManager;
+public class AssignmentReportPage extends AbstractReportPage {
 
     private FlowTable sends;
 
@@ -79,24 +48,17 @@ public class AssignmentReportPage extends WebPage {
     //--------------------------------
     public AssignmentReportPage( PageParameters parameters ) {
         super( parameters );
-        setDefaultModel( new CompoundPropertyModel<Object>( this ) {
-            @Override
-            public void detach() {
-                super.detach();
-                service = null;
-                assignment = null;
-            }
-        } );
-        Part part = getAssignment().getPart();
+
+        Part part = getPart();
         add(
-            SOPsReportPage.newFeedbackWidget( planManager, getService().getPlan() ),
+            SOPsReportPage.newFeedbackWidget( getPlanManager(), getService().getPlan() ),
             new Label( "pageTitle" ),
             new Label( "reportTitle" ),
 
             new BookmarkablePageLink<SOPsReportPage>( "top-link",
                                                       SOPsReportPage.class, getTopParameters() ),
-            new Label( "event" ),
-            new Label( "phase" ),
+            new Label( "assignment.part.segment.event.name" ),
+            new Label( "assignment.part.segment.phase.name" ),
             new Label( "type" ),
             new Label( "assignment.part.task" ),
 
@@ -209,20 +171,17 @@ public class AssignmentReportPage extends WebPage {
         );
     }
 
-    private AttributeModifier newCssClass( String cssClass ) {
-        return new AttributeModifier( "class", true, new Model<String>( cssClass ) );
-    }
-
     private Component newFlowLink( Flow flow ) {
         PageParameters parms = getTopParameters();
         parms.put( SelectorPanel.ACTOR_PARM,
                    Long.toString( ( (Identifiable) getActor() ) .getId() ) );
+        parms.put( TASK_PARM, Long.toString( getPart().getId() ) );
 
         String delay;
         if ( flow == null )
             delay = "";
         else {
-            parms.put( "flow", Long.toString( flow.getId() ) );
+            parms.put( FLOW_PARM, Long.toString( flow.getId() ) );
             delay = flow.getMaxDelay().toString();
         }
 
@@ -237,132 +196,19 @@ public class AssignmentReportPage extends WebPage {
         return result.setVisible( flow != null );
     }
 
-    //--------------------------------
-    private Assignment getAssignment() {
-        if ( assignment == null )
-            try {
-                PageParameters parameters = getPageParameters();
-                assignment = getAssignment( parameters.getLong( SelectorPanel.ACTOR_PARM, 0 ),
-                                            parameters.getLong( TASK_PARM, 0 ) );
-            } catch ( NotFoundException ignored ) {
-                throw new AbortWithHttpStatusException( HttpServletResponse.SC_NOT_FOUND, false );
-            }
-
-        return assignment;
-    }
-
-    private Assignment getAssignment( long actorId, long taskId ) throws NotFoundException {
-        Part task = getService().find( Part.class, taskId );
-        Specable actor = getActor( actorId );
-
-        Assignments assignments = getService().getAssignments()
-                                    .assignedTo( task ).withSome( actor );
-        if ( assignments.isEmpty() )
-            throw new NotFoundException();
-
-        else if ( assignments.size() != 1 )
-            LoggerFactory.getLogger( AssignmentReportPage.class ).warn(
-                        "More than one assignment for task {} and actor {}", taskId, actorId );
-
-        return assignments.getAssignments().iterator().next();
-    }
-
-    private PlanService getService() {
-        if ( service == null )
-            try {
-                PageParameters parameters = getPageParameters();
-                service = getService( parameters.getString( SelectorPanel.PLAN_PARM, null ),
-                                      parameters.getInt( SelectorPanel.VERSION_PARM, 0 ) );
-
-            } catch ( NotFoundException ignored ) {
-                throw new AbortWithHttpStatusException( HttpServletResponse.SC_NOT_FOUND, false );
-            }
-        return service;
-    }
-
-    private PlanService getService( String uri, int version ) throws NotFoundException {
-        boolean development;
-        if ( uri == null )
-            throw new NotFoundException();
-
-        else if ( user.isPlanner( uri ) ) {
-            int number = planManager.getDefinitionManager().get( uri )
-                            .getDevelopmentVersion().getNumber();
-
-            development = version == 0 || version == number;
-
-        } else if ( user.isParticipant( uri ) )
-            development = false;
-
-        else
-            throw new AbortWithHttpStatusException( HttpServletResponse.SC_FORBIDDEN, false );
-
-        PlanDao planDao = planManager.getDao( uri, development );
-        if ( planDao == null )
-            throw new NotFoundException();
-
-        return new PlanService( planManager, attachmentManager, planDao.getPlan() );
-    }
-
-    private Specable getActor( long actorId ) throws NotFoundException {
-        try {
-            return getService().find( Actor.class, actorId );
-        } catch ( NotFoundException ignored ) {
-            return getService().find( Role.class, actorId );
-        }
-    }
-
-    public Specable getActor() {
-        return getAssignment().getSpecableActor();
-    }
-
-    public String getReportTitle() {
-        return "Channels - SOPs - " + getActor();
-    }
-
-    public String getPageTitle() {
-        return getReportTitle();
-    }
-
-    public String getEvent() {
-        return getAssignment().getPart().getSegment().getEvent().getName();
-    }
-
-    public String getPhase() {
-        return getAssignment().getPart().getSegment().getPhase().getName();
-    }
-
-    public String getType() {
-        Part part = getAssignment().getPart();
-        return Assignments.isImmediate( part )    ? "Immediate Tasks"
-             : Assignments.isOptional( part )     ? "Optional Task"
-             : Assignments.isNotification( part ) ? "Information Received"
-             : Assignments.isRequest( part )      ? "Information Requested"
-                                                  : "Other";
-    }
-
     public String getTiming() {
-        return getAssignment().getPart().getCompletionTime().toString();
-    }
-
-    public PageParameters getTopParameters() {
-        Plan plan = getService().getPlan();
-
-        PageParameters parms = new PageParameters();
-        parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
-        parms.put( SelectorPanel.VERSION_PARM, plan.getVersion() );
-        return parms;
+        return getPart().getCompletionTime().toString();
     }
 
     public String getRepeat() {
-        Part part = getAssignment().getPart();
+        Part part = getPart();
         return part.isRepeating() ? "Yes, " + part.getRepeatsEvery()
                                   : "No";
     }
 
     public List<Attachment> getDocumentation() {
         List<Attachment> answer = new ArrayList<Attachment>();
-        for ( Attachment a : attachmentManager.getMediaReferences( getAssignment().getPart() ) )
+        for ( Attachment a : getAttachmentManager().getMediaReferences( getPart() ) )
             if ( Attachment.Type.Reference.equals( a.getType() ) )
                 answer.add( a );
 
@@ -371,7 +217,7 @@ public class AssignmentReportPage extends WebPage {
 
     public List<Attachment> getPolicies() {
         List<Attachment> answer = new ArrayList<Attachment>();
-        for ( Attachment a : attachmentManager.getMediaReferences( getAssignment().getPart() ) )
+        for ( Attachment a : getAttachmentManager().getMediaReferences( getPart() ) )
             if ( !Attachment.Type.Reference.equals( a.getType() )
                  && !Attachment.Type.Image.equals( a.getType() ) )
                 answer.add( a );
@@ -382,7 +228,7 @@ public class AssignmentReportPage extends WebPage {
     public List<Goal> getRisks() {
         List<Goal> result = new ArrayList<Goal>();
 
-        for ( Goal goal : getService().findAllGoalsImpactedByFailure( getAssignment().getPart() ) )
+        for ( Goal goal : getService().findAllGoalsImpactedByFailure( getPart() ) )
             if ( !goal.isGain() )
                 result.add( goal );
 
@@ -392,7 +238,7 @@ public class AssignmentReportPage extends WebPage {
     public List<Goal> getGains() {
         List<Goal> result = new ArrayList<Goal>();
 
-        for ( Goal goal : getService().findAllGoalsImpactedByFailure( getAssignment().getPart() ) )
+        for ( Goal goal : getService().findAllGoalsImpactedByFailure( getPart() ) )
             if ( goal.isGain() )
                 result.add( goal );
 
@@ -406,7 +252,7 @@ public class AssignmentReportPage extends WebPage {
 
     public FlowTable getSends() {
         if ( sends == null ) {
-            Part part = getAssignment().getPart();
+            Part part = getPart();
             sends = new FlowTable( part, part.sends() );
         }
         return sends;
@@ -414,7 +260,7 @@ public class AssignmentReportPage extends WebPage {
 
     public FlowTable getReceives() {
         if ( receives == null ) {
-            Part part = getAssignment().getPart();
+            Part part = getPart();
             receives = new FlowTable( part, part.receives() );
         }
         return receives;

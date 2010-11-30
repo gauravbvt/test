@@ -18,7 +18,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +56,7 @@ public class VCardPage extends WebPage {
         flow = getParm( "1", Flow.class );
 
         if ( actor == null || flow == null )
-            throw new AbortWithHttpStatusException( HttpServletResponse.SC_NOT_FOUND, false );
+            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
 
         ResourceSpec actorSpec = getActorSpec( flow.getContactedPart() );
         init( actorSpec.getOrganization(), actorSpec.getJob( User.current().getPlan().getLocale() ) );

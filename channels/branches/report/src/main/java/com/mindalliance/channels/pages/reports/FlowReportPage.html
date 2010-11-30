@@ -22,99 +22,49 @@
 <div id="breadcrumbs">
     <ul>
         <li><a wicket:id="top-link">Home</a></li>
-        <li><span wicket:id="event">Event</span></li>
-        <li><span wicket:id="phase">Phase</span></li>
+        <li><span wicket:id="assignment.part.segment.event.name">Event</span></li>
+        <li><span wicket:id="assignment.part.segment.phase.name">Phase</span></li>
         <li><span wicket:id="type">Information Notified</span></li>
-        <li><span wicket:id="task">Task</span></li>
-        <li class="last" wicket:id="flow"><span>Flow</span></li>
+        <li><span wicket:id="assignment.part.task">(Current)</span></li>
+        <li class="last" wicket:id="flow.name"><span>(Current)</span></li>
     </ul>
 </div>
 
 <div id="contents">
     <div id="flow">
-        <h2><span wicket:id="flow.name">Task</span> - Flow</h2>
+        <h2><span wicket:id="flow.name">Flow name</span> - Flow</h2>
+
+        <p wicket:id="flowTitle">(Some description)</p>
 
         <div wicket:id="instructions" id="instructions">
             <h3>Instructions</h3>
-            <p wicket:id="assignment.part.description">(Instructions)</p>
-        </div>
-
-        <div id="role">
-            <h3>Executed As</h3>
-            <p wicket:id="assignment.employment.job.role">(Role)</p>
-        </div>
-
-        <div id="location">
-            <h3>Location</h3>
-            <p wicket:id="jurisdiction">(Location)</p>
+            <p wicket:id="flow.description">(Instructions)</p>
         </div>
 
         <div id="timing">
             <h3>Timing</h3>
-            <p wicket:id="timing">(Timing information)</p>
+            <p wicket:id="flow.maxDelay">(Timing information)</p>
         </div>
 
-        <div id="repeat">
-            <h3>Repeat</h3>
-            <p wicket:id="repeat">(Repeat information)</p>
-        </div>
-
-        <div id="documentation">
-            <h3>Documentation</h3>
-            <ul>
-                <li wicket:id="no-docs">(None)</li>
-                <li wicket:id="documentation"><a wicket:id="doc-link"><span wicket:id="doc-title">(Documentation link)</span></a></li>
-            </ul>
+        <div id="agreement">
+            <h3>Sharing Agreement</h3>
+            <p wicket:id="agreement">(Sharing information)</p>
         </div>
 
         <div id="policies">
-            <h3>Policies</h3>
+            <h3>Mandating and Forbidding Policies</h3>
             <ul>
                 <li wicket:id="no-policies">(None)</li>
                 <li wicket:id="policies"><a wicket:id="policy-link"><span wicket:id="policy-title">(Documentation link)</span></a></li>
             </ul>
         </div>
 
-        <div wicket:id="sends" id="sends">
-            <h3>Sends</h3>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Flows</th>
-                        <th>&nbsp;</th>
-                        <th wicket:id="sends.headerStrings">To <span wicket:id="header">Someone</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr wicket:id="sends.rows">
-                        <td wicket:id="flowName">(Flow name)</td>
-                        <td>&nbsp;</td>
-                        <td wicket:id="cells">
-                            <a href="#" wicket:id="flow"><span wicket:id="delay">immediately</span></a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div wicket:id="receives" id="receives">
-            <h3>Receives</h3>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Flows</th>
-                        <th>&nbsp;</th>
-                        <th wicket:id="receives.headerStrings">From <span wicket:id="header">Someone</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr wicket:id="receives.rows">
-                        <td wicket:id="flowName">(Flow name)</td>
-                        <td>&nbsp;</td>
-                        <td wicket:id="cells">
-                            <a href="#" wicket:id="flow"><span wicket:id="delay">immediately</span></a></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div id="documentation">
+            <h3>Reference Documentation</h3>
+            <ul>
+                <li wicket:id="no-docs">(None)</li>
+                <li wicket:id="documentation"><a wicket:id="doc-link"><span wicket:id="doc-title">(Documentation link)</span></a></li>
+            </ul>
         </div>
 
         <div id="risks">

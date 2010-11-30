@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Employment;
@@ -16,7 +17,6 @@ import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.support.FeedbackWidget;
 import com.mindalliance.channels.query.Assignments;
-import com.mindalliance.channels.dao.PlanManager;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -32,16 +32,16 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Comparator;
 
 /**
  * The plan SOPs report.
@@ -65,7 +65,7 @@ public class SOPsReportPage extends WebPage {
         selector = new SelectorPanel( "selector", parameters );
         if ( !selector.isValid() ) {
             if ( selector.getPlans().isEmpty() )
-                throw new AbortWithHttpStatusException( HttpServletResponse.SC_FORBIDDEN, false );
+                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
 
             setRedirect( true );
             throw new RestartResponseException( getClass(), selector.getParameters() );
@@ -75,7 +75,7 @@ public class SOPsReportPage extends WebPage {
             new Label( "pageTitle" ),
             newFeedbackWidget( selector.getPlanManager(), selector.getPlan() ),
             new Label( "reportTitle" ),
-            selector,
+            selector.setVisible( selector.isPlanner() ),
 
             new BookmarkablePageLink<SOPsReportPage>( "top-link", SOPsReportPage.class ),
             new ListView<Organization>( "breadcrumbs" ) {
@@ -87,6 +87,10 @@ public class SOPsReportPage extends WebPage {
                                 .setRenderBodyOnly( true ) );
                 }
             },
+
+            selector.newPlanSelector()
+                .setVisible( !selector.isPlanner() && selector.getPlans().size() > 1 ),
+
             new Label( "selector.actor.name" ),
             new Label( "selector.plan.name" ),
             new Label( "selector.plan.description" ),
@@ -276,7 +280,7 @@ public class SOPsReportPage extends WebPage {
         parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
         parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
         parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
-        parms.put( AssignmentReportPage.TASK_PARM, Long.toString( part.getId() ) );
+        parms.put( AbstractReportPage.TASK_PARM, Long.toString( part.getId() ) );
 
         return new BookmarkablePageLink<AssignmentReportPage>(
                 "task", AssignmentReportPage.class, parms )
