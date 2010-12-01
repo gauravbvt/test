@@ -2024,12 +2024,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Commitment> findAllCommitmentsOf( Actor actor ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         Place locale = getPlan().getLocale();
-        for ( Assignment assignment : getAssignments().withSome( actor ) ) {
+        Assignments assignments = getAssignments();
+        for ( Assignment assignment : assignments.withSome( actor ) ) {
             Iterator<Flow> flows = assignment.getPart().flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 if ( flow.isSharing() && flow.getSource().equals( assignment.getPart() ) ) {
-                    for ( Assignment beneficiary : findAllAssignments( (Part) flow.getTarget(), false ) ) {
+                    for ( Assignment beneficiary : assignments.assignedTo( (Part) flow.getTarget() ) ) {
                         if ( flow.allowsCommitment( assignment, beneficiary, locale ) )
                             commitments.add( new Commitment(
                                     assignment,

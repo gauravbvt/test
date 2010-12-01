@@ -2,12 +2,20 @@
 // All rights reserved.
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ElementOfInformation;
+import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Specable;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,7 +23,9 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -26,7 +36,15 @@ import java.util.List;
  */
 public class FlowReportPage extends AbstractReportPage {
 
+    /** Short-hands for vcard compatible channel types. */
+    public enum PhoneType {
+        HOME, MSG, WORK, PREF, FAX, CELL, VIDEO, PAGER, BBS, MODEM, CAR, ISDN, PCS, VOICE
+    }
+
     private Flow flow;
+
+    @SpringBean
+    private ImagingService imagingService;
 
     public FlowReportPage( PageParameters parameters ) {
         super( parameters );
@@ -69,6 +87,46 @@ public class FlowReportPage extends AbstractReportPage {
                     }
                 } )
                 .setVisible( !getFlow().getEois().isEmpty() ),
+
+            new Label( "commonContact" ),
+
+            new ListView<Assignment>( "vcards" ) {
+                @Override
+                protected void populateItem( ListItem<Assignment> item ) {
+                    Assignment assignment = item.getModelObject();
+                    ModelEntity entity = (ModelEntity) assignment.getSpecableActor();
+                    Employment employment = assignment.getEmployment();
+
+                    item.add(
+                        new Label( "fullName", entity.getName() ),
+                        new Label( "description", entity.getDescription() ),
+                        new Label( "title", employment.getJob().getTitle() ),
+                        new Label( "role", assignment.getRole().getName() ),
+                        new Label( "jurisdiction", assignment.getJurisdiction() == null ? "All"
+                                                 : assignment.getJurisdiction().toString() ),
+                        new Label( "org", assignment.getOrganization() == null ? "None"
+                                        : assignment.getOrganization().toString() ),
+                        new Label( "supervisor", employment.getSupervisor() == null ? ""
+                                               : employment.getSupervisor().getName() ),
+                        new ChannelPanel( "channels", getService(), assignment ),
+                        new WebMarkupContainer( "super-channels-wrapper" )
+                            .add( new ChannelPanel( "super-channels",
+                                          getService(), assignment.getEmployment().getSupervisor() )
+                                )
+                            .setVisible( employment.getSupervisor() != null ),
+                        new WebMarkupContainer( "org-channels-wrapper" )
+                            .add( new ChannelPanel( "org-channels",
+                                          getService(), assignment.getOrganization() ) )
+                            .setVisible( assignment.getOrganization() != null ),
+
+                        new WebMarkupContainer( "pic" )
+                            .add( new AttributeModifier(
+                                   "src", new Model<String>( getPictureUrl( entity ) ) ),
+                                  new AttributeModifier(
+                                   "alt", new Model<String>( entity.getName() ) ) )
+                    );
+                }
+            }.add( newCssClass( isSending() ? "to" : "from" ) ),
 
             new ListView<Attachment>( "documentation" ) {
                 @Override
@@ -122,6 +180,19 @@ public class FlowReportPage extends AbstractReportPage {
         );
     }
 
+    private String getPictureUrl( ModelEntity entity ) {
+        String s = imagingService.getSquareIconUrl( entity );
+
+        if ( s == null ) {
+            ResourceSpec spec = new ResourceSpec( (Specable) entity );
+            return spec.isActor()        ? "images/actor.user.png"
+                 : spec.isOrganization() ? "images/organization.building.png"
+                 : spec.isRole()         ? "images/role.png"
+                                         : "images/system.png";
+        } else
+            return s;
+    }
+
     public Flow getFlow() {
         if ( flow == null ) {
             try {
@@ -145,6 +216,7 @@ public class FlowReportPage extends AbstractReportPage {
     }
 
     public String getAgreement() {
+        // TODO implement
         return "Not covered by a sharing agreement";
     }
 
@@ -173,6 +245,26 @@ public class FlowReportPage extends AbstractReportPage {
 
     public List<Goal> getGains() {
         return new ArrayList<Goal>();
+    }
+
+    public List<Assignment> getVcards() {
+        return getService().getAssignments().assignedTo( getOtherPart() ).getAssignments();
+    }
+
+    private Part getOtherPart() {
+        return isSending() ? (Part) getFlow().getTarget()
+                           : (Part) getFlow().getSource();
+    }
+
+    private boolean isSending() {
+        return getPart().equals( getFlow().getSource() );
+    }
+
+    public String getCommonContact() {
+        Part otherPart = getOtherPart();
+        return ( isSending() ? "To " : "From " )
+             + getService().getAssignments().assignedTo( otherPart
+                    ).getCommonSpec( otherPart ).getReportSource();
     }
 
 }

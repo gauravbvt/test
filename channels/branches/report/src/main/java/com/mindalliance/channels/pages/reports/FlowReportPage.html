@@ -8,6 +8,8 @@
 <head>
     <title wicket:id="pageTitle">[Title]</title>
     <link rel="stylesheet" href="css/procedures.css" type="text/css">
+    <link rel="profile" href="http://microformats.org/profile/hcard">
+
 </head>
 
 <body>
@@ -50,6 +52,112 @@
                     </ul>
                 </li>
             </ul>
+        </div>
+
+        <div id="contacts">
+            <h3 wicket:id="commonContact">To/From someone</h3>
+
+            <div class="vcard" wicket:id="vcards">
+                <h4 class="fn" wicket:id="fullName">Full name</h4>
+                <img class="photo" wicket:id="pic" src="" alt="Picture">
+                <table>
+                    <tr>
+                        <th>Description</th>
+                        <td class="note" wicket:id="description">(Description)</td>
+                    </tr>
+
+                    <tr>
+                        <th>Job Title</th>
+                        <td class="title" wicket:id="title">(Title)</td>
+                    </tr>
+
+                    <tr>
+                        <th>Role Name</th>
+                        <td class="role" wicket:id="role">(Role)</td>
+                    </tr>
+
+                    <tr>
+                        <th>Jurisdiction Name</th>
+                        <td wicket:id="jurisdiction">(Jurisdiction)</td>
+                    </tr>
+
+                    <tr>
+                        <th>Organization Name</th>
+                        <td class="org" wicket:id="org">(Organization)</td>
+                    </tr>
+
+                    <tr>
+                        <th>Supervisor Name</th>
+                        <td wicket:id="supervisor">(Supervisor)</td>
+                    </tr>
+                </table>
+
+                <div>
+                    <h5>Agent channels</h5>
+                    <div wicket:id="channels">
+                        <table>
+                            <tr class="tel">
+                                <th class="type">Work</th>
+                                <td class="value">(Office Phone)</td>
+                            </tr>
+
+                            <tr>
+                                <th>Email</th>
+                                <td><a class="email" href="#">(Email)</a></td>
+                            </tr>
+
+                            <tr>
+                                <th>Label</th>
+                                <td>(Address)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div wicket:id="super-channels-wrapper">
+                    <h5>Supervisor channels</h5>
+                    <div wicket:id="super-channels">
+                        <table>
+                            <tr class="tel">
+                                <th class="type">Work</th>
+                                <td class="value">(Office Phone)</td>
+                            </tr>
+
+                            <tr>
+                                <th>Email</th>
+                                <td><a class="email" href="#">(Email)</a></td>
+                            </tr>
+
+                            <tr>
+                                <th>Label</th>
+                                <td>(Address)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div wicket:id="org-channels-wrapper">
+                    <h5>Organization channels</h5>
+                    <div wicket:id="org-channels">
+                        <table>
+                            <tr class="tel">
+                                <th class="type">Work</th>
+                                <td class="value">(Office Phone)</td>
+                            </tr>
+
+                            <tr>
+                                <th>Email</th>
+                                <td><a class="email" href="#">(Email)</a></td>
+                            </tr>
+
+                            <tr>
+                                <th>Label</th>
+                                <td>(Address)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div wicket:id="instructions" id="instructions">
