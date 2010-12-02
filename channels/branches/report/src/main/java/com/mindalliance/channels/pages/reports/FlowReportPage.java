@@ -83,10 +83,14 @@ public class FlowReportPage extends AbstractReportPage {
                                 }
                             },
                             new WebMarkupContainer( "details" ).add(
-                                new Label( "specialHandling", eoi.getSpecialHandling() )
+                                new WebMarkupContainer( "handling-div" )
+                                    .add(
+                                        new Label( "specialHandling", eoi.getSpecialHandling() ) )
                                     .setVisible( !eoi.getSpecialHandling().isEmpty() ),
-                                new Label( "description", eoi.getDescription() )
-                                        .setVisible( !eoi.getDescription().isEmpty() )
+                                new WebMarkupContainer( "desc-div" )
+                                    .add(
+                                        new Label( "description", eoi.getDescription() ) )
+                                    .setVisible( !eoi.getDescription().isEmpty() )
                             ).setVisible( !eoi.getSpecialHandling().isEmpty()
                                           || !eoi.getDescription().isEmpty() ),
                             new Label( "content", eoi.getContent() )
