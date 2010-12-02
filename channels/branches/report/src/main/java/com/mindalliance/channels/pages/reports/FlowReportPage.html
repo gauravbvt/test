@@ -37,7 +37,7 @@
     <div id="flow">
         <h2><span wicket:id="flow.name">Flow name</span> - Flow</h2>
 
-        <p wicket:id="flowTitle">(Some description)</p>
+        <p class="description" wicket:id="flowTitle">(Some description)</p>
 
         <div id="eois" wicket:id="eoi-div">
             <h3>Elements</h3>
@@ -48,8 +48,12 @@
                         <span class="classification" wicket:id="classification">Classification</span>
                     </span>
                     <ul wicket:id="details">
-                        <li wicket:id="desc-div" class="description"><em>Description:</em> <span wicket:id="description">(Description)</span></li>
-                        <li wicket:id="handling-div" class="handling"><em>Handling:</em> <span wicket:id="specialHandling">(Handling information)</span></li>
+                        <li wicket:id="desc-div" class="description">
+							<em>Description:</em> <span wicket:id="description">(Description)</span>
+						</li>
+                        <li wicket:id="handling-div" class="handling">
+							<em>Handling:</em> <span wicket:id="specialHandling">(Handling information)</span>
+						</li>
                     </ul>
                 </li>
             </ul>
@@ -60,7 +64,9 @@
 
             <div class="vcard" wicket:id="vcards">
                 <h4 class="fn" wicket:id="fullName">Full name</h4>
-                <img class="photo" wicket:id="pic" src="" alt="Picture">
+				<div class="photo-cont">
+	                <img class="photo" wicket:id="pic" src="" alt="Picture">
+				</div>
                 <table>
                     <tr class="even">
                         <th>Description</th>
