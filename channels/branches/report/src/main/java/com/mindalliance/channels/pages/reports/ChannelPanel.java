@@ -8,11 +8,13 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.query.PlanService;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.GridView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,6 +31,13 @@ public class ChannelPanel extends Panel {
         add(
             new GridView<ChannelWrapper>( "channels",
                     new ListDataProvider<ChannelWrapper>( getChannels( service, specable ) ) ) {
+                @Override
+                protected Item<?> newRowItem( String id, int index ) {
+                    Item<?> item = super.newRowItem( id, index );
+                    item.add( new AttributeModifier( "class", true,
+                                new Model<String>( index % 2 == 0 ? "even" : "odd" ) ) );
+                    return item;
+                }
 
                 @Override
                 protected void populateEmptyItem( Item<ChannelWrapper> item ) {
@@ -47,6 +56,7 @@ public class ChannelPanel extends Panel {
                     ).setRenderBodyOnly( true );
                 }
             }.setColumns( 2 )
+
         );
     }
 

@@ -62,31 +62,31 @@
                 <h4 class="fn" wicket:id="fullName">Full name</h4>
                 <img class="photo" wicket:id="pic" src="" alt="Picture">
                 <table>
-                    <tr>
+                    <tr class="even">
                         <th>Description</th>
                         <td class="note" wicket:id="description">(Description)</td>
 
                         <th>Job Title</th>
                         <td class="title" wicket:id="title">(Title)</td>
                     </tr>
-                    <tr>
+                    <tr class="odd">
                         <th>Role</th>
                         <td class="role" wicket:id="role">(Role)</td>
 
                         <th>Jurisdiction</th>
                         <td wicket:id="jurisdiction">(Jurisdiction)</td>
                     </tr>
-                    <tr>
+                    <tr class="even">
 
-                        <th>Organization Name</th>
+                        <th>Organization</th>
                         <td class="org" wicket:id="org">(Organization)</td>
 
-                        <th>Supervisor Name</th>
+                        <th>Supervisor</th>
                         <td wicket:id="supervisor">(Supervisor)</td>
                     </tr>
 
-                    <tr>
-                        <th class="header" colspan="4">Agent channels</th>
+                    <tr class="header">
+                        <th colspan="4">Agent channels</th>
                     </tr>
 
                     <div wicket:id="channels">
@@ -100,8 +100,8 @@
                     </div>
 
                     <div wicket:id="super-channels-wrapper">
-                        <tr>
-                            <th class="header" colspan="4">Supervisor channels</th>
+                        <tr class="header">
+                            <th colspan="4">Supervisor channels</th>
                         </tr>
                         <div wicket:id="super-channels">
                             <tr class="tel">
@@ -115,8 +115,8 @@
                     </div>
 
                     <div wicket:id="org-channels-wrapper">
-                        <tr>
-                            <th class="header" colspan="4">Organization channels</th>
+                        <tr class="header">
+                            <th colspan="4">Organization channels</th>
                         </tr>
                         <div wicket:id="org-channels">
                             <tr class="tel">
