@@ -115,16 +115,19 @@ public class FlowReportPage extends AbstractReportPage {
                                         : assignment.getOrganization().toString() ),
                         new Label( "supervisor", employment.getSupervisor() == null ? ""
                                                : employment.getSupervisor().getName() ),
-                        new ChannelPanel( "channels", getService(), assignment ),
+                        new ChannelPanel( "channels", getService(), assignment )
+                            .setRenderBodyOnly( true ),
                         new WebMarkupContainer( "super-channels-wrapper" )
                             .add( new ChannelPanel( "super-channels",
                                           getService(), assignment.getEmployment().getSupervisor() )
                                 )
-                            .setVisible( employment.getSupervisor() != null ),
+                            .setVisible( employment.getSupervisor() != null )
+                            .setRenderBodyOnly( true ),
                         new WebMarkupContainer( "org-channels-wrapper" )
                             .add( new ChannelPanel( "org-channels",
                                           getService(), assignment.getOrganization() ) )
-                            .setVisible( assignment.getOrganization() != null ),
+                            .setVisible( assignment.getOrganization() != null )
+                            .setRenderBodyOnly( true ),
 
                         new WebMarkupContainer( "pic" )
                             .add( new AttributeModifier(

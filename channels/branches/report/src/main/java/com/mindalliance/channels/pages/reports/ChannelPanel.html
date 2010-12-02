@@ -7,22 +7,12 @@
         lang="en">
 <body>
 <wicket:panel>
-    <table>
-        <tr class="tel" wicket:id="phones">
-            <th class="type" wicket:id="type">Work</th>
-            <td class="value" wicket:id="value">(Office Phone)</td>
-        </tr>
-
-        <tr wicket:id="emails">
-            <th>Email</th>
-            <td><a class="email" wicket:id="email">(Email)</a></td>
-        </tr>
-
-        <tr wicket:id="others">
-            <th wicket:id="label">Label</th>
-            <td wicket:id="address">(Address)</td>
-        </tr>
-    </table>
+    <tr wicket:id="channels">
+        <div wicket:id="cols">
+            <th wicket:id="label">Work</th>
+            <td wicket:id="address">(Office Phone)</td>
+        </div>
+    </tr>
 </wicket:panel>
 </body>
 </html>
