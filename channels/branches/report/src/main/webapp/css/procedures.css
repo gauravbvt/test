@@ -184,14 +184,16 @@ div#contents {
 /* ----- Plan - Task - Flow Title ----- */
 
 div#plan,
-div#task {
+div#task,
+div#flow {
 	float:left;
 	margin:0 0 10px 0;
 	width:974px;
 }
 
 div#plan h2,
-div#task h2 {
+div#task h2,
+div#flow h2 {
 	font-size:18px;
 	font-weight:bold;
 	border-bottom:2px solid #999999;
@@ -200,7 +202,8 @@ div#task h2 {
 }
 
 div#plan p.description,
-div#task p.description {
+div#task p.description,
+div#flow p.description {
 	line-height:18px;
 	clear:both;
 }
@@ -409,6 +412,7 @@ div#instructions p {
 div#role,
 div#location,
 div#timing,
+div#agreement,
 div#repeat,
 div#documentation,
 div#policies,
@@ -421,6 +425,7 @@ div#gains {
 div#role h3,
 div#location h3,
 div#timing h3,
+div#agreement h3,
 div#repeat h3,
 div#documentation h3,
 div#policies h3,
@@ -440,6 +445,7 @@ div#gains h3 {
 div#role p,
 div#location p,
 div#timing p,
+div#agreement p,
 div#repeat p,
 div#documentation p,
 div#policies p {
@@ -453,6 +459,14 @@ div#timing,
 div#documentation,
 div#risks {
 	margin-right:16px;
+}
+
+div#flow div#policies {
+	margin-right:16px;
+}
+
+div#flow div#documentation {
+	margin:0;
 }
 
 div#instructions h3 {
@@ -469,6 +483,10 @@ div#location h3 {
 
 div#timing h3 {
 	background:url('../images/timing.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#agreement h3 {
+	background:url('../images/agreement.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#repeat h3 {
@@ -610,6 +628,48 @@ div#sends table tbody tr td a:hover,
 div#receives table tbody tr td a:hover {
 	border-bottom:1px dotted #666666; 
 }
+
+
+/* ----- Flow - Instructions, Sends, Receives  ----- */
+
+div#contacts {
+	float:left;
+}
+
+div#contacts h3 {
+	width:943px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 5px 0;
+	background:url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div.vcard {
+	width:954px;
+	float:left;
+	padding:0 0 0 20px;
+}
+
+div.vcard h4 {
+	width:923px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	background:url('../images/contact.vcard.png') 10px 6px no-repeat #e8e8e8;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 5px 0;
+}
+
+
+
 
 
 /* ----- Notice ----- */
