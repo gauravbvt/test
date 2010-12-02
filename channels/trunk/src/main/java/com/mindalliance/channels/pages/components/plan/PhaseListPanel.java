@@ -145,10 +145,12 @@ public class PhaseListPanel extends AbstractCommandablePanel {
                 return wrapper.getPhase().compareTo( otherWrapper.getPhase() );
             }
         } );
-        // New phase
-        PhaseWrapper creationPhaseWrapper = new PhaseWrapper( new Phase() );
-        creationPhaseWrapper.setMarkedForCreation( true );
-        wrappers.add( creationPhaseWrapper );
+        if ( getPlan().isDevelopment() ) {
+            // New phase
+            PhaseWrapper creationPhaseWrapper = new PhaseWrapper( new Phase() );
+            creationPhaseWrapper.setMarkedForCreation( true );
+            wrappers.add( creationPhaseWrapper );
+        }
         return wrappers;
     }
 

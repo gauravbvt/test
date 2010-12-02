@@ -224,11 +224,19 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private List<ParticipationWrapper> getAllParticipationWrappers() {
         QueryService queryService = getQueryService();
         List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
-        for ( String username : queryService.getUserService().getUsernames( getPlan().getUri() ) ) {
-            Participation participation = doSafeFindOrCreate( Participation.class, username );
-            ParticipationWrapper wrapper = new ParticipationWrapper( username );
-            wrapper.setParticipation( participation );
-            wrappers.add( wrapper );
+        if ( getPlan().isDevelopment() ) {
+            for ( String username : queryService.getUserService().getUsernames( getPlan().getUri() ) ) {
+                Participation participation = doSafeFindOrCreate( Participation.class, username );
+                ParticipationWrapper wrapper = new ParticipationWrapper( username );
+                wrapper.setParticipation( participation );
+                wrappers.add( wrapper );
+            }
+        } else {
+            for ( Participation participation : queryService.list( Participation.class )) {
+                ParticipationWrapper wrapper = new ParticipationWrapper( participation.getUsername() );
+                wrapper.setParticipation( participation );
+                wrappers.add( wrapper );
+            }
         }
         return wrappers;
     }
@@ -293,7 +301,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                             target,
                             new Change(
                                     Change.Type.Updated,
-                                    ((ParticipationWrapper) object).getParticipation() ) );
+                                    ( (ParticipationWrapper) object ).getParticipation() ) );
                 }
             }
         }
@@ -476,14 +484,18 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                     null,
                     "userNormalizedFullName"
             ) );
-            columns.add( makeEntityReferenceColumn(
-                    "Is agent",
-                    "actor",
-                    Actor.class,
-                    true,
-                    "Name the agent representing the user",
-                    ParticipationsPanel.this
-            ) );
+            if ( getPlan().isDevelopment() ) {
+                columns.add( makeEntityReferenceColumn(
+                        "Is agent",
+                        "actor",
+                        Actor.class,
+                        true,
+                        "Name the agent representing the user",
+                        ParticipationsPanel.this
+                ) );
+            } else {
+                columns.add( this.makeLinkColumn( "Is agent", "actor", "actor.normalizedName", EMPTY ) );
+            }
             columns.add( makeActionLinkColumn(
                     "",
                     "contact",

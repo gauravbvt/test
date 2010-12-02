@@ -122,7 +122,10 @@ public class IssueActionsMenuPanel extends MenuPanel {
             // Commands
             menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
         } else if ( !isCollapsed ) {
-            if ( getCommander().isTimedOut() || getLockOwner( getIssue() ) == null ) {
+            if ( !getPlan().isDevelopment() ) {
+                Label label = new Label( "menuItem", "" );
+                menuItems.add( label );
+            } else if ( getCommander().isTimedOut() || getLockOwner( getIssue() ) == null ) {
                 Label label = new Label( "menuItem", "Timed out" );
                 label.add( new AttributeModifier( "class", true, new Model<String>( "disabled locked" ) ) );
                 menuItems.add( label );
@@ -130,29 +133,6 @@ public class IssueActionsMenuPanel extends MenuPanel {
                 menuItems.add( editedByLabel( "menuItem", getIssue(), getLockOwner( getIssue() ) ) );
             }
         }
-/*
-        String disablement =
-                isLockedByUser( getIssue() )
-                        ? null
-                        : ( getCommander().isTimedOut() || !isCollapsed && getLockOwner( getIssue() ) == null )
-                        ? "Timed out"
-                        : ( "(Edited by " + getLockOwner( getIssue() ) + ")" );
-        if ( disablement == null ) {
-            // Commands
-            menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
-        } else {
-            if ( !isCollapsed ) {
-                if ( disablement.equals( "Timed out" ) ) {
-                    // Commands disabled
-                    Label label = new Label( "menuItem", disablement );
-                    label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
-                    menuItems.add( label );
-                } else {
-                    menuItems.add( editedByLabel( "menuItem", getLockOwner( getIssue() ) ) );
-                }
-            }
-        }
-*/
         return menuItems;
     }
 

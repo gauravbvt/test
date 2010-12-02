@@ -123,6 +123,8 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     }
 
     private void addToScope() {
+        WebMarkupContainer newInvolvedContainer = new WebMarkupContainer( "newInvolvedContainer");
+        add(newInvolvedContainer);
         addInvolvedField = new AutoCompleteTextField<String>(
                 "newInvolved",
                 new PropertyModel<String>( this, "newInvolvedName" ) ) {
@@ -148,8 +150,8 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                 target.addComponent( addInvolvedField );
             }
         } );
-        add( addInvolvedField );
-
+        newInvolvedContainer.add( addInvolvedField );
+        newInvolvedContainer.setVisible( getPlan().isDevelopment() );
     }
 
     @SuppressWarnings( "unchecked" )

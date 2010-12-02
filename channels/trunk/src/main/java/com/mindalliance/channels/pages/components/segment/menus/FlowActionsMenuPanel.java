@@ -148,23 +148,6 @@ public class FlowActionsMenuPanel extends MenuPanel {
         } else {
             menuItems.add( editedByLabel( "menuItem", getFlow(), getLockOwner( getFlow() ) ) );
         }
-/*
-        String disablement =
-                ( isLockedByUser( getFlow() ) || isCollapsed && getLockOwner( getFlow() ) == null )
-                        ? null
-                        : ( getCommander().isTimedOut() || !isCollapsed && getLockOwner( getFlow() ) == null )
-                        ? "Timed out"
-                        : ( "(Edited by " + getLockOwner( getFlow() ) + ")" );
-        if ( disablement == null ) {
-            // Commands
-            menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
-        } else {
-            // Commands disabled
-            Label label = new Label( "menuItem", disablement );
-            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled locked" ) ) );
-            menuItems.add( label );
-        }
-*/
         return menuItems;
     }
 
