@@ -745,22 +745,22 @@ div.vcard h4 {
 
 div.vcard div.photo-cont {
 	float:left;
-	height:86px;
+	height:84px;
 	background:#e8e8e8;
 	border-top:1px solid #999999;
 	border-right:none;
 	border-bottom:1px solid #999999;
 	border-left:none;
-	width:87px;
+	width:86px;
 	margin:5px 0;
 }
 
 div.vcard div.photo-cont img {
-    background: #FFFFFF;
-    border: 1px solid #999999;
-    height: 68px;
-    margin: 8px 0 0 14px;
-    width: 57px;
+    background:#FFFFFF;
+    border:1px solid #999999;
+    height:48px;
+    margin:17px 0 0 18px;
+    width:48px;
 }
 
 div.vcard table {
