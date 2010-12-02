@@ -91,7 +91,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-    public Assignments withSome( Collection<? extends Specable> parms ) {
+    public Assignments with( Collection<? extends Specable> parms ) {
         Assignments result = new Assignments( locale );
 
         for ( Assignment assignment : this ) {
@@ -129,15 +129,15 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return withAll( Arrays.asList( specs ) );
     }
 
-    public Assignments withSome( Specable... specs ) {
-        return withSome( Arrays.asList( specs ) );
+    public Assignments with( Specable... specs ) {
+        return with( Arrays.asList( specs ) );
     }
 
     public Assignments without( Specable... specs ) {
         return without( Arrays.asList( specs ) );
     }
 
-    public Assignments withSome( Segment... segments ) {
+    public Assignments with( Segment... segments ) {
         Assignments result = new Assignments( locale );
 
         for ( Segment segment : segments ) {
@@ -149,7 +149,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-    public Assignments withSome( Event... events ) {
+    public Assignments with( Event... events ) {
         Set<Event> eventSet = new HashSet<Event>( Arrays.asList( events ) );
         Assignments result = new Assignments( locale );
 
@@ -160,7 +160,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-    public Assignments withSome( Phase... phases ) {
+    public Assignments with( Phase... phases ) {
         Set<Phase> phaseSet = new HashSet<Phase>( Arrays.asList( phases ) );
         Assignments result = new Assignments( locale );
 
@@ -168,6 +168,16 @@ public class Assignments implements Iterable<Assignment>, Serializable {
             if ( phaseSet.contains( segment.getPhase() ) )
                 result.add( segmentMap.get( segment ) );
 
+        return result;
+    }
+
+    public Assignments with( Node node ) {
+        if ( node.isPart() )
+            return with( (Specable) node );
+
+        Assignments result = new Assignments( locale );
+        for ( ExternalFlow externalFlow : ( (Connector) node ).getExternalFlows() )
+            result.add( with( externalFlow.getPart() ) );
         return result;
     }
 

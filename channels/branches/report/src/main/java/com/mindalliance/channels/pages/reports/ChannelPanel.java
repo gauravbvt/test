@@ -53,7 +53,7 @@ public class ChannelPanel extends Panel {
                     item.add(
                         new Label( "email", address )
                             .add( new AttributeModifier( "href", true,
-                                                         new Model<String>( address ) ) )
+                                                     new Model<String>( "mailTo:" + address ) ) )
                     );
                 }
             },

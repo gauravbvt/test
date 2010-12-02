@@ -108,7 +108,7 @@ public class SOPsReportPage extends WebPage {
                     item.add(
                         new Label( "name" ),
                         new Label( "description" ),
-                        newPhaseList( selector.getAssignments().withSome( item.getModelObject() ) )
+                        newPhaseList( selector.getAssignments().with( item.getModelObject() ) )
                     );
                 }
             }
@@ -133,7 +133,7 @@ public class SOPsReportPage extends WebPage {
             }
             @Override
             protected void populateItem( ListItem<Phase> item ) {
-                Assignments phaseAssignments = eventAssignments.withSome( item.getModelObject() );
+                Assignments phaseAssignments = eventAssignments.with( item.getModelObject() );
 
                 item.add(
                     new Label( "name" ),
@@ -316,7 +316,7 @@ public class SOPsReportPage extends WebPage {
         return toSortedTaskList(
                 selector.getAllAssignments()
                         .from( parent )
-                        .withSome( parent.getActor() ) );
+                        .with( parent.getActor() ) );
 
     }
 

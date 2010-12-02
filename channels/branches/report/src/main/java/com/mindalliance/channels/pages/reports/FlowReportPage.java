@@ -13,8 +13,10 @@ import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.query.Assignments;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -216,7 +218,21 @@ public class FlowReportPage extends AbstractReportPage {
     }
 
     public String getAgreement() {
-        // TODO implement
+        Flow flow = getFlow();
+        if ( flow.isSharing() && !flow.isProhibited() ) {
+            Assignments assignments = getService().getAssignments();
+            Place locale = assignments.getLocale();
+
+            for ( Assignment committer : assignments.with( flow.getSource() ) ) {
+                Specable committerActor = committer.getSpecableActor();
+                for ( Assignment beneficiary : assignments.with( flow.getTarget() ) )
+                    if ( !committerActor.equals( beneficiary.getSpecableActor() )
+                            && flow.allowsCommitment( committer, beneficiary, locale )
+                            )
+                        return "Yes, covered by a sharing agreement";
+            }
+        }
+
         return "Not covered by a sharing agreement";
     }
 
@@ -240,11 +256,23 @@ public class FlowReportPage extends AbstractReportPage {
     }
 
     public List<Goal> getRisks() {
-        return new ArrayList<Goal>();
+        List<Goal> result = new ArrayList<Goal>();
+
+        for ( Goal goal : getService().findAllGoalsImpactedByFailure( getOtherPart() ) )
+            if ( !goal.isGain() )
+                result.add( goal );
+
+        return result;
     }
 
     public List<Goal> getGains() {
-        return new ArrayList<Goal>();
+        List<Goal> result = new ArrayList<Goal>();
+
+        for ( Goal goal : getService().findAllGoalsImpactedByFailure( getOtherPart() ) )
+            if ( goal.isGain() )
+                result.add( goal );
+
+        return result;
     }
 
     public List<Assignment> getVcards() {

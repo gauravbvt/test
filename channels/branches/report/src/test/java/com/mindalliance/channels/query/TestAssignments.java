@@ -114,13 +114,13 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testWithSegment() {
         List<Segment> segments = assignments.getSegments();
-        Assignments a = assignments.withSome( segments.get( 0 ), segments.get( 1 ) );
+        Assignments a = assignments.with( segments.get( 0 ), segments.get( 1 ) );
         assertEquals( 34, a.size() );
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void testWithSegment2() {
-        assignments.withSome( new Segment() );
+        assignments.with( new Segment() );
     }
 
     @Test
@@ -143,46 +143,46 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testWithSome() {
         int size = assignments.size();
-        assertEquals( size, assignments.withSome( assignments.getOrganizations() ).size() );
+        assertEquals( size, assignments.with( assignments.getOrganizations() ).size() );
 
-        assertEquals( size, assignments.withSome( assignments.getRoles() ).size() );
+        assertEquals( size, assignments.with( assignments.getRoles() ).size() );
         int total = 0;
         for ( Role role : assignments.getRoles() )
-            total += assignments.withSome( role ).size();
+            total += assignments.with( role ).size();
         assertEquals( size, total );
 
-        assertEquals( size, assignments.withSome( assignments.getActors() ).size() );
+        assertEquals( size, assignments.with( assignments.getActors() ).size() );
         total = 0;
         for ( Specable actor : assignments.getActors() )
-            total += assignments.withSome( actor ).size();
+            total += assignments.with( actor ).size();
         assertEquals( size, total );
 
-        assertEquals( size, assignments.withSome( assignments.getActualActors() ).size() );
+        assertEquals( size, assignments.with( assignments.getActualActors() ).size() );
         total = 0;
         for ( Actor actor : assignments.getActualActors() )
-            total += assignments.withSome( actor ).size();
+            total += assignments.with( actor ).size();
         assertEquals( size, total );
 
-        assertEquals( size, assignments.withSome( assignments.getJurisdictions() ).size() );
+        assertEquals( size, assignments.with( assignments.getJurisdictions() ).size() );
         total = 0;
         for ( Specable place : assignments.getJurisdictions() )
-            total += assignments.withSome( place ).size();
+            total += assignments.with( place ).size();
         assertEquals( size, total );
 
         total = 0;
         for ( Event event : assignments.getEvents() )
-            total += assignments.withSome( event ).size();
+            total += assignments.with( event ).size();
         assertEquals( size, total );
 
         total = 0;
         for ( Phase phase : assignments.getPhases() )
-            total += assignments.withSome( phase ).size();
+            total += assignments.with( phase ).size();
         assertEquals( size, total );
     }
 
     @Test
     public void testWithSome2() {
-        Assignments a = assignments.withSome( Actor.UNKNOWN );
+        Assignments a = assignments.with( Actor.UNKNOWN );
         assertEquals( 4, a.size() );
     }
 
@@ -267,7 +267,7 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetSources() throws NotFoundException {
         Actor jd = queryService.find( Actor.class, 283 );
-        Assignments a = assignments.withSome( jd );
+        Assignments a = assignments.with( jd );
 
         assertEquals( 3, a.size() );
         Assignments a1 = a.getNotifications();
@@ -281,7 +281,7 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetSources2() throws NotFoundException {
         Actor atp = queryService.find( Actor.class, 2586 );
-        Assignments a = assignments.withSome( atp );
+        Assignments a = assignments.with( atp );
 
         assertEquals( 3, a.size() );
         Assignments a1 = a.getRequests();
@@ -327,14 +327,14 @@ public class TestAssignments extends AbstractChannelsTest {
         assertEquals( 0, a.size() );
 
         Actor jd = queryService.find( Actor.class, 283 );
-        Assignments a2 = assignments.withSome( jd );
+        Assignments a2 = assignments.with( jd );
         assertEquals( 1, a2.from(  jd  ).size() );
     }
 
     @Test
     public void testNotFrom() throws NotFoundException {
         Actor jd = queryService.find( Actor.class, 283 );
-        Assignments a2 = assignments.withSome( jd );
+        Assignments a2 = assignments.with( jd );
         assertEquals( 2, a2.notFrom(  jd  ).size() );
     }
 }

@@ -21,6 +21,5 @@ public class RailTest extends WalkthroughTest {
     public void testGuest() {
         login( "jf" );
         assertRendered( "admin", AdminPage.class );
-        
     }
 }

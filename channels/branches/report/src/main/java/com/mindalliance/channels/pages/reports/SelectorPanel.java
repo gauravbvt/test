@@ -191,8 +191,8 @@ public class SelectorPanel extends Panel {
     public Assignments getAssignments() {
         Assignments as = getAllAssignments();
         return isActorSelected() && isOrgSelected() ? as.notFrom( actor ).withAll( actor, organization )
-             : isActorSelected()                    ? as.notFrom( actor ).withSome( actor )
-             : isOrgSelected()                      ? as.withSome( organization )
+             : isActorSelected()                    ? as.notFrom( actor ).with( actor )
+             : isOrgSelected()                      ? as.with( organization )
                                                     : as;
 
     }
@@ -284,7 +284,7 @@ public class SelectorPanel extends Panel {
             try {
                 Organization org = queryService.find( Organization.class, Long.parseLong( orgId ) );
                 if ( isActorSelected() && as.withAll( actor, org ).isEmpty()
-                     || !isActorSelected() && as.withSome( org ).isEmpty() )
+                     || !isActorSelected() && as.with( org ).isEmpty() )
                     setValid( false );
                 else
                     setOrganization( org );
@@ -330,7 +330,7 @@ public class SelectorPanel extends Panel {
                 a = participation.getActor();
         }
 
-        if ( a == null || getAllAssignments().withSome( a ).isEmpty() ) {
+        if ( a == null || getAllAssignments().with( a ).isEmpty() ) {
             // Specified actor is not assigned anything
             if ( isPlanner() )
                 setValid( false );
@@ -427,7 +427,7 @@ public class SelectorPanel extends Panel {
     }
 
     private List<Specable> getAllActors( Assignments as ) {
-        return isOrgSelected() ? as.withSome( organization ).getActors()
+        return isOrgSelected() ? as.with( organization ).getActors()
                                : as.getActors();
     }
 
@@ -445,7 +445,7 @@ public class SelectorPanel extends Panel {
     }
 
     private List<Organization> getAllOrganizations( Assignments as ) {
-        return isActorSelected() ? as.withSome( actor ).getOrganizations()
+        return isActorSelected() ? as.with( actor ).getOrganizations()
                                  : as.getOrganizations();
     }
 

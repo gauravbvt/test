@@ -98,7 +98,7 @@ public class AbstractReportPage extends WebPage {
         Specable actor = getActor( actorId );
 
         Assignments assignments = getService().getAssignments()
-                                    .assignedTo( task ).withSome( actor );
+                                    .assignedTo( task ).with( actor );
         if ( assignments.isEmpty() )
             throw new NotFoundException();
 

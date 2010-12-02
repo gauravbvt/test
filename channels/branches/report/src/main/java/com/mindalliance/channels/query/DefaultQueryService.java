@@ -1948,7 +1948,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Boolean isInvolved( Organization organization ) {
-        return !getAssignments().withSome( organization ).isEmpty();
+        return !getAssignments().with( organization ).isEmpty();
     }
 
     /**
@@ -1962,7 +1962,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public List<Part> findAllPartsPlayedBy( Organization organization ) {
-        return getAssignments().withSome( organization ).getParts();
+        return getAssignments().with( organization ).getParts();
     }
 
     /**
@@ -2025,7 +2025,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Set<Commitment> commitments = new HashSet<Commitment>();
         Place locale = getPlan().getLocale();
         Assignments assignments = getAssignments();
-        for ( Assignment assignment : assignments.withSome( actor ) ) {
+        for ( Assignment assignment : assignments.with( actor ) ) {
             Iterator<Flow> flows = assignment.getPart().flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
@@ -2048,7 +2048,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Commitment> findAllCommitmentsOf( Organization organization ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
-        for ( Actor actor : getAssignments().withSome( organization ).getActualActors() )
+        for ( Actor actor : getAssignments().with( organization ).getActualActors() )
             for ( Commitment commitment : findAllCommitmentsOf( actor ) )
                 if ( commitment.getCommitter().getOrganization().equals( organization ) )
                     commitments.add( commitment );
@@ -2125,7 +2125,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             Organization organization ) {
 
         Set<Commitment> commitments = new HashSet<Commitment>();
-        for ( Actor actor : getAssignments().withSome( organization ).getActualActors() )
+        for ( Actor actor : getAssignments().with( organization ).getActualActors() )
             for ( Commitment commitment : findAllCommitmentsOf( actor ) )
                 if ( commitment.isBetweenOrganizations() && covers( agreement, commitment ) )
                     commitments.add( commitment );
