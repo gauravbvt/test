@@ -15,7 +15,7 @@ public class TestPlanReportPage extends AbstractChannelsTest {
 
     @Test
     public void testPage() {
-        assertRendered( "report", SOPsReportPage.class );
+        assertRendered( "procedures", SOPsReportPage.class );
     }
 
 

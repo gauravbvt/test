@@ -234,7 +234,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 if ( value.equals( NewMedium ) ) {
                     medium =  doSafeFindOrCreate(
                             TransmissionMedium.class,
-                            NewMedium.getName() );
+                            NewMedium.getFlowName() );
                 } else
 */
                 if ( value.equals( NewMediumType ) ) {

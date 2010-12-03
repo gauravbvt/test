@@ -64,6 +64,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -314,8 +316,18 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
             URI url = new URI( path );
             RequestParameters requestParameters = new RequestParameters();
             requestParameters.setPath( url.getPath() );
-            requestParameters.setQueryString( url.getQuery() );
-            requestParameters.setParameters( new HashMap<String, Object>() );
+            Map<String, Object> map = new HashMap<String, Object>();
+            String queryString = url.getQuery();
+            if ( queryString != null ) {
+                requestParameters.setQueryString( queryString );
+                for ( StringTokenizer tokenizer = new StringTokenizer( queryString, "&" );
+                      tokenizer.hasMoreTokens(); ) {
+                    StringTokenizer t = new StringTokenizer( tokenizer.nextToken(), "=" );
+                    map.put( t.nextToken(), t.nextToken() );
+                }
+            }
+
+            requestParameters.setParameters( map );
             return (BookmarkablePageRequestTarget) rcs.targetForRequest( requestParameters );
 
         } catch ( URISyntaxException e ) {

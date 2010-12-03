@@ -30,7 +30,7 @@ public class UselessActor extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Actor actor = (Actor) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        Assignments assignments = getQueryService().getAssignments().withSome( actor );
+        Assignments assignments = getQueryService().getAssignments().with( actor );
         if ( assignments.isEmpty() ) {
             List<Commitment> commitments = getQueryService().findAllCommitmentsTo( actor );
             if ( commitments.isEmpty() ) {

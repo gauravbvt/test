@@ -246,12 +246,12 @@ public class TestPartPanel extends AbstractChannelsTest {
         assertEquals( "some description", part.getDescription() );
         assertEquals( "multitasking", part.getTask() );
         assertNotNull( part.getActor() );
-        assertEquals( "Bob", part.getActor().getName() );
+        assertEquals( "Bob", part.getActor().getFlowName() );
         assertNotNull( part.getRole() );
-        assertEquals( "Dispatcher", part.getRole().getName() );
+        assertEquals( "Dispatcher", part.getRole().getFlowName() );
         assertNotNull( part.getJurisdiction() );
-        assertEquals( "World", part.getJurisdiction().getName() );
+        assertEquals( "World", part.getJurisdiction().getFlowName() );
         assertNotNull( part.getLocation() );
-        assertEquals( "Somewhere", part.getLocation().getName() );
+        assertEquals( "Somewhere", part.getLocation().getFlowName() );
     }*/
 }

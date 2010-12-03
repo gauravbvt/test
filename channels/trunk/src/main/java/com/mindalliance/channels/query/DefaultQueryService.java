@@ -1948,7 +1948,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Boolean isInvolved( Organization organization ) {
-        return !getAssignments().withSome( organization ).isEmpty();
+        return !getAssignments().with( organization ).isEmpty();
     }
 
     /**
@@ -1961,9 +1961,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( "unchecked" )
     public List<Part> findAllPartsPlayedBy( Organization organization ) {
-        return getAssignments().withSome( organization ).getParts();
+        return getAssignments().with( organization ).getParts();
     }
 
     /**
@@ -2025,12 +2024,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Commitment> findAllCommitmentsOf( Actor actor ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         Place locale = getPlan().getLocale();
-        for ( Assignment assignment : getAssignments().withSome( actor ) ) {
+        Assignments assignments = getAssignments();
+        for ( Assignment assignment : assignments.with( actor ) ) {
             Iterator<Flow> flows = assignment.getPart().flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 if ( flow.isSharing() && flow.getSource().equals( assignment.getPart() ) ) {
-                    for ( Assignment beneficiary : findAllAssignments( (Part) flow.getTarget(), false ) ) {
+                    for ( Assignment beneficiary : assignments.assignedTo( (Part) flow.getTarget() ) ) {
                         if ( flow.allowsCommitment( assignment, beneficiary, locale ) )
                             commitments.add( new Commitment(
                                     assignment,
@@ -2048,7 +2048,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      */
     public List<Commitment> findAllCommitmentsOf( Organization organization ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
-        for ( Actor actor : getAssignments().withSome( organization ).getActualActors() )
+        for ( Actor actor : getAssignments().with( organization ).getActualActors() )
             for ( Commitment commitment : findAllCommitmentsOf( actor ) )
                 if ( commitment.getCommitter().getOrganization().equals( organization ) )
                     commitments.add( commitment );
@@ -2125,7 +2125,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             Organization organization ) {
 
         Set<Commitment> commitments = new HashSet<Commitment>();
-        for ( Actor actor : getAssignments().withSome( organization ).getActualActors() )
+        for ( Actor actor : getAssignments().with( organization ).getActualActors() )
             for ( Commitment commitment : findAllCommitmentsOf( actor ) )
                 if ( commitment.isBetweenOrganizations() && covers( agreement, commitment ) )
                     commitments.add( commitment );
@@ -2715,7 +2715,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return disseminations;
     }
 
-    public List<Employment> findAllEmployments( Part part, Place locale ) {
+    public List<Employment>  findAllEmployments( Part part, Place locale ) {
 
         Set<Actor> employed = new HashSet<Actor>();
         List<Employment> employments = new ArrayList<Employment>();
@@ -2753,7 +2753,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
         for ( Segment segment : list( Segment.class ) )
             for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); )
-                result.add( segment, findAllAssignments( pi.next(), true ) );
+                result.add( findAllAssignments( pi.next(), true ) );
 
         return result;
     }

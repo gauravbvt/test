@@ -1,0 +1,822 @@
+/**
+ * Channels Procedures - Styling
+ * Copyright (C) 2010 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: romit
+ * Date: Nov 30, 2010
+ * Time: 07:14:39 PM
+ */
+
+* {
+	margin:0;
+	padding:0;
+}
+
+a {
+	color:#333333; 
+	border-bottom:1px dotted #666666; 
+	text-decoration:none;
+}
+
+body {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#333333;
+	margin:0;
+	padding:0;
+	text-align:center;
+}
+
+div#container {
+	width:1000px;
+	margin:0px auto;
+	text-align:left;
+	padding:0;
+	border:1px solid #cccccc;
+	background-color:#f6f6f6;
+}
+
+
+/* ----- Plan Navigation Bar ----- */
+
+div#nav {
+	background:#D8D8D8;
+	border-bottom:1px solid #CCCCCC;
+	float:left;
+	font-size:11px;
+	height:22px;
+	padding:3px 5px 0 5px;
+	width:990px;
+}
+
+div#nav ul {
+	list-style:none;
+	display:inline;
+}
+
+div#nav ul li {
+	border-right:1px solid #999999;
+	display:inline;
+	list-style:none;
+	margin:0 5px 0 0;
+	padding:0 5px 0 0;
+}
+
+div#nav ul li select {
+	font-size:11px;
+	background:none repeat scroll 0 0 #f6f6f6;
+	border:1px solid #999999;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+div#nav ul li#apply input {
+	font-size:10px;
+	background:#cccccc;
+	color:#000;
+	border:1px solid #666;
+	margin:0;
+	padding:0;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+
+/* ----- Header ----- */
+
+div#header {
+	width:1000px;
+	height:60px;
+	background:url('../images/header.png') no-repeat #c3d9ff;
+	border-bottom:1px solid #cccccc;
+	float:left;
+}
+
+div#header h1 {
+	display:block;
+	float:left;
+	width:640px;
+	font-size:24px;
+	font-weight:bold;
+	padding:15px 0 0 60px;
+}
+
+
+/* ----- Header - Sign out ----- */
+
+div#header > ul {
+	float:right;
+	list-style:none;
+	margin:18px 18px 0 0;
+	padding:0;
+}
+
+div#header > ul li {
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+
+div#header > ul li.logout a {
+	background:url('../images/signout-bg.png') no-repeat;
+	border:medium none;
+	color:#727272;
+	display:block;
+	font-size:10px;
+	font-weight:bold;
+	height:18px;
+	padding:4px 0 0 14px;
+	width:56px;
+}
+
+div#header > ul li.logout a:hover {
+	color:#333333;
+}
+
+
+/* ----- Breadcrumbs ----- */
+
+div#breadcrumbs {
+	width:970px;
+	height:20px;
+	border-bottom:1px solid #e1e1e1;
+	float:left;
+	padding:25px 0 15px 15px;
+	font-size:10px;
+	font-weight:bold;
+}
+
+div#breadcrumbs ul {
+	list-style:none;
+	display:inline;
+	margin:0;
+	padding:4px 0 4px 4px;
+	background:#ededed;
+	border-left:1px solid #c7c7c7;
+}
+
+div#breadcrumbs ul li {
+	display:inline;
+	padding:4px 12px 4px 4px;
+	background:url('../images/breadcrumb-arrow.png') right no-repeat #ededed;
+}
+
+div#breadcrumbs ul li.last {
+	background:url('../images/breadcrumb-arrow-last.png') right no-repeat #ededed;
+}
+
+div#breadcrumbs a {
+	border:none;
+}
+
+div#breadcrumbs a:hover {
+	border-bottom:1px dotted #666; 
+}
+
+
+/* ----- Report Content - Container ----- */
+
+div#contents {
+	padding:13px 13px 23px 13px;
+	float:left;
+	width:974px;
+}
+
+
+/* ----- Plan - Task - Flow Title ----- */
+
+div#plan,
+div#task,
+div#flow {
+	float:left;
+	margin:0 0 10px 0;
+	width:974px;
+}
+
+div#plan h2,
+div#task h2,
+div#flow h2 {
+	font-size:18px;
+	font-weight:bold;
+	border-bottom:2px solid #999999;
+	padding:0 0 4px 0;
+	margin:0 0 5px 0;
+}
+
+div#plan p.description,
+div#task p.description,
+div#flow p.description {
+	line-height:18px;
+	clear:both;
+}
+
+
+/* ----- Plan - Event ----- */
+
+div.event {
+	clear:both;
+}
+	
+div.event h3 {
+	width:943px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	background:url('../images/event.png') 10px 6px no-repeat #e8e8e8;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 5px 0;
+}
+
+div.event p.description {
+	padding-left:10px;
+	line-height:18px;
+	clear:both;
+}
+
+
+/* ----- Plan - Event - Phase ----- */
+
+div.phase {
+	width:954px;
+	float:left;
+	padding:0 0 0 20px;
+}
+
+div.phase h4 {
+	width:923px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	background:url('../images/phase.png') 10px 6px no-repeat #e8e8e8;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 5px 0;
+}
+
+div.phase p.description {
+	padding-left:10px;
+	line-height:18px;
+	clear:both;
+}
+
+/* ----- Plan - Event - Phase - Immediates, Notified, Requested, Optionals ----- */
+
+div.immediates,
+div.notified,
+div.requested,
+div.optionals {
+	width:934px;
+	float:left;
+	padding:0 0 0 20px;
+}
+
+div.immediates h5,
+div.notified h5,
+div.requested h5,
+div.optionals h5 {
+	width:903px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 0 0;
+}
+
+div.immediates h5 {
+	background:url('../images/immediates.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div.notified h5 {
+	background:url('../images/notified.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div.requested h5 {
+	background:url('../images/requested.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div.optionals h5 {
+	background:url('../images/optionals.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div.immediates ul,
+div.notified ul,
+div.requested ul,
+div.optionals ul {
+	list-style:none;
+	margin:0;
+	padding:0;
+	display:block;
+	float:left;
+}
+
+div.immediates ul li,
+div.notified ul li,
+div.requested ul li,
+div.optionals ul li {
+	margin:0;
+	padding:0;
+	height:21px;
+	border-bottom:1px solid #999999;
+	width:903px;
+	display:block;
+	background:url('../images/arrow-right-report.png') 10px 6px no-repeat;
+	padding:6px 0 0 31px;
+	clear:both;
+}
+
+div.notified ul li ul,
+div.immediates ul li ul,
+div.requested ul li ul,
+div.optionals ul li ul {
+	list-style:none;
+	margin:0 0 0 -15px;
+	padding:7px 0 0 0;
+	display:block;
+	float:left;
+}
+
+div.notified ul li ul li,
+div.immediates ul li ul li,
+div.requested ul li ul li,
+div.optionals ul li ul li {
+	margin:0;
+	padding:0;
+	height:21px;
+	border-bottom:1px solid #999999;
+	width:887px;
+	display:block;
+	background:url('../images/arrow-right-report.png') 10px 6px no-repeat;
+	padding:6px 0 0 31px;
+}
+
+div.notified ul li span.by,
+div.immediates ul li span.by,
+div.requested ul li span.by,
+div.optionals ul li span.by {
+	font-style:italic;
+	color:#000000;
+}
+
+div.notified ul li span.from,
+div.immediates ul li span.from,
+div.requested ul li span.from,
+div.optionals ul li span.from {
+	font-weight:bold;
+}
+
+div.notified ul li span.from abbr,
+div.immediates ul li span.from abbr,
+div.requested ul li span.from abbr,
+div.optionals ul li span.from abbr {
+	border:none;
+}
+
+
+/* ----- Task - Instructions, Sends, Receives  ----- */
+
+div#instructions,
+div#sends,
+div#receives,
+div#eois {
+	float:left;
+}
+
+div#instructions h3,
+div#sends h3,
+div#receives h3,
+div#eois h3 {
+	width:943px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 5px 0;
+}
+
+div#eois h3 {
+	margin-bottom:0;
+}
+
+div#instructions p {
+	padding-left:10px;
+	line-height:18px;
+	clear:both;
+}
+
+
+/* ----- Task - Role, Location, Timing, Repeat, Documentation, Policies, Risks, Gains  ----- */
+
+div#role,
+div#location,
+div#timing,
+div#agreement,
+div#repeat,
+div#documentation,
+div#policies,
+div#risks,
+div#gains {
+	float:left;
+	width:479px;
+}
+	
+div#role h3,
+div#location h3,
+div#timing h3,
+div#agreement h3,
+div#repeat h3,
+div#documentation h3,
+div#policies h3,
+div#risks h3,
+div#gains h3 {
+	width:448px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 5px 0;
+}
+
+div#role p,
+div#location p,
+div#timing p,
+div#agreement p,
+div#repeat p,
+div#documentation p,
+div#policies p {
+	padding-left:10px;
+	line-height:18px;
+	clear:both;
+}
+
+div#role,
+div#timing,
+div#documentation,
+div#risks {
+	margin-right:16px;
+}
+
+div#flow div#policies {
+	margin-right:16px;
+}
+
+div#flow div#documentation {
+	margin:0;
+}
+
+div#instructions h3 {
+	background:url('../images/instructions.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#eois h3 {
+	background:url('../images/phase.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#role h3 {
+	background:url('../images/role-report.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#location h3 {
+	background:url('../images/location.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#timing h3 {
+	background:url('../images/timing.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#agreement h3 {
+	background:url('../images/agreement.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#repeat h3 {
+	background:url('../images/repeat.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#documentation h3 {
+	background:url('../images/documentation.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#policies h3 {
+	background:url('../images/policies.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#sends h3 {
+	background:url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#receives h3 {
+	background:url('../images/receives.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#risks h3 {
+	background:url('../images/risks.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div#gains h3 {
+	background:url('../images/gains.png') 10px 6px no-repeat #e8e8e8;
+}
+
+
+/* ----- Task - Unordered Lists - Documentation, Policies, Risks, Gains  ----- */
+
+div#documentation ul,
+div#policies ul,
+div#risks ul,
+div#gains ul {
+	list-style:none;
+	margin:0;
+	padding:0;
+	display:block;
+	float:left;
+}
+
+div#documentation ul li,
+div#policies ul li,
+div#risks ul li,
+div#gains ul li {
+	margin:0;
+	padding:0;
+	display:block;
+	background:url('../images/bullet-black-report.png') 10px 3px no-repeat;
+	padding:3px 0 0 31px;
+	clear:both;
+}
+
+
+/* ----- Task - Unordered Lists - Risks, Gains  ----- */
+
+
+
+
+/* ----- Task - Sends, Receives - Table  ----- */
+
+div#sends table,
+div#receives table {
+	border-collapse:collapse;
+	border-top:1px solid #999999;
+	border-right:none;
+	border-bottom:1px solid #999999;
+	border-left:none;
+	width:976px;
+	background:#e8e8e8;
+	margin:5px 0;
+}
+
+div#sends table thead,
+div#receives table thead {
+	border-bottom:1px solid #999999;
+	background:#d8d8d8;
+}
+
+div#sends table thead tr th,
+div#receives table thead tr th {
+	line-height:18px;
+}
+
+div#sends table tbody tr.odd,
+div#receives table tbody tr.odd {
+	background:#dadada;
+}
+
+div#sends table thead tr th,
+div#sends table tbody tr td,
+div#receives table thead tr th,
+div#receives table tbody tr td {
+	padding:7px;
+	border-right:2px solid #f5f5f5;
+	text-align:center;
+}
+
+div#sends table thead tr th.first,
+div#sends table tbody tr td.first,
+div#receives table thead tr th.first,
+div#receives table tbody tr td.first {
+	text-align:left;
+}
+
+
+/* ----- Task - Sends, Receives - Table - Cell Styling  ----- */
+
+div#sends table tbody tr td a,
+div#receives table tbody tr td a {
+	padding:0 10px 1px 0;
+	border:none;
+}
+
+div#sends table tbody tr td a.low,
+div#receives table tbody tr td a.low {
+	background:url('../images/bullet-blue.png') right no-repeat;
+}
+
+div#sends table tbody tr td a.medium,
+div#receives table tbody tr td a.medium {
+	background:url('../images/bullet-yellow.png') right no-repeat;
+}
+
+div#sends table tbody tr td a.high,
+div#receives table tbody tr td a.high {
+	background:url('../images/bullet-orange.png') right no-repeat;
+}
+
+div#sends table tbody tr td a.highest,
+div#receives table tbody tr td a.highest {
+	background:url('../images/bullet-red.png') right no-repeat;
+}
+
+div#sends table tbody tr td a:hover,
+div#receives table tbody tr td a:hover {
+	border-bottom:1px dotted #666666; 
+}
+
+
+
+/* ----- Flow - Unordered Lists - Elements  ----- */
+
+div#eois ul {
+	list-style:none;
+	margin:0;
+	padding:0;
+	display:block;
+	float:left;
+}
+
+div#eois ul li {
+	margin:0;
+	padding:0;
+	height:21px;
+	border-bottom:1px solid #999999;
+	width:943px;
+	display:block;
+	background:url('../images/arrow-right-report.png') 10px 6px no-repeat;
+	padding:6px 0 0 31px;
+	clear:both;
+}
+
+div#eois ul li ul {
+	list-style:none;
+	margin:0 0 0 -15px;
+	padding:7px 0 0 0;
+	display:block;
+	float:left;
+}
+
+div#eois ul li ul li {
+	margin:0;
+	padding:0;
+	height:21px;
+	border-bottom:1px solid #999999;
+	width:927px;
+	display:block;
+	background:url('../images/arrow-right-report.png') 10px 6px no-repeat;
+	padding:6px 0 0 31px;
+}
+
+div#eois ul li span.label,
+div#eois ul li ul li em {
+	font-weight:bold;
+	font-style:normal;
+}
+
+div#eois ul li span.classifications {
+	float: right;
+	font-size: 11px;
+	font-weight: bold;
+	padding: 0;
+	margin-top:-1px;
+}
+
+div#eois ul li span.classifications span.classification {
+	float: right;
+	background:url('../images/classification.png') no-repeat left;
+	display:block;
+    height: 15px;
+    padding: 2px 10px 0 17px;
+}
+
+
+/* ----- Flow - Instructions, Sends, Receives  ----- */
+
+div#contacts {
+	float:left;
+}
+
+div#contacts h3 {
+	width:943px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 5px 0;
+	background:url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
+}
+
+div.vcard {
+	width:954px;
+	float:left;
+	padding:0 0 0 20px;
+}
+
+div.vcard h4 {
+	width:923px;
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	height:22px;
+	background:url('../images/contact.vcard.png') 10px 6px no-repeat #e8e8e8;
+	font-weight:bold;
+	font-size:14px;
+	padding:6px 0 0 31px;
+	margin:10px 0 5px 0;
+}
+
+div.vcard div.photo-cont {
+	float:left;
+	height:84px;
+	background:#e8e8e8;
+	border-top:1px solid #999999;
+	border-right:none;
+	border-bottom:1px solid #999999;
+	border-left:none;
+	width:86px;
+	margin:5px 0;
+}
+
+div.vcard div.photo-cont img {
+    background:#FFFFFF;
+    border:1px solid #999999;
+    height:48px;
+    margin:17px 0 0 18px;
+    width:48px;
+}
+
+div.vcard table {
+	border-collapse:collapse;
+	border-top:1px solid #999999;
+	border-right:none;
+	border-bottom:1px solid #999999;
+	border-left:none;
+	width:860px;
+	background:#e8e8e8;
+	margin:5px 0;
+	float:right;
+}
+
+div.vcard table tr th {
+	padding:7px;
+	border-right:2px solid #f6f6f6;
+	border-left:3px solid #f6f6f6;
+	text-align:right;
+	width:150px;
+}
+
+div.vcard table tr td {
+	padding:7px;
+	border-right:2px solid #f6f6f6;
+	width:280px;
+	text-align:left;
+}
+
+div.vcard table tr.header {
+	border-bottom:1px solid #999999;
+	border-top:10px solid #f6f6f6;
+	background:#d8d8d8;
+	text-align:left;
+}
+
+div.vcard table tr.header th {
+	text-align:left;
+}
+
+div.vcard table tr.odd {
+	background:#dadada;
+}
+
+
+
+
+/* ----- Notice ----- */
+
+p#notice {
+	font-size:11px;
+	clear:both;
+	padding:10px 10px 0 10px;
+	width:980px;
+	height:25px;
+	border-top:1px solid #e1e1e1;
+	text-align:right;
+	color:#666666;
+}

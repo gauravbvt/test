@@ -10,8 +10,6 @@ import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.playbook.ContactPage;
-import com.mindalliance.channels.pages.playbook.PlaybookPage;
-import com.mindalliance.channels.pages.playbook.TaskPlaybook;
 import com.mindalliance.channels.pages.playbook.VCardPage;
 import com.mindalliance.channels.pages.png.DisseminationPage;
 import com.mindalliance.channels.pages.png.EntitiesNetworkPage;
@@ -20,12 +18,13 @@ import com.mindalliance.channels.pages.png.FailureImpactsPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.HierarchyPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
+import com.mindalliance.channels.pages.reports.AssignmentReportPage;
+import com.mindalliance.channels.pages.reports.FlowReportPage;
 import com.mindalliance.channels.pages.reports.SOPsReportPage;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.slf4j.Logger;
@@ -123,10 +122,10 @@ public class Channels extends WebApplication
 
         getMarkupSettings().setStripWicketTags( true );
 
-        String[] parameterNames = { PlaybookPage.ACTOR_PARM, PlaybookPage.PART_PARM };
-        mount( new MixedParamUrlCodingStrategy( "report", SOPsReportPage.class, parameterNames ) );
+        mount( new QueryStringUrlCodingStrategy( "procedures", SOPsReportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "task", AssignmentReportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "flow", FlowReportPage.class ) );
 
-        mount( new IndexedParamUrlCodingStrategy( "playbooks", TaskPlaybook.class ) );
         mount( new IndexedParamUrlCodingStrategy( "vcards", VCardPage.class ) );
         mount( new IndexedParamUrlCodingStrategy( "contacts", ContactPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "plan", PlanPage.class ) );

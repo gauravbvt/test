@@ -3,11 +3,13 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.PlanPage;
-import com.mindalliance.channels.pages.playbook.MainPage;
+import com.mindalliance.channels.pages.reports.AssignmentReportPage;
 import com.mindalliance.channels.pages.reports.SOPsReportPage;
+import com.mindalliance.channels.query.Assignments;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import static org.junit.Assert.assertEquals;
@@ -31,13 +33,26 @@ public abstract class WalkthroughTest extends AbstractChannelsTest {
     }
 
     @Test
-    public void testPlaybook() {
-        assertRendered( "playbooks", MainPage.class );
+    public void testProcedures() {
+        assertRendered( "procedures", SOPsReportPage.class );
     }
 
     @Test
-    public void testReport() {
-        assertRendered( "report", SOPsReportPage.class );
+    public void testTask() {
+        Assignments allAssignments = queryService.getAssignments();
+        if ( !allAssignments.isEmpty() ) {
+            Assignment assignment = allAssignments.getAssignments().get( 0 );
+            long actorId = assignment.getActor() == null ? assignment.getRole().getId()
+                                                         : assignment.getActor().getId();
+            Plan plan = queryService.getPlan();
+            wicketApplication.getDebugSettings().setComponentUseCheck( false );
+            assertRendered( "task?agent=" + actorId
+                            + "&plan=" + plan.getUri()
+                            + "&v=" + plan.getVersion()
+                            + "&task=" + assignment.getPart().getId(),
+                            AssignmentReportPage.class );
+        }
+
     }
 
     @SuppressWarnings( { "unchecked" } )

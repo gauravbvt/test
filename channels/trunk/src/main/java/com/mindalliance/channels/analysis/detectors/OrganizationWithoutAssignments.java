@@ -30,7 +30,7 @@ public class OrganizationWithoutAssignments extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         if ( getQueryService().isInvolvementExpected( org ) ) {
-            Assignments assignments = getQueryService().getAssignments().withSome( org );
+            Assignments assignments = getQueryService().getAssignments().with( org );
             if ( assignments.isEmpty() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, org );
                 issue.setSeverity( Level.Low );

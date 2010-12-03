@@ -58,7 +58,7 @@ public class AcmeTest extends WalkthroughTest {
         assertEquals( 10, issueMap.size() );
         assertEquals( 1,  issueMap.get( "ActorNotInOneOrganization" ).size() );
         assertEquals( 2,  issueMap.get( "ActorWithoutContactInfo" ).size() );
-        assertEquals( 4,  issueMap.get( "CommitmentWithoutRequiredAgreement" ).size() );
+        assertEquals( 17,  issueMap.get( "CommitmentWithoutRequiredAgreement" ).size() );
         assertEquals( 1,  issueMap.get( "GeonameButNoLocation" ).size() );
         assertEquals( 24, issueMap.get( "OrganizationWithNoAssignmentToCategoryOfTask" ).size() );
 //        assertEquals( 1,  issueMap.get( "OrganizationWithoutAssignments" ).size() );

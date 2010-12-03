@@ -120,7 +120,7 @@ public class ActorPlaybook extends PlaybookPage {
         // ResourceSpec spec = ResourceSpec.with( actor );
         for ( Segment segment : service.list( Segment.class ) ) {
             for ( Part part :
-                    service.getAssignments().withSome( segment ).withSome( actor ).getParts() )
+                    service.getAssignments().with( segment ).with( actor ).getParts() )
                 if ( part.getSegment().equals( segment ) && part.isStartsWithSegment() ) {
                     Event event = segment.getEvent();
                     EventParts parts = rawEvents.get( event );
@@ -184,7 +184,7 @@ public class ActorPlaybook extends PlaybookPage {
 
     private static Set<Flow> findInitialFlows( QueryService service, Actor actor ) {
         Set<Flow> flows = new HashSet<Flow>();
-        for ( Part part : service.getAssignments().withSome( actor ).getParts() ) {
+        for ( Part part : service.getAssignments().with( actor ).getParts() ) {
             for ( Iterator<Flow> iterator = part.flows(); iterator.hasNext(); ) {
                 Flow flow = iterator.next();
                 if ( part.equals( flow.getTarget() ) && flow.isTriggeringToTarget() )
