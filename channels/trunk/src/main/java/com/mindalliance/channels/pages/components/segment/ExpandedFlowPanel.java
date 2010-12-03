@@ -158,6 +158,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     private DropDownChoice<String> restrictionChoice;
     /**
+     * If task fails checkbox container.
+     */
+    private WebMarkupContainer ifTaskFailsContainer;
+    /**
+     * If task fails checkbox.
+     */
+    private CheckBox ifTaskFailsCheckBox;
+
+    /**
      * Flow is to be restricted.
      */
     private boolean restricted;
@@ -183,6 +192,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addSignificanceToTarget();
         addOtherField();
         addRestrictionFields();
+        addIfTaskFails();
         addAllField();
 
         Node node = getOther();
@@ -323,7 +333,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param f the flow
      */
     private void adjustFields( Flow f ) {
-        // TODO exception wnem f just got disconnected on undo
         boolean lockedByUser = isLockedByUser( f );
 
         nameField.setEnabled( lockedByUser && f.canSetNameAndElements() );
@@ -344,10 +353,24 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( lockedByUser && f.canSetTerminatesSource() );
         otherChoice.setEnabled( lockedByUser );
-        restrictedCheckBox.setEnabled(  lockedByUser );
+        restrictedCheckBox.setEnabled( lockedByUser );
         flowDescription.setEnabled( ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() )
                 && isLockedByUser( getFlow() ) );
         makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
+        makeVisible( ifTaskFailsContainer, canGetIfTaskFails() );
+        ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
+    }
+
+    private boolean canSetIfTaskFails() {
+        Flow f = getFlow();
+        return isLockedByUser( f )
+                && canGetIfTaskFails();
+    }
+
+    private boolean canGetIfTaskFails() {
+        Flow f = getFlow();
+        // true if agent has the initiative (notifies or asks)
+        return isSend() && f.isNotification() || !isSend() && f.isAskedFor();
     }
 
     private void addNameField() {
@@ -424,6 +447,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 makeVisible( channelRow, isChannelRelevant( getFlow() ) );
+                target.addComponent( channelRow );
+                makeVisible( ifTaskFailsContainer, canGetIfTaskFails() );
+                ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
+                target.addComponent( ifTaskFailsContainer );
                 update( target, new Change( Change.Type.Updated, getFlow(), "askedFor" ) );
             }
         } );
@@ -509,6 +536,26 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                         "notifying-or-replying",
                         new PropertyModel<String>( this, "replyingOrNotifying" ) ) );
     }
+
+    private void addIfTaskFails() {
+        ifTaskFailsContainer = new WebMarkupContainer( "ifTaskFailsContainer" );
+        ifTaskFailsContainer.setOutputMarkupId( true );
+        add( ifTaskFailsContainer );
+        ifTaskFailsCheckBox = new CheckBox(
+                "ifTaskFails",
+                new PropertyModel<Boolean>( this, "ifTaskFails" )
+        );
+        ifTaskFailsCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getFlow(), "ifTaskFails" ) );
+            }
+        } );
+        ifTaskFailsContainer.add( ifTaskFailsCheckBox );
+    }
+
 
     private void addFlowDescription() {
         flowDescription = new TextArea<String>( "description",
@@ -1202,6 +1249,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     /**
      * Whether the flow is restricted.
+     *
      * @return a boolean
      */
     public boolean isRestricted() {
@@ -1210,12 +1258,13 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     /**
      * Restrict or unrestrict the flow.
+     *
      * @param val a boolean
      */
     public void setRestricted( boolean val ) {
         this.restricted = val;
-        if ( !val  && getFlow().getRestriction() != null ) {
-           doCommand( new UpdateSegmentObject( getFlow(), "restriction", null ) );
+        if ( !val && getFlow().getRestriction() != null ) {
+            doCommand( new UpdateSegmentObject( getFlow(), "restriction", null ) );
         }
     }
 
@@ -1241,6 +1290,21 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     ? null
                     : Flow.Restriction.valueOfLabel( label );
             doCommand( new UpdateSegmentObject( getFlow(), "restriction", restriction ) );
+        }
+    }
+
+    /**
+     * Get whether flow is if task fails.
+     *
+     * @return a boolean
+     */
+    public boolean isIfTaskFails() {
+        return getFlow().isIfTaskFails();
+    }
+
+    public void setIfTaskFails( boolean val ) {
+        if ( val != getFlow().isIfTaskFails() ) {
+            doCommand( new UpdateSegmentObject( getFlow(), "ifTaskFails", val ) );
         }
     }
 

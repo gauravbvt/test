@@ -29,9 +29,11 @@
             </tr>
             <tr>
                 <th align="right">Intent:</th>
-                <td><select wicket:id="intent"><option>Report</option></select></td>
+                <td><select wicket:id="intent"><option>Report</option></select>
+                    <span wicket:id="ifTaskFailsContainer"><input wicket:id="ifTaskFails" type="checkbox"> only if the task fails</span>
+                </td>
             </tr>
-            <tr>
+             <tr>
                 <th class="area" align="right" valign="top">
                     <a wicket:id="editEOIs" href="#" title="Click to edit the elements">Elements:</a>
                 </th>

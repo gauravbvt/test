@@ -68,6 +68,7 @@ public final class ChannelsUtils {
         attributes.put( "significanceToSource", flow.getSignificanceToSource() );
         attributes.put( "intent", flow.getIntent() );
         attributes.put( "restriction", flow.getRestriction() );
+        attributes.put( "ifTaskFails", flow.isIfTaskFails() );
         return attributes;
     }
 
@@ -143,6 +144,10 @@ public final class ChannelsUtils {
         merged.put( "restriction", Flow.Restriction.resolve(
                 (Flow.Restriction) attributes.get( "restriction" ),
                 (Flow.Restriction) others.get( "restriction" ) ) );
+        // Merge is task failure flow
+        merged.put(
+                "ifTaskFails",
+                (Boolean) attributes.get( "ifTaskFails" ) || (Boolean) others.get( "ifTaskFails" ) );
         return merged;
     }
 
