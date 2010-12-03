@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.query.PlanService;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
@@ -34,8 +35,7 @@ public class ChannelPanel extends Panel {
                 @Override
                 protected Item<?> newRowItem( String id, int index ) {
                     Item<?> item = super.newRowItem( id, index );
-                    item.add( new AttributeModifier( "class", true,
-                                new Model<String>( index % 2 == 0 ? "even" : "odd" ) ) );
+                    item.add( newAttribute( "class", index % 2 == 0 ? "even" : "odd" ) );
                     return item;
                 }
 
@@ -43,21 +43,41 @@ public class ChannelPanel extends Panel {
                 protected void populateEmptyItem( Item<ChannelWrapper> item ) {
                     item.add(
                         new Label( "label", "" ),
-                        new Label( "address", "" )
+                        new WebMarkupContainer( "address" ).add(
+                            new Label( "type", "" ),
+                            new Label( "value", "" )
+                            )
                     ).setRenderBodyOnly( true );
                 }
 
                 @Override
                 protected void populateItem( Item<ChannelWrapper> item ) {
                     ChannelWrapper wrapper = item.getModelObject();
+                    WebMarkupContainer address = new WebMarkupContainer( "address" );
+
+                    Label value = new Label( "value", wrapper.getAddress() );
                     item.add(
                         new Label( "label", wrapper.getLabel() ),
-                        new Label( "address", wrapper.getAddress() )
+                        address.add(
+                            value.setRenderBodyOnly( wrapper.isOther() ),
+                            new Label( "type", wrapper.getCssClass() )
+                                .setVisible( wrapper.isPhone() && wrapper.isPhoneType() ) )
+
                     ).setRenderBodyOnly( true );
+
+                    if ( wrapper.isPhone() ) {
+                        value.add( newAttribute( "href", "tel:" + wrapper.getAddress() ) );
+                        address.add( newAttribute( "class", "tel" ) );
+                    } else if ( wrapper.isEmail() )
+                        value.add( newAttribute( "href", "mailto:" + wrapper.getAddress() ),
+                                   newAttribute( "class", "email" ) );
                 }
             }.setColumns( 2 )
-
         );
+    }
+
+    private static AttributeModifier newAttribute( String name, String value ) {
+        return new AttributeModifier( name, true, new Model<String>( value ) );
     }
 
     public static List<ChannelWrapper> getChannels( PlanService service, Specable specable ) {
@@ -67,18 +87,28 @@ public class ChannelPanel extends Panel {
             TransmissionMedium phone = getType( "phone", service.getPlanManager() );
             TransmissionMedium email = getType( "email", service.getPlanManager() );
 
-            for ( Channel channel : service.findAllChannelsFor( new ResourceSpec( specable ) ) )
+            for ( Channel channel : service.findAllChannelsFor( new ResourceSpec( specable ) ) ) {
+                TransmissionMedium medium = channel.getMedium();
                 result.add( new ChannelWrapper( channel,
-                                                isOfType( phone, channel ) ? Type.PHONE
-                                              : isOfType( email, channel ) ? Type.EMAIL
-                                                                           : Type.OTHER ) );
+                                                isOfType( phone, medium ) ? Type.PHONE
+                                              : isOfType( email, medium ) ? Type.EMAIL
+                                                                          : Type.OTHER ) );
+            }
         }
 
         return result;
     }
 
-    private static boolean isOfType( TransmissionMedium type, Channel channel ) {
-        return channel.getMedium().narrowsOrEquals( type, null );
+    private static boolean isOfType( TransmissionMedium type, TransmissionMedium medium ) {
+        try {
+            String name = medium.getName();
+            return medium.narrowsOrEquals( type, null )
+                || "phone".equalsIgnoreCase( name )
+                || FlowReportPage.PhoneType.valueOf( name.toUpperCase() ) != null ;
+
+        } catch ( IllegalArgumentException ignored ) {
+            return false;
+        }
     }
 
     private static TransmissionMedium getType( String type, PlanManager planManager ) {
@@ -110,6 +140,32 @@ public class ChannelPanel extends Panel {
 
         public String getAddress() {
             return channel.getAddress();
+        }
+
+        public boolean isPhone() {
+            return Type.PHONE.equals( type );
+        }
+
+        public String getCssClass() {
+            return channel.getMedium().getLabel().toString().toLowerCase();
+        }
+
+        public boolean isPhoneType() {
+            try {
+                FlowReportPage.PhoneType.valueOf(
+                    channel.getMedium().getLabel().toString().toUpperCase() );
+                return true;
+            } catch ( IllegalArgumentException ignored ) {
+                return false;
+            }
+        }
+
+        public boolean isEmail() {
+            return Type.EMAIL.equals( type );
+        }
+
+        public boolean isOther() {
+            return Type.OTHER.equals( type );
         }
     }
 }

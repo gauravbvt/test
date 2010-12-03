@@ -19,18 +19,24 @@ import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.Assignments;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.GridView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -100,47 +106,7 @@ public class FlowReportPage extends AbstractReportPage {
                 .setVisible( !getFlow().getEois().isEmpty() ),
 
             new Label( "commonContact" ),
-
-            new ListView<Assignment>( "vcards" ) {
-                @Override
-                protected void populateItem( ListItem<Assignment> item ) {
-                    Assignment assignment = item.getModelObject();
-                    ModelEntity entity = (ModelEntity) assignment.getSpecableActor();
-                    Employment employment = assignment.getEmployment();
-
-                    item.add(
-                        new Label( "fullName", entity.getName() ),
-                        new Label( "description", entity.getDescription() ),
-                        new Label( "title", employment.getJob().getTitle() ),
-                        new Label( "role", assignment.getRole().getName() ),
-                        new Label( "jurisdiction", assignment.getJurisdiction() == null ? "All"
-                                                 : assignment.getJurisdiction().toString() ),
-                        new Label( "org", assignment.getOrganization() == null ? "None"
-                                        : assignment.getOrganization().toString() ),
-                        new Label( "supervisor", employment.getSupervisor() == null ? ""
-                                               : employment.getSupervisor().getName() ),
-                        new ChannelPanel( "channels", getService(), assignment )
-                            .setRenderBodyOnly( true ),
-                        new WebMarkupContainer( "super-channels-wrapper" )
-                            .add( new ChannelPanel( "super-channels",
-                                          getService(), assignment.getEmployment().getSupervisor() )
-                                )
-                            .setVisible( employment.getSupervisor() != null )
-                            .setRenderBodyOnly( true ),
-                        new WebMarkupContainer( "org-channels-wrapper" )
-                            .add( new ChannelPanel( "org-channels",
-                                          getService(), assignment.getOrganization() ) )
-                            .setVisible( assignment.getOrganization() != null )
-                            .setRenderBodyOnly( true ),
-
-                        new WebMarkupContainer( "pic" )
-                            .add( new AttributeModifier(
-                                   "src", new Model<String>( getPictureUrl( entity ) ) ),
-                                  new AttributeModifier(
-                                   "alt", new Model<String>( entity.getName() ) ) )
-                    );
-                }
-            }.add( newCssClass( isSending() ? "to" : "from" ) ),
+            newVcards(),
 
             new ListView<Attachment>( "documentation" ) {
                 @Override
@@ -192,6 +158,83 @@ public class FlowReportPage extends AbstractReportPage {
                 .add( new Label( "flow.description" ) )
                 .setVisible( !getFlow().getDescription().isEmpty() )
         );
+    }
+
+    private Component newVcards() {
+        return new ListView<Assignment>( "vcards" ) {
+            @Override
+            protected void populateItem( ListItem<Assignment> item ) {
+                Assignment assignment = item.getModelObject();
+                ModelEntity entity = (ModelEntity) assignment.getSpecableActor();
+                Employment employment = assignment.getEmployment();
+
+                List<Info> infos = new ArrayList<Info>();
+                for ( Info i : Arrays.asList(
+                    new Info( "Description", entity.getDescription(), "note" ),
+                    new Info( "Title", employment.getJob() == null ? null
+                                       : employment.getJob().getTitle(), "title" ),
+                    new Info( "Role", assignment.getRole() == null ? null
+                                       : assignment.getRole().getName(), "role" ),
+                    new Info( "Jurisdiction", assignment.getJurisdiction() == null ? null
+                                       : assignment.getJurisdiction().toString(), null ),
+                    new Info( "Organization", assignment.getOrganization() == null ? null
+                                       : assignment.getOrganization().toString(), "org" ),
+                    new Info( "Supervisor", employment.getSupervisor() == null ? null
+                                       : employment.getSupervisor().getName(), null )
+                ) )
+                    if ( i.getValue() != null && !i.getValue().isEmpty() )
+                        infos.add( i );
+
+
+                item.add(
+                    new Label( "fullName", entity.getName() ),
+                    new GridView<Info>( "agent-infos", new ListDataProvider<Info>( infos ) ) {
+                        @Override
+                        protected void populateEmptyItem( Item<Info> item ) {
+                            item.add(
+                                new Label( "label", "" ),
+                                new Label( "value", "" )
+                            ).setRenderBodyOnly( true );
+                        }
+
+                        @Override
+                        protected void populateItem( Item<Info> item ) {
+                            Info i = item.getModelObject();
+                            Label label = new Label( "value", i.getValue() );
+                            item.add(
+                                new Label( "label", i.getLabel() ),
+                                label
+                            ).setRenderBodyOnly( true );
+
+                            if ( i.getHcardTag() != null )
+                                label.add( new AttributeModifier( "class", true,
+                                            new Model<String>( i.getHcardTag() ) ) );
+                        }
+                    }
+                            .setColumns( 2 ),
+
+                    new ChannelPanel( "channels", getService(), assignment.getSpecableActor() )
+                        .setRenderBodyOnly( true ),
+                    new WebMarkupContainer( "super-channels-wrapper" )
+                        .add( new ChannelPanel( "super-channels",
+                                      getService(), assignment.getEmployment().getSupervisor() )
+                            )
+                        .setVisible( employment.getSupervisor() != null )
+                        .setRenderBodyOnly( true ),
+                    new WebMarkupContainer( "org-channels-wrapper" )
+                        .add( new ChannelPanel( "org-channels",
+                                      getService(), assignment.getOrganization() ) )
+                        .setVisible( assignment.getOrganization() != null )
+                        .setRenderBodyOnly( true ),
+
+                    new WebMarkupContainer( "pic" )
+                        .add( new AttributeModifier(
+                               "src", new Model<String>( getPictureUrl( entity ) ) ),
+                              new AttributeModifier(
+                               "alt", new Model<String>( entity.getName() ) ) )
+                );
+            }
+        }.add( newCssClass( isSending() ? "to" : "from" ) );
     }
 
     private String getPictureUrl( ModelEntity entity ) {
@@ -307,4 +350,28 @@ public class FlowReportPage extends AbstractReportPage {
                     ).getCommonSpec( otherPart ).getReportSource();
     }
 
+    //============================================
+    public static class Info implements Serializable {
+        private String label;
+        private String value;
+        private String hcardTag;
+
+        public Info( String label, String value, String hcardTag ) {
+            this.hcardTag = hcardTag;
+            this.label = label;
+            this.value = value;
+        }
+
+        public String getHcardTag() {
+            return hcardTag;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
 }

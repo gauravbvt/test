@@ -68,27 +68,11 @@
 	                <img class="photo" wicket:id="pic" src="" alt="Picture">
 				</div>
                 <table>
-                    <tr class="even">
-                        <th>Description</th>
-                        <td class="note" wicket:id="description">(Description)</td>
-
-                        <th>Job Title</th>
-                        <td class="title" wicket:id="title">(Title)</td>
-                    </tr>
-                    <tr class="odd">
-                        <th>Role</th>
-                        <td class="role" wicket:id="role">(Role)</td>
-
-                        <th>Jurisdiction</th>
-                        <td wicket:id="jurisdiction">(Jurisdiction)</td>
-                    </tr>
-                    <tr class="even">
-
-                        <th>Organization</th>
-                        <td class="org" wicket:id="org">(Organization)</td>
-
-                        <th>Supervisor</th>
-                        <td wicket:id="supervisor">(Supervisor)</td>
+                    <tr wicket:id="agent-infos">
+                        <div wicket:id="cols">
+                            <th wicket:id="label">Description</th>
+                            <td wicket:id="value">(Description)</td>
+                        </div>
                     </tr>
 
                     <tr class="header">
