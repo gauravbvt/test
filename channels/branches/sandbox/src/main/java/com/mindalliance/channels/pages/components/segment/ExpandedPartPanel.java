@@ -39,6 +39,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -82,6 +83,15 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * The location property.
      */
     private static final String LOCATION_PROPERTY = "location";             // NON-NLS
+
+
+    /**
+      * The initiated event property.
+      */
+     private static final String INITIATED_EVENT_PROPERTY = "initiatedEvent";             // NON-NLS
+
+    private static String[] EntityProps = {LOCATION_PROPERTY, ACTOR_PROPERTY, ROLE_PROPERTY,
+                JURISDICTION_PROPERTY, ORG_PROPERTY, INITIATED_EVENT_PROPERTY};
 
     /**
      * The empty string.
@@ -425,23 +435,26 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     private void addEntityLinks() {
-        String[] entityProps = {"location", "actor", "role",
-                "jurisdiction", "organization", "initiatedEvent"};
-        Part part = getPart();
-        for ( String prop : entityProps ) {
-            ModelObjectLink moLink = new ModelObjectLink(
-                    prop + "-link",
-                    new PropertyModel<ModelEntity>( part, prop ),
-                    new Model<String>(
-                            prop.equals( "initiatedEvent" )
-                                    ? "Causes event"
-                                    : WordUtils.capitalize( prop.equals( "actor" )
-                                    ? "agent"
-                                    : prop ) ) );
-            moLink.setOutputMarkupId( true );
-            entityLinks.put( prop, moLink );
-            addOrReplace( moLink );
+        for ( String prop : EntityProps ) {
+            addEntityLink( prop );
         }
+    }
+
+    private ModelObjectLink addEntityLink( String prop ) {
+        Part part = getPart();
+        ModelObjectLink moLink = new ModelObjectLink(
+                prop + "-link",
+                new PropertyModel<ModelEntity>( part, prop ),
+                new Model<String>(
+                        prop.equals( "initiatedEvent" )
+                                ? "Causes event"
+                                : WordUtils.capitalize( prop.equals( "actor" )
+                                ? "agent"
+                                : prop ) ) );
+        moLink.setOutputMarkupId( true );
+        entityLinks.put( prop, moLink );
+        addOrReplace( moLink );
+        return moLink;
     }
 
     private void addTimingFields() {
@@ -946,7 +959,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                     target.addComponent( entityReferencePanel );
                 }
                 if ( change.getSubject( getQueryService() ).equals( getPart() ) ) {
-                    updateEntityLink( target, change );
+                    if ( Arrays.asList(  EntityProps ).contains( property ))
+                        updateEntityLink( target, change );
                 }
                 if ( property.equals( "goals" ) ) {
                     addGoals();
@@ -964,9 +978,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     private void updateEntityLink( AjaxRequestTarget target, Change change ) {
-        String property = change.getProperty();
-        ModelObjectLink moLink = entityLinks.get( property );
-        if ( moLink != null ) target.addComponent( moLink );
+        ModelObjectLink moLink = addEntityLink( change.getProperty() );
+        if ( moLink != null ) {
+            target.addComponent( moLink );
+        }
     }
 
 

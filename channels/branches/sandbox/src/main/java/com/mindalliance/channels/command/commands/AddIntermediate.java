@@ -70,7 +70,7 @@ public class AddIntermediate extends AbstractCommand {
             describeTarget( flow );
             MultiCommand multi = (MultiCommand) get( "subCommands" );
             if ( multi == null ) {
-                multi = makeSubCommands( segment, flow );
+                multi = makeSubCommands( segment, flow, commander );
                 set( "subCommands", multi );
             }
             // else this is a replay
@@ -101,7 +101,7 @@ public class AddIntermediate extends AbstractCommand {
     }
 
     // Create a capability and/or need if not repetitive
-    private MultiCommand makeSubCommands( Segment segment, Flow flow ) {
+    private MultiCommand makeSubCommands( Segment segment, Flow flow, Commander commander ) {
         MultiCommand subCommands = new MultiCommand( "breakup flow - extra" );
         subCommands.setMemorable( false );
         // make intermediate part
@@ -129,7 +129,7 @@ public class AddIntermediate extends AbstractCommand {
         // connect intermediate to new flow's source
         subCommands.addLink( addPart, "id", toTarget, "part" );
         // remove the flow
-        subCommands.addCommand( new DisconnectFlow( flow ));
+        subCommands.addCommand( commander.makeRemoveFlowCommand( flow ));
         return subCommands;
     }
 

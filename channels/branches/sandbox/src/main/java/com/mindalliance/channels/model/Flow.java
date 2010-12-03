@@ -1138,7 +1138,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     return committer.getOrganization().getTopOrganization()
                             .equals( beneficiary.getOrganization().getTopOrganization() );
 
-                case SameLocation:
+                case SameOrganization:
                     ModelEntity committerOrg = committer.getOrganization();
                     ModelEntity beneficiaryOrg = beneficiary.getOrganization();
 
@@ -1147,7 +1147,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                             || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
                             || beneficiaryOrg.narrowsOrEquals( committerOrg, locale );
 
-                case SameOrganization:
+                case SameLocation:
                     ModelEntity committerLocation = committer.getLocation();
                     ModelEntity beneficiaryLocation = beneficiary.getLocation();
 

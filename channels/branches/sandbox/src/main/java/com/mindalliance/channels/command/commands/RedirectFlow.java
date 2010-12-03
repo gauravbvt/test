@@ -53,7 +53,7 @@ public class RedirectFlow extends AbstractCommand {
         boolean nodeIsTarget = (Boolean) get( "isTarget" );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
-            multi = makeSubCommands( flow, other, nodeIsTarget );
+            multi = makeSubCommands( flow, other, nodeIsTarget, commander );
             set( "subCommands", multi );
         }
         // else command replay
@@ -66,7 +66,8 @@ public class RedirectFlow extends AbstractCommand {
     private MultiCommand makeSubCommands(
             Flow flow,
             Node other,
-            boolean nodeIsTarget ) {
+            boolean nodeIsTarget,
+            Commander commander ) {
         MultiCommand multi = new MultiCommand( "reconnect - extra" );
         multi.setMemorable( false );
         ConnectWithFlow connect = nodeIsTarget
@@ -74,7 +75,7 @@ public class RedirectFlow extends AbstractCommand {
                 : new ConnectWithFlow( other, flow.getTarget(), flow.getName(), ChannelsUtils.getFlowAttributes( flow ) );
         multi.addCommand( connect );
         // Remove prior flow. Don't carry over attributes to new flow.
-        DisconnectFlow disconnect = new DisconnectFlow( flow );
+        Command disconnect = commander.makeRemoveFlowCommand( flow );
         multi.addCommand( disconnect );
         multi.addLink( connect, "id", this, "newFlow" );
         return multi;

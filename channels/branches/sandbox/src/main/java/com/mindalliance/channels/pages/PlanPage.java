@@ -650,12 +650,14 @@ public final class PlanPage extends WebPage implements Updatable {
         getCommander().processDeaths();
         getCommander().processTimeOuts();
         if ( getCommander().isTimedOut() ) {
-            refreshAll( target );
+            if ( getPlan().isDevelopment() ) refreshAll( target );
             getCommander().clearTimeOut();
-        } else {
+        } else { 
             updateRefreshNotice();
-            target.addComponent( refreshNeededComponent );
-            fadeOutMessagePanel( target );
+            if ( getPlan().isDevelopment() ) {
+                target.addComponent( refreshNeededComponent );
+                fadeOutMessagePanel( target );
+            }
         }
         segmentPanel.updateSocialPanel( target );
     }
@@ -681,17 +683,19 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private String getReasonsToRefresh() {
         String reasons = "";
-        String lastModifier = getCommander().getLastModifier();
-        long lastModified = getCommander().getLastModified();
-        if ( lastModified > lastRefreshed && !lastModifier.isEmpty() && !lastModifier.equals(
-                getUser().getUsername() ) )
-            reasons = " -- Plan was modified by " + lastModifier;
+        if ( getPlan().isDevelopment() ) {
+            String lastModifier = getCommander().getLastModifier();
+            long lastModified = getCommander().getLastModified();
+            if ( lastModified > lastRefreshed && !lastModifier.isEmpty() && !lastModifier.equals(
+                    getUser().getUsername() ) )
+                reasons = " -- Plan was modified by " + lastModifier;
 
-        // Find expansions that were locked and are not unlocked
-        for ( ModelObject mo : getEditableModelObjects( expansions ) ) {
-            if ( !( mo instanceof Segment || mo instanceof Plan )
-                    && getCommander().isUnlocked( mo ) ) {
-                reasons += " -- " + mo.getName() + " can now be edited.";
+            // Find expansions that were locked and are not unlocked
+            for ( ModelObject mo : getEditableModelObjects( expansions ) ) {
+                if ( !( mo instanceof Segment || mo instanceof Plan )
+                        && getCommander().isUnlocked( mo ) ) {
+                    reasons += " -- " + mo.getName() + " can now be edited.";
+                }
             }
         }
         return reasons;
@@ -1822,8 +1826,8 @@ public final class PlanPage extends WebPage implements Updatable {
                 || identifiable instanceof SegmentObject
                 && change.isAspect( "dissemination" ) ) {
             boolean showTargets = change.hasQualifier( "show", "targets" );
-            Subject subject = (Subject)change.getQualifier( "subject" );
-            addDisseminationPanel( subject, showTargets);
+            Subject subject = (Subject) change.getQualifier( "subject" );
+            addDisseminationPanel( subject, showTargets );
             target.addComponent( disseminationPanel );
         } else if ( disseminationPanel instanceof DisseminationPanel ) {
             ( (DisseminationPanel) disseminationPanel ).refresh( target, change, updated );

@@ -4,6 +4,7 @@ import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.dao.ImportExportFactory;
 import com.mindalliance.channels.dao.Journal;
 import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
@@ -380,5 +381,12 @@ public interface Commander {
      * @param username a string
      */
     void loggedIn( String username );
+
+    /**
+     * Make the appropriate command to remove a flow.
+     * @param flow a flow
+     * @return a boolean
+     */
+    Command makeRemoveFlowCommand( Flow flow );
 
 }

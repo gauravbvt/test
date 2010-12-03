@@ -242,6 +242,10 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         doTransfer.setOutputMarkupId( true );
         makeVisible( doTransfer, isTransferring() );
         jobTransferDiv.add( doTransfer );
+        WebMarkupContainer transferContainer = new WebMarkupContainer( "transferContainer" );
+        transferContainer.setOutputMarkupId( true );
+        transferContainer.setVisible( getPlan().isDevelopment() );
+        addOrReplace( transferContainer );
         CheckBox transferCheckBox = new CheckBox(
                 "transfer",
                 new PropertyModel<Boolean>( this, "transferring" ) );
@@ -252,8 +256,8 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 target.addComponent( jobTransferDiv );
             }
         } );
-        transferCheckBox.setOutputMarkupId( true );
-        addOrReplace( transferCheckBox );
+        transferCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
+        transferContainer.add( transferCheckBox );
     }
 
     private boolean executeJobTransfers() {
@@ -464,17 +468,19 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 return collator.compare( jw1.getNormalizedActorName(), jw2.getNormalizedActorName() );
             }
         } );
-        // New job
-        JobWrapper creationJobWrapper;
-        // Use previously unconfirmed job if not null and not already implied
-        if ( unconfirmedJob != null && !unconfirmedJobs.contains( unconfirmedJob ) ) {
-            creationJobWrapper = new JobWrapper( unconfirmedJob, false );
-            unconfirmedJob = null;
-        } else {
-            creationJobWrapper = new JobWrapper( new Job(), false );
+        if ( getPlan().isDevelopment() ) {
+            // New job
+            JobWrapper creationJobWrapper;
+            // Use previously unconfirmed job if not null and not already implied
+            if ( unconfirmedJob != null && !unconfirmedJobs.contains( unconfirmedJob ) ) {
+                creationJobWrapper = new JobWrapper( unconfirmedJob, false );
+                unconfirmedJob = null;
+            } else {
+                creationJobWrapper = new JobWrapper( new Job(), false );
+            }
+            creationJobWrapper.setMarkedForCreation( true );
+            jobWrappers.add( creationJobWrapper );
         }
-        creationJobWrapper.setMarkedForCreation( true );
-        jobWrappers.add( creationJobWrapper );
         return jobWrappers;
     }
 

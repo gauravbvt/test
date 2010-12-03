@@ -333,12 +333,13 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
-            columns.add( makeCheckBoxColumn(
-                    "",
-                    "selected",
-                    "movable",
-                    SegmentPartMoverPanel.this
-            ) );
+            if ( isLockedByUserIfNeeded( getSegment() ) )
+                columns.add( makeCheckBoxColumn(
+                        "",
+                        "selected",
+                        "movable",
+                        SegmentPartMoverPanel.this
+                ) );
             columns.add( makeLinkColumn(
                     "Task",
                     "part",

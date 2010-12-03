@@ -360,6 +360,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * Return an actionalble label declaring that another user is editing.
      *
      * @param id       a string
+     * @param identifiable an identifiable
      * @param username a string
      * @return a label
      */
@@ -386,7 +387,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     protected Label timeOutLabel( String id ) {
         Label label = new Label(
-                id, new Model<String>( "Timed out" ) );
+                id, new Model<String>( getPlan().isDevelopment() ? "Timed out" : "") );
         label.add( new AttributeModifier( "class", true, new Model<String>( "disabled timed-out" ) ) );
         return label;
     }

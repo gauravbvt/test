@@ -84,7 +84,7 @@ public class AddCapability extends AbstractCommand {
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             Flow flow = segment.findFlow( (Long) get( "flow" ) );
-             return new RemoveCapability( flow );
+            return new RemoveCapability( flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
         }

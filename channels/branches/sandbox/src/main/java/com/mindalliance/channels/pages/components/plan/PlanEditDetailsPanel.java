@@ -47,11 +47,6 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     private DefinitionManager definitionManager;
 
     /**
-     * Entity reference panel for scope of event (a place).
-     */
-    private EntityReferencePanel<Place> scopePanel;
-
-    /**
      * Issues panel.
      */
     private IssuesPanel issuesPanel;
@@ -91,7 +86,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                         new PropertyModel<Organization>( plan, "locale" ),
                         new Model<String>( "Locale" ) ),
 
-             createScopePanel(),
+             createScopePanel().setEnabled( plan.isDevelopment() ),
 
              new AttachmentPanel( "attachments", new Model<ModelObject>( plan ) )
         );
@@ -103,13 +98,12 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
 
     private EntityReferencePanel<Place> createScopePanel() {
-        scopePanel = new EntityReferencePanel<Place>(
+        return new EntityReferencePanel<Place>(
                 "localePanel",
                 new Model<Plan>( getPlan() ), getQueryService().findAllEntityNames( Place.class ),
                 "locale",
                 Place.class
-            );
-        return scopePanel;
+        );
     }
 
     private IssuesPanel createIssuePanel() {

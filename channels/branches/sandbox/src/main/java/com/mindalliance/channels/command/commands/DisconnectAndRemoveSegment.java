@@ -48,7 +48,7 @@ public class DisconnectAndRemoveSegment extends AbstractCommand {
         if ( multi == null ) {
             multi = new MultiCommand( "remove plan segment - extra" );
             for ( Flow externalFlow : segment.listExternalFlows() ) {
-                multi.addCommand( new DisconnectFlow( externalFlow ) );
+                multi.addCommand( commander.makeRemoveFlowCommand( externalFlow ) );
             }
             multi.addCommand( new RemoveSegment( segment ) );
         }

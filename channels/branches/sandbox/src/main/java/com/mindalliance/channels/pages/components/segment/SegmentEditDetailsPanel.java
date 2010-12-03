@@ -10,12 +10,12 @@ import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
-import com.mindalliance.channels.nlp.Matcher;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -99,7 +99,8 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
             }
         } );
         eventLevelChoice.setOutputMarkupId( true );
-        eventLevelChoice.setEnabled( getSegment().getEvent() != null );
+        eventLevelChoice.setEnabled( isLockedByUserIfNeeded( getSegment() )
+                && getSegment().getEvent() != null );
         addOrReplace( eventLevelChoice );
     }
 

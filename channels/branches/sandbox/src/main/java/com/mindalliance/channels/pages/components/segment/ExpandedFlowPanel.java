@@ -258,7 +258,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Updated, getFlow(), "restriction" ) );
             }
         } );
-        restrictionChoice.setEnabled( isRestricted() );
+        restrictionChoice.setEnabled( isLockedByUser( getFlow() ) && isRestricted() );
         restrictionContainer.add( restrictionChoice );
     }
 

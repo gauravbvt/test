@@ -64,14 +64,14 @@ public class SegmentShowMenuPanel extends MenuPanel {
                 goalsLink ) );
         // Organizations
         Link orgsLink = new AjaxFallbackLink( "link" ) {
-             public void onClick( AjaxRequestTarget target ) {
-                 changeAspectTo( target, SegmentEditPanel.ORGANIZATIONS );
-             }
-         };
-         menuItems.add( new LinkMenuItem(
-                 "menuItem",
-                 new Model<String>( "Organizations" ),
-                 orgsLink ) );
+            public void onClick( AjaxRequestTarget target ) {
+                changeAspectTo( target, SegmentEditPanel.ORGANIZATIONS );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Organizations" ),
+                orgsLink ) );
         // Map
         List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
         Iterator<Part> parts = getSegment().parts();
@@ -91,15 +91,17 @@ public class SegmentShowMenuPanel extends MenuPanel {
                 geomapLink ) );
 
         // Task mover
-        Link moverLink = new AjaxFallbackLink( "link" ) {
-             public void onClick( AjaxRequestTarget target ) {
-                 changeAspectTo( target, SegmentEditPanel.MOVER );
-             }
-         };
-         menuItems.add( new LinkMenuItem(
-                 "menuItem",
-                 new Model<String>( "Task mover" ),
-                 moverLink ) );
+        if ( this.isLockedByUserIfNeeded( getSegment() ) ) {
+            Link moverLink = new AjaxFallbackLink( "link" ) {
+                public void onClick( AjaxRequestTarget target ) {
+                    changeAspectTo( target, SegmentEditPanel.MOVER );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Task mover" ),
+                    moverLink ) );
+        }
         return menuItems;
     }
 
