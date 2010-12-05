@@ -205,6 +205,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.ConfirmedAgreementWithoutMOU"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SingleAssignmentToImportantTask"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.AvailabilityGapInTaskAssignments"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.TaskWithoutFailureProtocol"/>
             </list>
         </property>
     </bean>
@@ -358,6 +359,29 @@ CONFIGURATION NOTES:
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Broadcast"/>
+    </bean>
+    <bean id="home" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Home"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Unicast"/>
+        <property name="tags">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="work" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Work"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Unicast"/>
+        <property name="tags">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+
     </bean>
 
     <!-- Collaboration services -->

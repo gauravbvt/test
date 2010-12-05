@@ -3,6 +3,7 @@ package com.mindalliance.channels.analysis.detectors;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class AlarmNotANotification extends AbstractIssueDetector {
         if ( intent != null && intent.equals( Flow.Intent.Alarm ) ) {
             if ( flow.isAskedFor() ) {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
-                issue.setSeverity( this.getSharingFailureSeverity( flow ) );
+                issue.setSeverity( flow.isSharing() ? getSharingFailureSeverity( flow ) : Level.Low );
                 issue.setDescription( "Information \""
                         + flow.getName()
                         + "\" is intended as an alarm and yet it must be requested." );

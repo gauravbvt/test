@@ -196,7 +196,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     }
 
     private void addAboutFlow() {
-        Label flowTypeLabel = new Label(
+        Label flowTypeLabel = new Label(                            
                 "flowType",
                 new Model<String>( getFlow().isNeed()
                         ? "need for"

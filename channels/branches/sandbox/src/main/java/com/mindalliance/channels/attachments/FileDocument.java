@@ -46,7 +46,7 @@ public class FileDocument implements Serializable {
     }
 
     public String getLabel() {
-        // return FileBasedManager.unescape( file.getName() );
+        // return FileBasedManager.unescape( file.getFlowName() );
         return file.getName();
     }
 

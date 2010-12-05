@@ -190,7 +190,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             return queryService.findAllActualActors( new ResourceSpec( (Role) entity ) );
         } else if ( entity instanceof Organization ) {
             List<ModelEntity> inOrg = new ArrayList<ModelEntity>();
-            Assignments assignments = queryService.getAssignments().withSome( (Specable) entity );
+            Assignments assignments = queryService.getAssignments().with( (Specable) entity );
             inOrg.addAll( assignments.getRoles() );
             inOrg.addAll( assignments.getActualActors() );
             return inOrg;

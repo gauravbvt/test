@@ -1,19 +1,19 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.pages.reports.VCardPanel;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class ContactPage extends WebPage {
 
         Flow flow = getParm( "0", Flow.class );
         if ( flow == null )
-            throw new AbortWithHttpStatusException( NOT_FOUND, false );
+            throw new AbortWithWebErrorCodeException( NOT_FOUND );
 
         init( flow, queryService.findAllContacts( contactsSpec( flow ), true ) );
     }

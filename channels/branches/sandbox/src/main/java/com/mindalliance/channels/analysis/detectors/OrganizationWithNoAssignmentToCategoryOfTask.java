@@ -33,7 +33,7 @@ public class OrganizationWithNoAssignmentToCategoryOfTask extends AbstractIssueD
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         if ( getQueryService().isInvolvementExpected( org ) ) {
-            Assignments assignments = getQueryService().getAssignments().withSome( org );
+            Assignments assignments = getQueryService().getAssignments().with( org );
 
             if ( !assignments.isEmpty() ) {
                 for ( Part.Category category : Part.Category.values() ) {

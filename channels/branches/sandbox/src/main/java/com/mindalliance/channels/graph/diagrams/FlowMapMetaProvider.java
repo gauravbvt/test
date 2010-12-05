@@ -235,10 +235,19 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( edge.isAskedFor() ) {
                 list.add( new DOTAttribute( "arrowtail", "onormal" ) );
-                list.add( new DOTAttribute( "style", edge.isCritical() ? "bold" : "solid" ) );
+                list.add( new DOTAttribute(
+                        "style",
+                        edge.isIfTaskFails()
+                            ? "dotted"
+                            : edge.isCritical()
+                                ? "bold"
+                                : "solid" ) );
             } else {
-                if ( edge.isCritical() ) {
-                    list.add( new DOTAttribute( "style", "bold" ) );
+                if (edge.isIfTaskFails() ) {
+                    list.add( new DOTAttribute( "style", "dotted" ) );
+                    if ( edge.isCritical() ) list.add( new DOTAttribute( "fontcolor", "black" ) );
+                 }
+                else if ( edge.isCritical() ) {
                     list.add( new DOTAttribute( "style", "bold" ) );
                     list.add( new DOTAttribute( "fontcolor", "black" ) );
                 }

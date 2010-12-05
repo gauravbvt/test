@@ -66,6 +66,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Restricion on implied sharing commitments.
      */
     private Restriction restriction;
+    /**
+     * Flow applies only if task fails. (Send only)
+     */
+    private boolean ifTaskFails;
 
     protected Flow() {
     }
@@ -434,6 +438,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.restriction = restriction;
     }
 
+    public boolean isIfTaskFails() {
+        return ifTaskFails;
+    }
+
+    public void setIfTaskFails( boolean ifTaskFails ) {
+        this.ifTaskFails = ifTaskFails;
+    }
+
     /**
      * Initialize relevant properties from another flow.
      *
@@ -460,6 +472,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         setRestriction( Flow.Restriction.resolve(
                 need.getRestriction(),
                 capability.getRestriction() ) );
+        setIfTaskFails( capability.isIfTaskFails() );
     }
 
     /**
@@ -999,6 +1012,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public boolean isImportant() {
         return isSharing()
+                && !isIfTaskFails()
                 && ( isCritical() || isTriggeringToTarget() );
     }
 
@@ -1006,7 +1020,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Whether the flow could be essential to risk mitigation.
      *
      * @param assumeFails  whether alternate flows are assumed
-     * @param queryService
+     * @param queryService a query service
      * @return a boolean
      */
     public boolean isEssential( boolean assumeFails, QueryService queryService ) {
@@ -1018,7 +1032,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * Whether this is a sharing flow where source actor is target actor.
      *
-     * @param queryService
+     * @param queryService a query service
      * @return a boolean
      */
     public boolean isSharingWithSelf( QueryService queryService ) {
@@ -1162,6 +1176,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     /**
      * Get the nature of the flow.
+     *
      * @return a string
      */
     public String getNature() {

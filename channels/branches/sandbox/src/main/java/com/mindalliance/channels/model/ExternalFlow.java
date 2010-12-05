@@ -118,11 +118,12 @@ public class ExternalFlow extends Flow {
     }
 
     /**
-     * Is the part the target in this flow?
+     * Is a part the ultimate target in this external flow?
      *
      * @return a boolean
      */
     public boolean isPartTargeted() {
+        // if connector is in a capability, i.e. itself the target of an internal flow
         return connector.isTarget();
     }
 

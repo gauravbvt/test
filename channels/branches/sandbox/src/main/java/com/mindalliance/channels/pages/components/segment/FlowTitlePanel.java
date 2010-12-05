@@ -51,13 +51,18 @@ public class FlowTitlePanel extends Panel {
         if ( isSend ) {
             Node node = flow.getTarget();
             if ( node.isConnector() ) {
-                return flow.isAskedFor() ? "Can answer with"
+                return flow.isAskedFor()
+                        ? "Can answer with"
+                        : flow.isIfTaskFails()
+                        ? "If task fails, would notify of"
                         : "Can notify of";
-
             } else {
                 // send
                 Part part = (Part) node;
-                String format = flow.isAskedFor() ? "Answer {0}{1}{2}{3} with"
+                String format = flow.isAskedFor()
+                        ? "Answer {0}{1}{2}{3} with"
+                        : flow.isIfTaskFails()
+                        ? "If task fails, notify {0}{1}{2}{3} of"
                         : "Notify {0}{1}{2}{3} of";
 
                 return MessageFormat.format(
@@ -71,18 +76,25 @@ public class FlowTitlePanel extends Panel {
             // receive
             Node source = flow.getSource();
             if ( source.isConnector() ) {
-                return flow.isAskedFor()
-                        ? "Needs to ask for"
-                        : "Needs to be notified of";
+                return !flow.isAskedFor()
+                        ? "Needs to be notified of"
+                        : flow.isIfTaskFails()
+                        ?  "If task fails, needs to ask for"
+                        : "Needs to ask for";
             } else {
                 Part part = (Part) source;
-                if ( flow.isAskedFor() )
+                if ( flow.isAskedFor() ) {
+                    String ask = flow.isIfTaskFails()
+                        ? "If task fails, ask"
+                        : "Ask";
                     return MessageFormat.format(
-                            "Ask {0}{1}{2}{3} for",
+                            "{0} {1}{2}{3}{4} for",
+                            ask,
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
                             Flow.getJurisdictionString( part ),
                             flow.getRestrictionString() );
+                }
                 else
                     return "Notified of";
             }
