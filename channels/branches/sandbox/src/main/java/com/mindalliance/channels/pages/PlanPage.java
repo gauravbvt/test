@@ -421,6 +421,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 redirectHere();
             }
         };
+        form.setMultiPart( true );
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
         addHeader();
         addFooter();
@@ -652,7 +653,7 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( getCommander().isTimedOut() ) {
             if ( getPlan().isDevelopment() ) refreshAll( target );
             getCommander().clearTimeOut();
-        } else { 
+        } else {
             updateRefreshNotice();
             if ( getPlan().isDevelopment() ) {
                 target.addComponent( refreshNeededComponent );

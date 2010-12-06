@@ -352,6 +352,8 @@ public class Organization extends AbstractUnicastChannelable
     @Override
     public List<Attachment.Type> getAttachmentTypes( String attachablePath ) {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
+        if ( !hasImage() )
+            types.add( Attachment.Type.Image );
         if ( attachablePath.startsWith( "agreements" ) )
             types.add( Attachment.Type.MOU );
         types.addAll( super.getAttachmentTypes() );
