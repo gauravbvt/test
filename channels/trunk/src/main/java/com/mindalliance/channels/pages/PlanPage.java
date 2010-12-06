@@ -421,6 +421,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 redirectHere();
             }
         };
+        form.setMultiPart( true );
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
         addHeader();
         addFooter();
