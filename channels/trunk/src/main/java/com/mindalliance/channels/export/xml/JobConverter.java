@@ -2,6 +2,7 @@ package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Job;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -53,6 +54,7 @@ public class JobConverter extends AbstractChannelsConverter {
         if ( job.getJurisdiction() != null ) {
             writer.startNode( "jurisdiction" );
             writer.addAttribute( "id", Long.toString( job.getJurisdiction().getId() ) );
+            writer.addAttribute( "kind", job.getJurisdiction().isType() ? "Type" : "Actual" );
             writer.setValue( job.getJurisdictionName() );
             writer.endNode();
         }
@@ -98,13 +100,20 @@ public class JobConverter extends AbstractChannelsConverter {
                 job.setRole( role );
             } else if ( nodeName.equals( "jurisdiction" ) ) {
                 String id = reader.getAttribute( "id" );
+                ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
                 Place jurisdiction = getEntity(
+                        Place.class,
+                        reader.getValue(),
+                        Long.parseLong( id ),
+                        kind,
+                        context );
+                /*Place jurisdiction = getEntity(
                         Place.class,
                         reader.getValue(),
                         Long.parseLong( id ),
                         false,
                         importingPlan,
-                        idMap );
+                        idMap );*/
                 job.setJurisdiction( jurisdiction );
             } else if ( nodeName.equals( "title" ) ) {
                 job.setTitle( reader.getValue() );

@@ -147,7 +147,9 @@ public class EventListPanel extends AbstractCommandablePanel {
                 ) );
             }
         } );
-        confirmedCheckBox.setEnabled( wrapper.isMarkedForCreation() || getPlan().getIncidents().size() > 1 );
+        confirmedCheckBox.setEnabled(
+                wrapper.isMarkedForCreation()
+                        || !(wrapper.isConfirmed() && getPlan().getIncidents().size() == 1 ) );
     }
 
     /**

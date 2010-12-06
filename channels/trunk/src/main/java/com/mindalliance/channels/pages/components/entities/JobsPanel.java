@@ -571,7 +571,6 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
             if ( confirmed ) {
-                assert markedForCreation;
                 doCommand( new UpdatePlanObject(
                         getOrganization(),
                         "jobs",
@@ -800,7 +799,11 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                             ? Place.class
                             // supervisor
                             : Actor.class;
-            final List<String> choices = getQueryService().findAllEntityNames( moClass, ModelEntity.Kind.Actual );
+            final List<String> choices = getQueryService().findAllEntityNames(
+                    moClass,
+                    moClass == Role.class
+                            ? ModelEntity.Kind.Type
+                            : ModelEntity.Kind.Actual );
             // text field
             TextField<String> entityField = new AutoCompleteTextField<String>(
                     "entity-field",
