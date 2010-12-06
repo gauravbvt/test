@@ -209,7 +209,7 @@ public class ResourceSpec extends ModelObject implements Specable {
      */
     public String getReportSource() {
         StringBuilder sb = new StringBuilder();
-        boolean showActor = isActor() && !actor.isArchetype();
+        boolean showActor = isActor() && !actor.isArchetype() && !actor.isUnknown();
         if ( isAnyRole() )
             sb.append( showActor ? actor.getName() : "Someone" );
         else {

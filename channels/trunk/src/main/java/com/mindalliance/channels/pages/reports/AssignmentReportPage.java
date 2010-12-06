@@ -98,10 +98,14 @@ public class AssignmentReportPage extends AbstractReportPage {
             new WebMarkupContainer( "no-policies" ).setVisible( getPolicies().isEmpty() ),
 
             new WebMarkupContainer( "sends" ).add(
-                new ListView<String>( "sends.headerStrings" ) {
+                new ListView<QuantifiedSpec>( "sends.headers" ) {
                     @Override
-                    protected void populateItem( ListItem<String> item ) {
-                        item.add( new Label( "header", item.getModelObject() ) );
+                    protected void populateItem( ListItem<QuantifiedSpec> item ) {
+                        item.add(
+                            new Label( "head", item.getModelObject().getHead() ),
+                            new Label( "tail", item.getModelObject().getTail() )
+                                .setRenderBodyOnly( true )
+                            );
                     } },
                 new ListView<FlowTable.Row>( "sends.rows" ) {
                     @Override
@@ -124,10 +128,14 @@ public class AssignmentReportPage extends AbstractReportPage {
 
 
             new WebMarkupContainer( "receives" ).add(
-                new ListView<String>( "receives.headerStrings" ) {
+                new ListView<QuantifiedSpec>( "receives.headers" ) {
                     @Override
-                    protected void populateItem( ListItem<String> item ) {
-                        item.add( new Label( "header", item.getModelObject() ) );
+                    protected void populateItem( ListItem<QuantifiedSpec> item ) {
+                        item.add(
+                            new Label( "head", item.getModelObject().getHead() ),
+                            new Label( "tail", item.getModelObject().getTail() )
+                                .setRenderBodyOnly( true )
+                        );
                     } },
                 new ListView<FlowTable.Row>( "receives.rows" ) {
                     @Override
@@ -307,14 +315,6 @@ public class AssignmentReportPage extends AbstractReportPage {
             return Collections.unmodifiableList( headers );
         }
 
-        public List<String> getHeaderStrings() {
-            List<String> result = new ArrayList<String>( headers.size() );
-            for ( QuantifiedSpec header : headers )
-                result.add( header.toString() );
-
-            return result;
-        }
-
         public List<Row> getRows() {
             List<Row> result = new ArrayList<Row>( rows.size() );
             for ( Row row : rows.values() )
@@ -346,7 +346,8 @@ public class AssignmentReportPage extends AbstractReportPage {
 
                 if ( !all.isEmpty() ) {
                     QuantifiedSpec header = new QuantifiedSpec( all.getCommonSpec( part ),
-                                                                all.size() != 1 && flow.isAll() );
+                                                                all.size() != 1 && flow.isAll(),
+                                                                part.equals( flow.getSource() ) );
 
                     if ( cells.containsKey( header ) )
                         throw new IllegalArgumentException(
@@ -404,21 +405,28 @@ public class AssignmentReportPage extends AbstractReportPage {
     public static class QuantifiedSpec extends ResourceSpec {
 
         private boolean all;
+        private boolean receiving;
 
         public QuantifiedSpec(
-                Actor actor, Role role, Organization organization, Place jurisdiction,
-                boolean all ) {
+                Actor actor, Role role, Organization organization, Place jurisdiction, boolean all,
+                boolean receiving ) {
             super( actor, role, organization, jurisdiction );
             this.all = all;
+            this.receiving = receiving;
         }
 
-        public QuantifiedSpec( Specable specable, boolean all ) {
+        public QuantifiedSpec( Specable specable, boolean all, boolean receiving ) {
             super( specable );
             this.all = all;
+            this.receiving = receiving;
         }
 
         public boolean isAll() {
             return all;
+        }
+
+        public boolean isReceiving() {
+            return receiving;
         }
 
         @Override
@@ -430,6 +438,31 @@ public class AssignmentReportPage extends AbstractReportPage {
         @Override
         public int hashCode() {
             return 31 * super.hashCode() + ( all ? 1 : 0 );
+        }
+
+        public String getHead() {
+            if ( all || !isActor() || getActor().isArchetype() || getActor().isUnknown() )
+                return receiving ? "Any" : "All";
+            else
+                return getActor().getName();
+        }
+
+        public String getTail() {
+            StringBuilder sb = new StringBuilder();
+
+            if ( !isAnyRole() ) {
+                sb.append( getRole().getName() );
+            }
+
+            if ( !isAnyOrganization() ) {
+                sb.append( " at " );
+                sb.append( getOrganization().getName() );
+            }
+            if ( !isAnyJurisdiction() ) {
+                sb.append( " for " );
+                sb.append( getJurisdiction().getName() );
+            }
+            return sb.toString();
         }
 
         @Override
