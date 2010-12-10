@@ -416,9 +416,8 @@ public final class PlanPage extends WebPage implements Updatable {
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
-                // Drop user history on submit
-                getCommander().resetUserHistory( getUser().getUsername(), true );
-                redirectHere();
+                // Do nothing - everything is done via Ajax, even file uploads
+                // System.out.println( "Form submitted" );
             }
         };
         form.setMultiPart( true );

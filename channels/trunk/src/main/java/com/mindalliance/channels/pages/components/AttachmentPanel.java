@@ -15,11 +15,12 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.RadioChoice;
-import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -44,9 +45,9 @@ import java.util.List;
 public class AttachmentPanel extends AbstractCommandablePanel {
 
     /**
-     * Submit link.
+     * Submit button.
      */
-    private SubmitLink submit;
+    private AjaxButton submit;
     /**
      * The name of the attachment.
      */
@@ -92,7 +93,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private Kind kind = Kind.File;
 
     /**
-     *  The input field for the attachment's name.
+     * The input field for the attachment's name.
      */
     private TextField nameField;
 
@@ -154,7 +155,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     }
 
     private void addSubmit() {
-        submit = new SubmitLink( "submit" );
+        submit = new AjaxButton( "submit" ) {
+            protected void onSubmit( AjaxRequestTarget target, Form<?> form ) {
+                update( target, new Change( Change.Type.Unknown ) );
+            }
+        };
         submit.setOutputMarkupId( true );
         submit.setEnabled( false );
         controlsContainer.add( submit );
@@ -198,20 +203,20 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void addNameField() {
         nameField = new TextField<String>(
                 "name",
-                new PropertyModel<String>( this, "name" )        
+                new PropertyModel<String>( this, "name" )
         );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-             @Override
-             protected void onUpdate( AjaxRequestTarget target ) {
-                 /*refresh( target );
-                 update( target, new Change(
-                         Change.Type.Updated,
-                         getAttachee(),
-                         "attachmentTickets"
-                 ) );*/
-             }
-         } );
-         controlsContainer.add( nameField );
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                /*refresh( target );
+               update( target, new Change(
+                       Change.Type.Updated,
+                       getAttachee(),
+                       "attachmentTickets"
+               ) );*/
+            }
+        } );
+        controlsContainer.add( nameField );
     }
 
     private void addUploadField() {
@@ -322,7 +327,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void addKindSelector() {
         RadioChoice<Kind> kindSelector = new RadioChoice<Kind>(
                 "radios",
-                new PropertyModel<Kind>( this, "kind" ),                                  
+                new PropertyModel<Kind>( this, "kind" ),
                 Arrays.asList( Kind.values() ),
                 new IChoiceRenderer<Kind>() {
                     public Object getDisplayValue( Kind object ) {
