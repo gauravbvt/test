@@ -119,7 +119,7 @@ p {
 
 a:focus, 
 a:hover		{ color: #000; }
-a			{ color: #009; text-decoration: underline; }
+a			{ color: #000; text-decoration: none; }
 
 blockquote 	{ margin: 1.5em; color: #666; font-style: italic; }
 strong 		{ font-weight: bold; }
