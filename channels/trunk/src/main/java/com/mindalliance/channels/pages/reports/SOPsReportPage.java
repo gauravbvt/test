@@ -342,10 +342,9 @@ public class SOPsReportPage extends WebPage {
 
                 first = false;
                 ResourceSpec spec = new ResourceSpec(
-                        ( prefix.getActor() == null || !prefix.getActor().isActual() )
-                            && employment.getActor() != null
-                            && !employment.getActor().isArchetype() ?
-                                           employment.getActor() : null,
+                            prefix.getActor() != null && prefix.getActor().isActual()
+                         || employment.getActor() == null || employment.getActor().isArchetype() ?
+                                null : employment.getActor(),
                         prefix.getRole() == null ? employment.getRole() : null,
                         prefix.getOrganization() == null ? employment.getOrganization() : null,
                         prefix.getJurisdiction() == null ? employment.getJurisdiction() : null

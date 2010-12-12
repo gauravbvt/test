@@ -130,7 +130,7 @@ public class TestSegmentPage extends AbstractChannelsTest {
         FormTester ft = tester.newFormTester( "big-form" );
         ft.submit();
 
-        tester.assertRenderedPage( RedirectPage.class );
+        tester.assertRenderedPage( PlanPage.class );
         tester.assertNoErrorMessage();
     }
 
