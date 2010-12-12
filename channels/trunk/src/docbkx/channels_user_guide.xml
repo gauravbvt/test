@@ -22,7 +22,7 @@
       </affiliation>
     </author>
 
-    <pubdate>December 10, 2010</pubdate>
+    <pubdate>December 11, 2010</pubdate>
 
     <abstract>
       <para>This document introduces the key concepts of Information Sharing
@@ -4800,19 +4800,6 @@
 
         <itemizedlist>
           <listitem>
-            <para>Select a Plan as the current Plan</para>
-          </listitem>
-
-          <listitem>
-            <para>Access the Plan's Procedures (from the development
-            version)</para>
-          </listitem>
-
-          <listitem>
-            <para>Access the Plan editor (by clicking on "Modify Plan")</para>
-          </listitem>
-
-          <listitem>
             <para>Create a new Plan by:</para>
 
             <itemizedlist>
@@ -4832,12 +4819,38 @@
           </listitem>
 
           <listitem>
+            <para>Select a Plan as the current Plan</para>
+          </listitem>
+
+          <listitem>
+            <para>Access the Plan's Procedures (from the development
+            version)</para>
+          </listitem>
+
+          <listitem>
+            <para>Access the Plan editor (by clicking on "Modify Plan")</para>
+          </listitem>
+
+          <listitem>
             <para>Put the development version of the current Plan into
             production (by clicking on "Productize Plan")</para>
           </listitem>
 
           <listitem>
             <para>Retire the current Plan</para>
+          </listitem>
+
+          <listitem>
+            <para>Name the client for which the plan is being built</para>
+          </listitem>
+
+          <listitem>
+            <para>Optionally configure plan-specific planner and user support
+            communities</para>
+          </listitem>
+
+          <listitem>
+            <para>Optionally configure a plan-specific survey service</para>
           </listitem>
 
           <listitem>
@@ -4870,6 +4883,18 @@
           <mediaobject>
             <imageobject>
               <imagedata fileref="quick_tour/tour_85.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <screenshot>
+          <info>
+            <title>Administration page (cont.)</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_85a.png"></imagedata>
             </imageobject>
           </mediaobject>
         </screenshot>

@@ -49,19 +49,19 @@
 				</li>
 				<li><a wicket:id="report">Info Sharing Procedures</a></li>
 				<li><a wicket:id="plan">Modify plan</a></li>
-				<li><input type="submit" wicket:id="productize" value="Productize plan"/></li>
-				<li><input type="submit" wicket:id="deletePlan" value="Delete plan"/></li>
+				<li><a wicket:id="productize"> Productize plan</a></li>
+				<li><a wicket:id="deletePlan"> Delete plan </a></li>
             </ul>
             <ul class="toolbar">
                 <li>URI: <span wicket:id="planUri"/></li>
                 <li>Client: <input type="text" wicket:id="planClient"/></li>
             </ul>
-            <h3>Set community support</h3>
+            <h4>Set community support</h4>
             <ul class="toolbar">
                 <li>Planner community: <input type="text" wicket:id="plannerSupportCommunity"/></li>
                 <li>User community: <input type="text" wicket:id="userSupportCommunity"/></li>
             </ul>
-            <h3>Set survey service</h3>
+            <h4>Set survey service</h4>
             <ul class="toolbar">
                 <li>Api key: <input type="text" class="big" wicket:id="surveyApiKey"/></li>
                 <li>User key: <input type="text" class="big" wicket:id="surveyUserKey"/></li>
@@ -119,13 +119,9 @@
 				<input type="submit" value="Submit" class="submit" name="Submit"/>
 			</div>
 			<div class="issues" wicket:id="feedback">(error messages)</div>
-            <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
         </form>
 		</div>
     </div>
-    <!-- Users -->
-
-    <!-- Plans -->
 </div>
 </body>
 </html>

@@ -6,6 +6,7 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.reports.SOPsReportPage;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
@@ -17,7 +18,6 @@ import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -126,38 +126,35 @@ public class AdminPage extends WebPage {
             }
         };
 
+        ConfirmedAjaxFallbackLink productizeLink = new ConfirmedAjaxFallbackLink(
+                "productize",
+                "Productize the current version?" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                planManager.productize( getPlan() );
+            }
+
+
+        };
+        ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
+                "deletePlan",
+                "Delete the selected plan?" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                planManager.delete( getPlan() );
+            }
+        };
+        deleteLink.setEnabled( definitionManager.getSize() > 1 );
+
         add(
                 new Label( "loggedUser", user.getUsername() ),
                 form.add(
 
                         new FeedbackPanel( "feedback" ),
 
-                        new Button( "productize" ) {
-                            @Override
-                            protected String getOnClickScript() {
-                                return "if ( !confirm('Are you sure?') ) return false; ";
-                            }
+                        productizeLink,
 
-                            @Override
-                            public void onSubmit() {
-                                super.onSubmit();
-                                planManager.productize( getPlan() );
-                            }
-                        },
-
-                        new Button( "deletePlan" ) {
-                            @Override
-                            protected String getOnClickScript() {
-                                return "if ( !confirm('Are you sure?') ) return false; ";
-                            }
-
-                            @Override
-                            public void onSubmit() {
-                                super.onSubmit();
-                                planManager.delete( getPlan() );
-                            }
-                        }
-                                .setEnabled( definitionManager.getSize() > 1 ),
+                        deleteLink,
 
                         new Label( "planUri", getPlan().getUri() ),
                         new TextField<String>( "planClient",
@@ -303,16 +300,16 @@ public class AdminPage extends WebPage {
 
 
     public String getSurveyDefaultEmailAddress() {
-         String s = getPlan().getSurveyDefaultEmailAddress();
-         return s.isEmpty() ? surveyService.getDefaultEmailAddress() : s;
-     }
+        String s = getPlan().getSurveyDefaultEmailAddress();
+        return s.isEmpty() ? surveyService.getDefaultEmailAddress() : s;
+    }
 
-     public void setSurveyDefaultEmailAddress( String val ) {
-         String defaultVal = surveyService.getDefaultEmailAddress();
-         if ( val != null && !val.isEmpty() && !defaultVal.equals( val ) ) {
-             getPlan().setSurveyDefaultEmailAddress( val );
-         }
-     }
+    public void setSurveyDefaultEmailAddress( String val ) {
+        String defaultVal = surveyService.getDefaultEmailAddress();
+        if ( val != null && !val.isEmpty() && !defaultVal.equals( val ) ) {
+            getPlan().setSurveyDefaultEmailAddress( val );
+        }
+    }
 
     private void submit() {
         for ( User u : toDelete ) {
@@ -335,7 +332,7 @@ public class AdminPage extends WebPage {
         }
 
         planManager.revalidateProducers( getPlan() );
-
+        planManager.save( getPlan() );
         try {
             userService.save();
         } catch ( IOException e ) {

@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.list.ListView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -174,7 +175,10 @@ public class AssignmentReportPage extends AbstractReportPage {
                         .add( newCssClass( goal.getLevel().getName().toLowerCase() ) );
                 }
             },
-            new WebMarkupContainer( "no-gain" ).setVisible( getGains().isEmpty() )
+            new WebMarkupContainer( "no-gain" ).setVisible( getGains().isEmpty() ),
+
+            new Label("year", "" + Calendar.getInstance().get(Calendar.YEAR) ),
+            new Label("client", getService().getPlan().getClient() )
 
         );
     }

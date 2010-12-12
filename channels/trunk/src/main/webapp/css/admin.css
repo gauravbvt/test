@@ -241,7 +241,7 @@ div.submit input.submit:hover {
 	padding:2px 3px;
 }
 
-h3 {
+h3,h4 {
     color: #333333;
     float: left;
     padding: 12px 0 0 2px;
