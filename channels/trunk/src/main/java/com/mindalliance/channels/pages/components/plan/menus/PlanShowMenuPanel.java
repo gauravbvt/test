@@ -190,7 +190,7 @@ public class PlanShowMenuPanel extends MenuPanel {
 
         if ( User.current().isAdmin() ) {
             BookmarkablePageLink adminLink = new BookmarkablePageLink( "link", AdminPage.class );
-            adminLink.add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) );
+            // adminLink.add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) );
             menuItems.add( new LinkMenuItem(
                     "menuItem",
                     new Model<String>( "Admin page" ),
