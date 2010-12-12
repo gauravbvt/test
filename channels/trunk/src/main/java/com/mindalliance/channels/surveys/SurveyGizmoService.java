@@ -55,25 +55,40 @@ public class SurveyGizmoService extends AbstractSurveyService {
         xpath = XPathFactory.newInstance().newXPath();
     }
 
-    public void setApiKey( String apiKey ) {
-        this.apiKey = apiKey;
+    public void setApiKey( String val ) {
+        this.apiKey = val == null ? "" : val;
     }
 
-    public void setUserKey( String userKey ) {
-        this.userKey = userKey;
+    public void setUserKey( String val ) {
+        this.userKey = val == null ? "" : val;
     }
 
-    public void setTemplate( String template ) {
-        this.template = template;
+    public void setTemplate( String val ) {
+        this.template = val == null ? "" : val;
+    }
+
+    public String getApiKey() {
+        String planValue = getPlan().getSurveyApiKey();
+        return planValue.isEmpty() ? apiKey : planValue;
+    }
+
+    public String getUserKey() {
+        String planValue = getPlan().getSurveyUserKey();
+        return planValue.isEmpty() ? userKey : planValue;
+    }
+
+    public String getTemplate() {
+        String planValue = getPlan().getSurveyTemplate();
+        return planValue.isEmpty() ? template : planValue;
     }
 
     private String getBaseUrl( String command, Map<String, String> query ) {
         StringBuilder sb = new StringBuilder();
         sb.append( SCHEME_DOMAIN );
         sb.append( "?dk=" );
-        sb.append( apiKey );
+        sb.append( getApiKey() );
         sb.append( "&uk=" );
-        sb.append( userKey );
+        sb.append( getUserKey() );
         sb.append( "&cmd=" );
         sb.append( command );
         if ( query != null ) {
@@ -98,7 +113,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
         String xml = getSurveyXml( survey, findIssue( survey ) );
         Map<String, String> get = new HashMap<String, String>();
         Map<String, String> post = new HashMap<String, String>();
-        get.put( "template", template );
+        get.put( "template", getTemplate() );
         post.put( "title", survey.getTitle() );
         post.put( "surveyxml", xml );
         String response = sendRequest( getBaseUrl( "sgCreateSurvey", get ), post );
@@ -295,6 +310,4 @@ public class SurveyGizmoService extends AbstractSurveyService {
     public String getName() {
         return "SurveyGizmo";
     }
-
-
 }

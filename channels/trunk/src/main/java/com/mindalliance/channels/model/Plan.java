@@ -105,6 +105,15 @@ public class Plan extends ModelObject {
 
     private String userSupportCommunity = "";
 
+    private String surveyApiKey = "";
+
+    private String surveyUserKey = "";
+
+    private String surveyTemplate = "";
+
+    private String surveyDefaultEmailAddress = "";
+
+
     //-----------------------------
     public Plan() {
         whenVersioned = new Date();
@@ -188,6 +197,39 @@ public class Plan extends ModelObject {
                 ? defaultName
                 : name;
     }
+
+    public String getSurveyApiKey() {
+        return surveyApiKey == null ? "" : surveyApiKey;
+    }
+
+    public void setSurveyApiKey( String surveyApiKey ) {
+        this.surveyApiKey = surveyApiKey;
+    }
+
+    public String getSurveyUserKey() {
+        return surveyUserKey == null ? "" : surveyUserKey;
+    }
+
+    public void setSurveyUserKey( String surveyUserKey ) {
+        this.surveyUserKey = surveyUserKey;
+    }
+
+    public String getSurveyTemplate() {
+        return surveyTemplate == null ? "" : surveyTemplate;
+    }
+
+    public void setSurveyTemplate( String surveyTemplate ) {
+        this.surveyTemplate = surveyTemplate;
+    }
+
+    public String getSurveyDefaultEmailAddress() {
+        return surveyDefaultEmailAddress == null ? "" : surveyDefaultEmailAddress;
+    }
+
+    public void setSurveyDefaultEmailAddress( String surveyDefaultEmailAddress ) {
+        this.surveyDefaultEmailAddress = surveyDefaultEmailAddress;
+    }
+
     /**
      * Name with version.
      *

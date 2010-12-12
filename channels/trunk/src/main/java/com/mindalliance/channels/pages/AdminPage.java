@@ -7,6 +7,7 @@ import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.reports.SOPsReportPage;
+import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -67,15 +68,24 @@ public class AdminPage extends WebPage {
     @SpringBean
     private User user;
 
-    /** The plan manager. */
+    /**
+     * The plan manager.
+     */
     @SpringBean
     private PlanManager planManager;
 
-    /** The plan definition manager. */
+    @SpringBean
+    private SurveyService surveyService;
+
+    /**
+     * The plan definition manager.
+     */
     @SpringBean
     private DefinitionManager definitionManager;
 
-    /** The user service. */
+    /**
+     * The user service.
+     */
     @SpringBean
     private UserService userService;
 
@@ -102,7 +112,7 @@ public class AdminPage extends WebPage {
             protected void populateItem( ListItem<User> item ) {
                 item.add(
                         createUserRow(
-                            new PropertyModel<String>( AdminPage.this, "plan.uri" ), item ) );
+                                new PropertyModel<String>( AdminPage.this, "plan.uri" ), item ) );
             }
         };
 
@@ -120,102 +130,189 @@ public class AdminPage extends WebPage {
                 new Label( "loggedUser", user.getUsername() ),
                 form.add(
 
-                    new FeedbackPanel( "feedback" ),
+                        new FeedbackPanel( "feedback" ),
 
-                    new Button( "productize" ) {
-                        @Override
-                        protected String getOnClickScript() {
-                            return "if ( !confirm('Are you sure?') ) return false; ";
-                        }
-
-                        @Override
-                        public void onSubmit() {
-                            super.onSubmit();
-                            planManager.productize( getPlan() );
-                        }
-                    },
-
-                    new Button( "deletePlan" ) {
-                        @Override
-                        protected String getOnClickScript() {
-                            return "if ( !confirm('Are you sure?') ) return false; ";
-                        }
-
-                        @Override
-                        public void onSubmit() {
-                            super.onSubmit();
-                            planManager.delete( getPlan() );
-                        }
-                    }
-                        .setEnabled( definitionManager.getSize() > 1 ),
-
-                    new TextField<String>( "plannerSupportCommunity",
-                                      new PropertyModel<String>( this, "plan.plannerSupportCommunity" ) ),
-                        new TextField<String>( "userSupportCommunity",
-                                          new PropertyModel<String>( this, "plan.userSupportCommunity" ) ),
-
-                    new TextField<String>( "newPlanUri",
-                                           new PropertyModel<String>( this, "newPlanUri" ) )
-                        .add( new AbstractValidator<String>() {
-                                @Override
-                                protected void onValidate( IValidatable<String> validatable ) {
-                                    if ( definitionManager.get( validatable.getValue() ) != null )
-                                        error( validatable, "NonUniqueUri" );
-                                }
-                            } )
-                        .add( new ValidationStyler() ),
-
-                    new TextField<String>( "newPlanClient",
-                                           new PropertyModel<String>( this, "newPlanClient" ) ),
-
-                    new DropDownChoice<Plan>( "plan-sel",
-                            new PropertyModel<Plan>( this, "plan" ),
-                            new PropertyModel<List<? extends Plan>>( this, "developmentPlans" ) )
-                        .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                                private static final long serialVersionUID = -5466916152047216396L;
-
-                                @Override
-                                protected void onUpdate( AjaxRequestTarget target ) {
-                                    target.addComponent( get( "users" ) );
-                                }
-                            } ),
-
-                    new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ),
-
-                    userList.setReuseItems( true ),
-
-                    new TextField<String>( "new", new Model<String>( null ) ) {
-                        private static final long serialVersionUID = -4399667115289497468L;
-
-                        @Override
-                        protected void onModelChanged() {
-                            super.onModelChanged();
-                            String object = getModelObject();
-                            if ( object != null ) {
-                                userService.createUser( object );
-                                setModelObject( null );
-                            }
-                            userList.removeAll();
-                        }
-                    }
-                        .add( new AbstractValidator<String>() {
+                        new Button( "productize" ) {
                             @Override
-                            protected void onValidate( IValidatable<String> validatable ) {
-                                String name = validatable.getValue();
-                                if ( userService.getUserNamed( name ) != null ) {
-                                    Map<String, Object> map = new HashMap<String, Object>();
-                                    map.put( "name", name );
-                                    error( validatable, "Duplicate", map );
-                                }
+                            protected String getOnClickScript() {
+                                return "if ( !confirm('Are you sure?') ) return false; ";
                             }
-                        } )
-                        .add( new ValidationStyler() ),
 
-                    new BookmarkablePageLink<SOPsReportPage>( "report", SOPsReportPage.class )
-                        .add( new AttributeModifier( "target",
-                                                     true, new Model<String>( "_blank" ) ) )
-            ) );
+                            @Override
+                            public void onSubmit() {
+                                super.onSubmit();
+                                planManager.productize( getPlan() );
+                            }
+                        },
+
+                        new Button( "deletePlan" ) {
+                            @Override
+                            protected String getOnClickScript() {
+                                return "if ( !confirm('Are you sure?') ) return false; ";
+                            }
+
+                            @Override
+                            public void onSubmit() {
+                                super.onSubmit();
+                                planManager.delete( getPlan() );
+                            }
+                        }
+                                .setEnabled( definitionManager.getSize() > 1 ),
+
+                        new Label( "planUri", getPlan().getUri() ),
+                        new TextField<String>( "planClient",
+                                new PropertyModel<String>( this, "planClient" ) ),
+
+                        new TextField<String>( "plannerSupportCommunity",
+                                new PropertyModel<String>( this, "plannerSupportCommunity" ) ),
+                        new TextField<String>( "userSupportCommunity",
+                                new PropertyModel<String>( this, "userSupportCommunity" ) ),
+
+                        new TextField<String>( "newPlanUri",
+                                new PropertyModel<String>( this, "newPlanUri" ) )
+                                .add( new AbstractValidator<String>() {
+                                    @Override
+                                    protected void onValidate( IValidatable<String> validatable ) {
+                                        if ( definitionManager.get( validatable.getValue() ) != null )
+                                            error( validatable, "NonUniqueUri" );
+                                    }
+                                } )
+                                .add( new ValidationStyler() ),
+
+                        new TextField<String>( "newPlanClient",
+                                new PropertyModel<String>( this, "newPlanClient" ) ),
+
+                        new TextField<String>( "surveyApiKey",
+                                new PropertyModel<String>( this, "surveyApiKey" ) ),
+                        new TextField<String>( "surveyUserKey",
+                                new PropertyModel<String>( this, "surveyUserKey" ) ),
+                        new TextField<String>( "surveyTemplate",
+                                new PropertyModel<String>( this, "surveyTemplate" ) ),
+                        new TextField<String>( "surveyDefaultEmailAddress",
+                                new PropertyModel<String>( this, "surveyDefaultEmailAddress" ) ),
+
+                        new DropDownChoice<Plan>( "plan-sel",
+                                new PropertyModel<Plan>( this, "plan" ),
+                                new PropertyModel<List<? extends Plan>>( this, "developmentPlans" ) )
+                                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                            private static final long serialVersionUID = -5466916152047216396L;
+
+                            @Override
+                            protected void onUpdate( AjaxRequestTarget target ) {
+                                target.addComponent( get( "users" ) );
+                            }
+                        } ),
+
+                        new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ),
+
+                        userList.setReuseItems( true ),
+
+                        new TextField<String>( "new", new Model<String>( null ) ) {
+                            private static final long serialVersionUID = -4399667115289497468L;
+
+                            @Override
+                            protected void onModelChanged() {
+                                super.onModelChanged();
+                                String object = getModelObject();
+                                if ( object != null ) {
+                                    userService.createUser( object );
+                                    setModelObject( null );
+                                }
+                                userList.removeAll();
+                            }
+                        }
+                                .add( new AbstractValidator<String>() {
+                                    @Override
+                                    protected void onValidate( IValidatable<String> validatable ) {
+                                        String name = validatable.getValue();
+                                        if ( userService.getUserNamed( name ) != null ) {
+                                            Map<String, Object> map = new HashMap<String, Object>();
+                                            map.put( "name", name );
+                                            error( validatable, "Duplicate", map );
+                                        }
+                                    }
+                                } )
+                                .add( new ValidationStyler() ),
+
+                        new BookmarkablePageLink<SOPsReportPage>( "report", SOPsReportPage.class )
+                                .add( new AttributeModifier( "target",
+                                true, new Model<String>( "_blank" ) ) )
+                ) );
     }
+
+    public String getPlannerSupportCommunity() {
+        String s = getPlan().getPlannerSupportCommunity();
+        return s.isEmpty() ? planManager.getDefaultSupportCommunity() : s;
+    }
+
+    public void setPlannerSupportCommunity( String val ) {
+        String defaultCommunity = planManager.getDefaultSupportCommunity();
+        if ( val != null && !val.isEmpty() && !defaultCommunity.equals( val ) ) {
+            getPlan().setPlannerSupportCommunity( val );
+        }
+    }
+
+    public String getUserSupportCommunity() {
+        String s = getPlan().getUserSupportCommunity();
+        return s.isEmpty() ? planManager.getDefaultSupportCommunity() : s;
+    }
+
+    public void setUserSupportCommunity( String val ) {
+        String defaultCommunity = planManager.getDefaultSupportCommunity();
+        if ( val != null && !val.isEmpty() && !defaultCommunity.equals( val ) ) {
+            getPlan().setUserSupportCommunity( val );
+        }
+    }
+
+    public String getSurveyApiKey() {
+        String s = getPlan().getSurveyApiKey();
+        return s.isEmpty() ? surveyService.getApiKey() : s;
+    }
+
+    public void setSurveyApiKey( String val ) {
+        String defaultVal = surveyService.getApiKey();
+        if ( val != null && !val.isEmpty() && !defaultVal.equals( val ) ) {
+            getPlan().setSurveyApiKey( val );
+        }
+    }
+
+    public String getSurveyUserKey() {
+        String s = getPlan().getSurveyUserKey();
+        return s.isEmpty() ? surveyService.getUserKey() : s;
+    }
+
+    public void setSurveyUserKey( String val ) {
+        String defaultVal = surveyService.getUserKey();
+        if ( val != null && !val.isEmpty() && !defaultVal.equals( val ) ) {
+            getPlan().setSurveyUserKey( val );
+        }
+    }
+
+
+    public String getSurveyTemplate() {
+        String s = getPlan().getSurveyTemplate();
+        return s.isEmpty() ? surveyService.getTemplate() : s;
+    }
+
+    public void setSurveyTemplate( String val ) {
+        String defaultVal = surveyService.getTemplate();
+        if ( val != null && !val.isEmpty() && !defaultVal.equals( val ) ) {
+            getPlan().setSurveyTemplate( val );
+        }
+    }
+
+
+    public String getSurveyDefaultEmailAddress() {
+         String s = getPlan().getSurveyDefaultEmailAddress();
+         return s.isEmpty() ? surveyService.getDefaultEmailAddress() : s;
+     }
+
+     public void setSurveyDefaultEmailAddress( String val ) {
+         String defaultVal = surveyService.getDefaultEmailAddress();
+         if ( val != null && !val.isEmpty() && !defaultVal.equals( val ) ) {
+             getPlan().setSurveyDefaultEmailAddress( val );
+         }
+     }
 
     private void submit() {
         for ( User u : toDelete ) {
@@ -260,7 +357,7 @@ public class AdminPage extends WebPage {
         List<Plan> answer = new ArrayList<Plan>();
         for ( Plan plan : planManager.getPlans() )
             if ( plan.isDevelopment() )
-                    answer.add( plan );
+                answer.add( plan );
 
         return answer;
     }
@@ -272,6 +369,14 @@ public class AdminPage extends WebPage {
      */
     public void setPlan( Plan plan ) {
         user.setPlan( plan );
+    }
+
+    public String getPlanClient() {
+        return getPlan().getClient();
+    }
+
+    public void setPlanClient( String val ) {
+        getPlan().setClient( val );
     }
 
     public String getNewPlanClient() {
@@ -307,8 +412,8 @@ public class AdminPage extends WebPage {
                         new PropertyModel<String>( userModel, "userInfo.fullName" ) ),
                 new TextField<String>( "email",
                         new PropertyModel<String>( userModel, "userInfo.email" ) )
-                    .add( EmailAddressValidator.getInstance() )
-                    .add( new ValidationStyler() ),
+                        .add( EmailAddressValidator.getInstance() )
+                        .add( new ValidationStyler() ),
 
                 new PasswordTextField( "password", new Model<String>( null ) ) {
                     private static final long serialVersionUID = 2037327143613490877L;
@@ -400,28 +505,28 @@ public class AdminPage extends WebPage {
         public void setObject( Access object ) {
             User rowUser = userModel.getObject();
             switch ( object ) {
-            case Admin:
-                planManager.setAuthorities( rowUser, UserInfo.ROLE_ADMIN, null );
-                break;
-            case Planner:
-                planManager.setAuthorities( rowUser, UserInfo.ROLE_PLANNER, null );
-                break;
-            case User:
-                planManager.setAuthorities( rowUser, UserInfo.ROLE_USER, null );
-                break;
-            case LPlanner:
-                planManager.setAuthorities( rowUser, UserInfo.ROLE_PLANNER, getUri() );
-                break;
-            case LUser:
-                planManager.setAuthorities( rowUser, UserInfo.ROLE_USER, getUri() );
-                break;
-            case LDisabled:
-                planManager.setAuthorities( rowUser, null, getUri() );
-                break;
-            case Disabled:
-            default:
-                planManager.setAuthorities( rowUser, null, null );
-                break;
+                case Admin:
+                    planManager.setAuthorities( rowUser, UserInfo.ROLE_ADMIN, null );
+                    break;
+                case Planner:
+                    planManager.setAuthorities( rowUser, UserInfo.ROLE_PLANNER, null );
+                    break;
+                case User:
+                    planManager.setAuthorities( rowUser, UserInfo.ROLE_USER, null );
+                    break;
+                case LPlanner:
+                    planManager.setAuthorities( rowUser, UserInfo.ROLE_PLANNER, getUri() );
+                    break;
+                case LUser:
+                    planManager.setAuthorities( rowUser, UserInfo.ROLE_USER, getUri() );
+                    break;
+                case LDisabled:
+                    planManager.setAuthorities( rowUser, null, getUri() );
+                    break;
+                case Disabled:
+                default:
+                    planManager.setAuthorities( rowUser, null, null );
+                    break;
             }
         }
     }

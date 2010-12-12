@@ -100,4 +100,28 @@ public interface SurveyService {
      * @return a list of surveys
      */
     List<Survey> getSurveys();
+
+    /**
+     * Get service API key.
+     * @return a string
+     */
+    String getApiKey();
+
+    /**
+     * Get service user key.
+     * @return a string
+     */
+    String getUserKey();
+
+    /**
+     * Get service template key.
+     * @return a string
+     */
+    String getTemplate();
+
+    /**
+     * Get service email address.
+     * @return a string
+     */
+    String getDefaultEmailAddress();
 }

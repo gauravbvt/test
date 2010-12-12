@@ -27,8 +27,7 @@
     <abstract>
       <para>This document introduces the key concepts of Information Sharing
       Planning, gives a tour of the Channels ISP web application, defines the
-      ISP Method, and briefly compares Information Sharing Planning with
-      Business Process Management.</para>
+      ISP Method, and answers FAQs.</para>
     </abstract>
   </info>
 
@@ -2043,8 +2042,7 @@
   </chapter>
 
   <chapter>
-    <title>Building and delivering Information Sharing Plans with
-    Channels</title>
+    <title>Using Channels</title>
 
     <para>Channels is a collaborative Web application for building, analyzing
     and deploying Information Sharing Plans.</para>
@@ -4069,9 +4067,18 @@
 
       <para>Connecting a capability with a need is done by selecting a task
       with a matching need from the “From” drop-down menu in the flow form
-      (and vice-versa). Connecting a need with a capability creates a new
-      information flow but does not remove the connected task' information
-      need.</para>
+      (and vice-versa). When a capability is to be connected to a need, the
+      drop-down menu lists all likely candidate tasks. The list of candidates
+      consists of all tasks in <emphasis>any</emphasis> segments with matching
+      information needs and all tasks in the <emphasis>current</emphasis>
+      segment with matching sharing flows. To select an unlisted task within
+      the same segment, planners can choose "Other..." and enter the name of
+      the task to connect to. When a need is to be connected to a capability,
+      the same process is used but, this time, the drop-down list is populated
+      with candidate capabilities.</para>
+
+      <para>Connecting a need with a capability creates a new information flow
+      but does not remove the connected task' information need.</para>
 
       <screenshot>
         <info>
@@ -4281,9 +4288,9 @@
       </screenshot>
 
       <para>In the<emphasis>All segments view</emphasis>, planners can look at
-      a map of all segments in the Plan. The segments can be grouped by phase
-      or by event. Planners can browse all cross-segment sharing flows as well
-      as all tasks in one segment that start or terminate another
+      a diagram of all segments in the Plan. The segments can be grouped by
+      phase or by event. Planners can browse all cross-segment sharing flows
+      as well as all tasks in one segment that start or terminate another
       segment.</para>
 
       <screenshot>
@@ -4594,7 +4601,7 @@
       in a single HTML document suitable for browsing and printing.</para>
 
       <para>Agent assignments are organized in terms of what triggers them,
-      either the phase of an event or information received. </para>
+      either the phase of an event or information received.</para>
 
       <screenshot>
         <info>
@@ -5063,8 +5070,7 @@
     <title>FAQs</title>
 
     <section>
-      <title>Information Sharing Planning and Business Process
-      Management</title>
+      <title>How is ISP different from BPM?</title>
 
       <para>The most frequently asked question about Information Sharing
       Planning is How does it differ from Business Process Management?</para>

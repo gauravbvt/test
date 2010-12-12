@@ -120,7 +120,7 @@ div#contents td input {
 
 div#contents td input[type=text],
 div#contents td input[type=password] {
-	font-size:11px;
+	font-size:9px;
 	color:#000;
 	width:100px;
 }
@@ -199,19 +199,22 @@ ul.toolbar li input[type=text] {
 }
 
 
-/* ----- Toolbar - New ----- */
+/* ----- Toolbar----- */
 
-ul.toolbar.new {
+ul.toolbar {
 	float:left;
 	margin:12px 0 0 2px;
 }
 
-ul.toolbar.new li {
+ul.toolbar li {
 	padding:0 10px;
 }
 
 ul.toolbar.new li input { width:110px; }
 
+ul.toolbar li input { width:200px; }
+
+ul.toolbar li input.big { width:300px; }
 
 /* ----- Submit ----- */
 
@@ -236,6 +239,12 @@ div.submit input.submit:hover {
 	color:#000000;
 	font-size:14px;
 	padding:2px 3px;
+}
+
+h3 {
+    color: #333333;
+    float: left;
+    padding: 12px 0 0 2px;
 }
 
 
