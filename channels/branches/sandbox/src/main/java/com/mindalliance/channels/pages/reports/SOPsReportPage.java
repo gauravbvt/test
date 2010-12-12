@@ -36,6 +36,7 @@ import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -111,7 +112,9 @@ public class SOPsReportPage extends WebPage {
                         newPhaseList( selector.getAssignments().with( item.getModelObject() ) )
                     );
                 }
-            }
+            },
+            new Label("year", "" + Calendar.getInstance().get(Calendar.YEAR) ),
+            new Label("client", selector.getPlan().getClient() )
         );
     }
 

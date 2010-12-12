@@ -34,7 +34,12 @@
     <div id="contents">
         <div id="plan">
         <form action="" wicket:id="users">
-			<ul class="toolbar">
+            <h3>Create new plan</h3>
+             <ul class="toolbar new">
+                 <li>New Plan URI: <input type="text" class="big" wicket:id="newPlanUri" value=""/> owned by: <input type="text" class="big" wicket:id="newPlanClient"/></li>
+             </ul>
+            <h3>Manage plan</h3>
+             <ul class="toolbar new">
 	            <li>
 					<label class="planselect">Plan:
 	                	<select wicket:id="plan-sel" name="plan">
@@ -44,15 +49,32 @@
 				</li>
 				<li><a wicket:id="report">Info Sharing Procedures</a></li>
 				<li><a wicket:id="plan">Modify plan</a></li>
-				<li><input type="submit" wicket:id="productize" value="Productize plan"/></li>
-				<li><input type="submit" wicket:id="deletePlan" value="Delete plan"/></li>
+				<li><a wicket:id="productize"> Productize plan</a></li>
+				<li><a wicket:id="deletePlan"> Delete plan </a></li>
             </ul>
-			<ul class="toolbar new">
-				<li>Planner support community: <input type="text" class="supportcommunity" wicket:id="plannerSupportCommunity"/></li>
-                <li>User support community: <input type="text" class="supportcommunity" wicket:id="userSupportCommunity"/></li>
-				<li>New Plan URI: <input type="text" class="newplanuri" wicket:id="newPlanUri" value=""/> for client: <input type="text" class="newplanclient" wicket:id="newPlanClient"/></li>
-				<li>New User: <input type="text" class="newuser" wicket:id="new"></li>
-			</ul>
+            <ul class="toolbar">
+                <li>URI: <span wicket:id="planUri"/></li>
+                <li>Owner: <input type="text" wicket:id="planClient"/></li>
+            </ul>
+            <h4>Set community support</h4>
+            <ul class="toolbar">
+                <li>Planner community: <input type="text" wicket:id="plannerSupportCommunity"/></li>
+                <li>User community: <input type="text" wicket:id="userSupportCommunity"/></li>
+            </ul>
+            <h4>Set survey service</h4>
+            <ul class="toolbar">
+                <li>Api key: <input type="text" class="big" wicket:id="surveyApiKey"/></li>
+                <li>User key: <input type="text" class="big" wicket:id="surveyUserKey"/></li>
+            </ul>
+            <ul class="toolbar">
+                <li>Template id: <input type="text" wicket:id="surveyTemplate"/></li>
+                <li>Default email: <input type="text" class="big" wicket:id="surveyDefaultEmailAddress"/></li>
+            </ul>
+            <h3>Add user</h3>
+            <ul class="toolbar">
+                <li>New user id: <input type="text" wicket:id="new"></li>
+            </ul>
+            <h3>Manage users</h3>
             <table>
                 <thead>
                     <tr>
@@ -97,13 +119,9 @@
 				<input type="submit" value="Submit" class="submit" name="Submit"/>
 			</div>
 			<div class="issues" wicket:id="feedback">(error messages)</div>
-            <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
         </form>
 		</div>
     </div>
-    <!-- Users -->
-
-    <!-- Plans -->
 </div>
 </body>
 </html>

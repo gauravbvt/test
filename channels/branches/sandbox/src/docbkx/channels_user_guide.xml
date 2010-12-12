@@ -22,13 +22,12 @@
       </affiliation>
     </author>
 
-    <pubdate>September 16, 2010</pubdate>
+    <pubdate>December 11, 2010</pubdate>
 
     <abstract>
       <para>This document introduces the key concepts of Information Sharing
       Planning, gives a tour of the Channels ISP web application, defines the
-      ISP Method, and briefly compares Information Sharing Planning with
-      Business Process Management.</para>
+      ISP Method, and answers FAQs.</para>
     </abstract>
   </info>
 
@@ -42,12 +41,13 @@
       inter-dependent world. Systemic risks are growing. Organizations must
       network to compete in a global marketplace. They can no longer respond
       to major crisis nor can they seize global business opportunities on
-      their own. Success now largely depends on the timely and targeted
-      sharing of information within and between organizations.</para>
+      their own.</para>
 
-      <para>During a crisis, information will not spontaneously flow as
-      needed. Maintaining contact lists is not enough; organizations must plan
-      ahead and create actionable information sharing procedures.</para>
+      <para>Success now largely depends on the timely and targeted sharing of
+      information within and between organizations. During a crisis,
+      information will not spontaneously flow as needed. Maintaining contact
+      lists is not enough; organizations must plan ahead and create actionable
+      information sharing procedures.</para>
 
       <para>Information Sharing Planning provides a framework and method for
       designing and improving the information sharing procedures required to
@@ -84,7 +84,12 @@
         </listitem>
 
         <listitem>
-          <para>the consequences of not sharing according to Plan.</para>
+          <para>the consequences of not sharing according to Plan,</para>
+        </listitem>
+
+        <listitem>
+          <para>where shared information originally comes from and ultimately
+          ends up.</para>
         </listitem>
       </itemizedlist>
 
@@ -105,22 +110,22 @@
         </listitem>
       </itemizedlist>
 
-      <para>It is important understand that an Information Sharing Plan is not
-      an action plan. Its objective is not to dictate a sequence of
-      actions.<footnote>
-          <para>However, task sequencing is not entirely absent from ISP. A
-          task may require information produced by another task that would
-          then necessarily precede it. These sequencing constraints do not
+      <para>It is important understand that an Information Sharing Plan is
+      <emphasis>not</emphasis> an action plan; it's objective is not to
+      dictate a sequence of actions nor is it to optimize processes.<footnote>
+          <para>However, task sequencing is not entirely absent from ISP. The
+          execution of a task may require information produced by the prior
+          execution of another task. These sequencing constraints do not
           typically apply to all tasks and they certainly do not dictate a
-          unique ordering for all tasks. In any case, attempting to define an
-          action plan for organizations that don't have a central authority is
-          more often than not an exercise in futility. What really matters
-          here is capturing what needs to be done, what information is
-          required and produced, and how and when it should or should not be
-          shared.</para>
+          unique ordering for all tasks. The fact that an IS Plan does not
+          dictate a strict sequence of tasks is a good thing. Attempting to
+          define an action plan for organizations that don't have a central
+          authority can be an exercise in futility. What really matters here
+          is capturing what needs to be done and then how information must
+          flow to make it possible.</para>
         </footnote>Information sharing planning concerns itself exclusively
-      with capturing information sharing requirements for necessary tasks to
-      be carried out successfully.</para>
+      with capturing the information sharing requirements of tasks that must
+      be executed to manage disruptive events.</para>
     </section>
 
     <section>
@@ -238,7 +243,11 @@
           </listitem>
 
           <listitem>
-            <para>requests for information they receive.</para>
+            <para>requests for information they receive,</para>
+          </listitem>
+
+          <listitem>
+            <para>the failure of a task.</para>
           </listitem>
         </itemizedlist>
 
@@ -256,6 +265,10 @@
           <listitem>
             <para>the intent of the flow (alarm, announcement, command,
             feedback or report)</para>
+          </listitem>
+
+          <listitem>
+            <para>whether it is executed only on task failure</para>
           </listitem>
 
           <listitem>
@@ -297,7 +310,8 @@
         organizations, events, transmission media and phases of events. These
         are called entities. An ISP entity can be unambiguously referenced by
         name in the specifications of tasks and flows, and in the profiles of
-        other entities.</para>
+        other entities. An entity in ISP is anything that can be named while
+        not something an agent does.</para>
 
         <para>There are actual entities and types of entities. Actual entities
         (“Jane Smith”, “ACME Inc.”, “Morristown, Morris County, NJ, USA” etc.)
@@ -306,19 +320,21 @@
         types (a “Senior executive” is an “Executive”).</para>
 
         <para>An <glossterm>agent</glossterm> is either a person or an
-        information processing system (system for short). A system is capable
-        of sending notifications, answering queries, receiving notifications
-        or sending queries. An agent has contact information. An agent's
-        clearance is a list of secrecy classifications. A secrecy
-        classification has a name (“NATO”) and an ordered list of secrecy
-        levels (“Restricted”, “Confidential”, “Secret”, “Focal Top Secret”,
-        “Cosmic Top Secret”). An agent type can be thought of as a
+        information system (system for short). A system is capable of sending
+        notifications, answering queries, receiving notifications or sending
+        queries. An agent has contact information and availability (24/7 by
+        default). An agent's clearance is a list of secrecy classifications. A
+        secrecy classification has a name (“NATO”) and an ordered list of
+        secrecy levels (“Restricted”, “Confidential”, “Secret”, “Focal Top
+        Secret”, “Cosmic Top Secret”). An agent type can be thought of as a
         qualification that can be shared by different agents (e.g. "adult" or
         "registered driver"). An agent type is not to be confused with a role.
-        An agent can be flagged as a system (non-human). When a group of
-        agents are indistinguisable from a planning perspective (for example,
-        call center operators), they can be profiled as a single
-        <glossterm>archetype</glossterm> agent.</para>
+        A role implies responsibilities whereas an agent type denotes
+        qualifications or status. An agent can be flagged as a system
+        (non-human). When a group of agents are indistinguisable from a
+        planning perspective (for example, call center operators), they can be
+        profiled as a single <glossterm>archetype</glossterm> agent (for
+        example, "a call center operator").</para>
 
         <para>An <glossterm>organization</glossterm> is a group of agents
         organized to accomplish a mission. An organization assigns roles of
@@ -362,7 +378,7 @@
         <title>Issues</title>
 
         <para>ISP identifies many different kinds of
-        <glossterm>issues</glossterm> (70 and counting) about tasks,
+        <glossterm>issues</glossterm> (80 and counting) about tasks,
         information flows, entities and entire segments and plans. There are
         issues of validity (definition errors), completeness (something
         obvioudly missing from the Plan) and robustness (something that makes
@@ -371,6 +387,76 @@
         extreme). The severity is either a constant or it is calculated from
         the potential cascade of task failures attributable to the
         issue.</para>
+      </section>
+
+      <section>
+        <title>The meaning of information in ISP</title>
+
+        <para>Tasks and flows are defined in terms of information needed,
+        uncovered and shared. The information is named and is broken into
+        atomic elements. Each element of information is named, can be given
+        security classifications and can be annotated with a description,
+        handling instructions and with transformative relationships to other
+        elements of information.</para>
+
+        <para>An element of information is considered atomic for the purposes
+        of a plan; it is the indivisible unit of transmission and
+        transformation.</para>
+
+        <para>The notion of the plurality of an element is left undefined. For
+        example, if "suspicious activity report" information contains the
+        element "suspect profile" then it is possible that there will be more
+        than one suspect profiles in a report.</para>
+
+        <para>When analyzing flows, Channels is not concerned with what the
+        information actually means. Rather it cares about whether or not two
+        flows share the same information, and whether an element of
+        information is the same as, or is the transformation of, another
+        element of information.</para>
+
+        <para>If the information in two flows share the same name, does it
+        mean that they represent, conceptually, the same information? Not
+        necessarily. Two tasks performed respectively by a EOC commander and a
+        corporate CEO and both needing a "situation assessment" would likely
+        not need that same elements of information (even if the elements
+        themselves have identical names).</para>
+
+        <para>In Channels, identically named flows, needs and capabilities
+        (ignoring uppercase vs lowercase and extra spaces) are meant to
+        represent the same kind of information (they are synonymous)
+        <emphasis>only if</emphasis> they connect to the same task
+        specification. Similarly, identically named elements of information
+        represent the same atom of information <emphasis>only if</emphasis>
+        they compose synonymous information.</para>
+
+        <para>Agents executing a task receive and send information. The
+        information they receive and send may have different names an yet have
+        common elements of information. For example, the "suspect profile"
+        element of a sent "suspicious activity report" information may be the
+        same as the "suspect description" element of a received "security
+        tip", and it may be the same as the "suspect profile" of received
+        "BOLO" information.</para>
+
+        <para>Alternately, an element sent may aggregate elements received.
+        Aggregation combines many elements into a single element, with loss of
+        data. For example, a "suspects count" element aggregates "suspect
+        profile" elements into a single number, losing the details of the
+        individual profiles. Counting is only one of many kinds of possible
+        aggregations. A "threat level", for example, might aggregate a great
+        deal of different elements into a rating.</para>
+
+        <para>In order to track the dissemination of information, it necessary
+        to indicate when sent elements are renamed or are aggregated. Channels
+        need only differentiate between two kinds of element transformation,
+        renaming and aggregation, in order to track the dissemination of
+        information. The description field of an element of information can be
+        used to provide more details about the specific nature of an
+        aggregation.</para>
+
+        <para>Issue detection takes element renaming and aggregation into
+        account. For example, while it may be acceptable to declassify
+        aggregated elements, it is not acceptable to declassify a renamed,
+        classified element.</para>
       </section>
     </section>
   </chapter>
@@ -422,6 +508,18 @@
       initiation and execution of information sharing planning
       projects.</para>
 
+      <screenshot>
+        <info>
+          <title>How the ISP Method fits in the ISP Process</title>
+        </info>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="quick_tour/isp_process.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+
       <para>ISP Method activities (Activities) should not be confused with
       Best Practices. For example, a Best Practice might help planners decide
       what the scope a Plan should be, whereas an Activity would prescribe how
@@ -445,9 +543,22 @@
 
       <para>When a flow connects an information-producing task (source task)
       with an information-consuming task (target task), then all agents
-      assigned to the source task commit to sharing information with the
-      agents assigned to the target task. The information is strictly to be
-      used for the execution of the target task.</para>
+      assigned to the source task, possibly subject to restrictions, commit to
+      sharing information with the agents assigned to the target task. The
+      information is strictly to be used for the execution of the target
+      task.</para>
+
+      <screenshot>
+        <info>
+          <title>Procedure generation</title>
+        </info>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="quick_tour/procedure_generation.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
 
       <para>The sum of all task assignments and sharing commitments for a
       given agent is this agent’s Procedures.</para>
@@ -1201,7 +1312,8 @@
               <para>Categorize its intent (alarm, announcement, command,
               feedback or report)</para>
 
-              <para>The intent of a flow can be one of:</para>
+              <para>The intent of a (needed, potential or committed-to) flow
+              can be one of:</para>
 
               <itemizedlist>
                 <listitem>
@@ -1235,7 +1347,13 @@
             </listitem>
 
             <listitem>
-              <para>Name its elements and, if applicable,</para>
+              <para>State whether communication is to be initiated on task
+              failure only (applies to "requested receives" and "sent
+              notifications")</para>
+            </listitem>
+
+            <listitem>
+              <para>Name the information's elements and, if applicable,</para>
 
               <itemizedlist>
                 <listitem>
@@ -1243,11 +1361,16 @@
                 </listitem>
 
                 <listitem>
-                  <para>give sourcing details</para>
+                  <para>give a description</para>
                 </listitem>
 
                 <listitem>
                   <para>give handling instructions</para>
+                </listitem>
+
+                <listitem>
+                  <para>if sent, specify relationship to received element(s),
+                  if any (identical, renamed, aggregated)</para>
                 </listitem>
               </itemizedlist>
             </listitem>
@@ -1258,8 +1381,8 @@
             </listitem>
 
             <listitem>
-              <para>Whether the information must go to/come from an agent
-              in</para>
+              <para>Whether the information must go to/come from an agent in
+              (restriction on commitments)</para>
 
               <itemizedlist>
                 <listitem>
@@ -1919,8 +2042,7 @@
   </chapter>
 
   <chapter>
-    <title>Building and delivering Information Sharing Plans with
-    Channels</title>
+    <title>Using Channels</title>
 
     <para>Channels is a collaborative Web application for building, analyzing
     and deploying Information Sharing Plans.</para>
@@ -2011,6 +2133,9 @@
       privileges will be taken to the Plan editor. A user without Planner
       privileges is taken to his/her Procedures.</para>
 
+      <para>Currently, users can only be added and their passwords assigned by
+      a Channels administrator.</para>
+
       <screenshot>
         <info>
           <title>Login screen</title>
@@ -2043,7 +2168,7 @@
       <para>A planner can at any time select which segment within a Plan to
       view or work on. The tasks and information flows of the selected segment
       are visualized as a flow map (a directed graph). The selected task is
-      highlighted (by a gray rectangle) in the flow map.</para>
+      highlighted (by a gray outlined rectangle) in the flow map.</para>
 
       <para>The Plan editor window has four principal panels:<itemizedlist>
           <listitem>
@@ -2091,11 +2216,11 @@
           </listitem>
 
           <listitem>
-            <para>the Plan panel</para>
+            <para>the About Plan panel</para>
           </listitem>
 
           <listitem>
-            <para>the Segment panel</para>
+            <para>the About Segment panel</para>
           </listitem>
 
           <listitem>
@@ -2116,9 +2241,29 @@
           </listitem>
 
           <listitem>
-            <para>and a help window</para>
+            <para>a short cut to all issues in the Plan</para>
+          </listitem>
+
+          <listitem>
+            <para>a short cut to the Plan's index</para>
+          </listitem>
+
+          <listitem>
+            <para>and a help window (with this content)</para>
           </listitem>
         </itemizedlist>
+
+        <screenshot>
+          <info>
+            <title>Main "show" menu</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/main_show_menu.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
 
         <para>An "Action" menu enables the planner to act on the segment as a
         whole by:</para>
@@ -2164,6 +2309,18 @@
             <para>Logging out of Channels</para>
           </listitem>
         </itemizedlist>
+
+        <screenshot>
+          <info>
+            <title>Main "action" menu</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/main_action_menu.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
 
         <para>The Help icon opens a Help window with this content.</para>
 
@@ -2352,25 +2509,30 @@
           </mediaobject>
         </screenshot>
 
+        <para>A flow map, by default, also does not display information needs
+        and capabilities (tasks connected by arrows to square dots). To
+        display information needs and capabilities the planner must click on
+        the "needs and capabilities" icon. Clicking again hides them.</para>
+
+        <screenshot>
+          <info>
+            <title>Flow map with information needs and capabilities</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_2g.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
         <para>Clicking on the summary of a task or flow will open its form.
         Channels automatically adapts the width of task and flow forms to ease
         editing. Clicking o the summary closes the form.</para>
 
         <screenshot>
           <info>
-            <title>Closed task and flow forms</title>
-          </info>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="quick_tour/tour_2d.png"></imagedata>
-            </imageobject>
-          </mediaobject>
-        </screenshot>
-
-        <screenshot>
-          <info>
-            <title>Opened task form</title>
+            <title>Opened task and flow form</title>
           </info>
 
           <mediaobject>
@@ -2381,11 +2543,12 @@
         </screenshot>
 
         <para>The planner can expand the height of the forms, at the expense
-        of the flow map, by pressing the "expand forms" icon.</para>
+        of the flow map, by pressing the "expand forms" icon. Clicking again
+        un-expands the forms.</para>
 
         <screenshot>
           <info>
-            <title>Vertically expanded task form</title>
+            <title>Vertically expanded task and flow forms</title>
           </info>
 
           <mediaobject>
@@ -2408,20 +2571,8 @@
       information needs) can also be edited by clicking on the summaries to
       open up their respective forms.</para>
 
-      <para>Note that, as a rule, none of the fields of a form anywhere in
-      Channels need to be given a value. Any field can be left blank.</para>
-
-      <screenshot>
-        <info>
-          <title>Tasks and flow forms</title>
-        </info>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="quick_tour/tour_3.png" scale="100"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </screenshot>
+      <para>Note that, with very few exceptions, any and all fields in any
+      form in Channels can be left blank.</para>
 
       <section>
         <title>Editing a task</title>
@@ -2479,6 +2630,10 @@
 
         <para>The mode of communication is given as either notification or
         by-request (push or pull).</para>
+
+        <para>Planners can specify if the flow is conditional to the task
+        failure if the flow is a requested "receive" (need or received
+        sharing) or if it is a "notification send".</para>
 
         <para>If an information flow (information that's shared) is a
         notification, then it can be made a broadcast (information will be
@@ -2548,9 +2703,28 @@
           </mediaobject>
         </screenshot>
 
-        <para>An element of information can be assigned individual secrecy
-        classifications and optional sourcing and handling
-        instructions.</para>
+        <para>Information needed, shareable or to-be shared can be decomposed
+        into named elements. Each element of information can bedescribed and
+        assigned individual secrecy classifications and handling instructions.
+        Planners can indicate whether an element shareable or to be shared is
+        related to a received element of information and how.</para>
+
+        <para>An element is implicitly the same as one received (identically
+        named element within identically named information received by and
+        sent from a given task). If an element sent is the same as one
+        received but have different names or compose information with
+        different name, then Planners need to indicate that the element sent
+        renames the element received. If an element sent is a
+        compilation/summation of multiple elements received, Planners can
+        identify the received elements that are aggregated into a sent
+        element. Doing so enables Channels to track the planned dissemination
+        of information.</para>
+
+        <para>To reduce the drudgery of defining elements of information, the
+        list can be auto-populated by clicking on the magic wand icon.
+        Clicking on the classifications "link" icon forces all elements to
+        have the same classification. Clicking again removes the
+        constraint.</para>
 
         <screenshot>
           <info>
@@ -2762,7 +2936,7 @@
         mission and set its location, contact information, and parent
         organization.</para>
 
-        <para>A planner can declare that it si an issue if a sharing
+        <para>A planner can declare that it is an issue if a sharing
         commitment by the organization with another is not covered by an
         agreement, and that it is also an issue if there is a role assigned by
         the organization in the Plan for which no agent is known.</para>
@@ -2842,23 +3016,23 @@
           </listitem>
 
           <listitem>
-            <para>whether it is a system or a person,</para>
+            <para>whether the agent is a system or a person,</para>
           </listitem>
 
           <listitem>
-            <para>its contact information (transmission media with endpoints
-            where applicable),</para>
+            <para>the agent's contact information (transmission media with
+            endpoints where applicable),</para>
           </listitem>
 
           <listitem>
-            <para>and its security clearances (secrecy classifications)</para>
+            <para>the agent's availability,</para>
+          </listitem>
+
+          <listitem>
+            <para>and the agent's security clearances (secrecy
+            classifications)</para>
           </listitem>
         </itemizedlist>
-
-        <para>In addition to profile attributes, the Details view of an agent
-        lists the roles played by the agent, the agent's task assignments and
-        sharing commitments, all references to the agent (indexed) and all
-        issues detected or reported specifically about the agent.</para>
 
         <screenshot>
           <info>
@@ -2868,6 +3042,23 @@
           <mediaobject>
             <imageobject>
               <imagedata fileref="quick_tour/tour_68.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <para>In addition to profile attributes, the Details view of an agent
+        lists the roles played by the agent, the agent's task assignments and
+        sharing commitments, all references to the agent (indexed) and all
+        issues detected or reported specifically about the agent.</para>
+
+        <screenshot>
+          <info>
+            <title>Agent details view (cont.)</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_68a.png"></imagedata>
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -3193,9 +3384,25 @@
       </screenshot>
 
       <para>Agents are implicitly bound by sharing commitments when they are
-      assigned to tasks that are sources of information flows. A planner can
-      look up the list of sharing commitments inferred by an information
-      flow.</para>
+      assigned to tasks that are sources of shared information. All agents
+      assigned to the "source" task have sharing commitments with all agents
+      assigned to the "recipient" task, except:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>if a prohibiting policy is attached to the sharing
+          flow,</para>
+        </listitem>
+
+        <listitem>
+          <para>if a restriction applies - must be in same (top) organization
+          or location - and a "source" agent and "recipient" agent do not meet
+          this restriction.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>A planner can look up the list of sharing commitments inferred by
+      an information flow.</para>
 
       <screenshot>
         <info>
@@ -3325,6 +3532,52 @@
     </section>
 
     <section>
+      <title>Tracking planned information dissemination</title>
+
+      <para>If planners systematically identify the non-implied relationships
+      between received and sent elements of informations, then Channels can
+      track the planned dissemination of individual elements of information.
+      Dissemination tracking can be done forward (where does the element go?)
+      and backward (where does the element come from?).</para>
+
+      <para>Dissemination tracking can be accessed from a part (offering a
+      choice of all elements received or sent by the task) or it can be
+      accessed from a flow (restricting the choice to the elements to those in
+      the flow). Dissemination tracking from a part gives the option of
+      looking at sources as wel as targets of individual elements of
+      information. A receive flow only tracks sources and a send fow only
+      tracks targets.</para>
+
+      <screenshot>
+        <info>
+          <title>Accessing dissemination tracking</title>
+        </info>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="quick_tour/tour_99a.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+
+      <para>Dissemination tracking is visualized as element flows and also
+      presented in table format, allowing sorting on various properties of a
+      dissemination.</para>
+
+      <screenshot>
+        <info>
+          <title>Dissemination tracking</title>
+        </info>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="quick_tour/tour_99b.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </section>
+
+    <section>
       <title>Actions</title>
 
       <para>Planners can create and remove segments; add, cut, copy and paste
@@ -3360,12 +3613,28 @@
         </listitem>
       </itemizedlist>
 
-      <para>Most actions can be undone and redone up and until some planner
-      takes an action that would conflict with the undoing or redoing (for
-      example, removing a task prevents undoing a change to one of its
-      attributes).</para>
+      <para>All actions are implementd in Channels as "commands". Most
+      commands are reversible and can be undone and redone up and until some
+      planner takes an action that would conflict with the undoing or redoing
+      (for example, removing a task prevents undoing a change to one of its
+      attributes). The execution of each command is journaled for replay
+      should the server be interrupted and restarted. It is also recorded and
+      listed in the activities tab in the collaboration panel.</para>
 
-      <para>These actions are available from the top actions menu:</para>
+      <screenshot>
+        <info>
+          <title>Channels commands</title>
+        </info>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="quick_tour/commands.png"></imagedata>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+
+      <para>The following actions are available from the top actions
+      menu:</para>
 
       <itemizedlist>
         <listitem>
@@ -3416,7 +3685,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="quick_tour/tour_14c.png"></imagedata>
+            <imagedata fileref="quick_tour/main_action_menu.png"></imagedata>
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -3798,9 +4067,18 @@
 
       <para>Connecting a capability with a need is done by selecting a task
       with a matching need from the “From” drop-down menu in the flow form
-      (and vice-versa). Connecting a need with a capability creates a new
-      information flow but does not remove the connected task' information
-      need.</para>
+      (and vice-versa). When a capability is to be connected to a need, the
+      drop-down menu lists all likely candidate tasks. The list of candidates
+      consists of all tasks in <emphasis>any</emphasis> segments with matching
+      information needs and all tasks in the <emphasis>current</emphasis>
+      segment with matching sharing flows. To select an unlisted task within
+      the same segment, planners can choose "Other..." and enter the name of
+      the task to connect to. When a need is to be connected to a capability,
+      the same process is used but, this time, the drop-down list is populated
+      with candidate capabilities.</para>
+
+      <para>Connecting a need with a capability creates a new information flow
+      but does not remove the connected task' information need.</para>
 
       <screenshot>
         <info>
@@ -4010,9 +4288,9 @@
       </screenshot>
 
       <para>In the<emphasis>All segments view</emphasis>, planners can look at
-      a map of all segments in the Plan. The segments can be grouped by phase
-      or by event. Planners can browse all cross-segment sharing flows as well
-      as all tasks in one segment that start or terminate another
+      a diagram of all segments in the Plan. The segments can be grouped by
+      phase or by event. Planners can browse all cross-segment sharing flows
+      as well as all tasks in one segment that start or terminate another
       segment.</para>
 
       <screenshot>
@@ -4322,6 +4600,9 @@
       assignments, sharing commitments and related issues, and presents them
       in a single HTML document suitable for browsing and printing.</para>
 
+      <para>Agent assignments are organized in terms of what triggers them,
+      either the phase of an event or information received.</para>
+
       <screenshot>
         <info>
           <title>Information sharing procedures report</title>
@@ -4334,9 +4615,13 @@
         </mediaobject>
       </screenshot>
 
+      <para>Each assignment is then detailed with role, timing, location,
+      documentation, policies, information consumed and produced, and impacts
+      of failing the task.</para>
+
       <screenshot>
         <info>
-          <title>Information sharing procedures report (cont.)</title>
+          <title>Report: Assignment</title>
         </info>
 
         <mediaobject>
@@ -4346,18 +4631,19 @@
         </mediaobject>
       </screenshot>
 
-      <para>The Plan map and the information flow maps shown in the report are
-      reduced to fit. Full-sized Plan map and flow maps can be retrieved as
-      PNGs.</para>
+      <para>Finally, each incoming and outgoing flow is also detailed with the
+      information, its elements, timing, instructions, documentation,
+      policies, the sources or targets with their contact information, and the
+      possible impacts of failing to receive or send the information.</para>
 
       <screenshot>
         <info>
-          <title>Map of a plan's segments</title>
+          <title>Report: Sharing commitment</title>
         </info>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="quick_tour/tour_41a.png"></imagedata>
+            <imagedata fileref="quick_tour/tour_43b.png"></imagedata>
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -4514,19 +4800,6 @@
 
         <itemizedlist>
           <listitem>
-            <para>Select a Plan as the current Plan</para>
-          </listitem>
-
-          <listitem>
-            <para>Access the Plan's Procedures (from the development
-            version)</para>
-          </listitem>
-
-          <listitem>
-            <para>Access the Plan editor (by clicking on "Modify Plan")</para>
-          </listitem>
-
-          <listitem>
             <para>Create a new Plan by:</para>
 
             <itemizedlist>
@@ -4546,12 +4819,38 @@
           </listitem>
 
           <listitem>
+            <para>Select a Plan as the current Plan</para>
+          </listitem>
+
+          <listitem>
+            <para>Access the Plan's Procedures (from the development
+            version)</para>
+          </listitem>
+
+          <listitem>
+            <para>Access the Plan editor (by clicking on "Modify Plan")</para>
+          </listitem>
+
+          <listitem>
             <para>Put the development version of the current Plan into
             production (by clicking on "Productize Plan")</para>
           </listitem>
 
           <listitem>
             <para>Retire the current Plan</para>
+          </listitem>
+
+          <listitem>
+            <para>Name the client for which the plan is being built</para>
+          </listitem>
+
+          <listitem>
+            <para>Optionally configure plan-specific planner and user support
+            communities</para>
+          </listitem>
+
+          <listitem>
+            <para>Optionally configure a plan-specific survey service</para>
           </listitem>
 
           <listitem>
@@ -4584,6 +4883,18 @@
           <mediaobject>
             <imageobject>
               <imagedata fileref="quick_tour/tour_85.png"></imagedata>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+
+        <screenshot>
+          <info>
+            <title>Administration page (cont.)</title>
+          </info>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="quick_tour/tour_85a.png"></imagedata>
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -4784,8 +5095,7 @@
     <title>FAQs</title>
 
     <section>
-      <title>Information Sharing Planning and Business Process
-      Management</title>
+      <title>How is ISP different from BPM?</title>
 
       <para>The most frequently asked question about Information Sharing
       Planning is How does it differ from Business Process Management?</para>
@@ -5778,7 +6088,7 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove the redundant channel </para>
+                      <para>Remove the redundant channel</para>
                     </listitem>
 
                     <listitem>
@@ -5789,42 +6099,43 @@
 
                 <entry><para>No</para></entry>
               </row>
+
               <row>
                 <entry><para>Element of information is repeated</para></entry>
-                
+
                 <entry><para>Low</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Remove the repeated element of information </para>
-                  </listitem>
-               </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Remove the repeated element of information</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>No</para></entry>
               </row>
+
               <row>
                 <entry><para>Contradictory policies</para></entry>
-                
-                <entry><para>Medium</para></entry>
-                
-                <entry><itemizedlist>
-                  <listitem>
-                    <para>Remove all prohibiting policies</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>or remove all mandating policies</para>
-                  </listitem>
 
-                  <listitem>
-                    <para>or remove all mandating policies and all prohibiting policies</para>
-                  </listitem>
-                  
-                </itemizedlist></entry>
-                
+                <entry><para>Medium</para></entry>
+
+                <entry><itemizedlist>
+                    <listitem>
+                      <para>Remove all prohibiting policies</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or remove all mandating policies</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or remove all mandating policies and all
+                      prohibiting policies</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>No</para></entry>
               </row>
-              
             </tbody>
           </tgroup>
         </informaltable>
@@ -6546,24 +6857,25 @@
 
                 <entry><para>Yes</para></entry>
               </row>
-              
+
               <row>
-                <entry><para>Confirmed sharing agreement without MOU</para></entry>
-                
+                <entry><para>Confirmed sharing agreement without
+                MOU</para></entry>
+
                 <entry><para>Medium</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Attach an MOU to the sharing agreement</para>
-                  </listitem>
-                  <listitem>
-                    <para>or unconfirm the sharing agreement</para>
-                  </listitem>
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Attach an MOU to the sharing agreement</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or unconfirm the sharing agreement</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>No</para></entry>
               </row>
-            
             </tbody>
           </tgroup>
         </informaltable>
@@ -6860,57 +7172,64 @@
 
                 <entry><para>Yes</para></entry>
               </row>
-              
+
               <row>
-                <entry><para>Important task has only one assignment</para></entry>
-                
+                <entry><para>Important task has only one
+                assignment</para></entry>
+
                 <entry><para>Depends on impacted tasks</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Profile agents so that more than one match the task specifications</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>or modify the task specifications so that it matches more than one agent</para>
-                  </listitem>
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Profile agents so that more than one match the
+                      task specifications</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or modify the task specifications so that it
+                      matches more than one agent</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>Yes</para></entry>
               </row>
-              
+
               <row>
-                <entry><para>Availability gap in task assignments</para></entry>
-                
+                <entry><para>Availability gap in task
+                assignments</para></entry>
+
                 <entry><para>Depends on impacted tasks</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Change the availabilities of assigned agents so that they leave no gap</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>or change the specification of the task so that more agents are assigned to fill the gaps</para>
-                  </listitem>
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Change the availabilities of assigned agents so
+                      that they leave no gap</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or change the specification of the task so that
+                      more agents are assigned to fill the gaps</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>Yes</para></entry>
               </row>
-              
+
               <row>
-                <entry><para>Important task without failure notification protocol</para></entry>
-                
+                <entry><para>Important task without failure notification
+                protocol</para></entry>
+
                 <entry><para>Depends on impacted tasks</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Add a notification conditional on task failure</para>
-                  </listitem>
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Add a notification conditional on task
+                      failure</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>Yes</para></entry>
               </row>
-              
             </tbody>
           </tgroup>
         </informaltable>

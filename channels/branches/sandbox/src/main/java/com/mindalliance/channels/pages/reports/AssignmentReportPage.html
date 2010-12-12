@@ -75,17 +75,17 @@
             </ul>
         </div>
 
-        <div wicket:id="sends" id="sends">
-            <h3>Sends</h3>
+        <div wicket:id="receives" id="receives">
+            <h3>Receives</h3>
             <table border="1">
                 <thead>
                     <tr>
                         <th class="first">Flows</th>
-                        <th wicket:id="sends.headerStrings">To <span wicket:id="header">Someone</span></th>
+                        <th wicket:id="receives.headers">From <u wicket:id="head">Someone</u> <span wicket:id="tail"> at a place</span></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr wicket:id="sends.rows">
+                    <tr wicket:id="receives.rows">
                         <td class="first" wicket:id="flowName">(Flow name)</td>
                         <td wicket:id="cells">
                             <a href="#" wicket:id="flow"><span wicket:id="delay">immediately</span></a></td>
@@ -94,17 +94,17 @@
             </table>
         </div>
 
-        <div wicket:id="receives" id="receives">
-            <h3>Receives</h3>
+        <div wicket:id="sends" id="sends">
+            <h3>Sends</h3>
             <table border="1">
                 <thead>
                     <tr>
                         <th class="first">Flows</th>
-                        <th wicket:id="receives.headerStrings">From <span wicket:id="header">Someone</span></th>
+                        <th wicket:id="sends.headers">To <u wicket:id="head">Someone</u> <span wicket:id="tail"> at a place</span></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr wicket:id="receives.rows">
+                    <tr wicket:id="sends.rows">
                         <td class="first" wicket:id="flowName">(Flow name)</td>
                         <td wicket:id="cells">
                             <a href="#" wicket:id="flow"><span wicket:id="delay">immediately</span></a></td>
@@ -131,7 +131,7 @@
     </div>
 
 </div>
-<p id="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
+<p id="notice">Confidential. Copyright &copy; <span wicket:id="year">2010</span> <span wicket:id="client">Mind-Alliance Systems LLC</span>.</p>
 </div>
 </body>
 </html>

@@ -18,8 +18,8 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.Assignments;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.Component;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -156,7 +157,10 @@ public class FlowReportPage extends AbstractReportPage {
 
             new WebMarkupContainer( "instructions" )
                 .add( new Label( "flow.description" ) )
-                .setVisible( !getFlow().getDescription().isEmpty() )
+                .setVisible( !getFlow().getDescription().isEmpty() ),
+
+            new Label("year", "" + Calendar.getInstance().get(Calendar.YEAR) ),
+            new Label("client", getService().getPlan().getClient() )
         );
     }
 

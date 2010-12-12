@@ -140,11 +140,12 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     }
 
     public String getDefaultEmailAddress() {
-        return defaultEmailAddress;
+        String planValue = getPlan().getSurveyDefaultEmailAddress();
+        return planValue.isEmpty() ? defaultEmailAddress : planValue;
     }
 
-    public void setDefaultEmailAddress( String defaultEmailAddress ) {
-        this.defaultEmailAddress = defaultEmailAddress;
+    public void setDefaultEmailAddress( String val ) {
+        this.defaultEmailAddress = val == null ? "" : val;
     }
 
     public void setTemplatesDir( String templatesDir ) {
@@ -568,7 +569,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     protected String getIssuerEmail( Survey survey ) {
         User user = getUser( survey.getUserName() );
         if ( user == null )
-            return defaultEmailAddress;
+            return getDefaultEmailAddress();
         else
             return user.getEmail();
     }
@@ -664,6 +665,11 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
      */
     public String getTypeName() {
         return "survey service";
+    }
+
+
+    protected Plan getPlan() {
+        return User.current().getPlan();
     }
 
     abstract protected long registerSurvey( Survey survey ) throws SurveyException;

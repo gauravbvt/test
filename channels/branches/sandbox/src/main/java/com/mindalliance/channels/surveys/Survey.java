@@ -394,13 +394,30 @@ public class Survey implements Identifiable, Serializable {
         return status == Status.Closed;
     }
 
+    /**
+     * Get short title for the survey.
+     *
+     * @return a string
+     */
     public String getTitle() {
+        String title;
         if ( isAboutDetectedIssue() )
-            return issueSpec.getDetectorLabel();
+            title = issueSpec.getDetectorLabel();
         else
-            return StringUtils.abbreviate(
+            title = StringUtils.abbreviate(
                     issueSpec.getDescription(),
                     MAX_TITLE_LENGTH );
+        return title;
+    }
+
+    /**
+     * Get registration title for the survey (includes plan uri).
+     *
+     * @param planUri a string
+     * @return a string
+     */
+    public String getRegistrationTitle( String planUri ) {
+        return getTitle() + " (in " + planUri + ")";
     }
 
     private boolean isAboutDetectedIssue() {

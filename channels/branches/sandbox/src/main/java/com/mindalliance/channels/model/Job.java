@@ -175,8 +175,8 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     @Override
     public int hashCode() {
         int hash = 1;
-        hash = hash * 31 + actor.hashCode();
-        hash = hash * 31 + role.hashCode();
+        if ( actor != null ) hash = hash * 31 + actor.hashCode();
+        if ( role != null ) hash = hash * 31 + role.hashCode();
         if ( jurisdiction != null ) hash = hash * 31 + jurisdiction.hashCode();
         return hash;
     }
@@ -220,7 +220,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     /**
      * {@inheritDoc}
      */
-    public void map( Map<String,Object> map ) {
+    public void map( Map<String, Object> map ) {
         map.put( "id", id );
         map.put( "actor", actor );
         map.put( "role", role );
@@ -245,6 +245,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
 
     /**
      * {@inheritDoc}
+     *
      * @param queryService
      */
     public String getGeoMarkerLabel( QueryService queryService ) {

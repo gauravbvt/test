@@ -416,9 +416,8 @@ public final class PlanPage extends WebPage implements Updatable {
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
-                // Drop user history on submit
-                getCommander().resetUserHistory( getUser().getUsername(), true );
-                redirectHere();
+                // Do nothing - everything is done via Ajax, even file uploads
+                // System.out.println( "Form submitted" );
             }
         };
         form.setMultiPart( true );
@@ -589,7 +588,7 @@ public final class PlanPage extends WebPage implements Updatable {
         form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
             @Override
             protected void onTimer( AjaxRequestTarget target ) {
-                doTimedUpdate( target );
+               doTimedUpdate( target );
             }
         } );
         form.add( refreshNeededComponent );
@@ -619,7 +618,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private String getMessage() {
         return message == null ? "" : message;
-    }
+    }                                                                     
 
     private void addGoBackAndForward() {
         goBackContainer = new WebMarkupContainer( "goBack" );
@@ -653,7 +652,7 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( getCommander().isTimedOut() ) {
             if ( getPlan().isDevelopment() ) refreshAll( target );
             getCommander().clearTimeOut();
-        } else {
+        } else { 
             updateRefreshNotice();
             if ( getPlan().isDevelopment() ) {
                 target.addComponent( refreshNeededComponent );

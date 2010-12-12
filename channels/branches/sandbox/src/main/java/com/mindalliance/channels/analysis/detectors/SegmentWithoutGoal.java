@@ -60,4 +60,11 @@ public class SegmentWithoutGoal extends AbstractIssueDetector {
     protected String getLabel() {
         return "Segment has no stated goal";
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canBeWaived() {
+        return true;
+    }
 }

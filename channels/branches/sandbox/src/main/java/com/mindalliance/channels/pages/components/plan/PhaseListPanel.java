@@ -123,7 +123,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
                 getPlan().isDevelopment()
                         && !wrapper.isMarkedForCreation()
                         && getPlan().getPhases().size() > 1
-                        && !getQueryService().isReferenced( wrapper.getPhase() ) );
+                        && getQueryService().countReferences( wrapper.getPhase() ) <= 1 );
         item.addOrReplace( deleteLink );
     }
 
@@ -204,7 +204,8 @@ public class PhaseListPanel extends AbstractCommandablePanel {
         }
 
         public void deletePhase() {
-            if ( getPlan().getPhases().contains( phase ) && !getQueryService().isReferenced( phase ) ) {
+            if ( getPlan().getPhases().contains( phase )
+                    && getQueryService().countReferences( phase ) <= 1 ) {
                 // Possible but unlikely race condition if another command executed here
                 // that alters the results of the above test.
                 doCommand( new UpdatePlanObject(

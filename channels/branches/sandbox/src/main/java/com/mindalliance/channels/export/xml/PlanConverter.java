@@ -90,6 +90,19 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "userSupportCommunity" );
         writer.setValue( plan.getUserSupportCommunity() );
         writer.endNode();
+        writer.startNode( "surveyApiKey" );
+        writer.setValue( plan.getSurveyApiKey() );
+        writer.endNode();
+        writer.startNode( "surveyTemplate" );
+        writer.setValue( plan.getSurveyTemplate() );
+        writer.endNode();
+        writer.startNode( "surveyUserKey" );
+        writer.setValue( plan.getSurveyUserKey() );
+        writer.endNode();
+        writer.startNode( "surveyDefaultEmailAddress" );
+        writer.setValue( plan.getSurveyDefaultEmailAddress() );
+        writer.endNode();
+
         // Producers - planners who voted to put this version into production
         for ( String producer : plan.getProducers() ) {
             writer.startNode( "producer" );
@@ -188,6 +201,14 @@ public class PlanConverter extends AbstractChannelsConverter {
                 plan.setPlannerSupportCommunity( reader.getValue() );
             } else if ( nodeName.equals( "userSupportCommunity" ) ) {
                 plan.setUserSupportCommunity( reader.getValue() );
+            } else if ( nodeName.equals( "surveyApiKey" ) ) {
+                plan.setSurveyApiKey( reader.getValue() );
+            } else if ( nodeName.equals( "surveyUserKey" ) ) {
+                plan.setSurveyUserKey( reader.getValue() );
+            } else if ( nodeName.equals( "surveyTemplate" ) ) {
+                plan.setSurveyTemplate( reader.getValue() );
+            } else if ( nodeName.equals( "surveyDefaultEmailAddress" ) ) {
+                plan.setSurveyDefaultEmailAddress( reader.getValue() );
             } else if ( nodeName.equals( "description" ) ) {
                 plan.setDescription( reader.getValue() );
                 // Entities
@@ -244,9 +265,9 @@ public class PlanConverter extends AbstractChannelsConverter {
                 Place locale = this.getEntity(
                         Place.class,
                         name,
-                        Long.getLong(  placeId ),
-                        ModelEntity.Kind.valueOf( kindName ), 
-                        context);
+                        Long.getLong( placeId ),
+                        ModelEntity.Kind.valueOf( kindName ),
+                        context );
                 plan.setLocale( locale );
             } else {
                 LOG.warn( "Unknown element " + nodeName );

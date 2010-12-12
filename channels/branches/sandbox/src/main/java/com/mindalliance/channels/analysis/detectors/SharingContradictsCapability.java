@@ -62,8 +62,8 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
     }
 
     private void findDelayMismatch( Flow sharing, Flow capability, List<String> mismatches ) {
-        if ( sharing.getMaxDelay().compareTo( capability.getMaxDelay() ) < 0) {
-            mismatches.add( "The maximum delay is less than expected.");
+        if ( sharing.getMaxDelay().compareTo( capability.getMaxDelay() ) > 0) {
+            mismatches.add( "The maximum delay is more than expected.");
         }
     }
 

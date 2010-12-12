@@ -359,9 +359,11 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return an entity kind
      */
     protected ModelEntity.Kind kind( String name ) {
-        return name == null          ? ModelEntity.Kind.Actual
-             : "Type".equals( name ) ? ModelEntity.Kind.Type
-                                     : ModelEntity.Kind.Actual;
+        return name == null
+                ? ModelEntity.Kind.Actual
+                : "Type".equals( name )
+                ? ModelEntity.Kind.Type                                     
+                : ModelEntity.Kind.Actual;
     }
 
 }
