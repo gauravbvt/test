@@ -452,6 +452,17 @@
         </testResources>
         <plugins>
             <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                   <systemProperties>
+                      <property>
+                         <name>java.awt.headless</name>
+                         <value>true</value>
+                      </property>
+                   </systemProperties>
+                </configuration>
+            </plugin>
+            <plugin>
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
