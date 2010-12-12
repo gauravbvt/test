@@ -588,7 +588,7 @@ public final class PlanPage extends WebPage implements Updatable {
         form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
             @Override
             protected void onTimer( AjaxRequestTarget target ) {
-                doTimedUpdate( target );
+               doTimedUpdate( target );
             }
         } );
         form.add( refreshNeededComponent );
@@ -618,7 +618,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private String getMessage() {
         return message == null ? "" : message;
-    }
+    }                                                                     
 
     private void addGoBackAndForward() {
         goBackContainer = new WebMarkupContainer( "goBack" );

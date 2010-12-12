@@ -576,10 +576,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     /**
-     * Whether the model object is referenced in another model object.
-     *
-     * @param mo a model object
-     * @return a boolean
+     * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
     public Boolean isReferenced( final ModelObject mo ) {
@@ -603,6 +600,29 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
             return hasReference;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings( "unchecked" )
+    public Integer countReferences( final ModelObject mo ) {
+        Set<ModelObject> referencers = new HashSet<ModelObject>();
+        if ( mo instanceof Participation ) {
+            // Participations are not referenced per se but are not obsolete if they name a registered user.
+            if ( ( (Participation) mo ).hasUser( this ) ) referencers.add( mo );
+        } else {
+            boolean hasReference = false;
+            Iterator classes = ModelObject.referencingClasses().iterator();
+            if ( getPlan().references( mo ) ) referencers.add( getPlan() );
+            while ( classes.hasNext() ) {
+                List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
+                for ( ModelObject ref : mos ) {
+                    if ( ref.references( mo ) ) referencers.add( ref );
+                }
+            }
+        }
+        return referencers.size();
     }
 
     public Boolean isReferenced( final Classification classification ) {

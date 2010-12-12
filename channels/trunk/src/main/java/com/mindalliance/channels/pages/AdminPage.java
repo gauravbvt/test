@@ -142,6 +142,7 @@ public class AdminPage extends WebPage {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 planManager.delete( getPlan() );
+                setResponsePage( AdminPage.class );
             }
         };
         deleteLink.setEnabled( definitionManager.getSize() > 1 );

@@ -376,7 +376,7 @@ public interface QueryService {
      * Find all contact of specified resources
      *
      * @param specable
-     *@param isSelf       find resources specified by spec, or else who specified resources need to know @return a list of ResourceSpec's
+     * @param isSelf   find resources specified by spec, or else who specified resources need to know @return a list of ResourceSpec's
      */
     List<ResourceSpec> findAllContacts( Specable specable, boolean isSelf );
 
@@ -461,6 +461,14 @@ public interface QueryService {
     Boolean isReferenced( ModelObject mo );
 
     /**
+     * Count the number of model objects referencing another.
+     *
+     * @param mo a model object
+     * @return an integer
+     */
+    Integer countReferences( ModelObject mo );
+
+    /**
      * Whether a classification is referenced within the plan.
      *
      * @param classification a classification
@@ -528,9 +536,9 @@ public interface QueryService {
     /**
      * Find all parts that has the specified resource.
      *
-     * @param segment      a plan segment
+     * @param segment    a plan segment
      * @param specable
-     *@param exactMatch   a boolean @return a list of parts
+     * @param exactMatch a boolean @return a list of parts
      */
     List<Part> findAllParts( Segment segment, Specable specable, boolean exactMatch );
 
@@ -939,7 +947,7 @@ public interface QueryService {
     /**
      * Find all assignments that match a part.
      *
-     * @param part                 a part
+     * @param part            a part
      * @param includeUnknowns whether to include assignment of unknown actors
      * @return a list of assignments
      */
@@ -1142,7 +1150,8 @@ public interface QueryService {
 
     /**
      * Find the EOIs that appear (or seem to) in two flows.
-     * @param flow a flow
+     *
+     * @param flow      a flow
      * @param otherFlow another flow
      * @return a list of EOIs
      */
@@ -1150,9 +1159,10 @@ public interface QueryService {
 
     /**
      * Find all dissemination from or to a part or flow.
+     *
      * @param segmentObject a part or flow
-     * @param subject  a subject being disseminated
-     * @param showTargets a boolean
+     * @param subject       a subject being disseminated
+     * @param showTargets   a boolean
      * @return a list of disseminations
      */
     List<Dissemination> findAllDisseminations(
@@ -1162,6 +1172,7 @@ public interface QueryService {
 
     /**
      * Return the plan used by this service.
+     *
      * @return a plan
      */
     Plan getPlan();
