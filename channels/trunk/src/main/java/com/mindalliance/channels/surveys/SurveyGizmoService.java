@@ -114,7 +114,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
         Map<String, String> get = new HashMap<String, String>();
         Map<String, String> post = new HashMap<String, String>();
         get.put( "template", getTemplate() );
-        post.put( "title", survey.getTitle() );
+        post.put( "title", survey.getRegistrationTitle( getPlan().getUri() ) );
         post.put( "surveyxml", xml );
         String response = sendRequest( getBaseUrl( "sgCreateSurvey", get ), post );
         boolean succeeded = requestSuccess( response );
