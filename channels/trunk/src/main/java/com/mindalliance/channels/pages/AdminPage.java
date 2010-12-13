@@ -245,9 +245,8 @@ public class AdminPage extends WebPage {
 
     public void setPlannerSupportCommunity( String val ) {
         String defaultCommunity = planManager.getDefaultSupportCommunity();
-        if ( val != null && !val.isEmpty() && !defaultCommunity.equals( val ) ) {
+        if ( val != null && !val.isEmpty() && !val.equals( defaultCommunity ) )
             getPlan().setPlannerSupportCommunity( val );
-        }
     }
 
     public String getUserSupportCommunity() {
@@ -257,9 +256,8 @@ public class AdminPage extends WebPage {
 
     public void setUserSupportCommunity( String val ) {
         String defaultCommunity = planManager.getDefaultSupportCommunity();
-        if ( val != null && !val.isEmpty() && !defaultCommunity.equals( val ) ) {
+        if ( val != null && !val.isEmpty() && !val.equals( defaultCommunity ) )
             getPlan().setUserSupportCommunity( val );
-        }
     }
 
     public String getSurveyApiKey() {
@@ -269,9 +267,8 @@ public class AdminPage extends WebPage {
 
     public void setSurveyApiKey( String val ) {
         String defaultVal = surveyService.getApiKey();
-        if ( val != null && !val.isEmpty() && !defaultVal.equals( val ) ) {
+        if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) )
             getPlan().setSurveyApiKey( val );
-        }
     }
 
     public String getSurveyUserKey() {
@@ -281,9 +278,8 @@ public class AdminPage extends WebPage {
 
     public void setSurveyUserKey( String val ) {
         String defaultVal = surveyService.getUserKey();
-        if ( val != null && !val.isEmpty() && !defaultVal.equals( val ) ) {
+        if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) )
             getPlan().setSurveyUserKey( val );
-        }
     }
 
 
@@ -294,7 +290,7 @@ public class AdminPage extends WebPage {
 
     public void setSurveyTemplate( String val ) {
         String defaultVal = surveyService.getTemplate();
-        if ( val != null && !val.isEmpty() && !defaultVal.equals( val ) ) {
+        if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) ) {
             getPlan().setSurveyTemplate( val );
         }
     }
@@ -307,7 +303,7 @@ public class AdminPage extends WebPage {
 
     public void setSurveyDefaultEmailAddress( String val ) {
         String defaultVal = surveyService.getDefaultEmailAddress();
-        if ( val != null && !val.isEmpty() && !defaultVal.equals( val ) ) {
+        if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) ) {
             getPlan().setSurveyDefaultEmailAddress( val );
         }
     }
