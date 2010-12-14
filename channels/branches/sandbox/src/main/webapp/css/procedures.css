@@ -13,8 +13,8 @@
 }
 
 a {
-	color:#333333; 
-	border-bottom:1px dotted #666666; 
+	color:#333333;
+	border-bottom:1px dotted #666666;
 	text-decoration:none;
 }
 
@@ -150,13 +150,13 @@ div#breadcrumbs ul {
 	margin:0;
 	padding:4px 0 4px 4px;
 	background:#ededed;
-	border-left:1px solid #c7c7c7;
 }
 
 div#breadcrumbs ul li {
 	display:inline;
 	padding:4px 12px 4px 4px;
 	background:url('../images/breadcrumb-arrow.png') right no-repeat #ededed;
+	cursor:pointer;
 }
 
 div#breadcrumbs ul li.last {
@@ -168,7 +168,7 @@ div#breadcrumbs a {
 }
 
 div#breadcrumbs a:hover {
-	border-bottom:1px dotted #666; 
+	color:#666666;
 }
 
 
@@ -214,7 +214,7 @@ div#flow p.description {
 div.event {
 	clear:both;
 }
-	
+
 div.event h3 {
 	width:943px;
 	float:left;
@@ -427,7 +427,7 @@ div#gains {
 	float:left;
 	width:479px;
 }
-	
+
 div#role h3,
 div#location h3,
 div#timing h3,
@@ -636,7 +636,7 @@ div#receives table tbody tr td a.highest {
 
 div#sends table tbody tr td a:hover,
 div#receives table tbody tr td a:hover {
-	border-bottom:1px dotted #666666; 
+	border-bottom:1px dotted #666666;
 }
 
 
@@ -806,8 +806,6 @@ div.vcard table tr.odd {
 }
 
 
-
-
 /* ----- Notice ----- */
 
 p#notice {
@@ -819,4 +817,11 @@ p#notice {
 	border-top:1px solid #e1e1e1;
 	text-align:right;
 	color:#666666;
+}
+
+
+/* ----- BetaEasy - Override ----- */
+
+#BetaEasyInvokeButton a {
+	border:none;
 }
