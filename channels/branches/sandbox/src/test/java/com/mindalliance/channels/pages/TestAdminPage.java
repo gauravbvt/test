@@ -228,8 +228,7 @@ public class TestAdminPage extends AbstractChannelsTest {
 
         PlanDefinition planDefinition = planManager.getDefinitionManager().get( DEMO );
 
-        form = tester.newFormTester( "users" );
-        form.submit( "deletePlan" );
+        tester.executeAjaxEvent( "users:deletePlan", "onclick" );
 
         assertRendered( "admin", AdminPage.class );
         assertEquals( 0, planManager.getPlansWithUri( DEMO ).size() );
@@ -251,9 +250,8 @@ public class TestAdminPage extends AbstractChannelsTest {
 
         PlanDefinition planDefinition = planManager.getDefinitionManager().get( ACME );
 
-        form = tester.newFormTester( "users" );
         assertNull( planDefinition.getProductionVersion() );
-        form.submit( "productize" );
+        tester.executeAjaxEvent( "users:productize", "onclick" );
 
         assertRendered( "admin", AdminPage.class );
         assertEquals( 2, planManager.getPlansWithUri( ACME ).size() );
@@ -269,8 +267,7 @@ public class TestAdminPage extends AbstractChannelsTest {
         assertEquals( 1, newProd.getVersion() );
 
         // Productize again
-        form = tester.newFormTester( "users" );
-        form.submit( "productize" );
+        tester.executeAjaxEvent( "users:productize", "onclick" );
 
         Plan newestProd = planManager.findProductionPlan( ACME );
         assertNotNull( newestProd );
