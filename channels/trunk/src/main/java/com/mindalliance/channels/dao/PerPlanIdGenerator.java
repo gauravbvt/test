@@ -28,18 +28,16 @@ public class PerPlanIdGenerator implements IdGenerator {
         setLastId( id, plan );
     }
 
-    public long assignId( Long id, Plan plan ) {
-        if ( id == null ) {
-            long lastId = getLastId( plan ) + 1L;
-            setLastId( lastId, plan );
-            return lastId;
-        } else {
-            setLastId( Math.max( getLastId( plan ), id ), plan );
-            return id;
-        }
+    public synchronized long assignId( Long id, Plan plan ) {
+        long lastId = id == null ? getLastId( plan ) + 1L
+                                 : Math.max( getLastId( plan ), id );
+
+        setLastId( lastId, plan );
+
+        return id == null ? lastId : id;
     }
 
-    private long getLastId( Plan plan ) {
+    private synchronized long getLastId( Plan plan ) {
         Long lastId = lastIds.get( plan.systemHashCode() );
         if ( lastId == null ) {
             lastId = 0L;
@@ -48,7 +46,7 @@ public class PerPlanIdGenerator implements IdGenerator {
         return lastId;
     }
 
-    private void setLastId( Long id, Plan plan ) {
+    private synchronized void setLastId( Long id, Plan plan ) {
         getLastId( plan );
         lastIds.put( plan.systemHashCode(), id );
     }
