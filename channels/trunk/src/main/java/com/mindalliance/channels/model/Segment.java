@@ -194,8 +194,7 @@ public class Segment extends ModelObject {
         Part result = queryService.createPart( this );
         result.setActor( actor );
         result.setTask( task );
-        addNode( result );
-        return result;
+        return addNode( result );
     }
 
     /**
@@ -210,19 +209,20 @@ public class Segment extends ModelObject {
         Part result = queryService.createPart( this );
         result.setRole( role );
         result.setTask( task );
-        addNode( result );
-        return result;
+        return addNode( result );
     }
 
     /**
      * Add a new node to this segment.
      *
      * @param node the new node
+     * @return the node
      */
-    public void addNode( Node node ) {
+    public <T extends Node> T addNode( T node ) {
         //       assert !nodeIndex.containsKey( node.getId() );
         nodeIndex.put( node.getId(), node );
         node.setSegment( this );
+        return node;
     }
 
     /**

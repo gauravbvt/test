@@ -489,9 +489,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * {@inheritDoc}
      */
     public Connector createConnector( Segment segment, Long id ) {
-        Connector result = getDao().createConnector( segment, id );
-        segment.addNode( result );
-        return result;
+        return segment.addNode( getDao().createConnector( segment, id ) );
     }
 
     /**
