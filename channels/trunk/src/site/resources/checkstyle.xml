@@ -3,7 +3,9 @@
         "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
-    <module name="PackageHtml"/>
+    <module name="PackageHtml">
+        <property name="severity" value="warning"/>
+    </module>
     <module name="NewlineAtEndOfFile"/>
     <module name="Translation"/>
     <module name="TreeWalker">
@@ -61,13 +63,17 @@
         <module name="InterfaceIsType"/>
         <module name="JUnitTestCase"/>
         <module name="JavadocMethod">
+            <property name="severity" value="warning"/>
             <property name="scope" value="package"/>
             <property name="allowUndeclaredRTE" value="true"/>
             <property name="allowMissingPropertyJavadoc" value="true"/>
             <property name="tokens" value="METHOD_DEF"/>
         </module>
-        <module name="JavadocType"/>
+        <module name="JavadocType">
+            <property name="severity" value="warning"/>
+        </module>
         <module name="JavadocVariable">
+            <property name="severity" value="warning"/>
             <property name="scope" value="private"/>
         </module>
         <module name="LeftCurly">
@@ -81,10 +87,13 @@
         </module>
         <module name="LineLength">
             <property name="max" value="100"/>
+            <property name="severity" value="warning"/>
         </module>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
-        <module name="MagicNumber"/>
+        <module name="MagicNumber">
+            <property name="severity" value="warning"/>
+        </module>
         <module name="MemberName"/>
         <module name="MethodLength"/>
         <module name="MethodName"/>
@@ -105,15 +114,18 @@
             <property name="max" value="1"/>
         </module>
         <module name="NoWhitespaceAfter">
+            <property name="severity" value="info"/>
             <property name="allowLineBreaks" value="false"/>
             <property name="tokens" value="DOT, BNOT, DEC, INC, LNOT, UNARY_MINUS, GENERIC_START, UNARY_PLUS"/>
         </module>
 
         <module name="NoWhitespaceBefore">
+            <property name="severity" value="info"/>
             <property name="allowLineBreaks" value="false"/>
             <property name="tokens" value="POST_DEC, POST_INC, GENERIC_END, GENERIC_START"/>
         </module>
         <module name="NoWhitespaceBefore">
+            <property name="severity" value="info"/>
             <property name="allowLineBreaks" value="true"/>
             <property name="tokens" value="DOT"/>
         </module>
@@ -127,6 +139,7 @@
         <module name="ParameterName"/>
         <module name="ParameterNumber"/>
         <module name="ParenPad">
+            <property name="severity" value="info"/>
             <property name="option" value="space"/>
         </module>
         <module name="RedundantImport"/>
@@ -146,9 +159,12 @@
         <module name="StaticVariableName">
             <property name="format" value="^[A-Z][A-Za-z0-9]*$"/>
         </module>
-        <module name="TabCharacter"/>
+        <module name="TabCharacter">
+            <property name="severity" value="warning"/>
+        </module>
         <module name="ThrowsCount"/>
         <module name="TrailingComment">
+            <property name="severity" value="warning"/>
             <property name="legalComment" value=" *NON-NLS"/>
         </module>
         <module name="TypeName"/>
@@ -163,9 +179,11 @@
         <module name="UpperEll"/>
         <module name="VisibilityModifier"/>
         <module name="WhitespaceAfter">
+            <property name="severity" value="info"/>
             <property name="tokens" value="COLON"/>
         </module>
         <module name="WhitespaceAround">
+            <property name="severity" value="info"/>
             <property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR, BOR_ASSIGN, BSR,
                 BSR_ASSIGN, BXOR, BXOR_ASSIGN, DIV, DIV_ASSIGN, EQUAL, GE, GT, LAND, LCURLY,
                 LE, LITERAL_ASSERT, LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY,
