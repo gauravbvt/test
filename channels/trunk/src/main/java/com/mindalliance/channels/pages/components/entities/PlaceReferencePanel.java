@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.PlaceReference;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.util.ChannelsUtils;
+import com.mindalliance.channels.dao.User;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -173,7 +174,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     private void adjustFields() {
         boolean editable =
                 getPlan().isDevelopment()
-                        && getLockManager().isLockedByUser( getEntity() )
+                        && getLockManager().isLockedByUser( User.current().getUsername(), getEntity().getId() )
                         && !ModelObject.areIdentical( getPlan().getLocale(), getEntity() );
         if ( !editable ) {
             planCheckBox.setEnabled( false );
