@@ -113,7 +113,7 @@ public interface LockManager {
      * @param userName the user presumed to have the lock
      * @param id the id of the locked object
      * @return true if lock was actually released
-     * @throws com.mindalliance.channels.command.LockingException when object is locked by another user
+     * @throws LockingException when object is locked by another user
      */
     boolean release( String userName, long id ) throws LockingException;
 }

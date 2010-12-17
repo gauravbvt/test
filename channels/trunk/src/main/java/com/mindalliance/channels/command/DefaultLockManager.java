@@ -6,7 +6,12 @@ import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Default implementation of LockManager.
@@ -140,7 +145,7 @@ public class DefaultLockManager implements LockManager {
                 if ( lock != null && userName.equals( lock.getUserName() ) ) {
                     locks.remove( lock.getId() );
                     released.add( lock.getId() );
-                    }
+                }
         }
 
         if ( LOG.isInfoEnabled() )
@@ -170,7 +175,7 @@ public class DefaultLockManager implements LockManager {
 
     private Lock getLock( long id ) {
         Lock lock;
-        synchronized ( locks ){
+        synchronized ( locks ) {
             lock = locks.get( id );
             if ( lock != null )
                 try {

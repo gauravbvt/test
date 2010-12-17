@@ -52,7 +52,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         LockManager lockManager = getLockManager();
         AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
         Segment segment = wicketApplication.getQueryService().getDefaultSegment();
-        Lock lock = lockManager.lock( "bob", segment.getId() );
+        lockManager.lock( "bob", segment.getId() );
         command.needLockOn( segment );
         assertFalse( commander.canDo( command ) );
         Change change = commander.doCommand( command );

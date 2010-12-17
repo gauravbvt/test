@@ -6,7 +6,9 @@
     <module name="PackageHtml">
         <property name="severity" value="warning"/>
     </module>
-    <module name="NewlineAtEndOfFile"/>
+    <module name="NewlineAtEndOfFile">
+        <property name="severity" value="info"/>
+    </module>
     <module name="Translation"/>
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
@@ -79,9 +81,11 @@
         </module>
         <module name="LeftCurly">
             <property name="tokens" value="CLASS_DEF,INTERFACE_DEF,METHOD_DEF,CTOR_DEF"/>
+            <property name="severity" value="info"/>
             <property name="option" value="eol"/>
         </module>
         <module name="LeftCurly">
+            <property name="severity" value="info"/>
             <property name="tokens"
                       value="LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_WHILE"/>
             <property name="option" value="nlow"/>
@@ -152,6 +156,7 @@
         -->
         <module name="ReturnCount"/>
         <module name="RightCurly">
+            <property name="severity" value="info"/>
             <property name="option" value="same"/>
             <property name="tokens" value="LITERAL_CATCH"/>
         </module>
@@ -170,6 +175,7 @@
         </module>
         <module name="TypeName"/>
         <module name="TypecastParenPad">
+            <property name="severity" value="info"/>
             <property name="tokens" value="TYPECAST"/>
         </module>
         <module name="UncommentedMain">
