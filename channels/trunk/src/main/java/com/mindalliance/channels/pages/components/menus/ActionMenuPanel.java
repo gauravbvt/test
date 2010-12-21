@@ -8,6 +8,7 @@ import org.apache.wicket.model.IModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,7 +17,7 @@ import java.util.Set;
  * Date: May 21, 2009
  * Time: 12:40:47 PM
  */
-abstract public class ActionMenuPanel extends MenuPanel {
+public abstract class ActionMenuPanel extends MenuPanel {
 
     protected ActionMenuPanel( String s, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( s, "Actions", model, expansions );
@@ -25,15 +26,19 @@ abstract public class ActionMenuPanel extends MenuPanel {
     /**
      * {@inheritDoc}
      */
-    public List<Component> getMenuItems() throws CommandException {
-        List<Component> menuItems = new ArrayList<Component>();
-        // Undo and redo
-        menuItems.add( getUndoMenuItem( "menuItem" ) );
-        menuItems.add( getRedoMenuItem( "menuItem" ) );
-        menuItems.add( getSendMessageMenuItem( "menuItem" ) );
-        // Commands
-        menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
-        return menuItems;
+    @Override
+    public List<Component> getMenuItems() {
+        synchronized ( getCommander() ) {
+            List<Component> menuItems = new ArrayList<Component>( Arrays.asList(
+                getUndoMenuItem( "menuItem" ),
+                getRedoMenuItem( "menuItem" ),
+                getSendMessageMenuItem( "menuItem" )
+            ) );
+
+            // Commands
+            menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
+            return menuItems;
+        }
     }
 
     /**

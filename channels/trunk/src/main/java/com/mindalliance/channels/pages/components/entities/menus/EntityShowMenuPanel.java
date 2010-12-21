@@ -42,62 +42,53 @@ public class EntityShowMenuPanel extends MenuPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<Component> getMenuItems() {
-        List<Component> menuItems = new ArrayList<Component>();
-        Link detailsLink = new AjaxFallbackLink( "link" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                changeAspectTo( target, "details" );
-            }
-        };
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "Details" ),
-                detailsLink ) );
-        ModelEntity entity = getEntity();
-        if ( !( entity instanceof Event
-                || entity instanceof Place
-                || entity instanceof Phase
-                || entity instanceof TransmissionMedium ) ) {
-            Link networkLink = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    changeAspectTo( target, "network" );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Network" ),
-                    networkLink ) );
-        }
-        // Map
-        if ( getEntity() instanceof GeoLocatable ) {
-            GeoLocatable geo = (GeoLocatable) getEntity();
-            BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
+        synchronized ( getCommander() ) {
+            List<Component> menuItems = new ArrayList<Component>();
+
+            menuItems.add( link( "Details", "details" ) );
+
+            ModelEntity entity = getEntity();
+            if ( !( entity instanceof Event || entity instanceof Place || entity instanceof Phase
+                    || entity instanceof TransmissionMedium ) )
+
+                menuItems.add( link( "Network", "network" ) );
+
+            // Map
+            if ( entity instanceof GeoLocatable ) {
+                GeoLocatable geo = (GeoLocatable) getEntity();
+                BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
                     "link",
                     new Model<String>(
-                            getEntity().isActual()
-                                ? "Location of " + getEntity().getName()
-                                : "Locations of organizations of type \"" + getEntity().getName() + "\""),
+                        entity.isActual() ? "Location of " + entity.getName() :
+                            "Locations of organizations of type \"" + entity.getName() + "\"" ),
                     geo,
                     getQueryService() );
-            if ( GeoLocation.getImpliedGeoLocations( geo, getQueryService() ).isEmpty() ) {
-                geomapLink.setEnabled( false );
+
+                geomapLink.setEnabled(
+                    !GeoLocation.getImpliedGeoLocations(
+                        geo, getQueryService() ).isEmpty() );
+
+                menuItems.add(
+                    new LinkMenuItem(
+                        "menuItem", new Model<String>( "Map" ), geomapLink ) );
             }
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Map" ),
-                    geomapLink ) );
-        }
-        // Issues
-        Link issuesLink = new AjaxFallbackLink( "link" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                changeAspectTo( target, "issues" );
-            }
-        };
-        menuItems.add( new LinkMenuItem(
+
+            menuItems.add( link( "Issues", "issues" ) );
+
+            return menuItems;
+        }    }
+
+    private LinkMenuItem link( String title, final String field ) {
+        return new LinkMenuItem(
                 "menuItem",
-                new Model<String>( "Issues" ),
-                issuesLink ) );
-        return menuItems;
+                new Model<String>( title ), new AjaxFallbackLink( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        changeAspectTo( target, field );
+                    }
+                } );
     }
 
     private void changeAspectTo( AjaxRequestTarget target, String aspect ) {

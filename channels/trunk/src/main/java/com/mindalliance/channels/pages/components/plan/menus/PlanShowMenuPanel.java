@@ -5,6 +5,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.HelpPage;
@@ -19,8 +20,9 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.PopupSettings;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -28,14 +30,10 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
 
 /**
- * Pages menu for  a segment
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 10, 2009
- * Time: 8:30:46 PM
+ * Pages menu for  a segment.
  */
 public class PlanShowMenuPanel extends MenuPanel {
 
@@ -44,6 +42,7 @@ public class PlanShowMenuPanel extends MenuPanel {
      */
     @SpringBean
     private PlanManager planManager;
+
     /**
      * Survey service.
      */
@@ -55,194 +54,109 @@ public class PlanShowMenuPanel extends MenuPanel {
     }
 
     /**
-     * {@inheritDoc
+     * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings( "unchecked" )
     public List<Component> getMenuItems() {
-        List<Component> menuItems = new ArrayList<Component>();
-        final Plan plan = User.plan();
-        // Show <-> Hide social panel
-        if ( getExpansions().contains( Channels.SOCIAL_ID ) ) {
-            AjaxFallbackLink hideSocialLink = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Collapsed, Channels.SOCIAL_ID ) );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Hide planners" ),
-                    hideSocialLink ) );
-        } else {
-            AjaxFallbackLink showSocialLink = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Expanded, Channels.SOCIAL_ID ) );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Planners" ),
-                    showSocialLink ) );
-        }
-        // Edit<->Hide about plan
-        if ( getExpansions().contains( plan.getId() ) ) {
-            AjaxFallbackLink editPlanLink = new AjaxFallbackLink( "link" ) {
-                @Override
-                public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Collapsed, plan ) );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Hide about plan" ),
-                    editPlanLink ) );
-        } else {
-            AjaxFallbackLink planMapLink = new AjaxFallbackLink( "link" ) {
-                @Override
-                public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Expanded, plan ) );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "About plan" ),
-                    planMapLink ) );
-        }
+        synchronized ( getCommander() ) {
+            Plan plan = User.plan();
+            List<Component> menuItems = new ArrayList<Component>();
 
-        Link editLink;
-        if ( getExpansions().contains( getSegment().getId() ) ) {
-            editLink =
-                    new AjaxFallbackLink( "link" ) {
-                        @Override
-                        public void onClick( AjaxRequestTarget target ) {
-                            update( target, new Change( Change.Type.Collapsed, getSegment() ) );
-                        }
-                    };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Hide about plan segment" ),
-                    editLink ) );
+            menuItems.addAll(
+                Arrays.asList(
+                    collapsible( Channels.SOCIAL_ID, "Hide planners", "Planners" ),
+                    collapsible( plan, "Hide about plan", "About plan" ),
+                    collapsible(
+                        getSegment(), "Hide about plan segment", "About plan segment" ) ) );
 
-        } else {
-            editLink =
-                    new AjaxFallbackLink( "link" ) {
-                        @Override
-                        public void onClick( AjaxRequestTarget target ) {
-                            update( target, new Change( Change.Type.Expanded, getSegment() ) );
-                        }
-                    };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "About plan segment" ),
-                    editLink ) );
-        }
-        if ( getPlan().isDevelopment() ) {
-            Link surveyLink;
-            if ( getExpansions().contains( Survey.UNKNOWN.getId() ) ) {
-                surveyLink =
-                        new AjaxFallbackLink( "link" ) {
-                            @Override
-                            public void onClick( AjaxRequestTarget target ) {
-                                update( target, new Change( Change.Type.Collapsed, Survey.UNKNOWN ) );
-                            }
-                        };
-                menuItems.add( new LinkMenuItem(
-                        "menuItem",
-                        new Model<String>( "Hide surveys" ),
-                        surveyLink ) );
+            if ( plan.isDevelopment() )
+                menuItems.add( collapsible( Survey.UNKNOWN, "Hide surveys", "Surveys" ) );
 
-            } else {
-                surveyLink =
-                        new AjaxFallbackLink( "link" ) {
-                            @Override
-                            public void onClick( AjaxRequestTarget target ) {
-                                update( target, new Change( Change.Type.Expanded, Survey.UNKNOWN ) );
-                            }
-                        };
-                menuItems.add( new LinkMenuItem(
-                        "menuItem",
-                        new Model<String>( "Surveys" ),
-                        surveyLink ) );
-            }
-        }
-        BookmarkablePageLink reportLink = new BookmarkablePageLink( "link", SOPsReportPage.class );
-        reportLink.add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) );
-        /*reportLink.setPopupSettings( new PopupSettings(
-               PopupSettings.RESIZABLE |
-                        PopupSettings.SCROLLBARS |
-                        PopupSettings.MENU_BAR ) );*/
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "Info Sharing Procedures" ),
-                reportLink ) );
+            menuItems.add(
+                newLink(
+                    "Info Sharing Procedures",
+                    newTargetedLink( "_blank", SOPsReportPage.class, null ) ) );
 
-/*
-        BookmarkablePageLink playbooksLink = new BookmarkablePageLink<SOPsReportPage>( "link", TaskPlaybook.class );
-        playbooksLink.setPopupSettings( new PopupSettings(
-               PopupSettings.RESIZABLE |
-                        PopupSettings.SCROLLBARS |
-                        PopupSettings.MENU_BAR ) );
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "Playbooks" ),
-                playbooksLink ) );
-*/
+            if ( User.current().isAdmin() )
+                menuItems.add(
+                    newLink(
+                        "Admin page",
+                        new BookmarkablePageLink<AdminPage>( "link", AdminPage.class ) ) );
 
-        if ( User.current().isAdmin() ) {
-            BookmarkablePageLink adminLink = new BookmarkablePageLink( "link", AdminPage.class );
-            // adminLink.add( new AttributeModifier( "target", true, new Model<String>( "_blank" ) ) );
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Admin page" ),
-                    adminLink ) );
-        }
-        // Segments
-        Link segmentsLink = new AjaxFallbackLink( "link" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, plan, PlanEditPanel.MAP ) );
-            }
-        };
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "All segments" ),
-                segmentsLink ) );
-        // All issues
-        Link allIssuesLink = new AjaxFallbackLink( "link" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, plan, PlanEditPanel.ISSUES ) );
-            }
-        };
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "All issues" ),
-                allIssuesLink ) );
-        // Index
-        Link indexLink = new AjaxFallbackLink( "link" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, plan, PlanEditPanel.INDEX ) );
-            }
-        };
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "Index" ),
-                indexLink ) );
-        // Help
-        Link helpLink = new BookmarkablePageLink( "link", HelpPage.class );
-        helpLink.add( new AttributeModifier( "target", true, new Model<String>( "help" ) ) );
-        helpLink.setPopupSettings( new PopupSettings(
-               PopupSettings.RESIZABLE |
-                        PopupSettings.SCROLLBARS |
-                        PopupSettings.MENU_BAR |
-                       PopupSettings.TOOL_BAR ) );
-        menuItems.add( new LinkMenuItem(
-                "menuItem",
-                new Model<String>( "Help" ),
-                helpLink ) );
+            menuItems.addAll(
+                Arrays.asList(
+                    newLink( "All segments", plan, PlanEditPanel.MAP ),
+                    newLink( "All issues", plan, PlanEditPanel.ISSUES ),
+                    newLink( "Index", plan, PlanEditPanel.INDEX ),
+                    newLink(
+                        "Help", newTargetedLink(
+                        "help", HelpPage.class, new PopupSettings(
+                        PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS | PopupSettings.MENU_BAR
+                        | PopupSettings.TOOL_BAR ) ) ) ) );
 
-        return menuItems;
+            return menuItems;
+        }    }
+
+    private LinkMenuItem newLink( String title, final Plan plan, final String action ) {
+        return newLink(
+                title,
+                new AjaxFallbackLink( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        update( target, new Change( Change.Type.Expanded, plan, action ) );
+                    }
+                } );
+    }
+
+    private static LinkMenuItem newLink( String title, Link<?> link ) {
+        return new LinkMenuItem(
+                "menuItem",
+                new Model<String>( title ),
+                link );
+    }
+
+    private static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
+            String target, Class<T> pageClass, PopupSettings popupSettings ) {
+
+        BookmarkablePageLink<T> link = new BookmarkablePageLink<T>( "link", pageClass );
+        link.add( new AttributeModifier( "target", true, new Model<String>( target ) ) );
+        if ( popupSettings != null )
+            link.setPopupSettings( popupSettings );
+
+        return link;
+    }
+
+    private LinkMenuItem collapsible( final long id,
+                                      String expandedTitle, String collapsedTitle ) {
+
+        final boolean expanded = getExpansions().contains( id );
+        return new LinkMenuItem( "menuItem",
+                new Model<String>( expanded ? expandedTitle : collapsedTitle ),
+                new AjaxFallbackLink( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        update( target,
+                                new Change( expanded ? Change.Type.Collapsed : Change.Type.Expanded,
+                                            id ) );
+                    }
+                } );
+    }
+
+    private LinkMenuItem collapsible( final Identifiable object,
+                                      String expandedTitle, String collapsedTitle ) {
+
+        final boolean expanded = getExpansions().contains( object.getId() );
+        return new LinkMenuItem(
+                "menuItem",
+                new Model<String>( expanded ? expandedTitle : collapsedTitle ),
+                new AjaxFallbackLink( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        update( target,
+                                new Change( expanded ? Change.Type.Collapsed : Change.Type.Expanded,
+                                            object ) );
+                    }
+                } );
     }
 
     private Segment getSegment() {

@@ -49,6 +49,9 @@
                         default-target-url="/"
                         authentication-failure-url="/static/failed.html"/>
         <sec:logout logout-url="/logout" logout-success-url="/"/>
+        <sec:session-management>
+            <sec:concurrency-control max-sessions="1"/>
+        </sec:session-management>
         <sec:remember-me key="channels"/>
 
     </sec:http>
