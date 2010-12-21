@@ -141,7 +141,7 @@ public class DefaultLockManager implements LockManager {
         List<Long> released = new ArrayList<Long>();
 
         synchronized ( locks ) {
-            for ( Lock lock : locks.values() )
+            for ( Lock lock : new ArrayList<Lock>( locks.values() ) )
                 if ( lock != null && userName.equals( lock.getUserName() ) ) {
                     locks.remove( lock.getId() );
                     released.add( lock.getId() );
@@ -174,19 +174,15 @@ public class DefaultLockManager implements LockManager {
     }
 
     private Lock getLock( long id ) {
-        Lock lock;
-        synchronized ( locks ) {
-            lock = locks.get( id );
-            if ( lock != null )
-                try {
-                    queryService.find( ModelObject.class, id );
-
-                } catch ( NotFoundException ignored ) {
-                    // Clean up obsolete lock
-                    locks.remove( id );
-                    lock = null;
-                }
-        }
+        Lock lock = locks.get( id );
+        if ( lock != null )
+            try {
+                queryService.find( ModelObject.class, id );
+            } catch ( NotFoundException ignored ) {
+                // Clean up obsolete lock
+                locks.remove( id );
+                lock = null;
+            }
 
         return lock;
     }
