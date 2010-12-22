@@ -1,7 +1,6 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
@@ -11,15 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Important task has a single assignment.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Nov 8, 2010
- * Time: 8:20:01 PM
+ * Date: Dec 21, 2010
+ * Time: 11:55:44 AM
  */
-public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
-    public SingleAssignmentToImportantTask() {
+public class ImportantTaskNotOperational extends AbstractIssueDetector {
+
+    public ImportantTaskNotOperational() {
     }
 
     /**
@@ -28,18 +27,15 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
-        if ( assignments.size() == 1 ) {
-            Level importance = this.getTaskFailureSeverity( part );
+        if ( !part.isOperational() ) {
+            Level importance = getTaskFailureSeverity( part );
             if ( importance.compareTo( Level.Low ) >= 1 ) {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, part );
                 issue.setDescription( "Task \""
                         + part.getTitle()
-                        + "\" is important and yet is assigned to only one agent." );
+                        + "\" is important but is not operational." );
                 issue.setSeverity( importance );
-                issue.setRemediation( "Profile agents so that more than one match the task specifications"
-                        + "\nor modify the task specifications so that it matches more than one agent."
-                );
+                issue.setRemediation( "Make the task operational." );
                 issues.add( issue );
             }
         }
@@ -64,7 +60,7 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Important task has only one assignment";
+        return "Important task is not operational";
     }
 
     /**

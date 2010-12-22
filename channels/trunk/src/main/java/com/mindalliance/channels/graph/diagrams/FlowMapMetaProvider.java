@@ -35,7 +35,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                                 String outputFormat,
                                 Resource imageDirectory,
                                 Analyst analyst ) {
-        this( modelObject, outputFormat, imageDirectory, analyst, false, false );
+        this( modelObject, outputFormat, imageDirectory, analyst, false, false, false );
     }
 
     public FlowMapMetaProvider( ModelObject modelObject,
@@ -43,8 +43,9 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                                 Resource imageDirectory,
                                 Analyst analyst,
                                 boolean showingGoals,
-                                boolean showingConnectors ) {
-        super( modelObject, outputFormat, imageDirectory, analyst, showingGoals, showingConnectors );
+                                boolean showingConnectors,
+                                boolean hidingNoop ) {
+        super( modelObject, outputFormat, imageDirectory, analyst, showingGoals, showingConnectors, hidingNoop );
     }
 
     /**
@@ -71,8 +72,12 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
              */
             public String getVertexURL( Node node ) {
                 if ( node.isPart() ) {
-                    Object[] args = {node.getSegment().getId(), node.getId()};
-                    return MessageFormat.format( VERTEX_URL_FORMAT, args );
+                    if ( isHidingNoop() && !( (Part) node ).isOperational() ) {
+                        return null;
+                    } else {
+                        Object[] args = {node.getSegment().getId(), node.getId()};
+                        return MessageFormat.format( VERTEX_URL_FORMAT, args );
+                    }
                 } else {
                     return null;
                 }
@@ -86,8 +91,12 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
              */
             public String getEdgeURL( Flow edge ) {
                 // Plan id = 0 for now sice there is only one plan
-                Object[] args = {0, edge.getId()};
-                return MessageFormat.format( EDGE_URL_FORMAT, args );
+                if ( isHidingNoop() && !edge.isEffectivelyOperational() ) {
+                    return null;
+                } else {
+                    Object[] args = {0, edge.getId()};
+                    return MessageFormat.format( EDGE_URL_FORMAT, args );
+                }
             }
         };
     }
@@ -169,12 +178,12 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 // assuming a bitmap format
             } else {
                 list.add( new DOTAttribute( "image", getIcon( FlowMapMetaProvider.this.getAnalyst().getImagingService(),
-                                                              vertex ) ) );
+                        vertex ) ) );
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
                     list.add( new DOTAttribute( "style", "solid" ) );
-                    list.add( new DOTAttribute( "color", HIGHLIGHT_COLOR ) );
+                    list.add( new DOTAttribute( "color", getHighlightColor( vertex ) ) );
                     list.add( new DOTAttribute( "penwidth", HIGHLIGHT_PENWIDTH ) );
                     list.add( new DOTAttribute( "fontname", HIGHLIGHT_NODE_FONT ) );
                 } else {
@@ -182,55 +191,72 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     list.add( new DOTAttribute( "fontname", NODE_FONT ) );
                 }
             }
-            list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
+            list.add( new DOTAttribute( "fontcolor", getFontColor( vertex ) ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
-            if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
-                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
-                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
-            } else {
-                String tooltip = vertex.getTitle();
-                if ( vertex.isPart() ) {
-                    List<Actor> partActors = getAnalyst().getQueryService().findAllActualActors(
-                            ( (Part) vertex ).resourceSpec() );
-                    if ( partActors.size() > 1 ) {
-                        tooltip = sanitize( listActors( partActors ) );
+            if ( !isInvisible( vertex ) ) {
+                if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+                    list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
+                    list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
+                            Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+                } else {
+                    String tooltip = vertex.getTitle();
+                    if ( vertex.isPart() ) {
+                        List<Actor> partActors = getAnalyst().getQueryService().findAllActualActors(
+                                ( (Part) vertex ).resourceSpec() );
+                        if ( partActors.size() > 1 ) {
+                            tooltip = sanitize( listActors( partActors ) );
+                        }
                     }
+                    list.add( new DOTAttribute( "tooltip", tooltip ) );
                 }
-                list.add( new DOTAttribute( "tooltip", tooltip ) );
             }
             if ( vertex.isConnector() ) {
                 Connector connector = (Connector) vertex;
                 Iterator<ExternalFlow> externalFlows = connector.externalFlows();
                 list.add( new DOTAttribute( "fontcolor", "white" ) );
-                if ( externalFlows.hasNext() ) {
-                    list.add( new DOTAttribute( "tooltip", "Connected to: " + summarizeExternalFlows( externalFlows ) ) );
-                } else {
-                    if ( connector.isSource() && !connector.getInnerFlow().isSatisfied() ) {
-                        list.add( new DOTAttribute( "tooltip", "Need completely unsatisfied" ) );
-                    } else if ( connector.isTarget() && !connector.getInnerFlow().isSatisfying() ) {
-                        list.add( new DOTAttribute( "tooltip", "Capability unused" ) );
+                if ( !isHidingNoop() || connector.getInnerFlow().isEffectivelyOperational() ) {
+                    if ( externalFlows.hasNext() ) {
+                        list.add( new DOTAttribute( "tooltip", "Connected to: " + summarizeExternalFlows( externalFlows ) ) );
                     } else {
-                        list.add( new DOTAttribute(
-                                "tooltip",
-                                connector.isTarget() ? "Capability" : "Need" ) );
+                        if ( connector.isSource() && !connector.getInnerFlow().isSatisfied() ) {
+                            list.add( new DOTAttribute( "tooltip", "Need completely unsatisfied" ) );
+                        } else if ( connector.isTarget() && !connector.getInnerFlow().isSatisfying() ) {
+                            list.add( new DOTAttribute( "tooltip", "Capability unused" ) );
+                        } else {
+                            list.add( new DOTAttribute(
+                                    "tooltip",
+                                    connector.isTarget() ? "Capability" : "Need" ) );
+                        }
                     }
                 }
             }
             return list;
         }
 
+        private boolean isInvisible( Node vertex ) {
+            return vertex.isPart() && isHidingNoop() && !( (Part) vertex ).isOperational();
+        }
+
+        private String getHighlightColor( Node vertex ) {
+            return isInvisible( vertex ) ? INVISIBLE_COLOR : HIGHLIGHT_COLOR;
+        }
+
+        private String getFontColor( Node vertex ) {
+            return isInvisible( vertex ) ? INVISIBLE_COLOR : FONTCOLOR;
+        }
+
         public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
+            list.add( new DOTAttribute( "color", colorIfVisible( edge, "black" ) ) );
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
-            list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
+            // list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             if ( highlighted ) {
                 list.add( new DOTAttribute( "fontname", EDGE_FONT_BOLD ) );
             } else {
                 list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             }
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
-            list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
+            list.add( new DOTAttribute( "fontcolor", colorIfVisible( edge, "darkslategray" ) ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( edge.isAskedFor() ) {
@@ -238,18 +264,18 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute(
                         "style",
                         edge.isIfTaskFails()
-                            ? "dotted"
-                            : edge.isCritical()
+                                ? "dotted"
+                                : edge.isCritical()
                                 ? "bold"
                                 : "solid" ) );
             } else {
-                if (edge.isIfTaskFails() ) {
+                if ( edge.isIfTaskFails() ) {
                     list.add( new DOTAttribute( "style", "dotted" ) );
-                    if ( edge.isCritical() ) list.add( new DOTAttribute( "fontcolor", "black" ) );
-                 }
-                else if ( edge.isCritical() ) {
+                    if ( edge.isCritical() )
+                        list.add( new DOTAttribute( "fontcolor", colorIfVisible( edge, "black" ) ) );
+                } else if ( edge.isCritical() ) {
                     list.add( new DOTAttribute( "style", "bold" ) );
-                    list.add( new DOTAttribute( "fontcolor", "black" ) );
+                    list.add( new DOTAttribute( "fontcolor", colorIfVisible( edge, "black" ) ) );
                 }
             }
             // head and tail labels
@@ -282,16 +308,27 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
             // Issue coloring
-            if ( getAnalyst().hasUnwaivedIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
-                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( edge,
-                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
-            } else {
-                list.add( new DOTAttribute( "tooltip", sanitize( edge.getTitle() ) ) );
+            if ( !isInvisible( edge ) ) {
+                if ( getAnalyst().hasUnwaivedIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+                    list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
+                    list.add( new DOTAttribute( "color", COLOR_ERROR ) );
+                    list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( edge,
+                            Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+                } else {
+                    list.add( new DOTAttribute( "tooltip", sanitize( edge.getTitle() ) ) );
+                }
             }
             return list;
         }
+
+        private String colorIfVisible( Flow edge, String color ) {
+            return isInvisible( edge) ? INVISIBLE_COLOR : color;
+        }
+
+        private boolean isInvisible( Flow edge ) {
+            return isHidingNoop() && !edge.isEffectivelyOperational();
+        }
+
 
     }
 

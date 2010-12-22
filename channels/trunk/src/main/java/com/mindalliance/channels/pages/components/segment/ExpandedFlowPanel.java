@@ -165,6 +165,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * If task fails checkbox.
      */
     private CheckBox ifTaskFailsCheckBox;
+    /**
+     * Operational checkbox container.
+     */
+    private WebMarkupContainer operationalContainer;
+    /**
+     * If operational.
+     */
+    private CheckBox operationalCheckBox;
 
     /**
      * Flow is to be restricted.
@@ -193,6 +201,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addOtherField();
         addRestrictionFields();
         addIfTaskFails();
+        addOperationalField();
         addAllField();
 
         Node node = getOther();
@@ -359,6 +368,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
         makeVisible( ifTaskFailsContainer, canGetIfTaskFails() );
         ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
+        makeVisible( operationalContainer, f.canGetOperational() );
+        operationalCheckBox.setEnabled( f.canSetOperational() );
     }
 
     private boolean canSetIfTaskFails() {
@@ -555,6 +566,27 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } );
         ifTaskFailsContainer.add( ifTaskFailsCheckBox );
     }
+
+    private void addOperationalField() {
+        operationalContainer = new WebMarkupContainer( "operationalContainer" );
+        operationalContainer.setOutputMarkupId( true );
+        add( operationalContainer );
+        operationalCheckBox = new CheckBox(
+                "operational",
+                new PropertyModel<Boolean>( this, "operational" )
+        );
+        operationalCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getFlow(), "operational" ) );
+            }
+        } );
+        operationalContainer.add( operationalCheckBox );
+     }
+
+
 
 
     private void addFlowDescription() {
@@ -1051,6 +1083,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             change = doCommand( new RedirectFlow( getFlow(), other, isSend() ) );
         }
         Flow newFlow = (Flow) change.getSubject( getQueryService() );
+        assert newFlow != null; // TODO Find out why this has happened...
         // requestLockOn( newFlow );
         setFlow( newFlow );
     }
@@ -1308,6 +1341,21 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
+    /**
+     * Get whether flow is operational.
+     *
+     * @return a boolean
+     */
+    public boolean isOperational() {
+        return getFlow().isOperational();
+    }
+
+    public void setOperational( boolean val ) {
+        if ( val != getFlow().isOperational() ) {
+            doCommand( new UpdateSegmentObject( getFlow(), "operational", val ) );
+        }
+    }
+
 
     /**
      * {@inheritDoc}
@@ -1318,11 +1366,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 && change.isForProperty( "other" ) ) {
             Flow oldFlow = getFlow();
             setOther( (Node) change.getSubject( getQueryService() ) );
-            adjustFields( getFlow() );
+            Flow newFlow = getFlow();
+            adjustFields( newFlow );
             update( target, new Change( Change.Type.Updated, getNode() ) );
             if ( !getFlow().equals( oldFlow ) ) {
                 update( target, new Change( Change.Type.Collapsed, oldFlow ) );
-                update( target, new Change( Change.Type.Expanded, getFlow() ) );
+                update( target, new Change( Change.Type.Expanded, newFlow ) );
             }
         } else {
             if ( change.isUpdated() ) {

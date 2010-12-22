@@ -338,7 +338,7 @@ public class Segment extends ModelObject {
      * Find parts played by a given organization, when no roles or actors have been specified.
      *
      * @param organization the organization, possibly Organization.UNKNOWN
-     * @param locale the default location
+     * @param locale       the default location
      * @return the appropriate parts
      */
     public List<Part> findParts( Organization organization, Place locale ) {
@@ -358,7 +358,7 @@ public class Segment extends ModelObject {
      * @param organization the organization, possibly Organization.UNKNOWN
      * @param role         the role, possibly Role.UNKNOWN
      * @param jurisdiction
-     * @param locale the default location
+     * @param locale       the default location
      * @return the appropriate parts
      */
     public List<Part> findParts(
@@ -379,7 +379,7 @@ public class Segment extends ModelObject {
      * Find roles in a given organization used in this segment.
      *
      * @param organization the organization, possibly Organization.UNKNOWN
-     * @param locale the default location
+     * @param locale       the default location
      * @return the appropriate roles.
      */
     public List<Role> findRoles( Organization organization, Place locale ) {
@@ -676,6 +676,22 @@ public class Segment extends ModelObject {
      */
     public String displayString( int maxLength ) {
         return StringUtils.abbreviate( getName(), maxLength );
+    }
+
+    /**
+     * Get all sharing flows.
+     *
+     * @return a list of flows
+     */
+    public List<Flow> getAllSharingFlows() {
+        Set<Flow> flows = new HashSet<Flow>();
+        Iterator<Part> parts = parts();
+        while ( parts.hasNext() ) {
+            Part part = parts.next();
+            flows.addAll( part.getAllSharingSends() );
+            flows.addAll( part.getAllSharingReceives() );
+        }
+        return new ArrayList<Flow>( flows );
     }
 
 

@@ -206,6 +206,8 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.SingleAssignmentToImportantTask"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.AvailabilityGapInTaskAssignments"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.TaskWithoutFailureProtocol"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ImportantTaskNotOperational"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ImportantFlowNotOperational"/>
             </list>
         </property>
     </bean>

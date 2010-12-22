@@ -524,28 +524,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
      */
     public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship(
             T fromEntity, T toEntity ) {
-        List<Flow> entityFlows = new ArrayList<Flow>();
-        for ( Segment segment : queryService.list( Segment.class ) ) {
-            Iterator<Flow> flows = segment.flows();
-            while ( flows.hasNext() ) {
-                Flow flow = flows.next();
-                if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
-                    Part sourcePart = (Part) flow.getSource();
-                    Part targetPart = (Part) flow.getTarget();
-                    if ( queryService.isExecutedBy( sourcePart, fromEntity )
-                            && queryService.isExecutedBy( targetPart, toEntity ) ) {
-                        entityFlows.add( flow );
-                    }
-                }
-            }
-        }
-        if ( entityFlows.isEmpty() ) {
-            return null;
-        } else {
-            EntityRelationship<T> entityRel = new EntityRelationship<T>( fromEntity, toEntity );
-            entityRel.setFlows( entityFlows );
-            return entityRel;
-        }
+        return findEntityRelationship( fromEntity, toEntity, null );
     }
 
     /**
@@ -554,10 +533,14 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship(
             T fromEntity, T toEntity, Segment segment ) {
         List<Flow> entityFlows = new ArrayList<Flow>();
-        Iterator<Flow> flows = segment.flows();
-        while ( flows.hasNext() ) {
-            Flow flow = flows.next();
-            if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
+        List<Segment> segments = new ArrayList<Segment>();
+        if ( segment == null ) {
+            segments.addAll( queryService.list( Segment.class ) );
+        } else {
+            segments.add( segment );
+        }
+        for ( Segment seg : segments ) {
+            for ( Flow flow : seg.getAllSharingFlows() ) {
                 Part sourcePart = (Part) flow.getSource();
                 Part targetPart = (Part) flow.getTarget();
                 if ( queryService.isExecutedBy( sourcePart, fromEntity )
@@ -580,21 +563,16 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
      */
     public List<EntityRelationship> findEntityRelationships(
             Segment segment, Class<? extends ModelEntity> entityClass, ModelEntity.Kind kind ) {
-        List<ModelEntity> entities = queryService.findEntities( segment, entityClass, kind );
+        List<ModelEntity> entities = queryService.findTaskedEntities( segment, entityClass, kind );
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         for ( ModelEntity entity : entities ) {
             for ( ModelEntity otherEntity : entities ) {
                 if ( !entity.equals( otherEntity ) ) {
-                    EntityRelationship<ModelEntity> sendRel = findEntityRelationship( entity, otherEntity );
+                    EntityRelationship<ModelEntity> sendRel =
+                            findEntityRelationship( entity, otherEntity, segment );
                     if ( sendRel != null ) {
                         rels.add( sendRel );
                     }
-/*
-                    EntityRelationship<ModelEntity> receiveRel = findEntityRelationship( otherEntity, entity );
-                    if ( receiveRel != null ) {
-                        rels.add( receiveRel );
-                    }
-*/
                 }
             }
         }
@@ -607,7 +585,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity ) {
         List<ModelEntity> otherEntities =
                 new ArrayList<ModelEntity>(
-                        queryService.findEntities( segment, entity.getClass(), entity.getKind() ) );
+                        queryService.findTaskedEntities( segment, entity.getClass(), entity.getKind() ) );
         otherEntities.remove( entity );
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         for ( ModelEntity otherEntity : otherEntities ) {

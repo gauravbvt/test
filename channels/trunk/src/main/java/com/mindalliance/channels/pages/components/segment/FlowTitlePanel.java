@@ -43,8 +43,14 @@ public class FlowTitlePanel extends Panel {
         add( preLabel );
         Label infoLabel = new Label( "info", new Model<String>( getInfo() ) );
         add( infoLabel );
-        Label postLabel = new Label( "post", new Model<String>( getPost() ) );
+        Label postLabel = new Label( "post", new Model<String>( getPost() + "." + operationalString() ) );
         add( postLabel );
+    }
+
+    private String operationalString() {
+        return flow.canGetOperational() && !flow.isEffectivelyOperational()
+                ? " Not operational."
+                : "";
     }
 
     private String getPre() {
@@ -79,14 +85,14 @@ public class FlowTitlePanel extends Panel {
                 return !flow.isAskedFor()
                         ? "Needs to be notified of"
                         : flow.isIfTaskFails()
-                        ?  "If task fails, needs to ask for"
+                        ? "If task fails, needs to ask for"
                         : "Needs to ask for";
             } else {
                 Part part = (Part) source;
                 if ( flow.isAskedFor() ) {
                     String ask = flow.isIfTaskFails()
-                        ? "If task fails, ask"
-                        : "Ask";
+                            ? "If task fails, ask"
+                            : "Ask";
                     return MessageFormat.format(
                             "{0} {1}{2}{3}{4} for",
                             ask,
@@ -94,8 +100,7 @@ public class FlowTitlePanel extends Panel {
                             Flow.getOrganizationString( part ),
                             Flow.getJurisdictionString( part ),
                             flow.getRestrictionString() );
-                }
-                else
+                } else
                     return "Notified of";
             }
 

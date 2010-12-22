@@ -23,77 +23,80 @@ import java.util.List;
  * Date: Oct 22, 2010
  * Time: 3:14:04 PM
  */
-abstract public class AbstractFlowMetaProvider<V extends Node,E> extends AbstractMetaProvider<V, E> {
+abstract public class AbstractFlowMetaProvider<V extends Node, E> extends AbstractMetaProvider<V, E> {
     /**
-      * Color for subgraph contour
-      */
-     protected static final String SUBGRAPH_COLOR = "azure2";
-     /**
-      * Font for subgraph labels.
-      */
-     protected static final String SUBGRAPH_FONT = "Arial Bold Oblique";
-     /**
-      * Font size for subgraph labels.
-      */
-     protected static final String SUBGRAPH_FONT_SIZE = "10";
-     /**
-      * Font for node labels
-      */
-     public static final String NODE_FONT = "Arial";
-     /**
-      * Font size for node labels.
-      */
-     public static final String NODE_FONT_SIZE = "10";
-     /**
-      * Distance for edge head and tail labels.
-      */
-     protected static final String LABEL_DISTANCE = "1.0";
-     /**
-      * Distance for edge head and tail labels.
-      */
-     protected static final String LABEL_ANGLE = "45";
+     * Color for subgraph contour
+     */
+    protected static final String SUBGRAPH_COLOR = "azure2";
     /**
-      * Highlight pen width.
-      */
-     protected static final String HIGHLIGHT_PENWIDTH = "2.0";
-     /**
-      * Highlight pen color.
-      */
-     protected static final String HIGHLIGHT_COLOR = "gray";
-     /**
-      * Font of highlighted node.
-      */
-     protected static final String HIGHLIGHT_NODE_FONT = "Arial Bold";
+     * Font for subgraph labels.
+     */
+    protected static final String SUBGRAPH_FONT = "Arial Bold Oblique";
     /**
-      * Segment in context.
-      */
-     private ModelObject context;
-     /**
-      * Whether to show goals.
-      */
-     private boolean showingGoals;
-     /**
-      * Whether to show connectors.
-      */
-     private boolean showingConnectors;
+     * Font size for subgraph labels.
+     */
+    protected static final String SUBGRAPH_FONT_SIZE = "10";
+    /**
+     * Font for node labels
+     */
+    public static final String NODE_FONT = "Arial";
+    /**
+     * Font size for node labels.
+     */
+    public static final String NODE_FONT_SIZE = "10";
+    /**
+     * Distance for edge head and tail labels.
+     */
+    protected static final String LABEL_DISTANCE = "1.0";
+    /**
+     * Distance for edge head and tail labels.
+     */
+    protected static final String LABEL_ANGLE = "45";
+    /**
+     * Highlight pen width.
+     */
+    protected static final String HIGHLIGHT_PENWIDTH = "2.0";
+    /**
+     * Highlight pen color.
+     */
+    protected static final String HIGHLIGHT_COLOR = "gray";
+    /**
+     * Font of highlighted node.
+     */
+    protected static final String HIGHLIGHT_NODE_FONT = "Arial Bold";
+    /**
+     * Segment in context.
+     */
+    private ModelObject context;
+    /**
+     * Whether to show goals.
+     */
+    private boolean showingGoals;
+    /**
+     * Whether to show connectors.
+     */
+    private boolean showingConnectors;
+    private boolean hidingNoop;
 
     public AbstractFlowMetaProvider( ModelObject modelObject,
-                                String outputFormat,
-                                Resource imageDirectory,
-                                Analyst analyst ) {
-        this( modelObject, outputFormat, imageDirectory, analyst, false, false );
+                                     String outputFormat,
+                                     Resource imageDirectory,
+                                     Analyst analyst ) {
+        this( modelObject, outputFormat, imageDirectory, analyst, false, false, false );
     }
 
     public AbstractFlowMetaProvider( ModelObject modelObject,
-                                String outputFormat,
-                                Resource imageDirectory,
-                                Analyst analyst,
-                                boolean showingGoals,
-                                boolean showingConnectors ) {
+                                     String outputFormat,
+                                     Resource imageDirectory,
+                                     Analyst analyst,
+                                     boolean showingGoals,
+                                     boolean showingConnectors,
+                                     boolean hidingNoop ) {
         super( outputFormat, imageDirectory, analyst );
         this.context = modelObject;
         this.showingGoals = showingGoals;
         this.showingConnectors = showingConnectors;
+        this.hidingNoop = hidingNoop;
     }
 
     public boolean isShowingGoals() {
@@ -102,6 +105,10 @@ abstract public class AbstractFlowMetaProvider<V extends Node,E> extends Abstrac
 
     public boolean isShowingConnectors() {
         return showingConnectors;
+    }
+
+    public boolean isHidingNoop() {
+        return hidingNoop;
     }
 
     /**
@@ -114,40 +121,40 @@ abstract public class AbstractFlowMetaProvider<V extends Node,E> extends Abstrac
     }
 
     /**
-      * {@inheritDoc}
-      */
-     public VertexNameProvider<V> getVertexLabelProvider() {
-         return new VertexNameProvider<V>() {
-             public String getVertexName( Node node ) {
-                 String label = getNodeLabel( node ).replaceAll( "\\|", "\\\\n" );
-                 return sanitize( label );
-             }
-         };
-     }
+     * {@inheritDoc}
+     */
+    public VertexNameProvider<V> getVertexLabelProvider() {
+        return new VertexNameProvider<V>() {
+            public String getVertexName( Node node ) {
+                String label = getNodeLabel( node ).replaceAll( "\\|", "\\\\n" );
+                return sanitize( label );
+            }
+        };
+    }
 
-     /**
-      * {@inheritDoc}
-      */
-     public VertexNameProvider<V> getVertexIDProvider() {
-         return new VertexNameProvider<V>() {
-             public String getVertexName( V node ) {
-                 return "" + node.getId();
-             }
-         };
-     }
+    /**
+     * {@inheritDoc}
+     */
+    public VertexNameProvider<V> getVertexIDProvider() {
+        return new VertexNameProvider<V>() {
+            public String getVertexName( V node ) {
+                return "" + node.getId();
+            }
+        };
+    }
 
-     protected String getNodeLabel( com.mindalliance.channels.model.Node node ) {
-         if ( node.isPart() ) {
-             Part part = (Part) node;
-             return part.getFullTitle( "|", getAnalyst().getQueryService() );
-         } else {
-             return "c";
-         }
-     }
+    protected String getNodeLabel( com.mindalliance.channels.model.Node node ) {
+        if ( node.isPart() ) {
+            Part part = (Part) node;
+            return part.getFullTitle( "|", getAnalyst().getQueryService() );
+        } else {
+            return "c";
+        }
+    }
 
-     public static String getDefaultActor() {
-         return Part.DEFAULT_ACTOR;
-     }
+    public static String getDefaultActor() {
+        return Part.DEFAULT_ACTOR;
+    }
 
     protected String listActors( List<Actor> partActors ) {
         StringBuilder sb = new StringBuilder();
@@ -171,7 +178,9 @@ abstract public class AbstractFlowMetaProvider<V extends Node,E> extends Abstrac
         if ( node.isConnector() ) {
             Connector connector = (Connector) node;
             Flow flow = connector.getInnerFlow();
-            if ( flow.isNeed() && flow.isSatisfied()
+            if ( hidingNoop && !connector.getInnerFlow().isEffectivelyOperational() ) {
+                iconName = imagesDirName + "/connector_blank";
+            } else if ( flow.isNeed() && flow.isSatisfied()
                     || flow.isCapability() && flow.isSatisfying() ) {
                 iconName = imagesDirName + "/connector";
             } else {
@@ -184,11 +193,17 @@ abstract public class AbstractFlowMetaProvider<V extends Node,E> extends Abstrac
             String[] lines = label.split( "\\|" );
             numLines = Math.min( lines.length, 5 );
             Part part = (Part) node;
-            iconName = imagingService.findIconName( part, imagesDirName, getAnalyst().getQueryService() );
+            if ( hidingNoop && !part.isOperational() ) {
+                iconName = "blank";
+            } else {
+                iconName = imagingService.findIconName(
+                        part,
+                        imagesDirName,
+                        getAnalyst().getQueryService() );
+            }
         }
         return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
     }
-
 
 
 }

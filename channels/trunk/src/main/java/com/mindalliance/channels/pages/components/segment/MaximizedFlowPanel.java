@@ -40,6 +40,7 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
      * Whether to show connectors.
      */
     private boolean showingConnectors = false;
+    private boolean hidingNoop;
     /**
      * Flow diagram panel.
      */
@@ -55,11 +56,17 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
      */
     private boolean resizedToFit = false;
 
-    public MaximizedFlowPanel( String id, IModel<Part> partModel, boolean showingGoals, boolean showingConnectors ) {
+    public MaximizedFlowPanel(
+            String id,
+            IModel<Part> partModel,
+            boolean showingGoals,
+            boolean showingConnectors,
+            boolean hidingNoop ) {
         super( id );
         this.partModel = partModel;
         this.showingGoals = showingGoals;
         this.showingConnectors = showingConnectors;
+        this.hidingNoop = hidingNoop;
         init();
     }
 
@@ -131,6 +138,7 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
             protected void onEvent( AjaxRequestTarget target ) {
                 String props = showingGoals ? "showGoals" : "";
                 props += showingConnectors ? " showConnectors" : "";
+                props += hidingNoop ? " hideNoop" : "";
                 update( target, new Change(
                         Change.Type.Minimized,
                         getSegment(),
@@ -138,6 +146,18 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
             }
         } );
         add( minimize );
+        // Show/hide non-operational
+        WebMarkupContainer hideNoop = new WebMarkupContainer( "hideNoop" );
+        hideNoop.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                hidingNoop = !hidingNoop;
+                addFlowDiagram();
+                target.addComponent( flowMapDiagramPanel );
+            }
+        } );
+        add( hideNoop );
+        // Legend
         WebMarkupContainer legend = new WebMarkupContainer( "legend" );
         legend.add( new AjaxEventBehavior( "onclick" ) {
             @Override
@@ -160,7 +180,8 @@ public class MaximizedFlowPanel extends AbstractUpdatablePanel {
                         partModel,
                         settings,
                         showingGoals,
-                        showingConnectors );
+                        showingConnectors,
+                        hidingNoop );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
     }

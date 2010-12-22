@@ -482,7 +482,8 @@ public interface QueryService {
     void onDestroy();
 
     /**
-     * Find all actual entities of a given class that are involved in the execution of tasks in a segment.
+     * Find all actual entities (actors, roles or organizations) of a given class
+     * that are involved in the execution of tasks in a segment.
      *
      * @param entityClass a model entity class
      * @param segment     a segment
@@ -1106,8 +1107,7 @@ public interface QueryService {
 
     Boolean isExecutedBy( Part part, ModelEntity entity );
 
-    @SuppressWarnings( "unchecked" )
-    List<ModelEntity> findEntities(
+    List<ModelEntity> findTaskedEntities(
             Segment segment,
             Class entityClass,
             ModelEntity.Kind kind );

@@ -1,25 +1,24 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.model.Assignment;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Part;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Important task has a single assignment.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Nov 8, 2010
- * Time: 8:20:01 PM
+ * Date: Dec 21, 2010
+ * Time: 12:03:56 PM
  */
-public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
-    public SingleAssignmentToImportantTask() {
+public class ImportantFlowNotOperational  extends AbstractIssueDetector {
+
+    public ImportantFlowNotOperational() {
     }
 
     /**
@@ -27,19 +26,16 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
-        Part part = (Part) modelObject;
-        List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
-        if ( assignments.size() == 1 ) {
-            Level importance = this.getTaskFailureSeverity( part );
+        Flow flow = (Flow) modelObject;
+        if ( flow.isOperationalizable() && !flow.isOperational() ) {
+            Level importance = getSharingFailureSeverity( flow );
             if ( importance.compareTo( Level.Low ) >= 1 ) {
-                Issue issue = makeIssue( Issue.ROBUSTNESS, part );
-                issue.setDescription( "Task \""
-                        + part.getTitle()
-                        + "\" is important and yet is assigned to only one agent." );
+                Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                issue.setDescription( "Flow \""
+                        + flow.getTitle()
+                        + "\" is important but is not operational." );
                 issue.setSeverity( importance );
-                issue.setRemediation( "Profile agents so that more than one match the task specifications"
-                        + "\nor modify the task specifications so that it matches more than one agent."
-                );
+                issue.setRemediation( "Make the flow operational." );
                 issues.add( issue );
             }
         }
@@ -50,7 +46,7 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject instanceof Part;
+        return modelObject instanceof Flow;
     }
 
     /**
@@ -64,7 +60,7 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Important task has only one assignment";
+        return "Important sharing flow is not operational";
     }
 
     /**
@@ -74,3 +70,4 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
         return true;
     }
 }
+

@@ -131,6 +131,10 @@ public class SegmentPanel extends AbstractCommandablePanel {
      */
     private boolean showingGoals = false;
     /**
+     * Whether to show non-operational tasks and flows in flow map.
+     */
+    private boolean hidingNoop = false;
+    /**
      * Whether to show connectors in flow map.
      */
     private boolean showingConnectors = false;
@@ -151,6 +155,11 @@ public class SegmentPanel extends AbstractCommandablePanel {
      */
     private MediaReferencesPanel partMediaPanel;
 
+    /**
+     * Task title container.
+     */
+    private WebMarkupContainer taskTitleContainer;
+
     public SegmentPanel(
             String id,
             IModel<Segment> segmentModel,
@@ -167,6 +176,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
         addFlowViewControls();
         addFlowDiagram();
         addPartMenuBar();
+        addPartTitleContainer();
         addPartMediaPanel();
         addPartPanel();
         addReceivesFlowPanel();
@@ -183,6 +193,17 @@ public class SegmentPanel extends AbstractCommandablePanel {
         );
         partMediaPanel.setOutputMarkupId( true );
         addOrReplace( partMediaPanel );
+    }
+
+    private void addPartTitleContainer() {
+        taskTitleContainer = new WebMarkupContainer(
+                "task-title" );
+        taskTitleContainer.setOutputMarkupId( true );
+        taskTitleContainer.add( new AttributeModifier(
+                "class",
+                true,
+                new Model<String>( getPart().isOperational() ? "task-title" : "task-title-noop" ) ) );
+        addOrReplace( taskTitleContainer );
     }
 
     private void addReceivesFlowPanel() {
@@ -299,6 +320,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
             protected void onEvent( AjaxRequestTarget target ) {
                 String props = showingGoals ? "showGoals" : "";
                 props += showingConnectors ? " showConnectors" : "";
+                props += hidingNoop ? " hideNoop" : "";
                 update( target, new Change( Change.Type.Maximized, getSegment(), props ) );
             }
         } );
@@ -325,7 +347,18 @@ public class SegmentPanel extends AbstractCommandablePanel {
             }
         } );
         add( showConnectors );
-
+        // Show/hide non-operational
+        WebMarkupContainer hideNoop = new WebMarkupContainer( "hideNoop" );
+        hideNoop.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                hidingNoop = !hidingNoop;
+                addFlowDiagram();
+                target.addComponent( flowMapDiagramPanel );
+            }
+        } );
+        add( hideNoop );
+        // Show legend
         WebMarkupContainer legend = new WebMarkupContainer( "legend" );
         legend.add( new AjaxEventBehavior( "onclick" ) {
             @Override
@@ -334,7 +367,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
             }
         } );
         add( legend );
-
+        // Maximize
         WebMarkupContainer shrinkExpand = new WebMarkupContainer( "minimized" );
         final String script = "if (! __channels_flowmap_minimized__) "
                 + " {__graph_bottom = \"90%\"; __part_top = \"10%\"; }"
@@ -351,7 +384,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
         Settings settings = new Settings( FLOWMAP_DOM_ID, null, dim, true, true );
 
         flowMapDiagramPanel =
-                new FlowMapDiagramPanel( "flow-map", segmentModel, partModel, settings, showingGoals, showingConnectors );
+                new FlowMapDiagramPanel( "flow-map", segmentModel, partModel, settings, showingGoals, showingConnectors, hidingNoop );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
     }
@@ -407,6 +440,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 if ( change.isUpdated() ) {
                     addPartMediaPanel();
                     target.addComponent( partMediaPanel );
+                    addPartTitleContainer();
+                    target.addComponent( taskTitleContainer );
                     if ( partPanel instanceof ExpandedPartPanel ) {
                         ( (ExpandedPartPanel) partPanel ).refresh( target, change, updated );
                     }
@@ -482,6 +517,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 target.addComponent( flowMapDiagramPanel );
             }
             target.appendJavascript( PlanPage.IE7CompatibilityScript );
+            addPartTitleContainer();
+            target.addComponent( taskTitleContainer );
             addPartMediaPanel();
             target.addComponent( partMediaPanel );
             resizePartPanels( target );

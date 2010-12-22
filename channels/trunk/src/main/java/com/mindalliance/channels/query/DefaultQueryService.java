@@ -760,10 +760,24 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             Class<T> entityClass,
             Segment segment,
             ModelEntity.Kind kind ) {
+        Set<T> result = new HashSet<T>();
+        Iterator<Part> parts = segment.parts();
+        while ( parts.hasNext() ) {
+            List<Assignment> assignments = findAllAssignments( parts.next(), false );
+            for ( Assignment assignment : assignments ) {
+                T entity = assignment.getActualEntityAssigned( entityClass );
+                if ( kind.equals( ModelEntity.Kind.Actual ) ) {
+                    if ( entity != null ) result.add( entity );
+                } else {
+                    result.addAll( assignment.getEntityTypesAssigned( entityClass ));
+                }
+            }
+        }
+/*
+        Set<T> result = new HashSet<T>();
         List<T> entities = kind.equals( ModelEntity.Kind.Actual )
                 ? listActualEntities( entityClass )
                 : listTypeEntities( entityClass );
-        Set<T> result = new HashSet<T>();
         for ( T entity : entities ) {
             if ( !entity.isUnknown() ) {
                 Iterator<Flow> flows = segment.flows();
@@ -780,34 +794,26 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 }
             }
         }
+*/
         return new ArrayList<T>( result );
     }
 
     public Boolean isExecutedBy( Part part, final ModelEntity entity ) {
         if ( entity.isActual() ) {
+            if ( part.resourceSpec().hasEntity( entity ) ) return true;
             List<Assignment> assignments = findAllAssignments( part, false );
-            return part.resourceSpec().hasEntity( entity )
-                    ||
-                    CollectionUtils.exists(
-                            assignments,
-                            new Predicate() {
-                                public boolean evaluate( Object object ) {
-                                    Assignment assignment = (Assignment) object;
-                                    return assignment.hasEntity( entity );
-                                }
-                            }
-                    );
+            return CollectionUtils.exists(
+                    assignments,
+                    new Predicate() {
+                        public boolean evaluate( Object object ) {
+                            Assignment assignment = (Assignment) object;
+                            return assignment.hasEntity( entity );
+                        }
+                    }
+            );
         } else {
             ResourceSpec partSpec = part.resourceSpec();
-            /*if ( entity instanceof Actor && entity.isActual() ) {
-                List<Actor> allPlayers = findAllActualActors( partSpec );
-                if ( allPlayers.isEmpty() )
-                    return entity.isUnknown();
-                else
-                    return allPlayers.contains( (Actor) entity );
-            } else {*/
             return partSpec.hasEntityOrBroader( entity, getPlan().getLocale() );
-            //           }
         }
     }
 
@@ -2303,7 +2309,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @SuppressWarnings( "unchecked" )
-    public List<ModelEntity> findEntities(
+    public List<ModelEntity> findTaskedEntities(
             Segment segment,
             Class entityClass,
             final ModelEntity.Kind kind ) {
@@ -2733,7 +2739,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return disseminations;
     }
 
-    public List<Employment>  findAllEmployments( Part part, Place locale ) {
+    public List<Employment> findAllEmployments( Part part, Place locale ) {
 
         Set<Actor> employed = new HashSet<Actor>();
         List<Employment> employments = new ArrayList<Employment>();

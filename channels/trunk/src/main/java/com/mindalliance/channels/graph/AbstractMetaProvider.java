@@ -37,6 +37,10 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      */
     protected static final String COLOR_ERROR = "red3";
     /**
+     * Invisible pen color.
+     */
+    public static final String INVISIBLE_COLOR = "none";
+    /**
      * Font for edge labels.
      */
     public static final String EDGE_FONT = "Helvetica-Oblique";

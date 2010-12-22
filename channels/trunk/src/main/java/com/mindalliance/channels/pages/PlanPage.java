@@ -466,14 +466,17 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( flowMaximized ) {
             boolean showGoals;
             boolean showConnectors;
+            boolean hideNoop;
             String props = change.getProperty();
             showGoals = props != null && props.contains( "showGoals" );
             showConnectors = props != null && props.contains( "showConnectors" );
+            hideNoop = props != null && props.contains( "hideNoop" );
             maximizedFlowPanel = new MaximizedFlowPanel(
                     "maximized-flow",
                     new PropertyModel<Part>( this, "part" ),
                     showGoals,
-                    showConnectors );
+                    showConnectors,
+                    hideNoop );
         } else {
             maximizedFlowPanel = new Label( "maximized-flow" );
         }

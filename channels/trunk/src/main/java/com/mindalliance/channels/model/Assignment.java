@@ -139,6 +139,14 @@ public class Assignment implements GeoLocatable, Specable {
                 || ModelObject.areIdentical( getJurisdiction(), entity );
     }
 
+    public boolean hasEntityOrBroader( ModelEntity entity, Place locale ) {
+        return entity.narrowsOrEquals( getActor(), locale )
+            || entity.narrowsOrEquals( getRole(), locale )
+            || entity.narrowsOrEquals( getOrganization(), locale )
+            || entity.narrowsOrEquals( getJurisdiction(), locale );
+    }
+    
+
     /**
      * Get known assignee, either an actor or an organization.
      *
@@ -162,4 +170,37 @@ public class Assignment implements GeoLocatable, Specable {
         Role role = getRole();
         return !actor.isUnknown() && actor.isActual() || role == null ? actor : role;
     }
+
+    public <T extends ModelEntity> T getActualEntityAssigned( Class<T> entityClass ) {
+        if ( entityClass.isAssignableFrom( Organization.class ) ) {
+            return (T) getOrganization();
+        } else if ( entityClass.isAssignableFrom( Actor.class ) ) {
+            return (T) getActor();
+        } else throw new IllegalArgumentException();
+    }
+
+    public <T extends ModelEntity> List<T> getEntityTypesAssigned( Class<T> entityClass ) {
+        List<T> results = new ArrayList<T>();
+        if ( entityClass.isAssignableFrom( Organization.class ) ) {
+            Organization org = getOrganization();
+            if ( org != null ) {
+                if ( org.isType() ) results.add( (T) org );
+                results.addAll( (List<T>) org.getAllTags() );
+            }
+        } else if ( entityClass.isAssignableFrom( Actor.class ) ) {
+            Actor actor = getActor();
+            if ( actor != null ) {
+                if ( actor.isType() ) results.add( (T) actor );
+                results.addAll( (List<T>) actor.getAllTags() );
+            }
+        } else if ( entityClass.isAssignableFrom( Role.class ) ) {
+            Role role = getRole();
+            if ( role != null ) {
+                results.add( (T) role );
+                results.addAll( (List<T>) getRole().getAllTags() );
+            }
+        } else throw new IllegalArgumentException();
+        return results;
+    }
+
 }

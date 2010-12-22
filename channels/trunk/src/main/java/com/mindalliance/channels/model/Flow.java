@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * An arrow between two nodes in the information flow graph.
  */
-public abstract class Flow extends ModelObject implements Channelable, SegmentObject {
+public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Operationable {
 
     /**
      * A list of alternate communication channels for the flow.
@@ -70,6 +70,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Flow applies only if task fails. (Send only)
      */
     private boolean ifTaskFails;
+
+    /**
+     * Whether operational.
+     */
+    private boolean operational = true;
 
     protected Flow() {
     }
@@ -257,6 +262,39 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public void setSignificanceToTarget( Significance significanceToTarget ) {
         this.significanceToTarget = significanceToTarget;
+    }
+
+    public boolean isOperational() {
+        return operational;
+    }
+
+    public void setOperational( boolean operational ) {
+        this.operational = operational;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEffectivelyOperational() {
+        return isOperational()
+                &&
+                ( isNeed() && ( (Part) getTarget() ).isOperational()
+                        || isCapability() && ( (Part) getSource() ).isOperational()
+                        || isOperationalizable() );
+    }
+
+    public boolean canGetOperational() {
+        return isOperationalizable();
+    }
+
+    public boolean canSetOperational() {
+        return isOperationalizable();
+    }
+
+    public boolean isOperationalizable() {
+        return isSharing()
+                && ( (Part) getSource() ).isOperational()
+                && ( (Part) getTarget() ).isOperational();
     }
 
     public String getShortName( Node node, boolean qualified ) {
@@ -1183,6 +1221,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return isSharing() ? "Flow" : isNeed() ? "Need" : "Capability";
     }
 
+    public String getOperationalLabel() {
+        return isEffectivelyOperational() ? "Yes" : "No";
+    }
+    
 
     /**
      * The significance of a flow.

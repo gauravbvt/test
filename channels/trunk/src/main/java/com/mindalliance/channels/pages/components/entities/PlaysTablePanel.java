@@ -88,6 +88,11 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
                 "part.category.label",
                 EMPTY
         ) );
+        columns.add( makeColumn(
+                "Operational",
+                "part.operationalLabel",
+                EMPTY
+        ) );
         columns.add( makeColumn( "Info", "flow.name", "@kind", "?", "flow.description" ) );
         // style class is one of: ask, notify, answer, receive
         // columns.add( makeColumn( "Channels", "flow.channelsString", EMPTY ) );      // NON-NLS

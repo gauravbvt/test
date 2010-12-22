@@ -40,12 +40,16 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      * Whether to show connectors.
      */
     private boolean showingConnectors;
+    /**
+     * Whether to hide non-operational tasks and flows.
+     */
+    private boolean hidingNoop;
 
     public FlowMapDiagramPanel( String id,
                                 IModel<Segment> segmentModel,
                                 IModel<Part> partModel,
                                 Settings settings ) {
-        this( id, segmentModel, partModel, settings, false, false );
+        this( id, segmentModel, partModel, settings, false, false, false );
     }
 
     public FlowMapDiagramPanel( String id,
@@ -53,12 +57,14 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                                 IModel<Part> partModel,
                                 Settings settings,
                                 boolean showingGoals,
-                                boolean showingConnectors ) {
+                                boolean showingConnectors,
+                                boolean hidingNoop ) {
         super( id, settings );
         this.segmentModel = segmentModel;
         this.partModel = partModel;
         this.showingGoals = showingGoals;
         this.showingConnectors = showingConnectors;
+        this.hidingNoop = hidingNoop;
         init();
     }
 
@@ -81,7 +87,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                 getDiagramSize(),
                 getOrientation(),
                 showingGoals,
-                showingConnectors );
+                showingConnectors,
+                hidingNoop );
     }
 
     /**
@@ -117,6 +124,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         if ( showingConnectors ) {
             sb.append( "&showingConnectors=" );
             sb.append( showingConnectors );
+        }
+        if ( hidingNoop ) {
+            sb.append( "&hidingNoop=" );
+            sb.append( hidingNoop );
         }
 
         return sb.toString();

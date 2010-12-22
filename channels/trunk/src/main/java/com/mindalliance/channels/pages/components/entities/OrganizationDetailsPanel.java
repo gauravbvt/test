@@ -529,6 +529,11 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                     "part.category.label",
                     EMPTY
             ) );
+            columns.add( makeColumn(
+                    "Operational",
+                    "part.operationalLabel",
+                    EMPTY
+            ) );
             columns.add( makeFilterableLinkColumn(
                     "Location",
                     "part.location",
@@ -651,6 +656,11 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                     "sharing.target.location.name",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
+            columns.add( makeColumn(
+                    "Operational",
+                    "sharing.operationalLabel",
+                    EMPTY
+            ) );
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",
