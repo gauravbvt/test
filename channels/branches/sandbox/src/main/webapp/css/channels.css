@@ -1558,6 +1558,11 @@ h3.task-title {
 	padding-left:18px;
 }
 
+h3.task-title-noop {
+	background: url( '../images/tasks.cog.noop.png' ) no-repeat 0 1px;
+	padding-left:18px;
+}
+
 /* ----- More Menu Lowercase ----- */
 
 div.receives > div.section-content > div.flow > div > span.menubar > span > span.dropmenu > span,

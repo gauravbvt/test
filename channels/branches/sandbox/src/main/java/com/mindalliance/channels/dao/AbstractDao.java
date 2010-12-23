@@ -10,15 +10,11 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,39 +25,22 @@ import java.util.Map;
 /**
  * An in-memory, no-transactions implementation of a store.
  */
-public abstract class AbstractDao implements Dao {
-
-    /**
-     * Class logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( AbstractDao.class );
+abstract class AbstractDao implements Dao {
 
     /**
      * ModelObjects indexed by id.
      */
     private final Map<Long, ModelObject> indexMap = Collections.synchronizedMap(
-            new HashMap<Long, ModelObject>() );
+                                                        new HashMap<Long, ModelObject>() );
 
     //=======================================
-    /**
-     * ModelObjects, indexed by id.
-     */
     protected AbstractDao() {
     }
-
-    /**
-     * The plan for the data managed by this dao.
-     *
-     * @return he current plan
-     */
-    public abstract Plan getPlan();
 
     /**
      * @return the id generator
      */
     public abstract IdGenerator getIdGenerator();
-
-    /// CRUD
 
     /**
      * {@inheritDoc}
@@ -89,14 +68,13 @@ public abstract class AbstractDao implements Dao {
      */
     public void add( ModelObject object, Long id ) {
         synchronized ( indexMap ) {
-            if ( id != null && indexMap.containsKey( id ) ) {
+            if ( id != null && indexMap.containsKey( id ) )
                 throw new DuplicateKeyException();
-            }
-            object.setId( getIdGenerator().assignId( id, getPlan() ) );
+
+            assignId( object, id, getIdGenerator() );
             indexMap.put( object.getId(), object );
-            if ( object instanceof Segment ) {
+            if ( object instanceof Segment )
                 getPlan().addSegment( (Segment) object );
-            }
         }
     }
 
@@ -110,41 +88,35 @@ public abstract class AbstractDao implements Dao {
      * {@inheritDoc}
      */
     public Part createPart( Segment segment, Long id ) {
-        Part part = new Part();
-        part.setId( getIdGenerator().assignId( id, getPlan() ) );
-        part.setSegment( segment );
-        segment.addNode( part );
-        return part;
+        return segment.addNode( assignId( new Part(), id, getIdGenerator() ) );
     }
 
     /**
      * {@inheritDoc}
      */
     public Connector createConnector( Segment segment, Long id ) {
-        Connector connector = new Connector();
-        connector.setId( getIdGenerator().assignId( id, getPlan() ) );
-        connector.setSegment( segment );
-        segment.addNode( connector );
-        return connector;
+        return segment.addNode( assignId( new Connector(), id, getIdGenerator() ) );
     }
 
     /**
      * {@inheritDoc}
      */
     public ExternalFlow createExternalFlow( Node source, Node target, String name, Long id ) {
-        ExternalFlow externalFlow = new ExternalFlow( source, target, name );
-        externalFlow.setId( getIdGenerator().assignId( id, getPlan() ) );
-        return externalFlow;
+        return assignId( new ExternalFlow( source, target, name ), id, getIdGenerator() );
     }
 
     /**
      * {@inheritDoc}
      */
     public InternalFlow createInternalFlow( Node source, Node target, String name, Long id ) {
-        InternalFlow internalFlow = new InternalFlow( source, target, name );
-        internalFlow.setId( getIdGenerator().assignId( id, getPlan() ) );
-        return internalFlow;
+        return assignId( new InternalFlow( source, target, name ), id, getIdGenerator() );
     }
+
+    private <T extends ModelObject> T assignId( T object, Long id, IdGenerator generator ) {
+        object.setId( generator.assignId( id, getPlan() ) );
+        return object;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -173,6 +145,7 @@ public abstract class AbstractDao implements Dao {
 
     private ModelObject find( long id ) throws NotFoundException {
         if ( getPlan().getId() == id ) return getPlan();
+
         ModelObject result = indexMap.get( id );
         if ( result == null ) {
             Iterator<Segment> iterator = list( Segment.class ).iterator();
@@ -183,11 +156,13 @@ public abstract class AbstractDao implements Dao {
                     Iterator<Flow> flows = segment.flows();
                     while ( result == null && flows.hasNext() ) {
                         Flow flow = flows.next();
-                        if ( flow.getId() == id ) result = flow;
+                        if ( flow.getId() == id )
+                            result = flow;
                     }
                 }
             }
         }
+
         if ( result == null ) throw new NotFoundException();
         return result;
     }
@@ -196,10 +171,9 @@ public abstract class AbstractDao implements Dao {
      * {@inheritDoc}
      */
     public <T extends ModelObject> T find( Class<T> clazz, String name ) {
-        for ( T object : list( clazz ) ) {
+        for ( T object : list( clazz ) )
             if ( name.equals( object.getName() ) )
                 return object;
-        }
 
         return null;
     }
@@ -238,10 +212,7 @@ public abstract class AbstractDao implements Dao {
     }
 
     /**
-     * Find a named segment.
-     * @param name the name
-     * @return the segment, if found
-     * @throws NotFoundException if none exists
+     * {@inheritDoc}
      */
     public Segment findSegment( String name ) throws NotFoundException {
         for ( Segment s : list( Segment.class ) )
@@ -251,6 +222,9 @@ public abstract class AbstractDao implements Dao {
         throw new NotFoundException();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id ) {
         T entityType = ModelEntity.getUniversalType( name, clazz );
         if ( entityType == null ) {
@@ -263,6 +237,9 @@ public abstract class AbstractDao implements Dao {
         return entityType;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Flow connect( Node source, Node target, String name, Long id ) {
         Flow result;
 
@@ -288,8 +265,7 @@ public abstract class AbstractDao implements Dao {
     }
 
     public void disconnect( Connector connector ) {
-        Collection<ExternalFlow> flows = new HashSet<ExternalFlow>( connector.getExternalFlows() );
-        for ( ExternalFlow flow : flows )
+        for ( ExternalFlow flow : new HashSet<ExternalFlow>( connector.getExternalFlows() ) )
             disconnect( flow );
     }
 
@@ -344,7 +320,7 @@ public abstract class AbstractDao implements Dao {
      * Quietly succeeds if node is not part of the segment
      *
      * @param node    the node to remove.
-     * @param segment
+     * @param segment the segment
      */
     public void removeNode( Node node, Segment segment ) {
         if ( segment.getNode( node.getId() ) != null && ( node.isConnector() || segment.hasMoreThanOnePart() ) ) {

@@ -29,6 +29,7 @@ public class PlanEditActionsMenuPanel extends ActionMenuPanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         commandWrappers.add( new CommandWrapper( new PasteAttachment( getPlan() ) ) {

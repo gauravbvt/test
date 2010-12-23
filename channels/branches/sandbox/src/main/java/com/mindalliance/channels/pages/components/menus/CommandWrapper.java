@@ -15,20 +15,18 @@ import java.io.Serializable;
  * Time: 9:02:28 PM
  */
 public abstract class CommandWrapper implements Serializable {
-    /**
-     * The wrapped command.
-     */
-    private Command command;
-    /**
-     * Whether the command requires confirmation.
-     */
-    private boolean confirm = false  ;
 
-    public CommandWrapper( Command command ) {
+    /** The wrapped command. */
+    private Command command;
+
+    /** Whether the command requires confirmation. */
+    private boolean confirm;
+
+    protected CommandWrapper( Command command ) {
         this.command = command;
     }
 
-    public CommandWrapper( Command command, boolean confirm ) {
+    protected CommandWrapper( Command command, boolean confirm ) {
         this( command );
         this.confirm = confirm;
     }
@@ -39,6 +37,7 @@ public abstract class CommandWrapper implements Serializable {
 
     /**
      * Invoked after the command has executed.
+     *
      * @param target an ajax request target
      * @param change the change caused by the command's execution
      */

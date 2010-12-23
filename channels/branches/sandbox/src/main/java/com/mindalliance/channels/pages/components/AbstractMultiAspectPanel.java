@@ -10,6 +10,7 @@ import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.dao.User;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -256,7 +257,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
     private Component makeActionMenuOrLabel( String menuId ) {
         Component menu;
         LockManager lockManager = getLockManager();
-        if ( !objectNeedsLocking() || lockManager.isLockedByUser( getObject() ) ) {
+        if ( !objectNeedsLocking() || lockManager.isLockedByUser( User.current().getUsername(), getObject().getId() ) ) {
             menu = makeActionMenu( menuId );
         } else if ( getCommander().isTimedOut() || getLockOwner( getObject() ) == null ) {
             menu = timeOutLabel( menuId ) ;
@@ -264,7 +265,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
             menu = new Label(
                     menuId, new Model<String>( "Immutable" ) );
         } else {
-            menu = editedByLabel( menuId, getObject(), lockManager.getLockOwner( getObject().getId() ) );
+            menu = editedByLabel( menuId, getObject(), lockManager.getLockUser( getObject().getId() ) );
         }
         return menu;
     }

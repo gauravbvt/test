@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Releaseable;
+import com.mindalliance.channels.dao.User;
 import org.apache.wicket.model.IModel;
 
 import java.util.Set;
@@ -56,7 +57,8 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     protected boolean isLockedByUser( Identifiable identifiable ) {
         return getPlan().isDevelopment()
                 && !isImmutable( identifiable )
-                && getLockManager().isLockedByUser( identifiable );
+                && getLockManager().isLockedByUser(
+                            User.current().getUsername(), identifiable.getId() );
     }
 
     /**
@@ -85,7 +87,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a string or null
      */
     protected String getLockOwner( Identifiable identifiable ) {
-        return getLockManager().getLockOwner( identifiable.getId() );
+        return getLockManager().getLockUser( identifiable.getId() );
     }
 
     /**

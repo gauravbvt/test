@@ -94,7 +94,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a query service
      */
     protected QueryService getQueryService() {
-        return getChannels().getQueryService();
+        return queryService;
     }
 
     /**
@@ -130,7 +130,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return the plan manager
      */
     protected PlanManager getPlanManager() {
-        return getQueryService().getPlanManager();
+        return queryService.getPlanManager();
     }
 
     /**
@@ -153,10 +153,8 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @param component a component
      * @param visible   a boolean
      */
-    protected static void makeVisible(
-            AjaxRequestTarget target,
-            Component component,
-            boolean visible ) {
+    protected static void makeVisible( AjaxRequestTarget target, Component component,
+                                       boolean visible ) {
         makeVisible( component, visible );
         target.addComponent( component );
     }
@@ -203,7 +201,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     /**
-     * {@inheritDoc}
+     * Update a change.
+     *
+     * @param target the target
+     * @param change the change
      */
     protected void update( AjaxRequestTarget target, Change change ) {
         changed( change );
@@ -267,21 +268,21 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     protected List<String> getUniqueNameChoices( ModelEntity entity ) {
         List<String> choices = new ArrayList<String>();
-        List<String> namesTaken = getQueryService().findAllEntityNames( entity.getClass() );
-        for ( String taken : namesTaken ) {
-            if ( taken.equals( entity.getName() ) ) {
+        for ( String taken : queryService.findAllEntityNames( entity.getClass() ) ) {
+            if ( taken.equals( entity.getName() ) )
                 choices.add( taken );
-            } else {
+            else {
                 Matcher matcher = namePattern.matcher( taken );
                 int count = matcher.groupCount();
                 if ( count > 1 ) {
                     String group = matcher.group( 0 );
                     int index = Integer.valueOf( group.substring( 1, group.length() - 2 ) );
-                    String newTaken = taken.substring( 0, taken.lastIndexOf( '(' ) - 1 ) + "(" + ( index + 1 ) + ")";
-                    choices.add( newTaken );
-                } else {
+                    choices.add(
+                        taken.substring( 0, taken.lastIndexOf( '(' ) - 1 )
+                        + '(' + ( index + 1 ) + ')'
+                    );
+                } else
                     choices.add( taken + "(2)" );
-                }
             }
         }
         return choices;
@@ -295,36 +296,27 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @param property  the property of concern. If null, get issues of object
      */
     protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
-        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
+        Analyst analyst = getAnalyst();
         String summary = property == null ?
                 analyst.getIssuesSummary( object, false ) :
                 analyst.getIssuesSummary( object, property );
+
         boolean hasIssues = property == null ?
                 analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) :
                 analyst.hasIssues( object, property );
-        if ( !summary.isEmpty() ) {
+
+        if ( summary.isEmpty() )
             component.add(
-                    new AttributeModifier(
-                            "class", true, new Model<String>( "error" ) ) );
+                new AttributeModifier(
+                    "class", true,
+                    new Model<String>( hasIssues ? "waived" : "no-error" ) ),
+                new AttributeModifier(
+                    "title", true,
+                     new Model<String>( hasIssues ? "All issues waived" : "" ) ) );
+        else
             component.add(
-                    new AttributeModifier(
-                            "title", true, new Model<String>( summary ) ) );                // NON-NLS
-        } else {
-            if ( hasIssues ) {
-                // All waived issues
-                component.add(
-                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
-                component.add(
-                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
-            } else {
-                component.add(
-                        new AttributeModifier(
-                                "class", true, new Model<String>( "no-error" ) ) );
-                component.add(
-                        new AttributeModifier(
-                                "title", true, new Model<String>( "" ) ) );
-            }
-        }
+                new AttributeModifier( "class", true, new Model<String>( "error" ) ),
+                new AttributeModifier( "title", true, new Model<String>( summary ) ) );
     }
 
     /**

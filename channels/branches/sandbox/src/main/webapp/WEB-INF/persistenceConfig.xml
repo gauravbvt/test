@@ -18,7 +18,12 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    <bean id="propset" class="com.mindalliance.channels.util.SystemPropertySetter">
+        <property name="property" value="webinf.path"/>
+        <property name="resource" value="/WEB-INF"/>
+    </bean>
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" depends-on="propset">
         <property name="configLocation" value="/WEB-INF/ehcache.xml"/>
     </bean>
 

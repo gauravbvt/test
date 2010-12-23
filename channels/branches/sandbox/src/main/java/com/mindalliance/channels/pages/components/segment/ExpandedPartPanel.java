@@ -187,6 +187,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Category choice.
      */
     private DropDownChoice<String> categoryChoice;
+    /**
+     * Operational checkbox.
+     */
+    private CheckBox operationalCheckBox;
 
 
     //====================================
@@ -199,6 +203,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addPartDescription();
         addTaskField();
         addCategoryField();
+        addOperationalField();
         addEntityFields();
         addEventInitiation();
         addAsTeam();
@@ -262,6 +267,17 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addOrReplace( categoryChoice );
     }
 
+    private void addOperationalField() {
+        operationalCheckBox = new CheckBox("operational", new PropertyModel<Boolean>( this, "operational"));
+        add( operationalCheckBox );
+        operationalCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getPart(), "operational" ) );
+            }
+        } );
+
+    }
+
     private List<String> getCategoryLabels() {
         List<String> labels = new ArrayList<String>();
         labels.add( NO_CATEGORY );
@@ -317,6 +333,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void adjustFields() {
         taskField.setEnabled( isLockedByUser( getPart() ) );
         categoryChoice.setEnabled( isLockedByUser( getPart() ) );
+        operationalCheckBox.setEnabled( isLockedByUser( getPart() ) );
         for ( EntityReferencePanel entityReferencePanel : entityFields ) {
             entityReferencePanel.enable( isLockedByUser( getPart() ) );
         }
@@ -909,6 +926,16 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             Part.Category category;
             category = label.equals( NO_CATEGORY ) ? null : Part.Category.valueOfLabel( label );
             doCommand( new UpdateSegmentObject( getPart(), "category", category ) );
+        }
+    }
+
+    public boolean isOperational() {
+        return getPart().isOperational();
+    }
+
+    public void setOperational( boolean val ) {
+        if ( val != isOperational() ) {
+            doCommand( new UpdateSegmentObject( getPart(), "operational", val ) );
         }
     }
 

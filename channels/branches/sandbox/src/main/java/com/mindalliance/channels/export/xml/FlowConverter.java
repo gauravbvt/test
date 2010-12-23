@@ -123,6 +123,11 @@ public class FlowConverter extends AbstractChannelsConverter {
             writer.setValue( Boolean.toString(  flow.isIfTaskFails() ) );
             writer.endNode();
         }
+        // Operational
+        writer.startNode( "operational" );
+        writer.setValue( Boolean.toString( flow.isOperational() ) );
+        writer.endNode();
+
     }
 
     private void writeFlowNodes( InternalFlow flow,
@@ -252,6 +257,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setRestriction( Flow.Restriction.valueOf( reader.getValue() ) );
             }  else if ( nodeName.equals( "ifTaskFails") ) {
                 flow.setIfTaskFails( Boolean.valueOf( reader.getValue() ) );
+            } else if ( nodeName.equals( "operational" ) ) {
+                flow.setOperational( reader.getValue().equals( "true" ) );
             } else {
                 throw new ConversionException( "Unknown element " + nodeName );
             }

@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.menus;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -12,77 +13,57 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * An abstract base class for menu panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 10, 2009
- * Time: 8:29:34 AM
- */
+/** An abstract base class for menu panel. */
 public abstract class MenuPanel extends AbstractCommandablePanel {
-    /**
-     * Confirmation requested.
-     */
-    protected static boolean CONFIRM = true;
-    /**
-     * List view of menu items.
-     */
-    private ListView<Component> menuItemsList;
-    /**
-     * Title.
-     */
+
+    /** Confirmation requested. */
+    protected static final boolean CONFIRM = true;
+
+    /** Title. */
     private String title;
 
-    public MenuPanel(
-            String s,
-            String title,
-            IModel<? extends Identifiable> model ) {
+    protected MenuPanel( String s, String title, IModel<? extends Identifiable> model ) {
         this( s, title, model, null );
     }
 
-    public MenuPanel(
-            String s,
-            String title,
-            IModel<? extends Identifiable> model,
-            Set<Long> expansions ) {
+    protected MenuPanel( String s, String title, IModel<? extends Identifiable> model,
+                         Set<Long> expansions ) {
         super( s, model, expansions );
         this.title = title;
         init();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** Initialize menu components. */
     protected void init() {
         setOutputMarkupId( true );
-        add( new Label( "menu-title", new Model<String>( title ) ) );
-        menuItemsList = new ListView<Component>(
-                "items",
-                new PropertyModel<List<Component>>( this, "menuItems" ) ) {
-            protected void populateItem( ListItem<Component> item ) {
-                item.add( item.getModelObject() );
-            }
-        };
-        add( menuItemsList );
+        add(
+            new Label( "menu-title", new Model<String>( title ) ),
+            new ListView<Component>(
+                "items", new PropertyModel<List<Component>>( this, "menuItems" ) ) {
+                    @Override
+                    protected void populateItem( ListItem<Component> item ) {
+                        item.add( item.getModelObject() );
+                    }
+                } );
     }
 
     /**
      * Get menu items.
      *
      * @return a list of components
+     *
      * @throws CommandException if fails to get menu items
      */
     public abstract List<Component> getMenuItems() throws CommandException;
@@ -97,9 +78,11 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         try {
             menuItems = getMenuItems();
         } catch ( CommandException e ) {
+            LoggerFactory.getLogger( getClass() ).debug( "While testing for emptyness", e );
             // do nothing
         }
-        return menuItems != null && menuItems.size() == 0;
+
+        return menuItems != null && menuItems.isEmpty();
     }
 
     /**
@@ -109,21 +92,23 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @param moWrappers model object wrappers (model object + link text)
      * @return a list of components
      */
-    protected List<Component> getModelObjectMenuItems(
-            String id,
-            List<ModelObjectWrapper> moWrappers ) {
+    protected List<Component> getModelObjectMenuItems( String id,
+                                                       List<ModelObjectWrapper> moWrappers ) {
         List<Component> menuItems = new ArrayList<Component>();
-        for ( final ModelObjectWrapper moWrapper : moWrappers ) {
-            Link link = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Expanded, moWrapper.getModelObject() ) );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
+        for ( final ModelObjectWrapper moWrapper : moWrappers )
+            menuItems.add(
+                new LinkMenuItem(
                     id,
                     new PropertyModel<String>( moWrapper, "title" ),
-                    link ) );
-        }
+                    new AjaxFallbackLink( "link" ) {
+                        @Override
+                        public void onClick( AjaxRequestTarget target ) {
+                            update(
+                                target,
+                                new Change( Change.Type.Expanded, moWrapper.getModelObject() ) );
+                        }
+                    } ) );
+
         return menuItems;
     }
 
@@ -134,26 +119,19 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @return a menu item component
      */
     protected Component getUndoMenuItem( String id ) {
-        Component menuItem;
-        if ( getCommander().canUndo() ) {
-            Link link = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    Change change = getCommander().undo();
-                    update( target, change );
-                }
-            };
-            menuItem = new LinkMenuItem(
-                    id,
-                    new Model<String>( getCommander().getUndoTitle() ), link );
-        } else {
-            Label undoLabel = new Label( id, "Undo" );
-            undoLabel.add( new AttributeModifier(
-                    "class",
-                    true,
-                    new Model<String>( "disabled" ) ) );
-            menuItem = undoLabel;
-        }
-        return menuItem;
+        return getCommander().canUndo() ?
+              new LinkMenuItem(
+                id,
+                new Model<String>( getCommander().getUndoTitle() ),
+                new AjaxFallbackLink( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        update( target, getCommander().undo() );
+                    }
+                } )
+
+            : new Label( id, "Undo" )
+                .add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
     }
 
     /**
@@ -163,95 +141,93 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @return a menu item component
      */
     protected Component getRedoMenuItem( String id ) {
-        Component menuItem;
-        if ( getCommander().canRedo() ) {
-            Link link = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    Change change = getCommander().redo();
-                    update( target, change );
-                }
-            };
-            menuItem = new LinkMenuItem(
-                    id,
-                    new Model<String>( getCommander().getRedoTitle() ), link );
-        } else {
-            Label label = new Label( id, "Redo" );
-            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
-            menuItem = label;
-        }
-        return menuItem;
+        return getCommander().canRedo() ?
+              new LinkMenuItem(
+                id,
+                new Model<String>( getCommander().getRedoTitle() ),
+                new AjaxFallbackLink( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        update(
+                            target, getCommander().redo() );
+                    }
+                } )
+
+            : new Label( id, "Redo" )
+                .add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
     }
 
+    /**
+     * Create a send message menu item.
+     *
+     * @param id the id
+     * @return the component
+     */
     protected Component getSendMessageMenuItem( String id ) {
-        Component menuItem;
         final Identifiable identifiable = getModel().getObject();
-        if ( identifiable != null & identifiable instanceof ModelObject ) {
-            Link link = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    Change change = new Change( Change.Type.Communicated, identifiable );
-                    update( target, change );
-                }
-            };
-            menuItem = new LinkMenuItem(
-                    id,
-                    new Model<String>( "Send message" ), link );
-        } else {
-            Label label = new Label( id, "Send message" );
-            label.add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
-            menuItem = label;
-        }
-        return menuItem;
+        return identifiable != null && identifiable instanceof ModelObject ?
+              new LinkMenuItem(
+                  id,
+                  new Model<String>( "Send message" ),
+                  new AjaxFallbackLink( "link" ) {
+                          @Override
+                          public void onClick( AjaxRequestTarget target ) {
+                              update( target,
+                                      new Change( Change.Type.Communicated, identifiable ) );
+                          } } )
+
+            : new Label( id, "Send message" )
+                .add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
     }
 
     /**
      * Make menu items from commands.
      *
-     * @param id              id of the menu item
-     * @param commandWrappers a list of wrapped commands
+     * @param id        id of the menu item
+     * @param commands  a list of wrapped commands
      * @return a list of menu item components
-     * @throws CommandException if can't build command label
      */
-    protected List<Component> getCommandMenuItems(
-            String id,
-            List<CommandWrapper> commandWrappers ) throws CommandException {
+    protected List<Component> getCommandMenuItems( String id, List<CommandWrapper> commands ) {
+
         List<Component> menuItems = new ArrayList<Component>();
-        for ( final CommandWrapper commandWrapper : commandWrappers ) {
-            final Command command = commandWrapper.getCommand();
-            if ( getCommander().canDo( command ) ) {
-                Link link = new ConfirmedAjaxFallbackLink(
-                        "link",
-                        commandWrapper.isConfirm() ? "Are you sure?" : null ) {
-                    public void onClick( AjaxRequestTarget target ) {
-                        Change change = getCommander().doCommand( command );
-                        commandWrapper.onExecuted( target, change );
-                    }
-                };
-                menuItems.add( new LinkMenuItem( id,
-                        new Model<String>( command.getLabel( getCommander() ) ),
-                        link ) );
-            } else {
-                Label label = new Label( id, new Model<String>( command.getLabel( getCommander() ) ) );
-                label.add( new AttributeModifier(
-                        "class",
-                        true,
-                        new Model<String>( "disabled" ) ) );
-                menuItems.add( label );
-            }
+
+        Commander commander = getCommander();
+
+        for ( final CommandWrapper commandWrapper : commands )
+            try {
+                final Command command = commandWrapper.getCommand();
+                String label = command.getLabel( commander );
+                menuItems.add(
+                    commander.canDo( command ) ? new LinkMenuItem(
+                        id,
+                        new Model<String>( label ),
+                        new ConfirmedAjaxFallbackLink(
+                            "link", commandWrapper.isConfirm() ? "Are you sure?" : null ) {
+                            @Override
+                            public void onClick( AjaxRequestTarget target ) {
+                                commandWrapper.onExecuted(
+                                    target, getCommander().doCommand( command ) );
+                            }
+                        } )
+
+                        : new Label( id, new Model<String>( label ) )
+                            .add( new AttributeModifier(
+                                "class", true, new Model<String>( "disabled" ) ) ) );
+
+            } catch ( CommandException e ) {
+            LoggerFactory.getLogger( getClass() ).warn( "Unable to get command label", e );
         }
+
         return menuItems;
     }
 
-    /**
-     * A Model object wrapper.
-     */
+    /** A Model object wrapper. */
     public static class ModelObjectWrapper implements Serializable {
-        /**
-         * Model object.
-         */
+
+        /** Model object. */
         private ModelObject modelObject;
-        /**
-         * Title.
-         */
+
+        /** Title. */
         private String title;
 
         public ModelObjectWrapper( String title, ModelObject modelObject ) {
@@ -275,6 +251,4 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             this.title = title;
         }
     }
-
-
 }

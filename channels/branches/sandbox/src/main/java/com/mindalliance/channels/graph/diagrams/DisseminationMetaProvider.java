@@ -37,7 +37,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             String outputFormat,
             Resource imageDirectory,
             Analyst analyst ) {
-        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false );
+        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false, false );
     }
 
     /**

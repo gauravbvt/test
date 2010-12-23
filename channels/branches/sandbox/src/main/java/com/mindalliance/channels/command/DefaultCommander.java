@@ -263,24 +263,29 @@ public class DefaultCommander implements Commander {
     public boolean canDo( Command command ) {
         return getPlan().isDevelopment()
                 && command.canDo( this )
-                && lockManager.canGrabLocksOn( command.getLockingSet() );
+                && lockManager.isLockableByUser( command.getUserName(), command.getLockingSet() );
     }
 
     private Change execute( Command command ) throws CommandException {
         Change change;
-        if ( command.isAuthorized() ) {
+        String userName = command.getUserName();
+        if ( command.isAuthorized() )
             try {
-                Collection<Lock> grabbedLocks = lockManager.grabLocksOn( command.getLockingSet() );
+                Collection<Long> grabbedLocks =
+                        lockManager.lock( userName, command.getLockingSet() );
                 change = command.execute( this );
-                if ( change.isNone() ) LOG.info( "No change" );
-                lockManager.releaseLocks( grabbedLocks );
+                if ( change.isNone() )
+                    LOG.info( "No change" );
+
+                lockManager.release( userName, grabbedLocks );
+
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
             }
-        } else {
+        else
             throw new CommandException( "You are not authorized." );
-        }
-        updateUserActive( command.getUserName() );
+
+        updateUserActive( userName );
         return change;
     }
 
@@ -442,46 +447,52 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public boolean isLockedByUser( Identifiable identifiable ) {
-        return lockManager.isLockedByUser( identifiable );
+        return lockManager.isLockedByUser( User.current().getUsername(), identifiable.getId() );
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean requestLockOn( Identifiable identifiable ) {
-        if ( isTimedOut() || identifiable == null ) return false;
-        updateUserActive( User.current().getUsername() );
-        return lockManager.requestLockOn( identifiable );
+        if ( isTimedOut() || identifiable == null )
+            return false;
+
+        String userName = User.current().getUsername();
+        updateUserActive( userName );
+        return lockManager.requestLock( userName, identifiable.getId() );
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean requestLockOn( Long id ) {
-        if ( isTimedOut() ) return false;
-        updateUserActive( User.current().getUsername() );
-        return lockManager.requestLockOn( id );
+        if ( isTimedOut() )
+            return false;
+
+        String userName = User.current().getUsername();
+        updateUserActive( userName );
+        return lockManager.requestLock( userName, id );
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean releaseAnyLockOn( Identifiable identifiable ) {
-        return lockManager.releaseAnyLockOn( identifiable );
+        return lockManager.requestRelease( User.current().getUsername(), identifiable.getId() );
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean releaseAnyLockOn( Long id ) {
-        return lockManager.releaseAnyLockOn( id );
+        return lockManager.requestRelease( User.current().getUsername(), id );
     }
 
     /**
      * {@inheritDoc}
      */
     public void releaseAllLocks( String userName ) {
-        lockManager.releaseAllLocks( userName );
+        lockManager.release( userName );
     }
 
     /**
@@ -524,7 +535,7 @@ public class DefaultCommander implements Commander {
                 loggedOut( userName );
                 deads.add( userName );
                 LOG.info( "{} is done planning", userName );
-                lockManager.releaseAllLocks( userName );
+                lockManager.release( userName );
             }
 
         for ( String userName : deads )
@@ -559,7 +570,7 @@ public class DefaultCommander implements Commander {
         if ( timeoutMillis < now - whenLastCheckedForTimeouts ) {
             for ( String userName : whenLastActive.keySet() ) {
                 long time = whenLastActive.get( userName );
-                if ( timeoutMillis < now - time && lockManager.releaseAllLocks( userName ) )
+                if ( timeoutMillis < now - time && lockManager.release( userName ) )
                     timedOut.add( userName );
             }
 
@@ -588,7 +599,7 @@ public class DefaultCommander implements Commander {
      * {@inheritDoc}
      */
     public boolean isUnlocked( ModelObject mo ) {
-        return lockManager.getLock( mo.getId() ) == null;
+        return !lockManager.isLocked( mo.getId() );
     }
 
     /**

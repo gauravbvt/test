@@ -224,7 +224,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportInitiations( PrintWriter out, Graph<Node, Flow> g ) {
         Segment segment = getSegment();
         for ( Part initiator : initiators ) {
-            List<DOTAttribute> attributes = getTimingEdgeAttributes();
+            List<DOTAttribute> attributes = getTimingEdgeAttributes( initiator );
             attributes.add( new DOTAttribute( "label", makeLabel( segment.initiationCause( initiator ) ) ) );
             /*attributes.add( new DOTAttribute(
                     "tooltip",
@@ -241,7 +241,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private void exportAutoStarts( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part autoStarter : autoStarters ) {
-            List<DOTAttribute> attributes = getTimingEdgeAttributes();
+            List<DOTAttribute> attributes = getTimingEdgeAttributes( autoStarter );
             attributes.add( new DOTAttribute( "headlabel", "(starts)" ) );
             String autoStarterId = getVertexID( autoStarter );
             out.print( getIndent() + START + getArrow( g ) + autoStarterId );
@@ -256,7 +256,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportTerminations( PrintWriter out, Graph<Node, Flow> g ) {
         Segment segment = getSegment();
         for ( Part terminator : terminators ) {
-            List<DOTAttribute> attributes = getTimingEdgeAttributes();
+            List<DOTAttribute> attributes = getTimingEdgeAttributes( terminator );
             attributes.add( new DOTAttribute( "label", makeLabel( segment.terminationCause( terminator ) ) ) );
             /*attributes.add( new DOTAttribute(
                     "tooltip",
@@ -273,7 +273,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private void exportEventStarts( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part part : eventStarters ) {
-            List<DOTAttribute> attributes = getTimingEdgeAttributes();
+            List<DOTAttribute> attributes = getTimingEdgeAttributes( part );
             attributes.add( new DOTAttribute( "headlabel", "(start)" ) );
             /*attributes.add( new DOTAttribute(
                     "tooltip",
@@ -289,16 +289,25 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
 
-    private List<DOTAttribute> getTimingEdgeAttributes() {
+    private List<DOTAttribute> getTimingEdgeAttributes( Part part ) {
         List<DOTAttribute> list = DOTAttribute.emptyList();
-        list.add( new DOTAttribute( "color", "gray" ) );
+        list.add( new DOTAttribute( "color", ifVisibleColor( part, "gray" ) ) );
         list.add( new DOTAttribute( "arrowhead", "none" ) );
         list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
         list.add( new DOTAttribute( "fontsize", AbstractMetaProvider.EDGE_FONT_SIZE ) );
-        list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
+        list.add( new DOTAttribute( "fontcolor", ifVisibleColor( part, "dimgray" ) ) );
         list.add( new DOTAttribute( "len", "1.5" ) );
         list.add( new DOTAttribute( "weight", "2.0" ) );
         return list;
+    }
+
+    private boolean isVisible( Part part ) {
+        return !((FlowMapMetaProvider)getMetaProvider()).isHidingNoop() || part.isOperational();
+    }
+
+    private String ifVisibleColor( Part part, String color ) {
+        return part != null && !isVisible( part )
+                ? AbstractMetaProvider.INVISIBLE_COLOR : color;
     }
 
 
@@ -316,14 +325,14 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
                 Part part = (Part) node;
                 if ( part.getSegment().equals( segment ) )
                     for ( Goal goal : part.getGoals() ) {
-                        exportGoal( getGoalVertexId( part, goal ), goal, out, metaProvider );
+                        exportGoal( getGoalVertexId( part, goal ), goal, part, out, metaProvider );
                     }
             }
         }
         if ( getTerminatedSegments().contains( segment ) ) {
             for ( Goal goal : segment.getGoals() ) {
                 if ( goal.isEndsWithSegment() ) {
-                    exportGoal( getGoalVertexId( segment, goal ), goal, out, metaProvider );
+                    exportGoal( getGoalVertexId( segment, goal ), goal, null, out, metaProvider );
                 }
             }
         }
@@ -332,10 +341,11 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportGoal(
             String riskVertexId,
             Goal goal,
+            Part part,
             PrintWriter out,
             AbstractMetaProvider<Node, Flow> metaProvider ) {
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
-        attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
+        attributes.add( new DOTAttribute( "fontcolor", ifVisibleColor( part, AbstractMetaProvider.FONTCOLOR ) ) );
         attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
@@ -349,7 +359,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         } catch ( IOException e ) {
             throw new RuntimeException( "Unable to get image directory location", e );
         }
-        attributes.add( new DOTAttribute( "image", dirName + "/" + getGoalIcon( goal ) ) );
+        attributes.add( new DOTAttribute( "image", dirName + "/" + getGoalIcon( goal, part ) ) );
         out.print( getIndent() );
         out.print( riskVertexId );
         out.print( "[" );
@@ -357,7 +367,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         out.println( "];" );
     }
 
-    private String getGoalIcon( Goal goal ) {
+    private String getGoalIcon( Goal goal, Part part ) {
+        if ( part != null && !isVisible( part ) ) return "goal_blank.png";
         if ( goal.isRiskMitigation() ) {
             switch ( goal.getLevel() ) {
                 case Low:
@@ -407,14 +418,14 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         if ( !terminators.isEmpty() ) {
             for ( Goal goal : getSegment().getGoals() ) {
                 if ( goal.isEndsWithSegment() ) {
-                    exportStopGoalEdge( goal, out, g );
+                    exportStopGoalEdge( goal, null, out, g );
                 }
             }
         }
     }
 
     private void exportGoalEdge( Part part, Goal goal, PrintWriter out, Graph<Node, Flow> g ) {
-        List<DOTAttribute> attributes = getNonFlowEdgeAttributes();
+        List<DOTAttribute> attributes = getNonFlowEdgeAttributes( part );
         attributes.add( new DOTAttribute( "label", goal.isRiskMitigation() ? "mitigates" : "achieves" ) );
         String goalId = getGoalVertexId( part, goal );
         String partId = getMetaProvider().getVertexIDProvider().getVertexName( part );
@@ -426,8 +437,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         out.println( "];" );
     }
 
-    private void exportStopGoalEdge( Goal goal, PrintWriter out, Graph<Node, Flow> g ) {
-        List<DOTAttribute> attributes = getNonFlowEdgeAttributes();
+    private void exportStopGoalEdge( Goal goal, Part part, PrintWriter out, Graph<Node, Flow> g ) {
+        List<DOTAttribute> attributes = getNonFlowEdgeAttributes( part );
         attributes.add( new DOTAttribute( "label", "terminates" ) );
         String goalId = getGoalVertexId( getSegment(), goal );
         out.print( getIndent() + STOP + getArrow( g ) + goalId );
@@ -446,13 +457,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         return segments;
     }
 
-    private List<DOTAttribute> getNonFlowEdgeAttributes() {
+    private List<DOTAttribute> getNonFlowEdgeAttributes( Part part ) {
         List<DOTAttribute> list = DOTAttribute.emptyList();
-        list.add( new DOTAttribute( "color", "gray" ) );
+        list.add( new DOTAttribute( "color", ifVisibleColor( part, "gray" ) ) );
         list.add( new DOTAttribute( "arrowhead", "none" ) );
         list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
         list.add( new DOTAttribute( "fontsize", AbstractMetaProvider.EDGE_FONT_SIZE ) );
-        list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
+        list.add( new DOTAttribute( "fontcolor", ifVisibleColor( part, "dimgray" ) ) );
         list.add( new DOTAttribute( "len", "1.5" ) );
         list.add( new DOTAttribute( "weight", "2.0" ) );
         return list;

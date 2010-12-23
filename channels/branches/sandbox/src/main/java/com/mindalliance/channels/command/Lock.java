@@ -1,7 +1,5 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.dao.User;
-
 import java.util.Date;
 
 /**
@@ -14,28 +12,24 @@ import java.util.Date;
  */
 public class Lock {
 
-
     /**
      * Id of model object locked.
      */
-    private long id;
+    private final long id;
+
     /**
      * The name of the user who owns the lock.
      */
-    private String userName;
+    private final String userName;
+
     /**
      * The date the lock was acquired.
      */
-    private Date date;
+    private final Date date;
 
-    /**
-     * Constructor.
-     *
-     * @param id the id of the identifiable to be locked
-     */
-    public Lock( long id ) {
+    public Lock( String userName, long id ) {
+        this.userName = userName;
         this.id = id;
-        userName = User.current().getUsername();
         date = new Date();
     }
 
@@ -47,29 +41,15 @@ public class Lock {
         return userName;
     }
 
-    // For debugging use only
-    public void setUserName( String userName ) {
-        this.userName = userName;
-    }
-
     public Date getDate() {
-        return date;
-    }
-
-    /**
-     * Is lock owned by user with given name?
-     *
-     * @param name a user name
-     * @return a boolean
-     */
-    public boolean isOwnedBy( String name ) {
-        return userName.equals( name );
+        return new Date( date.getTime() );
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
-        return "Lock: " + id + "," + userName + "," + date;
+        return "Lock: " + id + ',' + userName + ',' + date;
     }
 }

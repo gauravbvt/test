@@ -165,6 +165,9 @@ public class PartSummaryPanel extends Panel {
         if ( part.isAsTeam() ) {
             sb.append( " Assignees work as a team." );
         }
+        if ( !part.isOperational() ) {
+            sb.append( " Not operational." );
+        }
         return sb.toString();
     }
 

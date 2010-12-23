@@ -1,8 +1,6 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
@@ -24,23 +22,21 @@ import java.util.Map;
  * Time: 9:33:48 AM
  */
 public class DefaultLockManager implements LockManager {
+
     /**
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultLockManager.class );
+
     /**
      * Query service.
      */
     private QueryService queryService;
 
     /**
-     * The managed locks.
+     * The managed locks, indexed by id.
      */
-    private Map<Long, Lock> locks = Collections.synchronizedMap( new HashMap<Long, Lock>() );
-    /**
-     * Dirty locks to be removed.
-     */
-    private List<Lock> dirtyLocks = new ArrayList<Lock>();
+    private final Map<Long, Lock> locks = Collections.synchronizedMap( new HashMap<Long, Lock>() );
 
     public DefaultLockManager() {
     }
@@ -52,132 +48,111 @@ public class DefaultLockManager implements LockManager {
     /**
      * {@inheritDoc}
      */
-    public Lock grabLockOn( long id ) throws LockingException {
-        synchronized ( this ) {
-            // Warn if id is stale but don't fail since the model object is gone so there can be no conflict.
-            try {
-                ModelObject mo = queryService.find( ModelObject.class, id );
-                Lock lock = getLock( id );
-                if ( lock != null ) {
-                    String userName = User.current().getUsername();
-                    if ( !lock.isOwnedBy( userName ) ) {
-                        throw new LockingException(
-                                userName + " can't grab lock on " + mo.getName() + ": it is locked by " + lock.getUserName() );
-                    }
-                    // Grab the lock
-                } else {
-                    lock = new Lock( id );
-                    LOG.debug( lock.getUserName() + " grabs lock on " + id);
-                    addLock( lock );
-                }
-                return lock;
-            } catch ( NotFoundException e ) {
-                LOG.debug( "Could not grab lock: " + id + " not found (likely deleted by prior subcommand)");
-                return null;
-            }
-        }
-    }
+    public Lock lock( String userName, long id ) throws LockingException {
+        try {
+            ModelObject mo = queryService.find( ModelObject.class, id );
 
-    private void addLock( Lock lock ) {
-        locks.put( lock.getId(), lock );
-    }
+            Lock lock;
+            synchronized ( locks ) {
+                lock = locks.get( id );
+                if ( lock == null ) {
+                    lock = new Lock( userName, id );
+                    locks.put( id, lock );
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean releaseLockOn( long id ) throws LockingException {
-        synchronized ( this ) {
-            Lock lock = getLock( id );
-            if ( lock != null ) {
-                String userName = User.current().getUsername();
-                if ( !lock.isOwnedBy( userName ) )
+                } else if ( !userName.equals( lock.getUserName() ) )
                     throw new LockingException(
-                            userName + " does not own the lock. " + userName + " does." );
-                else {
-                    LOG.debug( lock.getUserName() + " releases lock on " + id);
-                    locks.remove( id );
-                }
+                            userName + " can't lock " + mo.getName() + ": it is locked by "
+                                    + lock.getUserName() );
             }
-            return lock != null;
+
+            LOG.debug( "{} locks {}", userName, id );
+            return lock;
+
+        } catch ( NotFoundException ignored ) {
+            LOG.debug( "Could not lock: {} not found (likely deleted by prior subcommand)", id );
+            locks.remove( id );
+            return null;
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<Lock> grabLocksOn( Collection<Long> ids ) throws LockingException {
-        synchronized ( this ) {
-            StringBuilder sb = new StringBuilder();
-            List<Lock> grabbedLocks = new ArrayList<Lock>();
-            for ( long id : ids ) {
-                if ( !isUserLocking( id ) ) {
+    public List<Long> lock( String username, Collection<Long> ids ) throws LockingException {
+        StringBuilder sb = new StringBuilder();
+        List<Long> grabbedLocks = new ArrayList<Long>();
+
+        synchronized ( locks ) {
+            for ( long id : ids )
+                if ( !isLockedByUser( username, id ) )
                     try {
-                        Lock lock = grabLockOn( id );
-                        if (lock != null) grabbedLocks.add( lock );
+                        Lock lock = lock( username, id );
+                        if ( lock != null )
+                            grabbedLocks.add( id );
                     }
                     catch ( LockingException e ) {
                         sb.append( e.getMessage() );
-                        sb.append( '\n' );
+                        sb.append( System.getProperty( "line.separator" ) );
                     }
-                }
-                String messages = sb.toString();
-                if ( !messages.isEmpty() ) {
-                    throw new LockingException( messages );
-                }
-            }
-            return grabbedLocks;
         }
+
+        String messages = sb.toString();
+        if ( !messages.isEmpty() ) {
+            release( username, grabbedLocks );
+            throw new LockingException( messages );
+        }
+
+        return grabbedLocks;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void releaseLocks( Collection<Lock> locksToRelease ) throws LockingException {
-        synchronized ( this ) {
-            for ( Lock lock : locksToRelease ) {
-                LOG.info(lock.getUserName() + " releases lock on " + lock.getId());
-                locks.remove( lock.getId() );
-            }
-        }
-    }
+    public boolean release( String userName, long id ) throws LockingException {
 
-    /**
-     * Whether user has write lock on a given model object.
-     *
-     * @param id a model object id
-     * @return a boolean
-     */
-    public boolean isUserLocking( long id ) {
-        Lock lock = getLock( id );
-        return lock != null && lock.isOwnedBy( User.current().getUsername() );
+        synchronized ( locks ) {
+            Lock lock = getLock( id );
+            if ( lock == null )
+                return false;
+
+            if ( !userName.equals( lock.getUserName() ) )
+                throw new LockingException(
+                        userName + " does not own the lock. " + userName + " does." );
+
+            locks.remove( id );
+        }
+
+        LOG.debug( "{} releases lock on {}", userName, id );
+        return true;
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean releaseAllLocks( String userName ) {
-        synchronized ( this ) {
-            removeDirtyLocks();
-            List<Lock> locksToRelease = getAllLocks( userName );
-            for ( Lock lock : locksToRelease ) {
-                LOG.info(userName + " releases lock on " + lock.getId());
-                locks.remove( lock.getId() );
-            }
-            return !locksToRelease.isEmpty();
-        }
+    public void release( String userName, Collection<Long> ids ) throws LockingException {
+        for ( Long id : ids )
+            release( userName, id );
     }
 
     /**
-     * Get name of user with a lock on model object with given id.
-     *
-     * @param id a model object id
-     * @return a string or null if no lock on model object
+     * {@inheritDoc}
      */
-    public String getLockOwner( long id ) {
-        String owner = null;
-        Lock lock = getLock( id );
-        if ( lock != null ) owner = lock.getUserName();
-        return owner;
+    public boolean release( String userName ) {
+        List<Long> released = new ArrayList<Long>();
+
+        synchronized ( locks ) {
+            for ( Lock lock : new ArrayList<Lock>( locks.values() ) )
+                if ( lock != null && userName.equals( lock.getUserName() ) ) {
+                    locks.remove( lock.getId() );
+                    released.add( lock.getId() );
+                }
+        }
+
+        if ( LOG.isInfoEnabled() )
+            for ( Long id : released )
+                LOG.info( "{} releases lock on {}", userName, id );
+
+        return !released.isEmpty();
     }
 
     /**
@@ -188,51 +163,37 @@ public class DefaultLockManager implements LockManager {
     }
 
     /**
-     * {@inheritDoc}
+     * Get name of user with a lock on model object with given id.
+     *
+     * @param id a model object id
+     * @return a string or null if no lock on model object
      */
-    public Lock getLock( long id ) {
+    public String getLockUser( long id ) {
+        Lock lock = getLock( id );
+        return lock == null ? null : lock.getUserName();
+    }
+
+    private Lock getLock( long id ) {
         Lock lock = locks.get( id );
-        if ( lock != null ) {
+        if ( lock != null )
             try {
                 queryService.find( ModelObject.class, id );
-            }
-            catch ( NotFoundException e ) {
+            } catch ( NotFoundException ignored ) {
                 // Clean up obsolete lock
-                dirtyLocks.add( lock );
+                locks.remove( id );
                 lock = null;
             }
-        }
+
         return lock;
     }
 
-    private void removeDirtyLocks() {
-        for ( Lock lock : dirtyLocks ) {
-            locks.remove( lock.getId() );
-        }
-        dirtyLocks = new ArrayList<Lock>();
-    }
-
     /**
      * {@inheritDoc}
      */
-    public List<Lock> getAllLocks( String userName ) {
-        List<Lock> userLocks = new ArrayList<Lock>();
-        for ( long id : locks.keySet() ) {
-            Lock lock = getLock( id );
-            if ( lock != null && lock.isOwnedBy( userName ) )
-                userLocks.add( lock );
-        }
-        return userLocks;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean canGrabLocksOn( Collection<Long> ids ) {
-        String userName = User.current().getUsername();
+    public boolean isLockableByUser( String userName, Collection<Long> ids ) {
         for ( long id : ids ) {
             Lock lock = getLock( id );
-            if ( lock != null && !lock.isOwnedBy( userName ) )
+            if ( lock != null && !userName.equals( lock.getUserName() ) )
                 return false;
         }
         return true;
@@ -242,55 +203,42 @@ public class DefaultLockManager implements LockManager {
      * {@inheritDoc}
      */
     public void reset() {
-        locks = new HashMap<Long, Lock>();
+        locks.clear();
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean isLockedByUser( Identifiable identifiable ) {
-        return isUserLocking( identifiable.getId() );
+    public boolean isLockedByUser( String username, long id ) {
+        Lock lock = getLock( id );
+        return lock != null && username.equals( lock.getUserName() );
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean requestLockOn( Identifiable identifiable ) {
-        return requestLockOn ( identifiable.getId() );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean requestLockOn( Long id ) {
-        boolean locked = false;
+    public boolean requestLock( String username, Long id ) {
         try {
-            locked = grabLockOn( id ) != null;
-        } catch ( LockingException e ) {
-            LOG.info( "Failed to grab lock on " + id );
+            return lock( username, id ) != null;
+
+        } catch ( LockingException ignored ) {
+            LOG.info( "Failed to grab lock on {}", id );
+            return false;
         }
-        return locked;
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean releaseAnyLockOn( Identifiable identifiable ) {
-        return releaseAnyLockOn( identifiable.getId() );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean releaseAnyLockOn( Long id ) {
-        boolean unlocked = false;
+    public boolean requestRelease( String username, Long id ) {
         try {
-            releaseLockOn( id );
-            unlocked = true;
-        } catch ( LockingException e ) {
-            LOG.info( "Failed to release lock on " + id );
+            release( username, id );
+            return true;
+
+        } catch ( LockingException ignored ) {
+            LOG.info( "Failed to release lock on {}", id );
+            return false;
         }
-        return unlocked;
     }
 
 }

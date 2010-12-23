@@ -36,6 +36,10 @@ public class FlowMapPage extends PngWebPage {
      * Whether to show connectors.
      */
     private boolean showingConnectors;
+    /**
+     * Whether to hide non-operational tasks and flows.
+     */
+    private boolean hidingNoop;
 
     public FlowMapPage( PageParameters parameters ) {
         super( parameters );
@@ -59,6 +63,8 @@ public class FlowMapPage extends PngWebPage {
                 && parameters.getBoolean( "showingGoals" );
         showingConnectors = parameters.containsKey( "showingConnectors" )
                 && parameters.getBoolean( "showingConnectors" );
+        hidingNoop = parameters.containsKey( "hidingNoop" )
+                && parameters.getBoolean( "hidingNoop" );
     }
 
     /**
@@ -71,7 +77,8 @@ public class FlowMapPage extends PngWebPage {
                 diagramSize,
                 orientation,
                 showingGoals,
-                showingConnectors );
+                showingConnectors,
+                hidingNoop );
     }
 
 
@@ -85,11 +92,12 @@ public class FlowMapPage extends PngWebPage {
         setResponsePage(
                 new RedirectPage(
                         MessageFormat.format(
-                                "?segment={0,number,0}&node={1,number,0}&showingGoals={2}&showingConnectors={3}",
+                                "?segment={0,number,0}&node={1,number,0}&showingGoals={2}&showingConnectors={3&hidingNoop={4}",
                                 sid,
                                 nid,
                                 showingGoals,
-                                showingConnectors ) ) );
+                                showingConnectors,
+                                hidingNoop ) ) );
     }
 
 }

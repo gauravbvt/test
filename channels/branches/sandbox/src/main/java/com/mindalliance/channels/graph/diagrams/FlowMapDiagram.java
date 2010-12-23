@@ -39,13 +39,17 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
      * Whether to show connectors.
      */
     private boolean showingConnectors;
+    /**
+     * Whether to hide non-operational tasks and flows.
+     */
+    private boolean hidingNoop;
 
     public FlowMapDiagram(
             Segment segment,
             Node selectedNode,
             double[] diagramSize,
             String orientation ) {
-        this( segment, selectedNode, diagramSize, orientation, false, false );
+        this( segment, selectedNode, diagramSize, orientation, false, false, false );
     }
 
     public FlowMapDiagram(
@@ -54,12 +58,14 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
             double[] diagramSize,
             String orientation,
             boolean showingGoals,
-            boolean showingConnectors ) {
+            boolean showingConnectors,
+            boolean hidingNoop ) {
         super( diagramSize, orientation );
         this.segment = segment;
         this.selectedNode = selectedNode;
         this.showingGoals = showingGoals;
         this.showingConnectors = showingConnectors;
+        this.hidingNoop = hidingNoop;
     }
 
 
@@ -88,7 +94,8 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
                 diagramFactory.getImageDirectory(),
                 analyst,
                 showingGoals,
-                showingConnectors );
+                showingConnectors,
+                hidingNoop );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }

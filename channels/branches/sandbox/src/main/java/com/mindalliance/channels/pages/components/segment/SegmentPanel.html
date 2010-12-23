@@ -11,6 +11,7 @@
         <div class="zoom">
             <span wicket:id="showConnectors"><img src="images/show_connectors.png" title = "Show needs and capabilities (click again to hide them)" alt="Show needs and capabilities"/></span>
             <span wicket:id="showGoals"><img src="images/show_goals.png" title = "Show goals (click again to hide goals)" alt="Show goals"/></span>
+            <span wicket:id="hideNoop"><img src="images/hide_noop.png" title = "Hide non-operational (click again to restore)" alt="Hide non-operational"/></span>
             <span wicket:id="maximized"><img src="images/fullscreen.png" title = "Maximize" alt="Maximize"/></span>
             <span wicket:id="fit"><img src="images/fit.png" title = "Reduce to fit (click again to restore)" alt="Reduce to fit"/></span>
             <span wicket:id="minimized"><img src="images/split.png" title = "Minimize (click again to restore)" alt="Minimize"/></span>
@@ -25,7 +26,7 @@
         <div id="part">
             <div class="part-header">
                 <div class="section-title">
-                    <h3 class="task-title">Task</h3>
+                    <h3 wicket:id="task-title">Task</h3>
                     <span wicket:id="partMedia" class="partMediaRefs">[media references panel]</span>
                     <span class="menubar">
                         <span class="menuitem" wicket:id="partShowMenu">[part show menu]</span><span class="menuitem" wicket:id="partActionsMenu">[part action menu]</span>

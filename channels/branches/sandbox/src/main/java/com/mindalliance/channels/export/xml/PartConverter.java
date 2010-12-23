@@ -136,6 +136,10 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.setValue( part.getCategory().name() );
             writer.endNode();
         }
+        // Operational
+        writer.startNode( "operational" );
+        writer.setValue( Boolean.toString( part.isOperational() ) );
+        writer.endNode();
         // Part user issues
         exportUserIssues( part, writer, context );
     }
@@ -236,6 +240,8 @@ public class PartConverter extends AbstractChannelsConverter {
                 context.convertAnother( segment, UserIssue.class );
             } else if ( nodeName.equals( "category" ) ) {
                 part.setCategory( Part.Category.valueOf( reader.getValue() ) );
+            } else if ( nodeName.equals( "operational" ) ) {
+                part.setOperational( reader.getValue().equals( "true" ) );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }

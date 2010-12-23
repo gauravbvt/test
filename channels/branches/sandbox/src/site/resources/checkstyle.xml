@@ -3,8 +3,12 @@
         "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
-    <module name="PackageHtml"/>
-    <module name="NewlineAtEndOfFile"/>
+    <module name="PackageHtml">
+        <property name="severity" value="warning"/>
+    </module>
+    <module name="NewlineAtEndOfFile">
+        <property name="severity" value="info"/>
+    </module>
     <module name="Translation"/>
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
@@ -55,36 +59,47 @@
         <module name="IllegalInstantiation"/>
         <module name="IllegalType"/>
         <module name="Indentation">
+            <property name="severity" value="warning"/>
             <property name="caseIndent" value="0"/>
+            <property name="basicOffset" value="4"/>
         </module>
         <module name="InnerAssignment"/>
         <module name="InterfaceIsType"/>
         <module name="JUnitTestCase"/>
         <module name="JavadocMethod">
+            <property name="severity" value="warning"/>
             <property name="scope" value="package"/>
             <property name="allowUndeclaredRTE" value="true"/>
             <property name="allowMissingPropertyJavadoc" value="true"/>
             <property name="tokens" value="METHOD_DEF"/>
         </module>
-        <module name="JavadocType"/>
+        <module name="JavadocType">
+            <property name="severity" value="warning"/>
+        </module>
         <module name="JavadocVariable">
+            <property name="severity" value="warning"/>
             <property name="scope" value="private"/>
         </module>
         <module name="LeftCurly">
             <property name="tokens" value="CLASS_DEF,INTERFACE_DEF,METHOD_DEF,CTOR_DEF"/>
+            <property name="severity" value="info"/>
             <property name="option" value="eol"/>
         </module>
         <module name="LeftCurly">
+            <property name="severity" value="info"/>
             <property name="tokens"
                       value="LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_WHILE"/>
             <property name="option" value="nlow"/>
         </module>
         <module name="LineLength">
             <property name="max" value="100"/>
+            <property name="severity" value="warning"/>
         </module>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
-        <module name="MagicNumber"/>
+        <module name="MagicNumber">
+            <property name="severity" value="warning"/>
+        </module>
         <module name="MemberName"/>
         <module name="MethodLength"/>
         <module name="MethodName"/>
@@ -105,15 +120,18 @@
             <property name="max" value="1"/>
         </module>
         <module name="NoWhitespaceAfter">
+            <property name="severity" value="info"/>
             <property name="allowLineBreaks" value="false"/>
             <property name="tokens" value="DOT, BNOT, DEC, INC, LNOT, UNARY_MINUS, GENERIC_START, UNARY_PLUS"/>
         </module>
 
         <module name="NoWhitespaceBefore">
+            <property name="severity" value="info"/>
             <property name="allowLineBreaks" value="false"/>
             <property name="tokens" value="POST_DEC, POST_INC, GENERIC_END, GENERIC_START"/>
         </module>
         <module name="NoWhitespaceBefore">
+            <property name="severity" value="info"/>
             <property name="allowLineBreaks" value="true"/>
             <property name="tokens" value="DOT"/>
         </module>
@@ -127,6 +145,7 @@
         <module name="ParameterName"/>
         <module name="ParameterNumber"/>
         <module name="ParenPad">
+            <property name="severity" value="info"/>
             <property name="option" value="space"/>
         </module>
         <module name="RedundantImport"/>
@@ -138,6 +157,7 @@
         -->
         <module name="ReturnCount"/>
         <module name="RightCurly">
+            <property name="severity" value="info"/>
             <property name="option" value="same"/>
             <property name="tokens" value="LITERAL_CATCH"/>
         </module>
@@ -146,13 +166,17 @@
         <module name="StaticVariableName">
             <property name="format" value="^[A-Z][A-Za-z0-9]*$"/>
         </module>
-        <module name="TabCharacter"/>
+        <module name="TabCharacter">
+            <property name="severity" value="warning"/>
+        </module>
         <module name="ThrowsCount"/>
         <module name="TrailingComment">
+            <property name="severity" value="warning"/>
             <property name="legalComment" value=" *NON-NLS"/>
         </module>
         <module name="TypeName"/>
         <module name="TypecastParenPad">
+            <property name="severity" value="info"/>
             <property name="tokens" value="TYPECAST"/>
         </module>
         <module name="UncommentedMain">
@@ -163,9 +187,11 @@
         <module name="UpperEll"/>
         <module name="VisibilityModifier"/>
         <module name="WhitespaceAfter">
+            <property name="severity" value="info"/>
             <property name="tokens" value="COLON"/>
         </module>
         <module name="WhitespaceAround">
+            <property name="severity" value="info"/>
             <property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR, BOR_ASSIGN, BSR,
                 BSR_ASSIGN, BXOR, BXOR_ASSIGN, DIV, DIV_ASSIGN, EQUAL, GE, GT, LAND, LCURLY,
                 LE, LITERAL_ASSERT, LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY,

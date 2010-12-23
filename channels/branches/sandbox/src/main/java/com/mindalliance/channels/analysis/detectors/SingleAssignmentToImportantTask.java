@@ -31,7 +31,7 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
         List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
         if ( assignments.size() == 1 ) {
             Level importance = this.getTaskFailureSeverity( part );
-            if ( importance.compareTo( Level.Low ) == 1 ) {
+            if ( importance.compareTo( Level.Low ) >= 1 ) {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, part );
                 issue.setDescription( "Task \""
                         + part.getTitle()

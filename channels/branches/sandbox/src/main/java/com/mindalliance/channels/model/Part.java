@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * A part in a segment.
  */
-public class Part extends Node implements GeoLocatable, Specable {
+public class Part extends Node implements GeoLocatable, Specable, Operationable {
 
     /**
      * Default actor label, when unknown.
@@ -93,6 +93,11 @@ public class Part extends Node implements GeoLocatable, Specable {
      * Task categorization.
      */
     private Category category;
+
+    /**
+     * Whether a task is operational.
+     */
+    private boolean operational = true;
 
     public Part() {
         adjustName();
@@ -395,6 +400,21 @@ public class Part extends Node implements GeoLocatable, Specable {
         }
     }
 
+    public boolean isOperational() {
+        return operational;
+    }
+
+    public void setOperational( boolean operational ) {
+        this.operational = operational;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEffectivelyOperational() {
+        return isOperational();
+    }
+
     /**
      * Test if this part is considered belonging to an organization.
      *
@@ -584,7 +604,7 @@ public class Part extends Node implements GeoLocatable, Specable {
     /**
      * Find explicit or implicit, single, actual actor, if any.
      *
-     * @param queryService
+     * @param queryService a query service
      * @return an actor or null
      */
     public Actor getKnownActor( QueryService queryService ) {
@@ -644,7 +664,7 @@ public class Part extends Node implements GeoLocatable, Specable {
      * Get extended title for the part.
      *
      * @param sep          separator string
-     * @param queryService
+     * @param queryService a query service
      * @return a string
      */
     public String getFullTitle( String sep, QueryService queryService ) {
@@ -1053,6 +1073,7 @@ public class Part extends Node implements GeoLocatable, Specable {
 
     /**
      * Find all important flows downstream of part, without circularities.
+     *
      * @param visited already visited parts
      * @return a list of important flows
      */
@@ -1067,9 +1088,13 @@ public class Part extends Node implements GeoLocatable, Specable {
             if ( flow.isImportant() ) {
                 importantFlows.add( flow );
                 importantFlows.addAll( ( (Part) flow.getTarget() ).findImportantFlowsFrom( visited ) );
-                }
+            }
 
         return new ArrayList<Flow>( importantFlows );
+    }
+
+    public String getOperationalLabel() {
+        return isEffectivelyOperational() ? "Yes" : "No";
     }
 
     /**

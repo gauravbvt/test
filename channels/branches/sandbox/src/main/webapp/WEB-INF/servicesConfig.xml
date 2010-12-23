@@ -13,6 +13,8 @@
         default-autowire="byName">
 
     <!-- =========================== Bean Factory Modifiers -->
+
+
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="WEB-INF/channels.properties"/>
     </bean>
