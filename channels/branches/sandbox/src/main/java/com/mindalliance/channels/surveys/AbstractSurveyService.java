@@ -249,7 +249,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
                     addSurvey( plan, survey );
                 }
             }
-            LOG.info( "Survey records loaded" );
+            LOG.debug( "Survey records loaded" );
         } catch ( Exception e ) {
             LOG.error( "Failed to load survey records", e );
         } finally {

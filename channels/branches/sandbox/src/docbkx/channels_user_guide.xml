@@ -7230,6 +7230,34 @@
 
                 <entry><para>Yes</para></entry>
               </row>
+ 
+              <row>
+                <entry><para>Important task is not operational</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Make the task operational</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
+              
+              <row>
+                <entry><para>Important sharing flow is not operational</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Make the sgaring flow operational</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
