@@ -13,6 +13,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Segment;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.springframework.core.io.Resource;
 
@@ -242,7 +243,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         private String getFontColor( Node vertex ) {
-            return isInvisible( vertex ) ? INVISIBLE_COLOR : FONTCOLOR;
+            return isInvisible( vertex )
+                    ? vertex.getSegment().equals( getSegment() )
+                        ? INVISIBLE_COLOR
+                        : SUBGRAPH_COLOR
+                    : FONTCOLOR;
         }
 
         public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
@@ -341,5 +346,10 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
         return sanitize( sb.toString() );
     }
+
+    private Segment getSegment() {
+        return (Segment) getContext();
+    }
+
 
 }
