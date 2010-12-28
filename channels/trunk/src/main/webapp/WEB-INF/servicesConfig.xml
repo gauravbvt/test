@@ -30,7 +30,7 @@
     </bean>
 
     <!-- =========================== External Services -->
-    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <bean id="mailSender" class="com.mindalliance.channels.util.MailSenderProxy">
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtps.auth">true</prop>

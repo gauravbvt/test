@@ -52,59 +52,46 @@ import java.util.Map;
  * Date: Aug 21, 2009
  * Time: 1:53:35 PM
  */
-abstract public class AbstractSurveyService implements SurveyService, InitializingBean {
+public abstract class AbstractSurveyService implements SurveyService, InitializingBean {
 
-    /**
-     * The logger.
-     */
-    private final Logger LOG = LoggerFactory.getLogger( AbstractSurveyService.class );
-    /**
-     * Surveys.
-     */
+    /** The logger. */
+    private static final Logger LOG = LoggerFactory.getLogger( AbstractSurveyService.class );
+
+    /** Surveys. */
     Map<Plan, List<Survey>> surveys = new HashMap<Plan, List<Survey>>();
-    /**
-     * Query service.
-     */
+
+    /** Query service. */
     private QueryService queryService;
 
     private UserService userService;
-    /**
-     * Default email address for survey help.
-     */
+
+    /** Default email address for survey help. */
     private String defaultEmailAddress;
-    /**
-     * Analyst.
-     */
+
+    /** Analyst. */
     private Analyst analyst;
-    /**
-     * Mail sender.
-     */
+
+    /** Mail sender. */
     private MailSender mailSender;
-    /**
-     * Velocity engine.
-     */
+
+    /** Velocity engine. */
     private VelocityEngine velocityEngine;
-    /**
-     * Plan manager.
-     */
+
+    /** Plan manager. */
     private PlanManager planManager;
-    /**
-     * Templates home directory.
-     */
+
+    /** Templates home directory. */
     private String templatesDir;
-    /**
-     * Templates source directory.
-     */
+
+    /** Templates source directory. */
     private Resource templatesSource;
 
-    /**
-     * Survey records file name.
-     */
+    /** Survey records file name. */
     private String surveysFile = "surveys";
 
     private boolean templatesCopyAttempted = false;
 
-    public AbstractSurveyService() {
+    protected AbstractSurveyService() {
     }
 
     public String getSurveysFile() {
@@ -139,6 +126,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         velocityEngine = engine;
     }
 
+    @Override
     public String getDefaultEmailAddress() {
         String planValue = getPlan().getSurveyDefaultEmailAddress();
         return planValue.isEmpty() ? defaultEmailAddress : planValue;
@@ -156,40 +144,45 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         this.templatesSource = templatesSource;
     }
 
-    /**
-     * Called by Spring after properties have been set.
-     */
+    /** Called by Spring after properties have been set. */
+    @Override
     public void afterPropertiesSet() {
-        planManager.addListener( new PlanListener() {
-            public void aboutToProductize( Plan devPlan ) {
-                for ( Survey survey : getSurveys( devPlan ) )
-                    try {
-                        closeSurvey( survey );
-                    } catch ( SurveyException e ) {
-                        LOG.error( "Unable to close survey", e );
-                    }
-            }
+        planManager.addListener(
+            new PlanListener() {
+                @Override
+                public void aboutToProductize( Plan devPlan ) {
+                    for ( Survey survey : getSurveys( devPlan ) )
+                        try {
+                            closeSurvey( survey );
+                        } catch ( SurveyException e ) {
+                            LOG.error( "Unable to close survey", e );
+                        }
+                }
 
-            public void productized( Plan plan ) {
-            }
+                @Override
+                public void productized( Plan plan ) {
+                }
 
-            public void created( Plan devPlan ) {
-                loadSurveys( devPlan );
-            }
+                @Override
+                public void created( Plan devPlan ) {
+                    loadSurveys( devPlan );
+                }
 
-            public void loaded( Plan plan ) {
-                loadSurveys( plan );
-            }
+                @Override
+                public void loaded( Plan plan ) {
+                    loadSurveys( plan );
+                }
 
-            public void aboutToUnload( Plan plan ) {
-                for ( Survey survey : getSurveys( plan ) )
-                    try {
-                        closeSurvey( survey );
-                    } catch ( SurveyException e ) {
-                        LOG.error( "Unable to close survey", e );
-                    }
-            }
-        } );
+                @Override
+                public void aboutToUnload( Plan plan ) {
+                    for ( Survey survey : getSurveys( plan ) )
+                        try {
+                            closeSurvey( survey );
+                        } catch ( SurveyException e ) {
+                            LOG.error( "Unable to close survey", e );
+                        }
+                }
+            } );
 
         for ( Plan plan : planManager.getPlans() )
             if ( plan.isDevelopment() ) {
@@ -208,11 +201,12 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
                 if ( sourceDir.exists() ) {
                     for ( final File templateFile : sourceDir.listFiles() ) {
                         if ( templatesDirFile.listFiles(
-                                new FilenameFilter() {
-                                    public boolean accept( File dir, String name ) {
-                                        return name.equals( templateFile.getName() );
-                                    }
-                                } ).length == 0 ) {
+                            new FilenameFilter() {
+                                @Override
+                                public boolean accept( File dir, String name ) {
+                                    return name.equals( templateFile.getName() );
+                                }
+                            } ).length == 0 ) {
                             File copy = new File( templatesDirFile, templateFile.getName() );
                             copy.createNewFile();
                             FileUtils.copyFile( templateFile, copy );
@@ -230,9 +224,6 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     private void loadSurveys( Plan plan ) {
         File file;
         BufferedReader in = null;
@@ -253,11 +244,12 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         } catch ( Exception e ) {
             LOG.error( "Failed to load survey records", e );
         } finally {
-            if ( in != null ) try {
-                in.close();
-            } catch ( IOException e ) {
-                LOG.error( "Unable to close survey records file.", e );
-            }
+            if ( in != null )
+                try {
+                    in.close();
+                } catch ( IOException e ) {
+                    LOG.error( "Unable to close survey records file.", e );
+                }
         }
     }
 
@@ -287,7 +279,8 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         } catch ( Exception e ) {
             LOG.error( "Unable to save survey records in " + surveysFile + ".", e );
         } finally {
-            if ( out != null ) out.close();
+            if ( out != null )
+                out.close();
         }
     }
 
@@ -295,71 +288,60 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         return planManager.getVersion( plan ).getVersionDirectory();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isSurveyed( Issue issue ) {
         return findOpenSurvey( issue ) != null;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings ( "unchecked" )
     private Survey findOpenSurvey( final Issue issue ) {
         Survey latestSurvey = null;
         List<Survey> planSurveys = (List<Survey>) CollectionUtils.select(
-                getSurveys( User.plan() ),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        Survey survey = (Survey) obj;
-                        return !survey.isClosed() && survey.getIssueSpec().matches( issue );
-                    }
+            getSurveys( User.plan() ), new Predicate() {
+                @Override
+                public boolean evaluate( Object obj ) {
+                    Survey survey = (Survey) obj;
+                    return !survey.isClosed() && survey.getIssueSpec().matches( issue );
                 }
-        );
+            } );
         if ( !planSurveys.isEmpty() ) {
             Collections.sort(
-                    planSurveys,
-                    new Comparator<Survey>() {
-                        public int compare( Survey survey, Survey other ) {
-                            return survey.getCreationDate().compareTo( other.getCreationDate() ) * -1;
-
-                        }
-                    } );
+                planSurveys, new Comparator<Survey>() {
+                    @Override
+                    public int compare( Survey survey, Survey other ) {
+                        return survey.getCreationDate().compareTo( other.getCreationDate() ) * -1;
+                    }
+                } );
             latestSurvey = planSurveys.get( 0 );
         }
         return latestSurvey;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isRelevant( Survey survey ) {
         return findIssue( survey ) != null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Issue findIssue( final Survey survey ) {
         Issue issue = null;
         try {
             ModelObject mo = queryService.find( ModelObject.class, survey.getIssueSpec().getAboutId() );
             issue = (Issue) CollectionUtils.find(
-                    // exclude property-specific, exclude waived
-                    analyst.listIssues( mo, false, false ),
-                    new Predicate() {
-                        public boolean evaluate( Object obj ) {
-                            return survey.getIssueSpec().matches( (Issue) obj );
-                        }
+                // exclude property-specific, exclude waived
+                analyst.listIssues( mo, false, false ), new Predicate() {
+                    @Override
+                    public boolean evaluate( Object obj ) {
+                        return survey.getIssueSpec().matches( (Issue) obj );
                     }
-            );
+                } );
         } catch ( NotFoundException e ) {
             LOG.warn( "The model object the surveyed issue is about does not exist anymore." );
         }
         return issue;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Survey getOrCreateSurvey( Issue issue ) throws SurveyException {
         Survey survey = findOpenSurvey( issue );
         if ( survey == null ) {
@@ -431,10 +413,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         return contacts;
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void inviteContacts( Survey survey, List<String> usernames ) throws SurveyException {
         if ( survey.isLaunched() ) {
             inviteNewContacts( survey );
@@ -442,12 +421,10 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         save();
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void deleteSurvey( Survey survey ) throws SurveyException {
-        if ( !survey.canBeCancelled() ) throw new SurveyException( "Can't cancel survey." );
+        if ( !survey.canBeCancelled() )
+            throw new SurveyException( "Can't cancel survey." );
         if ( survey.isRegistered() ) {
             unregisterSurvey( survey );
         }
@@ -461,14 +438,14 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
      * @param survey a survey
      * @throws SurveyException if service call fails
      */
-    protected abstract void unregisterSurvey( Survey survey )  throws SurveyException;
+    protected abstract void unregisterSurvey( Survey survey ) throws SurveyException;
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void launchSurvey( Survey survey ) throws SurveyException {
-        if ( !survey.isRegistered() ) throw new SurveyException( "Survey not registered." );
-        if ( survey.isClosed() || survey.isLaunched() ) throw new SurveyException( "Survey already launched." );
+        if ( !survey.isRegistered() )
+            throw new SurveyException( "Survey not registered." );
+        if ( survey.isClosed() || survey.isLaunched() )
+            throw new SurveyException( "Survey already launched." );
         try {
             doLaunchSurvey( survey );
             survey.setStatus( Survey.Status.Launched );
@@ -482,9 +459,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void closeSurvey( Survey survey ) throws SurveyException {
         if ( survey.isLaunched() ) {
             if ( survey.isClosed() )
@@ -496,9 +471,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Survey> getSurveys() {
         return new ArrayList<Survey>( surveys.get( User.plan() ) );
     }
@@ -561,7 +534,8 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
         Iterator<String> iter = names.iterator();
         while ( iter.hasNext() ) {
             sb.append( iter.next() );
-            if ( iter.hasNext() ) sb.append( ", " );
+            if ( iter.hasNext() )
+                sb.append( ", " );
         }
         return sb.toString();
     }
@@ -585,11 +559,14 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
 
     private void emailInvitationTo( Contact contact, Survey survey ) throws SurveyException {
         User user = getUser( contact.getUsername() );
-        if ( user == null ) throw new SurveyException( "Unknown contact " + contact.getUsername() );
+        if ( user == null )
+            throw new SurveyException( "Unknown contact " + contact.getUsername() );
         User issuer = getUser( survey.getUserName() );
-        if ( issuer == null ) throw new SurveyException( "Unknown issuer " );
+        if ( issuer == null )
+            throw new SurveyException( "Unknown issuer " );
         Issue issue = findIssue( survey );
-        if ( issue == null ) throw new SurveyException( "Unknown issue" );
+        if ( issue == null )
+            throw new SurveyException( "Unknown issue" );
         try {
             Map<String, Object> context = getInvitationContext( user, issuer, survey, issue );
             SimpleMailMessage email = new SimpleMailMessage();
@@ -608,10 +585,7 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     }
 
     private Map<String, Object> getInvitationContext(
-            User user,
-            User issuer,
-            Survey survey,
-            Issue issue ) {
+        User user, User issuer, Survey survey, Issue issue ) {
         survey.updateSurveyData( this );
         Map<String, Object> context = new HashMap<String, Object>();
         context.put( "user", user );
@@ -646,27 +620,20 @@ abstract public class AbstractSurveyService implements SurveyService, Initializi
     }
 
     protected String resolveTemplate(
-            String template,
-            Map<String, Object> context ) throws SurveyException {
+        String template, Map<String, Object> context ) throws SurveyException {
         try {
             copyTemplatesIfNeeded();
             return VelocityEngineUtils.mergeTemplateIntoString(
-                    velocityEngine,
-                    template,
-                    context );
+                velocityEngine, template, context );
         } catch ( Exception e ) {
             LOG.error( "Failed to process template", e );
             throw new SurveyException( "Failed to process template", e );
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getTypeName() {
         return "survey service";
     }
-
 
     protected Plan getPlan() {
         return User.current().getPlan();

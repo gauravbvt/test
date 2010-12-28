@@ -1,12 +1,8 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.analysis.data.Dissemination;
+import com.mindalliance.channels.model.Dissemination;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.Subject;
+import com.mindalliance.channels.model.*;
 import com.mindalliance.channels.pages.components.diagrams.DisseminationDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.query.QueryService;

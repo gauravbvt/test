@@ -1,7 +1,9 @@
 package com.mindalliance.channels.query;
 
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Plan;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -14,26 +16,18 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Generic method result cache.
- */
+/** Generic method result cache. */
 public class ResultCache {
 
     private static final Logger LOG = LoggerFactory.getLogger( ResultCache.class );
 
-    /**
-     * The manager for the internal cache.
-     */
+    /** The manager for the internal cache. */
     private CacheManager cacheManager;
 
-    /**
-     * The cache key, from the point of view of the manager.
-     */
+    /** The cache key, from the point of view of the manager. */
     private String cacheKey;
 
-    /**
-     * The actual cache, lazy-inited.
-     */
+    /** The actual cache, lazy-inited. */
     private Cache cache;
 
     public ResultCache() {
@@ -43,21 +37,27 @@ public class ResultCache {
      * Cache the result of a method invocation.
      *
      * @param invocation the invocation, used as key for the caching
-     * @param result     the result.
+     * @param result the result.
      */
-    @SuppressWarnings( "unchecked" )
     public void cache( MethodInvocation invocation, Object result ) {
-        String key = getKey( invocation );
-        int count = cache.getSize();
-        if ( LOG.isTraceEnabled() )
-            LOG.trace( MessageFormat.format( "Caching result {0} of {1}", count, key ) );
-        Object cachedResult;
-        if ( result instanceof List ) {
-            cachedResult = Collections.unmodifiableList( (List) result );
-        } else {
-            cachedResult = result;
-        }
-        getCache().put( new Element( key, cachedResult ) );
+
+        Plan plan = User.plan();
+        LOG.trace(
+            MessageFormat.format(
+                "Caching result {0} of {1} in {2}",
+                cache( getKey( invocation, plan ), result ),
+                getKey( invocation, plan ),
+                plan ) );
+    }
+
+    private synchronized int cache( String key, Object result ) {
+        int count = getCache().getSize();
+
+        cache.put(
+            new Element(
+                key, result instanceof List ? Collections.unmodifiableList( (List<?>) result ) : result ) );
+
+        return count;
     }
 
     /**
@@ -67,11 +67,10 @@ public class ResultCache {
      * @return null when no previous value was found
      */
     public Element getCached( MethodInvocation invocation ) {
-        String key = getKey( invocation );
+        String key = getKey( invocation, User.plan() );
         Element element = null;
         try {
             element = getCache().get( key );
-
         } catch ( NullPointerException e ) {
             LOG.error( "Reading key " + key, e );
         } catch ( IllegalStateException e ) {
@@ -80,10 +79,10 @@ public class ResultCache {
             LOG.error( "Reading key " + key, e );
         }
 
-        if ( LOG.isTraceEnabled() && element != null )
-            LOG.trace( "Returning cached value for {}", key );
-        if ( LOG.isTraceEnabled() && element == null )
+        if ( element == null )
             LOG.trace( "No cached value for {}", key );
+        else
+            LOG.trace( "Returning cached value for {}", key );
 
         return element;
     }
@@ -94,20 +93,16 @@ public class ResultCache {
      * @param invocation the invocation
      */
     public void forget( MethodInvocation invocation ) {
-        getCache().remove( getKey( invocation ) );
+        getCache().remove( getKey( invocation, User.plan() ) );
     }
 
-    /**
-     * Forget all cached results.
-     */
+    /** Forget all cached results. */
     public void forgetAll() {
         LOG.info( "***Clearing cache" );
         getCache().removeAll();
     }
 
-    /**
-     * Clean-up and get rid of the cache.
-     */
+    /** Clean-up and get rid of the cache. */
     public synchronized void destroy() {
         cacheManager.removeCache( cacheKey );
         cache = null;
@@ -121,40 +116,38 @@ public class ResultCache {
         return cache;
     }
 
-    private static String getKey( MethodInvocation methodInvocation ) {
+    private static String getKey( MethodInvocation methodInvocation, Plan plan ) {
         String targetMethodName = methodInvocation.getMethod().getName();
 
         Object[] methodArgs = methodInvocation.getArguments();
-        if ( methodArgs == null ) {
+        if ( methodArgs == null )
             return targetMethodName;
-
-        } else {
+        else {
             StringBuilder key = new StringBuilder( targetMethodName );
             key.append( '(' );
             for ( int i = 0; i < methodArgs.length; i++ ) {
                 if ( i != 0 )
                     key.append( ',' );
-                key.append( argumentToString( methodArgs[i] ) );
+                key.append( argumentToString( methodArgs[ i ] ) );
             }
 
             // Add plan uri to key
             key.append( ") in " );
-            key.append( User.plan().getUri() );
+            key.append( plan.getUri() );
             return key.toString();
         }
     }
 
     private static String argumentToString( Object arg ) {
-        if ( arg instanceof ModelObject ) {
+        if ( arg instanceof Identifiable ) {
             StringBuilder sb = new StringBuilder();
             sb.append( String.valueOf( arg ) );
-            sb.append( "[" );
-            sb.append( ( (ModelObject) arg ).getId() );
-            sb.append( "]" );
+            sb.append( '[' );
+            sb.append( ( (Identifiable) arg ).getId() );
+            sb.append( ']' );
             return sb.toString();
-        } else {
+        } else
             return String.valueOf( arg );
-        }
     }
 
     public synchronized String getCacheKey() {

@@ -1,48 +1,12 @@
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.analysis.data.Dissemination;
+import com.mindalliance.channels.model.Dissemination;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Agreement;
-import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Classification;
-import com.mindalliance.channels.model.Commitment;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Delay;
-import com.mindalliance.channels.model.ElementOfInformation;
-import com.mindalliance.channels.model.Employment;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Goal;
-import com.mindalliance.channels.model.Hierarchical;
-import com.mindalliance.channels.model.InvalidEntityKindException;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Job;
-import com.mindalliance.channels.model.Level;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Participation;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.model.Subject;
-import com.mindalliance.channels.model.Transformation;
-import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.model.*;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.nlp.SemanticMatcher;
@@ -109,6 +73,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     DefaultQueryService() {
     }
 
+    @Override
     public PlanManager getPlanManager() {
         return planManager;
     }
@@ -130,17 +95,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      *
      * @return the dao
      */
+    @Override
     public PlanDao getDao() {
         return planManager.getDao( getPlan() );
     }
 
+    @Override
     public AttachmentManager getAttachmentManager() {
         return attachmentManager;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onDestroy() {
         // Do nothing
     }
@@ -148,13 +113,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * Make sure plans are valid initialized with some proper http://bit.ly/24Reg.
      */
+    @Override
     public void afterPropertiesSet() {
         planManager.assignPlans();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
         try {
             return getDao().find( clazz, id );
@@ -184,21 +148,18 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             throw new NotFoundException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelObject> List<T> list( Class<T> clazz ) {
         return getDao().list( clazz );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz ) {
         return (List<T>) CollectionUtils.select(
                 list( clazz ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (T) object ).isType();
                     }
@@ -206,14 +167,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz ) {
         return (List<T>) CollectionUtils.select(
                 list( clazz ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (T) object ).isActual();
                     }
@@ -221,13 +181,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( {"unchecked"} )
     public <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz ) {
         return (List<T>) CollectionUtils.select( list( clazz ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         ModelEntity entity = (ModelEntity) object;
                         return entity.isImmutable() && !entity.isUnknown()
@@ -236,15 +195,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 } );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( {"unchecked"} )
     public <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity ) {
         final Place place = getPlan().getLocale();
         return (List<T>) CollectionUtils.select(
                 list( entity.getClass() ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (ModelEntity) object ).narrowsOrEquals( entity, place );
                     }
@@ -252,16 +210,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
         return findOrCreate( clazz, name, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
         if ( name != null && !name.trim().isEmpty() ) {
             String root = name.trim();
@@ -282,16 +236,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name ) {
         return findOrCreate( clazz, name, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, Long id ) {
         T result;
 
@@ -315,18 +265,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
         ModelEntity entity = ModelEntity.getUniversalType( name, clazz );
         if ( entity == null ) entity = getDao().find( clazz, name );
         return entity != null && entity.getKind().equals( kind );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id ) {
         T entityType = null;
         if ( name != null && !name.trim().isEmpty() ) {
@@ -348,16 +294,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return entityType;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name ) {
         return findOrCreateType( clazz, name, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id ) {
         T entityType = ModelEntity.getUniversalType( name, clazz );
         if ( entityType == null ) {
@@ -369,66 +311,48 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return entityType;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void add( ModelObject object ) {
         getDao().add( object );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void add( ModelObject object, Long id ) {
         getDao().add( object, id );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void update( ModelObject object ) {
         getDao().update( object );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void remove( ModelObject object ) {
         object.beforeRemove( this );
         getDao().remove( object );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Segment createSegment() {
         return createSegment( null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Segment createSegment( Long id ) {
         return createSegment( id, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Segment createSegment( Long id, Long defaultPartId ) {
         return getDao().createSegment( id, defaultPartId );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Boolean isInitiated( Segment segment ) {
         return !findInitiators( segment ).isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findInitiators( Segment segment ) {
         List<Part> initiators = new ArrayList<Part>();
         for ( Segment sc : list( Segment.class ) ) {
@@ -443,9 +367,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return initiators;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findExternalTerminators( Segment segment ) {
         List<Part> terminators = new ArrayList<Part>();
         for ( Segment sc : list( Segment.class ) ) {
@@ -461,9 +383,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return terminators;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findTerminators( Segment segment ) {
         List<Part> terminators = new ArrayList<Part>();
         for ( Segment sc : list( Segment.class ) ) {
@@ -478,44 +398,32 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Connector createConnector( Segment segment ) {
         return createConnector( segment, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Connector createConnector( Segment segment, Long id ) {
         return segment.addNode( getDao().createConnector( segment, id ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Part createPart( Segment segment ) {
         return createPart( segment, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Part createPart( Segment segment, Long id ) {
         return getDao().createPart( segment, id );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Flow connect( Node source, Node target, String name ) {
         return connect( source, target, name, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Flow connect( Node source, Node target, String name, Long id ) {
         Flow result;
         if ( Flow.isInternal( source, target ) ) {
@@ -551,21 +459,18 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     // QUERIES (no change to model)
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Segment getDefaultSegment() {
         return toSortedList( list( Segment.class ) ).get( 0 );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public <T extends ModelObject> List<T> findAllReferencing( final ModelObject mo, Class<T> clazz ) {
         return (List<T>) CollectionUtils.select(
                 findAllModelObjects( clazz ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (ModelObject) object ).references( mo );
                     }
@@ -573,9 +478,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public Boolean isReferenced( final ModelObject mo ) {
         if ( mo instanceof Participation ) {
@@ -590,6 +493,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 hasReference = CollectionUtils.exists(
                         mos,
                         new Predicate() {
+                            @Override
                             public boolean evaluate( Object object ) {
                                 return ( (ModelObject) object ).references( mo );
                             }
@@ -600,9 +504,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public Integer countReferences( final ModelObject mo ) {
         Set<ModelObject> referencers = new HashSet<ModelObject>();
@@ -623,9 +525,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return referencers.size();
     }
 
+    @Override
     public Boolean isReferenced( final Classification classification ) {
         boolean hasReference = CollectionUtils.exists( listActualEntities( Actor.class ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (Actor) object ).getClearances().contains( classification );
                     }
@@ -634,6 +538,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         hasReference = hasReference || CollectionUtils.exists(
                 findAllFlows(),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (Flow) object ).getClassifications().contains( classification );
                     }
@@ -642,9 +547,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return hasReference;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<ResourceSpec> findAllResourceSpecs() {
         Set<ResourceSpec> result = new HashSet<ResourceSpec>();
         // Specs from entities
@@ -673,9 +576,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<ResourceSpec>( result );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( Specable specable ) {
         Place locale = getPlan().getLocale();
         List<ResourceSpec> list = new ArrayList<ResourceSpec>();
@@ -686,9 +587,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return list;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<ResourceSpec> findAllContacts( Specable specable, boolean isSelf ) {
         Set<ResourceSpec> contacts = new HashSet<ResourceSpec>();
         if ( isSelf ) {
@@ -705,16 +604,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<ResourceSpec>( contacts );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Play> findAllPlays( Specable specable ) {
         return findAllPlays( specable, false );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Play> findAllPlays( Specable resourceSpec, boolean specific ) {
         Set<Play> plays = new HashSet<Play>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -746,16 +641,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Play>( plays );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Issue> findAllUserIssues( ModelObject identifiable ) {
         return getDao().findAllUserIssues( identifiable );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelEntity> List<T> listEntitiesTaskedInSegment(
             Class<T> entityClass,
             Segment segment,
@@ -798,6 +689,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<T>( result );
     }
 
+    @Override
     public Boolean isExecutedBy( Part part, final ModelEntity entity ) {
         if ( entity.isActual() ) {
             if ( part.resourceSpec().hasEntity( entity ) ) return true;
@@ -805,6 +697,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             return CollectionUtils.exists(
                     assignments,
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object object ) {
                             Assignment assignment = (Assignment) object;
                             return assignment.hasEntity( entity );
@@ -818,9 +711,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource ) {
         List<Flow> relatedFlows = new ArrayList<Flow>();
         Place locale = getPlan().getLocale();
@@ -837,9 +728,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return relatedFlows;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( {"unchecked"} )
     public List<Actor> findAllActualActors( ResourceSpec resourceSpec ) {
         Place locale = getPlan().getLocale();
@@ -849,6 +738,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         if ( !resourceSpec.isAnyone() ) {
             Iterator<ResourceSpec> specs = findAllResourceSpecs().iterator();
             Iterator<ResourceSpec> actorSpecs = new FilterIterator( specs, new Predicate() {
+                @Override
                 public boolean evaluate( Object object ) {
                     Actor actor = ( (Specable) object ).getActor();
                     return actor != null && actor.isActual();
@@ -872,6 +762,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @param spec the spec
      * @return the channels
      */
+    @Override
     public List<Channel> findAllChannelsFor( ResourceSpec spec ) {
         Set<Channel> channels = new HashSet<Channel>();
 
@@ -925,9 +816,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Job> findUnconfirmedJobs( Organization organization ) {
         Place locale = getPlan().getLocale();
         Set<Job> unconfirmedJobs = new HashSet<Job>();
@@ -959,9 +848,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return results;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<String> findAllJobTitles() {
         Set<String> titles = new HashSet<String>();
         for ( Organization organization : listActualEntities( Organization.class ) ) {
@@ -972,9 +859,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return toSortedList( titles );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<String> findAllTasks() {
         Set<String> tasks = new HashSet<String>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -986,9 +871,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return toSortedList( tasks );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<String> findAllEntityNames( Class<? extends ModelEntity> aClass ) {
         Set<String> allNames = new HashSet<String>();
         for ( ModelObject mo : listReferencedEntities( aClass ) ) {
@@ -997,9 +880,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return toSortedList( allNames );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<String> findAllEntityNames(
             Class<? extends ModelEntity> aClass,
             ModelEntity.Kind kind ) {
@@ -1011,9 +892,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return toSortedList( allNames );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Role> findAllRolesOf( Actor actor ) {
         Set<Role> roles = new HashSet<Role>();
         Place place = getPlan().getLocale();
@@ -1027,9 +906,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Role>( roles );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<ModelObject> findAllSegmentObjectsInvolving( ModelEntity entity ) {
         if ( entity instanceof Event ) {
             return findAllModelObjectsDirectlyRelatedToEvent( (Event) entity );
@@ -1054,18 +931,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     /*
     */
-/**
- * {@inheritDoc}
- */
 /*
     public List<Actor> findActualActors( Organization organization, Role role, Segment segment ) {
         return findActualActors( organization, role, null, segment );
     }
 
     */
-/**
- * {@inheritDoc}
- */
 /*
     public List<Actor> findActualActors( Organization organization, Role role, Place jurisdiction, Segment segment ) {
         Set<Actor> actors = new HashSet<Actor>();
@@ -1098,9 +969,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
 */
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Job> findAllJobs( Organization organization, Actor actor ) {
         List<Job> jobs = new ArrayList<Job>();
         List<Organization> orgs;
@@ -1127,9 +996,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return jobs;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Job> findAllConfirmedJobs( Specable specable ) {
         List<Job> jobs = new ArrayList<Job>();
         Place locale = getPlan().getLocale();
@@ -1141,9 +1008,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return jobs;
     }
 
-    /**
-     * {@inheritDoc
-     */
+    @Override
     public List<Organization> findEmployers( Actor actor ) {
         List<Organization> employers = new ArrayList<Organization>();
         String actorName = actor.getName();
@@ -1157,9 +1022,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return employers;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Boolean findIfPartStarted( Part part ) {
         return doFindIfPartStarted( part, new HashSet<ModelObject>() );
     }
@@ -1194,17 +1057,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Boolean findIfSegmentStarted( Segment segment ) {
         return doFindIfSegmentStarted( segment, new HashSet<ModelObject>() );
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findAllParts() {
         List<Part> list = new ArrayList<Part>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -1216,9 +1075,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return list;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findAllParts( Segment segment, Specable specable, boolean exactMatch ) {
         Set<Part> list = new HashSet<Part>();
         Set<Segment> segments;
@@ -1244,9 +1101,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return toSortedList( list );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findAllPartsWithExactLocation( Place place ) {
         List<Part> list = new ArrayList<Part>();
         if ( place != null ) {
@@ -1258,9 +1113,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return list;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Flow> findUnconnectedNeeds( Part part ) {
         List<Flow> unconnectedNeeds = new ArrayList<Flow>();
         Iterator<Flow> receives = part.receives();
@@ -1283,9 +1136,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return unconnectedNeeds;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Flow> findUnusedCapabilities( Part part ) {
         List<Flow> unusedCapabilities = new ArrayList<Flow>();
         Iterator<Flow> sends = part.sends();
@@ -1309,9 +1160,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return unusedCapabilities;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Connector> findAllSatificers( Flow need ) {
         List<Connector> satisficers = new ArrayList<Connector>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -1352,6 +1201,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return started;
     }
 
+    @Override
     public String getTitle( Actor actor ) {
         for ( Job job : findAllJobs( null, actor ) ) {
             String title = job.getTitle().trim();
@@ -1362,9 +1212,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return "";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Event> findPlannedEvents() {
         Plan plan = getPlan();
         List<Event> plannedEvents = new ArrayList<Event>();
@@ -1374,9 +1222,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return plannedEvents;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findAchievers( Segment segment, Goal goal ) {
         List<Part> achievers = new ArrayList<Part>();
         Iterator<Part> parts = segment.parts();
@@ -1390,9 +1236,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return achievers;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Employment> findAllEmploymentsWithKnownActors() {
         Set<Actor> employed = new HashSet<Actor>();
         List<Employment> employments = new ArrayList<Employment>();
@@ -1415,9 +1259,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return employments;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Employment> findAllEmploymentsIn( Organization organization ) {
         List<Employment> employments = new ArrayList<Employment>();
         List<Organization> orgs = listEntitiesNarrowingOrEqualTo( organization );
@@ -1432,15 +1274,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return employments;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Employment> findAllEmploymentsForRole( final Role role ) {
         final Place locale = getPlan().getLocale();
         return (List<Employment>) CollectionUtils.select(
                 findAllEmploymentsWithKnownActors(),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         Role empRole = ( (Employment) object ).getRole();
                         return empRole != null && empRole.narrowsOrEquals( role, locale );
@@ -1449,14 +1290,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Employment> findAllEmploymentsForActor( final Actor actor ) {
         return (List<Employment>) CollectionUtils.select(
                 findAllEmploymentsWithKnownActors(),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object obj ) {
                         Employment employment = (Employment) obj;
                         Actor empActor = employment.getActor();
@@ -1466,9 +1306,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Flow> findAllFlows() {
         List<Flow> allFlows = new ArrayList<Flow>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -1480,14 +1318,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return allFlows;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Segment> findSegmentsRespondingTo( final Event event ) {
         return (List<Segment>) CollectionUtils.select(
                 list( Segment.class ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         Event repondedEvent = ( (Segment) object ).getEvent();
                         return repondedEvent != null && repondedEvent.equals( event );
@@ -1496,9 +1333,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findPartsTerminatingEventPhaseIn( Segment segment ) {
         List<Part> terminatingParts = new ArrayList<Part>();
         Iterator<Part> parts = segment.parts();
@@ -1510,9 +1345,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return terminatingParts;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findPartsStartingWithEventIn( Segment segment ) {
         List<Part> startedParts = new ArrayList<Part>();
         Iterator<Part> parts = segment.parts();
@@ -1524,9 +1357,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return startedParts;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findPartsInitiatingEvent( Event event ) {
         List<Part> initiatingParts = new ArrayList<Part>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -1541,9 +1372,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return initiatingParts;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<ModelObject> findAllModelObjects() {
         List<ModelObject> allModelObjects = new ArrayList<ModelObject>();
         allModelObjects.addAll( list( ModelObject.class ) );
@@ -1560,9 +1389,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return allModelObjects;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
         List<T> domain;
@@ -1576,9 +1403,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return domain;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<String> findAllGeonames() {
         Set<String> geonames = new HashSet<String>();
         for ( Place place : list( Place.class ) ) {
@@ -1589,9 +1414,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<String>( geonames );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<? extends ModelObject> findAllModelObjectsIn( Place place ) {
         List<ModelObject> inPlace = new ArrayList<ModelObject>();
         Place locale = getPlan().getLocale();
@@ -1618,9 +1441,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return inPlace;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<? extends ModelObject> findAllModelObjectsIn( Phase phase ) {
         List<ModelObject> inPhase = new ArrayList<ModelObject>();
@@ -1634,9 +1455,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return inPhase;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<ModelObject> findAllModelObjectsDirectlyRelatedToEvent( Event event ) {
         Set<ModelObject> mos = new HashSet<ModelObject>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -1657,9 +1476,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<ModelObject>( mos );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Hierarchical> findRoots( Hierarchical hierarchical ) {
         Set<Hierarchical> roots = findRoots( hierarchical, new HashSet<Hierarchical>() );
         return new ArrayList<Hierarchical>( roots );
@@ -1683,9 +1500,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return roots;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Hierarchical> findAllDescendants( Hierarchical hierarchical ) {
         Set<Hierarchical> descendants = new HashSet<Hierarchical>();
         for ( ModelObject mo : findAllModelObjects() ) {
@@ -1708,6 +1523,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         visited.add( hierarchical );
         List<Hierarchical> superiors = hierarchical.getSuperiors();
         Object superior = CollectionUtils.find( superiors, new Predicate() {
+            @Override
             public boolean evaluate( Object object ) {
                 return hasAncestor( (Hierarchical) object, other, visited );
             }
@@ -1717,17 +1533,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 && ( superiors.contains( other ) || superior != null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Boolean isSemanticMatch( String text, String otherText, Proximity proximity ) {
         return Matcher.getInstance().same( text, otherText )
                 || semanticMatcher.matches( text.trim(), otherText.trim(), proximity );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Boolean likelyRelated( String text, String otherText ) {
         return Matcher.getInstance().matches( text, otherText )
                 || isSemanticMatch( StringUtils.uncapitalize( text ),
@@ -1735,9 +1547,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Proximity.HIGH );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Flow> findAllSharingsAddressingNeed( Flow need ) {
         assert need.isNeed();
         List<Flow> sharings = new ArrayList<Flow>();
@@ -1766,16 +1576,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return sharings;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Level computePartPriority( Part part ) {
         return getPartPriority( part, new ArrayList<Part>() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Level computeSharingPriority( Flow flow ) {
         assert flow.isSharing();
         if ( flow.isEssential( false, this ) )
@@ -1784,9 +1590,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             return Level.Low;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Plan getPlan() {
         return User.plan();
     }
@@ -1811,9 +1615,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return max;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Goal> findAllGoalsImpactedByFailure( Part part ) {
         return findAllGoalsImpactedByFailure( part, new ArrayList<Part>() );
     }
@@ -1840,9 +1642,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return goals;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<String> findAllPlanners() {
         return (List<String>) CollectionUtils.collect(
@@ -1851,9 +1651,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String findUserFullName( String userName ) {
         User user = userService.getUserNamed( userName );
         if ( user != null ) {
@@ -1863,9 +1661,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String findUserEmail( String userName ) {
         User user = userService.getUserNamed( userName );
         if ( user != null ) {
@@ -1875,9 +1671,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String findUserRole( String userName ) {
         User user = userService.getUserNamed( userName );
         if ( user != null ) {
@@ -1887,9 +1681,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String findUserNormalizedFullName( String userName ) {
         User user = userService.getUserNamed( userName );
         if ( user != null ) {
@@ -1899,14 +1691,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Segment> findAllSegmentsForPhase( final Phase phase ) {
         return (List<Segment>) CollectionUtils.select(
                 list( Segment.class ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (Segment) object ).getPhase().equals( phase );
                     }
@@ -1914,9 +1705,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findCausesOf( Event event ) {
         List<Part> causes = new ArrayList<Part>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -1932,9 +1721,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return causes;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllEntitiesIn( Place place ) {
         return (List<ModelEntity>) CollectionUtils.select(
@@ -1942,9 +1729,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 PredicateUtils.invokerPredicate( "isEntity" ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllEntitiesIn( Phase phase ) {
         return (List<ModelEntity>) CollectionUtils.select(
@@ -1952,15 +1737,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 PredicateUtils.invokerPredicate( "isEntity" ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllNarrowingOrEqualTo( final ModelEntity entity ) {
         final Place locale = getPlan().getLocale();
         return (List<? extends ModelEntity>) CollectionUtils.select(
                 list( entity.getClass() ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (ModelEntity) object ).narrowsOrEquals( entity, locale );
                     }
@@ -1968,30 +1752,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Boolean isInvolved( Organization organization ) {
         return !getAssignments().with( organization ).isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Boolean isInvolvementExpected( Organization organization ) {
         return getPlan().getOrganizations().contains( organization );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findAllPartsPlayedBy( Organization organization ) {
         return getAssignments().with( organization ).getParts();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns ) {
         Place locale = getPlan().getLocale();
         List<Assignment> result = new ArrayList<Assignment>();
@@ -2018,9 +1794,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Commitment> findAllCommitments( Flow flow ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         if ( flow.isSharing() ) {
@@ -2042,9 +1816,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Commitment>( commitments );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Commitment> findAllCommitmentsOf( Actor actor ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         Place locale = getPlan().getLocale();
@@ -2067,9 +1839,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Commitment>( commitments );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Commitment> findAllCommitmentsOf( Organization organization ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Actor actor : getAssignments().with( organization ).getActualActors() )
@@ -2079,9 +1849,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Commitment>( commitments );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Commitment> findAllCommitmentsTo( Actor actor ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Flow flow : findAllRelatedFlows( new ResourceSpec( actor ), false ) ) {
@@ -2090,9 +1858,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Commitment>( commitments );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Flow[]> findUntappedSatisfactions( final Part part ) {
         List<Flow[]> untapped = new ArrayList<Flow[]>();
         for ( Flow need : part.getNeeds() ) {
@@ -2100,6 +1866,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 boolean connected = CollectionUtils.exists(
                         IteratorUtils.toList( connector.externalFlows() ),
                         new Predicate() {
+                            @Override
                             public boolean evaluate( Object object ) {
                                 return ( (ExternalFlow) object ).getTarget().equals( part );
                             }
@@ -2116,9 +1883,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return untapped;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Agreement> findAllImpliedAgreementsOf( Organization organization ) {
         List<Agreement> agreements = new ArrayList<Agreement>();
@@ -2129,6 +1894,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 encompassed.addAll( (List<Agreement>) CollectionUtils.select(
                         agreements,
                         new Predicate() {
+                            @Override
                             public boolean evaluate( Object object ) {
                                 return encompasses( Agreement.from( commitment ),
                                         (Agreement) object );
@@ -2141,9 +1907,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return (List<Agreement>) CollectionUtils.subtract( agreements, encompassed );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Commitment> findAllCommitmentsCoveredBy(
             Agreement agreement,
             Organization organization ) {
@@ -2156,9 +1920,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Commitment>( commitments );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Flow> findEssentialFlowsFrom( Part part, boolean assumeFails ) {
         // Find all downstream important flows, avoiding circularities
@@ -2172,6 +1934,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             return (List<Flow>) CollectionUtils.select(
                     essentialFlows,
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object object ) {
                             Flow flow = (Flow) object;
                             List<Flow> alternates = getAlternates( flow );
@@ -2183,9 +1946,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Part> findFailureImpacts( SegmentObject segmentObject, boolean assumeFails ) {
         if ( segmentObject instanceof Flow ) {
             Flow flow = (Flow) segmentObject;
@@ -2221,6 +1982,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<Flow> nonEssentialFlows = (List<Flow>) CollectionUtils.select(
                 importantFlows,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         Flow flow = (Flow) object;
                         Part target = (Part) flow.getTarget();
@@ -2241,10 +2003,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
     }
 
+    @Override
     @SuppressWarnings( "unchecked" )
-    /**
-     * {@inheritDoc}
-     */
     public <T extends ModelEntity> List<T> findAllActualEntitiesMatching(
             Class<T> entityClass,
             final T entityType ) {
@@ -2253,6 +2013,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return (List<T>) CollectionUtils.select(
                 findAllModelObjects( entityClass ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         T entity = (T) object;
                         return entity.isActual() && entity.narrowsOrEquals( entityType, locale );
@@ -2261,9 +2022,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Employment> findAllSupervisedBy( Actor actor ) {
         return findAllSupervisedBy( actor, new HashSet<Actor>() );
     }
@@ -2287,20 +2046,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return employments;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public UserService getUserService() {
         return userService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Participation findParticipation( final String username ) {
         return (Participation) CollectionUtils.find(
                 getDao().list( Participation.class ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (Participation) object ).getUsername().equals( username );
                     }
@@ -2308,6 +2064,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<ModelEntity> findTaskedEntities(
             Segment segment,
@@ -2320,6 +2077,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return (List<ModelEntity>) CollectionUtils.select(
                 entities,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         ModelEntity entity = (ModelEntity) object;
                         return !entity.isUnknown()
@@ -2328,9 +2086,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 } );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Boolean covers( Agreement agreement, Commitment commitment ) {
         Flow sharing = commitment.getSharing();
         Assignment beneficiary = commitment.getBeneficiary();
@@ -2348,9 +2104,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Boolean encompasses( Agreement agreement, Agreement other ) {
         if ( other.getBeneficiary().narrowsOrEquals( agreement.getBeneficiary(), getPlan().getLocale() )
                 && Matcher.getInstance().same( agreement.getInformation(), other.getInformation() ) ) {
@@ -2369,6 +2123,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @param otherFlow a flow
      * @return a boolean
      */
+    @Override
     public Boolean hasCommonEOIs( Flow flow, Flow otherFlow ) {
         List<ElementOfInformation> eois = flow.getEois();
         final Matcher matcher = Matcher.getInstance();
@@ -2376,11 +2131,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return CollectionUtils.exists(
                 eois,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         final String eoi = ( (ElementOfInformation) object ).getContent();
                         return CollectionUtils.exists(
                                 otherEois,
                                 new Predicate() {
+                                    @Override
                                     public boolean evaluate( Object object ) {
                                         String otherEoi = ( (ElementOfInformation) object ).getContent();
                                         return matcher.same( eoi, otherEoi );
@@ -2397,17 +2154,20 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @param superset a list of elements of information
      * @return a boolean
      */
+    @Override
     public Boolean subsetOf(
             List<ElementOfInformation> eois, final List<ElementOfInformation> superset ) {
         final Matcher matcher = Matcher.getInstance();
         return !CollectionUtils.exists(
                 eois,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         final String eoiContent = ( (ElementOfInformation) object ).getContent();
                         return !CollectionUtils.exists(
                                 superset,
                                 new Predicate() {
+                                    @Override
                                     public boolean evaluate( Object object ) {
                                         String otherEoiContent = ( (ElementOfInformation) object ).getContent();
                                         return matcher.same( eoiContent, otherEoiContent );
@@ -2419,6 +2179,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         );
     }
 
+    @Override
     public <T extends ModelEntity> T retrieveEntity(
             Class<T> entityClass, Map<String, Object> state, String key ) {
         Object[] vals = ( (Collection<?>) state.get( key ) ).toArray();
@@ -2437,6 +2198,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @param flow a flow
      * @return a list of flows @param flow
      */
+    @Override
     public List<Flow> getAlternates( Flow flow ) {
         // TODO - Revise for transformations
         List<Flow> answer = new ArrayList<Flow>();
@@ -2460,6 +2222,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @param map a map
      * @return a goal
      */
+    @Override
     public Goal goalFromMap( Map<String, Object> map ) {
         Goal goal = new Goal();
         goal.setCategory( Goal.Category.valueOf( (String) map.get( "category" ) ) );
@@ -2471,9 +2234,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return goal;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Organization.FamilyRelationship findFamilyRelationship( Organization fromOrg, Organization toOrg ) {
         if ( ModelObject.areIdentical( fromOrg, toOrg ) )
             return Organization.FamilyRelationship.Identity;
@@ -2496,9 +2257,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return Organization.FamilyRelationship.None;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
         ModelObject mo = getDao().find( clazz, name.trim() );
         if ( mo == null || !mo.isEntity() || mo.isUnknown()
@@ -2511,9 +2270,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<ElementOfInformation> findCommonEOIs( Flow flow, Flow otherFlow ) {
         List<ElementOfInformation> commonEOIs = new ArrayList<ElementOfInformation>();
@@ -2531,6 +2288,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             ElementOfInformation matching = (ElementOfInformation) CollectionUtils.find(
                     longer,
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object object ) {
                             return object.equals( eoi );
                         }
@@ -2540,6 +2298,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 matching = (ElementOfInformation) CollectionUtils.find(
                         longer,
                         new Predicate() {
+                            @Override
                             public boolean evaluate( Object object ) {
                                 return matcher.same(
                                         ( (ElementOfInformation) object ).getContent(),
@@ -2555,9 +2314,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return commonEOIs;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Dissemination> findAllDisseminations(
             SegmentObject segmentObject,
             Subject subject,
@@ -2595,6 +2352,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             boolean covered = CollectionUtils.exists(
                     disseminations,
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object object ) {
                             return ( (Dissemination) object ).getFlow().equals( candidate );
                         }
@@ -2684,6 +2442,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return (ElementOfInformation) CollectionUtils.find(
                 flow.getEois(),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return matcher.same( flow.getName(), subject.getInfo() )
                                 && matcher.same(
@@ -2739,6 +2498,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return disseminations;
     }
 
+    @Override
     public List<Employment> findAllEmployments( Part part, Place locale ) {
 
         Set<Actor> employed = new HashSet<Actor>();
@@ -2772,6 +2532,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return employments;
     }
 
+    @Override
     public Assignments getAssignments() {
         Assignments result = new Assignments( getPlan().getLocale() );
 
