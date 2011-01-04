@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -27,6 +28,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -534,6 +536,31 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "terminatesEventPhase" ) );
             }
         } );
+        WebMarkupContainer phaseEnding = new WebMarkupContainer( "phase-ending" );
+        phaseEnding.add(new ModelObjectLink( "end-phase-link",
+                new PropertyModel<Event>( this, "part.segment.phase" ),
+                new PropertyModel<String>( this, "part.segment.phase.name" ) ));
+        phaseEnding.setVisible( getPart().getSegment().getPhase().isPostEvent() );
+        add( phaseEnding );
+        WebMarkupContainer eventEnding = new WebMarkupContainer( "event-ending" );
+        eventEnding.add( new Label("end-event-effect", getEventEndingEffect() ));
+        eventEnding.add( new ModelObjectLink( "end-event-link",
+                new PropertyModel<Event>( this, "part.segment.event" ),
+                new PropertyModel<String>( this, "part.segment.event.name" ) ) );
+        add( eventEnding );
+    }
+
+    private Phase getPhase() {
+       return getPart().getSegment().getPhase();
+    }
+
+    private String getEventEndingEffect() {
+       Phase phase = getPhase();
+       return phase.isPreEvent()
+               ? "prevent event"
+               : phase.isConcurrent()
+               ? "end event"
+               : "of event";
     }
 
     private void addAsTeam() {

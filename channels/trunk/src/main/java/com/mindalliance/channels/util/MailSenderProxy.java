@@ -94,7 +94,7 @@ public class MailSenderProxy implements MailSender, InitializingBean {
 
     /**
      * Test if mail message will be forwarded to the actual mailer.
-     * @return
+     * @return a boolean
      */
     public boolean isConfigured() {
         return !( getHost() == null || getUsername() == null || getPassword() == null );

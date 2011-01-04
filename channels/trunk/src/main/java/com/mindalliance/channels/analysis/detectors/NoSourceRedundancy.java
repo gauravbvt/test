@@ -23,9 +23,9 @@ import java.util.List;
  * Date: Dec 19, 2008
  * Time: 4:35:27 PM
  */
-public class NoRedundancy extends AbstractIssueDetector {
+public class NoSourceRedundancy extends AbstractIssueDetector {
 
-    public NoRedundancy() { }
+    public NoSourceRedundancy() { }
 
     /**
      * {@inheritDoc}
