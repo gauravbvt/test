@@ -75,10 +75,14 @@ public class InternalFlow extends Flow {
         setDescription( flow.getDescription() );
         if ( !hasConnector() ) setMaxDelay( flow.getMaxDelay() );
         setAskedFor( flow.isAskedFor() );
-        setChannels( flow.getChannels() );
+        setChannels( flow.copyChannels() );
         if ( !source.isConnector() ) setSignificanceToSource( flow.getSignificanceToSource() );
         if ( !target.isConnector() ) setSignificanceToTarget( flow.getSignificanceToTarget() );
         setAll( flow.isAll() );
+        setIntent( flow.getIntent() );
+        setRestriction( flow.getRestriction() );
+        setEois( flow.copyEois() );
+        setOperational( flow.isOperational() );
     }
 
     /**

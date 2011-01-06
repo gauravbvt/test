@@ -47,6 +47,10 @@ public class ElementOfInformation implements Classifiable {
         transformation = eoi.getTransformation();
     }
 
+    public ElementOfInformation( String content ) {
+        this.content = content;
+    }
+
     public String getContent() {
         return content;
     }
@@ -158,7 +162,7 @@ public class ElementOfInformation implements Classifiable {
             sb.append( ']' );
         }
         if ( !description.isEmpty() || !specialHandling.isEmpty() ) {
-            sb.append( "...");
+            sb.append( "..." );
         }
         return sb.toString();
     }
@@ -233,4 +237,16 @@ public class ElementOfInformation implements Classifiable {
         return merged;
     }
 
+    /**
+     * Add classifications not already encompassed.
+     *
+     * @param classificationList a list of classifications
+     */
+    public void addClassifications( List<Classification> classificationList ) {
+        for ( Classification classification : classificationList ) {
+            if ( !Classification.encompass( classifications, classification ) ) {
+                classifications.add( classification );
+            }
+        }
+    }
 }
