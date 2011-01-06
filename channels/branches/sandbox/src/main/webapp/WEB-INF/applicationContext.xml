@@ -154,7 +154,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.SegmentEventNeverCaused"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SegmentNeverStarts"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.CyclicTriggering"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.NoRedundancy"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NoSourceRedundancy"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.PotentialDeadlock"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorNotInOneOrganization"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SegmentWithSameGoal"/>

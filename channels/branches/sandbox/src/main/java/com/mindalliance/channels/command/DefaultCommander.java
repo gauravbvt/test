@@ -157,35 +157,35 @@ public class DefaultCommander implements Commander {
         return analyst;
     }
 
+    @Override
     public Map<String, Object> getCopy() {
         return copy.get( User.current().getUsername() );
     }
 
+    @Override
     public void setCopy( Map<String, Object> state ) {
         copy.put( User.current().getUsername(), state );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isPartCopied() {
         Map<String, Object> userCopy = getCopy();
         return userCopy != null && userCopy.get( "partState" ) != null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isFlowCopied() {
         Map<String, Object> userCopy = getCopy();
         return userCopy != null && userCopy.get( "isSend" ) != null;
     }
 
+    @Override
     public boolean isAttachmentCopied() {
         Map<String, Object> userCopy = getCopy();
         return userCopy != null && userCopy.get( "url" ) != null && userCopy.get( "type" ) != null;
     }
 
+    @Override
     public void setLockManager( LockManager lockManager ) {
         this.lockManager = lockManager;
     }
@@ -194,6 +194,7 @@ public class DefaultCommander implements Commander {
         this.queryService = queryService;
     }
 
+    @Override
     public QueryService getQueryService() {
         return queryService;
     }
@@ -206,17 +207,17 @@ public class DefaultCommander implements Commander {
         this.timeout = timeout;
     }
 
+    @Override
     public boolean isReplaying() {
         return replaying;
     }
 
+    @Override
     public void setReplaying( boolean replaying ) {
         this.replaying = replaying;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException {
         try {
             return queryService.find( clazz, id );
@@ -225,16 +226,12 @@ public class DefaultCommander implements Commander {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized void resetUserHistory( String userName, boolean all ) {
         history.resetForUser( userName, all );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getUndoTitle() {
         String title = "Undo";
         Memento memento = history.getUndo();
@@ -244,9 +241,7 @@ public class DefaultCommander implements Commander {
         return title;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getRedoTitle() {
         String title = "Redo";
         // memento of a command undoing another
@@ -257,9 +252,7 @@ public class DefaultCommander implements Commander {
         return title;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canDo( Command command ) {
         return getPlan().isDevelopment()
                 && command.canDo( this )
@@ -271,8 +264,7 @@ public class DefaultCommander implements Commander {
         String userName = command.getUserName();
         if ( command.isAuthorized() )
             try {
-                Collection<Long> grabbedLocks =
-                        lockManager.lock( userName, command.getLockingSet() );
+                Collection<Long> grabbedLocks = lockManager.lock( userName, command.getLockingSet() );
                 change = command.execute( this );
                 if ( change.isNone() )
                     LOG.info( "No change" );
@@ -289,9 +281,7 @@ public class DefaultCommander implements Commander {
         return change;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized boolean canUndo() {
         if ( getPlan().isDevelopment() ) {
             Memento memento = history.getUndo();
@@ -310,9 +300,7 @@ public class DefaultCommander implements Commander {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized boolean canRedo() {
         if ( getPlan().isDevelopment() ) {
             Memento memento = history.getRedo();
@@ -332,9 +320,7 @@ public class DefaultCommander implements Commander {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized Change doCommand( Command command ) {
         try {
             if ( !getPlan().isDevelopment() )
@@ -360,9 +346,7 @@ public class DefaultCommander implements Commander {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized Change undo() {
         Memento memento = history.getUndo();
         if ( memento == null ) {
@@ -390,9 +374,7 @@ public class DefaultCommander implements Commander {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized Change redo() {
         // Get memento of undoing command
         Memento memento = history.getRedo();
@@ -426,33 +408,25 @@ public class DefaultCommander implements Commander {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void reset() {
         replaying = false;
         history.reset();
         lockManager.reset();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
         return !( name == null || name.trim().isEmpty() )
                 && getQueryService().cleanup( clazz, name );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isLockedByUser( Identifiable identifiable ) {
         return lockManager.isLockedByUser( User.current().getUsername(), identifiable.getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean requestLockOn( Identifiable identifiable ) {
         if ( isTimedOut() || identifiable == null )
             return false;
@@ -462,9 +436,7 @@ public class DefaultCommander implements Commander {
         return lockManager.requestLock( userName, identifiable.getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean requestLockOn( Long id ) {
         if ( isTimedOut() )
             return false;
@@ -474,37 +446,27 @@ public class DefaultCommander implements Commander {
         return lockManager.requestLock( userName, id );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean releaseAnyLockOn( Identifiable identifiable ) {
         return lockManager.requestRelease( User.current().getUsername(), identifiable.getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean releaseAnyLockOn( Long id ) {
         return lockManager.requestRelease( User.current().getUsername(), id );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void releaseAllLocks( String userName ) {
         lockManager.release( userName );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public long getLastModified() {
         return history.getLastModified();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getLastModifier() {
         return history.getLastModifier();
     }
@@ -513,9 +475,7 @@ public class DefaultCommander implements Commander {
         whenLastActive.put( userName, System.currentTimeMillis() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized void keepAlive( String userName, int refreshDelay ) {
         if ( !userLives.containsKey( userName ) ) {
             LOG.info( "{} is planning", userName );
@@ -523,9 +483,7 @@ public class DefaultCommander implements Commander {
         userLives.put( userName, System.currentTimeMillis() + refreshDelay * 2 * 1000 );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized void processDeaths() {
         List<String> deads = new ArrayList<String>();
 
@@ -542,18 +500,14 @@ public class DefaultCommander implements Commander {
             userLives.remove( userName );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized void loggedOut( String username ) {
         for ( PresenceListener presenceListener : presenceListeners ) {
             presenceListener.loggedOut( username );
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized void loggedIn( String username ) {
         for ( PresenceListener presenceListener : presenceListeners ) {
             presenceListener.loggedIn( username );
@@ -561,9 +515,7 @@ public class DefaultCommander implements Commander {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized void processTimeOuts() {
         long now = System.currentTimeMillis();
         long timeoutMillis = timeout * 1000L;
@@ -581,30 +533,22 @@ public class DefaultCommander implements Commander {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized boolean isTimedOut() {
         return timedOut.contains( User.current().getUsername() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public synchronized void clearTimeOut() {
         timedOut.remove( User.current().getUsername() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUnlocked( ModelObject mo ) {
         return !lockManager.isLocked( mo.getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void replay( Journal journal ) throws CommandException {
         setReplaying( true );
         if ( !journal.isEmpty() )
@@ -618,34 +562,27 @@ public class DefaultCommander implements Commander {
         reset();
     }
 
+    @Override
     public Plan getPlan() {
         return planDao.getPlan();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void setResyncRequired() {
         planManager.setResyncRequired( getPlan().getUri() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void resynced() {
         planManager.resynced( User.current() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isOutOfSync() {
         return planManager.isOutOfSync( User.current(), getPlan().getUri() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Exporter getExporter() {
         return importExportFactory.createExporter( planDao );
     }
@@ -658,17 +595,17 @@ public class DefaultCommander implements Commander {
         this.planManager = planManager;
     }
 
+    @Override
     public PlanDao getPlanDao() {
         return planDao;
     }
 
+    @Override
     public void setPlanDao( PlanDao planDao ) {
         this.planDao = planDao;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isLockable( String className ) {
         if ( className == null ) return false;
         try {
@@ -681,12 +618,14 @@ public class DefaultCommander implements Commander {
         }
     }
 
+    @Override
     public void initialize() {
         replayJournal();
         queryService.getAttachmentManager().removeUnattached( planDao );
         analyst.onStart( planDao.getPlan() );
     }
 
+    @Override
     public ImportExportFactory getImportExportFactory() {
         return importExportFactory;
     }
@@ -723,9 +662,7 @@ public class DefaultCommander implements Commander {
         }
      */
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public void initPartFrom( Part part, Map<String, Object> state ) {
         part.setDescription( (String) state.get( "description" ) );
@@ -772,9 +709,7 @@ public class DefaultCommander implements Commander {
             part.setLocation( null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Command makeRemoveFlowCommand( Flow flow ) {
         if ( flow.isSharing() ) {
             return new DisconnectFlow( flow );

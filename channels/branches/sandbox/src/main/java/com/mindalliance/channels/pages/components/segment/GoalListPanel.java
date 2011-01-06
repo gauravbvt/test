@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -95,6 +96,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
         goalsContainer = new WebMarkupContainer( "goalsDiv" );
         goalsContainer.setOutputMarkupId( true );
         add( goalsContainer );
+        goalsContainer.add( makeAtEnd() );
         goalsContainer.add( makeGoalsTable() );
         moreContainer = new WebMarkupContainer( "moreDiv" );
         moreContainer.setOutputMarkupId( true );
@@ -103,6 +105,21 @@ public class GoalListPanel extends AbstractCommandablePanel {
         addDescriptionField();
         moreContainer.add( makeTasksTable() );
         makeVisible( moreContainer, false );
+    }
+
+    private WebMarkupContainer makeAtEnd() {
+        Phase phase = getSegment().getPhase();
+        String eventName = getSegment().getEvent().getName();
+        String atEndTitle = "Whether goal is immediately achieved by "
+                + ( phase.isPreEvent()
+                ? "preventing "
+                : phase.isConcurrent()
+                ? "ending "
+                : "completing phase \"" + phase.getName() + "\" of " )
+                + "event \"" + eventName + "\"";
+        WebMarkupContainer atEndHeader = new WebMarkupContainer( "atEnd" );
+        atEndHeader.add( new AttributeModifier( "title", true, new Model<String>( atEndTitle ) ) );
+        return atEndHeader;
     }
 
     private void initLabel() {

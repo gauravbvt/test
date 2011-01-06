@@ -1,56 +1,41 @@
-package com.mindalliance.channels.analysis.data;
+package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Subject;
-import com.mindalliance.channels.model.Transformation;
+import com.mindalliance.channels.model.Transformation.Type;
 
 import java.io.Serializable;
 
 /**
  * The dissemination of an element of information.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Oct 22, 2010
- * Time: 11:04:57 AM
  */
 public class Dissemination implements Serializable {
-    /**
-     * Flow disseminating eoi.
-     */
-    private Flow flow;
-    /**
-     * Transformation type.
-     */
-    private Transformation.Type transformationType;
 
-    /**
-     * Subject transformed to produce eoi.
-     */
+    /** Flow disseminating eoi. */
+    private Flow flow;
+
+    /** Transformation type. */
+    private Type transformationType;
+
+    /** Subject transformed to produce eoi. */
     private Subject transformedSubject;
 
-    /**
-     * Transmission delay.
-     */
+    /** Transmission delay. */
     private Delay delay;
 
     private Subject subject;
-    /**
-     *  Root dissemination.
-     */
+
+    /** Root dissemination. */
     private boolean root;
 
     public Dissemination() {
     }
 
     public Dissemination(
-            Flow flow,
-            Transformation.Type transformationType,
-            Delay delay,
-            Subject transformedSubject,
-            Subject subject ) {
+        Flow flow, Type transformationType, Delay delay, Subject transformedSubject, Subject subject ) {
+
         this.flow = flow;
         this.delay = delay;
         this.transformationType = transformationType;
@@ -66,11 +51,11 @@ public class Dissemination implements Serializable {
         this.flow = flow;
     }
 
-    public Transformation.Type getTransformationType() {
+    public Type getTransformationType() {
         return transformationType;
     }
 
-    public void setTransformationType( Transformation.Type transformationType ) {
+    public void setTransformationType( Type transformationType ) {
         this.transformationType = transformationType;
     }
 
@@ -110,24 +95,15 @@ public class Dissemination implements Serializable {
         return flow.getId() + ":" + hashCode();
     }
 
-    public static long extractFlowId( String id ) {
-        return Long.valueOf( id.substring( id.indexOf( ":" ) + 1 ) );
-    }
-
     public Part getPart( boolean showTargets ) {
         return (Part) ( showTargets ? flow.getTarget() : flow.getSource() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String toString() {
-        return transformedSubject
-                + transformationType.getSymbol()
-                + subject;
+        return transformedSubject + transformationType.getSymbol() + subject;
     }
 
     public void addToDelay( Delay val ) {
-        setDelay( delay.add( val ) );
+        delay = delay.add( val );
     }
 }

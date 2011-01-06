@@ -1072,7 +1072,29 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
     }
 
     /**
-     * Find all important flows downstream of part, without circularities.
+      * List all subjects (info+eoi content) known to the part.
+      *
+      * @param sent a boolean
+      * @return a sorted list of unique subjects
+      */
+     public List<Subject> getAllSubjects( boolean sent ) {
+         Set<Subject> subjects = new HashSet<Subject>();
+         Iterator<Flow> flows = sent ? sends() : receives();
+         while ( flows.hasNext() ) {
+             Flow flow = flows.next();
+             for ( ElementOfInformation eoi : flow.getEois() ) {
+                 Subject subject = new Subject( flow.getName(), eoi.getContent() );
+                 subject.setRoot( sent );
+                 subjects.add( subject );
+             }
+         }
+         List<Subject> results = new ArrayList<Subject>( subjects );
+         Collections.sort( results );
+         return results;
+     }
+
+    /**
+     * Find all important flows downstream of part, without circularity.
      *
      * @param visited already visited parts
      * @return a list of important flows

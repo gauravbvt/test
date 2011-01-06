@@ -45,9 +45,7 @@ public class DefaultLockManager implements LockManager {
         this.queryService = queryService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Lock lock( String userName, long id ) throws LockingException {
         try {
             ModelObject mo = queryService.find( ModelObject.class, id );
@@ -75,9 +73,7 @@ public class DefaultLockManager implements LockManager {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Long> lock( String username, Collection<Long> ids ) throws LockingException {
         StringBuilder sb = new StringBuilder();
         List<Long> grabbedLocks = new ArrayList<Long>();
@@ -105,9 +101,7 @@ public class DefaultLockManager implements LockManager {
         return grabbedLocks;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean release( String userName, long id ) throws LockingException {
 
         synchronized ( locks ) {
@@ -126,17 +120,13 @@ public class DefaultLockManager implements LockManager {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void release( String userName, Collection<Long> ids ) throws LockingException {
         for ( Long id : ids )
             release( userName, id );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean release( String userName ) {
         List<Long> released = new ArrayList<Long>();
 
@@ -155,9 +145,7 @@ public class DefaultLockManager implements LockManager {
         return !released.isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isLocked( long id ) {
         return getLock( id ) != null;
     }
@@ -168,6 +156,7 @@ public class DefaultLockManager implements LockManager {
      * @param id a model object id
      * @return a string or null if no lock on model object
      */
+    @Override
     public String getLockUser( long id ) {
         Lock lock = getLock( id );
         return lock == null ? null : lock.getUserName();
@@ -187,9 +176,7 @@ public class DefaultLockManager implements LockManager {
         return lock;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isLockableByUser( String userName, Collection<Long> ids ) {
         for ( long id : ids ) {
             Lock lock = getLock( id );
@@ -199,24 +186,18 @@ public class DefaultLockManager implements LockManager {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void reset() {
         locks.clear();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isLockedByUser( String username, long id ) {
         Lock lock = getLock( id );
         return lock != null && username.equals( lock.getUserName() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean requestLock( String username, Long id ) {
         try {
             return lock( username, id ) != null;
@@ -227,9 +208,7 @@ public class DefaultLockManager implements LockManager {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean requestRelease( String username, Long id ) {
         try {
             release( username, id );

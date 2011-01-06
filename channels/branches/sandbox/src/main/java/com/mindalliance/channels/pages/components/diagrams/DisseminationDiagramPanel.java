@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.analysis.data.Dissemination;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Flow;
@@ -59,6 +58,10 @@ public class DisseminationDiagramPanel extends AbstractDiagramPanel {
         this.subject = subject;
         this.showTargets = showTargets;
         init();
+    }
+
+    public static long extractFlowId( String id ) {
+        return Long.valueOf( id.substring( id.indexOf( ':' ) + 1 ) );
     }
 
     /**
@@ -180,7 +183,7 @@ public class DisseminationDiagramPanel extends AbstractDiagramPanel {
             int scrollTop,
             int scrollLeft,
             AjaxRequestTarget target ) {
-        long id = Dissemination.extractFlowId( edgeId );
+        long id = extractFlowId( edgeId );
         try {
             Flow flow = getQueryService().find( Flow.class, id );
             String js = scroll( domIdentifier, scrollTop, scrollLeft );

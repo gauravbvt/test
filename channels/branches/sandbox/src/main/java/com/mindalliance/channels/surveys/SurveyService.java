@@ -19,8 +19,7 @@ public interface SurveyService {
      *
      * @param issue an issue
      * @return a survey
-     * @throws com.mindalliance.channels.surveys.SurveyException
-     *          if fails
+     * @throws SurveyException if fails
      */
     Survey getOrCreateSurvey( Issue issue ) throws SurveyException;
 
@@ -37,8 +36,7 @@ public interface SurveyService {
      *
      * @param survey    a survey
      * @param usernames a list of user names
-     * @throws com.mindalliance.channels.surveys.SurveyException
-     *          if fails
+     * @throws SurveyException if fails
      */
     void inviteContacts( Survey survey, List<String> usernames ) throws SurveyException;
 
@@ -56,7 +54,7 @@ public interface SurveyService {
      * @param survey a survey
      * @return an issue or null
      */
-    Issue findIssue( final Survey survey );
+    Issue findIssue( Survey survey );
 
     /**
      * Delete not-yet-launched survey.
@@ -70,7 +68,7 @@ public interface SurveyService {
      * Launch the survey.
      *
      * @param survey a survey
-     * @throws com.mindalliance.channels.surveys.SurveyException
+     * @throws SurveyException
      *          if fails
      */
     void launchSurvey( Survey survey ) throws SurveyException;
@@ -79,7 +77,7 @@ public interface SurveyService {
      * Close the survey.
      *
      * @param survey a survey
-     * @throws com.mindalliance.channels.surveys.SurveyException
+     * @throws SurveyException
      *          if fails
      */
     void closeSurvey( Survey survey ) throws SurveyException;
@@ -89,7 +87,7 @@ public interface SurveyService {
      *
      * @param survey a survey
      * @return survey data
-     * @throws com.mindalliance.channels.surveys.SurveyException
+     * @throws SurveyException
      *          if fails
      */
     SurveyData getSurveyData( Survey survey ) throws SurveyException;

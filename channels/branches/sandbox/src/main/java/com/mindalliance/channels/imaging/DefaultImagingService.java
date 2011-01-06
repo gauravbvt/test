@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Iterator;
 
 /**
  * Default imaging service.
@@ -390,9 +391,9 @@ public class DefaultImagingService implements ImagingService {
         } else {
             sanitized = fileName.replaceAll( File.separator, "" );
         }
-        sanitized = sanitized.replaceAll( " ", "_");
+        sanitized = sanitized.replaceAll( " ", "_" );
         try {
-            sanitized = URLEncoder.encode( sanitized, "UTF-8");
+            sanitized = URLEncoder.encode( sanitized, "UTF-8" );
         } catch ( UnsupportedEncodingException e ) {
             e.printStackTrace(); // should never happen
         }
@@ -508,17 +509,54 @@ public class DefaultImagingService implements ImagingService {
             } else {
                 iconName = getModelObjectIconsPath( part.getRole() );
                 if ( iconName == null ) {
-                    iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "role" );
+                    if ( part.getOrganization() != null ) {
+                        iconName = getOrganizationIconName(
+                                part.getOrganization(),
+                                imagesDirName,
+                                false,
+                                queryService );
+                    }
+                    if ( iconName == null ) {
+                        iconName = imagesDirName + "/" + ( part.isSystem() ? "system" : "role" );
+                    }
                 }
             }
         } else if ( part.getOrganization() != null ) {
-            iconName = getModelObjectIconsPath( part.getOrganization() );
-            if ( iconName == null ) {
-                iconName = imagesDirName + "/" + "organization";
-            }
+            iconName = getOrganizationIconName(
+                    part.getOrganization(),
+                    imagesDirName,
+                    true,
+                    queryService );
         } else {
             iconName = imagesDirName + "/" + "unknown";
         }
         return iconName;
     }
+
+    private String getOrganizationIconName( Organization organization, String imagesDirName, boolean useDefault, QueryService queryService ) {
+        String iconName = getModelObjectIconsPath( organization );
+        if ( organization.isType() ) {
+            java.util.List<Organization> instances = queryService.findAllActualEntitiesMatching(
+                    Organization.class,
+                    organization );
+            if ( instances.size() == 1 ) {
+                iconName = getOrganizationIconName(
+                        instances.get( 0 ),
+                        imagesDirName,
+                        false,
+                        queryService );
+            }
+        }
+        if ( iconName == null ) {
+            Iterator<Organization> ancestors = organization.ancestors().iterator();
+            while ( iconName == null && ancestors.hasNext() ) {
+                iconName = getModelObjectIconsPath( ancestors.next() );
+            }
+        }
+        if ( useDefault && iconName == null ) {
+            iconName = imagesDirName + "/" + "organization";
+        }
+        return iconName;
+    }
+
 }

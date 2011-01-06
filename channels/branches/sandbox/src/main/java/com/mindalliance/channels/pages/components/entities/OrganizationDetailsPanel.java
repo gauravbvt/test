@@ -16,6 +16,7 @@ import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.TransformerUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -76,7 +77,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     private static final String PREFIX_DOM_IDENTIFIER = ".entity";
 
-     public OrganizationDetailsPanel(
+    public OrganizationDetailsPanel(
             String id,
             IModel<? extends ModelEntity> model,
             Set<Long> expansions ) {
@@ -94,7 +95,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         addContactInfoPanel( moDetailsDiv );
         addReceiveFields( moDetailsDiv );
         addTabPanel( moDetailsDiv );
-        addAssignmentsPanel( moDetailsDiv);
+        addAssignmentsPanel( moDetailsDiv );
         addCommitmentsPanel( moDetailsDiv );
         adjustFields();
     }
@@ -122,7 +123,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 new PropertyModel<String>( this, "parentOrganization" ) ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
-                final List<String> parentChoices = findCandidateParents();
+                final List<String> parentChoices = findCandidateParentsForActual();
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : parentChoices ) {
                     if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
@@ -142,9 +143,9 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         EntityReferencePanel<Organization> parentField = new EntityReferencePanel<Organization>(
                 "parent",
                 new Model<Organization>( getOrganization() ),
-                findCandidateParents(),
+                findCandidateParentsForType(),
                 "parent",
-                Organization.class);
+                Organization.class );
         moDetailsDiv.add( parentField );
         parentField.setVisible( getOrganization().isType() );
     }
@@ -246,7 +247,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                             id,
                             new PropertyModel<Hierarchical>( OrganizationDetailsPanel.this, "organization" ),
                             getExpansions(),
-                            PREFIX_DOM_IDENTIFIER);
+                            PREFIX_DOM_IDENTIFIER );
                 }
             } );
             tabs.add( new AbstractTab( new Model<String>( "Agreements" ) ) {
@@ -254,7 +255,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                     return new AgreementsPanel(
                             id,
                             new PropertyModel<Organization>( OrganizationDetailsPanel.this, "organization" ),
-                            getExpansions());
+                            getExpansions() );
                 }
             } );
         }
@@ -311,16 +312,14 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         return getQueryService().findAllCommitmentsOf( getOrganization() );
     }
 
-
-
     @SuppressWarnings( "unchecked" )
-    private List<String> findCandidateParents() {
+    private List<String> findCandidateParentsForActual() {
         Organization organization = getOrganization();
         List<String> candidateNames = new ArrayList<String>();
-        if ( getOrganization().isActual() ) {
+        if ( organization.isActual() ) {
             List<Organization> ancestors = organization.ancestors();
-            List<Organization> allOrganizations =
-                    new ArrayList<Organization>( getQueryService().listActualEntities( Organization.class ) );
+            List<Organization> allOrganizations = new ArrayList<Organization>(
+                    getQueryService().listActualEntities( Organization.class ) );
             allOrganizations.remove( Organization.UNKNOWN );
             allOrganizations.remove( organization );
             Collection<Organization> candidates = CollectionUtils.subtract( allOrganizations, ancestors );
@@ -328,8 +327,28 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 if ( !candidate.ancestors().contains( organization ) )
                     candidateNames.add( candidate.getName() );
             }
-            if ( organization.getParent()!= null )
+            if ( organization.getParent() != null )
                 candidateNames.add( organization.getParent().getName() );
+            Collections.sort( candidateNames );
+        }
+        return candidateNames;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<String> findCandidateParentsForType() {
+        Organization organization = getOrganization();
+        List<String> candidateNames = new ArrayList<String>();
+        if ( getOrganization().isType() ) {
+            List<Organization> allOrganizations =
+                    new ArrayList<Organization>(
+                            getQueryService().listActualEntities( Organization.class ) );
+            allOrganizations.remove( Organization.UNKNOWN );
+            allOrganizations.addAll( getQueryService().listTypeEntities( Organization.class ) );
+            allOrganizations.removeAll( organization.getAllTags() );
+            allOrganizations.remove( organization );
+            candidateNames = (List<String>) CollectionUtils.collect(
+                    allOrganizations,
+                    TransformerUtils.invokerTransformer( "getName" ) );
             Collections.sort( candidateNames );
         }
         return candidateNames;

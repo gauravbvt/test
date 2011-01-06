@@ -1,6 +1,7 @@
 package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.surveys.Survey.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -22,6 +23,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Survey Gizmo Service.
@@ -31,18 +33,16 @@ import java.util.Map;
  * Date: Aug 21, 2009
  * Time: 1:50:44 PM
  */
+@SuppressWarnings ( { "HardcodedFileSeparator" } )
 public class SurveyGizmoService extends AbstractSurveyService {
-    /**
-     * Class logger.
-     */
+
+    /** Class logger. */
     public static final Logger LOG = LoggerFactory.getLogger( SurveyGizmoService.class );
-    /**
-     * API key.
-     */
+
+    /** API key. */
     private String apiKey;
-    /**
-     * User key.
-     */
+
+    /** User key. */
     private String userKey;
 
     private XPath xpath;
@@ -67,16 +67,19 @@ public class SurveyGizmoService extends AbstractSurveyService {
         this.template = val == null ? "" : val;
     }
 
+    @Override
     public String getApiKey() {
         String planValue = getPlan().getSurveyApiKey();
         return planValue.isEmpty() ? apiKey : planValue;
     }
 
+    @Override
     public String getUserKey() {
         String planValue = getPlan().getSurveyUserKey();
         return planValue.isEmpty() ? userKey : planValue;
     }
 
+    @Override
     public String getTemplate() {
         String planValue = getPlan().getSurveyTemplate();
         return planValue.isEmpty() ? template : planValue;
@@ -92,12 +95,12 @@ public class SurveyGizmoService extends AbstractSurveyService {
         sb.append( "&cmd=" );
         sb.append( command );
         if ( query != null ) {
-            for ( String param : query.keySet() ) {
+            for ( Entry<String, String> entry : query.entrySet() ) {
                 sb.append( '&' );
-                sb.append( param );
-                sb.append( "=" );
+                sb.append( entry.getKey() );
+                sb.append( '=' );
                 try {
-                    sb.append( URLEncoder.encode( query.get( param ), "UTF-8" ) );
+                    sb.append( URLEncoder.encode( entry.getValue(), "UTF-8" ) );
                 } catch ( UnsupportedEncodingException e ) {
                     throw new RuntimeException( "Failure to encode query parameter", e );
                 }
@@ -106,9 +109,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
         return sb.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected long registerSurvey( Survey survey ) throws SurveyException {
         String xml = getSurveyXml( survey, findIssue( survey ) );
         Map<String, String> get = new HashMap<String, String>();
@@ -116,28 +117,25 @@ public class SurveyGizmoService extends AbstractSurveyService {
         get.put( "template", getTemplate() );
         post.put( "title", survey.getRegistrationTitle( getPlan().getUri() ) );
         post.put( "surveyxml", xml );
+
         String response = sendRequest( getBaseUrl( "sgCreateSurvey", get ), post );
-        boolean succeeded = requestSuccess( response );
-        if ( !succeeded ) {
+        if ( !requestSuccess( response ) )
             throw new SurveyException( "Failed to create survey" );
-        }
+
         String id = xpathExtract( response, "/apiResults/survey/@id" );
-        if ( id != null ) {
-            LOG.info( "Survey " + id + " registered" );
-            return Long.parseLong( id );
-        } else {
+        if ( id == null ) {
             LOG.error( "Failed to create survey" );
             throw new SurveyException( "Failed to create survey" );
+        } else {
+            LOG.info( "Survey {} registered", id );
+            return Long.parseLong( id );
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected void unregisterSurvey( Survey survey )  throws SurveyException {
+    @Override
+    protected void unregisterSurvey( Survey survey ) throws SurveyException {
         // todo -- do something when removing a survey is supported
     }
-
 
     private boolean requestSuccess( String response ) throws SurveyException {
         return xpathEquals( response, "/apiResults/status/text()", "success" );
@@ -175,8 +173,8 @@ public class SurveyGizmoService extends AbstractSurveyService {
             }
             out.close();
             BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                            connection.getInputStream() ) );
+                new InputStreamReader(
+                    connection.getInputStream() ) );
             String line;
             while ( ( line = in.readLine() ) != null ) {
                 writer.write( line );
@@ -200,7 +198,8 @@ public class SurveyGizmoService extends AbstractSurveyService {
                 sb.append( URLEncoder.encode( param, "UTF-8" ) );
                 sb.append( '=' );
                 sb.append( URLEncoder.encode( post.get( param ), "UTF-8" ) );
-                if ( params.hasNext() ) sb.append( '&' );
+                if ( params.hasNext() )
+                    sb.append( '&' );
             }
             return sb.toString();
         } catch ( UnsupportedEncodingException e ) {
@@ -209,17 +208,13 @@ public class SurveyGizmoService extends AbstractSurveyService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected void doLaunchSurvey( Survey survey ) throws SurveyException {
         changeSurveyStatus( survey, "Launched" );
         LOG.info( "Survey " + survey.getId() + " launched" );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected void doCloseSurvey( Survey survey ) throws SurveyException {
         changeSurveyStatus( survey, "Closed" );
         LOG.info( "Survey " + survey.getId() + " closed" );
@@ -228,12 +223,12 @@ public class SurveyGizmoService extends AbstractSurveyService {
     private void changeSurveyStatus( Survey survey, String status ) throws SurveyException {
         assert survey.getId() >= 0;
         Map<String, String> query = new HashMap<String, String>();
-        query.put( "sid", "" + survey.getId() );
+        query.put( "sid", String.valueOf( survey.getId() ) );
         query.put( "status", status );
         String response = sendRequest( getBaseUrl( "sgSetSurveyStatus", query ), null );
         boolean succeeded = requestSuccess( response );
         if ( !succeeded ) {
-            LOG.error( "Failed to change survey status to " + status );
+            LOG.error( "Failed to change survey status to {}", status );
             throw new SurveyException( "Failed to change survey status to " + status );
         }
         survey.setStatus( surveyStatus( status ) );
@@ -241,10 +236,8 @@ public class SurveyGizmoService extends AbstractSurveyService {
         survey.updateSurveyData( this );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    // TODO - cache results? 
+    // TODO - cache results?
+    @Override
     public SurveyData getSurveyData( Survey survey ) throws SurveyException {
         SurveyData data = new SurveyData();
         Map<String, String> get = new HashMap<String, String>();
@@ -252,7 +245,10 @@ public class SurveyGizmoService extends AbstractSurveyService {
         String response = sendRequest( getBaseUrl( "sgGetSurveyList", get ), null );
         String surveyPath = "//survey[id/text()=\"" + survey.getId() + "\"]";
         String surveyNode = xpathExtract( response, surveyPath );
-        if ( !surveyNode.isEmpty() ) {
+        if ( surveyNode.isEmpty() ) {
+            LOG.warn( "Failed to find survey {}", survey.getId() );
+            throw new SurveyException( "Failed to find survey " + survey.getId() );
+        } else {
             String value = xpathExtract( response, surveyPath + "/status/text()" );
             data.setStatus( surveyStatus( value ) );
             value = xpathExtract( response, surveyPath + "/count_inprogress/text()" );
@@ -268,21 +264,21 @@ public class SurveyGizmoService extends AbstractSurveyService {
             value = xpathExtract( response, surveyPath + "/publish_link/text()" );
             data.setPublishLink( value );
             data.setReportingLink( "http://app.sgizmo.com/survey_list_responses.php?id=" + survey.getId() );
-            LOG.info( "Data retrieved for survey " + survey.getId() );
+            LOG.info( "Data retrieved for survey {}", survey.getId() );
             return data;
-        } else {
-            LOG.warn( "Failed to find survey " + survey.getId() );
-            throw new SurveyException( "Failed to find survey " + survey.getId() );
         }
     }
 
-    private Survey.Status surveyStatus( String value ) {
-        if ( value.equalsIgnoreCase( "In Design" ) ) return Survey.Status.In_design;
-        else if ( value.equalsIgnoreCase( "Launched" ) ) return Survey.Status.Launched;
-        else if ( value.equalsIgnoreCase( "Closed" ) ) return Survey.Status.Closed;
-        else throw new RuntimeException( "Unknown status " + value );
+    private static Status surveyStatus( String value ) {
+        if ( "In Design".equalsIgnoreCase( value ) )
+            return Status.In_design;
+        else if ( "Launched".equalsIgnoreCase( value ) )
+            return Status.Launched;
+        else if ( "Closed".equalsIgnoreCase( value ) )
+            return Status.Closed;
+        else
+            throw new RuntimeException( "Unknown status " + value );
     }
-
 
     private String getStatusValue( Survey survey ) {
         switch ( survey.getStatus() ) {
@@ -297,16 +293,10 @@ public class SurveyGizmoService extends AbstractSurveyService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getDescription() {
         return "The SurveyGizmo survey service";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getName() {
         return "SurveyGizmo";
     }
