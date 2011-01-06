@@ -167,7 +167,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         );
         return (List<String>) CollectionUtils.collect(
                 candidates,
-                TransformerUtils.invokerTransformer( "getFlowName" )
+                TransformerUtils.invokerTransformer( "getName" )
         );
     }
 
