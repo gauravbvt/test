@@ -3,7 +3,11 @@
         "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
-    <module name="PackageHtml">
+    <module name="JavadocPackage">
+        <property name="severity" value="warning"/>
+    </module>
+    <module name="FileLength"/>
+    <module name="FileTabCharacter">
         <property name="severity" value="warning"/>
     </module>
     <module name="NewlineAtEndOfFile">
@@ -17,6 +21,7 @@
         <module name="AnonInnerLength">
             <property name="max" value="40"/>
         </module>
+        <module name="AnnotationUseStyle"/>
         <module name="ArrayTrailingComma"/>
         <module name="ArrayTypeStyle"/>
         <module name="AvoidNestedBlocks"/>
@@ -27,6 +32,7 @@
 
         <module name="ClassDataAbstractionCoupling"/>
         <module name="ClassFanOutComplexity"/>
+        <module name="ClassTypeParameterName"/>
         <module name="ConstantName"/>
         <module name="CovariantEquals"/>
         <module name="CyclomaticComplexity">
@@ -44,14 +50,12 @@
         </module>
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
+        <module name="EqualsAvoidNull"/>
         <module name="ExecutableStatementCount"/>
         <module name="ExplicitInitialization"/>
         <module name="FallThrough"/>
-        <module name="FileLength"/>
         <module name="FinalClass"/>
-        <module name="GenericIllegalRegexp">
-            <property name="format" value="\(\s+\)"/>
-        </module>
+        <module name="GenericWhitespace"/>
         <!--        <module name="Header">
                   <property name="headerFile" value="${checkstyle.header.file}"/>
                 </module>
@@ -116,7 +120,10 @@
         <module name="MethodLength"/>
         <module name="MethodName"/>
         <module name="MethodParamPad"/>
+        <module name="MethodTypeParameterName"/>
         <module name="MissingCtor"/>
+        <module name="MissingDeprecated"/>
+        <module name="MissingOverride"/>
         <module name="MissingSwitchDefault"/>
         <module name="ModifierOrder"/>
         <module name="MultipleStringLiterals">
@@ -155,6 +162,7 @@
                       value="ASSIGN, DIV_ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, MOD_ASSIGN, SR_ASSIGN, BSR_ASSIGN, SL_ASSIGN, BXOR_ASSIGN, BOR_ASSIGN, BAND_ASSIGN"/>
             <property name="option" value="eol"/>
         </module>
+        <module name="OuterTypeNumber"/>
         <module name="PackageDeclaration"/>
         <module name="PackageName"/>
         <module name="ParameterAssignment"/>
@@ -185,9 +193,6 @@
         <module name="StringLiteralEquality"/>
         <module name="SuperClone"/>
         <module name="SuperFinalize"/>
-        <module name="TabCharacter">
-            <property name="severity" value="warning"/>
-        </module>
         <module name="ThrowsCount"/>
         <module name="TrailingComment">
             <property name="severity" value="warning"/>
