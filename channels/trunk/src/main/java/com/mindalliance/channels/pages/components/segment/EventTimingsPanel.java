@@ -55,17 +55,21 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        newEventTiming = new EventTiming();
-        eventLevelName = null;
+        reset();
         addEventTimings();
         addNewEventTiming();
+    }
+
+    private void reset() {
+        newEventTiming = new EventTiming();
+        eventLevelName = null;
     }
 
     private void addEventTimings() {
         eventTimingsContainer = new WebMarkupContainer( "eventTimingsDiv" );
         eventTimingsContainer.setOutputMarkupId( true );
-        eventTimingsContainer.setVisible( !getSegment().getContext().isEmpty() );
         addOrReplace( eventTimingsContainer );
+        makeVisible( eventTimingsContainer, !getSegment().getContext().isEmpty() );
         eventTimingsContainer.add( makeEventTimingsList() );
     }
 
@@ -73,10 +77,10 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
         creationContainer = new WebMarkupContainer( "creationDiv" );
         creationContainer.setOutputMarkupId( true );
         addOrReplace( creationContainer );
-        addTimingChoice( creationContainer );
-        addEventField( creationContainer );
-        addLevelField( creationContainer );
-        creationContainer.setVisible( isLockedByUserIfNeeded( getSegment() ) );
+        addTimingChoice( );
+        addEventField( );
+        addLevelField( );
+        makeVisible( creationContainer, isLockedByUserIfNeeded( getSegment() ) );
     }
 
     private ListView<EventTiming> makeEventTimingsList() {
@@ -123,6 +127,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
 
     private void addDeleteImage( ListItem<EventTiming> item ) {
          final EventTiming eventTiming = item.getModelObject();
+         final String oldName = eventTiming.getEvent().getName();
          ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
                  "delete",
                  "Remove from segment context?" ) {
@@ -133,6 +138,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
                         eventTiming,
                         UpdateObject.Action.Remove
                 ) );
+                 getCommander().cleanup( Event.class, oldName );
                  update( target,
                          new Change(
                                  Change.Type.Updated,
@@ -147,7 +153,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
 
 
 
-    private void addTimingChoice( WebMarkupContainer creationContainer ) {
+    private void addTimingChoice(  ) {
         final List<Phase.Timing> candidateTimings = getCandidateTimings();
         DropDownChoice<Phase.Timing> timingDropDownChoice = new DropDownChoice<Phase.Timing>(
                 "timing",
@@ -187,7 +193,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
     }
 
 
-    private void addEventField( WebMarkupContainer creationContainer ) {
+    private void addEventField( ) {
         final List<String> choices = getQueryService().findAllEntityNames( Event.class );
         TextField<String> eventField = new AutoCompleteTextField<String>(
                 "event",
@@ -217,7 +223,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
         creationContainer.add( eventField );
     }
 
-    private void addLevelField( WebMarkupContainer creationContainer ) {
+    private void addLevelField( ) {
         final List<String> choices = getLevelNameChoices();
         DropDownChoice<String> levelDropDownChoice = new DropDownChoice<String>(
                 "level",
@@ -299,9 +305,11 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
     }
 
     public void setEventName( String name ) {
+        String oldName = getEventName();
         Event event = getQueryService().findOrCreateType( Event.class, name );
         newEventTiming.setEvent( event );
         addIfComplete();
+        getCommander().cleanup( Event.class, oldName );
     }
 
     public Phase.Timing getTiming() {
@@ -330,9 +338,11 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
       * {@inheritDoc}
       */
      public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-         init();
-         target.addComponent( creationContainer );
+         reset();
+         addEventTimings();
+         addNewEventTiming();
          target.addComponent( eventTimingsContainer );
+         target.addComponent( creationContainer );
          super.updateWith( target, change, updated );
      }
 
