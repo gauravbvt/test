@@ -1072,9 +1072,10 @@ div.aspect div.picture {
 	vertical-align:middle;
 }
 
-div.grouped {
+.grouped {
     background: #DDDDDD;
     padding: 4px;
+    margin: 0 0 2px 0;
 }
 
 /* ----- Floating Panels - Data Tables - Controls ----- */
