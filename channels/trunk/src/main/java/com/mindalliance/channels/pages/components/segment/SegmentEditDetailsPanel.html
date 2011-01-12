@@ -19,33 +19,26 @@
         </tr>
         <tr>
             <th align="right">
-                <label for="phase">
-                    About <a wicket:id="phase-link" href="#" title="Phase details">phase</a>:
-                </label>
+                    Addresses:
             </th>
             <td>
+                 <a wicket:id="phase-link" href="#" title="Phase details">Phase</a>
                 <select id="phase" wicket:id="phase-choices">
                     <option>Responding</option> 
                 </select>
-            </td>
-        </tr>
-        <tr>
-            <th align="right">
-                <label for="event">
-                    of <span wicket:id="event-link" href="#" title="Event details">event</span>:
-                </label>
-            </th>
-            <td><input type="text" size="40" id="event" wicket:id="event" value=""></td>
-        </tr>
-        <tr>
-            <th align="right">
-                <label for="event-level">rated: </label>
-            </th>
-            <td>
+                of <a wicket:id="event-link" href="#" title="Event details">event</a>
+                <input type="text" class="entity-name" id="event" wicket:id="event" value="">
+                rated
                 <select id="event-level" wicket:id="event-level">
-                    <option>Any</option> 
+                    <option>Any</option>
                 </select>
             </td>
+        </tr>
+        <tr>
+           <th align="right">
+                    Context:
+            </th>
+            <td><span wicket:id="context">[event timings panel]</span></td>
         </tr>
         <tr wicket:id="attachments">
             <th align="right">Attachments:</th>
