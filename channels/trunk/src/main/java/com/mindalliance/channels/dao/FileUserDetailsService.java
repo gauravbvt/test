@@ -46,7 +46,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
     /**
      * Base for relative user definitions.
      */
-    private String base = System.getProperty( "user.home" );
+    private Resource base;
 
     /**
      * The file for the user definitions.
@@ -81,6 +81,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
         }
     }
 
+    @Override
     @Secured( "ROLE_ADMIN" )
     public synchronized User createUser( String name ) throws DuplicateKeyException {
         if ( users.containsKey( name ) )
@@ -91,6 +92,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
         return user;
     }
 
+    @Override
     @Secured( "ROLE_ADMIN" )
     public synchronized void deleteUser( User user ) {
         users.remove( user.getUsername() );
@@ -123,6 +125,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
      * @param username the user name.
      * @return the details
      */
+    @Override
     public UserDetails loadUserByUsername( String username ) {
         User user = readUsers().get( username );
         if ( user == null )
@@ -134,9 +137,9 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
 
     private static Map<String, User> readDetails( Properties properties ) {
         Map<String, User> result = new HashMap<String, User>();
-        for ( String username : properties.stringPropertyNames() ) {
-            String values = properties.getProperty( username );
-            result.put( username, new User( new UserInfo( username, values ) ) );
+        for ( String userName : properties.stringPropertyNames() ) {
+            String values = properties.getProperty( userName );
+            result.put( userName, new User( new UserInfo( userName, values ) ) );
         }
         return result;
     }
@@ -162,20 +165,24 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
      *
      * @throws IOException on write errors
      */
-    public synchronized void save() throws IOException {
-        Properties props = new Properties();
-        for ( User d : users.values() )
-            props.setProperty( d.getUsername(), d.getUserInfo().toString() );
+    @Override
+    public void save() throws IOException {
+        long time = System.currentTimeMillis();
+        synchronized ( this ) {
+            lastModified = time;
 
-        FileOutputStream stream = null;
-        try {
-            stream = new FileOutputStream( userFile );
-            props.store( stream, " Copied from " + defaultDefinitions.getURI() );
-        } finally {
-            if ( stream != null )
+            Properties props = new Properties();
+            for ( User def : users.values() )
+                props.setProperty( def.getUsername(), def.getUserInfo().toString() );
+
+            FileOutputStream stream = new FileOutputStream( userFile );
+            try {
+                props.store( stream, " Copied from " + defaultDefinitions.getURI() );
+            } finally {
                 stream.close();
+            }
         }
-        lastModified = System.currentTimeMillis();
+
         LOG.debug( "Wrote user definitions to {}", userFile.getAbsolutePath() );
     }
 
@@ -198,15 +205,25 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
      */
     public synchronized void setUserDefinitions( String userDefinitions ) {
         this.userDefinitions = userDefinitions;
-        userFile = userDefinitions == null ? null : new File( base, userDefinitions );
+        try {
+            userFile = userDefinitions == null ? null : new File( base.getFile(), userDefinitions );
+        } catch ( IOException e ) {
+            throw new RuntimeException( "Unable to specify user file", e );
+        }
     }
 
-    public synchronized String getBase() {
+    public synchronized Resource getBase() {
         return base;
     }
 
-    public synchronized void setBase( String base ) {
+    public synchronized void setBase( Resource base ) {
         this.base = base;
+        try {
+            File dir = base.getFile();
+            dir.mkdirs();
+        } catch ( IOException e ) {
+            LOG.error( "Unable to create " + base, e );
+        }
     }
 
     /**
@@ -215,14 +232,16 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
      * @param userName a string
      * @return a user or null
      */
+    @Override
     public User getUserNamed( String userName ) {
         return readUsers().get( userName );
     }
 
-    /** {@inheritDoc} */
+    @Override
     public List<User> getUsers() {
         List<User> result = new ArrayList<User>( readUsers().values() );
         Collections.sort( result, new Comparator<User>() {
+            @Override
             public int compare( User o1, User o2 ) {
                 return o1.getUsername().compareTo( o2.getUsername() );
             }
@@ -236,6 +255,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
      * @param uri the plan uri
      * @return a list of users
      */
+    @Override
     public List<User> getPlanners( String uri ) {
         Collection<User> userList = readUsers().values();
         List<User> result = new ArrayList<User>( userList.size() );
@@ -253,6 +273,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
      * @param uri the plan uri
      * @return a list of strings
      */
+    @Override
     public List<String> getUsernames( String uri ) {
         Collection<User> userList = readUsers().values();
         List<String> result = new ArrayList<String>( userList.size() );
@@ -267,6 +288,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
      * Get a sorted list of all user names.
      * @return a list
      */
+    @Override
     public List<String> getUsernames() {
         List<String> result = new ArrayList<String>( readUsers().keySet() );
         Collections.sort( result );
@@ -278,6 +300,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
      * @param uri the plan's uri
      * @return the list
      */
+    @Override
     public List<User> getUsers( String uri ) {
         Collection<User> collection = readUsers().values();
         List<User> result = new ArrayList<User>( collection.size() );

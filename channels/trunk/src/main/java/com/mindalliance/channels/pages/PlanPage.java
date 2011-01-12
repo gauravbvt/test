@@ -5,7 +5,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.model.GeoLocatable;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
@@ -621,7 +621,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private String getMessage() {
         return message == null ? "" : message;
-    }                                                                     
+    }
 
     private void addGoBackAndForward() {
         goBackContainer = new WebMarkupContainer( "goBack" );
@@ -655,7 +655,7 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( getCommander().isTimedOut() ) {
             if ( getPlan().isDevelopment() ) refreshAll( target );
             getCommander().clearTimeOut();
-        } else { 
+        } else {
             updateRefreshNotice();
             if ( getPlan().isDevelopment() ) {
                 target.addComponent( refreshNeededComponent );

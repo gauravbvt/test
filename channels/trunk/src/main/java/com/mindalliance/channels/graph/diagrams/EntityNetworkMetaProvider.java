@@ -168,7 +168,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             String label = getIdentifiableLabel( entity );
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
-            iconName = service.findIconName( entity, imagesDirName );
+            iconName = service.findIconName( entity );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 

@@ -3,6 +3,7 @@
 
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.dao.PlanDefinition.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -10,7 +11,6 @@ import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,13 +38,13 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     private static final int DEFAULT_THRESHOLD = 10;
 
     /** Where the plan *data* is saved. Plan data will be under $dataDirectory/$uri/... */
-    private final File dataDirectory;
+    private final Resource dataDirectory;
 
     /**
      * The plan property file.
      * If this file is empty, it will be created and initialized with the default properties.
      */
-    private final File planProperties;
+    private final Resource planProperties;
 
     /** The default properties. May be null, for no default plans. */
     private Resource defaultProperties;
@@ -66,21 +66,29 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
      * Callback for changes on observed plan definitions.
      */
     private final Observer observer = new Observer() {
+        @Override
         public void update( Observable o, Object arg ) {
-            save();
+            try {
+                save();
+            } catch ( IOException e ) {
+                LOG.error( "Unable to save definitions", e );
+            }
         }
     };
 
 
     //---------------------------
-    public DefinitionManager( File dataDirectory, File planProperties ) {
+    public DefinitionManager( Resource dataDirectory, Resource planProperties ) throws IOException {
         this.dataDirectory = dataDirectory;
         this.planProperties = planProperties;
-        if ( dataDirectory != null )
-            dataDirectory.mkdirs();
+        if ( dataDirectory != null ) {
+            File file = dataDirectory.getFile();
+            if ( file.mkdirs() )
+                LOG.info( "Created {}", file );
+        }
     }
 
-    public DefinitionManager() {
+    public DefinitionManager() throws IOException {
         this( null, null );
     }
 
@@ -100,7 +108,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
      * @param development get the development version if true, production otherwise
      * @return the plan version or null if not found
      */
-    public PlanDefinition.Version get( String uri, boolean development ) {
+    public Version get( String uri, boolean development ) {
         PlanDefinition definition = definitions.get( uri );
 
         return development ? definition.getDevelopmentVersion()
@@ -110,15 +118,15 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     //---------------------------
     /**
      * Load the definitions from the plan property file.
+     * @throws IOException on erros
      */
-    public void load() {
+    public void load() throws IOException {
         for ( PlanDefinition definition : definitions.values() )
             definition.deleteObserver( observer );
         definitions.clear();
 
-        InputStream inputStream = null;
+        InputStream inputStream = findInputStream();
         try {
-            inputStream = findInputStream();
             Properties properties = new Properties();
             if ( inputStream != null )
                 properties.load( inputStream );
@@ -131,16 +139,9 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
                     getOrCreate( "default", "Default Plan", "Internal" );
             }
 
-        } catch ( IOException e ) {
-            LOG.error( "Unable to read plan properties", e );
-
         } finally {
             if ( inputStream != null )
-                try {
-                    inputStream.close();
-                } catch ( IOException e ) {
-                    LOG.error( "Unable to close plan properties file", e );
-                }
+                inputStream.close();
         }
     }
 
@@ -195,8 +196,13 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     private InputStream findInputStream() throws IOException {
         InputStream inputStream;
         if ( planProperties != null && planProperties.exists() ) {
-            LOG.debug( "Reading plan definitions from {}", planProperties.getAbsolutePath() );
-            inputStream = new FileInputStream( planProperties );
+            File propFile = planProperties.getFile();
+            if ( propFile.isFile() ) {
+                LOG.debug( "Reading plan definitions from {}", propFile.getAbsolutePath() );
+                inputStream = new FileInputStream( propFile );
+            }
+            else
+                inputStream = null;
 
         } else if ( defaultProperties != null && defaultProperties.exists() ) {
             LOG.debug( "Reading default plan definitions from {}", defaultProperties.getURI() );
@@ -212,8 +218,9 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     //---------------------------
     /**
      * Save definitions to the plan property file.
+     * @throws IOException on errors
      */
-    public void save() {
+    public void save() throws IOException {
         if ( planProperties != null ) {
             Properties props = new Properties();
             synchronized ( definitions ) {
@@ -221,34 +228,18 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
                     props.setProperty( plan.getUri(), plan.toString() );
             }
 
-            FileOutputStream stream = null;
+            FileOutputStream stream = new FileOutputStream( planProperties.getFile() );
             try {
-                stream = new FileOutputStream( planProperties );
                 props.store( stream, " Active plans" );
-                LOG.debug( "Wrote plan definitions to {}", planProperties.getAbsolutePath() );
-
-            } catch ( FileNotFoundException e ) {
-                LOG.error( "Can't find plan definitions!", e );
-
-            } catch ( IOException e ) {
-                LOG.error( "Unable to save plan definitions", e );
+                LOG.debug( "Wrote plan definitions to {}", planProperties.getFile().getAbsolutePath() );
 
             } finally {
-                if ( stream != null )
-                    try {
-                        stream.close();
-                    } catch ( IOException e ) {
-                        LOG.error( "Couldn't even close plan definitions", e );
-                    }
+                stream.close();
             }
         }
     }
 
     //---------------------------
-    public File getDataDirectory() {
-        return dataDirectory;
-    }
-
     public Resource getDefaultProperties() {
         return defaultProperties;
     }
@@ -283,7 +274,8 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     /**
      * Load data after all properties have been set.
      */
-    public void afterPropertiesSet() {
+    @Override
+    public void afterPropertiesSet() throws IOException {
         load();
     }
 
@@ -292,6 +284,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
      * Note: not thread safe (definitions update may cause problems)
      * @return an Iterator.
      */
+    @Override
     public Iterator<PlanDefinition> iterator() {
         // TODO remove the need for this
         return definitions.values().iterator();

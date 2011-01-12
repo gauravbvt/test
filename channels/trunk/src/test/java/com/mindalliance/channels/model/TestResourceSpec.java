@@ -14,6 +14,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.FileSystemResource;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +67,7 @@ public class TestResourceSpec {
      */
     public void setUp() throws IOException {
         DefinitionManager definitionManager = new DefinitionManager(
-                new File( "target/channel-test-data" ), null );
+                new FileSystemResource( new File( "target/channel-test-data" ) ), null );
         definitionManager.delete( "test" );
         definitionManager.setIdGenerator( new SimpleIdGenerator() );
         definitionManager.getOrCreate( "test", "test", "MAS" );

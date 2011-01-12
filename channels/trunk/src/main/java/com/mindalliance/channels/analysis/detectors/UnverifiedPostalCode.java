@@ -22,22 +22,20 @@ public class UnverifiedPostalCode extends AbstractIssueDetector {
     public UnverifiedPostalCode() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
         String postalCode = place.getPostalCode();
         if ( postalCode != null && !postalCode.isEmpty() ) {
-            if ( place.geoLocate() == null ) {
+            if ( place.getPlaceBasis() == null ) {
                 Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
                 issue.setSeverity( Level.Low );
                 issue.setDescription( "Can't verify the postal code without a geolocation." );
                 issue.setRemediation( "Set a valid geoname and choose a geolocation." );
                 issues.add( issue );
             } else {
-                if ( !getGeoService().verifyPostalCode( place.getPostalCode(), place.geoLocate() ) ) {
+                if ( !getGeoService().verifyPostalCode( place.getPostalCode(), place.getLocationBasis() ) ) {
                     Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
                     issue.setSeverity( Level.Low );
                     issue.setDescription( "Can't verify the postal code for the geolocation." );
@@ -49,23 +47,17 @@ public class UnverifiedPostalCode extends AbstractIssueDetector {
         return issues;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Place;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTestedProperty() {
         return "postalCode";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getLabel() {
         return "Postal code can't be verified";
     }

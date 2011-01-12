@@ -25,12 +25,15 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.core.io.FileSystemResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,6 +54,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.SessionScope;
 import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer;
+import org.springframework.web.context.support.ServletContextResourceLoader;
 
 import javax.servlet.ServletContext;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
@@ -65,6 +70,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 /**
@@ -77,8 +83,8 @@ import java.util.StringTokenizer;
 @ContextConfiguration(
     loader = AbstractChannelsTest.MyContextLoader.class,
     locations = {
-        "file:src/main/webapp/WEB-INF/applicationContext.xml",
-            "file:src/main/webapp/WEB-INF/securityConfig.xml",
+            "/WEB-INF/applicationContext.xml",
+            "/WEB-INF/securityConfig.xml",
 //            "file:src/main/webapp/WEB-INF/persistenceConfig.xml",
         "testConfig.xml" } )
 @TestExecutionListeners( {
@@ -136,7 +142,7 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         IRequestCycleProcessor rcp = wicketApplication.getRequestCycleProcessor();
         rcs = rcp.getRequestCodingStrategy();
 
-        applicationContext.getBeanFactory().registerScope("session", new SessionScope());
+//        applicationContext.getBeanFactory().registerScope( "session", new SessionScope() );
 
         tester = new WicketTester( wicketApplication ) {
             @Override
@@ -245,57 +251,6 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         path.mkdirs();
     }
 
-    protected static void installSamples() {
-        LOG.debug( "Installing samples" );
-        try {
-            copyFiles( new File( "src/main/webapp/WEB-INF/samples" ), new File( "target/channel-test-data" ) );
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
-        }
-    }
-
-    /**
-     * This function will copy files or directories from one location to another.
-     * note that the source and the destination must be mutually exclusive. This
-     * function can not be used to copy a directory to a sub directory of itself.
-     * The function will also have problems if the destination files already exist.
-     * @param src A File object that represents the source for the copy
-     * @param dest A File object that represents the destination for the copy.
-     * @throws IOException if unable to copy.
-     */
-    private static void copyFiles( File src, File dest ) throws IOException {
-
-        if ( src.isDirectory() ) {
-            if ( dest.exists() || dest.mkdirs() )
-                for ( String f : src.list() )
-                    copyFiles( new File( src, f ), new File( dest, f ) );
-
-            else
-                throw new IOException( "Could not create directory: " + dest.getAbsolutePath() );
-
-        } else {
-            FileInputStream in = null;
-            FileOutputStream out = null;
-            try {
-                in = new FileInputStream( src );
-                out = new FileOutputStream( dest );
-                byte[] buffer = new byte[4096];
-
-                int bytesRead = in.read( buffer );
-                while ( bytesRead >= 0 ) {
-                    out.write( buffer, 0, bytesRead );
-                    bytesRead = in.read( buffer );
-                }
-            } finally { //Ensure that the files are closed (if they were open).
-                if ( in != null )
-                    in.close();
-
-                if ( out != null )
-                    out.close();
-            }
-        }
-    }
-
     private static void deleteDirectory( File path ) {
         if ( path.exists() ) {
             for ( File file : path.listFiles() )
@@ -336,6 +291,7 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         }
     }
 
+    @Override
     public void setApplicationContext( ApplicationContext applicationContext ) {
         this.applicationContext = (ConfigurableApplicationContext) applicationContext;
     }
@@ -343,11 +299,32 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     //=======================================================
     public static class MyContextLoader extends AbstractContextLoader {
 
-        private ServletContext servletContext =
-                new MockServletContext( "src/main/webapp",
-                                        new FileSystemResourceLoader() );
+        private static final String BASE = "src/main/webapp";
 
-        public final ConfigurableApplicationContext loadContext( String... locations ) {
+        private final ServletContext servletContext = new MockServletContext(
+                        BASE,
+                        new FileSystemResourceLoader() {
+                            @Override
+                            public Resource getResource( String location ) {
+                                Resource resource = super.getResource( location );
+                                return resource;
+                            }
+                        }
+                        );
+
+        @Override
+        protected String[] modifyLocations( Class<?> clazz, String... locations ) {
+            for ( int i = 0, locationsLength = locations.length; i < locationsLength; i++ ) {
+                String location = locations[ i ];
+                if ( location.startsWith( "/" ) )
+                    locations[ i ] = "file:" + BASE + location;
+            }
+
+            return super.modifyLocations( clazz, locations );
+        }
+
+        @Override
+        public ConfigurableApplicationContext loadContext( String... locations ) {
             if ( LOG.isDebugEnabled() ) {
                 LOG.debug( "Loading ApplicationContext for locations [ {} ]",
                               StringUtils.arrayToCommaDelimitedString( locations ) );
@@ -369,6 +346,7 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         }
 
 
+        @Override
         protected String getResourceSuffix() {
             return "-context.xml";
         }
@@ -381,7 +359,8 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     public static class ReinitContextListener extends AbstractTestExecutionListener {
 
         @Override
-        public void afterTestMethod( TestContext testContext ) {
+        public void afterTestMethod( TestContext testContext ) throws Exception {
+            super.afterTestMethod( testContext );
             LOG.debug( "Forcing test context reload after test method" );
             reload( testContext );
         }
@@ -401,7 +380,8 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     public static class ClearDataListener extends AbstractTestExecutionListener {
 
         @Override
-        public void beforeTestClass( TestContext testContext ) {
+        public void beforeTestClass( TestContext testContext ) throws Exception {
+            super.beforeTestClass( testContext );
 //            CacheManager cacheManager =
 //                    (CacheManager) testContext.getApplicationContext().getBean( "cacheManager" );
 //            cacheManager.clearAll();
@@ -415,10 +395,60 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
      */
     public static class InstallSamplesListener extends AbstractTestExecutionListener {
 
+        private static final String DEST = "target/channel-test-data";
+
+        private static final String SRC = "src/main/webapp/WEB-INF/samples";
+
         @Override
-        public void beforeTestClass( TestContext testContext ) {
-            installSamples();
+        public void beforeTestClass( TestContext testContext ) throws Exception {
+            super.beforeTestClass( testContext );
+
+            File dest = new File( DEST );
+            LOG.debug( "Installing samples under {}", dest.getAbsolutePath() );
+            copyFiles( new File( SRC ), dest );
         }
+
+        /**
+         * This function will copy files or directories from one location to another.
+         * note that the source and the destination must be mutually exclusive. This
+         * function can not be used to copy a directory to a sub directory of itself.
+         * The function will also have problems if the destination files already exist.
+         * @param src A File object that represents the source for the copy
+         * @param dest A File object that represents the destination for the copy.
+         * @throws IOException if unable to copy.
+         */
+        private static void copyFiles( File src, File dest ) throws IOException {
+
+            if ( !".svn".equals( src.getName() ) ) {
+
+                if ( src.isDirectory() ) {
+                    if ( dest.mkdirs() )
+                        LOG.trace( "Created {}", dest );
+
+                    for ( String file : src.list() )
+                        copyFiles( new File( src, file ), new File( dest, file ) );
+                } else {
+                    FileInputStream in = new FileInputStream( src );
+                    try {
+                        FileOutputStream out = new FileOutputStream( dest );
+                        try {
+                            byte[] buffer = new byte[4096];
+
+                            int bytesRead = in.read( buffer );
+                            while ( bytesRead >= 0 ) {
+                                out.write( buffer, 0, bytesRead );
+                                bytesRead = in.read( buffer );
+                            }
+                        } finally { //Ensure that the files are closed (if they were open).
+                            out.close();
+                        }
+                    } finally {
+                        in.close();
+                    }
+                }
+            }
+        }
+
     }
 
     protected Analyst getAnalyst() {

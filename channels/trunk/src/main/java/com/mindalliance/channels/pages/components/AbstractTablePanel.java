@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.model.GeoLocatable;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
@@ -621,7 +621,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             };
             if ( cssClasses != null ) {
                 link.add( new AttributeModifier( "class", true, new Model<String>( cssClasses ) ) );
-            }            
+            }
             add( link );
             link.add( new Label( "label", new Model<String>( label ) ) );
         }

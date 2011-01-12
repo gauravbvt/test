@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+  <Parameter name="channels.home" value="WEB-INF/samples"  override="false"/>
+</Context>
