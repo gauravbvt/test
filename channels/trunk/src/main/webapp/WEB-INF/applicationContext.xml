@@ -209,6 +209,8 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.TaskWithoutFailureProtocol"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ImportantTaskNotOperational"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ImportantFlowNotOperational"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.RedundantSegmentContext"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SegmentContextNeverCaused"/>
             </list>
         </property>
     </bean>

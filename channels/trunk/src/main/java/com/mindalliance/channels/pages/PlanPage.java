@@ -5,8 +5,8 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.GeoLocatable;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.GeoLocatable;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
@@ -540,6 +540,16 @@ public final class PlanPage extends WebPage implements Updatable {
                     }
                 } );
         segmentDescriptionLabel.setOutputMarkupId( true );
+        segmentDescriptionLabel.add(
+                    new AttributeModifier(
+                            "title",
+                            true,
+                            new AbstractReadOnlyModel<String>() {
+                                @Override
+                                public String getObject() {
+                                    return segment.getPhaseEventTitle();
+                                }
+                            } ) );
         form.addOrReplace( segmentDescriptionLabel );
     }
 
@@ -591,7 +601,7 @@ public final class PlanPage extends WebPage implements Updatable {
         form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
             @Override
             protected void onTimer( AjaxRequestTarget target ) {
-               doTimedUpdate( target );
+                doTimedUpdate( target );
             }
         } );
         form.add( refreshNeededComponent );

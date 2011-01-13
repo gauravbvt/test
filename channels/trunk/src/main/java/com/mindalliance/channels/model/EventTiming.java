@@ -69,10 +69,19 @@ public class EventTiming implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append( timing == Phase.Timing.Concurrent ? "during " : "after " );
         sb.append( StringUtils.uncapitalize( getEvent().getName() ) );
+        sb.append( eventLevelLabel() );
+        return sb.toString();
+    }
+
+    private String eventLevelLabel() {
+        StringBuilder sb = new StringBuilder();
         if ( getEventLevel() != null ) {
             sb.append( " (" );
-            sb.append( getEventLevel().getLabel() );
-            sb.append( ')' );
+            sb.append( getEventLevel().getLabel().toLowerCase() );
+            if ( !getEventLevel().equals( Level.Highest ) ) {
+                sb.append( " or greater");
+            }
+            sb.append( ")" );
         }
         return sb.toString();
     }
@@ -114,4 +123,14 @@ public class EventTiming implements Serializable {
     }
 
 
+    public boolean implies( EventTiming other, Place planLocale ) {
+        return getTiming().equals( other.getTiming() )
+                && other.getEvent().narrowsOrEquals( getEvent(), planLocale )
+                && ( eventLevelImplied( getEventLevel(), other.getEventLevel() ) );
+    }
+
+    public static boolean eventLevelImplied( Level eventLevel, Level other ) {
+        return eventLevel == null
+                || other != null && eventLevel.compareTo( other ) <= 0;
+    }
 }
