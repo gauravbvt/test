@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -70,6 +72,9 @@ public class Organization extends AbstractUnicastChannelable
         super( name );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean validates( ModelEntity entity, Place locale ) {
         Organization org = (Organization) entity;
@@ -78,6 +83,9 @@ public class Organization extends AbstractUnicastChannelable
             && ModelEntity.implies( org.getParent(), parent, locale );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean narrowsOrEquals( ModelEntity other, Place locale ) {
         return super.narrowsOrEquals( other, locale )
@@ -220,6 +228,9 @@ public class Organization extends AbstractUnicastChannelable
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return parent == null ? getName()
@@ -230,7 +241,6 @@ public class Organization extends AbstractUnicastChannelable
     public List<Job> getJobs() {
         // Filter out incomplete jobs (actor
         jobs = (List<Job>) CollectionUtils.select( jobs, new Predicate() {
-            @Override
             public boolean evaluate( Object obj ) {
                 Job job = (Job) obj;
                 return job.isDefined();
@@ -274,37 +284,58 @@ public class Organization extends AbstractUnicastChannelable
         return resourceSpecs;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isUndefined() {
         return super.isUndefined() && parent == null && location == null && jobs.isEmpty();
     }
 
-    @Override
-    public Place getPlaceBasis() {
-        return location == null ? null : location.getPlaceBasis();
+    /**
+     * {@inheritDoc}
+     */
+    public GeoLocation geoLocate() {
+        return location != null ? location.geoLocate() : null;
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
         List<Organization> geoLocatables = new ArrayList<Organization>();
-        for ( Organization organization : queryService.listEntitiesNarrowingOrEqualTo( this ) )
-            if ( organization.isActual() && organization.getPlaceBasis() != null )
-                geoLocatables.add( organization );
+        for ( Organization organization : queryService.listEntitiesNarrowingOrEqualTo( this ) ) {
+            if ( organization.isActual() ) {
+                GeoLocation geoLoc = organization.geoLocate();
+                if ( geoLoc != null ) {
+                    geoLocatables.add( organization );
+                }
+            }
+        }
         return geoLocatables;
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @param queryService
+     */
     public String getGeoMarkerLabel( QueryService queryService ) {
         return location != null ? location.getGeoMarkerLabel( queryService ) : "";
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public List<Hierarchical> getSuperiors() {
         List<Hierarchical> superiors = new ArrayList<Hierarchical>();
         if ( parent != null ) superiors.add( parent );
         return superiors;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
@@ -315,6 +346,9 @@ public class Organization extends AbstractUnicastChannelable
         return types;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Attachment.Type> getAttachmentTypes( String attachablePath ) {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
@@ -328,11 +362,17 @@ public class Organization extends AbstractUnicastChannelable
 
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isIconized() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean references( final ModelObject mo ) {
         return super.references( mo )
@@ -342,7 +382,6 @@ public class Organization extends AbstractUnicastChannelable
                 CollectionUtils.exists(
                         jobs,
                         new Predicate() {
-                            @Override
                             public boolean evaluate( Object obj ) {
                                 return ( (Job) obj ).references( mo );
                             }
@@ -350,22 +389,18 @@ public class Organization extends AbstractUnicastChannelable
                 );
     }
 
-    @Override
     public Actor getActor() {
         return null;
     }
 
-    @Override
     public Role getRole() {
         return null;
     }
 
-    @Override
     public Organization getOrganization() {
         return this;
     }
 
-    @Override
     public Place getJurisdiction() {
         return null;
     }

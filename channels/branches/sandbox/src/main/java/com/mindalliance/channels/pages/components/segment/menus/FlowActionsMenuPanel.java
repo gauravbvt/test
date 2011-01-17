@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.segment.menus;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.commands.AddIntermediate;
 import com.mindalliance.channels.command.commands.AddUserIssue;
 import com.mindalliance.channels.command.commands.BreakUpFlow;
@@ -160,12 +161,12 @@ public class FlowActionsMenuPanel extends MenuPanel {
 
         commandWrappers.add( wrap( new CopyFlow( flow, getPart() ), false ) );
 
+        if ( isSend && flow.getTarget().isPart() || !isSend && flow.getSource().isPart() )
+            commandWrappers.add( wrap( new DuplicateFlow( flow, isSend ), false ) );
+
+        commandWrappers.add( wrap( new AddUserIssue( flow ), false ) );
+
         if ( !isCollapsed ) {
-            if ( flow.isSharing() )
-                commandWrappers.add( wrap( new DuplicateFlow( flow, isSend ), false ) );
-
-            commandWrappers.add( wrap( new AddUserIssue( flow ), false ) );
-
             commandWrappers.add( wrap( new PasteAttachment( flow ), false ) );
 
             commandWrappers.add( wrap(

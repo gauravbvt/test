@@ -39,7 +39,7 @@ CONFIGURATION NOTES:
 
     <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager" lazy-init="true">
         <constructor-arg ref="definitionManager" />
-        <property name="importDirectory" value="${channels.home}${file.separator}import"/>
+        <property name="importDirectory" value="file:${channels.home}${file.separator}import"/>
         <property name="builtInMedia">
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>
@@ -98,8 +98,7 @@ CONFIGURATION NOTES:
           init-method="start" destroy-method="stop"/>
 
     <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
-        <property name="iconDirectory" value="${channels.home}${file.separator}icons"/>
-        <property name="imageDirectory" value="WEB-INF/images"/>
+        <property name="iconDirectory" value="file:${channels.home}${file.separator}icons"/>
         <property name="iconPath" value="icons/"/>
     </bean>
 
@@ -209,8 +208,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.TaskWithoutFailureProtocol"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ImportantTaskNotOperational"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ImportantFlowNotOperational"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.RedundantSegmentContext"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.SegmentContextNeverCaused"/>
             </list>
         </property>
     </bean>

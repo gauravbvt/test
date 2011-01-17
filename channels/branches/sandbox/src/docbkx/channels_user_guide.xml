@@ -6876,44 +6876,6 @@
 
                 <entry><para>No</para></entry>
               </row>
-              
-              <row>
-                <entry><para>Redundancy in segment context</para></entry>
-                
-                <entry><para>Low</para></entry>
-                
-                <entry><itemizedlist>
-                  <listitem>
-                    <para>Remove redundant pre or post-event from the context</para>
-                  </listitem>
-                 </itemizedlist></entry>
-                
-                <entry><para>No</para></entry>
-              </row>
-              
-              <row>
-                <entry><para>Segment context may never come to be</para></entry>
-                
-                <entry><para>Medium</para></entry>
-                
-                <entry><itemizedlist>
-                  <listitem>
-                    <para>Make event in context an incident</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>or have a task cause the event</para>
-                  </listitem>
-                  <listitem>
-                    <para>or make event self-terminating (post-event only)</para>
-                  </listitem>
-                  <listitem>
-                    <para>or make a task terminate the event (post-event only)</para>
-                  </listitem>
-                </itemizedlist></entry>
-                
-                <entry><para>No</para></entry>
-              </row>
             </tbody>
           </tgroup>
         </informaltable>

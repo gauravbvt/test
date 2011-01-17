@@ -48,13 +48,21 @@ public class Segment extends ModelObject {
     private final Map<Long, Node> nodeIndex = new HashMap<Long, Node>( INITIAL_CAPACITY );
 
     /**
-     * Event phase addressed in this segment.
+     * Plan event addressed to by this segment.
+     * The event is always a type
+     * (planning is done for types of events, not actual events since they have yet to occur).
      */
-    private EventPhase eventPhase = new EventPhase();
+    private Event event;
+
     /**
-     * Event phases in context.
+     * A qualifcation of the intensity of the event.
      */
-    private List<EventTiming> context = new ArrayList<EventTiming>(  );
+    private Level eventLevel;
+
+    /**
+     * Plan phase addressed by this segment.
+     */
+    private Phase phase;
 
     /**
      * Goals (risk mitigations, gains to be made) for the segment.
@@ -70,22 +78,6 @@ public class Segment extends ModelObject {
     public Segment() {
     }
 
-    public EventPhase getEventPhase() {
-        return eventPhase;
-    }
-
-    public void setEventPhase( EventPhase eventPhase ) {
-        this.eventPhase = eventPhase;
-    }
-
-    public List<EventTiming> getContext() {
-        return context;
-    }
-
-    public void setContext( List<EventTiming> context ) {
-        this.context = context;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -94,19 +86,21 @@ public class Segment extends ModelObject {
     }
 
     public Event getEvent() {
-        return eventPhase.getEvent();
+        return event;
     }
 
     public void setEvent( Event event ) {
-        eventPhase.setEvent( event );
+        // TODO avoid setEvent( null ) during import
+        //  assert event.isType();
+        this.event = event;
     }
 
     public Level getEventLevel() {
-        return eventPhase.getEventLevel();
+        return eventLevel;
     }
 
     public void setEventLevel( Level eventLevel ) {
-        eventPhase.setEventLevel( eventLevel );
+        this.eventLevel = eventLevel;
     }
 
     /**
@@ -521,16 +515,15 @@ public class Segment extends ModelObject {
      */
     public String getPhaseEventTitle() {
         StringBuilder sb = new StringBuilder();
-        sb.append( eventPhase.toString() );
-        if ( !getContext().isEmpty() ) {
-            sb.append(", ");
-        }
-        Iterator<EventTiming> eventTimings = getContext().iterator();
-        while ( eventTimings.hasNext() ) {
-            sb.append( eventTimings.next() );
-            if ( eventTimings.hasNext() ) {
-                sb.append( " and ");
-            }
+        sb.append( StringUtils.capitalize( phase.getName() ) );
+        sb.append( ' ' );
+        sb.append( phase.getPreposition() );
+        sb.append( ' ' );
+        sb.append( StringUtils.uncapitalize( event.getName() ) );
+        if ( eventLevel != null ) {
+            sb.append( " (" );
+            sb.append( eventLevel.getLabel() );
+            sb.append( ')' );
         }
         return sb.toString();
     }
@@ -556,15 +549,15 @@ public class Segment extends ModelObject {
      */
     public String initiationCause( Part part ) {
         Event initiator = part.getInitiatedEvent();
-        if ( getEvent().equals( initiator ) && getPhase().isConcurrent() )
-            return "causes event \"" + getEvent().getName().toLowerCase() + '\"';
+        if ( event.equals( initiator ) && phase.isConcurrent() )
+            return "causes event \"" + event.getName().toLowerCase() + '\"';
         else {
             Segment partSegment = part.getSegment();
             return part.isTerminatesEventPhase()
                     && partSegment.getPhase().isConcurrent()
-                    && getEvent().equals( partSegment.getEvent() )
-                    && getPhase().isPostEvent() ?
-                    "terminates event \"" + getEvent().getName().toLowerCase() + '\"'
+                    && event.equals( partSegment.getEvent() )
+                    && phase.isPostEvent() ?
+                    "terminates event \"" + event.getName().toLowerCase() + '\"'
                     : "";
         }
     }
@@ -591,7 +584,7 @@ public class Segment extends ModelObject {
         Event initiator = part.getInitiatedEvent();
         return equals( part.getSegment() ) && part.isTerminatesEventPhase() ?
                 "terminates " + getPhaseEventTitle().toLowerCase()
-                : getEvent().equals( initiator ) && getPhase().isPreEvent() ?
+                : event.equals( initiator ) && getPhase().isPreEvent() ?
                 "causes event \"" + initiator.getName().toLowerCase() + '\"'
                 : "";
     }
@@ -701,14 +694,6 @@ public class Segment extends ModelObject {
         return new ArrayList<Flow>( flows );
     }
 
-    public void addToContext( EventTiming eventTiming ) {
-        context.add( eventTiming );
-    }
-
-    public void initEventPhase( EventPhase eventPhase ) {
-        this.eventPhase.initFrom( eventPhase );
-    }
-
 
     //=================================================
     /**
@@ -791,11 +776,11 @@ public class Segment extends ModelObject {
     }
 
     public Phase getPhase() {
-        return eventPhase.getPhase();
+        return phase;
     }
 
     public void setPhase( Phase phase ) {
-        eventPhase.setPhase( phase );
+        this.phase = phase;
     }
 
     /**
@@ -803,19 +788,13 @@ public class Segment extends ModelObject {
      */
     @Override
     public boolean references( final ModelObject mo ) {
-        return eventPhase.references( mo )
+        return ModelObject.areIdentical( phase, mo )
+                || ModelObject.areIdentical( event, mo )
                 || CollectionUtils.exists(
                 goals,
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         return ( (Goal) object ).references( mo );
-                    }
-                } )
-                || CollectionUtils.exists(
-                context,
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return ( (EventTiming) object ).references( mo );
                     }
                 } );
     }

@@ -7,33 +7,32 @@
         lang="en">
 
 <body>
-    <table>
-        <tr>
-            <wicket:panel>
-                <th align="right" valign="top">&nbsp;</th>
-                <td class="grouped">
-                    <ul class="attach">
+<table>
+    <tr>
+        <wicket:panel>
+            <th align="right" valign="top">&nbsp;</th>
+            <td>
+                <ul class="attach">
                     <span wicket:id="attachments-container">
                         <li wicket:id="attachments">
                             <a wicket:id="attachment" href="#">attachment</a>
                             <ul class="menu">
                                 <li><a wicket:id="copy" href="#">
                                     <img style="border:0" src="images/copy.png" title="Copy" alt="Copy attachment"/>
-                                </a>
+                                    </a>
                                 </li>
                                 <li><a wicket:id="delete" href="#">
-                                    <img style="border:0" src="images/delete.png" title="Delete"
-                                         alt="Delete attachment"/>
-                                </a>
+                                    <img style="border:0" src="images/delete.png" title="Delete" alt="Delete attachment"/>
+                                    </a>
                                 </li>
                             </ul>
                         </li>
                     </span>
-                        <li class="controls">
+                    <li class="controls">
                         <span wicket:id="controls">
                             Attach: <select wicket:id="type">
-                            <option>Reference</option>
-                        </select> named <input wicket:id="name" type="text"/>
+                                <option>Reference</option>
+                            </select> named <input wicket:id="name" type="text"/>
                             <br>
                             <span wicket:id="radios">
                             </span>
@@ -42,11 +41,11 @@
                             <input type="text" wicket:id="url" value="url">
                             <input type="button" value="Attach" wicket:id="submit">
                         </span>
-                        </li>
-                    </ul>
-                </td>
-            </wicket:panel>
-        </tr>
-    </table>
+                    </li>
+                </ul>
+            </td>
+        </wicket:panel>
+    </tr>
+</table>
 </body>
 </html>

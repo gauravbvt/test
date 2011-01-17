@@ -1,48 +1,12 @@
 package com.mindalliance.channels.query;
 
+import com.mindalliance.channels.model.Dissemination;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Agreement;
-import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Classification;
-import com.mindalliance.channels.model.Commitment;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Delay;
-import com.mindalliance.channels.model.Dissemination;
-import com.mindalliance.channels.model.ElementOfInformation;
-import com.mindalliance.channels.model.Employment;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Goal;
-import com.mindalliance.channels.model.Hierarchical;
-import com.mindalliance.channels.model.InvalidEntityKindException;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Job;
-import com.mindalliance.channels.model.Level;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Participation;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.model.Subject;
-import com.mindalliance.channels.model.Transformation;
-import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.model.*;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.nlp.SemanticMatcher;
@@ -696,7 +660,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 if ( kind.equals( ModelEntity.Kind.Actual ) ) {
                     if ( entity != null ) result.add( entity );
                 } else {
-                    result.addAll( assignment.getEntityTypesAssigned( entityClass ) );
+                    result.addAll( assignment.getEntityTypesAssigned( entityClass ));
                 }
             }
         }
@@ -1755,23 +1719,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
         }
         return causes;
-    }
-
-    @Override
-    public List<Part> findTerminatorsOf( Event event ) {
-        List<Part> terminators = new ArrayList<Part>();
-        for ( Segment segment : list( Segment.class ) ) {
-            if ( segment.getEvent().equals( event ) && segment.getPhase().isConcurrent() ) {
-                Iterator<Part> parts = segment.parts();
-                while ( parts.hasNext() ) {
-                    Part part = parts.next();
-                    if ( part.isTerminatesEventPhase() ) {
-                        terminators.add( part );
-                    }
-                }
-            }
-        }
-        return terminators;
     }
 
     @Override

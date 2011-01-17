@@ -240,10 +240,6 @@ input[type="text"].no-expand {
     width: 5em;
 }
 
-input[type="text"].entity-name {
-    width: 25em;
-}
-
 input[type="text"].address {
     width: 12em;
 }
@@ -1072,11 +1068,7 @@ div.aspect div.picture {
 	vertical-align:middle;
 }
 
-.grouped {
-    background: #DDDDDD;
-    padding: 4px;
-    margin: 0 0 2px 0;
-}
+
 
 /* ----- Floating Panels - Data Tables - Controls ----- */
 

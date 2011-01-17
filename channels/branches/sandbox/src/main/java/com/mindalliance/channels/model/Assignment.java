@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
@@ -37,38 +39,42 @@ public class Assignment implements GeoLocatable, Specable {
         return employment;
     }
 
-    @Override
     public Actor getActor() {
         return employment.getActor();
     }
 
-    @Override
     public Role getRole() {
         return employment.getRole();
     }
 
-    @Override
     public Organization getOrganization() {
         return employment.getOrganization();
     }
 
 
-    @Override
     public Place getJurisdiction() {
         return employment.getJurisdiction();
     }
 
-    @Override
-    public Place getPlaceBasis() {
-        return part.getPlaceBasis();
+    /**
+     * {@inheritDoc}
+     */
+    public GeoLocation geoLocate() {
+        return part.geoLocate();
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @param queryService
+     */
     public String getGeoMarkerLabel( QueryService queryService ) {
         return employment.toString() + ", and is assigned to task \"" + part.getTask() + '\"';
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
         List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
         geoLocatables.addAll( employment.getImpliedGeoLocatables( queryService ) );
@@ -76,6 +82,9 @@ public class Assignment implements GeoLocatable, Specable {
         return geoLocatables;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -86,6 +95,9 @@ public class Assignment implements GeoLocatable, Specable {
         return sb.toString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals( Object obj ) {
         if ( !( obj instanceof Assignment ) ) return false;
@@ -94,6 +106,9 @@ public class Assignment implements GeoLocatable, Specable {
                 && part.equals( other.getPart() );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int hash = 1;
@@ -130,7 +145,7 @@ public class Assignment implements GeoLocatable, Specable {
             || entity.narrowsOrEquals( getOrganization(), locale )
             || entity.narrowsOrEquals( getJurisdiction(), locale );
     }
-
+    
 
     /**
      * Get known assignee, either an actor or an organization.

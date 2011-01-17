@@ -61,7 +61,7 @@ public class TestFileUserDetailsService {
 
     @Test
     public void testUserData() {
-        service.setBase( new FileSystemResource( System.getProperty( "user.dir" ) ) );
+        service.setBase( System.getProperty( "user.dir" ) );
         service.setUserDefinitions( "src/main/webapp/WEB-INF/users.properties" );
         String user = "denis";
         User details = (User) service.loadUserByUsername( user );
@@ -83,20 +83,20 @@ public class TestFileUserDetailsService {
     @Test
     public void testInitialCopy() throws IOException {
         service.setDefaultDefinitions( new FileSystemResource( "src/main/webapp/WEB-INF/users.properties" ) );
-        service.setBase( new FileSystemResource( System.getProperty( "user.dir" ) ) );
+        service.setBase( System.getProperty( "user.dir" ) );
         service.setUserDefinitions( "target/users.properties" );
 
         assertNotNull( service.loadUserByUsername( "guest" ) );
         assertTrue( new File( service.getUserDefinitions() ).exists() );
 
-        new File( service.getBase().getFile(), service.getUserDefinitions() ).delete();
+        new File( service.getBase(), service.getUserDefinitions() ).delete();
 
     }
 
     @Test
     public void testJf() {
         service.setDefaultDefinitions( new FileSystemResource( "src/main/webapp/WEB-INF/users.properties" ) );
-        service.setBase( new FileSystemResource( System.getProperty( "user.dir" ) ) );
+        service.setBase( System.getProperty( "user.dir" ) );
         service.setUserDefinitions( "target/users.properties" );
         User jf = (User) service.loadUserByUsername( "jf" );
         assertTrue( jf.isAdmin() );

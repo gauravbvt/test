@@ -2,7 +2,7 @@ package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.model.GeoLocation;
+import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
@@ -24,7 +24,9 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
     public GeonameButNoLocation() {
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
@@ -40,17 +42,23 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
         return issues;
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Place;
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public String getTestedProperty() {
         return "geoname";
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     protected String getLabel() {
         return "Can't put place on a map";
     }

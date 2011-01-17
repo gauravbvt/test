@@ -1,10 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocatable;
 import com.mindalliance.channels.pages.GeoMapPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
@@ -37,17 +38,24 @@ public class GeomapLinkPanel extends Panel {
     }
 
     private void init() {
-        add(
-            GeoMapPage.makeLink( "mapLink", titleModel, geoLocatables )
-                .add( new AttributeModifier( "title", true, hintModel ) )
-                .setVisible(
-                    CollectionUtils.exists(
-                        geoLocatables, new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return ( (GeoLocatable) object ).getPlaceBasis() != null;
-                            }
-                        } ) ) );
+        BookmarkablePageLink geomapLink = GeoMapPage.makeLink(
+                "mapLink",
+                titleModel,
+                geoLocatables
+        );
+        geomapLink.add( new AttributeModifier(
+                "title",
+                true,
+                hintModel ) );
+        boolean somethingToMap = CollectionUtils.find(
+                geoLocatables,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ( (GeoLocatable) obj ).geoLocate() != null;
+                    }
+                } ) != null;
+        geomapLink.setVisible( somethingToMap );
+        add( geomapLink );
     }
 
 }

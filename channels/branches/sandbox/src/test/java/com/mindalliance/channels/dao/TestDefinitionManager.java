@@ -35,13 +35,13 @@ public class TestDefinitionManager {
         FileUtils.deleteDirectory( dataDir );
         props = new File( dataDir, "plans.properties" );
 
-        definitionManager = new DefinitionManager( new FileSystemResource( dataDir ), new FileSystemResource( props ) );
+        definitionManager = new DefinitionManager( dataDir, props );
         generator = new SimpleIdGenerator();
         definitionManager.setIdGenerator( generator );
     }
 
     @Test
-    public void testEmpty() throws IOException {
+    public void testEmpty() {
         definitionManager.afterPropertiesSet();
         assertTrue( dataDir.exists() );
         assertTrue( props.exists() );
@@ -81,22 +81,22 @@ public class TestDefinitionManager {
     }
 
     @Test
-    public void testReload() throws IOException {
+    public void testReload() {
         definitionManager.afterPropertiesSet();
         definitionManager.load();
         assertNotNull( definitionManager.get( "default" ) );
     }
 
     @Test
-    public void testLoadDefaults() throws IOException {
+    public void testLoadDefaults() {
         definitionManager.setDefaultProperties( new FileSystemResource( "src/main/webapp/WEB-INF/samples/plans.properties" ) );
         definitionManager.afterPropertiesSet();
         assertNotNull( definitionManager.get( "mindalliance.com/channels/plans/demo" ) );
     }
 
     @Test
-    public void testBadProps() throws IOException {
-        definitionManager = new DefinitionManager( new FileSystemResource( dataDir ), new FileSystemResource( dataDir ) );
+    public void testBadProps() {
+        definitionManager = new DefinitionManager( dataDir, dataDir );
         definitionManager.load();
     }
 
@@ -105,6 +105,7 @@ public class TestDefinitionManager {
         definitionManager.setSnapshotThreshold( 5 );
         assertEquals( 5, definitionManager.getSnapshotThreshold() );
 
+        assertSame( dataDir, definitionManager.getDataDirectory() );
         assertSame( generator,definitionManager.getIdGenerator() );
 
         Resource resource = new InMemoryResource( "bla" );

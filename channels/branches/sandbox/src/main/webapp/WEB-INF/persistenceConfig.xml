@@ -56,7 +56,7 @@
                        advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(com.mindalliance.channels.query.Assignments com.mindalliance.channels.query.QueryService.*(..))"
                        advice-ref="cacheSet"/>
-        <aop:advisor pointcut="execution(com.mindalliance.channels.model.Level com.mindalliance.channels.query.QueryService.*(..))"
+          <aop:advisor pointcut="execution(com.mindalliance.channels.model.Level com.mindalliance.channels.query.QueryService.*(..))"
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.query.QueryService.*(..))"
                      advice-ref="cacheSet"/>
@@ -80,13 +80,17 @@
                      advice-ref="cacheClear"/>
 
         <!-- Permanent caching -->
-        <aop:advisor pointcut="execution(String com.mindalliance.channels.geo.DefaultGeoService.getGeoCoding(..))"
+        <aop:advisor pointcut="execution(String com.mindalliance.channels.geo.GeoService.getGeoCoding(..))"
                      advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.geo.DefaultGeoService.findNearbyPostalCodes(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.geo.GeoService.findNearbyPostalCodes(..))"
                      advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.geo.DefaultGeoService.*(..))"
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.geo.GeoService.verifyPostalCode(..))"
                      advice-ref="permSet"/>
-        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.geo.DefaultGeoService.findGeoLocations(..))"
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.geo.GeoService.isPostalCodeInGeoLocation(..))"
+                     advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.geo.GeoService.isLikelyGeoname(..))"
+                      advice-ref="permSet"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.geo.GeoService.findGeoLocations(..))"
                        advice-ref="permSet"/>
         <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.nlp.SemanticMatcher.matches(..))"
                      advice-ref="permSet"/>

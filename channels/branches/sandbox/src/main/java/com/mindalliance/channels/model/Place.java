@@ -1,6 +1,8 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.model.Attachment.Type;
+import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.LoggerFactory;
 
@@ -70,14 +72,29 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      */
     public static final String UnknownPlaceName = "(unknown)";
 
+    /**
+     * Street address.
+     */
     private String streetAddress = "";
 
+    /**
+     * Postal code
+     */
     private String postalCode = "";
 
+    /**
+     * A string denoting a geolocation. Null if not set. Set if empty.
+     */
     private String geoname;
 
+    /**
+     * Geolocation for the geoname, if any.
+     */
     private GeoLocation geoLocation;
 
+    /**
+     * Candidate geolocations for the geoname, if any.
+     */
     private List<GeoLocation> geoLocations;
 
     /**
@@ -102,13 +119,14 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         super( name );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ModelEntity> getImplicitTags() {
-        List<ModelEntity> implicitTags = super.getImplicitTags();
-
-        GeoLocation geo = getLocationBasis();
-        String actualAddress = getActualStreetAddress();
-        if ( ( actualAddress == null || actualAddress.isEmpty() ) && geo != null ) {
+        List<ModelEntity> implicitTags = new ArrayList<ModelEntity>();
+        if ( isRegion() ) {
+            GeoLocation geo = geoLocate();
             if ( geo.isCity() )
                 implicitTags.add( City );
             else if ( geo.isCounty() )
@@ -121,6 +139,9 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         return implicitTags;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setName( String name ) {
         // If geoname was empty or same as name, reset it to null
@@ -129,10 +150,6 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         super.setName( name );
     }
 
-    /**
-     * Street address.
-     * @return the address
-     */
     public String getStreetAddress() {
         return streetAddress;
     }
@@ -141,10 +158,6 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         streetAddress = address == null ? "" : address;
     }
 
-    /**
-     * A string denoting a geolocation. Null if not set. Set if empty.
-     * @return the geoname
-     */
     public String getGeoname() {
         return geoname;
     }
@@ -154,17 +167,14 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * Assumes a subsequent call to validate().
      *
      * @param geoname the geoname.
+     * @see #validate
      */
     public void setGeoname( String geoname ) {
-        setGeoLocations( null );
-        setGeoLocation( null );
+        geoLocations = null;
+        geoLocation = null;
         this.geoname = geoname;
     }
 
-    /**
-     * Return the postal code.
-     * @return the postal code
-     */
     public String getPostalCode() {
         return postalCode == null ? "" : postalCode;
     }
@@ -199,6 +209,9 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         this.mustBeContainedIn = mustBeContainedIn;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isInvalid( Place locale ) {
         return super.isInvalid( locale )
@@ -264,6 +277,9 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         return within != null && within.isWithinCircular( visited );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean narrowsOrEquals( ModelEntity other, Place locale ) {
         // a place narrows another place if it or one of its parent is within the other place
@@ -272,6 +288,9 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
                                       && matchesOrIsInside( (Place) other, locale );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean validates( ModelEntity entity, Place locale ) {
         // other mustContain test must be less stringent
@@ -307,12 +326,19 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 //        return pmc == null || mc != null && pmc.narrowsOrEquals( mc, locale );
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
         List<Place> geoLocatables = new ArrayList<Place>();
-        for ( Place place : queryService.listEntitiesNarrowingOrEqualTo( this ) )
-            if ( place.isActual() && place.getPlaceBasis() != null )
-                geoLocatables.add( place );
+        for ( Place place : queryService.listEntitiesNarrowingOrEqualTo( this ) ) {
+            if ( place.isActual() ) {
+                GeoLocation geoLoc = place.geoLocate();
+                if ( geoLoc != null ) {
+                    geoLocatables.add( place );
+                }
+            }
+        }
         return geoLocatables;
     }
 
@@ -349,26 +375,24 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         return containers;
     }
 
-    @Override
-    public Place getPlaceBasis() {
-        if ( getGeoLocation() == null )
-            for ( Place container : containment() )
-                if ( container.getGeoLocation() != null )
-                    return container;
-
-        return this;
+    /**
+     * {@inheritDoc}
+     */
+    public GeoLocation geoLocate() {
+        GeoLocation geoLoc = getGeoLocation();
+        if ( geoLoc == null ) {
+            Iterator<Place> containers = containment().iterator();
+            while ( geoLoc == null && containers.hasNext() ) {
+                geoLoc = containers.next().getGeoLocation();
+            }
+        }
+        return geoLoc;
     }
 
     /**
-     * Find the geoLocation on which this place is based on.
-     * @return a geoLocation
+     * {@inheritDoc}
+     * @param queryService
      */
-    public GeoLocation getLocationBasis() {
-        Place basis = getPlaceBasis();
-        return basis == null ? null : basis.getGeoLocation();
-    }
-
-    @Override
     public String getGeoMarkerLabel( QueryService queryService ) {
         StringBuilder sb = new StringBuilder();
         sb.append( toString() );
@@ -388,16 +412,15 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     public String getFullAddress() {
         StringBuilder sb = new StringBuilder();
         String address = getActualStreetAddress();
-        if ( address != null )
+        if ( address != null ) {
             sb.append( address.trim() );
-
-        GeoLocation geoLoc = getLocationBasis();
+        }
+        GeoLocation geoLoc = geoLocate();
         if ( geoLoc != null ) {
             if ( sb.length() > 0 )
                 sb.append( ", " );
             sb.append( geoLoc.toString().trim() );
         }
-
         String code = getActualPostalCode();
         if ( code != null && code.trim().length() > 0 ) {
             if ( sb.length() > 0 )
@@ -413,11 +436,12 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * @return a string
      */
     public String getActualStreetAddress() {
-        String street = streetAddress;
+        String street = getStreetAddress();
         if ( street == null || street.isEmpty() ) {
             Iterator<Place> containers = containment().iterator();
-            while ( street == null && containers.hasNext() )
+            while ( street == null && containers.hasNext() ) {
                 street = containers.next().getStreetAddress();
+            }
         }
         return street;
     }
@@ -439,12 +463,30 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     }
 
     /**
-     * Candidate geolocations for the geoname, if any.
+     * Validate this place using a geoservice.
+     *
+     * @param service the service
      */
+    public void validate( GeoService service ) {
+        if ( geoname == null ) {
+            String n = getName();
+            boolean hasName = !( n == null || n.trim().isEmpty() );
+            setGeoname( hasName && service.isLikelyGeoname( n ) ? n : "" );
+        }
+        boolean hasGeoName = !( geoname == null || geoname.trim().isEmpty() );
+        if ( hasGeoName && geoLocations == null )
+            geoLocations = service.findGeoLocations( geoname );
+        if ( hasAddress() )
+            service.refineWithAddress( geoLocation, streetAddress, postalCode );
+    }
+
     public List<GeoLocation> getGeoLocations() {
         return geoLocations;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void beforeRemove( QueryService queryService ) {
         super.beforeRemove( queryService );
@@ -459,10 +501,6 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
                 place.setWithin( null );
     }
 
-    /**
-     * Geolocation for the geoname, if any.
-     * @return the resolved location or null
-     */
     public GeoLocation getGeoLocation() {
         return geoLocation;
     }
@@ -471,10 +509,10 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         geoLocation = geoLoc;
     }
 
-    public boolean hasAddress() {
+    private boolean hasAddress() {
         boolean hasStreetAddress = !( streetAddress == null || streetAddress.isEmpty() );
         boolean hasPostalCode = !( postalCode == null || postalCode.isEmpty() );
-        return getGeoLocation() != null && ( hasStreetAddress || hasPostalCode );
+        return geoLocation != null && ( hasStreetAddress || hasPostalCode );
     }
 
     /**
@@ -483,9 +521,9 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * @param location a location
      */
     public void addGeoLocation( GeoLocation location ) {
-        if ( getGeoLocations() == null )
-            setGeoLocations( new ArrayList<GeoLocation>() );
-        getGeoLocations().add( location );
+        if ( geoLocations == null )
+            geoLocations = new ArrayList<GeoLocation>();
+        geoLocations.add( location );
     }
 
     /**
@@ -496,14 +534,30 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * @return a boolean
      */
     public boolean matchesOrIsInside( Place place, Place locale ) {
-        if ( equals( place ) || isInside( place, locale ) )
+        if ( equals( place ) ) {
             return true;
+        } else if ( isInside( place, locale ) ) {
+            return true;
+        } else if ( isActual() && place.isActual() && isGeoLocatedIn( place.geoLocate() ) ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-        GeoLocation loc = getLocationBasis();
-        return isActual()
-            && place.isActual()
-            && loc != null
-            && loc.isInside( place.getLocationBasis() );
+    /**
+     * Whether this place's geolocation, if any is the same as or contained in a given geolocation.
+     *
+     * @param geoLoc a geo location
+     * @return a boolean
+     */
+    public boolean isGeoLocatedIn( GeoLocation geoLoc ) {
+        if ( geoLoc == null ) {
+            return false;
+        } else {
+            GeoLocation myGeoLoc = geoLocate();
+            return myGeoLoc != null && myGeoLoc.isSameAsOrInside( geoLoc );
+        }
     }
 
     /**
@@ -525,6 +579,29 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
             return within.getLoopyContainingPlace( place );
     }
 
+    /**
+     * Get latitude.
+     *
+     * @return a double
+     */
+    public double getLatitude() {
+        GeoLocation geoLoc = geoLocate();
+        return geoLoc != null ? geoLoc.getLatitude() : 0.0;
+    }
+
+    /**
+     * Get longitude.
+     *
+     * @return a double
+     */
+    public double getLongitude() {
+        GeoLocation geoLoc = geoLocate();
+        return geoLoc != null ? geoLoc.getLongitude() : 0.0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -559,18 +636,24 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      */
     public boolean isRegion() {
         String actualAddress = getActualStreetAddress();
-        return ( actualAddress == null || actualAddress.isEmpty() ) && getLocationBasis() != null;
+        return ( actualAddress == null || actualAddress.isEmpty() ) && geoLocate() != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<Type> getAttachmentTypes() {
-        List<Type> types = new ArrayList<Type>();
+    public List<Attachment.Type> getAttachmentTypes() {
+        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )
-            types.add( Type.Image );
+            types.add( Attachment.Type.Image );
         types.addAll( super.getAttachmentTypes() );
         return types;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean references( ModelObject mo ) {
         return super.references( mo ) || ModelObject.areIdentical( within, mo )
@@ -581,7 +664,6 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * Get the implied actor.
      * @return the actor, or null if any
      */
-    @Override
     public Actor getActor() {
         return null;
     }
@@ -590,7 +672,6 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * Get the implied role.
      * @return the role, or null if any
      */
-    @Override
     public Role getRole() {
         return null;
     }
@@ -599,7 +680,6 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * Get the implied organization.
      * @return the organization, or null if any
      */
-    @Override
     public Organization getOrganization() {
         return null;
     }
@@ -608,12 +688,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * Get the implied jurisdiction.
      * @return the jurisdiction, or null if any
      */
-    @Override
     public Place getJurisdiction() {
         return this;
-    }
-
-    public void setGeoLocations( List<GeoLocation> geoLocations ) {
-        this.geoLocations = geoLocations;
     }
 }

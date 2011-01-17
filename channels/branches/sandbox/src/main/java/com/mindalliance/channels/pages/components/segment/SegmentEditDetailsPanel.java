@@ -65,10 +65,6 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
      */
     private DropDownChoice<String> eventLevelChoice;
     /**
-     * Event timings panel.
-     */
-    private EventTimingsPanel eventTimingsPanel;
-    /**
      * Name for unspecified level.
      */
     private static final String ANY = "Any";
@@ -88,9 +84,8 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
         addEventLink();
         addEventLevelChoice();
         addEventField();
-        addEventTimingsPanel();
-        add( new AttachmentPanel( "attachments", new PropertyModel<Segment>( this, "segment" ) ) );
         addIssuesPanel();
+        add( new AttachmentPanel( "attachments", new PropertyModel<Segment>( this, "segment" ) ) );
     }
 
     private void addEventLevelChoice() {
@@ -166,7 +161,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
     private void addPhaseLink() {
         phaseLink = new ModelObjectLink( "phase-link",
                 new PropertyModel<Event>( getSegment(), "phase" ),
-                new Model<String>( "Phase" ) );
+                new Model<String>( "phase" ) );
         phaseLink.setOutputMarkupId( true );
         addOrReplace( phaseLink );
     }
@@ -223,13 +218,6 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
         eventLink.setOutputMarkupId( true );
         addOrReplace( eventLink );
     }
-
-
-    private void addEventTimingsPanel() {
-        eventTimingsPanel = new EventTimingsPanel( "context", new PropertyModel<Segment>( this, "segment" ) );
-        add( eventTimingsPanel );
-    }
-
 
     private void addIssuesPanel() {
         issuesPanel = new IssuesPanel(

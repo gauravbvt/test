@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.query.QueryService;
 
 import java.io.Serializable;
@@ -131,6 +133,9 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         return new ResourceSpec( actor, role, organization, jurisdiction );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return ( getActorName() )
@@ -149,6 +154,9 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals( Object obj ) {
         if ( obj instanceof Job ) {
@@ -161,6 +169,9 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int hash = 1;
@@ -206,7 +217,9 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         return actor != null && role != null;
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public void map( Map<String, Object> map ) {
         map.put( "id", id );
         map.put( "actor", actor );
@@ -216,12 +229,13 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         map.put( "supervisor", supervisor );
     }
 
-    @Override
-    public Place getPlaceBasis() {
-        return jurisdiction == null ? null : jurisdiction.getPlaceBasis();
+    /**
+     * {@inheritDoc}
+     */
+    public GeoLocation geoLocate() {
+        return jurisdiction != null ? jurisdiction.geoLocate() : null;
     }
 
-    @Override
     public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
         List<Place> geoLocatables = new ArrayList<Place>();
         if ( jurisdiction != null )
@@ -229,10 +243,13 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         return geoLocatables;
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     *
+     * @param queryService
+     */
     public String getGeoMarkerLabel( QueryService queryService ) {
-        return jurisdiction == null ? ""
-                                    : jurisdiction.getGeoMarkerLabel( queryService );
+        return jurisdiction != null ? jurisdiction.getGeoMarkerLabel( queryService ) : "";
     }
 
     /**

@@ -6,8 +6,6 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.model.Transformation;
 import com.mindalliance.channels.nlp.Matcher;
@@ -15,8 +13,8 @@ import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.TransformerUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -34,7 +32,6 @@ import org.apache.wicket.model.PropertyModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -199,7 +196,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     }
 
     private void addAboutFlow() {
-        Label flowTypeLabel = new Label(
+        Label flowTypeLabel = new Label(                            
                 "flowType",
                 new Model<String>( getFlow().isNeed()
                         ? "need for"
@@ -422,7 +419,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
 
     private boolean autoPopulate() {
         boolean populated = false;
-        List<ElementOfInformation> newEOIs = guessNewEOIs();
+        List<ElementOfInformation> newEOIs = getNewEOIs();
         if ( !newEOIs.isEmpty() ) {
             List<ElementOfInformation> allEOIs = new ArrayList<ElementOfInformation>();
             allEOIs.addAll( getFlow().getEois() );
@@ -441,117 +438,51 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     }
 
     private boolean canBePopulated() {
-        return !guessNewEOIs().isEmpty();
-    }
-
-    private List<ElementOfInformation> guessNewEOIs() {
-        List<ElementOfInformation> newEois = new ArrayList<ElementOfInformation>();
-        Node source = getFlow().getSource();
-        if ( source.isPart() ) {
-            addGuessedFromSourceSends( (Part) source, newEois );
-            addGuessedFromSourceReceives( ( (Part) source ), newEois );
-        }
-        return newEois;
+        return !getNewEOIs().isEmpty();
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addGuessedFromSourceSends( Part source, List<ElementOfInformation> newEois ) {
-        Flow flow = getFlow();
-        List<String> contents = (List<String>) CollectionUtils.collect(
-                flow.getEois(),
-                TransformerUtils.invokerTransformer( "getContent" ) );
-        contents.addAll( (List<String>) CollectionUtils.collect(
-                newEois,
-                TransformerUtils.invokerTransformer( "getContent" ) ) );
-        Iterator<Flow> sends = source.sends();
-        while ( sends.hasNext() ) {
-            Flow send = sends.next();
-            if ( !send.equals( flow ) && Matcher.getInstance().same( flow.getName(), send.getName() ) ) {
-                for ( ElementOfInformation sourceEoi : send.getEois() ) {
-                    if ( !Matcher.getInstance().contains( contents, sourceEoi.getContent() ) ) {
-                        // Use the first one as-is. Will improve later. Maybe.
-                        newEois.add( new ElementOfInformation( sourceEoi ) );
-                        contents.add( sourceEoi.getContent() );
-                    }
+    private List<ElementOfInformation> getNewEOIs() {
+        Set<ElementOfInformation> population = new HashSet<ElementOfInformation>();
+        for ( Flow relatedFlow : relatedFlows() ) {
+            boolean renamed = !Matcher.getInstance().same( relatedFlow.getName(), getFlow().getName() );
+            for ( ElementOfInformation eoi : relatedFlow.getEois() ) {
+                ElementOfInformation newEoi = new ElementOfInformation( eoi );
+                if ( renamed ) {
+                    Transformation xform = new Transformation(
+                            Transformation.Type.Renaming,
+                            new Subject( relatedFlow.getName(), eoi.getContent() ) );
+                    newEoi.setTransformation( xform );
                 }
+                population.add( newEoi );
             }
         }
+        return new ArrayList<ElementOfInformation>(
+                CollectionUtils.subtract( population, getFlow().getEois() ) );
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addGuessedFromSourceReceives( Part source, List<ElementOfInformation> newEois ) {
-        Flow flow = getFlow();
-        String flowName = flow.getName();
-        List<String> contents = (List<String>) CollectionUtils.collect(
-                flow.getEois(),
-                TransformerUtils.invokerTransformer( "getContent" ) );
-        contents.addAll( (List<String>) CollectionUtils.collect(
-                newEois,
-                TransformerUtils.invokerTransformer( "getContent" ) ) );
-        List<Flow> receives = source.getAllSharingReceives();
-        Set<String> newContents = new HashSet<String>();
-        for ( Flow receive : receives ) {
-            newContents.addAll( (List<String>) CollectionUtils.collect(
-                    receive.getEois(),
-                    TransformerUtils.invokerTransformer( "getContent" ) ) );
-        }
-        // Only keep new eoi content
-        Matcher.getInstance().removeAll( newContents, contents );
-        for ( final String newContent : newContents ) {
-            ElementOfInformation newEoi = new ElementOfInformation( newContent );
-            Set<String> infos = new HashSet<String>();
-            for ( Flow receive : receives ) {
-                if ( !receive.equals( flow ) ) {
-                    String receiveName = receive.getName();
-                    ElementOfInformation sourceEoi = (ElementOfInformation) CollectionUtils.find(
-                            receive.getEois(),
-                            new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                    return Matcher.getInstance().same(
-                                            newContent,
-                                            ( (ElementOfInformation) object ).getContent() );
-                                }
-                            }
-                    );
-                    if ( sourceEoi != null ) {
-                        if ( !Matcher.getInstance().same( receiveName, flowName ) ) {
-                            // transformations
-                            if ( !infos.contains( receiveName ) ) {
-                                Transformation xform = newEoi.getTransformation();
-                                if ( xform.isNone() ) {
-                                    xform = new Transformation( Transformation.Type.Renaming );
-                                    newEoi.setTransformation( xform );
-                                }
-                                xform.addSubject( new Subject( receiveName, newContent ) );
-                                infos.add( receiveName );
-                            }
-                        }
-                        // classifications
-                        newEoi.addClassifications( sourceEoi.getClassifications() );
-                        // description
-                        String description = newEoi.getDescription();
-                        String sourceDescription = sourceEoi.getDescription();
-                        if ( !sourceDescription.isEmpty() && !description.contains( sourceDescription ) ) {
-                            newEoi.setDescription(
-                                    description + ( description.isEmpty() ? "" : " " ) + sourceDescription
-                            );
-                        }
-                        // handling
-                        String handling = newEoi.getSpecialHandling();
-                        String sourceHandling = sourceEoi.getSpecialHandling();
-                        if ( !sourceHandling.isEmpty() && !handling.contains( sourceHandling ) ) {
-                            newEoi.setSpecialHandling(
-                                    handling + ( handling.isEmpty() ? "" : " " ) + sourceHandling
-                            );
-                        }
+    private List<Flow> relatedFlows() {
+        final Flow flow = getFlow();
+        Set<Flow> flows = new HashSet<Flow>();
+        flows.addAll( IteratorUtils.toList( flow.getSource().receives()  ) );
+        flows.addAll( (List<Flow>) CollectionUtils.select(
+                IteratorUtils.toList(
+                        IteratorUtils.chainedIterator(
+                                flow.getSource().sends(),
+                                IteratorUtils.chainedIterator(
+                                        flow.getTarget().sends(),
+                                        flow.getTarget().receives() ) ) ),
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return Matcher.getInstance().same( ( (Flow) obj ).getName(),
+                                flow.getName() );
                     }
                 }
-            }
-            newEois.add( newEoi );
-        }
-    }
+        ) );
 
+        return new ArrayList<Flow>( flows );
+    }
 
     private boolean isClassificationsLinked() {
         return getFlow().isClassificationsLinked() && getFlow().areAllEOIClassificationsSame();
@@ -585,7 +516,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
 
     private boolean isReadOnly() {
         return !getPlan().isDevelopment()
-                || !isLockedByUser( getFlow() ) || !getFlow().canSetNameAndElements();
+                || !isLockedByUser( getFlow() ) || !getFlow().canSetNameAndElements() ;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.model;
+package com.mindalliance.channels.geo;
 
 import com.mindalliance.channels.query.QueryService;
 
@@ -14,13 +14,12 @@ import java.util.List;
  * Time: 12:53:44 PM
  */
 public interface GeoLocatable extends Serializable {
-
     /**
      * Get geolocation if known, else null.
      *
      * @return a geo location
      */
-    Place getPlaceBasis();
+    GeoLocation geoLocate();
 
     /**
      * Get a geo marker's label.
@@ -33,8 +32,9 @@ public interface GeoLocatable extends Serializable {
     /**
      * Get implied geolocatables.
      *
-     * @param queryService a query service
      * @return a list of geolocatables
+     * @param queryService a query service
      */
     List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService );
+
 }

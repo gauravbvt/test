@@ -5,7 +5,6 @@ import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import junit.framework.TestCase;
-import org.springframework.core.io.FileSystemResource;
 
 import java.io.File;
 
@@ -29,8 +28,7 @@ public class TestExternalFlow extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        DefinitionManager definitionManager = new DefinitionManager(
-            new FileSystemResource( new File( "target/channel-test-data" ) ), null );
+        DefinitionManager definitionManager = new DefinitionManager( new File( "target/channel-test-data" ), null );
         definitionManager.afterPropertiesSet();
         PlanManager planManager = new PlanManager( definitionManager );
         planManager.assignPlans();

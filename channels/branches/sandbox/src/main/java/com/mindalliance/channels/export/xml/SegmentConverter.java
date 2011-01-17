@@ -1,16 +1,18 @@
 package com.mindalliance.channels.export.xml;
 
 import com.mindalliance.channels.dao.PlanDao;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.EventPhase;
-import com.mindalliance.channels.model.EventTiming;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -88,19 +90,30 @@ public class SegmentConverter extends AbstractChannelsConverter {
                 writer.endNode();
             }
         }
-        // Segment event phase
-        writer.startNode( "eventphase" );
-        context.convertAnother( segment.getEventPhase() );
+        // Trigger event
+        if ( segment.getEvent() != null ) {
+            Event event = segment.getEvent();
+            writer.startNode( "trigger-event" );
+            writer.addAttribute( "id", Long.toString( event.getId() ) );
+            writer.setValue( event.getName() );
+            writer.endNode();
+            if ( segment.getEventLevel() != null ) {
+                writer.startNode( "event-level" );
+                writer.setValue( segment.getEventLevel().name() );
+                writer.endNode();
+            }
+        }
+        // Plan phase
+        Phase phase = segment.getPhase();
+        if ( phase == null ) {
+            // Make sur a segment is always saved with a phase.
+            phase = plan.getDefaultPhase();
+        }
+        writer.startNode( "phase" );
+        writer.addAttribute( "id", Long.toString( phase.getId() ) );
+        writer.setValue( phase.getName() );
         writer.endNode();
 
-        // Segment context
-        writer.startNode( "context" );
-        for ( EventTiming eventTiming : segment.getContext() ) {
-            writer.startNode( "eventtiming" );
-            context.convertAnother( eventTiming );
-            writer.endNode();
-        }
-        writer.endNode();
         // Segment user issues
         exportUserIssues( segment, writer, context );
         // Risks in scope
@@ -155,7 +168,8 @@ public class SegmentConverter extends AbstractChannelsConverter {
                 importDetectionWaivers( segment, reader );
             } else if ( nodeName.equals( "attachments" ) ) {
                 importAttachments( segment, reader );
-/*
+            } else if ( nodeName.equals( "event" ) ) {
+                context.convertAnother( segment, Event.class );
             } else if ( nodeName.equals( "actor" ) ) {
                 context.convertAnother( segment, Actor.class );
             } else if ( nodeName.equals( "organization" ) ) {
@@ -164,9 +178,6 @@ public class SegmentConverter extends AbstractChannelsConverter {
                 context.convertAnother( segment, Role.class );
             } else if ( nodeName.equals( "place" ) ) {
                 context.convertAnother( segment, Place.class );
-                // Event (always a type)
-            } else if ( nodeName.equals( "event" ) ) {
-                context.convertAnother( segment, Event.class );
                 // Incident
             } else if ( nodeName.equals( "incident" ) ) {
                 String id = reader.getAttribute( "id" );
@@ -178,37 +189,18 @@ public class SegmentConverter extends AbstractChannelsConverter {
                         importingPlan,
                         idMap );
                 getContext().getPlan().addIncident( event );
-*/
-       // LEGACY as of Jan. 11, 2011
+                // Event (always a type)
             } else if ( nodeName.equals( "trigger-event" ) ) {
                 String id = reader.getAttribute( "id" );
                 Event event = findOrCreateType( Event.class, reader.getValue(), id );
                 segment.setEvent( event );
                 // Phase
+            } else if ( nodeName.equals( "event-level" ) ) {
+                segment.setEventLevel( Level.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "phase" ) ) {
                 String id = reader.getAttribute( "id" );
                 Phase phase = findOrCreate( Phase.class, reader.getValue(), id );
                 segment.setPhase( phase );
-            } else if ( nodeName.equals( "event-level" ) ) {
-                segment.setEventLevel( Level.valueOf( reader.getValue() ) );
-      // END LEGACY
-            } else if ( nodeName.equals( "eventphase" ) ) {
-                EventPhase eventPhase = (EventPhase) context.convertAnother( segment, EventPhase.class );
-                segment.initEventPhase( eventPhase );
-            } else if ( nodeName.equals( "context" ) ) {
-                while ( reader.hasMoreChildren() ) {
-                    reader.moveDown();
-                    nodeName = reader.getNodeName();
-                    if ( nodeName.equals( "eventtiming" ) ) {
-                        EventTiming eventTiming = (EventTiming) context.convertAnother(
-                                segment,
-                                EventTiming.class );
-                        segment.addToContext( eventTiming );
-                    } else {
-                        LOG.warn( "Unknown element " + nodeName );
-                    }
-                    reader.moveUp();
-                }
                 // Parts and flows
             } else if ( nodeName.equals( "goal" ) ) {
                 Goal goal = (Goal) context.convertAnother( segment, Goal.class );
@@ -219,7 +211,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( segment, Flow.class );
                 // Risks
-            } else if ( nodeName.equals( "issue" ) ) {
+            }else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( segment, UserIssue.class );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
