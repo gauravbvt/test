@@ -1,11 +1,13 @@
 package com.mindalliance.channels.geo;
 
-import com.mindalliance.channels.geo.GeoService;
+import com.mindalliance.channels.model.GeoLocation;
 import com.mindalliance.channels.model.Place;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
 import org.apache.commons.lang.StringUtils;
+import org.geonames.InsufficientStyleException;
+import org.geonames.InvalidParameterException;
 import org.geonames.PostalCode;
 import org.geonames.PostalCodeSearchCriteria;
 import org.geonames.Style;
@@ -15,14 +17,12 @@ import org.geonames.ToponymSearchResult;
 import org.geonames.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -37,41 +37,35 @@ import java.util.List;
  * Date: Jun 19, 2009
  * Time: 1:30:08 PM
  */
-public class DefaultGeoService implements GeoService, InitializingBean {
+public class DefaultGeoService implements GeoService {
 
-    /**
-     * Logger.
-     */
+    /** Logger. */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultGeoService.class );
-    /**
-     * Maximum number fo results retrieved from geonames per search.
-     */
+
+    /** Google maps geocoding uri. */
+    private static final Object GOOGLE_MAP_URI = "http://maps.google.com/maps/geo";
+
+    /** Maximum number fo results retrieved from geonames per search. */
     private static final int MAX_SEARCH_ROWS = 15;
-    /**
-     * Geonames server to use.
-     */
+
+    private static final List<String> CITY_CODES = Arrays.asList( "PPL", "PPLA", "PPLC" );
+
+    /** Geonames server to use. */
     private String geonamesServer;
-    /**
-     * Authentication user name.
-     */
+
+    /** Authentication user name. */
     private String geonamesUserName;
-    /**
-     * Authentication token.
-     */
+
+    /** Authentication token. */
     private String geonamesToken;
 
-    /**
-     * Google map's API key.
-     */
+    /** Google map's API key. */
     private String googleMapsAPIKey;
-    /**
-     * Google maps geocoding uri.
-     */
-    private static final Object GOOGLE_MAP_URI = "http://maps.google.com/maps/geo";
 
     public DefaultGeoService() {
     }
 
+    @Override
     public String getGoogleMapsAPIKey() {
         return googleMapsAPIKey;
     }
@@ -82,28 +76,23 @@ public class DefaultGeoService implements GeoService, InitializingBean {
 
     public void setGeonamesServer( String geonamesServer ) {
         this.geonamesServer = geonamesServer;
+        if ( geonamesServer != null )
+            WebService.setGeoNamesServer( geonamesServer );
     }
 
     public void setGeonamesUserName( String geonamesUserName ) {
         this.geonamesUserName = geonamesUserName;
+        if ( geonamesUserName != null )
+            WebService.setUserName( geonamesUserName );
     }
 
     public void setGeonamesToken( String geonamesToken ) {
         this.geonamesToken = geonamesToken;
-    }
-
-    public void afterPropertiesSet() throws Exception {
-        if ( geonamesServer != null)
-            WebService.setGeoNamesServer( geonamesServer );
-        if ( geonamesUserName != null)
-            WebService.setUserName( geonamesUserName );
-        if ( geonamesToken != null)
+        if ( geonamesToken != null )
             WebService.setToken( geonamesToken );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<GeoLocation> findGeoLocations( String name ) {
         List<String> geoLocStrings = new ArrayList<String>();
         List<GeoLocation> results = new ArrayList<GeoLocation>();
@@ -112,11 +101,13 @@ public class DefaultGeoService implements GeoService, InitializingBean {
             searchCriteria.setQ( name );
             searchCriteria.setStyle( Style.FULL );
             searchCriteria.setMaxRows( MAX_SEARCH_ROWS );
-            LOG.debug( "Geonames search: toponyms for " + name );
+
+            LOG.trace( "Searching: toponyms for {}", name );
             ToponymSearchResult searchResult = WebService.search( searchCriteria );
-            LOG.debug( "Found " + searchResult.getTotalResultsCount() + " toponyms for " + name );
+            LOG.debug( "Found {} toponyms for {}", searchResult.getTotalResultsCount(), name );
+
             for ( Toponym topo : searchResult.getToponyms() ) {
-                GeoLocation geoLoc = new GeoLocation( topo );
+                GeoLocation geoLoc = newGeoLocation( topo );
                 String s = geoLoc.toString();
                 if ( !geoLocStrings.contains( s ) ) {
                     results.add( geoLoc );
@@ -129,31 +120,67 @@ public class DefaultGeoService implements GeoService, InitializingBean {
         return results;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean isLikelyGeoname( String val ) {
-        if ( val == null || val.isEmpty() || val.equals( Place.UnknownPlaceName ) ) return false;
-        List<GeoLocation> geoLocs = findGeoLocations( val );
-        final List<String> geonameTokens = Arrays.asList( StringUtils.split( val, ",. :;-'\"" ) );
-        if ( geoLocs.isEmpty() ) return false;
-        GeoLocation match = (GeoLocation) CollectionUtils.find(
-                geoLocs,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        List<String> geoLocTokens = Arrays.asList( StringUtils.split(
-                                obj.toString(),
-                                ",. :;-'\"" ) );
-                        return !CollectionUtils.intersection( geonameTokens, geoLocTokens ).isEmpty();
-                    }
-                } );
-        return match != null;
+    private static GeoLocation newGeoLocation( Toponym toponym ) {
+        GeoLocation location = new GeoLocation();
+
+        location.setCountry( toponym.getCountryName() );
+        try {
+            location.setState( toponym.getAdminName1() );
+        } catch ( InsufficientStyleException ignored ) {
+        }
+
+        try {
+            location.setCounty( toponym.getAdminName2() );
+        } catch ( InsufficientStyleException ignored ) {
+        }
+
+        location.setCity( CITY_CODES.contains( toponym.getFeatureCode() ) ? toponym.getName()
+                                                                          : null );
+        location.setCountryCode( toponym.getCountryCode() );
+
+        try {
+            location.setStateCode( toponym.getAdminCode1() );
+        } catch ( InsufficientStyleException ignored ) {
+        }
+
+        try {
+            location.setCountyCode( toponym.getAdminCode2() );
+        } catch ( InsufficientStyleException ignored ) {
+        }
+
+        location.setCityCode( CITY_CODES.contains( toponym.getFeatureCode() ) ?
+                                toponym.getFeatureCode() : null );
+        location.setLatitude( toponym.getLatitude() );
+        location.setLongitude( toponym.getLongitude() );
+        location.setGeonameId( toponym.getGeoNameId() );
+
+        return location;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean verifyPostalCode( final String postalCode, GeoLocation geoLocation ) {
+    @Override
+    public Boolean isLikelyGeoname( String val ) {
+        if ( val == null || val.isEmpty() || val.equals( Place.UnknownPlaceName ) )
+            return false;
+
+        List<GeoLocation> geoLocs = findGeoLocations( val );
+        if ( geoLocs.isEmpty() )
+            return false;
+
+        final List<String> geonameTokens = Arrays.asList( StringUtils.split( val, ",. :;-'\"" ) );
+        return CollectionUtils.exists(
+            geoLocs,
+            new Predicate() {
+                @Override
+                public boolean evaluate( Object object ) {
+                    List<String> geoLocTokens = Arrays.asList(
+                        StringUtils.split( object.toString(), ",. :;-'\"" ) );
+                    return !CollectionUtils.intersection( geonameTokens, geoLocTokens ).isEmpty();
+                }
+            } );
+    }
+
+    @Override
+    public Boolean verifyPostalCode( String postalCode, GeoLocation geoLocation ) {
         try {
             return isPostalCodeInGeoLocation( postalCode, geoLocation );
         } catch ( Exception e ) {
@@ -162,24 +189,22 @@ public class DefaultGeoService implements GeoService, InitializingBean {
         }
     }
 
-    public Boolean isPostalCodeInGeoLocation( String postalCode, GeoLocation geoLocation ) {
-        final String code = postalCode;
-        if ( postalCode.isEmpty() || geoLocation == null ) return false;
-        List<String> postalCodes = findNearbyPostalCodes( geoLocation );
-        String match = (String) CollectionUtils.find(
-                postalCodes,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return obj.equals( code );
-                    }
-                } );
-        return match != null;
+    @Override
+    public Boolean isPostalCodeInGeoLocation( final String postalCode, GeoLocation geoLocation ) {
+        if ( postalCode.isEmpty() || geoLocation == null )
+            return false;
+
+        return CollectionUtils.exists(
+            findNearbyPostalCodes( geoLocation ),
+            new Predicate() {
+                @Override
+                public boolean evaluate( Object object ) {
+                    return object.equals( postalCode );
+                }
+            } );
     }
 
-    /**
-     * {@inheritDoc
-     */
-    @SuppressWarnings( "unchecked" )
+    @Override
     public List<String> findNearbyPostalCodes( GeoLocation geoLocation ) {
         try {
             PostalCodeSearchCriteria criteria = new PostalCodeSearchCriteria();
@@ -188,68 +213,27 @@ public class DefaultGeoService implements GeoService, InitializingBean {
             criteria.setLatitude( geoLocation.getLatitude() );
             criteria.setLongitude( geoLocation.getLongitude() );
             criteria.setStyle( Style.FULL );
-            LOG.debug( "Geonames search: finding nearby postal codes for " + geoLocation );
+
+            LOG.trace( "Finding nearby postal codes for {}", geoLocation );
             List<PostalCode> postalCodes = WebService.findNearbyPostalCodes( criteria );
-            LOG.debug( "Found " + postalCodes.size() + " for " + geoLocation );
-            return (List<String>) CollectionUtils.collect( postalCodes, TransformerUtils.invokerTransformer( "toString" ) );
+            LOG.debug( "Found {} for {}", postalCodes.size(), geoLocation );
+
+            List<String> answer = new ArrayList<String>( postalCodes.size() );
+            CollectionUtils.collect( postalCodes,
+                                     TransformerUtils.invokerTransformer( "toString" ),
+                                     answer );
+            return answer;
+
+        } catch ( InvalidParameterException e ) {
+            throw new RuntimeException( e );
         } catch ( Exception e ) {
             throw new RuntimeException( e );
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void refineWithAddress( GeoLocation geoLocation, String streetAddress, String postalCode ) {
-        if ( !geoLocation.isRefinedTo( streetAddress, postalCode ) ) {
-            // Lat/Long refinement is obsolete, must re-obtain lat/long for address.
-            String rest = makeGoogleGeocodingURL( geoLocation, streetAddress, postalCode, "csv" );
-            try {
-                URL url = new URL( rest );
-                String csv = getGeoCoding( url );
-                LOG.debug( rest + " => " + csv );
-                String[] results = csv.split( "," );
-                if ( results[0].equals( "200" ) ) {
-                    int precision = Integer.valueOf( results[1] );
-                    double latitude = Double.valueOf( results[2] );
-                    double longitude = Double.valueOf( results[3] );
-                    geoLocation.setPrecision( precision );
-                    geoLocation.setLatitude( latitude );
-                    geoLocation.setLongitude( longitude );
-                    // Record the fact that refinement was done
-                    geoLocation.setStreetAddress( streetAddress == null ? "" : streetAddress );
-                    geoLocation.setPostalCode( postalCode == null ? "" : postalCode );
-                }
-
-            } catch ( MalformedURLException e ) {
-                throw new RuntimeException( e );
-            } catch ( IOException e ) {
-                throw new RuntimeException( e );
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getGeoCoding( URL restUrl ) {
-        try {
-            LOG.debug( "Google geocoding search:" + restUrl );
-            InputStream in = restUrl.openStream();
-            BufferedReader reader = new BufferedReader( new InputStreamReader( in ) );
-            String csv = reader.readLine();
-            LOG.debug( "Found " + csv );
-            return csv;
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
-        }
-    }
-
     private String makeGoogleGeocodingURL(
-            GeoLocation geoLocation,
-            String streetAddress,
-            String postalCode,
-            String outputFormat ) {
+        GeoLocation geoLocation, String streetAddress, String postalCode, String outputFormat ) {
+
         StringBuilder loc = new StringBuilder();
         if ( streetAddress != null ) {
             loc.append( streetAddress );
@@ -263,12 +247,10 @@ public class DefaultGeoService implements GeoService, InitializingBean {
         return makeGoogleGeocodingURL( loc.toString(), outputFormat );
     }
 
-    private String makeGoogleGeocodingURL(
-            String name,
-            String outputFormat ) {
+    private String makeGoogleGeocodingURL( String name, String outputFormat ) {
         StringBuilder sb = new StringBuilder();
         sb.append( GOOGLE_MAP_URI );
-        sb.append( "?" );
+        sb.append( '?' );
         sb.append( "q=" );
         try {
             sb.append( URLEncoder.encode( name, "UTF-8" ) );
@@ -283,5 +265,77 @@ public class DefaultGeoService implements GeoService, InitializingBean {
         return sb.toString();
     }
 
+    /**
+     * Validate this place using a geoservice.
+     *
+     * @param place the place to validate
+     */
+    @Override
+    public void validate( Place place ) {
+        String geoname = place.getGeoname();
+        if ( geoname == null )
+            place.setGeoname( getLikelyGeoname( place.getName() ) );
 
+        else if ( !geoname.trim().isEmpty() && place.getGeoLocations() == null )
+            place.setGeoLocations( findGeoLocations( geoname ) );
+
+        if ( place.hasAddress() )
+            setPosition( place.getGeoLocation(), place.getStreetAddress(), place.getPostalCode() );
+    }
+
+    private void setPosition( GeoLocation location, String streetAddress, String postalCode ) {
+
+        try {
+            String coding = getGeoCoding( location, streetAddress, postalCode );
+            String[] result = coding.split( "," );
+
+            if ( HttpServletResponse.SC_OK == Integer.valueOf( result[ 0 ] ) )
+                location.setPosition( Double.valueOf( result[ 2 ] ),
+                                      Double.valueOf( result[ 3 ] ),
+                                      Integer.valueOf( result[ 1 ] ) );
+
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
+    /**
+     * Get CSV result from Google geocoder.
+     * Example: 200,6,42.730070,-73.690570
+     *
+     * @param location the location
+     * @param streetAddress a street address
+     * @param postalCode a postal code
+     * @return a string "http_code,precision,lat,long"
+     * @throws IOException on errors
+     */
+    private String getGeoCoding( GeoLocation location, String streetAddress, String postalCode )
+        throws IOException {
+
+        URL restUrl = new URL(
+            makeGoogleGeocodingURL( location, streetAddress, postalCode, "csv" ) );
+
+        LOG.debug( "Google geocoding search: {}", restUrl );
+
+        BufferedReader reader = new BufferedReader( new InputStreamReader( restUrl.openStream() ) );
+        try {
+            String csv = reader.readLine();
+            LOG.debug( "Found {}", csv );
+            return csv;
+        } finally {
+            reader.close();
+        }
+    }
+
+    @Override
+    public boolean isConfigured() {
+        return !( geonamesServer == null
+                  || geonamesUserName == null || geonamesToken == null
+                  || googleMapsAPIKey == null );
+    }
+
+    private String getLikelyGeoname( String name ) {
+        return name == null || name.trim().isEmpty() || !isLikelyGeoname( name ) ?
+               "" : name;
+    }
 }

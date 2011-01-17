@@ -4,9 +4,11 @@
 package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Plan.Status;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -61,7 +63,7 @@ public class PlanDefinition extends Observable {
     private String client;
 
     /** The actual plan versions, indexed by version number. */
-    private Map<Integer, Version> versions =
+    private final Map<Integer, Version> versions =
             Collections.synchronizedMap( new HashMap<Integer, Version>() );
 
     /** The directory when plan versions are saved. */
@@ -89,18 +91,21 @@ public class PlanDefinition extends Observable {
      * @param dataDirectory the data directory
      * @throws IOException on initialization errors
      */
-    public void initialize( File dataDirectory ) throws IOException {
-        planDirectory = new File( dataDirectory, sanitize( uri ) );
-        planDirectory.mkdir();
+    public void initialize( Resource dataDirectory ) throws IOException {
+        planDirectory = new File( dataDirectory.getFile(), sanitize( uri ) );
+        if ( planDirectory.mkdirs() )
+            LOG.debug( "Created {}", planDirectory );
+
         versions.clear();
         maxVersion = 0;
 
         File[] subDirs = planDirectory.listFiles( new FileFilter() {
+            @Override
             public boolean accept( File pathname ) {
                 return pathname.isDirectory();
             }
         } );
-        if ( subDirs.length == 0 )
+        if ( subDirs == null || subDirs.length == 0 )
             versions.put( ++maxVersion, new Version( 1 ) );
         else
             for ( File dir : subDirs ) {
@@ -114,10 +119,10 @@ public class PlanDefinition extends Observable {
             }
 
         developmentVersion = get( maxVersion );
-        developmentVersion.setStatus( Plan.Status.DEVELOPMENT );
+        developmentVersion.setStatus( Status.DEVELOPMENT );
         productionVersion = get( previousVersion( maxVersion ) );
         if ( productionVersion != null )
-            productionVersion.setStatus( Plan.Status.PRODUCTION );
+            productionVersion.setStatus( Status.PRODUCTION );
     }
 
     private int previousVersion( int version ) {
@@ -136,7 +141,7 @@ public class PlanDefinition extends Observable {
      */
     public Version productize() throws IOException {
         if ( productionVersion != null )
-            productionVersion.setStatus( Plan.Status.RETIRED );
+            productionVersion.setStatus( Status.RETIRED );
 
         productionVersion = developmentVersion;
 
@@ -145,7 +150,7 @@ public class PlanDefinition extends Observable {
         versions.put( maxVersion, result );
 
         if ( productionVersion != null ) {
-            productionVersion.setStatus( Plan.Status.PRODUCTION );
+            productionVersion.setStatus( Status.PRODUCTION );
 
             File oldVersionDir = productionVersion.getVersionDirectory();
             // Copy files from old to new
@@ -163,7 +168,7 @@ public class PlanDefinition extends Observable {
         }
 
         developmentVersion = result;
-        developmentVersion.setStatus( Plan.Status.DEVELOPMENT );
+        developmentVersion.setStatus( Status.DEVELOPMENT );
 
         notifyObservers();
         return result;
@@ -278,7 +283,7 @@ public class PlanDefinition extends Observable {
          * The plan status, duplicated from Plan.getStatus() to allow queries without actually
          * loading the plan.
          */
-        private Plan.Status status = Plan.Status.RETIRED;
+        private Status status = Status.RETIRED;
 
         //-----------------------------
         /**
@@ -289,7 +294,8 @@ public class PlanDefinition extends Observable {
         public Version( int number, File versionDirectory ) {
             this.number = number;
             this.versionDirectory = versionDirectory;
-            versionDirectory.mkdirs();
+            if ( versionDirectory.mkdirs() )
+                LOG.debug( "Created {}", versionDirectory );
         }
 
         public Version( int number ) {
@@ -304,16 +310,16 @@ public class PlanDefinition extends Observable {
             return number;
         }
 
-        public Plan.Status getStatus() {
+        public Status getStatus() {
             return status;
         }
 
-        public void setStatus( Plan.Status status ) {
+        public void setStatus( Status status ) {
             this.status = status;
         }
 
         public boolean isDevelopment() {
-            return Plan.Status.DEVELOPMENT.equals( status );
+            return Status.DEVELOPMENT == status;
         }
 
         /**
@@ -347,8 +353,8 @@ public class PlanDefinition extends Observable {
          */
         public File getJournalFile() throws IOException {
             File journalFile = new File( versionDirectory, JOURNAL_FILE );
-            if ( !journalFile.exists() )
-                journalFile.createNewFile();
+            if ( journalFile.createNewFile() )
+                LOG.debug( "Created {}", journalFile );
             return journalFile;
         }
 
@@ -366,17 +372,15 @@ public class PlanDefinition extends Observable {
          * @throws IOException if unable to read the file
          */
         public synchronized long getLastId() throws IOException {
-            BufferedReader reader = null;
             Long lastId = 0L;
-            try {
-                File lastIdFile = getLastIdFile();
-                if ( lastIdFile.exists() ) {
-                    reader = new BufferedReader( new FileReader( lastIdFile ) );
+            File lastIdFile = getLastIdFile();
+            if ( lastIdFile.exists() ) {
+                BufferedReader reader = new BufferedReader( new FileReader( lastIdFile ) );
+                try {
                     lastId = Long.parseLong( reader.readLine() );
-                }
-            } finally {
-                if ( reader != null )
+                } finally {
                     reader.close();
+                }
             }
             return lastId;
         }
@@ -388,15 +392,13 @@ public class PlanDefinition extends Observable {
          */
         public void setLastId( long id ) throws IOException {
             File idFile = getLastIdFile();
-
             idFile.delete();
-            PrintWriter out = null;
+
+            PrintWriter out = new PrintWriter( new FileOutputStream( idFile ) );
             try {
-                out = new PrintWriter( new FileOutputStream( idFile ) );
                 out.print( id );
             } finally {
-                if ( out != null )
-                    out.close();
+                out.close();
             }
         }
 

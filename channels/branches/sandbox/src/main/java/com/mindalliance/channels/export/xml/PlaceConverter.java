@@ -1,17 +1,13 @@
 package com.mindalliance.channels.export.xml;
 
-import com.mindalliance.channels.geo.GeoLocation;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.PlaceReference;
+import com.mindalliance.channels.model.*;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
- * XStream place converter
+ * XStream place converter.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -24,23 +20,17 @@ public class PlaceConverter extends EntityConverter {
         super( context );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canConvert( Class aClass ) {
         return Place.class.isAssignableFrom( aClass );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Class<? extends ModelEntity> getEntityClass() {
         return Place.class;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected void writeSpecifics( ModelEntity entity,
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
@@ -67,9 +57,9 @@ public class PlaceConverter extends EntityConverter {
             writer.setValue( place.getGeoname() );
             writer.endNode();
         }
-        if ( place.geoLocate() != null ) {
+        if ( place.getGeoLocation() != null ) {
             writer.startNode( "geoLocation" );
-            context.convertAnother( place.geoLocate() );
+            context.convertAnother( place.getGeoLocation() );
             writer.endNode();
         }
         Place locale = getPlan().getLocale();
@@ -107,9 +97,7 @@ public class PlaceConverter extends EntityConverter {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected void setSpecific(
             ModelEntity entity,
             String nodeName,

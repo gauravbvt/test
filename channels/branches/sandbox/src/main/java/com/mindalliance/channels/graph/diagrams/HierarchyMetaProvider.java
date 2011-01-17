@@ -165,7 +165,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             String label = getIdentifiableLabel( modelObject );
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
-            iconName = imagingService.findIconName( modelObject, imagesDirName );
+            iconName = imagingService.findIconName( modelObject );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 

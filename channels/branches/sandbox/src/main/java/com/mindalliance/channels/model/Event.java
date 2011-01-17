@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.geo.GeoLocatable;
-import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
@@ -60,9 +58,6 @@ public class Event extends ModelEntity implements GeoLocatable {
         this.selfTerminating = selfTerminating;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean validates( ModelEntity entity, Place locale ) {
         Event event = (Event) entity;
@@ -71,35 +66,25 @@ public class Event extends ModelEntity implements GeoLocatable {
             && ModelEntity.implies( event.getScope(), scope, locale );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
         List<Event> geoLocatables = new ArrayList<Event>();
         geoLocatables.add( this );
         return geoLocatables;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public GeoLocation geoLocate() {
-        return scope != null ? scope.geoLocate() : null;
+    @Override
+    public Place getPlaceBasis() {
+        return scope == null ? null : scope.getPlaceBasis();
     }
 
-    /**
-     * {@inheritDoc}
-     * @param queryService
-     */
+    @Override
     public String getGeoMarkerLabel( QueryService queryService ) {
-        return scope != null
-                ? getName() + " in " + scope.getGeoMarkerLabel( queryService )
-                : "";
+        return scope == null ? ""
+                             : getName() + " in " + scope.getGeoMarkerLabel( queryService );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )
@@ -108,9 +93,7 @@ public class Event extends ModelEntity implements GeoLocatable {
         return types;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean references( ModelObject mo ) {
         return super.references( mo )
                 || ModelObject.areIdentical( scope, mo );

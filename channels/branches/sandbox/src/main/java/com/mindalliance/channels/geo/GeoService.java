@@ -1,6 +1,7 @@
 package com.mindalliance.channels.geo;
 
-import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.model.GeoLocation;
+import com.mindalliance.channels.model.Place;
 
 import java.net.URL;
 import java.util.List;
@@ -38,25 +39,7 @@ public interface GeoService {
      * @param geoLocation a geo location
      * @return a boolean
      */
-    Boolean verifyPostalCode( final String postalCode, GeoLocation geoLocation );
-
-    /**
-     * Refine latlong values  from Google geocoder if address or postal code known.
-     *
-     * @param geoLocation   a geolocation
-     * @param streetAddress street address
-     * @param postalCode    postal code
-     */
-    void refineWithAddress( GeoLocation geoLocation, String streetAddress, String postalCode );
-
-    /**
-     * Get CSV result from Google geocoder: "http_code,precision,lat,long".
-     * Example: 200,6,42.730070,-73.690570
-     *
-     * @param restUrl a URL
-     * @return a string
-     */
-    String getGeoCoding( URL restUrl );
+    Boolean verifyPostalCode( String postalCode, GeoLocation geoLocation );
 
     /**
      * Get Google map API key.
@@ -72,7 +55,7 @@ public interface GeoService {
      * @param geoLocation a geo location
      * @return a boolean
      */
-    Boolean isPostalCodeInGeoLocation( final String postalCode, GeoLocation geoLocation );
+    Boolean isPostalCodeInGeoLocation( String postalCode, GeoLocation geoLocation );
 
     /**
      * Finds postal codes nearby a geolocation.
@@ -81,4 +64,17 @@ public interface GeoService {
      * @return a list of postal codes as strings
      */
     List<String> findNearbyPostalCodes( GeoLocation geoLocation );
+
+    /**
+     * Validate a place using a geoservice.
+     *
+     * @param place the place
+     */
+    void validate( Place place);
+
+    /**
+     * Query if this service is configured and ready to use.
+     * @return true if configured
+     */
+    boolean isConfigured();
 }

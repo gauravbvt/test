@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.geo.GeoLocatable;
-import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
@@ -103,32 +101,22 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         adjustName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getLabel() {
         return getTitle();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getTitle() {
         return MessageFormat.format( "{0} {1}", getName(), WordUtils.uncapitalize( getTask() ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTypeName() {
         return "task";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getKindLabel() {
         return "Task";
     }
@@ -153,6 +141,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
             setName( DEFAULT_ACTOR );
     }
 
+    @Override
     public Actor getActor() {
         return spec.getActor();
     }
@@ -169,6 +158,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
             adjustName();
     }
 
+    @Override
     public Place getJurisdiction() {
         return spec.getJurisdiction();
     }
@@ -185,6 +175,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         this.location = location;
     }
 
+    @Override
     public Organization getOrganization() {
         return spec.getOrganization();
     }
@@ -201,6 +192,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
             adjustName();
     }
 
+    @Override
     public Role getRole() {
         return spec.getRole();
     }
@@ -379,6 +371,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         return (List<Goal>) CollectionUtils.select(
                 getGoals(),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (Goal) object ).isRiskMitigation();
                     }
@@ -400,6 +393,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         }
     }
 
+    @Override
     public boolean isOperational() {
         return operational;
     }
@@ -408,9 +402,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         this.operational = operational;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isEffectivelyOperational() {
         return isOperational();
     }
@@ -456,6 +448,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
     @SuppressWarnings( "unchecked" )
     public Iterator<Flow> sendsNamed( final String name ) {
         return new FilterIterator( sends(), new Predicate() {
+            @Override
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
                 return Matcher.getInstance().same( flow.getName(), name );
@@ -472,6 +465,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
     @SuppressWarnings( "unchecked" )
     public Iterator<Flow> receivesNamed( final String name ) {
         return new FilterIterator( receives(), new Predicate() {
+            @Override
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
                 return Matcher.getInstance().same( flow.getName(), name );
@@ -479,32 +473,24 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         } );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndefined() {
         return super.isUndefined()
                 && isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String displayString() {
         return displayString( Integer.MAX_VALUE );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String displayString( int maxItemLength ) {
         return resourceSpec().displayString( maxItemLength )
                 + " (" + StringUtils.abbreviate( getTask(), maxItemLength ) + ")";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String fullDisplayString( int maxItemLength ) {
         return displayString( maxItemLength );
     }
@@ -608,20 +594,12 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
      * @return an actor or null
      */
     public Actor getKnownActor( QueryService queryService ) {
-        if ( getActor() != null ) {
-            return getActor();
-        } else {
-            return getKnownActualActor( queryService );
-        }
+        return getActor() == null ? getKnownActualActor( queryService ) : getActor();
     }
 
     public Actor getKnownActualActor( QueryService queryService ) {
         List<Actor> knownActors = queryService.findAllActualActors( spec );
-        if ( knownActors.size() == 1 ) {
-            return knownActors.get( 0 );
-        } else {
-            return null;
-        }
+        return knownActors.size() == 1 ? knownActors.get( 0 ) : null;
     }
 
     /**
@@ -706,27 +684,20 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         return label;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public GeoLocation geoLocate() {
-        return location != null ? location.geoLocate() : null;
+    @Override
+    public Place getPlaceBasis() {
+        return location == null ? null
+                                : location.getPlaceBasis();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
         List<Part> geoLocatables = new ArrayList<Part>();
         geoLocatables.add( this );
         return geoLocatables;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param queryService
-     */
+    @Override
     public String getGeoMarkerLabel( QueryService queryService ) {
         StringBuilder sb = new StringBuilder();
         sb.append( getFullTitle( " ", queryService ) );
@@ -737,9 +708,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         return sb.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getModelObjectType() {
         return "Task";
     }
@@ -753,9 +722,6 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         return getInitiatedEvent() != null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean references( final ModelObject mo ) {
         return ModelObject.areIdentical( getActor(), mo )
@@ -767,6 +733,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
                 || CollectionUtils.exists(
                 goals,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (Goal) object ).references( mo );
                     }
@@ -801,6 +768,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         return (List<Flow>) CollectionUtils.select(
                 IteratorUtils.toList( receives() ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object obj ) {
                         return ( (Flow) obj ).isNeed();
                     }
@@ -818,6 +786,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         return (List<Flow>) CollectionUtils.select(
                 IteratorUtils.toList( sends() ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object obj ) {
                         return ( (Flow) obj ).isCapability();
                     }
@@ -825,9 +794,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService ) {
         return queryService.findEssentialFlowsFrom( this, assumeFails );
     }
@@ -893,6 +860,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
         List<Goal> goals = new ArrayList<Goal>( getMitigations() );
         if ( !goals.isEmpty() ) {
             Collections.sort( goals, new Comparator<Goal>() {
+                @Override
                 public int compare( Goal r1, Goal r2 ) {
                     return r1.getLevel().compareTo( r2.getLevel() ) * -1;
                 }
@@ -912,6 +880,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
                 CollectionUtils.exists(
                         IteratorUtils.toList( sends() ),
                         new Predicate() {
+                            @Override
                             public boolean evaluate( Object object ) {
                                 return ( (Flow) object ).isImportant();
                             }
