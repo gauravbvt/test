@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.segment.menus;
 
-import com.mindalliance.channels.geo.GeoLocatable;
+import com.mindalliance.channels.model.GeoLocatable;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;

@@ -1,12 +1,14 @@
 package com.mindalliance.channels.nlp;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A matching utility.
@@ -123,5 +125,44 @@ public class Matcher {
      */
     public String makeCanonical( String s ) {
         return s.trim().toLowerCase();
+    }
+
+    /**
+     * Whether any in a list of strings matches a given string.
+     *
+     * @param list a list of strings
+     * @param s    a string
+     * @return a boolean
+     */
+    public boolean contains( List<String> list, final String s ) {
+        return CollectionUtils.exists(
+                list,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return same( s, (String) object );
+                    }
+                } );
+    }
+
+    /**
+     * Remove from list all matching strings from other list.
+     *
+     * @param list     list of strings
+     * @param toRemove list of strings to remove
+     */
+    @SuppressWarnings( "unchecked" )
+    public void removeAll( Set<String> list, List<String> toRemove ) {
+        for ( final String s : toRemove ) {
+            List<String> same = (List<String>) CollectionUtils.select(
+                    list,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return same( s, (String) object );
+                        }
+                    } );
+            list.removeAll( same );
+        }
     }
 }

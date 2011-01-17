@@ -3,12 +3,9 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.geo.GeoLocatable;
-import com.mindalliance.channels.geo.GeoLocation;
+import com.mindalliance.channels.model.*;
+import com.mindalliance.channels.model.GeoLocation;
 import com.mindalliance.channels.geo.GeoService;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -479,7 +476,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     private void updatePlace( String property, Object value ) {
         Place place = getPlace();
         doCommand( new UpdatePlanObject( place, property, value ) );
-        place.validate( geoService );
+        geoService.validate( place );
 
     }
 
@@ -562,15 +559,13 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     public static List<Place> findAllPlacesWithin( QueryService queryService, Place place ) {
         List<Place> places = queryService.listActualEntities( Place.class );
         List<Place> result = new ArrayList<Place>( places.size() );
-        GeoLocation geoLocation = place.geoLocate();
 
         Place locale = queryService.getPlan().getLocale();
 
-        for ( Place p : places ) {
-            if ( !p.equals( place ) &&
-                    ( p.isInside( place, locale ) || place.isRegion() && p.isGeoLocatedIn( geoLocation ) ) )
+        for ( Place p : places )
+            if ( !p.equals( place ) && p.matchesOrIsInside( place, locale ) )
                 result.add( p );
-        }
+
         return result;
     }
 
@@ -613,7 +608,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
          * @return a boolean
          */
         public boolean isSelected() {
-            GeoLocation geoLoc = getPlace().geoLocate();
+            GeoLocation geoLoc = getPlace().getLocationBasis();
             return geoLoc != null && geoLoc.getGeonameId() == geoLocation.getGeonameId();
         }
 

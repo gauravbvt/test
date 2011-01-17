@@ -3,7 +3,11 @@
         "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
-    <module name="PackageHtml">
+    <module name="JavadocPackage">
+        <property name="severity" value="warning"/>
+    </module>
+    <module name="FileLength"/>
+    <module name="FileTabCharacter">
         <property name="severity" value="warning"/>
     </module>
     <module name="NewlineAtEndOfFile">
@@ -13,18 +17,26 @@
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
 
+        <module name="AbstractClassName"/>
         <module name="AnonInnerLength">
             <property name="max" value="40"/>
         </module>
-        <!--        <module name="ArrayTrailingComma"/> -->
+        <module name="AnnotationUseStyle"/>
+        <module name="ArrayTrailingComma"/>
         <module name="ArrayTypeStyle"/>
         <module name="AvoidNestedBlocks"/>
         <module name="AvoidStarImport"/>
-        <module name="BooleanExpressionComplexity"/>
+        <module name="BooleanExpressionComplexity">
+            <property name="max" value="5"/>
+        </module>
+
+        <module name="ClassDataAbstractionCoupling"/>
+        <module name="ClassFanOutComplexity"/>
+        <module name="ClassTypeParameterName"/>
         <module name="ConstantName"/>
         <module name="CovariantEquals"/>
         <module name="CyclomaticComplexity">
-            <property name="max" value="10"/>
+            <property name="max" value="11"/>
         </module>
         <module name="DeclarationOrder"/>
         <module name="DefaultComesLast"/>
@@ -38,14 +50,12 @@
         </module>
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
+        <module name="EqualsAvoidNull"/>
         <module name="ExecutableStatementCount"/>
         <module name="ExplicitInitialization"/>
         <module name="FallThrough"/>
-        <module name="FileLength"/>
         <module name="FinalClass"/>
-        <module name="GenericIllegalRegexp">
-            <property name="format" value="\(\s+\)"/>
-        </module>
+        <module name="GenericWhitespace"/>
         <!--        <module name="Header">
                   <property name="headerFile" value="${checkstyle.header.file}"/>
                 </module>
@@ -58,6 +68,8 @@
         <module name="IllegalImport"/>
         <module name="IllegalInstantiation"/>
         <module name="IllegalType"/>
+        <!--<module name="ImportOrder"/>-->
+
         <module name="Indentation">
             <property name="severity" value="warning"/>
             <property name="caseIndent" value="0"/>
@@ -72,6 +84,10 @@
             <property name="allowUndeclaredRTE" value="true"/>
             <property name="allowMissingPropertyJavadoc" value="true"/>
             <property name="tokens" value="METHOD_DEF"/>
+        </module>
+        <module name="JavaNCSS"/>
+        <module name="JavadocStyle">
+            <property name="severity" value="warning"/>
         </module>
         <module name="JavadocType">
             <property name="severity" value="warning"/>
@@ -104,9 +120,15 @@
         <module name="MethodLength"/>
         <module name="MethodName"/>
         <module name="MethodParamPad"/>
+        <module name="MethodTypeParameterName"/>
         <module name="MissingCtor"/>
+        <module name="MissingDeprecated"/>
+        <module name="MissingOverride"/>
         <module name="MissingSwitchDefault"/>
         <module name="ModifierOrder"/>
+        <module name="MultipleStringLiterals">
+            <property name="allowedDuplicates" value="2"/>
+        </module>
         <module name="MultipleVariableDeclarations"/>
         <module name="MutableException"/>
         <module name="NPathComplexity"/>
@@ -140,8 +162,10 @@
                       value="ASSIGN, DIV_ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, MOD_ASSIGN, SR_ASSIGN, BSR_ASSIGN, SL_ASSIGN, BXOR_ASSIGN, BOR_ASSIGN, BAND_ASSIGN"/>
             <property name="option" value="eol"/>
         </module>
+        <module name="OuterTypeNumber"/>
         <module name="PackageDeclaration"/>
         <module name="PackageName"/>
+        <module name="ParameterAssignment"/>
         <module name="ParameterName"/>
         <module name="ParameterNumber"/>
         <module name="ParenPad">
@@ -166,9 +190,9 @@
         <module name="StaticVariableName">
             <property name="format" value="^[A-Z][A-Za-z0-9]*$"/>
         </module>
-        <module name="TabCharacter">
-            <property name="severity" value="warning"/>
-        </module>
+        <module name="StringLiteralEquality"/>
+        <module name="SuperClone"/>
+        <module name="SuperFinalize"/>
         <module name="ThrowsCount"/>
         <module name="TrailingComment">
             <property name="severity" value="warning"/>

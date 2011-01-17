@@ -53,6 +53,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
      *
      * @return a generated short description
      */
+    @Override
     public abstract String getTitle();
 
     /**
@@ -92,9 +93,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
         List<Flow> flows = new ArrayList<Flow>();
         flows.addAll( getSends().values() );
         Collections.sort( flows, new Comparator<Flow>() {
-            /**
-             * {@inheritDoc}
-             */
+            @Override
             public int compare( Flow flow, Flow other ) {
                 // Sort on significance to source
                 if ( flow.getSignificanceToSource().ordinal() == other.getSignificanceToSource().ordinal() ) {
@@ -157,9 +156,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
         List<Flow> flows = new ArrayList<Flow>();
         flows.addAll( getReceives().values() );
         Collections.sort( flows, new Comparator<Flow>() {
-            /**
-             * {@inheritDoc}
-             */
+            @Override
             public int compare( Flow flow, Flow other ) {
                 // Sort on significance to target
                 if ( flow.getSignificanceToTarget().ordinal() == other.getSignificanceToTarget().ordinal() ) {
@@ -214,14 +211,13 @@ public abstract class Node extends ModelObject implements SegmentObject {
         return false;
     }
 
+    @Override
     public Segment getSegment() {
         return segment;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Flow> getEssentialFlows( boolean ssumeFails, QueryService queryService ) {
+    @Override
+    public List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService ) {
         return new ArrayList<Flow>();
     }
 
@@ -229,9 +225,6 @@ public abstract class Node extends ModelObject implements SegmentObject {
         this.segment = segment;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return getTitle();
@@ -318,9 +311,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
         return count > 1;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndefined() {
         return super.isUndefined() && receives.isEmpty() && sends.isEmpty();
     }

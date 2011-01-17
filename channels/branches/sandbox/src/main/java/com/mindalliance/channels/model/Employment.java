@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.geo.GeoLocatable;
-import com.mindalliance.channels.geo.GeoLocation;
 import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
@@ -16,21 +14,16 @@ import java.util.List;
  * Time: 3:36:42 PM
  */
 
-/**
- * An actor's job in an organization (or with no job).
- */
+/** An actor's job in an organization (or with no job). */
 public class Employment implements GeoLocatable, Specable {
-    /**
-     * Actor.
-     */
+
+    /** Actor. */
     private Actor actor;
-    /**
-     * Organization.
-     */
+
+    /** Organization. */
     private Organization organization;
-    /**
-     * Job.
-     */
+
+    /** Job. */
     private Job job;
 
     public Employment( Actor actor ) {
@@ -54,18 +47,14 @@ public class Employment implements GeoLocatable, Specable {
         this.job = job;
     }
 
+    @Override
     public Actor getActor() {
-        if ( actor == null )
-            return Actor.UNKNOWN;
-        else
-            return actor;
+        return actor == null ? Actor.UNKNOWN : actor;
     }
 
+    @Override
     public Organization getOrganization() {
-        if ( organization == null )
-            return Organization.UNKNOWN;
-        else
-            return organization;
+        return organization == null ? Organization.UNKNOWN : organization;
     }
 
     /**
@@ -73,12 +62,9 @@ public class Employment implements GeoLocatable, Specable {
      *
      * @return a role or null
      */
+    @Override
     public Role getRole() {
-        if ( job != null ) {
-            return job.getRole();
-        } else {
-            return null;
-        }
+        return job == null ? null : job.getRole();
     }
 
     /**
@@ -86,12 +72,9 @@ public class Employment implements GeoLocatable, Specable {
      *
      * @return a place or null
      */
+    @Override
     public Place getJurisdiction() {
-        if ( job != null ) {
-            return job.getJurisdiction();
-        } else {
-            return null;
-        }
+        return job == null ? null : job.getJurisdiction();
     }
 
     /**
@@ -100,11 +83,7 @@ public class Employment implements GeoLocatable, Specable {
      * @return an actor or null
      */
     public Actor getSupervisor() {
-        if ( job != null ) {
-            return job.getSupervisor();
-        } else {
-            return null;
-        }
+        return job == null ? null : job.getSupervisor();
     }
 
     /**
@@ -128,15 +107,13 @@ public class Employment implements GeoLocatable, Specable {
         this.job = job;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( getActor().getName() );
-        if ( getOrganization().isUnknown() ) {
+        if ( getOrganization().isUnknown() )
             sb.append( ", unemployed" );
-        } else {
+        else {
             sb.append( ", " );
             sb.append( getRole() );
             sb.append( " at " );
@@ -149,69 +126,39 @@ public class Employment implements GeoLocatable, Specable {
         return sb.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public GeoLocation geoLocate() {
-        return getOrganization().geoLocate();
+    @Override
+    public Place getPlaceBasis() {
+        return getOrganization().getPlaceBasis();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
         List<Employment> geoLocatables = new ArrayList<Employment>();
         geoLocatables.add( this );
         return geoLocatables;
     }
 
-    /**
-     * {@inheritDoc}
-     * @param queryService
-     */
+    @Override
     public String getGeoMarkerLabel( QueryService queryService ) {
         return getOrganization().getGeoMarkerLabel( queryService );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean equals( Object object ) {
-        if ( !( object instanceof Employment ) ) return false;
-        Employment other = (Employment) object;
-        if ( getActor() != other.getActor() ) return false;
-        if ( getOrganization() != other.getOrganization() ) return false;
-        if ( job == null ) {
-            if ( other.getJob() != null ) return false;
-        } else if ( other.getJob() == null ) return false;
-        return job.equals( other.getJob() );
+    public boolean equals( Object obj ) {
+        if ( obj instanceof Employment ) {
+            Employment other = (Employment) obj;
+
+            if ( getActor() == other.getActor() && getOrganization() == other.getOrganization() )
+                return job == null ? other.getJob() == null : job.equals( other.getJob() );
+        }
+
+        return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + getActor().hashCode();
-        if (job != null) hash = hash * 31 + job.hashCode();
+        if ( job != null )
+            hash = hash * 31 + job.hashCode();
         return hash;
     }
-
-    /**
-     * Employment has known actor and/or organization, and matches part.
-     *
-     * @param part a part
-     * @param locale the default location
-     * @return a boolean
-     */
-    public boolean playsPart( Part part, Place locale ) {
-        return !part.isEmpty()
-                && !getActor().isUnknown()
-                && !getOrganization().isUnknown()
-                && ModelEntity.implies( getActor(), part.getActor(), locale )
-                && ModelEntity.implies( getRole(), part.getRole(), locale )
-                && ModelEntity.implies( getOrganization(), part.getOrganization(), locale )
-                && ModelEntity.implies( getJurisdiction(), part.getJurisdiction(), locale );
-    }
-
 }

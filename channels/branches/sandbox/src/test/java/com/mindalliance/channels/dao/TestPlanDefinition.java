@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.FileSystemResource;
 
 import java.io.IOException;
 
@@ -31,7 +32,7 @@ public class TestPlanDefinition {
         dataDir.mkdirs();
 
         planDefinition = new PlanDefinition( TEST );
-        planDefinition.initialize( dataDir );
+        planDefinition.initialize( new FileSystemResource( dataDir ) );
         planDefinition.setName( TEST );
     }
 
@@ -61,7 +62,7 @@ public class TestPlanDefinition {
         assertEquals( 2, dev2.getNumber() );
         assertEquals( Plan.Status.DEVELOPMENT, dev2.getStatus() );
 
-        planDefinition.initialize( dataDir );
+        planDefinition.initialize( new FileSystemResource( dataDir ) );
     }
 
 }

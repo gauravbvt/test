@@ -1,13 +1,6 @@
-package com.mindalliance.channels.geo;
-
-import com.mindalliance.channels.query.QueryService;
-import org.geonames.InsufficientStyleException;
-import org.geonames.Toponym;
+package com.mindalliance.channels.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A geolocation.
@@ -18,8 +11,6 @@ import java.util.List;
  * Time: 12:52:36 PM
  */
 public class GeoLocation implements Serializable {
-
-    private static List<String> CityCodes = Arrays.asList( "PPL", "PPLA", "PPLC" );
 
     private int geonameId = -1;
     private String country;
@@ -35,83 +26,37 @@ public class GeoLocation implements Serializable {
     private double longitude;
     private String streetAddress;
     private String postalCode;
-    private int precision = 0;
+    private int precision;
 
     public GeoLocation() {
     }
 
-    public GeoLocation( Toponym topo ) {
-        country = topo.getCountryName();
-        state = getStateName( topo );
-        county = getCountyName( topo );
-        city = getCityName( topo );
-        countryCode = topo.getCountryCode();
-        stateCode = getStateCode( topo );
-        countyCode = getCountyCode( topo );
-        cityCode = getCityCode( topo );
-        // population = getPopulation( topo );
-        latitude = topo.getLatitude();
-        longitude = topo.getLongitude();
-        geonameId = topo.getGeoNameId();
-    }
+    /**
+     * Set position information.
+     *
+     * @param latitude the latitude
+     * @param longitude the longitude
+     * @param precision precision of the above
+     */
+    public void setPosition( double latitude, double longitude, int precision ) {
+        if ( streetAddress == null || postalCode == null ) {
+            // Lat/Long refinement is obsolete, must re-obtain latitude/long for address.
+            this.precision = precision;
+            this.latitude = latitude;
+            this.longitude = longitude;
 
-    private String getStateName( Toponym topo ) {
-        try {
-            return topo.getAdminName1();
-        } catch ( InsufficientStyleException e ) {
-            return null;
+            // Record the fact that refinement was done
+            if ( streetAddress == null )
+                streetAddress = "";
+            if ( postalCode == null )
+                postalCode = "";
         }
     }
 
-    private String getCountyName( Toponym topo ) {
-        try {
-            return topo.getAdminName2();
-        } catch ( InsufficientStyleException e ) {
-            return null;
-        }
-    }
-
-
-    private String getCityName( Toponym topo ) {
-        if ( CityCodes.contains( topo.getFeatureCode() ) ) {
-            return topo.getName();
-        } else {
-            return null;
-        }
-    }
-
-
-    private String getStateCode( Toponym topo ) {
-        try {
-            return topo.getAdminCode1();
-        } catch ( InsufficientStyleException e ) {
-            return null;
-        }
-    }
-
-
-    private String getCountyCode( Toponym topo ) {
-        try {
-            return topo.getAdminCode2();
-        } catch ( InsufficientStyleException e ) {
-            return null;
-        }
-    }
-
-
-    private String getCityCode( Toponym topo ) {
-        if ( CityCodes.contains( topo.getFeatureCode() ) ) {
-            return topo.getFeatureCode();
-        } else {
-            return null;
-        }
-    }
-
-    private Long getPopulation( Toponym topo ) {
-        try {
-            return topo.getPopulation();
-        } catch ( Exception e ) {
-            return null;
+    private void resetPosition() {
+        if ( "".equals( streetAddress ) && "".equals( postalCode ) ) {
+            postalCode = null;
+            streetAddress = null;
         }
     }
 
@@ -183,7 +128,7 @@ public class GeoLocation implements Serializable {
         return population;
     }
 
-    public void setPopulation( Integer population ) {
+    public void setPopulation( Long population ) {
         this.population = population;
     }
 
@@ -217,6 +162,7 @@ public class GeoLocation implements Serializable {
 
     public void setPostalCode( String postalCode ) {
         this.postalCode = postalCode;
+        resetPosition();
     }
 
     public String getStreetAddress() {
@@ -225,6 +171,7 @@ public class GeoLocation implements Serializable {
 
     public void setStreetAddress( String streetAddress ) {
         this.streetAddress = streetAddress;
+        resetPosition();
     }
 
     public int getPrecision() {
@@ -235,22 +182,23 @@ public class GeoLocation implements Serializable {
         this.precision = precision;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if ( city != null ) {
-            sb.append( ( ( sb.length() > 0 ) ? ", " : "" ) );
+            sb.append( sb.length() > 0 ? ", " : "" );
             sb.append( city );
         }
         if ( state != null ) {
-            sb.append( ( ( sb.length() > 0 ) ? ", " : "" ) );
+            sb.append( sb.length() > 0 ? ", " : "" );
             sb.append( state );
         }
         if ( county != null ) {
-            sb.append( ( ( sb.length() > 0 ) ? ", " : "" ) );
+            sb.append( sb.length() > 0 ? ", " : "" );
             sb.append( county );
         }
         if ( country != null ) {
-            sb.append( ( ( sb.length() > 0 ) ? ", " : "" ) );
+            sb.append( sb.length() > 0 ? ", " : "" );
             sb.append( country );
         }
         return sb.toString();
@@ -264,12 +212,12 @@ public class GeoLocation implements Serializable {
      */
     public boolean isSameAsOrInside( GeoLocation geoLoc ) {
         return areasMatch( country, geoLoc.getCountry() )
-                && areasMatch( state, geoLoc.getState() )
-                && areasMatch( county, geoLoc.getCounty() )
-                && areasMatch( city, geoLoc.getCity() );
+            && areasMatch( state, geoLoc.getState() )
+            && areasMatch( county, geoLoc.getCounty() )
+            && areasMatch( city, geoLoc.getCity() );
     }
 
-    private boolean areasMatch( String area, String otherArea ) {
+    private static boolean areasMatch( String area, String otherArea ) {
         return otherArea == null || area != null && area.equals( otherArea );
     }
 
@@ -282,54 +230,20 @@ public class GeoLocation implements Serializable {
         return country == null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals( Object obj ) {
         return this == obj
-                || obj instanceof GeoLocation
+            || obj instanceof GeoLocation
                 && longitude == ( (GeoLocation) obj ).getLongitude()
                 && latitude == ( (GeoLocation) obj ).getLatitude();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + Double.toString( longitude ).hashCode();
         hash = hash * 31 + Double.toString( latitude ).hashCode();
         return hash;
-    }
-
-
-    public boolean isRefinedTo( String addressOrNull, String codeOrNull ) {
-        if ( streetAddress == null || postalCode == null ) return false;
-        String address = ( addressOrNull == null ? "" : addressOrNull );
-        String code = ( codeOrNull == null ? "" : codeOrNull );
-        return streetAddress.equals( address ) && postalCode.equals( code );
-    }
-
-    /**
-     * Find all implied geolocations for a geolocatable.
-     *
-     * @param geoLocatable a geolocatable
-     * @param queryService a query service
-     * @return a list ofr geolocations
-     */
-    public static List<GeoLocation> getImpliedGeoLocations(
-            GeoLocatable geoLocatable,
-            QueryService queryService ) {
-        List<GeoLocation> geoLocations = new ArrayList<GeoLocation>();
-        for ( GeoLocatable geo : geoLocatable.getImpliedGeoLocatables( queryService ) ) {
-            GeoLocation geoLocation = geo.geoLocate();
-            if ( geoLocation != null ) {
-                geoLocations.add( geoLocation );
-            }
-        }
-        return geoLocations;
     }
 
     /**
@@ -372,4 +286,8 @@ public class GeoLocation implements Serializable {
         return name != null && !name.trim().isEmpty();
     }
 
+    public boolean isInside( GeoLocation container ) {
+        return container != null
+            && isSameAsOrInside( container );
+    }
 }
