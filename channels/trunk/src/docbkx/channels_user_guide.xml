@@ -7111,13 +7111,13 @@
               </row>
 
               <row>
-                <entry><para>Untimely critical commitment</para></entry>
+                <entry><para>Untimely necessary sharing</para></entry>
 
                 <entry><para>Depends on impacted tasks</para></entry>
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Ease the time constraints the critical need</para>
+                      <para>Ease the time constraints the information need</para>
                     </listitem>
 
                     <listitem>
@@ -7130,20 +7130,18 @@
               </row>
 
               <row>
-                <entry><para>Task-triggering notification is not
-                timely</para></entry>
+                <entry><para>Untimely dissemination</para></entry>
 
                 <entry><para>Depends on impacted tasks</para></entry>
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Ease the time constraints the triggering
+                      <para>Ease the time constraints the information
                       need</para>
                     </listitem>
 
                     <listitem>
-                      <para>or reduce the time delay for the matching
-                      notifying sharing flow</para>
+                      <para>or reduce the time delays of flows disseminating needed elements</para>
                     </listitem>
                   </itemizedlist></entry>
 

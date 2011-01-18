@@ -1,8 +1,13 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.analysis.GraphBuilder;
+import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Dissemination;
-import com.mindalliance.channels.model.*;
+import com.mindalliance.channels.model.InternalFlow;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Subject;
+import com.mindalliance.channels.model.Transformation;
 import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -53,7 +58,7 @@ public class DisseminationGraphBuilder implements GraphBuilder<Node, Disseminati
                                 Transformation.Type.Identity,
                                 new Delay(),
                                 new Subject(),
-                                new Subject() );
+                                new Subject());
                     }
 
                 } );

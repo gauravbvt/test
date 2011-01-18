@@ -687,7 +687,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
     @Override
     public Place getPlaceBasis() {
         return location == null ? null
-                                : location.getPlaceBasis();
+                : location.getPlaceBasis();
     }
 
     @Override
@@ -1041,26 +1041,26 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
     }
 
     /**
-      * List all subjects (info+eoi content) known to the part.
-      *
-      * @param sent a boolean
-      * @return a sorted list of unique subjects
-      */
-     public List<Subject> getAllSubjects( boolean sent ) {
-         Set<Subject> subjects = new HashSet<Subject>();
-         Iterator<Flow> flows = sent ? sends() : receives();
-         while ( flows.hasNext() ) {
-             Flow flow = flows.next();
-             for ( ElementOfInformation eoi : flow.getEois() ) {
-                 Subject subject = new Subject( flow.getName(), eoi.getContent() );
-                 subject.setRoot( sent );
-                 subjects.add( subject );
-             }
-         }
-         List<Subject> results = new ArrayList<Subject>( subjects );
-         Collections.sort( results );
-         return results;
-     }
+     * List all subjects (info+eoi content) known to the part.
+     *
+     * @param sent a boolean
+     * @return a sorted list of unique subjects
+     */
+    public List<Subject> getAllSubjects( boolean sent ) {
+        Set<Subject> subjects = new HashSet<Subject>();
+        Iterator<Flow> flows = sent ? sends() : receives();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            for ( ElementOfInformation eoi : flow.getEois() ) {
+                Subject subject = new Subject( flow.getName(), eoi.getContent() );
+                subject.setRoot( sent );
+                subjects.add( subject );
+            }
+        }
+        List<Subject> results = new ArrayList<Subject>( subjects );
+        Collections.sort( results );
+        return results;
+    }
 
     /**
      * Find all important flows downstream of part, without circularity.
@@ -1086,6 +1086,37 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
 
     public String getOperationalLabel() {
         return isEffectivelyOperational() ? "Yes" : "No";
+    }
+
+    /**
+     * Find a need for a subject, if any.
+     *
+     * @param subject a Subject (info name + element name)
+     * @return a flow or null
+     */
+    public Flow findNeedFor( final Subject subject ) {
+        return (Flow) CollectionUtils.find(
+                getNeeds(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Flow need = (Flow) object;
+                        return Matcher.getInstance().same(
+                                subject.getInfo(),
+                                need.getName() )
+                                && CollectionUtils.exists(
+                                    need.getEois(),
+                                    new Predicate() {
+                                        @Override
+                                        public boolean evaluate( Object object ) {
+                                            return Matcher.getInstance().same(
+                                                    ( (ElementOfInformation) object ).getContent(),
+                                                    subject.getContent() );
+                                        }
+                                    }
+                        );
+                    }
+                } );
     }
 
     /**
