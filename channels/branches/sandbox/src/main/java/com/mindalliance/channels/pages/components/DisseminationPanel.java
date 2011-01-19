@@ -1,8 +1,12 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.Dissemination;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.*;
+import com.mindalliance.channels.model.Assignment;
+import com.mindalliance.channels.model.Dissemination;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.pages.components.diagrams.DisseminationDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.query.QueryService;
@@ -221,7 +225,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                 target.addComponent( sizingLabel );
             }
         } );
-        makeVisible( sizingLabel, getSubject() != null );
+       // makeVisible( sizingLabel, getSubject() != null );
         addOrReplace( sizingLabel );
     }
 
@@ -488,6 +492,14 @@ public class DisseminationPanel extends FloatingCommandablePanel {
         public void setDissemination( Dissemination dissemination ) {
             this.dissemination = dissemination;
         }
+
+        /**
+         * Get CSS class based on timeliness.
+         * @return a string
+         */
+        public String getTimeliness() {
+            return dissemination.isTimely() ? null : "late";
+        }
     }
 
     public class DisseminationTablePanel extends AbstractTablePanel<DisseminationAssignment> {
@@ -502,12 +514,16 @@ public class DisseminationPanel extends FloatingCommandablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initTable() {
-            List<DisseminationAssignment> disseminations = findAllAssignedDisseminations(
+            List<DisseminationAssignment> disseminations = findAllDisseminationAssignments(
                     (SegmentObject) getModel().getObject(),
                     subject,
                     showTargets );
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
-            columns.add( makeLinkColumn( "Recipient", "assignment.actor", "assignment.actor.normalizedName", EMPTY ) );
+            columns.add( makeLinkColumn(
+                    showTargets ? "Recipient" : "Source",
+                    "assignment.actor",
+                    "assignment.actor.normalizedName",
+                    EMPTY ) );
             columns.add( makeLinkColumn( "Role", "assignment.role", "assignment.role.name", EMPTY ) );
             columns.add( makeLinkColumn( "Jurisdiction", "assignment.jurisdiction", "assignment.jurisdiction.name", EMPTY ) );
             columns.add( makeLinkColumn( "Organization", "assignment.organization", "assignment.organization.name", EMPTY ) );
@@ -515,6 +531,13 @@ public class DisseminationPanel extends FloatingCommandablePanel {
             columns.add( makeColumn( "Subject", "dissemination.subject", EMPTY ) );
             columns.add( makeColumn( "Transformation", "dissemination.transformationType.label", EMPTY ) );
             columns.add( makeColumn( "Max delay", "dissemination.delay", null, EMPTY, null, "dissemination.delay" ) );
+            columns.add( makeColumn(
+                    "Requirement",
+                    "dissemination.needMaxDelay",
+                    "@timeliness",
+                    EMPTY,
+                    null,
+                    "dissemination.needMaxDelay" ) );
             add( new AjaxFallbackDefaultDataTable(
                     "disseminationTable",
                     columns,
@@ -522,7 +545,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                     getPageSize() ) );
         }
 
-        private List<DisseminationAssignment> findAllAssignedDisseminations(
+        private List<DisseminationAssignment> findAllDisseminationAssignments(
                 SegmentObject segmentObject,
                 Subject localSubject,
                 boolean showTargets ) {
@@ -535,7 +558,8 @@ public class DisseminationPanel extends FloatingCommandablePanel {
             List<DisseminationAssignment> disseminationAssignments = new ArrayList<DisseminationAssignment>();
             for ( Dissemination dissemination : disseminations ) {
                 Part part = dissemination.getPart( showTargets );
-                List<Assignment> assignments = queryService.findAllAssignments( part, false );
+                // Include assignments to unknown actors
+                List<Assignment> assignments = queryService.findAllAssignments( part, true );
                 for ( Assignment assignment : assignments ) {
                     DisseminationAssignment disseminationAssignment = new DisseminationAssignment(
                             assignment,

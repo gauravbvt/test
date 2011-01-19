@@ -291,7 +291,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private List<String> getAllRestrictionLabels() {
         List<String> labels = new ArrayList<String>();
         labels.add( NO_RESTRICTION );
-        labels.addAll( Flow.Restriction.getAllLabels() );
+        labels.addAll( Flow.Restriction.getAllLabels( isSend() ) );
         return labels;
     }
 
@@ -1321,7 +1321,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         if ( label != null ) {
             Flow.Restriction restriction = label.equals( NO_RESTRICTION )
                     ? null
-                    : Flow.Restriction.valueOfLabel( label );
+                    : Flow.Restriction.valueOfLabel( label, isSend() );
             doCommand( new UpdateSegmentObject( getFlow(), "restriction", restriction ) );
         }
     }

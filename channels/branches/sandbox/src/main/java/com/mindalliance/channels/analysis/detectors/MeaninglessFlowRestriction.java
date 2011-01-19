@@ -39,9 +39,12 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
             Organization targetOrg = target.getOrganization();
             Place sourceLoc = source.getLocation();
             Place targetLoc = target.getLocation();
+            Actor sourceActor = source.getActor();
+            Actor targetActor = target.getActor();
             if ( ( restriction == Flow.Restriction.SameOrganization ||
                     restriction == Flow.Restriction.SameTopOrganization ||
-                    restriction == Flow.Restriction.DifferentOrganizations )
+                    restriction == Flow.Restriction.DifferentOrganizations ||
+                    restriction == Flow.Restriction.DifferentTopOrganizations )
                     && sourceOrg != null
                     && targetOrg != null
                     && sourceOrg.isActual()
@@ -66,6 +69,19 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                         "and target tasks are actual places." );
                 issue.setRemediation( "Remove the restriction" +
                         "\nor change the source and/or target specification to use types of places or none at all." );
+                issue.setSeverity( Level.Low );
+                issues.add( issue );
+            }  else if ( restriction == Flow.Restriction.Supervisor
+                    && sourceActor != null
+                    && targetActor != null
+                    && sourceActor.isActual()
+                    && targetActor.isActual() ) {
+                Issue issue = makeIssue( Issue.VALIDITY, flow );
+                issue.setDescription( "The restriction adds nothing because " +
+                        "the agents named in specifying both source " +
+                        "and target tasks are actual agents." );
+                issue.setRemediation( "Remove the restriction" +
+                        "\nor change the source and/or target specification to use types of agents or none at all." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             }

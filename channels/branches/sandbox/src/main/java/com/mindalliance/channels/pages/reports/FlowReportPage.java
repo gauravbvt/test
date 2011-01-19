@@ -286,7 +286,7 @@ public class FlowReportPage extends AbstractReportPage {
                 Specable committerActor = committer.getSpecableActor();
                 for ( Assignment beneficiary : assignments.with( flow.getTarget() ) )
                     if ( !committerActor.equals( beneficiary.getSpecableActor() )
-                            && flow.allowsCommitment( committer, beneficiary, locale )
+                            && flow.allowsCommitment( committer, beneficiary, locale, getService() )
                             )
                         return "Yes, covered by a sharing agreement";
             }

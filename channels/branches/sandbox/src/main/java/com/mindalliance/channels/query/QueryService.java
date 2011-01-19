@@ -1185,7 +1185,25 @@ public interface QueryService {
      */
     Plan getPlan();
 
+    /**
+     * Find all employments for a part given a plan's locale.
+     * @param part  a part
+     * @param locale a place
+     * @return  a list of employments
+     */
     List<Employment> findAllEmployments( Part part, Place locale );
 
+    /**
+     * Get assignments factory.
+     * @return  assignments factory
+     */
     Assignments getAssignments();
+
+    /**
+     * Whether an actor is a direct or indirect supervisor of another.
+     * @param actor  an actor
+     * @param other  an actor
+     * @return a Boolean
+     */
+    Boolean isSupervisorOf( Actor actor, Actor other );
 }

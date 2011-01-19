@@ -1078,6 +1078,11 @@ div.aspect div.picture {
     margin: 0 0 2px 0;
 }
 
+td.late span {
+    color: #ff0000;
+	font-weight:bold;
+}
+
 /* ----- Floating Panels - Data Tables - Controls ----- */
 
 .aspect div.filters {

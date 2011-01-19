@@ -1,11 +1,13 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.commands.AddPart;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -33,7 +35,7 @@ import java.util.List;
  * Date: Apr 28, 2010
  * Time: 1:15:10 PM
  */
-public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
+public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
 
     /**
      * Maximum display length for task name.
@@ -59,7 +61,9 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
      * The "other" node previously selected.
      */
     private IModel<Node> otherNodeModel;
-    /** Flow name model. */
+    /**
+     * Flow name model.
+     */
     private IModel<String> flowNameModel;
     /**
      * Parts to be shown in a drop down.
@@ -234,9 +238,7 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
         List<Node> results = new ArrayList<Node>();
         results.add( selectedOtherNode );
         results.addAll( firstChoices );
-        if ( !getSecondChoices().isEmpty() ) {
-            results.add( unknownOtherNode );
-        }   // TODO - second choices recomputed
+        results.add( unknownOtherNode );
         return results;
     }
 
@@ -251,18 +253,26 @@ public class OtherNodeSelectorPanel extends AbstractUpdatablePanel {
     }
 
     public void setSelectedOtherNodeName( final String nodeName ) {
-        Node node = null;
-        if ( nodeName != null ) {
-            node = (Node) CollectionUtils.find(
+        if ( nodeName != null && !nodeName.isEmpty() ) {
+            Node node = (Node) CollectionUtils.find(
                     getSecondChoices(),
                     new Predicate() {
                         public boolean evaluate( Object object ) {
                             return Matcher.getInstance().same( displayString( (Node) object ),
-                                                                nodeName );
+                                    nodeName );
                         }
                     }
             );
+            if ( node != null ) {
+                selectedOtherNode = node;
+            } else {
+                Change change = doCommand( new AddPart( getSegment(), nodeName ) );
+                selectedOtherNode = (Part) change.getSubject( getQueryService() );
+            }
         }
-        if ( node != null ) selectedOtherNode = node;
+    }
+
+    private Segment getSegment() {
+        return nodeModel.getObject().getSegment();
     }
 }

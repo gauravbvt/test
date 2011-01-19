@@ -1,13 +1,19 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.model.Dissemination;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.model.*;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Dissemination;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Transformation;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.springframework.core.io.Resource;
 
@@ -85,18 +91,25 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
     public EdgeNameProvider<Dissemination> getEdgeLabelProvider() {
         return new EdgeNameProvider<Dissemination>() {
             public String getEdgeName( Dissemination edge ) {
+                Flow flow = edge.getFlow();
                 StringBuilder sb = new StringBuilder();
                 sb.append( edge.getSubject().getLabel( MAX_INFO_LENGTH ) );
+                if ( edge.getFlow().isProhibited() ) {
+                    sb.append( " -PROHIBITED-");
+                }
+                Flow.Restriction restriction = flow.getRestriction();
+                if ( restriction != null ) {
+                    sb.append( " (" );
+                    sb.append( restriction.getLabel());
+                    sb.append( ")" );
+                }
                 Transformation.Type xformType = edge.getTransformationType();
                 if ( !(edge.isRoot() || xformType ==  Transformation.Type.Identity ) ) {
-                    sb.append( " (" );
+                    sb.append( " [" );
                     sb.append( xformType.getLabel() );
                     sb.append( " " );
                     sb.append( edge.getTransformedSubject().getLabel( MAX_INFO_LENGTH ) );
-                    sb.append( ")");
-                }
-                if ( edge.getFlow().isProhibited() ) {
-                    sb.append( " [PROHIBITED]");
+                    sb.append( "]");
                 }
                 String label = AbstractMetaProvider.separate(
                         sb.toString(),

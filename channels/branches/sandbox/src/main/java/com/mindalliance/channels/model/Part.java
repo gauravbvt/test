@@ -1089,6 +1089,37 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
     }
 
     /**
+     * Find a need for a subject, if any.
+     *
+     * @param subject a Subject (info name + element name)
+     * @return a flow or null
+     */
+    public Flow findNeedFor( final Subject subject ) {
+        return (Flow) CollectionUtils.find(
+                getNeeds(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Flow need = (Flow) object;
+                        return Matcher.getInstance().same(
+                                subject.getInfo(),
+                                need.getName() )
+                                && CollectionUtils.exists(
+                                    need.getEois(),
+                                    new Predicate() {
+                                        @Override
+                                        public boolean evaluate( Object object ) {
+                                            return Matcher.getInstance().same(
+                                                    ( (ElementOfInformation) object ).getContent(),
+                                                    subject.getContent() );
+                                        }
+                                    }
+                        );
+                    }
+                } );
+    }
+
+    /**
      * Category of tasks.
      */
     public enum Category {

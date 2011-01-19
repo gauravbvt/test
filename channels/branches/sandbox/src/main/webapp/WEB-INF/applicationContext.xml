@@ -168,8 +168,8 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.EmptyNeedOrCapability"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnsatisfiedNeed"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.CommitmentWithoutRequiredAgreement"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyTriggeringSharing"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyCriticalSharing"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyDissemination"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.UntimelyNecessarySharing"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnTargetPart"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnSourcePart"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure"/>
