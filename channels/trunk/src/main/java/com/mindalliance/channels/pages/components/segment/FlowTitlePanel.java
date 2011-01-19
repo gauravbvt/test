@@ -76,7 +76,7 @@ public class FlowTitlePanel extends Panel {
                         flow.getShortName( node, true ),
                         Flow.getOrganizationString( part ),
                         Flow.getJurisdictionString( part ),
-                        flow.getRestrictionString() );
+                        flow.getRestrictionString(isSend) );
             }
         } else {
             // receive
@@ -99,7 +99,7 @@ public class FlowTitlePanel extends Panel {
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
                             Flow.getJurisdictionString( part ),
-                            flow.getRestrictionString() );
+                            flow.getRestrictionString(isSend) );
                 } else
                     return "Notified of";
             }
@@ -122,7 +122,7 @@ public class FlowTitlePanel extends Panel {
         Node node = flow.getTarget();
         if ( isSend ) {
             if ( node.isConnector() ) {
-                return flow.getRestrictionString();
+                return flow.getRestrictionString( isSend );
             } else {
                 return "";
             }
@@ -130,7 +130,7 @@ public class FlowTitlePanel extends Panel {
             // receive
             Node source = flow.getSource();
             if ( source.isConnector() ) {
-                return flow.getRestrictionString();
+                return flow.getRestrictionString(isSend);
 
             } else {
                 Part part = (Part) source;
@@ -142,7 +142,7 @@ public class FlowTitlePanel extends Panel {
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
                             Flow.getJurisdictionString( part ),
-                            flow.getRestrictionString() );
+                            flow.getRestrictionString(isSend) );
                 }
             }
         }

@@ -41,6 +41,13 @@ public class AddPart extends AbstractCommand {
         set( "segment", segment.getId() );
     }
 
+    public AddPart( Segment segment, String task ) {
+        super();
+        set( "segment", segment.getId() );
+        set( "task", task );
+    }
+
+
     /**
      * {@inheritDoc}
      */
@@ -66,6 +73,10 @@ public class AddPart extends AbstractCommand {
         }
         Long priorId = (Long) get( "part" );
         Part part = planDao.createPart( segment, priorId );
+        String task = (String)get( "task" );
+        if ( task != null ) {
+            part.setTask( task );
+        }
         set( "part", part.getId() );
         if ( defaultPart != null ) planDao.removeNode( defaultPart, segment );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );

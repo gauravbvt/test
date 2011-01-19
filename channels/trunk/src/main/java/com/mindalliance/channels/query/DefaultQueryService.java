@@ -1860,7 +1860,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 for ( Assignment beneficiary : beneficiaries ) {
                     if ( !committerActor.equals( beneficiary.getActor() )
                             && !flow.isProhibited()
-                            && flow.allowsCommitment( committer, beneficiary, place )
+                            && flow.allowsCommitment( committer, beneficiary, place, this )
                             )
                         commitments.add( new Commitment( committer, beneficiary, flow ) );
                 }
@@ -1880,7 +1880,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Flow flow = flows.next();
                 if ( flow.isSharing() && flow.getSource().equals( assignment.getPart() ) ) {
                     for ( Assignment beneficiary : assignments.assignedTo( (Part) flow.getTarget() ) ) {
-                        if ( flow.allowsCommitment( assignment, beneficiary, locale ) )
+                        if ( flow.allowsCommitment( assignment, beneficiary, locale, this ) )
                             commitments.add( new Commitment(
                                     assignment,
                                     beneficiary,
@@ -2430,7 +2430,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         showTargets,
                         startPart,
                         startSubject
- );
+                );
                 for ( Dissemination immediateDissemination : immediateDisseminations ) {
                     if ( !disseminations.contains( immediateDissemination ) ) {
                         immediateDissemination.addToDelay( cumulativeDelay );
@@ -2474,7 +2474,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         subject,
                         subject,
                         startPart,
-                                    startSubject,
+                        startSubject,
                         showTargets ) );
             } else {
                 Transformation xform = eoi.getTransformation();
@@ -2486,7 +2486,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                             subject,
                             subject,
                             startPart,
-                                    startSubject,
+                            startSubject,
                             showTargets ) );
                 } else {
                     for ( Subject transformedSubject : xform.getSubjects() ) {
@@ -2497,7 +2497,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 transformedSubject,
                                 subject,
                                 startPart,
-                                    startSubject,
+                                startSubject,
                                 showTargets ) );
                     }
                 }
@@ -2563,7 +2563,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                             new Subject( subject ),
                             new Subject( subject ),
                             startPart,
-                                    startSubject,
+                            startSubject,
                             showTargets );
                     dissemination.setRoot( subject.isRoot() );
                     disseminations.add( dissemination );
@@ -2578,7 +2578,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 subject,
                                 new Subject( flow.getName(), eoi.getContent() ),
                                 startPart,
-                                    startSubject,
+                                startSubject,
                                 showTargets ) );
                     }
                 } else {
@@ -2603,6 +2603,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    /** @{inheritDoc} */
     public List<Employment> findAllEmployments( Part part, Place locale ) {
 
         Set<Actor> employed = new HashSet<Actor>();
@@ -2637,6 +2638,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    /** @{inheritDoc} */
     public Assignments getAssignments() {
         Assignments result = new Assignments( getPlan().getLocale() );
 
@@ -2645,6 +2647,25 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 result.add( findAllAssignments( pi.next(), true ) );
 
         return result;
+    }
+
+    @Override
+    /** @{inheritDoc} */
+    public Boolean isSupervisorOf( Actor actor, Actor other ) {
+        return isSupervisorOf( actor, other, new HashSet<Actor>() );
+    }
+
+    private boolean isSupervisorOf( Actor actor, Actor other, Set<Actor> visited ) {
+        if ( actor.isUnknown() || actor.equals( other ) || visited.contains( actor ) ) return false;
+        visited.add( actor );
+        List<Employment> employments = findAllEmploymentsForActor( actor );
+        for ( Employment employment : employments ) {
+            Actor supervisor = employment.getSupervisor();
+            if ( supervisor != null ) {
+                if ( supervisor.equals( other ) || isSupervisorOf( supervisor, other, visited ) ) return true;
+            }
+        }
+        return false;
     }
 }
 

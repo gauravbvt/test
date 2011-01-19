@@ -63,7 +63,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     private Intent intent;
     /**
-     * Restricion on implied sharing commitments.
+     * Restriction on implied sharing commitments.
      */
     private Restriction restriction;
     /**
@@ -1138,11 +1138,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         );
     }
 
-    public String getRestrictionString() {
+    public String getRestrictionString( boolean isSend ) {
         if ( getRestriction() == null ) {
             return "";
         } else {
-            return " if in " + getRestriction().getLabel();
+            return " if " + getRestriction().getLabel( isSend );
         }
     }
 
@@ -1182,17 +1182,23 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return results;
     }
 
-    public boolean allowsCommitment( Assignment committer, Assignment beneficiary, Place locale ) {
+    public boolean allowsCommitment(
+            Assignment committer,
+            Assignment beneficiary,
+            Place locale,
+            QueryService queryService ) {
 
         if ( restriction != null ) {
-            ModelEntity committerOrg = committer.getOrganization();
-            ModelEntity beneficiaryOrg = beneficiary.getOrganization();
-            ModelEntity committerLocation = committer.getLocation();
-            ModelEntity beneficiaryLocation = beneficiary.getLocation();
+            Organization committerOrg = committer.getOrganization();
+            Organization beneficiaryOrg = beneficiary.getOrganization();
+            Place committerLocation = committer.getLocation();
+            Place beneficiaryLocation = beneficiary.getLocation();
             switch ( restriction ) {
                 case SameTopOrganization:
-                    return committer.getOrganization().getTopOrganization()
-                            .equals( beneficiary.getOrganization().getTopOrganization() );
+                    return committerOrg == null
+                            || beneficiaryOrg == null
+                            || committerOrg.getTopOrganization()
+                            .equals( beneficiaryOrg.getTopOrganization() );
 
                 case SameOrganization:
                     return committerOrg == null
@@ -1206,6 +1212,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                             || ( !committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
                             && !beneficiaryOrg.narrowsOrEquals( committerOrg, locale ) );
 
+                case DifferentTopOrganizations:
+                    return committerOrg == null
+                            || beneficiaryOrg == null
+                            || !committerOrg.getTopOrganization()
+                            .equals( beneficiaryOrg.getTopOrganization() );
+
                 case SameLocation:
                     return committerLocation == null
                             || beneficiaryLocation == null
@@ -1217,6 +1229,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                             || beneficiaryLocation == null
                             || ( !committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
                             && !beneficiaryLocation.narrowsOrEquals( committerLocation, locale ) );
+
+                case Supervisor:
+                    return committer.getActor() == null
+                            || beneficiary.getActor() == null
+                            || queryService.isSupervisorOf( beneficiary.getActor(), committer.getActor() );
             }
         }
 
@@ -1381,9 +1398,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         SameOrganization,
         SameLocation,
         DifferentOrganizations,
-        DifferentLocations;
+        DifferentTopOrganizations,
+        DifferentLocations,
+        Supervisor;
 
-        public String getLabel() {
+        public String toString() {
             switch ( this ) {
                 case SameTopOrganization:
                     return "the same overall organization";
@@ -1393,25 +1412,41 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     return "the same location";
                 case DifferentOrganizations:
                     return "different organizations";
+                case DifferentTopOrganizations:
+                    return "different overall organizations";
                 case DifferentLocations:
                     return "different locations";
+                case Supervisor:
+                    return "a supervisor";
                 default:
                     return name();
             }
         }
 
-        public static List<String> getAllLabels() {
+        public String getLabel() {
+            return getLabel( true );
+        }
+
+        public String getLabel( boolean isSend ) {
+            if ( this == Supervisor ) {
+                return (isSend ? "to " : "from ") + toString();
+            } else {
+                return "in " + toString();
+            }
+        }
+
+        public static List<String> getAllLabels( boolean isSend ) {
             List<String> labels = new ArrayList<String>();
             for ( Restriction restriction : Restriction.values() ) {
-                labels.add( restriction.getLabel() );
+                labels.add( restriction.getLabel( isSend ) );
             }
             Collections.sort( labels );
             return labels;
         }
 
-        public static Restriction valueOfLabel( String label ) {
+        public static Restriction valueOfLabel( String label, boolean isSend ) {
             for ( Restriction restriction : Restriction.values() ) {
-                if ( restriction.getLabel().equals( label ) ) return restriction;
+                if ( restriction.getLabel( isSend ).equals( label ) ) return restriction;
             }
             return null;
         }
@@ -1423,6 +1458,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             if ( restriction == other ) return restriction;
             if ( restriction == SameTopOrganization && other == SameOrganization ) return SameOrganization;
             if ( other == SameTopOrganization && restriction == SameOrganization ) return SameOrganization;
+            if ( restriction == DifferentTopOrganizations && other == DifferentOrganizations ) return DifferentOrganizations;
+            if ( other == DifferentTopOrganizations && restriction == DifferentOrganizations ) return DifferentOrganizations;
             return null;
         }
 

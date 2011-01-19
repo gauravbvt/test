@@ -1566,9 +1566,13 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         // Hide message panel on changed message ( not null )
-        if ( change.getMessage() != null ) {
+        String message = change.getMessage();
+        if ( message != null ) {
             addChangeMessagePanel();
             target.addComponent( messageContainer );
+            if ( message.contains( "copied" ) ) {
+                refreshAllMenus( target );
+            }
         }
         if ( !change.isNone() ) {
             if ( change.isForInstanceOf( Plan.class ) && change.isSelected() ) {

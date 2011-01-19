@@ -41,7 +41,13 @@ public class Dissemination implements Serializable {
      * The part from which dissemination is calculated (forward or backward).
      */
     private Part startPart;
+    /**
+     * The initial subject disseminated.
+     */
     private Subject startSubject;
+    /**
+     * Whether dissemination is to targets or from sources.
+     */
     private boolean toTargets;
 
     public Dissemination() {
@@ -53,7 +59,15 @@ public class Dissemination implements Serializable {
             Delay delay,
             Subject transformedSubject,
             Subject subject ) {
-        this( flow, transformationType, delay, transformedSubject, subject, null, null, true );
+        this(
+                flow,
+                transformationType,
+                delay,
+                transformedSubject,
+                subject,
+                (Part)flow.getSource(),
+                subject,
+                true );
     }
 
     public Dissemination(

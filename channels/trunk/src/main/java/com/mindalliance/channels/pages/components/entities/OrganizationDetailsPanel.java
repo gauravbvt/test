@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
@@ -76,6 +77,14 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      * Prefix DOM identifier for org chart element.
      */
     private static final String PREFIX_DOM_IDENTIFIER = ".entity";
+    /**
+     * Parent link.
+     */
+    private ModelObjectLink parentLink;
+    /**
+     * Container for details.
+     */
+    private WebMarkupContainer moDetailsDiv;
 
     public OrganizationDetailsPanel(
             String id,
@@ -89,18 +98,20 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
-        addMissionField( moDetailsDiv );
-        addParentField( moDetailsDiv );
-        addLocationField( moDetailsDiv );
-        addContactInfoPanel( moDetailsDiv );
-        addReceiveFields( moDetailsDiv );
-        addTabPanel( moDetailsDiv );
-        addAssignmentsPanel( moDetailsDiv );
-        addCommitmentsPanel( moDetailsDiv );
+        this.moDetailsDiv = moDetailsDiv;
+        addMissionField(  );
+        addParentLink(  );
+        addParentField(  );
+        addLocationField(  );
+        addContactInfoPanel(  );
+        addReceiveFields(  );
+        addTabPanel(  );
+        addAssignmentsPanel(  );
+        addCommitmentsPanel(  );
         adjustFields();
     }
 
-    private void addMissionField( WebMarkupContainer moDetailsDiv ) {
+    private void addMissionField(  ) {
         missionField = new TextArea<String>( "mission",
                 new PropertyModel<String>( this, "mission" ) );
         missionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -112,12 +123,16 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     }
 
 
-    private void addParentField( WebMarkupContainer moDetailsDiv ) {
-        Organization organization = getOrganization();
-        moDetailsDiv.add( new ModelObjectLink(
+    private void addParentLink(  ) {
+        parentLink =  new ModelObjectLink(
                 "org-link",
-                new PropertyModel<Organization>( organization, "parent" ),
-                new Model<String>( "Parent" ) ) );
+                new PropertyModel<Organization>( getOrganization(), "parent" ),
+                new Model<String>( "Parent" ) );
+        moDetailsDiv.addOrReplace( parentLink );
+    }
+
+    private void addParentField(  ) {
+        Organization organization = getOrganization();
         // If organization is actual, parent must be actual
         actualParentField = new AutoCompleteTextField<String>( "actualParent",
                 new PropertyModel<String>( this, "parentOrganization" ) ) {
@@ -133,6 +148,8 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         };
         actualParentField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
+                addParentLink(  );
+                target.addComponent( parentLink );
                 target.addComponent( actualParentField );
                 update( target, new Change( Change.Type.Updated, getModel().getObject(), "parent" ) );
             }
@@ -150,7 +167,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         parentField.setVisible( getOrganization().isType() );
     }
 
-    private void addLocationField( WebMarkupContainer moDetailsDiv ) {
+    private void addLocationField(  ) {
         WebMarkupContainer locationContainer = new WebMarkupContainer( "locationContainer" );
         locationContainer.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( locationContainer );
@@ -180,7 +197,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         locationContainer.add( locationField );
     }
 
-    private void addContactInfoPanel( WebMarkupContainer moDetailsDiv ) {
+    private void addContactInfoPanel(  ) {
         WebMarkupContainer contactContainer = new WebMarkupContainer( "contactContainer" );
         contactContainer.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( contactContainer );
@@ -190,7 +207,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 new Model<Channelable>( organization ) ) );
     }
 
-    private void addReceiveFields( WebMarkupContainer moDetailsDiv ) {
+    private void addReceiveFields(  ) {
         WebMarkupContainer receivesContainers = new WebMarkupContainer( "constraintsContainers" );
         receivesContainers.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( receivesContainers );
@@ -216,7 +233,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         receivesContainers.add( agreementsRequiredCheckBox );
     }
 
-    private void addTabPanel( WebMarkupContainer moDetailsDiv ) {
+    private void addTabPanel(  ) {
         WebMarkupContainer tabContainer = new WebMarkupContainer( "tabContainer" );
         tabContainer.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( tabContainer );
@@ -262,7 +279,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         return tabs;
     }
 
-    private void addAssignmentsPanel( WebMarkupContainer moDetailsDiv ) {
+    private void addAssignmentsPanel(  ) {
         WebMarkupContainer assignmentsContainer = new WebMarkupContainer( "assignmentsContainer" );
         assignmentsContainer.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( assignmentsContainer );
@@ -287,7 +304,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         return getQueryService().getAssignments().with( getOrganization() ).getAssignments();
     }
 
-    private void addCommitmentsPanel( WebMarkupContainer moDetailsDiv ) {
+    private void addCommitmentsPanel(  ) {
         WebMarkupContainer commitmentsContainer = new WebMarkupContainer( "commitmentsContainer" );
         commitmentsContainer.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( commitmentsContainer );
@@ -495,6 +512,20 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                             "mission",
                             val,
                             UpdateObject.Action.Set ) );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+         if ( change.isUpdated() ) {
+                String property = change.getProperty();
+             if ( property.equals( "parent" ) ) {
+                 addParentLink( );
+                 target.addComponent( parentLink );
+             }
+         }
+        super.updateWith( target, change, updated );
     }
 
     private class AssignmentsTablePanel extends AbstractFilterableTablePanel {
