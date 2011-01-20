@@ -221,8 +221,10 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     public List<Actor> getActualActors() {
         Set<Actor> actors = new HashSet<Actor>();
-        for ( Assignment a : this )
-            actors.add( a.getActor() );
+        for ( Assignment a : this ) {
+            Actor actor = a.getActor();
+            if ( actor != null ) actors.add( actor );
+        }
 
         List<Actor> result = new ArrayList<Actor>( actors );
         Collections.sort( result, new Comparator<Actor>() {
@@ -235,8 +237,10 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     public List<Role> getRoles() {
         Set<Role> roles = new HashSet<Role>();
-        for ( Assignment a : this )
-            roles.add( a.getRole() );
+        for ( Assignment a : this )  {
+            Role role = a.getRole();
+            if ( role != null ) roles.add( role );
+        }
 
         return toSortedList( roles );
     }
