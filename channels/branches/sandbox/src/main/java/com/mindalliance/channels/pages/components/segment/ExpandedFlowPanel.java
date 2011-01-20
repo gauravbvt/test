@@ -1309,7 +1309,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     public String getRestrictionLabel() {
         Flow.Restriction restriction = getFlow().getRestriction();
-        return restriction == null ? NO_RESTRICTION : restriction.getLabel();
+        return restriction == null ? NO_RESTRICTION : restriction.getLabel( isSend() );
     }
 
     /**
