@@ -52,7 +52,6 @@ public class AssignmentReportPage extends AbstractReportPage {
 
         Part part = getPart();
         add(
-            SOPsReportPage.newFeedbackWidget( getPlanManager(), getService().getPlan() ),
             new Label( "pageTitle" ),
             new Label( "reportTitle" ),
 

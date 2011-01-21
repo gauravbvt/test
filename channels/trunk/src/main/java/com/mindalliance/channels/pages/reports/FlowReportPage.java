@@ -59,7 +59,6 @@ public class FlowReportPage extends AbstractReportPage {
         super( parameters );
 
         add(
-            SOPsReportPage.newFeedbackWidget( getPlanManager(), getService().getPlan() ),
             new Label( "pageTitle" ),
             new Label( "reportTitle" ),
 
