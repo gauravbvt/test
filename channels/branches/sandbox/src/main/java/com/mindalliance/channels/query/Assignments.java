@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
@@ -19,7 +20,6 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.model.ExternalFlow;
 import org.apache.commons.collections.IteratorUtils;
 
 import java.io.Serializable;

@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Employment;
@@ -15,7 +14,6 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.pages.components.support.FeedbackWidget;
 import com.mindalliance.channels.query.Assignments;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -74,7 +72,6 @@ public class SOPsReportPage extends WebPage {
 
         add(
             new Label( "pageTitle" ),
-            newFeedbackWidget( selector.getPlanManager(), selector.getPlan() ),
             new Label( "reportTitle" ),
             selector.setVisible( selector.isPlanner() ),
 
@@ -367,16 +364,6 @@ public class SOPsReportPage extends WebPage {
         return selector;
     }
 
-    static Component newFeedbackWidget( PlanManager planManager, Plan plan ) {
-        FeedbackWidget feedbackWidget = new FeedbackWidget(
-                "feedback-widget",
-                new Model<String>(
-                    plan.getUserSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
-                true );
-
-        makeVisible( feedbackWidget, false );
-        return feedbackWidget;
-    }
 
     /**
      * Set the headers of the Page being served.

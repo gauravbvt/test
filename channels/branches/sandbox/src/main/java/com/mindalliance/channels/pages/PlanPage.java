@@ -35,7 +35,6 @@ import com.mindalliance.channels.pages.components.segment.PartAssignmentsPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentPanel;
 import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
-import com.mindalliance.channels.pages.components.support.FeedbackWidget;
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
 import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
 import com.mindalliance.channels.query.QueryService;
@@ -412,7 +411,6 @@ public final class PlanPage extends WebPage implements Updatable {
         expanded.add( Channels.SOCIAL_ID );
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
-        addFeedbackWidget();
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
@@ -450,16 +448,6 @@ public final class PlanPage extends WebPage implements Updatable {
         updateNavigation();
         LOG.debug( "Segment page generated" );
         rememberState();
-    }
-
-    private void addFeedbackWidget() {
-        FeedbackWidget feedbackWidget = new FeedbackWidget(
-                "feedback-widget",
-                new Model<String>(
-                        getPlan().getPlannerSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
-                true );
-        makeVisible( feedbackWidget, false );
-        add( feedbackWidget );
     }
 
     private void addMaximizedFlowPanel( Change change ) {

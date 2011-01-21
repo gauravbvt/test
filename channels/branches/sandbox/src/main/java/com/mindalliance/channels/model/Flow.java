@@ -63,7 +63,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     private Intent intent;
     /**
-     * Restricion on implied sharing commitments.
+     * Restriction on implied sharing commitments.
      */
     private Restriction restriction;
     /**
