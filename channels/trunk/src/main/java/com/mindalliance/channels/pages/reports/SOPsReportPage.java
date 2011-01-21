@@ -368,13 +368,14 @@ public class SOPsReportPage extends WebPage {
     }
 
     static Component newFeedbackWidget( PlanManager planManager, Plan plan ) {
-        FeedbackWidget feedbackWidget = new FeedbackWidget(
-                "feedback-widget",
-                new Model<String>(
-                    plan.getUserSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
-                true );
-
-        makeVisible( feedbackWidget, false );
+//        FeedbackWidget feedbackWidget = new FeedbackWidget(
+//                "feedback-widget",
+//                new Model<String>(
+//                    plan.getUserSupportCommunityUri( planManager.getDefaultSupportCommunity() ) ),
+//                true );
+//
+//        makeVisible( feedbackWidget, false );
+        Component feedbackWidget = new Label( "feedback-widget", "" ).setVisible( false );
         return feedbackWidget;
     }
 
