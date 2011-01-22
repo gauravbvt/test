@@ -59,7 +59,6 @@ public class HelpPage extends WebPage {
     private String content = "";
     private TextArea<String> contentText;
     private AjaxLink sendButton;
-    private static final String DEFAULT_COMMUNITY = "channels@mind-alliance.com";
     private SimpleDateFormat dateFormat;
     private AjaxCheckBox suggestionCheckBox;
     private AjaxCheckBox problemCheckBox;
@@ -159,9 +158,12 @@ public class HelpPage extends WebPage {
         sendButton = new AjaxLink( "send" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+/*
                 if ( getContent().isEmpty() ) {
                     target.appendJavascript( "alert('Please state your " + contentType() + ".');" );
+                    target.addComponent( feedbackContainer );
                 } else {
+*/              if ( !getContent().isEmpty() ) {
                     boolean success = sendFeedback();
                     String alert = success
                             ? "Feedback sent. Thank you!"
@@ -200,7 +202,7 @@ public class HelpPage extends WebPage {
     private boolean sendFeedback() {
         User currentUser = User.current();
         Plan plan = currentUser.getPlan();
-        String toAddress = plan.getPlannerSupportCommunityUri( DEFAULT_COMMUNITY );
+        String toAddress = plan.getPlannerSupportCommunityUri( getApp().getSupportCommunityUri() );
         try {
             SimpleMailMessage email = new SimpleMailMessage();
             email.setTo( toAddress );
