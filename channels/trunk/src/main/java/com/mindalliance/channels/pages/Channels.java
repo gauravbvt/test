@@ -118,6 +118,8 @@ public class Channels extends WebApplication
     protected void init() {
         super.init();
 
+        getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
+
         addComponentInstantiationListener( getInjector() );
 
         getMarkupSettings().setStripWicketTags( true );
