@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
@@ -52,7 +53,7 @@ public class HelpPage extends WebPage {
 
 
     private WebMarkupContainer feedbackContainer;
-    private boolean question;
+    private boolean question = true;
     private boolean problem;
     private boolean suggestion;
     private boolean asap;
@@ -72,6 +73,24 @@ public class HelpPage extends WebPage {
     }
 
     private void init() {
+        addNewFeedbackLink();
+        IndicatorAwareForm form = new IndicatorAwareForm( "form", "spinner" ) {
+            @Override
+            protected void onSubmit() {
+                // Do nothing - everything is done via Ajax, even file uploads
+                // System.out.println( "Form submitted" );
+            }
+        };
+        add( form );
+        feedbackContainer = new WebMarkupContainer( "feedback" );
+        feedbackContainer.setOutputMarkupId( true );
+        makeVisible( feedbackContainer, false );
+        form.add( feedbackContainer );
+        addFeedbackFields();
+        addFeedbackButtons();
+    }
+
+    private void addNewFeedbackLink() {
         AjaxLink<String> newFeedback = new AjaxLink<String>( "newFeedback" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -80,12 +99,6 @@ public class HelpPage extends WebPage {
             }
         };
         add( newFeedback );
-        feedbackContainer = new WebMarkupContainer( "feedback" );
-        feedbackContainer.setOutputMarkupId( true );
-        makeVisible( feedbackContainer, false );
-        add( feedbackContainer );
-        addFeedbackFields();
-        addFeedbackButtons();
     }
 
     private void addFeedbackFields() {
@@ -136,19 +149,13 @@ public class HelpPage extends WebPage {
         contentText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                // nothing
-            }
+                // do nothing
+           }
         } );
-        makeVisible( contentText, false );
         feedbackContainer.add( contentText );
     }
 
     private void updateFields( AjaxRequestTarget target ) {
-        boolean visible = isQuestion() || isProblem() || isSuggestion();
-        makeVisible( contentText, visible );
-        target.addComponent( contentText );
-        makeVisible( sendButton, visible );
-        target.addComponent( sendButton );
         target.addComponent( questionCheckBox );
         target.addComponent( problemCheckBox );
         target.addComponent( suggestionCheckBox );
@@ -158,12 +165,7 @@ public class HelpPage extends WebPage {
         sendButton = new AjaxLink( "send" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-/*
-                if ( getContent().isEmpty() ) {
-                    target.appendJavascript( "alert('Please state your " + contentType() + ".');" );
-                    target.addComponent( feedbackContainer );
-                } else {
-*/              if ( !getContent().isEmpty() ) {
+                if ( !getContent().isEmpty() ) {
                     boolean success = sendFeedback();
                     String alert = success
                             ? "Feedback sent. Thank you!"
@@ -173,17 +175,20 @@ public class HelpPage extends WebPage {
                     updateFields( target );
                     makeVisible( feedbackContainer, !success );
                     target.addComponent( feedbackContainer );
+                } else {
+                    target.appendJavascript( "alert('Please enter a short text.');" );
+                    target.addComponent( feedbackContainer );
                 }
             }
         };
         sendButton.setOutputMarkupId( true );
-        makeVisible( sendButton, false );
         add( sendButton );
         feedbackContainer.add( sendButton );
         AjaxLink cancelButton = new AjaxLink( "cancel" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 resetFeedback();
+                updateFields( target);
                 makeVisible( feedbackContainer, false );
                 target.addComponent( feedbackContainer );
             }
@@ -255,7 +260,7 @@ public class HelpPage extends WebPage {
     }
 
     private void resetFeedback() {
-        question = false;
+        question = true;
         problem = false;
         suggestion = false;
         asap = false;
@@ -281,11 +286,13 @@ public class HelpPage extends WebPage {
         return question;
     }
 
-    public void setQuestion( boolean question ) {
-        this.question = question;
-        if ( question ) {
-            problem = false;
-            suggestion = false;
+    public void setQuestion( boolean val ) {
+        if ( !question ) {
+            this.question = val;
+            if ( question ) {
+                problem = false;
+                suggestion = false;
+            }
         }
     }
 
@@ -293,11 +300,13 @@ public class HelpPage extends WebPage {
         return problem;
     }
 
-    public void setProblem( boolean problem ) {
-        this.problem = problem;
-        if ( problem ) {
-            question = false;
-            suggestion = false;
+    public void setProblem( boolean val ) {
+        if ( !problem ) {
+            this.problem = val;
+            if ( problem ) {
+                question = false;
+                suggestion = false;
+            }
         }
     }
 
@@ -305,11 +314,13 @@ public class HelpPage extends WebPage {
         return suggestion;
     }
 
-    public void setSuggestion( boolean suggestion ) {
-        this.suggestion = suggestion;
-        if ( suggestion ) {
-            problem = false;
-            question = false;
+    public void setSuggestion( boolean val ) {
+        if ( !suggestion ) {
+            this.suggestion = val;
+            if ( suggestion ) {
+                problem = false;
+                question = false;
+            }
         }
     }
 
@@ -322,7 +333,7 @@ public class HelpPage extends WebPage {
     }
 
     public String getContent() {
-        return content;
+        return content == null ? "" : content;
     }
 
     public void setContent( String content ) {

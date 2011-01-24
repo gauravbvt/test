@@ -1381,6 +1381,7 @@ ul.ranges li a.selected {
 
 span.spinner {
     padding-left: 15px;
+    display: none;
 }
 
 span.spinner img {
@@ -2092,6 +2093,24 @@ body.support iframe {
 	border:none;
 }
 
+.support .feedback  {
+    font-size: large;
+    position: absolute;
+    right: 75px;
+    top: 10px;
+}
+
+.support .feedback .feedback-form {
+    font-size: 11px;
+    background:#fafafa;
+	border:1px solid #999999;
+    margin-top: 5px;
+    padding: 10px;
+}
+
+.support .feedback .cancelSend {
+    margin-top: 5px;
+}
 
 /* ----- ALPHA - Links ----- */
 
