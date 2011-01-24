@@ -1,6 +1,7 @@
 package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.model.Plan;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -35,6 +36,10 @@ public class User implements UserDetails {
      * Current plan for this user.
      */
     private Plan plan;
+    /**
+     * Web client info.
+     */
+    private WebClientInfo clientInfo;
 
     //----------------------------------------
     public User() {
@@ -283,5 +288,13 @@ public class User implements UserDetails {
         User user = current();
         return user == null ? null : user.getPlan();
 //        }
+    }
+
+    public WebClientInfo getClientInfo() {
+        return clientInfo;
+    }
+
+    public void setClientInfo( WebClientInfo clientInfo ) {
+        this.clientInfo = clientInfo;
     }
 }

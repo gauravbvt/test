@@ -118,7 +118,7 @@ public class Channels extends WebApplication
     protected void init() {
         super.init();
 
-        getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
+        getRequestCycleSettings().setGatherExtendedBrowserInfo( true );
 
         addComponentInstantiationListener( getInjector() );
 
