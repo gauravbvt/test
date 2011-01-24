@@ -1,11 +1,32 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.components.IndicatorAwareForm;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Help page.
@@ -18,17 +39,233 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 public class HelpPage extends WebPage {
 
     /**
+     * The logger.
+     */
+    private final Logger LOG = LoggerFactory.getLogger( HelpPage.class );
+    /**
      * Plan manager.
      */
     @SpringBean
     private PlanManager planManager;
 
+    @SpringBean
+    private MailSender mailSender;
+
+
+    private WebMarkupContainer feedbackContainer;
+    private boolean question = true;
+    private boolean problem;
+    private boolean suggestion;
+    private boolean asap;
+    private String content = "";
+    private TextArea<String> contentText;
+    private AjaxLink sendButton;
+    private SimpleDateFormat dateFormat;
+    private AjaxCheckBox suggestionCheckBox;
+    private AjaxCheckBox problemCheckBox;
+    private AjaxCheckBox questionCheckBox;
+    private static final int MAX_SUBJECT_LENGTH = 60;
 
     public HelpPage() {
         setStatelessHint( true );
+        dateFormat = new SimpleDateFormat( "yyyy/MM/dd HH:mm:ss" );
+        init();
     }
 
+    private void init() {
+        addNewFeedbackLink();
+        IndicatorAwareForm form = new IndicatorAwareForm( "form", "spinner" ) {
+            @Override
+            protected void onSubmit() {
+                // Do nothing - everything is done via Ajax, even file uploads
+                // System.out.println( "Form submitted" );
+            }
+        };
+        add( form );
+        feedbackContainer = new WebMarkupContainer( "feedback" );
+        feedbackContainer.setOutputMarkupId( true );
+        makeVisible( feedbackContainer, false );
+        form.add( feedbackContainer );
+        addFeedbackFields();
+        addFeedbackButtons();
+    }
 
+    private void addNewFeedbackLink() {
+        AjaxLink<String> newFeedback = new AjaxLink<String>( "newFeedback" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                makeVisible( feedbackContainer, true );
+                target.addComponent( feedbackContainer );
+            }
+        };
+        add( newFeedback );
+    }
+
+    private void addFeedbackFields() {
+        questionCheckBox = new AjaxCheckBox(
+                "question",
+                new PropertyModel<Boolean>( this, "question" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateFields( target );
+            }
+        };
+        feedbackContainer.add( questionCheckBox );
+        problemCheckBox = new AjaxCheckBox(
+                "problem",
+                new PropertyModel<Boolean>( this, "problem" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateFields( target );
+            }
+        };
+        feedbackContainer.add( problemCheckBox );
+        suggestionCheckBox = new AjaxCheckBox(
+                "suggestion",
+                new PropertyModel<Boolean>( this, "suggestion" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateFields( target );
+            }
+        };
+        feedbackContainer.add( suggestionCheckBox );
+        AjaxCheckBox priorityCheckBox = new AjaxCheckBox(
+                "priority",
+                new PropertyModel<Boolean>( this, "asap" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                //Nothing
+            }
+        };
+        feedbackContainer.add( priorityCheckBox );
+        contentText = new TextArea<String>(
+                "content",
+                new PropertyModel<String>( this, "content" ) );
+        contentText.setOutputMarkupId( true );
+        contentText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // do nothing
+           }
+        } );
+        feedbackContainer.add( contentText );
+    }
+
+    private void updateFields( AjaxRequestTarget target ) {
+        target.addComponent( questionCheckBox );
+        target.addComponent( problemCheckBox );
+        target.addComponent( suggestionCheckBox );
+    }
+
+    private void addFeedbackButtons() {
+        sendButton = new AjaxLink( "send" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                if ( !getContent().isEmpty() ) {
+                    boolean success = sendFeedback();
+                    String alert = success
+                            ? "Feedback sent. Thank you!"
+                            : "There was a problem. Your feedback could not be sent. Please manually send an email to channels@mind-allaince.com";
+                    target.appendJavascript( "alert('" + alert + "');" );
+                    resetFeedback();
+                    updateFields( target );
+                    makeVisible( feedbackContainer, !success );
+                    target.addComponent( feedbackContainer );
+                } else {
+                    target.appendJavascript( "alert('Please enter a short text.');" );
+                    target.addComponent( feedbackContainer );
+                }
+            }
+        };
+        sendButton.setOutputMarkupId( true );
+        add( sendButton );
+        feedbackContainer.add( sendButton );
+        AjaxLink cancelButton = new AjaxLink( "cancel" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                resetFeedback();
+                updateFields( target);
+                makeVisible( feedbackContainer, false );
+                target.addComponent( feedbackContainer );
+            }
+        };
+        feedbackContainer.add( cancelButton );
+    }
+
+    private String contentType() {
+        return isQuestion()
+                ? "question"
+                : isProblem()
+                ? "problem"
+                : "suggestion";
+    }
+
+    private boolean sendFeedback() {
+        User currentUser = User.current();
+        Plan plan = currentUser.getPlan();
+        String toAddress = plan.getPlannerSupportCommunityUri( getApp().getSupportCommunityUri() );
+        try {
+            SimpleMailMessage email = new SimpleMailMessage();
+            email.setTo( toAddress );
+            email.setFrom( currentUser.getEmail() );
+            email.setReplyTo( currentUser.getEmail() );
+            String subject = makeEmailSubject();
+            email.setSubject( subject );
+            email.setText( makeContent( plan, currentUser ) );
+            LOG.info( currentUser.getUsername()
+                    + " emailing \"" + subject + "\" to "
+                    + toAddress );
+            mailSender.send( email );
+            return true;
+        } catch ( Exception e ) {
+            LOG.warn( currentUser.getUsername()
+                    + " failed to email feedback ", e );
+            return false;
+
+        }
+
+    }
+
+    private String makeContent( Plan plan, User user ) {
+        WebClientInfo clientInfo = (WebClientInfo) WebRequestCycle.get().getClientInfo();
+        return "Plan: " + plan.getUri()
+                + "\nUser: " + user.getFullName()
+                + "\n"
+                + dateFormat.format( new Date() )
+                + "\n----------------------------------------------------------------------------\n\n"
+                + getContent()
+                + "\n\n----------------------------------------------------------------------------\n"
+                + clientInfo.getProperties().toString();
+
+    }
+
+    private String makeEmailSubject() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "Feedback" );
+        if ( isAsap() ) sb.append( " [ASAP]" );
+        sb.append( " - " );
+        sb.append( WordUtils.capitalize( contentType() ) );
+        sb.append( " - " );
+        sb.append( contentAbbreviated() );
+        return sb.toString();
+    }
+
+    private String contentAbbreviated() {
+        String summary = getContent().replaceAll( "\\s", " " );
+        return StringUtils.abbreviate( summary, MAX_SUBJECT_LENGTH );
+    }
+
+    private void resetFeedback() {
+        question = true;
+        problem = false;
+        suggestion = false;
+        asap = false;
+        content = "";
+    }
 
     /**
      * Set a component's visibility.
@@ -45,5 +282,61 @@ public class HelpPage extends WebPage {
         return (Channels) getApplication();
     }
 
+    public boolean isQuestion() {
+        return question;
+    }
 
+    public void setQuestion( boolean val ) {
+        if ( !question ) {
+            this.question = val;
+            if ( question ) {
+                problem = false;
+                suggestion = false;
+            }
+        }
+    }
+
+    public boolean isProblem() {
+        return problem;
+    }
+
+    public void setProblem( boolean val ) {
+        if ( !problem ) {
+            this.problem = val;
+            if ( problem ) {
+                question = false;
+                suggestion = false;
+            }
+        }
+    }
+
+    public boolean isSuggestion() {
+        return suggestion;
+    }
+
+    public void setSuggestion( boolean val ) {
+        if ( !suggestion ) {
+            this.suggestion = val;
+            if ( suggestion ) {
+                problem = false;
+                question = false;
+            }
+        }
+    }
+
+    public boolean isAsap() {
+        return asap;
+    }
+
+    public void setAsap( boolean asap ) {
+        this.asap = asap;
+    }
+
+    public String getContent() {
+        return content == null ? "" : content;
+    }
+
+    public void setContent( String content ) {
+        this.content = content;
+    }
 }

@@ -25,7 +25,7 @@ CONFIGURATION NOTES:
 
     <!-- =========================== Main Components -->
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels">
-        <!--<property name="supportCommunityUri" value="273"/>-->
+        <property name="supportCommunityUri" value="channels@mind-alliance.com"/>
     </bean>
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
     <bean id="issueScanner" class="com.mindalliance.channels.analysis.IssueScanner"/>

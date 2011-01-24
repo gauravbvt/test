@@ -97,7 +97,7 @@ public class MailSenderProxy implements MailSender, InitializingBean {
      * @return a boolean
      */
     public boolean isConfigured() {
-        return !( getHost() == null || getUsername() == null || getPassword() == null );
+        return getHost() != null;
     }
 
     @Override

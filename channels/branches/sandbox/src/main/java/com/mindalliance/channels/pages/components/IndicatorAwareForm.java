@@ -13,11 +13,18 @@ import org.apache.wicket.markup.html.form.Form;
  */
 public class IndicatorAwareForm extends Form<Object> implements IAjaxIndicatorAware {
 
+    private String indicatorId = "spinner";
+
     public IndicatorAwareForm( String id ) {
         super( id );
     }
 
+    public IndicatorAwareForm( String id, String indicatorId ) {
+        super( id );
+        this.indicatorId = indicatorId;
+    }
+
     public String getAjaxIndicatorMarkupId() {
-        return "spinner";
+        return indicatorId;
     }
 }
