@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.pages.components.IndicatorAwareForm;
+import com.mindalliance.channels.pages.components.AjaxIndicatorAwareContainer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
@@ -17,7 +17,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
@@ -65,6 +64,7 @@ public class HelpPage extends WebPage {
     private AjaxCheckBox problemCheckBox;
     private AjaxCheckBox questionCheckBox;
     private static final int MAX_SUBJECT_LENGTH = 60;
+    private String clientInfo = "";
 
     public HelpPage() {
         setStatelessHint( true );
@@ -74,18 +74,12 @@ public class HelpPage extends WebPage {
 
     private void init() {
         addNewFeedbackLink();
-        IndicatorAwareForm form = new IndicatorAwareForm( "form", "spinner" ) {
-            @Override
-            protected void onSubmit() {
-                // Do nothing - everything is done via Ajax, even file uploads
-                // System.out.println( "Form submitted" );
-            }
-        };
-        add( form );
+        AjaxIndicatorAwareContainer indicatorAware = new AjaxIndicatorAwareContainer( "aware", "spinner" );
+        add( indicatorAware );
         feedbackContainer = new WebMarkupContainer( "feedback" );
         feedbackContainer.setOutputMarkupId( true );
         makeVisible( feedbackContainer, false );
-        form.add( feedbackContainer );
+        indicatorAware.add( feedbackContainer );
         addFeedbackFields();
         addFeedbackButtons();
     }
@@ -94,6 +88,7 @@ public class HelpPage extends WebPage {
         AjaxLink<String> newFeedback = new AjaxLink<String>( "newFeedback" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+                clientInfo = getClientProperties();
                 makeVisible( feedbackContainer, true );
                 target.addComponent( feedbackContainer );
             }
@@ -150,7 +145,7 @@ public class HelpPage extends WebPage {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
-           }
+            }
         } );
         feedbackContainer.add( contentText );
     }
@@ -169,7 +164,7 @@ public class HelpPage extends WebPage {
                     boolean success = sendFeedback();
                     String alert = success
                             ? "Feedback sent. Thank you!"
-                            : "There was a problem. Your feedback could not be sent. Please manually send an email to channels@mind-allaince.com";
+                            : "Oops! Your feedback could not be sent. Sorry.";
                     target.appendJavascript( "alert('" + alert + "');" );
                     resetFeedback();
                     updateFields( target );
@@ -188,7 +183,7 @@ public class HelpPage extends WebPage {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 resetFeedback();
-                updateFields( target);
+                updateFields( target );
                 makeVisible( feedbackContainer, false );
                 target.addComponent( feedbackContainer );
             }
@@ -231,7 +226,6 @@ public class HelpPage extends WebPage {
     }
 
     private String makeContent( Plan plan, User user ) {
-        WebClientInfo clientInfo = (WebClientInfo) WebRequestCycle.get().getClientInfo();
         return "Plan: " + plan.getUri()
                 + "\nUser: " + user.getFullName()
                 + "\n"
@@ -239,8 +233,17 @@ public class HelpPage extends WebPage {
                 + "\n----------------------------------------------------------------------------\n\n"
                 + getContent()
                 + "\n\n----------------------------------------------------------------------------\n"
-                + clientInfo.getProperties().toString();
+                + clientInfo;
 
+    }
+
+    private String getClientProperties() {
+        WebClientInfo clientInfo = User.current().getClientInfo();
+        if ( clientInfo != null ) {
+            return clientInfo.getProperties().toString();
+        } else {
+            return "No client info";
+        }
     }
 
     private String makeEmailSubject() {

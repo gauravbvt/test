@@ -398,6 +398,13 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void init( Segment sc, Part p, Set<Long> expanded ) {
+        // TODO - uncomment when getting client info works on first invocation without restart exception
+        /*
+        User user = User.current();
+        WebClientInfo clientInfo = (WebClientInfo) WebRequestCycle.get().getClientInfo();
+        user.setClientInfo( clientInfo );
+        */
+
         final Commander commander = getCommander();
         commander.loggedIn( getUser().getUsername() );
         commander.releaseAllLocks( getUser().getUsername() );
