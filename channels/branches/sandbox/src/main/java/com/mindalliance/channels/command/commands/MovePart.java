@@ -38,6 +38,8 @@ public class MovePart extends AbstractCommand {
         set( "toSegment", toSegment.getId() );
         set( "fromSegment", part.getSegment().getId() );
         needLocksOn( ChannelsUtils.getLockingSetFor( part ) );
+        addConflicting( toSegment );
+        addConflicting( part.getSegment() );
     }
 
     /**

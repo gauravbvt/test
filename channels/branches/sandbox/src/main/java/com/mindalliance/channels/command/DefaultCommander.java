@@ -25,7 +25,6 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,7 +109,7 @@ public class DefaultCommander implements Commander {
     private int timeout = 300;
 
     /**
-     * A user's copied state of eiher a part, flow or attachment.
+     * A user's copied state of either a part, flow or attachment.
      */
     private Map<String, Map<String, Object>> copy = Collections.synchronizedMap(
             new HashMap<String, Map<String, Object>>() );
@@ -275,7 +274,7 @@ public class DefaultCommander implements Commander {
                 throw new CommandException( e.getMessage(), e );
             }
         else
-            throw new CommandException( "You are not authorized." );
+            throw new CommandException( "Required locks not acquired" );
 
         updateUserActive( userName );
         return change;
@@ -291,7 +290,7 @@ public class DefaultCommander implements Commander {
                     try {
                         return command.noLockRequired() || canDo( command.getUndoCommand( this ) );
                     } catch ( CommandException e ) {
-                        LOG.debug( "Unable to test undoability", e );
+                        LOG.debug( "Unable to test undo-ability", e );
                     }
                 }
             }
@@ -310,7 +309,7 @@ public class DefaultCommander implements Commander {
                     try {
                         return command.noLockRequired() || canDo( command.getUndoCommand( this ) );
                     } catch ( CommandException e ) {
-                        LOG.debug( "Unable to test redoability", e );
+                        LOG.debug( "Unable to test redo-ability", e );
                     }
                 }
             }
@@ -610,9 +609,7 @@ public class DefaultCommander implements Commander {
         if ( className == null ) return false;
         try {
             Class clazz = Class.forName( className );
-            return Identifiable.class.isAssignableFrom( clazz ) &&
-                    !Plan.class.isAssignableFrom( clazz ) &&
-                    !Segment.class.isAssignableFrom( clazz );
+            return Identifiable.class.isAssignableFrom( clazz );
         } catch ( ClassNotFoundException e ) {
             throw new IllegalArgumentException( "Class not found", e );
         }

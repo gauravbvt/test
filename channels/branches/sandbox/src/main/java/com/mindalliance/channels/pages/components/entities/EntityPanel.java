@@ -97,13 +97,6 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
-    protected boolean objectNeedsLocking() {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected MenuPanel makeActionMenu( String menuId ) {
         return new EntityActionsMenuPanel(
                 menuId,

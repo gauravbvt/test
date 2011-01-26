@@ -26,6 +26,7 @@ public class DuplicatePart extends AbstractCommand {
     }
 
     public DuplicatePart( Part part ) {
+        needLockOn( part );
         set( "segment", part.getSegment().getId() );
         set( "part", part.getId() );
     }

@@ -49,10 +49,6 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
         return DETAILS;
     }
 
-    protected boolean objectNeedsLocking() {
-        return false;
-    }
-
     protected int getMaxTitleNameLength() {
         return 20;
     }

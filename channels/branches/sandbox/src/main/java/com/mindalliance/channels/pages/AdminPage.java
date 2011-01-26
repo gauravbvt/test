@@ -141,8 +141,13 @@ public class AdminPage extends WebPage {
                 "Delete the selected plan?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                planManager.delete( getPlan() );
-                setResponsePage( AdminPage.class );
+                List<Plan> plans = planManager.getPlans();
+                if ( plans.size() > 1 ) {
+                    User user = User.current();
+                    planManager.delete( getPlan() );
+                    user.setPlan( plans.get( 0 ) );
+                    setResponsePage( AdminPage.class );
+                }
             }
         };
         deleteLink.setEnabled( definitionManager.getSize() > 1 );
@@ -193,13 +198,13 @@ public class AdminPage extends WebPage {
                                 new PropertyModel<Plan>( this, "plan" ),
                                 new PropertyModel<List<? extends Plan>>( this, "developmentPlans" ) )
                                 .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                            private static final long serialVersionUID = -5466916152047216396L;
+                                    private static final long serialVersionUID = -5466916152047216396L;
 
-                            @Override
-                            protected void onUpdate( AjaxRequestTarget target ) {
-                                target.addComponent( get( "users" ) );
-                            }
-                        } ),
+                                    @Override
+                                    protected void onUpdate( AjaxRequestTarget target ) {
+                                        target.addComponent( get( "users" ) );
+                                    }
+                                } ),
 
                         new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ),
 
@@ -234,7 +239,7 @@ public class AdminPage extends WebPage {
 
                         new BookmarkablePageLink<SOPsReportPage>( "report", SOPsReportPage.class )
                                 .add( new AttributeModifier( "target",
-                                true, new Model<String>( "_blank" ) ) )
+                                        true, new Model<String>( "_blank" ) ) )
                 ) );
     }
 
@@ -432,6 +437,7 @@ public class AdminPage extends WebPage {
     }
 
     //==================================================================
+
     /**
      * Utility styler for components with errors.
      */
@@ -458,6 +464,7 @@ public class AdminPage extends WebPage {
     }
 
     //==================================================================
+
     /**
      * Wrapper class for access rights modifications.
      */

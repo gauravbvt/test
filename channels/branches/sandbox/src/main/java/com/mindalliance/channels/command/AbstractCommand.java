@@ -50,8 +50,9 @@ public abstract class AbstractCommand implements Command {
      */
     private Set<Long> lockingSet = new HashSet<Long>();
     /**
-     * Ids of model objects that are affected by the command. Used to rule out conflicting undoes and redoes in history.
-     * An id in the locking set is always in the conclifct set.
+     * Ids of model objects that are involved by the command but need not be locked.
+     * Used to rule out conflicting undoes and redoes in history.
+     * An id in the locking set is always in the conflict set.
      */
     private Set<Long> conflictSet = new HashSet<Long>();
     /**
@@ -210,6 +211,17 @@ public abstract class AbstractCommand implements Command {
             ignoreLock( identifiable.getId() );
         }
     }
+
+    /**
+     * Release any lock on an identifiable and remove from conflict set.
+     * @param identifiable an identifiable
+     * @param commander a commander
+     */
+    protected void releaseAnyLockOn( Identifiable identifiable, Commander commander ) {
+        conflictSet.remove( identifiable.getId() );
+        commander.releaseAnyLockOn( identifiable );
+    }
+
 
     /**
      * Add identifiable to conflict set.

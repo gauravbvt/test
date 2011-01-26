@@ -85,7 +85,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                         update( target, new Change( Change.Type.Updated, getPlan(), "classifications" ) );
                     }
                 };
-                moveLink.setVisible( item.getIndex() != 0 );
+                moveLink.setVisible( isLockedByUser( getPlan() ) && item.getIndex() != 0 );
                 item.add( moveLink );
                 // more
                 AjaxFallbackLink moreLink = new AjaxFallbackLink( "more" ) {
@@ -112,7 +112,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                     }
                 };
                 deleteLink.setVisible(
-                        getPlan().isDevelopment()
+                        isLockedByUser( getPlan() )
                                 && !isReferenced( classification ) );
                 item.add( deleteLink );
                 // css

@@ -178,7 +178,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                         target.addComponent( item );
                     }
                 } );
-        kindDropDownChoice.setEnabled( getPlan().isDevelopment() );
+        kindDropDownChoice.setEnabled( isLockedByUser( getSegment() ) );
         item.add( kindDropDownChoice );
     }
 
@@ -207,7 +207,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                         }
                     }
                 } );
-        levelDropDownChoice.setEnabled( getPlan().isDevelopment() );
+        levelDropDownChoice.setEnabled( isLockedByUser( getSegment() ) );
         item.add( levelDropDownChoice );
     }
 
@@ -239,7 +239,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
 
                     }
                 } );
-        categoryChoices.setEnabled( getPlan().isDevelopment() );
+        categoryChoices.setEnabled( isLockedByUser( getSegment() ) );
         categoryChoices.setOutputMarkupId( true );
         item.addOrReplace( categoryChoices );
     }
@@ -253,7 +253,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 choices,
                 "organization",
                 Organization.class );
-        orgRefField.enable( getPlan().isDevelopment() );
+        orgRefField.enable( isLockedByUser( getSegment() ) );
         item.add( orgRefField );
     }
 
@@ -270,7 +270,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 }
             }
         } );
-        endsWithSegmentCheckBox.setEnabled( getPlan().isDevelopment() );
+        endsWithSegmentCheckBox.setEnabled( isLockedByUser( getSegment() ) );
         item.add( endsWithSegmentCheckBox );
     }
 
@@ -289,7 +289,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                         ) );
             }
         };
-        makeVisible( deleteLink, getPlan().isDevelopment() && wrapper.isComplete() );
+        makeVisible( deleteLink, isLockedByUser( getSegment() ) && wrapper.isComplete() );
         item.addOrReplace( deleteLink );
     }
 
@@ -318,7 +318,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
             }
         } );
         descriptionField.setOutputMarkupId( true );
-        descriptionField.setEnabled( getPlan().isDevelopment() );
+        descriptionField.setEnabled( isLockedByUser( getSegment() ) );
         moreContainer.add( descriptionField );
     }
 

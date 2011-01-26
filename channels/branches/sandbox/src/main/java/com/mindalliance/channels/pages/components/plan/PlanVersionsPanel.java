@@ -144,7 +144,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
             }
         };
         prodVotesContainer.add( voteList );
-        prodVotesContainer.setVisible( getPlan().isDevelopment() );
+        prodVotesContainer.setVisible( isLockedByUser( getPlan() ) );
     }
 
     private String itemCssClasses( int index, int count ) {

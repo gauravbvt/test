@@ -27,7 +27,7 @@ public class SetPartFromCopy extends AbstractCommand {
     }
 
     public SetPartFromCopy( Part part ) {
-        addConflicting( part );
+        needLockOn( part );
         set( "part", part.getId() );
         set( "segment", part.getSegment().getId() );
         set( "state", ChannelsUtils.getPartCopy( part ) );

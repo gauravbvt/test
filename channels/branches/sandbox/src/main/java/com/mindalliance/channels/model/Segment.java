@@ -782,14 +782,6 @@ public class Segment extends ModelObject {
         this.beingDeleted = beingDeleted;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isLockable() {
-        return false;
-    }
-
     public Phase getPhase() {
         return eventPhase.getPhase();
     }

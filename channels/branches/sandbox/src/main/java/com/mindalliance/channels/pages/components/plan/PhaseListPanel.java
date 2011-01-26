@@ -86,7 +86,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
 
             }
         };
-        nameField.setVisible( getPlan().isDevelopment() && wrapper.isMarkedForCreation() );
+        nameField.setVisible( isLockedByUser( getPlan() ) && wrapper.isMarkedForCreation() );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 makePhasesTable();
@@ -101,6 +101,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
     }
 
     private void addDeleteCell( ListItem<PhaseWrapper> item ) {
+        Plan plan = getPlan();
         final PhaseWrapper wrapper = item.getModelObject();
         ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
                 "delete",
@@ -120,9 +121,9 @@ public class PhaseListPanel extends AbstractCommandablePanel {
         };
         makeVisible(
                 deleteLink,
-                getPlan().isDevelopment()
+                isLockedByUser( plan )
                         && !wrapper.isMarkedForCreation()
-                        && getPlan().getPhases().size() > 1
+                        && plan.getPhases().size() > 1
                         && getQueryService().countReferences( wrapper.getPhase() ) <= 1 );
         item.addOrReplace( deleteLink );
     }
@@ -145,7 +146,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
                 return wrapper.getPhase().compareTo( otherWrapper.getPhase() );
             }
         } );
-        if ( getPlan().isDevelopment() ) {
+        if ( isLockedByUser( getPlan() ) ) {
             // New phase
             PhaseWrapper creationPhaseWrapper = new PhaseWrapper( new Phase() );
             creationPhaseWrapper.setMarkedForCreation( true );

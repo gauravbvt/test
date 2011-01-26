@@ -9,9 +9,9 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.dao.DefinitionManager;
 import com.mindalliance.channels.dao.PlanDefinition;
+import com.mindalliance.channels.model.Plan;
 
 /**
  * Rename a plan and its plan definition.
@@ -41,7 +41,7 @@ public class PlanRename extends AbstractCommand {
      * Execute the command.
      *
      * @param commander a commander executing the command
-     * @return cuased change
+     * @return change caused
      * @throws CommandException if execution fails
      */
     public Change execute( Commander commander ) throws CommandException {

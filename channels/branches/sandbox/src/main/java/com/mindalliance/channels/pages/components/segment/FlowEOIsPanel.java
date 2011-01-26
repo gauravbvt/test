@@ -584,8 +584,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     }
 
     private boolean isReadOnly() {
-        return !getPlan().isDevelopment()
-                || !isLockedByUser( getFlow() ) || !getFlow().canSetNameAndElements();
+        return !isLockedByUser( getFlow() ) || !getFlow().canSetNameAndElements();
     }
 
     /**

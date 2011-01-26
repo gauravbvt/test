@@ -26,6 +26,7 @@ public class AddUserIssue extends AbstractCommand {
     }
 
     public AddUserIssue( ModelObject modelObject ) {
+        addConflicting( modelObject );
         set( "modelObject", modelObject.getId() );
     }
 

@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.LockManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.Channels;
@@ -10,7 +11,6 @@ import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.dao.User;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -257,7 +257,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
     private Component makeActionMenuOrLabel( String menuId ) {
         Component menu;
         LockManager lockManager = getLockManager();
-        if ( !objectNeedsLocking() || lockManager.isLockedByUser( User.current().getUsername(), getObject().getId() ) ) {
+        if ( lockManager.isLockedByUser( User.current().getUsername(), getObject().getId() ) ) {
             menu = makeActionMenu( menuId );
         } else if ( getCommander().isTimedOut() || getLockOwner( getObject() ) == null ) {
             menu = timeOutLabel( menuId ) ;
@@ -269,13 +269,6 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         }
         return menu;
     }
-
-    /**
-     * Model object needs locking before it can be acted upon.
-     *
-     * @return a boolean
-     */
-    protected abstract boolean objectNeedsLocking();
 
     /**
      * Make action menu.
@@ -451,7 +444,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         refreshMenus( target );
         adjustComponents();
         target.addComponent( banner );
-        if ( change.isModified() ) {
+        if ( change.isModified() || change.isSelected() ) {
             showAspect( aspect );
             target.addComponent( aspectPanel );
         }

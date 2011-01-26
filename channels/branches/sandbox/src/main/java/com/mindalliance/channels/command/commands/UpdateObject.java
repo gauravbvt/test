@@ -61,8 +61,7 @@ public abstract class UpdateObject extends AbstractCommand {
             final String property,
             final Object value,
             final Action action ) {
-        if ( identifiable instanceof ModelObject
-                && ( (ModelObject) identifiable ).isLockable() )
+        if ( identifiable instanceof ModelObject )
             needLockOn( identifiable );
         set( "action", action.toString() );
         set( "object", identifiable.getId() );

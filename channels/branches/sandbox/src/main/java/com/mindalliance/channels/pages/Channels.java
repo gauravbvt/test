@@ -22,10 +22,19 @@ import com.mindalliance.channels.pages.reports.AssignmentReportPage;
 import com.mindalliance.channels.pages.reports.FlowReportPage;
 import com.mindalliance.channels.pages.reports.SOPsReportPage;
 import com.mindalliance.channels.query.QueryService;
+import org.apache.wicket.Page;
+import org.apache.wicket.Request;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
+import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +109,7 @@ public class Channels extends WebApplication
      */
     public static final long SOCIAL_ID = -1;
     /**
-     *  URI of support community.
+     * URI of support community.
      */
     private String supportCommunityUri;
 
@@ -149,6 +158,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "dissemination.png", DisseminationPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
+        getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE );
         getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );
 
     }
@@ -181,10 +191,10 @@ public class Channels extends WebApplication
             plan = planManager.getDefaultPlan( user );
             user.setPlan( plan );
         }
-        return user.isAdmin()                  ? PlanPage.class // was AdminPage.class
-             : plan == null                    ? NoAccessPage.class
-             : user.isPlanner( plan.getUri() ) ? PlanPage.class
-                                               : SOPsReportPage.class ;
+        return user.isAdmin() ? PlanPage.class // was AdminPage.class
+                : plan == null ? NoAccessPage.class
+                : user.isPlanner( plan.getUri() ) ? PlanPage.class
+                : SOPsReportPage.class;
     }
 
     public QueryService getQueryService() {
@@ -292,7 +302,7 @@ public class Channels extends WebApplication
             String name = auth.getName();
             String session = ( (SessionIdentifierAware) auth.getDetails() ).getSessionId();
             LOG.debug( event.getClass().getSimpleName() + ": " + name
-                       + ";session=" + session );
+                    + ";session=" + session );
         }
 
     }
@@ -319,5 +329,26 @@ public class Channels extends WebApplication
 
     public String getSupportCommunityUri() {
         return supportCommunityUri;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final RequestCycle newRequestCycle( final Request request, final Response response ) {
+        return new WebRequestCycle( this, (WebRequest) request, (WebResponse) response ) {
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public Page onRuntimeException( final Page cause, final RuntimeException e ) {
+                // obviously you can check the instanceof the exception and return the appropriate page if desired
+                if ( e instanceof PageExpiredException ) {
+                    return new ExpiredPage();
+                } else {
+                    return new ErrorPage( e );
+                }
+            }
+        };
     }
 }

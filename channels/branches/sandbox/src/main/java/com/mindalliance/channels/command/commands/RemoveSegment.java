@@ -30,7 +30,10 @@ public class RemoveSegment extends AbstractCommand {
 
     public RemoveSegment( Segment segment ) {
         List<Part> parts = segment.listParts();
+        needLockOn( segment );
         needLocksOn( parts );
+        needLocksOn( segment.listFlows() );
+        needLocksOn( segment.listExternalParts() );
         set( "segment", segment.getId() );
     }
 

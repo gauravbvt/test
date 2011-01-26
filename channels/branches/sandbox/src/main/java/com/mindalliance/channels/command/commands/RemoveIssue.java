@@ -27,7 +27,7 @@ public class RemoveIssue extends AbstractCommand {
 
     public RemoveIssue( UserIssue issue ) {
         needLockOn( issue );
-        addConflicting( issue.getAbout() );
+        needLockOn( issue.getAbout() );
         set( "issue", issue.getId() );
     }
 
@@ -53,7 +53,7 @@ public class RemoveIssue extends AbstractCommand {
         state.put( "reportedBy", issue.getReportedBy() );
         set( "state", state );
         queryService.remove( issue );
-        commander.releaseAnyLockOn( issue );
+        releaseAnyLockOn( issue, commander );
         return new Change( Change.Type.Removed, issue );
     }
 

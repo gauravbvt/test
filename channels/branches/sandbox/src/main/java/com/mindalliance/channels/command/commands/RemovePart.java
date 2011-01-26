@@ -33,6 +33,7 @@ public class RemovePart extends AbstractCommand {
 
     public RemovePart( Part part ) {
         needLocksOn( ChannelsUtils.getLockingSetFor( part ) );
+        addConflicting( part.getSegment() );
         set( "part", part.getId() );
         set( "segment", part.getSegment().getId() );
     }
@@ -82,7 +83,7 @@ public class RemovePart extends AbstractCommand {
             set( "defaultPart", defaultPart.getId() );
         }
         commander.getPlanDao().removeNode( part, segment );
-        commander.releaseAnyLockOn( part );
+        releaseAnyLockOn( part, commander );
         ignoreLock( (Long) get( "part" ) );
         return new Change( Change.Type.Recomposed, segment );
     }

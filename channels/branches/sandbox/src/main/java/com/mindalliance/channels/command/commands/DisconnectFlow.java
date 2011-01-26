@@ -50,7 +50,7 @@ public class DisconnectFlow extends AbstractCommand {
             set( "flowState", ChannelsUtils.getFlowState( flow ) );
             describeTarget( flow );                    
             commander.getPlanDao().disconnect( flow );
-            commander.releaseAnyLockOn( flow );
+            releaseAnyLockOn( flow, commander );
             return new Change( Change.Type.Removed, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );

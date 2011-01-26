@@ -31,7 +31,7 @@ public class AttachDocument extends AbstractCommand {
     }
 
     public AttachDocument( ModelObject modelObject, String attachablePath, Attachment attachment ) {
-        needLockOn( modelObject );
+        addConflicting( modelObject );
         set( "attachee", modelObject.getId() );
         set( "attachablePath", attachablePath );
         set( "url", attachment.getUrl() );
