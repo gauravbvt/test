@@ -27,6 +27,7 @@ import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -108,7 +109,7 @@ public class Channels extends WebApplication
      */
     public static final long SOCIAL_ID = -1;
     /**
-     *  URI of support community.
+     * URI of support community.
      */
     private String supportCommunityUri;
 
@@ -157,7 +158,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "dissemination.png", DisseminationPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
-        getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
+        getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE );
         getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );
 
     }
@@ -190,10 +191,10 @@ public class Channels extends WebApplication
             plan = planManager.getDefaultPlan( user );
             user.setPlan( plan );
         }
-        return user.isAdmin()                  ? PlanPage.class // was AdminPage.class
-             : plan == null                    ? NoAccessPage.class
-             : user.isPlanner( plan.getUri() ) ? PlanPage.class
-                                               : SOPsReportPage.class ;
+        return user.isAdmin() ? PlanPage.class // was AdminPage.class
+                : plan == null ? NoAccessPage.class
+                : user.isPlanner( plan.getUri() ) ? PlanPage.class
+                : SOPsReportPage.class;
     }
 
     public QueryService getQueryService() {
@@ -301,7 +302,7 @@ public class Channels extends WebApplication
             String name = auth.getName();
             String session = ( (SessionIdentifierAware) auth.getDetails() ).getSessionId();
             LOG.debug( event.getClass().getSimpleName() + ": " + name
-                       + ";session=" + session );
+                    + ";session=" + session );
         }
 
     }
@@ -331,19 +332,23 @@ public class Channels extends WebApplication
     }
 
     /**
- * {@inheritDoc}
- */
-@Override
-public final RequestCycle newRequestCycle(final Request request, final Response response) {
-	return new WebRequestCycle(this, (WebRequest)request, (WebResponse)response) {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Page onRuntimeException(final Page cause, final RuntimeException e) {
-            // obviously you can check the instanceof the exception and return the appropriate page if desired
-            return new ErrorPage( e );
-        }
-    };
-}
+     * {@inheritDoc}
+     */
+    @Override
+    public final RequestCycle newRequestCycle( final Request request, final Response response ) {
+        return new WebRequestCycle( this, (WebRequest) request, (WebResponse) response ) {
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public Page onRuntimeException( final Page cause, final RuntimeException e ) {
+                // obviously you can check the instanceof the exception and return the appropriate page if desired
+                if ( e instanceof PageExpiredException ) {
+                    return new ExpiredPage();
+                } else {
+                    return new ErrorPage( e );
+                }
+            }
+        };
+    }
 }
