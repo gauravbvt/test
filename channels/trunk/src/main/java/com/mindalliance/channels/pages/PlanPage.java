@@ -404,7 +404,6 @@ public final class PlanPage extends WebPage implements Updatable {
         WebClientInfo clientInfo = (WebClientInfo) WebRequestCycle.get().getClientInfo();
         user.setClientInfo( clientInfo );
         */
-
         final Commander commander = getCommander();
         commander.loggedIn( getUser().getUsername() );
         commander.releaseAllLocks( getUser().getUsername() );
