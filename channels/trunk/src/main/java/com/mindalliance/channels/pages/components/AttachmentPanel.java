@@ -102,6 +102,10 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      */
     private Attachment.Type selectedType = Attachment.Type.Reference;
     /**
+     * Overall container.
+     */
+    private WebMarkupContainer container;
+    /**
      * Attachments list container.
      */
     private WebMarkupContainer attachmentsContainer;
@@ -132,10 +136,14 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         super( id, model, null );
         this.attachablePath = attachablePath;
         setOutputMarkupId( true );
+        container = new WebMarkupContainer( "container" );
+        container.setOutputMarkupId( true );
+        container.setVisible( isLockedByUser( getAttachee() ) || !getAttachee().getAttachments().isEmpty() );
+        add( container );
         addAttachmentList();
         controlsContainer = new WebMarkupContainer( "controls" );
         controlsContainer.setOutputMarkupId( true );
-        add( controlsContainer );
+        container.add( controlsContainer );
         addTypeChoice();
         addKindSelector();
         addNameField();
@@ -260,7 +268,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void addAttachmentList() {
         attachmentsContainer = new WebMarkupContainer( "attachments-container" );
         attachmentsContainer.setOutputMarkupId( true );
-        add( attachmentsContainer );
+        container.add( attachmentsContainer );
         ListView<Attachment> attachmentList = new ListView<Attachment>( "attachments",
                 new PropertyModel<List<Attachment>>( this, "attachments" ) ) {
 

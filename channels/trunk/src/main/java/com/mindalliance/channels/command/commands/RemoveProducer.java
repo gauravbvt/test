@@ -21,6 +21,7 @@ public class RemoveProducer extends AbstractCommand {
     }
 
     public RemoveProducer( String username ) {
+        needLockOn( User.plan() );
         set( "producer", username );
     }
 

@@ -316,15 +316,6 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
     }
 
     /**
-     * Whether this can be locked.
-     *
-     * @return a boolean
-     */
-    public boolean isLockable() {
-        return true;
-    }
-
-    /**
      * Two model objects are not null and equal.
      *
      * @param mo    a model object

@@ -106,7 +106,7 @@ public class EventListPanel extends AbstractCommandablePanel {
 
             }
         };
-        nameField.setVisible( getPlan().isDevelopment() && wrapper.isMarkedForCreation() );
+        nameField.setVisible( isLockedByUser( getPlan() ) && wrapper.isMarkedForCreation() );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addConfirmedCell( item );
@@ -134,7 +134,7 @@ public class EventListPanel extends AbstractCommandablePanel {
         final CheckBox confirmedCheckBox = new CheckBox(
                 "confirmed",
                 new PropertyModel<Boolean>( wrapper, "confirmed" ) );
-        makeVisible( confirmedCheckBox, getPlan().isDevelopment() && wrapper.canBeConfirmed() );
+        makeVisible( confirmedCheckBox, wrapper.canBeConfirmed() );
         item.addOrReplace( confirmedCheckBox );
         confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -148,8 +148,8 @@ public class EventListPanel extends AbstractCommandablePanel {
             }
         } );
         confirmedCheckBox.setEnabled(
-                wrapper.isMarkedForCreation()
-                        || !(wrapper.isConfirmed() && getPlan().getIncidents().size() == 1 ) );
+                isLockedByUser( getPlan() ) && ( wrapper.isMarkedForCreation()
+                        || !(wrapper.isConfirmed() && getPlan().getIncidents().size() == 1 ) ) );
     }
 
     /**

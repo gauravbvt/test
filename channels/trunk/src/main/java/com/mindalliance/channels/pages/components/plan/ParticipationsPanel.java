@@ -224,7 +224,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private List<ParticipationWrapper> getAllParticipationWrappers() {
         QueryService queryService = getQueryService();
         List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
-        if ( getPlan().isDevelopment() ) {
+        if ( isLockedByUser( getPlan() ) ) {
             for ( String username : queryService.getUserService().getUsernames( getPlan().getUri() ) ) {
                 Participation participation = doSafeFindOrCreate( Participation.class, username );
                 ParticipationWrapper wrapper = new ParticipationWrapper( username );
@@ -484,7 +484,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                     null,
                     "userNormalizedFullName"
             ) );
-            if ( getPlan().isDevelopment() ) {
+            if ( isLockedByUser( getPlan() ) ) {
                 columns.add( makeEntityReferenceColumn(
                         "Is agent",
                         "actor",

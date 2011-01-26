@@ -39,8 +39,8 @@ public class ConnectWithFlow extends AbstractCommand {
             final String name,
             final Map<String, Object> attributes ) {
         super();
-        needLockOn( source );
-        needLockOn( target );
+        addConflicting( source );
+        addConflicting( target );
         final Part part;
         final Node other;
         final boolean isSend;

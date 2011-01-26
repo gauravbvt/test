@@ -38,11 +38,13 @@ public class AddPart extends AbstractCommand {
 
     public AddPart( Segment segment ) {
         super();
+        addConflicting( segment );
         set( "segment", segment.getId() );
     }
 
     public AddPart( Segment segment, String task ) {
         super();
+        addConflicting( segment );
         set( "segment", segment.getId() );
         set( "task", task );
     }

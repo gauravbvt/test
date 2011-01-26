@@ -700,8 +700,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
             // Find expansions that were locked and are not unlocked
             for ( ModelObject mo : getEditableModelObjects( expansions ) ) {
-                if ( !( mo instanceof Segment || mo instanceof Plan )
-                        && getCommander().isUnlocked( mo ) ) {
+                if ( getCommander().isUnlocked( mo ) ) {
                     reasons += " -- " + mo.getName() + " can now be edited.";
                 }
             }
@@ -1305,10 +1304,9 @@ public final class PlanPage extends WebPage implements Updatable {
         for ( Long id : expansions ) {
             try {
                 ModelObject expanded = getQueryService().find( ModelObject.class, id );
-                if ( !( expanded instanceof Segment || expanded instanceof Plan ) )
-                    getCommander().requestLockOn( expanded );
+                getCommander().requestLockOn( expanded );
             } catch ( NotFoundException e ) {
-                LOG.warn( "Expanded model object not found at: " + id );
+                LOG.info( "Expanded model object not found at: " + id );
             }
         }
     }
@@ -1333,6 +1331,25 @@ public final class PlanPage extends WebPage implements Updatable {
             }
         }
         expansions.add( change.getId() );
+    }
+
+    private void expandOtherSegmentIfNeeded( Segment toExpand ) {
+        Segment expanded = null;
+        Iterator<Long> iter = expansions.iterator();
+        Long id = null;
+        while ( expanded == null && iter.hasNext() ) {
+            try {
+                id = iter.next();
+            ModelObject mo = getQueryService().find( ModelObject.class, id );
+                if ( mo instanceof Segment ) expanded = (Segment)mo;
+            } catch ( NotFoundException e ) {
+                LOG.info( "Failed to find expanded " + id );
+            }
+        }
+        if ( expanded != null && !expanded.equals( toExpand ) ) {
+            collapse( expanded );
+            expand( toExpand );
+        }
     }
 
     private boolean isExpanded( long id ) {
@@ -1396,7 +1413,7 @@ public final class PlanPage extends WebPage implements Updatable {
             try {
                 viewed = getQueryService().find( clazz, id );
             } catch ( NotFoundException e ) {
-                LOG.warn( "Viewed object not found at " + id );
+                LOG.info( "Viewed object not found at " + id );
             }
         }
         return viewed;
@@ -1429,7 +1446,7 @@ public final class PlanPage extends WebPage implements Updatable {
                     }
                 }
             } catch ( NotFoundException e ) {
-                LOG.warn( "Failed to find expanded " + id );
+                LOG.info( "Failed to find expanded " + id );
             }
         }
         for ( Identifiable identifiable : toCollapse ) {
@@ -1454,7 +1471,7 @@ public final class PlanPage extends WebPage implements Updatable {
                     }
                 }
             } catch ( NotFoundException e ) {
-                LOG.warn( "Failed to find expanded " + id );
+                LOG.info( "Failed to find expanded " + id );
             }
         }
         for ( Identifiable identifiable : toCollapse ) {
@@ -1512,6 +1529,7 @@ public final class PlanPage extends WebPage implements Updatable {
             } else if ( change.isSelected() ) {
                 collapseSegmentObjects();
                 setSegment( changedSegment );
+                expandOtherSegmentIfNeeded( changedSegment );
                 setPart( null );
             } else if ( change.isMaximized() ) {
                 flowMaximized = true;

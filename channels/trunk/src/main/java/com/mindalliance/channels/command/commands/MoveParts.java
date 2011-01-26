@@ -32,6 +32,8 @@ public class MoveParts extends AbstractCommand {
             needLocksOn( ChannelsUtils.getLockingSetFor( part ) );
             partIds.add( part.getId() );
         }
+        addConflicting( fromSegment );
+        addConflicting( toSegment );
         set( "parts", partIds );
         set( "fromSegment", fromSegment.getId() );
         set( "toSegment", toSegment.getId() );

@@ -431,13 +431,6 @@ public class Plan extends ModelObject {
         return getSegments().iterator().next();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isLockable() {
-        return false;
-    }
-
     public List<Phase> getPhases() {
         return phases;
     }

@@ -25,6 +25,7 @@ public class DuplicateFlow extends AbstractCommand {
 
     public DuplicateFlow( Flow flow, boolean isSend ) {
         needLockOn( isSend ? flow.getSource() : flow.getTarget() );
+        needLockOn( flow );
         set( "segment", flow.getSegment().getId() );
         set( "flow", flow.getId() );
         set( "send", isSend );

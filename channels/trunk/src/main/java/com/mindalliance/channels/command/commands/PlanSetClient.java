@@ -6,8 +6,8 @@ package com.mindalliance.channels.command.commands;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.DefinitionManager;
 import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.model.Plan;
@@ -21,6 +21,7 @@ public class PlanSetClient extends AbstractCommand {
     }
 
     public PlanSetClient( Plan plan, String newClient ) {
+        needLockOn( plan );
         set( "uri", plan.getUri() );
         set( "old", plan.getClient() );
         set( "new", newClient );
@@ -39,7 +40,7 @@ public class PlanSetClient extends AbstractCommand {
      * Execute the command.
      *
      * @param commander a commander executing the command
-     * @return cuased change
+     * @return change caused
      * @throws CommandException if execution fails
      */
     public Change execute( Commander commander ) {

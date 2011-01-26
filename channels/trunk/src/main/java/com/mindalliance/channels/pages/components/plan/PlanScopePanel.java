@@ -151,7 +151,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
             }
         } );
         newInvolvedContainer.add( addInvolvedField );
-        newInvolvedContainer.setVisible( getPlan().isDevelopment() );
+        newInvolvedContainer.setVisible( isLockedByUser( getPlan() ) );
     }
 
     @SuppressWarnings( "unchecked" )

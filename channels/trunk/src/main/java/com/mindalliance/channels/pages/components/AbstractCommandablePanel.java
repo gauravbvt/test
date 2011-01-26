@@ -4,13 +4,11 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.commands.CreateEntityIfNew;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Releaseable;
-import com.mindalliance.channels.dao.User;
 import org.apache.wicket.model.IModel;
 
 import java.util.Set;
@@ -69,9 +67,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      */
     protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
         return getPlan().isDevelopment() &&
-                ( identifiable instanceof Segment
-                        || identifiable instanceof Plan
-                        || isImmutable( identifiable )
+                        ( isImmutable( identifiable )
                         || isLockedByUser( identifiable ) );
     }
 

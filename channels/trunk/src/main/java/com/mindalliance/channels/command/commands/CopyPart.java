@@ -25,6 +25,7 @@ public class CopyPart extends AbstractCommand {
     public CopyPart( Part part ) {
         set( "part", part.getId() );
         set( "segment", part.getSegment().getId() );
+        needLockOn( part );
     }
 
     /**

@@ -25,6 +25,7 @@ public class CopyFlow extends AbstractCommand {
         set( "part", part.getId() );
         set( "flow", flow.getId() );
         set( "segment", flow.getSegment().getId() );
+        needLockOn( flow );
     }
 
     /**

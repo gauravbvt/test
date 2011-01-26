@@ -68,7 +68,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                             update( target, new Change( Change.Type.Updated, getPlan(), "name" ) );
                         }
                     } )
-                .setEnabled( plan.isDevelopment() ),
+                .setEnabled( isLockedByUser( plan ) ),
 
              new TextArea<String>( "description", new PropertyModel<String>( this, "description" ) )
                 .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -78,7 +78,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                                     new Change( Change.Type.Updated, getPlan(), "description" ) );
                         }
                     } )
-                .setEnabled( plan.isDevelopment() ),
+                .setEnabled( isLockedByUser( plan ) ),
 
              new PhaseListPanel( "phases" ),
 
@@ -86,7 +86,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                         new PropertyModel<Organization>( plan, "locale" ),
                         new Model<String>( "Locale" ) ),
 
-             createScopePanel().setEnabled( plan.isDevelopment() ),
+             createScopePanel().setEnabled( isLockedByUser( plan ) ),
 
              new AttachmentPanel( "attachments", new Model<ModelObject>( plan ) )
         );

@@ -25,7 +25,6 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -255,6 +254,7 @@ public class DefaultCommander implements Commander {
     @Override
     public boolean canDo( Command command ) {
         return getPlan().isDevelopment()
+                && isConflictSetVerified( command.getLockingSet() )
                 && command.canDo( this )
                 && lockManager.isLockableByUser( command.getUserName(), command.getLockingSet() );
     }
@@ -264,6 +264,7 @@ public class DefaultCommander implements Commander {
         String userName = command.getUserName();
         if ( command.isAuthorized() )
             try {
+                verifyConflictSet( command.getLockingSet() );
                 Collection<Long> grabbedLocks = lockManager.lock( userName, command.getLockingSet() );
                 change = command.execute( this );
                 if ( change.isNone() )
@@ -275,10 +276,29 @@ public class DefaultCommander implements Commander {
                 throw new CommandException( e.getMessage(), e );
             }
         else
-            throw new CommandException( "You are not authorized." );
+            throw new CommandException( "Required locks not acquired" );
 
         updateUserActive( userName );
         return change;
+    }
+
+    private boolean isConflictSetVerified( Set<Long> conflictSet ) {
+        try {
+            verifyConflictSet( conflictSet );
+            return true;
+        } catch ( CommandException e ) {
+            return false;
+        }
+    }
+
+    private void verifyConflictSet( Set<Long> conflictSet ) throws CommandException {
+        try {
+            for ( Long id : conflictSet ) {
+                getQueryService().find(ModelObject.class, id);
+            }
+        } catch( NotFoundException e ) {
+            throw new CommandException( "You need to refresh" );
+        }
     }
 
     @Override
@@ -610,9 +630,7 @@ public class DefaultCommander implements Commander {
         if ( className == null ) return false;
         try {
             Class clazz = Class.forName( className );
-            return Identifiable.class.isAssignableFrom( clazz ) &&
-                    !Plan.class.isAssignableFrom( clazz ) &&
-                    !Segment.class.isAssignableFrom( clazz );
+            return Identifiable.class.isAssignableFrom( clazz );
         } catch ( ClassNotFoundException e ) {
             throw new IllegalArgumentException( "Class not found", e );
         }

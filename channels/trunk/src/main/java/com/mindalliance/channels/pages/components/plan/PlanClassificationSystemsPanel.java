@@ -126,7 +126,7 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
             }
         } );
         newSystemContainer.add( classificationSystemField );
-        newSystemContainer.setVisible( getPlan().isDevelopment() );
+        newSystemContainer.setVisible( isLockedByUser( getPlan() ) );
     }
 
     private void addClassificationSystemPanel( String classificationSystemName ) {

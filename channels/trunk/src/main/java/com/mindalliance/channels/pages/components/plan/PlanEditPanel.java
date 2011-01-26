@@ -134,14 +134,6 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * {@inheritDoc}
      */
     @Override
-    protected boolean objectNeedsLocking() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     protected int getMaxTitleNameLength() {
         return 25;
     }

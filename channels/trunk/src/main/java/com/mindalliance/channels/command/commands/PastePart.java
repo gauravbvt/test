@@ -26,6 +26,7 @@ public class PastePart extends AbstractCommand {
 
     public PastePart( Segment segment ) {
         set( "segment", segment.getId() );
+        addConflicting( segment );
     }
 
     /**

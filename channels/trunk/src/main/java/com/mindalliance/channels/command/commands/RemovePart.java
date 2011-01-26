@@ -33,6 +33,7 @@ public class RemovePart extends AbstractCommand {
 
     public RemovePart( Part part ) {
         needLocksOn( ChannelsUtils.getLockingSetFor( part ) );
+        addConflicting( part.getSegment() );
         set( "part", part.getId() );
         set( "segment", part.getSegment().getId() );
     }
