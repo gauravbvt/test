@@ -184,6 +184,11 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
         definition.deleteObserver( observer );
         definitions.remove( uri );
         definition.delete();
+        try {
+            save();
+        } catch ( IOException e ) {
+            LOG.warn( "Failed to update plans.properties", e );
+        }
         LOG.info( "Removed plan {}", uri );
     }
 

@@ -224,7 +224,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
                 }
             }
         } );
-        eventField.setEnabled( isLockedByUserIfNeeded( getSegment() ) );
+        eventField.setEnabled( isLockedByUser( getSegment() ) );
         creationContainer.add( eventField );
     }
 
@@ -248,7 +248,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
                         }
                     }
                 } );
-        levelDropDownChoice.setEnabled( isLockedByUser( getPlan() ) );
+        levelDropDownChoice.setEnabled( isLockedByUser( getSegment() ) );
         creationContainer.add( levelDropDownChoice );
     }
 
