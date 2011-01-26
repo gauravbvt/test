@@ -9,6 +9,10 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.util.tester.FormTester;
+import org.junit.Test;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.test.context.TestExecutionListeners;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -16,9 +20,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import org.junit.Test;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.context.TestExecutionListeners;
 
 /**
  * ...
@@ -216,25 +217,6 @@ public class TestAdminPage extends AbstractChannelsTest {
         assertNotNull( plan.getDefaultPhase() );
         assertNotNull( plan.getDefaultSegment() );
     }
-
-    @Test
-    public void testDeletePlan() {
-        assertRendered( "admin", AdminPage.class );
-        FormTester form = tester.newFormTester( "users" );
-        form.select( "plan-sel", 1 );
-        tester.executeAjaxEvent( "users:plan-sel", "onchange" );
-        AdminPage page = (AdminPage) tester.getLastRenderedPage();
-        assertEquals( DEMO, page.getPlan().getUri() );
-
-        PlanDefinition planDefinition = planManager.getDefinitionManager().get( DEMO );
-
-        tester.executeAjaxEvent( "users:deletePlan", "onclick" );
-
-        assertRendered( "admin", AdminPage.class );
-        assertEquals( 0, planManager.getPlansWithUri( DEMO ).size() );
-        assertFalse( planDefinition.getPlanDirectory().exists() );
-    }
-
     @Test
     public void testProductize() {
         User guest = userService.getUserNamed( "guest" );
@@ -277,7 +259,25 @@ public class TestAdminPage extends AbstractChannelsTest {
         assertTrue( newProd.isRetired() );
         assertEquals( 3, planManager.findDevelopmentPlan( ACME ).getVersion() );
 
+    }
 
+
+    @Test
+    public void testDeletePlan() {
+        assertRendered( "admin", AdminPage.class );
+        FormTester form = tester.newFormTester( "users" );
+        form.select( "plan-sel", 1 );
+        tester.executeAjaxEvent( "users:plan-sel", "onchange" );
+        AdminPage page = (AdminPage) tester.getLastRenderedPage();
+        assertEquals( DEMO, page.getPlan().getUri() );
+
+        PlanDefinition planDefinition = planManager.getDefinitionManager().get( DEMO );
+
+        tester.executeAjaxEvent( "users:deletePlan", "onclick" );
+
+        assertRendered( "admin", AdminPage.class );
+        assertEquals( 0, planManager.getPlansWithUri( DEMO ).size() );
+        assertFalse( planDefinition.getPlanDirectory().exists() );
     }
 
 }
