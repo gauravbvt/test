@@ -213,6 +213,17 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
+     * Release any lock on an identifiable and remove from conflict set.
+     * @param identifiable an identifiable
+     * @param commander a commander
+     */
+    protected void releaseAnyLockOn( Identifiable identifiable, Commander commander ) {
+        conflictSet.remove( identifiable.getId() );
+        commander.releaseAnyLockOn( identifiable );
+    }
+
+
+    /**
      * Add identifiable to conflict set.
      *
      * @param identifiable an identifiable object

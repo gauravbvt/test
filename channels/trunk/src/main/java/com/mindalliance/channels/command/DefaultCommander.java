@@ -109,7 +109,7 @@ public class DefaultCommander implements Commander {
     private int timeout = 300;
 
     /**
-     * A user's copied state of eiher a part, flow or attachment.
+     * A user's copied state of either a part, flow or attachment.
      */
     private Map<String, Map<String, Object>> copy = Collections.synchronizedMap(
             new HashMap<String, Map<String, Object>>() );
@@ -254,7 +254,6 @@ public class DefaultCommander implements Commander {
     @Override
     public boolean canDo( Command command ) {
         return getPlan().isDevelopment()
-                && isConflictSetVerified( command.getLockingSet() )
                 && command.canDo( this )
                 && lockManager.isLockableByUser( command.getUserName(), command.getLockingSet() );
     }
@@ -264,7 +263,6 @@ public class DefaultCommander implements Commander {
         String userName = command.getUserName();
         if ( command.isAuthorized() )
             try {
-                verifyConflictSet( command.getLockingSet() );
                 Collection<Long> grabbedLocks = lockManager.lock( userName, command.getLockingSet() );
                 change = command.execute( this );
                 if ( change.isNone() )
@@ -282,25 +280,6 @@ public class DefaultCommander implements Commander {
         return change;
     }
 
-    private boolean isConflictSetVerified( Set<Long> conflictSet ) {
-        try {
-            verifyConflictSet( conflictSet );
-            return true;
-        } catch ( CommandException e ) {
-            return false;
-        }
-    }
-
-    private void verifyConflictSet( Set<Long> conflictSet ) throws CommandException {
-        try {
-            for ( Long id : conflictSet ) {
-                getQueryService().find(ModelObject.class, id);
-            }
-        } catch( NotFoundException e ) {
-            throw new CommandException( "You need to refresh" );
-        }
-    }
-
     @Override
     public synchronized boolean canUndo() {
         if ( getPlan().isDevelopment() ) {
@@ -311,7 +290,7 @@ public class DefaultCommander implements Commander {
                     try {
                         return command.noLockRequired() || canDo( command.getUndoCommand( this ) );
                     } catch ( CommandException e ) {
-                        LOG.debug( "Unable to test undoability", e );
+                        LOG.debug( "Unable to test undo-ability", e );
                     }
                 }
             }
@@ -330,7 +309,7 @@ public class DefaultCommander implements Commander {
                     try {
                         return command.noLockRequired() || canDo( command.getUndoCommand( this ) );
                     } catch ( CommandException e ) {
-                        LOG.debug( "Unable to test redoability", e );
+                        LOG.debug( "Unable to test redo-ability", e );
                     }
                 }
             }

@@ -211,4 +211,5 @@ public interface Command extends JournalCommand {
      * @throws CommandException if the label can not be constructed
      */
     String getLabel( Commander commander ) throws CommandException;
+
 }

@@ -83,7 +83,7 @@ public class RemovePart extends AbstractCommand {
             set( "defaultPart", defaultPart.getId() );
         }
         commander.getPlanDao().removeNode( part, segment );
-        commander.releaseAnyLockOn( part );
+        releaseAnyLockOn( part, commander );
         ignoreLock( (Long) get( "part" ) );
         return new Change( Change.Type.Recomposed, segment );
     }
