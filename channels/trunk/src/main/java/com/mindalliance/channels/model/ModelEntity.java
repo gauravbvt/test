@@ -64,7 +64,7 @@ public abstract class ModelEntity extends ModelObject {
     /**
      * Type set.
      */
-    private List<ModelEntity> tags = new ArrayList<ModelEntity>();
+    private List<ModelEntity> types = new ArrayList<ModelEntity>();
 
     /**
      * Whether the entity is immutable.
@@ -187,7 +187,7 @@ public abstract class ModelEntity extends ModelObject {
      */
     @Override
     public boolean isUndefined() {
-        return super.isUndefined() && tags.isEmpty();
+        return super.isUndefined() && types.isEmpty();
     }
 
     public Kind getKind() {
@@ -214,17 +214,17 @@ public abstract class ModelEntity extends ModelObject {
         this.kind = kind;
     }
 
-    public List<ModelEntity> getTags() {
-        return tags;
+    public List<ModelEntity> getTypes() {
+        return types;
     }
 
-    public void setTags( List<ModelEntity> tags ) {
-        this.tags = tags;
+    public void setTypes( List<ModelEntity> types ) {
+        this.types = types;
     }
 
-    public void addTag( ModelEntity tag ) {
-        assert tag.appliesTo( this );
-        if ( !tags.contains( tag ) ) tags.add( tag );
+    public void addType( ModelEntity type ) {
+        assert type.appliesTo( this );
+        if ( !types.contains( type ) ) types.add( type );
     }
 
     private boolean appliesTo( ModelEntity modelEntity ) {
@@ -232,12 +232,12 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
-     * Whether the entity has tags.
+     * Whether the entity has types.
      *
      * @return a boolean
      */
-    public boolean hasTags() {
-        return !getTags().isEmpty();
+    public boolean hasTypes() {
+        return !getTypes().isEmpty();
     }
 
 
@@ -294,23 +294,23 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
-     * Is this tagged by the entity? (transitive, ignores circularities)
+     * Is this typed by the entity? (transitive, ignores circularities)
      *
      * @param entity an entity
      * @return a boolean
      */
-    public boolean hasTag( ModelEntity entity ) {
-        return entity.isType() && hasTagSafe( entity, new HashSet<ModelEntity>() );
+    public boolean hasType( ModelEntity entity ) {
+        return entity.isType() && hasTypeSafe( entity, new HashSet<ModelEntity>() );
     }
 
-    private boolean hasTagSafe( ModelEntity entity, Set<ModelEntity> visited ) {
-        if ( tags.contains( entity ) || getImplicitTags().contains( entity ) )
+    private boolean hasTypeSafe( ModelEntity entity, Set<ModelEntity> visited ) {
+        if ( types.contains( entity ) || getImplicitTypes().contains( entity ) )
             return true;
 
         visited.add( this );
 
-        for ( ModelEntity tag : tags )
-            if ( !visited.contains( tag ) && tag.hasTagSafe( entity, visited ) )
+        for ( ModelEntity type : types )
+            if ( !visited.contains( type ) && type.hasTypeSafe( entity, visited ) )
                 return true;
 
         return false;
@@ -326,14 +326,14 @@ public abstract class ModelEntity extends ModelObject {
     public boolean isEquivalentToOrIsA( ModelEntity entity, Class<? extends ModelEntity> aClass ) {
 
         return entity == null ? isUnknown() && getClass().equals( aClass )
-                              : equals( entity ) || isType() && entity.hasTag( this );
+                              : equals( entity ) || isType() && entity.hasType( this );
     }
 
     /**
-     *   Get the list of implicit tags.
+     *   Get the list of implicit types.
      * @return  a list of model entities
      */
-    public List<ModelEntity> getImplicitTags() {
+    public List<ModelEntity> getImplicitTypes() {
         return new ArrayList<ModelEntity>();
     }
 
@@ -352,7 +352,7 @@ public abstract class ModelEntity extends ModelObject {
 
     /**
      * Whether an entity is the same as the other,
-     * or has all the tags (transitively) of the other, type entity.
+     * or has all the types (transitively) of the other, type entity.
      *
      * @param other a model entity
      * @param locale the default location
@@ -372,7 +372,7 @@ public abstract class ModelEntity extends ModelObject {
         return getClass().isAssignableFrom( other.getClass() )
             && !isInvalid( locale )
 
-            && hasTag( other );
+            && hasType( other );
     }
 
     /**
@@ -381,8 +381,8 @@ public abstract class ModelEntity extends ModelObject {
      * @return a boolean
      */
     public boolean isInvalid( Place locale ) {
-        for ( ModelEntity tag : getAllTags() )
-            if ( !tag.validates( this, locale ) )
+        for ( ModelEntity type : getAllTypes() )
+            if ( !type.validates( this, locale ) )
                 return true;
 
         return false;
@@ -402,56 +402,56 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
-     * Transitively find all tags, avoiding circularities.
+     * Transitively find all types, avoiding circularities.
      *
      * @return a list of model entities
      */
-    public List<ModelEntity> getAllTags() {
-        return safeAllTags( new HashSet<ModelEntity>() );
+    public List<ModelEntity> getAllTypes() {
+        return safeAllTypes( new HashSet<ModelEntity>() );
     }
 
     /**
-     * Transitively find all implicit tags, avoiding circularities.
+     * Transitively find all implicit types, avoiding circularities.
      *
      * @return a list of model entities
      */
-    public List<ModelEntity> getAllImplicitTags() {
-        return safeAllImplicitTags( new HashSet<ModelEntity>() );
+    public List<ModelEntity> getAllImplicitTypes() {
+        return safeAllImplicitTypes( new HashSet<ModelEntity>() );
     }
 
-    private List<ModelEntity> safeAllTags( Set<ModelEntity> visited ) {
-        List<ModelEntity> allTags = new ArrayList<ModelEntity>();
+    private List<ModelEntity> safeAllTypes( Set<ModelEntity> visited ) {
+        List<ModelEntity> allTypes = new ArrayList<ModelEntity>();
         if ( !visited.contains( this ) ) {
-            allTags.addAll( getTags() );
-            allTags.addAll( getImplicitTags() );
+            allTypes.addAll( getTypes() );
+            allTypes.addAll( getImplicitTypes() );
             visited.add( this );
-            for ( ModelEntity tag : getTags() ) {
-                allTags.addAll( tag.safeAllTags( visited ) );
+            for ( ModelEntity type : getTypes() ) {
+                allTypes.addAll( type.safeAllTypes( visited ) );
             }
         }
-        return allTags;
+        return allTypes;
     }
 
-    private List<ModelEntity> safeAllImplicitTags( Set<ModelEntity> visited ) {
-        List<ModelEntity> allImplicitTags = new ArrayList<ModelEntity>();
+    private List<ModelEntity> safeAllImplicitTypes( Set<ModelEntity> visited ) {
+        List<ModelEntity> allImplicitTypes = new ArrayList<ModelEntity>();
         if ( !visited.contains( this ) ) {
-            allImplicitTags.addAll( getImplicitTags() );
+            allImplicitTypes.addAll( getImplicitTypes() );
             visited.add( this );
-            for ( ModelEntity tag : getTags() ) {
-                allImplicitTags.addAll( tag.safeAllImplicitTags( visited ) );
+            for ( ModelEntity type : getTypes() ) {
+                allImplicitTypes.addAll( type.safeAllImplicitTypes( visited ) );
             }
         }
-        return allImplicitTags;
+        return allImplicitTypes;
     }
 
     /**
-     * Shortest inheritance path to a tag as string (excludes this from the path).
+     * Shortest inheritance path to a type as string (excludes this from the path).
      *
-     * @param tag a model entity
+     * @param type a model entity
      * @return a string
      */
-    public String inheritancePathTo( ModelEntity tag ) {
-        List<ModelEntity> inheritance = inheritanceTo( tag );
+    public String inheritancePathTo( ModelEntity type ) {
+        List<ModelEntity> inheritance = inheritanceTo( type );
         StringBuilder sb = new StringBuilder();
         if ( !inheritance.isEmpty() ) {
             inheritance.remove( inheritance.size() - 1 );
@@ -466,25 +466,25 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     /**
-     * Shortest inheritance path to a tag.
+     * Shortest inheritance path to a type.
      *
-     * @param tag a model entity
+     * @param type a model entity
      * @return a list of model entities
      */
-    private List<ModelEntity> inheritanceTo( ModelEntity tag ) {
-        return safeInheritanceTo( tag, new HashSet<ModelEntity>() );
+    private List<ModelEntity> inheritanceTo( ModelEntity type ) {
+        return safeInheritanceTo( type, new HashSet<ModelEntity>() );
     }
 
-    private List<ModelEntity> safeInheritanceTo( ModelEntity tag, Set<ModelEntity> visited ) {
+    private List<ModelEntity> safeInheritanceTo( ModelEntity type, Set<ModelEntity> visited ) {
         List<ModelEntity> inheritance = new ArrayList<ModelEntity>();
         if ( !visited.contains( this ) ) {
             visited.add( this );
-            if ( getTags().contains( tag ) ) {
+            if ( getTypes().contains( type ) ) {
                 inheritance.add( this );
             } else {
                 List<List<ModelEntity>> allPaths = new ArrayList<List<ModelEntity>>();
-                for ( ModelEntity t : getTags() ) {
-                    List<ModelEntity> inh = t.safeInheritanceTo( tag, visited );
+                for ( ModelEntity t : getTypes() ) {
+                    List<ModelEntity> inh = t.safeInheritanceTo( type, visited );
                     if ( !inh.isEmpty() ) {
                         inh.add( this );
                         allPaths.add( inh );
@@ -508,9 +508,9 @@ public abstract class ModelEntity extends ModelObject {
      */
     @Override
     public boolean references( ModelObject mo ) {
-        if ( tags != null && mo != null )
-            for ( ModelEntity tag : tags )
-                if ( tag.equals( mo ) )
+        if ( types != null && mo != null )
+            for ( ModelEntity type : types )
+                if ( type.equals( mo ) )
                     return true;
 
         return false;

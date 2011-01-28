@@ -103,22 +103,22 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     }
 
     @Override
-    public List<ModelEntity> getImplicitTags() {
-        List<ModelEntity> implicitTags = super.getImplicitTags();
+    public List<ModelEntity> getImplicitTypes() {
+        List<ModelEntity> implicitTypes = super.getImplicitTypes();
 
         GeoLocation geo = getLocationBasis();
         String actualAddress = getActualStreetAddress();
         if ( ( actualAddress == null || actualAddress.isEmpty() ) && geo != null ) {
             if ( geo.isCity() )
-                implicitTags.add( City );
+                implicitTypes.add( City );
             else if ( geo.isCounty() )
-                implicitTags.add( County );
+                implicitTypes.add( County );
             else if ( geo.isState() )
-                implicitTags.add( State );
+                implicitTypes.add( State );
             else if ( geo.isCountry() )
-                implicitTags.add( Country );
+                implicitTypes.add( Country );
         }
-        return implicitTags;
+        return implicitTypes;
     }
 
     @Override
@@ -207,7 +207,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     /**
      * Whether a place is not specified as contained or containing another,
-     * or tagged only with absolute places.
+     * or categorized only with absolute places.
      *
      * @param locale the default locale
      * @return a boolean
@@ -219,8 +219,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
             return false;
 
-        for ( ModelEntity tag : getAllTags() )
-            if ( !( (Place) tag ).isAbsolute( locale ) )
+        for ( ModelEntity type : getAllTypes() )
+            if ( !( (Place) type ).isAbsolute( locale ) )
                 return false;
 
         return true;

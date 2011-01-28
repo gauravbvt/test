@@ -54,8 +54,12 @@ public class PartConverter extends AbstractChannelsConverter {
                          MarshallingContext context ) {
         Part part = (Part) object;
         writer.addAttribute( "id", String.valueOf( part.getId() ) );
+        writeTags( writer, part );
         exportDetectionWaivers( part, writer );
         exportAttachments( part, writer );
+        writer.startNode( "description" );
+        writer.setValue( part.getDescription() );
+        writer.endNode();
         if ( part.getTask() != null ) {
             writer.startNode( "task" );
             writer.setValue( part.getTask() );
@@ -162,6 +166,8 @@ public class PartConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 part.setDescription( reader.getValue() );
+            } else if ( nodeName.equals( "tags") ) {
+                part.addTags( reader.getValue() );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( part, reader );
             } else if ( nodeName.equals( "attachments" ) ) {

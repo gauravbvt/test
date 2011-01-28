@@ -9,7 +9,6 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -82,9 +81,9 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
         creationContainer = new WebMarkupContainer( "creationDiv" );
         creationContainer.setOutputMarkupId( true );
         container.addOrReplace( creationContainer );
-        addTimingChoice( );
-        addEventField( );
-        addLevelField( );
+        addTimingChoice();
+        addEventField();
+        addLevelField();
         makeVisible( creationContainer, isLockedByUserIfNeeded( getSegment() ) );
     }
 
@@ -131,34 +130,33 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
     }
 
     private void addDeleteImage( ListItem<EventTiming> item ) {
-         final EventTiming eventTiming = item.getModelObject();
-         final String oldName = eventTiming.getEvent().getName();
-         ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
-                 "delete",
-                 "Remove from segment context?" ) {
-             public void onClick( AjaxRequestTarget target ) {
-                  doCommand( new UpdatePlanObject(
+        final EventTiming eventTiming = item.getModelObject();
+        final String oldName = eventTiming.getEvent().getName();
+        ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
+                "delete",
+                "Remove from segment context?" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                doCommand( new UpdatePlanObject(
                         getSegment(),
                         "context",
                         eventTiming,
                         UpdateObject.Action.Remove
                 ) );
-                 getCommander().cleanup( Event.class, oldName );
-                 update( target,
-                         new Change(
-                                 Change.Type.Updated,
-                                 getSegment(),
-                                 "context"
-                         ) );
-             }
-         };
-         deleteLink.setVisible( isLockedByUserIfNeeded( getSegment() ) );
-         item.add( deleteLink );
-     }
+                getCommander().cleanup( Event.class, oldName );
+                update( target,
+                        new Change(
+                                Change.Type.Updated,
+                                getSegment(),
+                                "context"
+                        ) );
+            }
+        };
+        deleteLink.setVisible( isLockedByUserIfNeeded( getSegment() ) );
+        item.add( deleteLink );
+    }
 
 
-
-    private void addTimingChoice(  ) {
+    private void addTimingChoice() {
         final List<Phase.Timing> candidateTimings = getCandidateTimings();
         DropDownChoice<Phase.Timing> timingDropDownChoice = new DropDownChoice<Phase.Timing>(
                 "timing",
@@ -192,13 +190,13 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
     }
 
     public boolean isEventTimingComplete() {
-        return newEventTiming.getTiming()!= null
+        return newEventTiming.getTiming() != null
                 && newEventTiming.getEvent() != null
                 && eventLevelName != null;
     }
 
 
-    private void addEventField( ) {
+    private void addEventField() {
         final List<String> choices = getQueryService().findAllEntityNames( Event.class );
         TextField<String> eventField = new AutoCompleteTextField<String>(
                 "event",
@@ -206,7 +204,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
+                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
 
@@ -228,7 +226,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
         creationContainer.add( eventField );
     }
 
-    private void addLevelField( ) {
+    private void addLevelField() {
         final List<String> choices = getLevelNameChoices();
         DropDownChoice<String> levelDropDownChoice = new DropDownChoice<String>(
                 "level",
@@ -261,7 +259,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
         return choices;
     }
 
-     private List<Phase.Timing> getCandidateTimings() {
+    private List<Phase.Timing> getCandidateTimings() {
         List<Phase.Timing> candidates = new ArrayList<Phase.Timing>();
         candidates.add( Phase.Timing.Concurrent );
         candidates.add( Phase.Timing.PostEvent );
@@ -292,17 +290,17 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
     }
 
     private void addIfComplete() {
-         if ( isEventTimingComplete() ) {
-             if ( !getSegment().getContext().contains( newEventTiming ) ) {
-                 doCommand( new UpdatePlanObject(
-                         getSegment(),
-                         "context",
-                         newEventTiming,
-                         UpdateObject.Action.Add
-                 ) );
-             }
-         }
-     }
+        if ( isEventTimingComplete() ) {
+            if ( !getSegment().getContext().contains( newEventTiming ) ) {
+                doCommand( new UpdatePlanObject(
+                        getSegment(),
+                        "context",
+                        newEventTiming,
+                        UpdateObject.Action.Add
+                ) );
+            }
+        }
+    }
 
     public String getEventName() {
         Event event = newEventTiming.getEvent();
@@ -310,20 +308,22 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
     }
 
     public void setEventName( String name ) {
-        String oldName = getEventName();
-        Event event = getQueryService().findOrCreateType( Event.class, name );
-        newEventTiming.setEvent( event );
-        addIfComplete();
-        getCommander().cleanup( Event.class, oldName );
+        if ( name != null && !name.isEmpty() ) {
+            String oldName = getEventName();
+            Event event = getQueryService().findOrCreateType( Event.class, name );
+            newEventTiming.setEvent( event );
+            addIfComplete();
+            getCommander().cleanup( Event.class, oldName );
+        }
     }
 
     public Phase.Timing getTiming() {
-         return newEventTiming.getTiming();
-     }
+        return newEventTiming.getTiming();
+    }
 
-     public void setTiming( Phase.Timing timing ) {
-         newEventTiming.setTiming( timing );
-     }
+    public void setTiming( Phase.Timing timing ) {
+        newEventTiming.setTiming( timing );
+    }
 
     public String getLevelName() {
         return eventLevelName;
@@ -331,25 +331,25 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
 
     public void setLevelName( String val ) {
         eventLevelName = val;
-        if ( val.equals( ANY )) {
+        if ( val.equals( ANY ) ) {
             newEventTiming.setEventLevel( null );
         } else {
-            newEventTiming.setEventLevel( Level.valueOf( val ));
+            newEventTiming.setEventLevel( Level.valueOf( val ) );
         }
         addIfComplete();
     }
 
     /**
-      * {@inheritDoc}
-      */
-     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-         reset();
-         addEventTimings();
-         addNewEventTiming();
-         target.addComponent( eventTimingsContainer );
-         target.addComponent( creationContainer );
-         super.updateWith( target, change, updated );
-     }
+     * {@inheritDoc}
+     */
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        reset();
+        addEventTimings();
+        addNewEventTiming();
+        target.addComponent( eventTimingsContainer );
+        target.addComponent( creationContainer );
+        super.updateWith( target, change, updated );
+    }
 
 
 }

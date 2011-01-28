@@ -183,7 +183,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : locationChoices ) {
-                    if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
+                    if ( getOrganization().isType() ) {
+                       if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
+                    }
+                    else if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
@@ -361,7 +364,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                             getQueryService().listActualEntities( Organization.class ) );
             allOrganizations.remove( Organization.UNKNOWN );
             allOrganizations.addAll( getQueryService().listTypeEntities( Organization.class ) );
-            allOrganizations.removeAll( organization.getAllTags() );
+            allOrganizations.removeAll( organization.getAllTypes() );
             allOrganizations.remove( organization );
             candidateNames = (List<String>) CollectionUtils.collect(
                     allOrganizations,

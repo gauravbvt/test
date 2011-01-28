@@ -1,5 +1,6 @@
 package com.mindalliance.channels.nlp;
 
+import com.mindalliance.channels.model.Tag;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -7,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -82,6 +84,31 @@ public class Matcher {
         return cleanOther.startsWith( cleanString )
                 || commonWords( cleanString, cleanOther ) > 0;
     }
+
+    /**
+     * Whether two tags match.
+     *
+     * @param tag   a tag
+     * @param other another tag
+     * @return a boolean
+     */
+    public boolean matches( Tag tag, Tag other ) {
+        if ( tag.equals( other ) ) return true;
+        List<String> elements = tag.getElements();
+        List<String> otherElements = other.getElements();
+        Iterator<String> shorter = elements.size() < otherElements.size()
+                ? elements.iterator()
+                : otherElements.iterator();
+        Iterator<String> longer = elements.size() >= otherElements.size()
+                ? elements.iterator()
+                : otherElements.iterator();
+        boolean matching = true;
+        while ( matching && shorter.hasNext() ) {
+            matching = matches( shorter.next(), longer.next() );
+        }
+        return matching;
+    }
+
 
     private int commonWords( String string, String other ) {
         List<String> words = Arrays.asList( StringUtils.split( makeCanonical( string ), SEPARATORS ) );
@@ -165,4 +192,5 @@ public class Matcher {
             list.removeAll( same );
         }
     }
+
 }

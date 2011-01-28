@@ -14,6 +14,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Taggable;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -21,6 +22,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
+import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -193,6 +195,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         setOutputMarkupId( true );
         addHeader();
         addNameField();
+        addTagsPanel();
         addIntentField();
         addLabeled( "name-label", nameField );
         addEOIs();
@@ -225,6 +228,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         issuesPanel.setOutputMarkupId( true );
         add( issuesPanel );
         adjustFields( getFlow() );
+    }
+
+    private void addTagsPanel() {
+        TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getFlow() ) );
+        add( tagsPanel );
     }
 
     private void addIntentField() {

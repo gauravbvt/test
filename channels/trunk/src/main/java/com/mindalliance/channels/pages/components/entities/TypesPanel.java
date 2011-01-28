@@ -5,7 +5,6 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
@@ -34,19 +33,19 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Tags panel.
+ * Types panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: Oct 16, 2009
  * Time: 7:27:02 AM
  */
-public class TagsPanel extends AbstractCommandablePanel {
+public class TypesPanel extends AbstractCommandablePanel {
 
     /**
      * Class logger.
      */
-    public static final Logger LOG = LoggerFactory.getLogger( TagsPanel.class );
+    public static final Logger LOG = LoggerFactory.getLogger( TypesPanel.class );
     /**
      * Collator.
      */
@@ -55,34 +54,34 @@ public class TagsPanel extends AbstractCommandablePanel {
     private IModel<ModelEntity> entityModel;
 
 
-    public TagsPanel( String id, IModel<ModelEntity> iModel ) {
+    public TypesPanel( String id, IModel<ModelEntity> iModel ) {
         super( id );
         entityModel = iModel;
         init();
     }
 
     private void init() {
-        WebMarkupContainer tagsDiv = new WebMarkupContainer( "tagsDiv" );
-        tagsDiv.setOutputMarkupId( true );
-        add( tagsDiv );
-        tagsDiv.add( makeTagsTable() );
+        WebMarkupContainer typesDiv = new WebMarkupContainer( "typesDiv" );
+        typesDiv.setOutputMarkupId( true );
+        add( typesDiv );
+        typesDiv.add( makeTypesTable() );
     }
 
-    private ListView<TagWrapper> makeTagsTable() {
-        return new ListView<TagWrapper>( "tags", getWrappedTags() ) {
+    private ListView<TypeWrapper> makeTypesTable() {
+        return new ListView<TypeWrapper>( "types", getWrappedTypes() ) {
             /** {@inheritDoc} */
-            protected void populateItem( ListItem<TagWrapper> item ) {
-                addTagCell( item );
+            protected void populateItem( ListItem<TypeWrapper> item ) {
+                addTypeCell( item );
                 addDeleteCell( item );
             }
         };
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addTagCell( final ListItem<TagWrapper> item ) {
-        final TagWrapper wrapper = item.getModelObject();
+    private void addTypeCell( final ListItem<TypeWrapper> item ) {
+        final TypeWrapper wrapper = item.getModelObject();
         item.setOutputMarkupId( true );
-        WebMarkupContainer nameContainer = new WebMarkupContainer( "tagContainer" );
+        WebMarkupContainer nameContainer = new WebMarkupContainer( "typeContainer" );
         item.add( nameContainer );
         final List<String> choices;
         if ( wrapper.isMarkedForCreation() ) {
@@ -94,7 +93,7 @@ public class TagsPanel extends AbstractCommandablePanel {
                                     getEntity().getClass(),
                                     ( (String) obj ) );
                             return !type.equals( getEntity() ) &&
-                                    !getEntity().hasTag( type );
+                                    !getEntity().hasType( type );
                         }
                     }
             );
@@ -103,12 +102,12 @@ public class TagsPanel extends AbstractCommandablePanel {
         }
         // text field
         TextField<String> nameField = new AutoCompleteTextField<String>(
-                "newTag",
-                new PropertyModel<String>( wrapper, "tagName" ) ) {
+                "newType",
+                new PropertyModel<String>( wrapper, "typeName" ) ) {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
+                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
 
@@ -118,12 +117,12 @@ public class TagsPanel extends AbstractCommandablePanel {
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 target.addComponent( item );
-                update( target, new Change( Change.Type.Updated, getEntity(), "tags" ) );
+                update( target, new Change( Change.Type.Updated, getEntity(), "types" ) );
             }
         } );
         nameContainer.add( nameField );
         // Link to entity type
-        EntityLink entityLink = new EntityLink( "tagLink", new PropertyModel<Event>( wrapper, "tag" ) );
+        EntityLink entityLink = new EntityLink( "typeLink", new PropertyModel<Event>( wrapper, "type" ) );
         entityLink.setVisible( !wrapper.isMarkedForCreation() && !wrapper.isUniversal() );
         if ( wrapper.isInherited() || wrapper.isImmutable() )
             entityLink.add(
@@ -134,7 +133,7 @@ public class TagsPanel extends AbstractCommandablePanel {
                 new Model<String>( wrapper.getTitle() ) ) );
         nameContainer.add( entityLink );
         // Universal type
-        Label universalLabel = new Label( "universal", new Model<String>( wrapper.getTagName() ) );
+        Label universalLabel = new Label( "universal", new Model<String>( wrapper.getTypeName() ) );
         universalLabel.setVisible( wrapper.isUniversal() );
         universalLabel.add(
                 new AttributeModifier( "style", true, new Model<String>( "font-style:oblique" ) ) );
@@ -145,18 +144,18 @@ public class TagsPanel extends AbstractCommandablePanel {
         nameContainer.add( universalLabel );
     }
 
-    private void addDeleteCell( ListItem<TagWrapper> item ) {
-        final TagWrapper wrapper = item.getModelObject();
+    private void addDeleteCell( ListItem<TypeWrapper> item ) {
+        final TypeWrapper wrapper = item.getModelObject();
         ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
                 "delete",
-                "Delete tag?" ) {
+                "Remove type?" ) {
             public void onClick( AjaxRequestTarget target ) {
-                wrapper.removeTag();
+                wrapper.removeType();
                 update( target,
                         new Change(
                                 Change.Type.Updated,
                                 getEntity(),
-                                "tags"
+                                "types"
                         ) );
             }
         };
@@ -164,23 +163,23 @@ public class TagsPanel extends AbstractCommandablePanel {
         item.addOrReplace( deleteLink );
     }
 
-    private List<TagWrapper> getWrappedTags() {
-        List<TagWrapper> wrappers = new ArrayList<TagWrapper>();
-        wrappers.add( new TagWrapper( ModelEntity.getUniversalTypeFor( getEntity().getClass() ) ) );
-        List<TagWrapper> current = new ArrayList<TagWrapper>();
-        for ( ModelEntity tag : getEntity().getAllTags() ) {
-            current.add( new TagWrapper( tag ) );
+    private List<TypeWrapper> getWrappedTypes() {
+        List<TypeWrapper> wrappers = new ArrayList<TypeWrapper>();
+        wrappers.add( new TypeWrapper( ModelEntity.getUniversalTypeFor( getEntity().getClass() ) ) );
+        List<TypeWrapper> current = new ArrayList<TypeWrapper>();
+        for ( ModelEntity type : getEntity().getAllTypes() ) {
+            current.add( new TypeWrapper( type ) );
         }
         // Sort
-        Collections.sort( current, new Comparator<TagWrapper>() {
-            public int compare( TagWrapper tw1, TagWrapper tw2 ) {
-                return collator.compare( tw1.getTagName(), tw2.getTagName() );
+        Collections.sort( current, new Comparator<TypeWrapper>() {
+            public int compare( TypeWrapper tw1, TypeWrapper tw2 ) {
+                return collator.compare( tw1.getTypeName(), tw2.getTypeName() );
             }
         } );
         wrappers.addAll( current );
         if ( isLockedByUser( getEntity() ) ) {
-            // to-be-created tag
-            wrappers.add( new TagWrapper() );
+            // to-be-created type
+            wrappers.add( new TypeWrapper() );
         }
         return wrappers;
     }
@@ -193,52 +192,52 @@ public class TagsPanel extends AbstractCommandablePanel {
     /**
      * A wrapped entity type.
      */
-    public class TagWrapper implements Serializable {
+    public class TypeWrapper implements Serializable {
 
-        private ModelEntity tag;
+        private ModelEntity type;
 
 
-        private TagWrapper( ModelEntity tag ) {
-            assert tag.isType();
-            assert tag.getDomain().equals( getEntity().getDomain() );
-            this.tag = tag;
+        private TypeWrapper( ModelEntity type ) {
+            assert type.isType();
+            assert type.getDomain().equals( getEntity().getDomain() );
+            this.type = type;
         }
 
-        private TagWrapper() {
+        private TypeWrapper() {
 
         }
 
-        public ModelEntity getTag() {
-            return tag;
+        public ModelEntity getType() {
+            return type;
         }
 
         public boolean isMarkedForCreation() {
-            return tag == null;
+            return type == null;
         }
 
         public boolean isImmutable() {
-            return tag != null && tag.isImmutable();
+            return type != null && type.isImmutable();
         }
 
         public boolean isInherited() {
-            return tag != null
-                    && !getEntity().getTags().contains( tag )
+            return type != null
+                    && !getEntity().getTypes().contains( type )
                     && !isImplicit()
-                    && getEntity().hasTag( tag );
+                    && getEntity().hasType( type );
         }
 
         public boolean isImplicit() {
-            return getEntity().getAllImplicitTags().contains( tag );
+            return getEntity().getAllImplicitTypes().contains( type );
         }
 
         public boolean isUniversal() {
-            return tag != null && tag.isUniversal();
+            return type != null && type.isUniversal();
         }
 
-        public String getTagName() {
-            return tag == null
+        public String getTypeName() {
+            return type == null
                     ? ""
-                    : tag.getName();
+                    : type.getName();
         }
 
         public String getTitle() {
@@ -247,33 +246,33 @@ public class TagsPanel extends AbstractCommandablePanel {
             } else if ( isImplicit() ) {
                 return "Implicit";
             } else if ( isInherited() ) {
-                return getEntity().inheritancePathTo( tag );
+                return getEntity().inheritancePathTo( type );
             } else {
                 return "";
             }
         }
 
-        public void setTagName( String name ) {
+        public void setTypeName( String name ) {
             assert isMarkedForCreation();
             if ( name != null && !name.isEmpty()) {
-                tag = doSafeFindOrCreateType( getEntity().getClass(), name );
-                if ( tag != null  && !getEntity().hasTag( tag ) ) {
+                type = doSafeFindOrCreateType( getEntity().getClass(), name );
+                if ( type != null  && !getEntity().hasType( type ) ) {
                     doCommand( new UpdatePlanObject(
                             getEntity(),
-                            "tags",
-                            tag,
+                            "types",
+                            type,
                             UpdateObject.Action.Add
                     ) );
                 }
             }
         }
 
-        public void removeTag() {
+        public void removeType() {
             assert !isMarkedForCreation();
             doCommand( new UpdatePlanObject(
                     getEntity(),
-                    "tags",
-                    tag,
+                    "types",
+                    type,
                     UpdateObject.Action.Remove
             ) );
         }

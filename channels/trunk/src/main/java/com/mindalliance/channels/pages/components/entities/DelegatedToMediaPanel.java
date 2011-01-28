@@ -133,14 +133,14 @@ public class DelegatedToMediaPanel extends AbstractCommandablePanel {
                         public boolean evaluate( Object object ) {
                             TransmissionMedium delegatedTo = (TransmissionMedium) object;
                             return candidate.equals( delegatedTo )
-                                    || candidate.getAllTags().contains( delegatedTo );
+                                    || candidate.getAllTypes().contains( delegatedTo );
                         }
                     }
             );
             if ( !covered
                     && !candidate.isDirect()
                     && !candidate.equals( getModeledMedium() )
-                    && !getModeledMedium().getAllTags().contains( candidate )
+                    && !getModeledMedium().getAllTypes().contains( candidate )
                     && !candidate.isUniversal()
                     && !candidate.isUnknown()
                     && !getModeledMedium().getInheritedDelegates().contains( candidate )

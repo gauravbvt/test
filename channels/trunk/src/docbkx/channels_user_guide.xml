@@ -665,7 +665,7 @@
 
         <itemizedlist>
           <listitem>
-            <para>changing an entity’s type tags</para>
+            <para>changing an entity’s type categorization</para>
           </listitem>
         </itemizedlist>
 
@@ -1587,8 +1587,8 @@
             </listitem>
 
             <listitem>
-              <para>Tag the entity with the names of entity types of the same
-              kind (e.g. The actual place “Headquarters” is tagged with place
+              <para>Categorize the entity with the names of entity types of the same
+              kind (e.g. The actual place “Headquarters” is categorized as a place
               type “Building”)</para>
             </listitem>
 
@@ -1970,7 +1970,7 @@
             </listitem>
 
             <listitem>
-              <para>Replace the type of agent by one of the types it is tagged
+              <para>Replace the type of agent by one of the types it is categorized
               with</para>
             </listitem>
 
@@ -1979,7 +1979,7 @@
             </listitem>
 
             <listitem>
-              <para>Replace the role by one of the roles it is tagged
+              <para>Replace the role by one of the roles it is categorized
               with</para>
             </listitem>
 
@@ -1989,7 +1989,7 @@
 
             <listitem>
               <para>Replace the type of jurisdiction by one of the types it is
-              tagged with</para>
+              categorized with</para>
             </listitem>
 
             <listitem>
@@ -2004,7 +2004,7 @@
 
             <listitem>
               <para>Replace the type of organization by one of the types it is
-              tagged with</para>
+              categorized with</para>
             </listitem>
           </itemizedlist>
         </section>
@@ -2015,24 +2015,24 @@
           <para role="aspect">Outcomes</para>
 
           <para>The meaning of the entity changes. Now, different agents match
-          the specification of tasks that reference the entity. Agents tagged
+          the specification of tasks that reference the entity. Agents categorized
           with the entity get re-assigned to different tasks. As a
           consequence, sharing commitments also change.</para>
 
           <para role="aspect">Prerequisites</para>
 
           <para>The entity is profiled and so are the entity types it is
-          tagged with.</para>
+          categorized with.</para>
 
           <para role="aspect">Steps</para>
 
           <itemizedlist>
             <listitem>
-              <para>Add or remove tags to the entity’s profile</para>
+              <para>Add or remove types to the entity’s categorization</para>
             </listitem>
 
             <listitem>
-              <para>Or change the tags of entity types that define this
+              <para>Or change the entity types that categorize this
               entity.</para>
             </listitem>
           </itemizedlist>
@@ -2844,9 +2844,9 @@
       <para>Recall that the definitions of Plan elements can reference both
       actual entities (ACME Corporation, Peter Sanchez, Morristown NJ) and
       types of entities (a corporation, a certified emergency technician, a
-      city). An entity is classified by tagging it with the names of entity
-      types. An entity can only be tagged with entity types of its own kind
-      (Warehouse A can be tagged as a building but not as a senior executive).
+      city). An entity is categorized by listing the names of entity
+      types. An entity can only be categorized with entity types of its own kind
+      (Warehouse A can be categorized as a building but not as a senior executive).
       Both actual entities and entity types can be edited.</para>
 
       <para>An editable profile of an entity , actual or type, can be opened
@@ -3144,7 +3144,7 @@
         <para>When editing a transmission medium, a planner can set the
         transmission mode to either unicast (one -to-one), multicast
         (one-to-many) or broadcast (one-to-any), unless the mode is already
-        implied by another medium this one is tagged with (to make it a
+        implied by another medium this one is categorized with (to make it a
         special case of it).</para>
 
         <para>The address pattern is a “regular expression” that constrains
@@ -5801,22 +5801,22 @@
               </row>
 
               <row>
-                <entry><para>Conflicting entity tag</para></entry>
+                <entry><para>Conflicting entity categorization</para></entry>
 
                 <entry><para>Medium</para></entry>
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove conflicting tag</para>
+                      <para>Remove conflicting type from categorization</para>
                     </listitem>
 
                     <listitem>
-                      <para>or change definition of conflicting tag to remove
+                      <para>or change definition of conflicting type to remove
                       conflict</para>
                     </listitem>
 
                     <listitem>
-                      <para>or change definition of tagged entity to remove
+                      <para>or change definition of categorized entity to remove
                       conflict.</para>
                     </listitem>
                   </itemizedlist></entry>
@@ -5837,7 +5837,7 @@
                     </listitem>
 
                     <listitem>
-                      <para>or tag the medium with another with a set
+                      <para>or categorize the medium with another that has a set
                       transmission mode.</para>
                     </listitem>
                   </itemizedlist></entry>
@@ -5960,10 +5960,10 @@
                       <para>Change the definition of the containing place so
                       that it is not relative</para>
                     </listitem>
-                  </itemizedlist> <para>or if the plan locale is tagged with a
+                </itemizedlist> <para>or if the plan locale is categorized with a
                 place defined relative to another:</para> <itemizedlist>
                     <listitem>
-                      <para>Change the definition of the place tag so that it
+                      <para>Change the categorization of the place type so that it
                       is not relative</para>
                     </listitem>
                   </itemizedlist> <para>or, in either case,</para>

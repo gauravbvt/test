@@ -213,8 +213,8 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     /**
      * {@inheritDoc}
      */
-    protected void tagsChanged( AjaxRequestTarget target ) {
-        super.tagsChanged( target );
+    protected void typesChanged( AjaxRequestTarget target ) {
+        super.typesChanged( target );
         addCastChoice();
         addDelegatedToMedia();
         target.addComponent( castChoice );

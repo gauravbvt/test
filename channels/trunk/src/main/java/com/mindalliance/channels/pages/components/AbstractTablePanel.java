@@ -771,7 +771,11 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {
-                        if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
+                        if ( kind == ModelEntity.Kind.Type ) {
+                            if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
+                        } else {
+                            if ( Matcher.getInstance().same( s, choice ) ) candidates.add( choice );
+                        }
                     }
                     return candidates.iterator();
                 }

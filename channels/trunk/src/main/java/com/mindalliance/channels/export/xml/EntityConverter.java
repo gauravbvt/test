@@ -38,18 +38,19 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
                          MarshallingContext context ) {
         ModelEntity entity = (ModelEntity) object;
         writer.addAttribute( "id", String.valueOf( entity.getId() ) );
-        assert( entity.getKind() != null );
+        assert ( entity.getKind() != null );
         writer.addAttribute( "kind", entity.getKind().name() );
         String name = entity.getName() == null ? "" : entity.getName();
         writer.addAttribute( "name", name );
         writer.startNode( "description" );
         writer.setValue( entity.getDescription() == null ? "" : entity.getDescription() );
         writer.endNode();
-        for ( ModelEntity tag : entity.getTags() ) {
-            writer.startNode( "tag" );
-            writer.addAttribute( "id", tag.getId() + "" );
-            writer.addAttribute( "kind", tag.getKind().name() );
-            writer.setValue( tag.getName() );
+        writeTags( writer, entity );
+        for ( ModelEntity type : entity.getTypes() ) {
+            writer.startNode( "type" );
+            writer.addAttribute( "id", type.getId() + "" );
+            writer.addAttribute( "kind", type.getKind().name() );
+            writer.setValue( type.getName() );
             writer.endNode();
         }
         exportDetectionWaivers( entity, writer );
@@ -99,18 +100,20 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 entity.setDescription( reader.getValue() );
-            } else if ( nodeName.equals( "tag" ) ) {
-                Long tagId = Long.parseLong( reader.getAttribute( "id" ) );
-                String tagName = reader.getValue();
-                ModelEntity tag = getEntity(
+            } else if ( nodeName.equals( "tags") ) {
+                entity.addTags( reader.getValue() );
+            } else if ( nodeName.equals( "tag" ) || nodeName.equals( "type" ) ) {  // todo obsolete "tag" as of Jan. 27, 2011
+                Long typeId = Long.parseLong( reader.getAttribute( "id" ) );
+                String typeName = reader.getValue();
+                ModelEntity type = getEntity(
                         getEntityClass(),
-                        tagName,
-                        tagId,
+                        typeName,
+                        typeId,
                         // always a type
                         true,
                         importingPlan,
                         idMap );
-                entity.addTag( tag );
+                entity.addType( type );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( entity, reader );
             } else if ( nodeName.equals( "attachments" ) ) {

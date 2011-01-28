@@ -37,6 +37,7 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.model.Subject;
+import com.mindalliance.channels.model.Tag;
 import com.mindalliance.channels.nlp.Proximity;
 
 import java.util.List;
@@ -375,8 +376,9 @@ public interface QueryService {
     /**
      * Find all contact of specified resources
      *
-     * @param specable
+     * @param specable a specable
      * @param isSelf   find resources specified by spec, or else who specified resources need to know @return a list of ResourceSpec's
+     * @return a list of resource specs
      */
     List<ResourceSpec> findAllContacts( Specable specable, boolean isSelf );
 
@@ -498,7 +500,7 @@ public interface QueryService {
     /**
      * Find all confirmed jobs with resource spec
      *
-     * @param specable
+     * @param specable a specable
      * @return a list of jobs
      */
     List<Job> findAllConfirmedJobs( Specable specable );
@@ -538,8 +540,9 @@ public interface QueryService {
      * Find all parts that has the specified resource.
      *
      * @param segment    a plan segment
-     * @param specable
+     * @param specable a specable
      * @param exactMatch a boolean @return a list of parts
+     * @return a list of parts
      */
     List<Part> findAllParts( Segment segment, Specable specable, boolean exactMatch );
 
@@ -802,6 +805,15 @@ public interface QueryService {
     Boolean likelyRelated( String text, String otherText );
 
     /**
+     * Whether two tags have high semantic proximity.
+     *
+     * @param tag   a tag
+     * @param other a tag
+     * @return a boolean
+     */
+    Boolean likelyRelated( Tag tag, Tag other );
+
+    /**
      * Find all sharing flows addressing a given information need.
      *
      * @param need a flow
@@ -894,7 +906,7 @@ public interface QueryService {
      * @param event an event
      * @return a list of parts
      */
-    List<Part>findTerminatorsOf ( Event event );
+    List<Part> findTerminatorsOf( Event event );
 
     /**
      * Find all entities in a given place.
@@ -1187,23 +1199,33 @@ public interface QueryService {
 
     /**
      * Find all employments for a part given a plan's locale.
-     * @param part  a part
+     *
+     * @param part   a part
      * @param locale a place
-     * @return  a list of employments
+     * @return a list of employments
      */
     List<Employment> findAllEmployments( Part part, Place locale );
 
     /**
      * Get assignments factory.
-     * @return  assignments factory
+     *
+     * @return assignments factory
      */
     Assignments getAssignments();
 
     /**
      * Whether an actor is a direct or indirect supervisor of another.
-     * @param actor  an actor
-     * @param other  an actor
+     *
+     * @param actor an actor
+     * @param other an actor
      * @return a Boolean
      */
     Boolean isSupervisorOf( Actor actor, Actor other );
+
+    /**
+     * Find all tags in domain.
+     *
+     * @return a list of tags
+     */
+    List<Tag> findTagDomain();
 }

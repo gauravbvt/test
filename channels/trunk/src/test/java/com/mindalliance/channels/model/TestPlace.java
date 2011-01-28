@@ -2,10 +2,11 @@
 // All rights reserved.
 package com.mindalliance.channels.model;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * ...
@@ -105,7 +106,7 @@ public class TestPlace {
     @Test
     public void testIsAbsolute2() {
 
-        place1.addTag( type1 );
+        place1.addType( type1 );
         assertTrue( place1.isAbsolute( null ) );
 
         type1.getMustContain().setPlanReferenced( true );

@@ -12,12 +12,14 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Taggable;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
+import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.WordUtils;
@@ -202,6 +204,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         setOutputMarkupId( true );
         this.model = model;
         addSummaryPanel();
+        addTagsPanel();
         addPartDescription();
         addTaskField();
         addCategoryField();
@@ -214,6 +217,11 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addIssuesPanel();
         addAttachments();
         adjustFields();
+    }
+
+    private void addTagsPanel() {
+        TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getPart() ) );
+        add( tagsPanel );
     }
 
     private void addSummaryPanel() {

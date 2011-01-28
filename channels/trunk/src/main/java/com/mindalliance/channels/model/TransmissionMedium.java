@@ -155,12 +155,12 @@ public class TransmissionMedium extends ModelEntity {
      */
     @SuppressWarnings( "unchecked" )
     public Pattern getEffectiveCompiledAddressPattern() {
-        if ( compiledPattern != null || getTags().isEmpty() ) {
+        if ( compiledPattern != null || getTypes().isEmpty() ) {
             return compiledPattern;
         } else {
             Set<ModelEntity> visited = new HashSet<ModelEntity>();
             visited.add( this );
-            List<ModelEntity> unvisited = (List<ModelEntity>) CollectionUtils.subtract( getTags(), visited );
+            List<ModelEntity> unvisited = (List<ModelEntity>) CollectionUtils.subtract( getTypes(), visited );
             return findEffectiveCompiledAddressPattern( unvisited, visited );
         }
     }
@@ -188,7 +188,7 @@ public class TransmissionMedium extends ModelEntity {
         } else {
             Set<ModelEntity> inheritedMedia = new HashSet<ModelEntity>();
             for ( ModelEntity medium : media ) {
-                inheritedMedia.addAll( medium.getTags() );
+                inheritedMedia.addAll( medium.getTypes() );
             }
             List<ModelEntity> unvisited = (List<ModelEntity>) CollectionUtils.subtract( inheritedMedia, visited );
             return findEffectiveCompiledAddressPattern( unvisited, visited );
@@ -360,8 +360,8 @@ public class TransmissionMedium extends ModelEntity {
 
     private List<String> getAddressPatterns() {
         Set<String> patterns = new HashSet<String>();
-        for ( ModelEntity tag : getAllTags() ) {
-            String pattern = ( (TransmissionMedium) tag ).getAddressPattern();
+        for ( ModelEntity type : getAllTypes() ) {
+            String pattern = ( (TransmissionMedium) type ).getAddressPattern();
             // drop empty or universal pattern
             if ( !pattern.isEmpty() && !pattern.equals( ".*" ) ) {
                 patterns.add( pattern );
@@ -404,7 +404,7 @@ public class TransmissionMedium extends ModelEntity {
             return null;
         } else {
             List<Cast> casts = new ArrayList<Cast>();
-            for ( ModelEntity ancestor : getAllTags() ) {
+            for ( ModelEntity ancestor : getAllTypes() ) {
                 Cast c = ( (TransmissionMedium) ancestor ).getCast();
                 if ( c != null && !casts.contains( c ) ) casts.add( c );
             }
@@ -424,7 +424,7 @@ public class TransmissionMedium extends ModelEntity {
      */
     public List<Classification> getEffectiveSecurity() {
         List<Classification> effective = new ArrayList<Classification>( security );
-        for ( ModelEntity ancestor : getAllTags() ) {
+        for ( ModelEntity ancestor : getAllTypes() ) {
             List<Classification> classifications = ( (TransmissionMedium) ancestor ).getSecurity();
             for ( Classification classification : classifications ) {
                 if ( !Classification.encompass( effective, classification ) ) {
@@ -442,7 +442,7 @@ public class TransmissionMedium extends ModelEntity {
      */
     public List<TransmissionMedium> getEffectiveDelegates( Place locale ) {
         List<TransmissionMedium> effectiveMedia = new ArrayList<TransmissionMedium>( delegatedToMedia );
-        for ( ModelEntity ancestor : getAllTags() ) {
+        for ( ModelEntity ancestor : getAllTypes() ) {
             for ( TransmissionMedium delegate : ( (TransmissionMedium) ancestor ).getDelegatedToMedia() ) {
                 boolean redundant = false;
                 for ( TransmissionMedium effectiveMedium : effectiveMedia ) {
@@ -500,8 +500,8 @@ public class TransmissionMedium extends ModelEntity {
      */
     public List<TransmissionMedium> getInheritedDelegates() {
         Set<TransmissionMedium> inherited = new HashSet<TransmissionMedium>();
-        for ( ModelEntity tag : getAllTags() ) {
-            inherited.addAll( ( (TransmissionMedium) tag ).getDelegatedToMedia() );
+        for ( ModelEntity type : getAllTypes() ) {
+            inherited.addAll( ( (TransmissionMedium) type ).getDelegatedToMedia() );
         }
         return new ArrayList<TransmissionMedium>( inherited );
     }
