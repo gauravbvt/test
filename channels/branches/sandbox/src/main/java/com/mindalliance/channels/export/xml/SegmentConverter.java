@@ -70,6 +70,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( segment.getDescription() );
         writer.endNode();
+        writeTags( writer, segment );
         exportDetectionWaivers( segment, writer );
         exportAttachments( segment, writer );
         if ( !exportingInPlan ) {
@@ -151,6 +152,8 @@ public class SegmentConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 segment.setDescription( reader.getValue() );
+            } else if ( nodeName.equals( "tags") ) {
+                segment.addTags( reader.getValue() );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( segment, reader );
             } else if ( nodeName.equals( "attachments" ) ) {

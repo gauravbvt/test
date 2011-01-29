@@ -170,19 +170,19 @@ public class Assignment implements GeoLocatable, Specable {
             Organization org = getOrganization();
             if ( org != null ) {
                 if ( org.isType() ) results.add( (T) org );
-                results.addAll( (List<T>) org.getAllTags() );
+                results.addAll( (List<T>) org.getAllTypes() );
             }
         } else if ( entityClass.isAssignableFrom( Actor.class ) ) {
             Actor actor = getActor();
             if ( actor != null ) {
                 if ( actor.isType() ) results.add( (T) actor );
-                results.addAll( (List<T>) actor.getAllTags() );
+                results.addAll( (List<T>) actor.getAllTypes() );
             }
         } else if ( entityClass.isAssignableFrom( Role.class ) ) {
             Role role = getRole();
             if ( role != null ) {
                 results.add( (T) role );
-                results.addAll( (List<T>) getRole().getAllTags() );
+                results.addAll( (List<T>) getRole().getAllTypes() );
             }
         } else throw new IllegalArgumentException();
         return results;

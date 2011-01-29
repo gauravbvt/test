@@ -7,11 +7,6 @@ import com.mindalliance.channels.dao.DefinitionManager;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.FileSystemResource;
@@ -19,6 +14,12 @@ import org.springframework.core.io.FileSystemResource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 /**
  * ...
@@ -94,7 +95,7 @@ public class TestResourceSpec {
         planDao.add( company );
         walmart = new Organization( "Walmart" );
         walmart.setActual();
-        walmart.addTag( company );
+        walmart.addType( company );
         planDao.add( walmart );
 
         building = new Place( "building" );
@@ -110,17 +111,17 @@ public class TestResourceSpec {
         planDao.add( person );
         guy = new Actor( "guy" );
         guy.setType();
-        guy.addTag( person );
+        guy.addType( person );
         planDao.add( guy );
         gal = new Actor( "gal" );
         gal.setType();
-        gal.addTag( person );
+        gal.addType( person );
         planDao.add( gal );
 
 
 
         bob = new Actor( "Bob" );
-        bob.addTag( guy );
+        bob.addType( guy );
         planDao.add( bob );
 
         nj = new Place( "New Jersey" );
@@ -134,18 +135,18 @@ public class TestResourceSpec {
         njCo = new Organization( "NJ company" );
         njCo.setType();
         planDao.add( njCo );
-        njCo.addTag( company );
+        njCo.addType( company );
         njCo.setLocation( nj );
 
         nyCo = new Organization( "NY company" );
         nyCo.setType();
         planDao.add( nyCo );
-        nyCo.addTag( company );
+        nyCo.addType( company );
         nyCo.setLocation( ny );
 
         mas = new Organization( "MAS" );
         mas.setActual();
-        mas.addTag( njCo );
+        mas.addType( njCo );
         planDao.add( mas );
         hr = new Organization( "Human Resources" );
         hr.setActual();
@@ -414,7 +415,7 @@ public class TestResourceSpec {
         Place office = new Place( "Office" );
         office.setActual();
         planDao.add( office );
-        office.addTag( building );
+        office.addType( building );
 
         assertTrue( building.validates( office, null ) );
         assertFalse( building.validates( cafeteria, null ) );
@@ -423,7 +424,7 @@ public class TestResourceSpec {
         Place resto = new Place( "Restaurant" );
         planDao.add( resto );
         resto.setActual();
-        resto.addTag( cafeteria );
+        resto.addType( cafeteria );
 
         assertFalse( cafeteria.validates( resto, null ) );
         resto.setWithin( office );

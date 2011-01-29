@@ -8,7 +8,6 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
 import org.apache.wicket.AttributeModifier;
@@ -100,7 +99,7 @@ public class EventListPanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
+                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
 

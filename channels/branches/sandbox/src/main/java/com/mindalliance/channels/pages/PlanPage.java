@@ -1488,7 +1488,12 @@ public final class PlanPage extends WebPage implements Updatable {
         }
         if ( change.isNone() )
             return;
-        if ( change.isCollapsed() || change.isRemoved() )
+        if ( change.isUnknown() ) {
+          if ( !getPlan().getSegments().contains( segment ) ) {
+              segment = getPlan().getDefaultSegment();
+              setPart( null );
+          }
+        } else if ( change.isCollapsed() || change.isRemoved() )
             collapse( change );
         else if ( change.isExpanded() || change.isAdded() ) {
             expand( change );

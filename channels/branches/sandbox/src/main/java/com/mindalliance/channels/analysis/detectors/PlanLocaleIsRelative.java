@@ -75,18 +75,18 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
                     issues.add( issue );
                 }
             }
-            for ( ModelEntity tag : locale.getAllTags() ) {
-                Place placeTag = (Place) tag;
-                if ( !placeTag.isAbsolute( locale ) ) {
+            for ( ModelEntity type : locale.getAllTypes() ) {
+                Place placeType = (Place) type;
+                if ( !placeType.isAbsolute( locale ) ) {
                     Issue issue = makeIssue( Issue.VALIDITY, plan );
                     issue.setSeverity( Level.High );
                     issue.setDescription( "The plan's locale ("
                             + locale.getName()
-                            + ") is tagged with "
-                            + placeTag.getName()
+                            + ") is categorized with "
+                            + placeType.getName()
                             + " which is specified as containing or being contained in another. It must not." );
                     issue.setRemediation( "Change the definition of "
-                            + placeTag.getName()
+                            + placeType.getName()
                             + " so that it is not relative"
                             + "\nor use another place as the plan's locale"
                             + "\nor leave the plan's locale unnamed."

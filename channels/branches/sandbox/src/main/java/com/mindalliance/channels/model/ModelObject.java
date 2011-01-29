@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * An object with name, id and description, comparable by its toString() values.
  */
-public abstract class ModelObject extends AbstractAttachable implements Comparable<ModelObject>, Identifiable, Nameable, Modelable {
+public abstract class ModelObject extends AbstractAttachable implements Comparable<ModelObject>, Nameable, Modelable, Taggable {
 
     /**
      * Unique id of this object.
@@ -30,6 +30,10 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
      * The description.
      */
     private String description = "";
+    /**
+     * Tags.
+     */
+    private List<Tag> tags = new ArrayList<Tag>();
 
     /**
      * Time the object was last modified. Set by aspect.
@@ -127,7 +131,37 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
         return this;
     }
 
+    @Override
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags( List<Tag> tags ) {
+        this.tags = tags;
+    }
+
+    public void setTags( String s ) {
+        setTags( Tag.tagsFromString( s ) );
+    }
+
+    public void addTag( String s ) {
+        addTag( new Tag( s ) );
+    }
+
+    public void addTag (Tag tag ) {
+        if ( !tags.contains( tag ) )
+            tags.add( tag );
+    }
+
+
+    public void addTags( String s ) {
+        for (Tag tag : Tag.tagsFromString( s ) ) {
+            addTag( tag );
+        }
+    }
+
     //=============================
+
     /**
      * Compare with another named object.
      *
@@ -144,6 +178,7 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
     }
 
     //=============================
+
     /**
      * {@inheritDoc}
      */
@@ -363,6 +398,7 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
 
     /**
      * Whether a prohibiting policy is attached.
+     *
      * @return a boolean
      */
     public boolean isProhibited() {
@@ -370,13 +406,15 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
                 getAttachments(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        return ((Attachment)object).isProhibition();
+                        return ( (Attachment) object ).isProhibition();
                     }
                 }
         );
     }
+
     /**
      * Whether a mandating policy is attached.
+     *
      * @return a boolean
      */
     public boolean isMandated() {
@@ -384,7 +422,7 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
                 getAttachments(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        return ((Attachment)object).isMandate();
+                        return ( (Attachment) object ).isMandate();
                     }
                 }
         );

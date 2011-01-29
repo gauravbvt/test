@@ -72,6 +72,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.startNode( "description" );
         writer.setValue( flow.getDescription() );
         writer.endNode();
+        writeTags( writer, flow );
         // eois
         for ( ElementOfInformation eoi : flow.getEois() ) {
             writer.startNode( "eoi" );
@@ -120,7 +121,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         }
         if ( flow.isIfTaskFails() ) {
             writer.startNode( "ifTaskFails" );
-            writer.setValue( Boolean.toString(  flow.isIfTaskFails() ) );
+            writer.setValue( Boolean.toString( flow.isIfTaskFails() ) );
             writer.endNode();
         }
         // Operational
@@ -219,6 +220,8 @@ public class FlowConverter extends AbstractChannelsConverter {
             if ( nodeName.equals( "description" ) ) {
                 String description = reader.getValue();
                 flow.setDescription( description );
+            } else if ( nodeName.equals( "tags" ) ) {
+                flow.addTags( reader.getValue() );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( flow, reader );
             } else if ( nodeName.equals( "attachments" ) ) {
@@ -251,11 +254,11 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setClassificationsLinked( classificationsLinked );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( segment, UserIssue.class );
-            } else if ( nodeName.equals( "intent") ) {
+            } else if ( nodeName.equals( "intent" ) ) {
                 flow.setIntent( Flow.Intent.valueOf( reader.getValue() ) );
-            } else if ( nodeName.equals( "restriction") ) {
+            } else if ( nodeName.equals( "restriction" ) ) {
                 flow.setRestriction( Flow.Restriction.valueOf( reader.getValue() ) );
-            }  else if ( nodeName.equals( "ifTaskFails") ) {
+            } else if ( nodeName.equals( "ifTaskFails" ) ) {
                 flow.setIfTaskFails( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "operational" ) ) {
                 flow.setOperational( reader.getValue().equals( "true" ) );

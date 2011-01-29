@@ -2,8 +2,8 @@ package com.mindalliance.channels.attachments;
 
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.model.Attachment;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 import java.io.File;
@@ -17,8 +17,8 @@ public interface AttachmentManager {
     /**
      * URL points to a document.
      *
-     * @param plan  a plan
-     * @param url a url
+     * @param plan a plan
+     * @param url  a url
      * @return a boolean
      */
     boolean exists( Plan plan, String url );
@@ -26,9 +26,9 @@ public interface AttachmentManager {
     /**
      * Upload a file and get an attachment.
      *
-     * @param plan a plan
+     * @param plan         a plan
      * @param selectedType a type of attachment
-     * @param name  a name for the attachment
+     * @param name         a name for the attachment
      * @param upload       a file upload
      * @return an attachment or null if failed
      */
@@ -37,7 +37,7 @@ public interface AttachmentManager {
     /**
      * Get display label for an attachment.
      *
-     * @param plan   a plan
+     * @param plan       a plan
      * @param attachment an attachment
      * @return a string
      */
@@ -46,7 +46,7 @@ public interface AttachmentManager {
     /**
      * Remove unattached documents.
      *
-     * @param planDao   a plan dao
+     * @param planDao a plan dao
      */
     void removeUnattached( PlanDao planDao );
 
@@ -59,14 +59,15 @@ public interface AttachmentManager {
     File getUploadDirectory( Plan plan );
 
     /**
-      * Get upload path.
-      *
-      * @return a string
-      */
+     * Get upload path.
+     *
+     * @return a string
+     */
     String getUploadPath();
 
     /**
      * Whether url points to a video.
+     *
      * @param url a string
      * @return a boolean
      */
@@ -74,6 +75,7 @@ public interface AttachmentManager {
 
     /**
      * Whether url points to an image.
+     *
      * @param url a string
      * @return a boolean
      */
@@ -111,4 +113,20 @@ public interface AttachmentManager {
      * @return a boolean
      */
     boolean isImageReference( Attachment attachment );
+
+    /**
+     * Whether url points to uploaded file.
+     *
+     * @param url a string
+     * @return a boolean
+     */
+    boolean isUploadedFileDocument( String url );
+
+        /**
+     * Make full file path name from plan version-relative path.
+     *
+     * @param planRelativePath a string
+     * @return a file
+     */
+    File getUploadedFile( String planRelativePath );
 }

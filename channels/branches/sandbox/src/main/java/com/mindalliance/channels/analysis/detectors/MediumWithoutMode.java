@@ -33,7 +33,7 @@ public class MediumWithoutMode extends AbstractIssueDetector {
             issue.setDescription( "The transmission mode of communication medium \"" + medium.getName()
                     + "\" is undetermined (unicast is assumed).");
             issue.setRemediation( "Set the transmission mode to either Unicast, Multicast or Broadcast"
-            + "\nor tag \"" + medium.getName() + "\" with another medium for which the transmission mode is known");
+            + "\nor categorize \"" + medium.getName() + "\" with another medium for which the transmission mode is known");
             issue.setSeverity( Level.Medium );
             issues.add(issue);
         }

@@ -91,9 +91,9 @@ public class Organization extends AbstractUnicastChannelable
      * @return a boolean
      */
     @Override
-    public boolean hasTag( ModelEntity entity ) {
-        return super.hasTag( entity )
-            || parent != null && parent.hasTag( entity );
+    public boolean hasType( ModelEntity entity ) {
+        return super.hasType( entity )
+            || parent != null && parent.hasType( entity );
     }
 
     public boolean isActorsRequired() {

@@ -811,7 +811,12 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {
-                        if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
+                        if ( property.equals( "role" ) ) {
+                             if ( getQueryService().likelyRelated( s, choice ) )
+                            candidates.add( choice );
+                        }
+                        else if ( Matcher.getInstance().matches( s, choice ) )
+                            candidates.add( choice );
                     }
                     return candidates.iterator();
 

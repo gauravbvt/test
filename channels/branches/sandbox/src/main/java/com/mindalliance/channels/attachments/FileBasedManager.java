@@ -3,6 +3,7 @@ package com.mindalliance.channels.attachments;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Attachable;
 import com.mindalliance.channels.model.Attachment;
@@ -593,4 +594,17 @@ public class FileBasedManager implements AttachmentManager {
     public boolean isImageReference( Attachment attachment ) {
         return attachment.getType() == Attachment.Type.Reference && hasImageContent( attachment.getUrl() );
     }
+
+    @Override
+    /** {@inheritDoc} */
+    public boolean isUploadedFileDocument( String url ) {
+        return url.startsWith( getUploadPath() );
+    }
+
+    @Override
+    public File getUploadedFile( String planRelativePath ) {
+        return new File( getUploadDirectory( User.plan() ),
+                         planRelativePath.replaceFirst( getUploadPath(), "" ) );
+    }
+
 }

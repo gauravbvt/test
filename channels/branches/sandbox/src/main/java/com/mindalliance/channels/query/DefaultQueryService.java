@@ -41,6 +41,7 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.model.Subject;
+import com.mindalliance.channels.model.Tag;
 import com.mindalliance.channels.model.Transformation;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.nlp.Matcher;
@@ -1584,6 +1585,25 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    public Boolean likelyRelated( Tag tag, Tag other ) {
+        if ( tag.equals( other ) ) return true;
+        List<String> elements = tag.getElements();
+        List<String> otherElements = other.getElements();
+        Iterator<String> shorter = elements.size() < otherElements.size()
+                ? elements.iterator()
+                : otherElements.iterator();
+        Iterator<String> longer = elements.size() >= otherElements.size()
+                ? elements.iterator()
+                : otherElements.iterator();
+        boolean similar = true;
+        while ( similar && shorter.hasNext() ) {
+            similar = likelyRelated( shorter.next(), longer.next() );
+        }
+        return similar;
+    }
+
+
+    @Override
     public List<Flow> findAllSharingsAddressingNeed( Flow need ) {
         assert need.isNeed();
         List<Flow> sharings = new ArrayList<Flow>();
@@ -2667,5 +2687,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return false;
     }
+
+    @Override
+    /** @{inheritDoc} */
+    public List<Tag> findTagDomain() {
+        Set<Tag> domain = new HashSet<Tag>();
+        for ( ModelObject mo : findAllModelObjects(  ) ) {
+            List<Tag> tags = mo.getTags();
+            for ( Tag tag : tags ) {
+                for ( String s : tag.getAllComponents() ) {
+                    domain.add( new Tag( s ) );
+                }
+            }
+        }
+        return new ArrayList<Tag>( domain );
+    }
+
+
 }
 

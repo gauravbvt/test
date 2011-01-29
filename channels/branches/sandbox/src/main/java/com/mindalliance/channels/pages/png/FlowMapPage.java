@@ -92,7 +92,7 @@ public class FlowMapPage extends PngWebPage {
         setResponsePage(
                 new RedirectPage(
                         MessageFormat.format(
-                                "?segment={0,number,0}&node={1,number,0}&showingGoals={2}&showingConnectors={3&hidingNoop={4}",
+                                "?segment={0,number,0}&node={1,number,0}&showingGoals={2}&showingConnectors={3}&hidingNoop={4}",
                                 sid,
                                 nid,
                                 showingGoals,

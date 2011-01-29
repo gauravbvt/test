@@ -29,7 +29,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         ModelEntity entity = (ModelEntity) modelObject;
-        List<ModelEntity> types = entity.getAllTags();
+        List<ModelEntity> types = entity.getAllTypes();
         Place locale = getPlan().getLocale();
 
         // Entity is inherently inconsistent with one of its types
@@ -37,7 +37,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
             if ( !type.validates( entity, locale ) ) {
                 Issue issue = makeIssue( Issue.VALIDITY, entity );
                 issue.setDescription( "This " + entity.getKindLabel()
-                        + " is tagged as a " + type.getName()
+                        + " is types as a " + type.getName()
                         + " but is not consistent with its definition." );
                 issue.setRemediation( "Do not use  "
                         + entity.getKindLabel()
@@ -58,12 +58,12 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
                                  + " is inconsistent with other type "
                                  + otherType.getName()
                          );
-                         issue.setRemediation( "Remove "
+                         issue.setRemediation( "Remove type "
                                  + type.getKindLabel()
-                                 + " " + entity.getName()
-                                 + " as a tag of " + entity.getName()
+                                 + " " + type.getName()
+                                 + " from the categorization of  " + entity.getName()
                                  + "\n or remove " + otherType.getName()
-                                 + " as a tag of " + entity.getName()
+                                 + " from the categorization of " + entity.getName()
                                  + "\n or change the definition of " + type.getName()
                                  + "\n or change the definition of " + otherType.getName()
                          );
@@ -81,7 +81,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
      */
     public boolean appliesTo( ModelObject modelObject ) {
         return ModelEntity.class.isAssignableFrom( modelObject.getClass() )
-                && ( (ModelEntity) modelObject ).hasTags();
+                && ( (ModelEntity) modelObject ).hasTypes();
     }
 
     /**
@@ -95,6 +95,6 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getLabel() {
-        return "Conflicting entity tag";
+        return "Conflicting entity categorization";
     }
 }

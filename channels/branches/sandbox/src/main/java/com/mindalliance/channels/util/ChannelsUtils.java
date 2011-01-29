@@ -11,6 +11,7 @@ import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Tag;
 import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -57,6 +58,7 @@ public final class ChannelsUtils {
     public static Map<String, Object> getFlowAttributes( final Flow flow ) {
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put( "description", flow.getDescription() );
+        attributes.put( "tags", flow.getTags() );
         attributes.put( "eois", flow.copyEois() );
         attributes.put( "askedFor", flow.isAskedFor() );
         attributes.put( "all", flow.isAll() );
@@ -82,6 +84,7 @@ public final class ChannelsUtils {
         merged.put(
                 "description",
                 desc2.length() > desc1.length() ? desc2 : desc1 );
+        merged.put( "tags", attributes.get( "tags" ) + Tag.SEPARATOR + others.get( "tags" ) );
         merged.put( "eois", aggregateEOIs(
                 (List<ElementOfInformation>) attributes.get( "eois" ),
                 (List<ElementOfInformation>) others.get( "eois" ) ) );
@@ -267,6 +270,7 @@ public final class ChannelsUtils {
         Map<String, Object> state = new HashMap<String, Object>();
         // state.put( "id", flow.getId() );
         state.put( "name", flow.getName() );
+        state.put( "tags", Tag.tagsToString( flow.getTags() ) );
         state.put( "isSend", isSend );
         state.put( "segment", part.getSegment().getId() );
         state.put( "part", part.getId() );
@@ -292,6 +296,7 @@ public final class ChannelsUtils {
     public static Map<String, Object> getPartState( final Part part ) {
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "description", part.getDescription() );
+        state.put( "tags", Tag.tagsToString( part.getTags() ) );
         state.put( "task", part.getTask() );
         state.put( "repeatsEvery", new Delay( part.getRepeatsEvery() ) );
         state.put( "completionTime", new Delay( part.getCompletionTime() ) );
@@ -302,7 +307,11 @@ public final class ChannelsUtils {
         state.put( "terminatesEventPhase", part.isTerminatesEventPhase() );
         state.put( "startsWithSegment", part.isStartsWithSegment() );
         state.put( "category", part.getCategory() );
-        state.put( "goals", new ArrayList<Goal>( part.getGoals() ) );
+        List<Map<String, Object>> mappedGoals = new ArrayList<Map<String, Object>>();
+        for ( Goal goal : part.getGoals() ) {
+            mappedGoals.add( goal.toMap() );
+        }
+        state.put( "goals", mappedGoals );
         if ( part.getInitiatedEvent() != null )
             state.put(
                     "initiatedEvent",

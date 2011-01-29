@@ -4,6 +4,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
+import com.mindalliance.channels.model.Taggable;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.commons.lang.StringUtils;
@@ -67,7 +68,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        Issue issue = model.getObject();
+        Issue issue = getIssue();
         setOutputMarkupId( true );
         addIssueActionsMenu();
         addSummary( );
@@ -96,6 +97,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
             }
         } );
         add( typeChoice );
+        addTagsPanel();
         // Severity
         severityChoice = new DropDownChoice<Level>(
                 "severity",
@@ -135,6 +137,12 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 new PropertyModel<String>( issue, "reportedBy" ) ) );
         adjustFields();
     }
+
+    private void addTagsPanel() {
+        TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( (UserIssue)getIssue() ) );
+        add( tagsPanel );
+    }
+
 
     private void addSummary(  ) {
         final Issue issue = getIssue();

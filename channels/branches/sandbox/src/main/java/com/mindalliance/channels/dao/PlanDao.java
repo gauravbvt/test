@@ -1,5 +1,6 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
@@ -68,6 +69,9 @@ public class PlanDao extends AbstractDao {
     private final PlanDefinition.Version version;
 
     private IdGenerator idGenerator;
+
+    /** Attachment manager */
+    private AttachmentManager attachmentManager;
 
     //-------------------------------------
     PlanDao( PlanDefinition.Version version ) {
@@ -220,6 +224,7 @@ public class PlanDao extends AbstractDao {
         // Make sure there is at least one segment per plan
         if ( !list( Segment.class ).iterator().hasNext() )
             plan.addSegment( createSegment( null, null ) );
+        plan.reloadTags( getAttachmentManager() );
     }
 
     /**
@@ -384,18 +389,18 @@ public class PlanDao extends AbstractDao {
         Place administrativeArea = findOrCreateType( Place.class, Place.ADMINISTRATIVE_AREA, null );
         administrativeArea.makeImmutable();
         Place.Country = findOrCreateType( Place.class, Place.COUNTRY, null );
-        Place.Country.addTag( administrativeArea );
+        Place.Country.addType( administrativeArea );
         Place.Country.makeImmutable();
         Place.State = findOrCreateType( Place.class, Place.STATE, null );
-        Place.State.addTag( administrativeArea );
+        Place.State.addType( administrativeArea );
         Place.State.setWithin( Place.Country );
         Place.State.makeImmutable();
         Place.County = findOrCreateType( Place.class, Place.COUNTY, null );
-        Place.County.addTag( administrativeArea );
+        Place.County.addType( administrativeArea );
         Place.County.setWithin( Place.State );
         Place.County.makeImmutable();
         Place.City = findOrCreateType( Place.class, Place.CITY, null );
-        Place.City.addTag( administrativeArea );
+        Place.City.addType( administrativeArea );
         Place.City.setWithin( Place.County );
         Place.City.makeImmutable();
         Role.UNKNOWN = findOrCreate( Role.class, Role.UnknownName, null );
@@ -454,5 +459,13 @@ public class PlanDao extends AbstractDao {
 
     void resetPlan() {
         plan = version.createPlan( idGenerator );
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
     }
 }

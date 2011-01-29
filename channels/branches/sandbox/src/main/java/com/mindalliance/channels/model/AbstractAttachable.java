@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +31,12 @@ public class AbstractAttachable implements Attachable {
     /**
      * {@inheritDoc}
      */
-    public void addAttachment( Attachment attachment ) {
+    public void addAttachment( Attachment attachment, AttachmentManager attachmentManager ) {
         if ( !attachments.contains( attachment ) ) {
             attachments.add( attachment );
         }
+        attachmentAdded( attachment, attachmentManager );
     }
-
 
     /**
      * {@inheritDoc}
@@ -45,7 +47,29 @@ public class AbstractAttachable implements Attachable {
         types.add( Attachment.Type.Policy );
         return types;
     }
-    
+
+    @Override
+    public void removeAttachment( Attachment attachment, AttachmentManager attachmentManager ) {
+        getAttachments().remove( attachment );
+        attachmentRemoved( attachment, attachmentManager );
+    }
+
+    /**
+     * React to new attachment.
+     * @param attachment an attachment
+     */
+    protected void attachmentAdded( Attachment attachment, AttachmentManager attachmentManager ) {
+        // Do nothing
+    }
+
+    /**
+     * React to removed attachment.
+     * @param attachment an attachment
+     */
+     protected void attachmentRemoved( Attachment attachment, AttachmentManager attachmentManager ) {
+        // Do nothing
+    }
+
     /**
      * {@inheritDoc}
      */

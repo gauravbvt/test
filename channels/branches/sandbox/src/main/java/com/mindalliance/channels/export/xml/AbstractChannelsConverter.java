@@ -11,6 +11,8 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Tag;
+import com.mindalliance.channels.model.Taggable;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -236,7 +238,7 @@ public abstract class AbstractChannelsConverter implements Converter {
                     name = "";
                 }
                 if ( attachmentManager.exists( getPlan(), url ) ) {
-                    attachable.addAttachment( new Attachment( url, type, name ) );
+                    attachable.addAttachment( new Attachment( url, type, name ), getAttachmentManager() );
                 } else {
                     LOG.warn( "Dropping attachment to {} (not found)", url );
                 }
@@ -364,6 +366,19 @@ public abstract class AbstractChannelsConverter implements Converter {
                 : "Type".equals( name )
                 ? ModelEntity.Kind.Type                                     
                 : ModelEntity.Kind.Actual;
+    }
+
+    /**
+     * Export tags.
+     * @param writer a hierarchical stream writer
+     * @param taggable a taggable
+     */
+    protected void writeTags( HierarchicalStreamWriter writer, Taggable taggable ) {
+        if ( !taggable.getTags().isEmpty() ) {
+            writer.startNode( "tags" );
+            writer.setValue( Tag.tagsToString( taggable.getTags() ) );
+            writer.endNode();
+        }
     }
 
 }

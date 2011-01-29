@@ -56,7 +56,7 @@ public class AttachDocument extends AbstractCommand {
         String attachablePath = (String) get( "attachablePath" );
         Attachable attachable = (Attachable) ChannelsUtils.getProperty( mo, attachablePath, null );
         if ( attachable == null ) throw new CommandException( "Can't find where attachments are" );
-        attachable.addAttachment( attachment );
+        attachable.addAttachment( attachment, commander.getQueryService().getAttachmentManager() );
         describeTarget( mo );
         return new Change(
                 Change.Type.Updated,

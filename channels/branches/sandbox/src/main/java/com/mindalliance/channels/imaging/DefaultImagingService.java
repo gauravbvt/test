@@ -17,11 +17,7 @@ import org.springframework.core.io.Resource;
 import sun.awt.image.BufferedImageGraphicsConfig;
 
 import javax.imageio.ImageIO;
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.RenderingHints;
-import java.awt.Transparency;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -133,12 +129,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     private boolean isUploadedFileDocument( String url ) {
-        return url.startsWith( attachmentManager.getUploadPath() );
+        return attachmentManager.isUploadedFileDocument( url );
     }
 
     private File getUploadedImageFile( String url ) {
-        return new File( attachmentManager.getUploadDirectory( User.plan() ),
-                         url.replaceFirst( attachmentManager.getUploadPath(), "" ) );
+        return attachmentManager.getUploadedFile( url );
     }
 
     @Override
@@ -436,8 +431,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                 return path;
         }
 
-        for ( ModelEntity tag : organization.getAllTags() ) {
-            String path = getModelObjectIconsPath( tag );
+        for ( ModelEntity type : organization.getAllTypes() ) {
+            String path = getModelObjectIconsPath( type );
             if ( path != null )
                 return path;
         }
@@ -453,8 +448,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
             if ( s != null )
                 return s;
 
-            for ( ModelEntity tag : entity.getAllTags() ) {
-                String path = getModelObjectIconsPath( tag );
+            for ( ModelEntity type : entity.getAllTypes() ) {
+                String path = getModelObjectIconsPath( type );
                 if ( path != null )
                     return path;
             }

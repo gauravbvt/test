@@ -5,11 +5,11 @@ import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
+import com.mindalliance.channels.pages.components.TagsPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -64,9 +64,9 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      */
     private TextArea<String> descriptionField;
     /**
-     * Tags panel.
+     * Types panel.
      */
-    private TagsPanel tagsPanel;
+    private TypesPanel typesPanel;
     /**
      * Entity issues panel.
      */
@@ -90,6 +90,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         addImage();
         addNameField();
         addDescriptionField();
+        addTypesPanel();
         addTagsPanel();
         moDetailsDiv.add( new AttachmentPanel( "attachments", new Model<ModelEntity>( mo ) ) );
         addEntityReferencesAndMatchesPanel();
@@ -111,7 +112,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
+                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
@@ -135,6 +136,11 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         moDetailsDiv.add( descriptionField );
     }
 
+    private void addTagsPanel() {
+        TagsPanel tagsPanel = new TagsPanel( "tags", new Model<ModelEntity>( getEntity() ) );
+        moDetailsDiv.add( tagsPanel );
+    }
+
     private void addIssuesPanel() {
         issuesPanel = new IssuesPanel(
                 "issues",
@@ -144,12 +150,12 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         moDetailsDiv.addOrReplace( issuesPanel );
     }
 
-    private void addTagsPanel() {
-        tagsPanel = new TagsPanel(
-                "tags",
+    private void addTypesPanel() {
+        typesPanel = new TypesPanel(
+                "types",
                 new PropertyModel<ModelEntity>( this, "entity" ) );
-        tagsPanel.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( tagsPanel );
+        typesPanel.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( typesPanel );
     }
 
     private void addEntityReferencesAndMatchesPanel() {
@@ -279,10 +285,10 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isUpdated() && change.isForProperty( "tags" ) ) {
-            addTagsPanel();
-            target.addComponent( tagsPanel );
-            tagsChanged( target );
+        if ( change.isUpdated() && change.isForProperty( "types" ) ) {
+            addTypesPanel();
+            target.addComponent( typesPanel );
+            typesChanged( target );
         }
         if ( change.isUpdated() && change.isForProperty( "attachments" ) ) {
             addImage();
@@ -298,11 +304,11 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * React to change in tags.
+     * React to change in types.
      *
      * @param target an ajax request target
      */
-    protected void tagsChanged( AjaxRequestTarget target ) {
+    protected void typesChanged( AjaxRequestTarget target ) {
         // do nothing
     }
 }

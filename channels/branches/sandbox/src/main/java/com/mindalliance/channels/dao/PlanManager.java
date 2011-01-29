@@ -1,5 +1,6 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
@@ -16,10 +17,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 /**
  * Persistent store for plans.
@@ -62,6 +63,8 @@ public class PlanManager {
     private List<TransmissionMedium> builtInMedia = new ArrayList<TransmissionMedium>();
 
     private UserService userService;
+
+    private AttachmentManager attachmentManager;
 
     private ImportExportFactory importExportFactory;
     /**
@@ -111,6 +114,14 @@ public class PlanManager {
 
     public void setUserService( UserService userService ) {
         this.userService = userService;
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
     }
 
     public ImportExportFactory getImportExportFactory() {
@@ -182,6 +193,7 @@ public class PlanManager {
     private PlanDao createDao( PlanDefinition.Version version ) {
         PlanDao dao = new PlanDao( version );
         dao.setUserDetailsService( userService );
+        dao.setAttachmentManager( attachmentManager );
         dao.setIdGenerator( definitionManager.getIdGenerator() );
         try {
             dao.resetPlan();

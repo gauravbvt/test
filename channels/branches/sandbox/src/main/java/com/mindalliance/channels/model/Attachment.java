@@ -43,7 +43,12 @@ public class Attachment implements Serializable, Comparable<Attachment> {
         /**
          * A memorandum of understanding document.
          */
-        MOU( "Memorandum of Understanding" );
+        MOU( "Memorandum of Understanding" ),
+        /**
+         * List of end-line or comma-separated tags to pre-load into a plan.
+         */
+        TAGS( "Tags" );
+
 
         //--------------------------------
         /**
@@ -151,6 +156,17 @@ public class Attachment implements Serializable, Comparable<Attachment> {
     public boolean isMOU() {
         return type == Type.MOU;
     }
+
+    /**
+     * Is tags.
+     *
+     * @return a boolean
+     */
+    public boolean isTags() {
+        return type == Type.TAGS;
+    }
+
+
 
     /**
      * {@inheritDoc}
