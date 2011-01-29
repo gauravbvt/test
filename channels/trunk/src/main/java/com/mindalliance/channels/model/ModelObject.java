@@ -140,6 +140,10 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
         this.tags = tags;
     }
 
+    public void setTags( String s ) {
+        setTags( Tag.tagsFromString( s ) );
+    }
+
     public void addTag( String s ) {
         addTag( new Tag( s ) );
     }

@@ -39,6 +39,7 @@ public class ExportConverter extends AbstractChannelsConverter {
             if ( nodeName.equals( "segment" ) ) {
                 results = context.convertAnother( getContext().getPlan(), Segment.class );
             }
+            reader.moveUp();
         }
         return results;
     }

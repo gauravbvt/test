@@ -14,4 +14,6 @@ public interface Taggable extends Identifiable {
 
     List<Tag> getTags();
 
+    void setTags( String s );
+
 }
