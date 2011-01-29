@@ -238,7 +238,7 @@ public abstract class AbstractChannelsConverter implements Converter {
                     name = "";
                 }
                 if ( attachmentManager.exists( getPlan(), url ) ) {
-                    attachable.addAttachment( new Attachment( url, type, name ) );
+                    attachable.addAttachment( new Attachment( url, type, name ), getAttachmentManager() );
                 } else {
                     LOG.warn( "Dropping attachment to {} (not found)", url );
                 }

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
@@ -68,6 +69,9 @@ public class PlanDao extends AbstractDao {
     private final PlanDefinition.Version version;
 
     private IdGenerator idGenerator;
+
+    /** Attachment manager */
+    private AttachmentManager attachmentManager;
 
     //-------------------------------------
     PlanDao( PlanDefinition.Version version ) {
@@ -220,6 +224,7 @@ public class PlanDao extends AbstractDao {
         // Make sure there is at least one segment per plan
         if ( !list( Segment.class ).iterator().hasNext() )
             plan.addSegment( createSegment( null, null ) );
+        plan.reloadTags( getAttachmentManager() );
     }
 
     /**
@@ -454,5 +459,13 @@ public class PlanDao extends AbstractDao {
 
     void resetPlan() {
         plan = version.createPlan( idGenerator );
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
     }
 }

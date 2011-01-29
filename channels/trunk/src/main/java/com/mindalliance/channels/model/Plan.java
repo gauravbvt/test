@@ -1,9 +1,18 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -21,6 +30,11 @@ import java.util.Set;
  * Time: 3:43:39 PM
  */
 public class Plan extends ModelObject {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( Plan.class );
 
     /**
      * Name of the default phase of a plan.
@@ -473,8 +487,8 @@ public class Plan extends ModelObject {
     public boolean equals( Object obj ) {
         return this == obj
                 || obj != null
-                   && obj instanceof Plan
-                   && getVersionUri().equals( ( (Plan) obj ).getVersionUri() );
+                && obj instanceof Plan
+                && getVersionUri().equals( ( (Plan) obj ).getVersionUri() );
     }
 
     /**
@@ -515,11 +529,11 @@ public class Plan extends ModelObject {
                             }
                         } )
                 || CollectionUtils.exists(
-                        phases,
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return ModelObject.areIdentical( (ModelObject) obj, mo );
-                            }
+                phases,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return ModelObject.areIdentical( (ModelObject) obj, mo );
+                    }
                 } );
     }
 
@@ -605,5 +619,66 @@ public class Plan extends ModelObject {
             max = Math.max( max, classification.getLevel() );
         }
         return max + 1;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Attachment.Type> getAttachmentTypes() {
+        List<Attachment.Type> types = super.getAttachmentTypes();
+        types.add( Attachment.Type.TAGS );
+        return types;
+    }
+
+    public void reloadTags( AttachmentManager attachmentManager ) {
+        setTags( new ArrayList<Tag>() );
+        for ( Attachment attachment : getAttachments() ) {
+            if ( attachment.isTags() ) {
+                String url = attachment.getUrl();
+                reloadTagsFromUrl( url, attachmentManager );
+            }
+        }
+    }
+
+    private void reloadTagsFromUrl( String url, AttachmentManager attachmentManager ) {
+        BufferedReader in = null;
+        try {
+            InputStreamReader reader;
+            if ( attachmentManager.isUploadedFileDocument( url ) ) {
+                File file = attachmentManager.getUploadedFile( url );
+                reader = new InputStreamReader( new FileInputStream( file ) );
+            } else {
+                reader = new InputStreamReader( new URL( url ).openStream() );
+            }
+            in = new BufferedReader( reader );
+            String inputLine;
+            while ( ( inputLine = in.readLine() ) != null ) {
+                addTags( inputLine );
+            }
+        } catch ( IOException e ) {
+            LOG.warn( "Failed to load tags file " + url, e );
+        } finally {
+            if ( in != null ) {
+                try {
+                    in.close();
+                } catch ( IOException e ) {
+                    LOG.warn( "Failed to close tags file " + url, e );
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void attachmentAdded( Attachment attachment, AttachmentManager attachmentManager ) {
+        super.attachmentAdded( attachment, attachmentManager );
+        if ( attachment.isTags() )
+            reloadTags( attachmentManager );
+    }
+
+    @Override
+    protected void attachmentRemoved( Attachment attachment, AttachmentManager attachmentManager ) {
+        super.attachmentRemoved( attachment, attachmentManager );
+        if ( attachment.isTags() )
+            reloadTags( attachmentManager );
     }
 }

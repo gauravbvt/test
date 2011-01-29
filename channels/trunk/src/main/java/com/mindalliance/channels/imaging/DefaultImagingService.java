@@ -129,12 +129,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     private boolean isUploadedFileDocument( String url ) {
-        return url.startsWith( attachmentManager.getUploadPath() );
+        return attachmentManager.isUploadedFileDocument( url );
     }
 
     private File getUploadedImageFile( String url ) {
-        return new File( attachmentManager.getUploadDirectory( User.plan() ),
-                         url.replaceFirst( attachmentManager.getUploadPath(), "" ) );
+        return attachmentManager.getUploadedFile( url );
     }
 
     @Override

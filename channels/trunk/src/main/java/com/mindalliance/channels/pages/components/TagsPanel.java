@@ -32,13 +32,15 @@ import java.util.Set;
  */
 public class TagsPanel extends AbstractCommandablePanel {
 
+    private AutoCompleteTextField<String> tagsField;
+
     public TagsPanel( String id, IModel<? extends Taggable> iModel ) {
         super( id, iModel );
         init();
     }
 
     private void init() {
-        AutoCompleteTextField<String> tagsField = new AutoCompleteTextField<String>(
+        tagsField = new AutoCompleteTextField<String>(
                 "tags",
                 new PropertyModel<String>( this, "tagsString" ) ) {
             @Override
@@ -46,9 +48,11 @@ public class TagsPanel extends AbstractCommandablePanel {
                 return computeTagStringChoices( input );
             }
         };
+        tagsField.setOutputMarkupId( true );
         tagsField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
+                target.addComponent( tagsField );
                 update( target, new Change( Change.Type.Updated, getModel().getObject(), "tags" ) );
             }
         } );

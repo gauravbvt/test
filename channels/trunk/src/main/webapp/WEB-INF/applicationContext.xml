@@ -37,6 +37,27 @@ CONFIGURATION NOTES:
         <property name="snapshotThreshold" value="10"/>
     </bean>
 
+    <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
+        <property name="uploadPath" value="uploads/"/>
+        <property name="imageExtensions" value="png,jpeg,jpg,gif"/>
+        <property name="videoExtensions" value="avi,mov,mp4,mpg"/>
+        <property name="imageDomains">
+            <list>
+                <value>flickr.com</value>
+                <value>picasaweb.google.com</value>
+                <value>photobucket.com</value>
+                <value>smugmug.com</value>
+            </list>
+        </property>
+        <property name="videoDomains">
+            <list>
+                <value>youtube.com</value>
+                <value>vimeo.com</value>
+                <value>video.google.com</value>
+            </list>
+        </property>
+    </bean>
+
     <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager" lazy-init="true">
         <constructor-arg ref="definitionManager" />
         <property name="importDirectory" value="${channels.home}${file.separator}import"/>
@@ -58,27 +79,6 @@ CONFIGURATION NOTES:
                 <ref bean="faceToFace"/>
                 <ref bean="meeting"/>
                 <ref bean="paSystem"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="attachmentManager" class="com.mindalliance.channels.attachments.FileBasedManager">
-        <property name="uploadPath" value="uploads/"/>
-        <property name="imageExtensions" value="png,jpeg,jpg,gif"/>
-        <property name="videoExtensions" value="avi,mov,mp4,mpg"/>
-        <property name="imageDomains">
-            <list>
-                <value>flickr.com</value>
-                <value>picasaweb.google.com</value>
-                <value>photobucket.com</value>
-                <value>smugmug.com</value>
-            </list>
-        </property>
-        <property name="videoDomains">
-            <list>
-                <value>youtube.com</value>
-                <value>vimeo.com</value>
-                <value>video.google.com</value>
             </list>
         </property>
     </bean>

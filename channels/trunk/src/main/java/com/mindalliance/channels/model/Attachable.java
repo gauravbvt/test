@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
+
 import java.util.List;
 
 /**
@@ -29,8 +31,9 @@ public interface Attachable {
      * Add an attachment.
      *
      * @param attachment an attachment
+     * @param attachmentManager  an attachment manager
      */
-    void addAttachment( Attachment attachment );
+    void addAttachment( Attachment attachment, AttachmentManager attachmentManager );
 
     /**
      * Return list of meaningful types of attachments for class of model objects.
@@ -46,6 +49,13 @@ public interface Attachable {
      *
      * @return a list of attachment types
      */
-    List<Attachment.Type> getAttachmentTypes(  );
+    List<Attachment.Type> getAttachmentTypes();
 
+    /**
+     * Remove an attachment.
+     *
+     * @param attachment an attachment
+     * @param attachmentManager an attachment manager
+     */
+    void removeAttachment( Attachment attachment, AttachmentManager attachmentManager );
 }
