@@ -74,26 +74,24 @@ public class Organization extends AbstractUnicastChannelable
     public boolean validates( ModelEntity entity, Place locale ) {
         Organization org = (Organization) entity;
         return super.validates( org, locale )
-            && ModelEntity.implies( org.getLocation(), location, locale )
-            && ModelEntity.implies( org.getParent(), parent, locale );
+                && ModelEntity.implies( org.location(), location, locale )
+                && ModelEntity.implies( org.getParent(), parent, locale );
     }
 
     @Override
     public boolean narrowsOrEquals( ModelEntity other, Place locale ) {
         return super.narrowsOrEquals( other, locale )
-            || other instanceof Organization && isWithin( (Organization) other, locale );
+                || other instanceof Organization && isWithin( (Organization) other, locale );
     }
 
-    /**
-     * Is this tagged by the entity? (transitive, ignores circularities)
-     *
-     * @param entity an entity
-     * @return a boolean
-     */
+
     @Override
-    public boolean hasType( ModelEntity entity ) {
-        return super.hasType( entity )
-            || parent != null && parent.hasType( entity );
+    public List<ModelEntity> getImplicitTypes() {
+        Set<ModelEntity> implicitTypes = new HashSet<ModelEntity>();
+        for ( ModelEntity ancestor : ancestors() ) {
+            implicitTypes.addAll( ancestor.getAllTypes() );
+        }
+        return new ArrayList<ModelEntity>( implicitTypes );
     }
 
     public boolean isActorsRequired() {
@@ -161,7 +159,7 @@ public class Organization extends AbstractUnicastChannelable
      * Whether this organization has an ancestor that narrows or equals a given organization.
      *
      * @param organization an organization
-     * @param locale the default location
+     * @param locale       the default location
      * @return a boolean
      */
     public boolean isWithin( Organization organization, Place locale ) {
@@ -174,10 +172,25 @@ public class Organization extends AbstractUnicastChannelable
     }
 
     /**
+     * Find explicit or implied location.
+     *
+     * @return a place
+     */
+    public Place location() {
+        if ( location != null ) return location;
+        else {
+            for ( Organization ancestor : ancestors() ) {
+                if ( ancestor.getLocation() != null ) return ancestor.getLocation();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Whether this is the same or within a given organization
      *
      * @param organization an organization
-     * @param locale the default location
+     * @param locale       the default location
      * @return a boolean
      */
     public boolean isSameOrWithin( Organization organization, Place locale ) {
@@ -208,7 +221,6 @@ public class Organization extends AbstractUnicastChannelable
         Set<Organization> visited = new HashSet<Organization>();
         safeAncestors( visited );
         visited.remove( this );
-
         return new ArrayList<Organization>( visited );
     }
 
@@ -325,7 +337,6 @@ public class Organization extends AbstractUnicastChannelable
         types.addAll( super.getAttachmentTypes() );
         return types;
     }
-
 
 
     @Override
