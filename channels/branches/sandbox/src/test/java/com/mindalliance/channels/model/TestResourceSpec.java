@@ -147,6 +147,7 @@ public class TestResourceSpec {
         mas = new Organization( "MAS" );
         mas.setActual();
         mas.addType( njCo );
+        mas.setLocation( nj );
         planDao.add( mas );
         hr = new Organization( "Human Resources" );
         hr.setActual();
