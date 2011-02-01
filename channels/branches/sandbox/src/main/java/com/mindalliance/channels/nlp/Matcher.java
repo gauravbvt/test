@@ -104,7 +104,7 @@ public class Matcher {
                 : otherElements.iterator();
         boolean matching = true;
         while ( matching && shorter.hasNext() ) {
-            matching = matches( shorter.next(), longer.next() );
+            matching = same( shorter.next(), longer.next() );
         }
         return matching;
     }

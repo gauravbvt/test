@@ -206,6 +206,10 @@ public final class PlanPage extends WebPage implements Updatable {
      * The big form -- used for attachments and segment imports only.
      */
     private IndicatorAwareForm form;
+    /**
+     * Ajax activity spinner.
+     */
+    private WebMarkupContainer spinner;
 
     /**
      * Import segment "dialog".
@@ -417,14 +421,8 @@ public final class PlanPage extends WebPage implements Updatable {
         expanded.add( Channels.SOCIAL_ID );
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
-        form = new IndicatorAwareForm( "big-form" ) {
-            @Override
-            protected void onSubmit() {
-                // Do nothing - everything is done via Ajax, even file uploads
-                // System.out.println( "Form submitted" );
-            }
-        };
-        form.setMultiPart( true );
+        addForm();
+        addSpinner();
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
         addHeader();
         addFooter();
@@ -448,12 +446,30 @@ public final class PlanPage extends WebPage implements Updatable {
         addPlanEditPanel();
         addSurveysPanel( Survey.UNKNOWN );
         addFlowLegendPanel();
-        add( form );
 
         updateSelectorsVisibility();
         updateNavigation();
         LOG.debug( "Segment page generated" );
         rememberState();
+    }
+
+    private void addForm() {
+        form = new IndicatorAwareForm( "big-form" ) {
+            @Override
+            protected void onSubmit() {
+                // Do nothing - everything is done via Ajax, even file uploads
+                // System.out.println( "Form submitted" );
+            }
+        };
+        form.setMultiPart( true );
+        add( form );
+    }
+
+    private void addSpinner() {
+        spinner = new WebMarkupContainer( "spinner" );
+        spinner.setOutputMarkupId( true );
+        spinner.add( new AttributeModifier( "id", true, new Model<String>( "spinner" ) ) );
+        form.addOrReplace( spinner );
     }
 
     private void addMaximizedFlowPanel( Change change ) {
@@ -535,15 +551,15 @@ public final class PlanPage extends WebPage implements Updatable {
                 } );
         segmentDescriptionLabel.setOutputMarkupId( true );
         segmentDescriptionLabel.add(
-                    new AttributeModifier(
-                            "title",
-                            true,
-                            new AbstractReadOnlyModel<String>() {
-                                @Override
-                                public String getObject() {
-                                    return segment.getPhaseEventTitle();
-                                }
-                            } ) );
+                new AttributeModifier(
+                        "title",
+                        true,
+                        new AbstractReadOnlyModel<String>() {
+                            @Override
+                            public String getObject() {
+                                return segment.getPhaseEventTitle();
+                            }
+                        } ) );
         form.addOrReplace( segmentDescriptionLabel );
     }
 
@@ -596,6 +612,8 @@ public final class PlanPage extends WebPage implements Updatable {
             @Override
             protected void onTimer( AjaxRequestTarget target ) {
                 doTimedUpdate( target );
+                addSpinner();
+                target.addComponent( spinner );
             }
         } );
         form.add( refreshNeededComponent );
@@ -1339,8 +1357,8 @@ public final class PlanPage extends WebPage implements Updatable {
         while ( expanded == null && iter.hasNext() ) {
             try {
                 id = iter.next();
-            ModelObject mo = getQueryService().find( ModelObject.class, id );
-                if ( mo instanceof Segment ) expanded = (Segment)mo;
+                ModelObject mo = getQueryService().find( ModelObject.class, id );
+                if ( mo instanceof Segment ) expanded = (Segment) mo;
             } catch ( NotFoundException e ) {
                 LOG.info( "Failed to find expanded " + id );
             }
@@ -1489,10 +1507,10 @@ public final class PlanPage extends WebPage implements Updatable {
         if ( change.isNone() )
             return;
         if ( change.isUnknown() ) {
-          if ( !getPlan().getSegments().contains( segment ) ) {
-              segment = getPlan().getDefaultSegment();
-              setPart( null );
-          }
+            if ( !getPlan().getSegments().contains( segment ) ) {
+                segment = getPlan().getDefaultSegment();
+                setPart( null );
+            }
         } else if ( change.isCollapsed() || change.isRemoved() )
             collapse( change );
         else if ( change.isExpanded() || change.isAdded() ) {
