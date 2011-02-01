@@ -15,6 +15,7 @@ import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Taggable;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.util.NameRange;
@@ -28,6 +29,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -121,6 +123,18 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      */
     private String indexedOn = ALL;
     /**
+     * Filter by name checkbox.
+     */
+    private CheckBox byNameCheckBox;
+    /**
+     * Filter by tags checkbox.
+     */
+    private CheckBox byTagsCheckBox;
+    /**
+     * Filter string input field.
+     */
+    private TextField<String> filterField;
+    /**
      * Name index panel.
      */
     private NameRangePanel nameRangePanel;
@@ -132,6 +146,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * Filter string.
      */
     private String filter = "";
+    /**
+     * Whether filtering is by name vs by tags.
+     */
+    private boolean filteredByName = true;
     /**
      * Name index panel.
      */
@@ -154,6 +172,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
 
     private void init() {
         addIndexChoice();
+        addByNameOrTags();
         addFilterField();
         addNameRangePanel();
         addIndices();
@@ -167,6 +186,12 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         indexedOnChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 indices = null;
+                byTagsCheckBox.setEnabled( !indexedOn.equals( EOIS ) );
+                if ( indexedOn.equals( EOIS ) )  {
+                    setFilteredByName( true );
+                }
+                target.addComponent( byNameCheckBox );
+                target.addComponent( byTagsCheckBox );
                 nameRange = new NameRange();
                 addNameRangePanel();
                 addIndices();
@@ -190,7 +215,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     }
 
     private void addFilterField() {
-        TextField<String> filterField = new TextField<String>(
+        filterField = new TextField<String>(
                 "filter",
                 new PropertyModel<String>( this, "filter" )
         );
@@ -203,6 +228,35 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             }
         } );
         add( filterField );
+    }
+
+    private void addByNameOrTags() {
+        byNameCheckBox = new CheckBox( "name", new PropertyModel<Boolean>( this, "filteredByName" ) );
+        byNameCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addNameRangePanel();
+                target.addComponent( nameRangePanel );
+                addIndices();
+                target.addComponent( indicesContainer );
+                target.addComponent( filterField );
+                target.addComponent( byTagsCheckBox );
+            }
+        } );
+        add( byNameCheckBox );
+        byTagsCheckBox = new CheckBox( "tags", new PropertyModel<Boolean>( this, "filteredByTags" ) );
+        byTagsCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addNameRangePanel();
+                target.addComponent( nameRangePanel );
+                addIndices();
+                target.addComponent( indicesContainer );
+                target.addComponent( filterField );
+                target.addComponent( byNameCheckBox );
+            }
+        } );
+        add( byTagsCheckBox );
     }
 
     private void addIndices() {
@@ -247,13 +301,87 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         indicesContainer.addOrReplace( indices3 );
     }
 
+    public boolean isFilteredByName() {
+        return filteredByName;
+    }
+
+    public void setFilteredByName( boolean val ) {
+        filteredByName = val;
+        filter = "";
+        indices = null;
+    }
+
+    public boolean isFilteredByTags() {
+        return !isFilteredByName();
+    }
+
+    public void setFilteredByTags( boolean val ) {
+        filteredByName = !val;
+        filter = "";
+        indices = null;
+    }
+
+    public List<String> getIndexedNames() {
+        if ( isFilteredByName() )
+            return getIndexedNamesFilteredByName();
+        else {
+            assert isFilteredByTags();
+            return getIndexedNamesFilteredByTags();
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<String> getIndexedNamesFilteredByTags() {
+        List<? extends Taggable> taggables;
+        if ( indexedOn.equals( ALL ) ) {
+            taggables = getAllTaggables();
+        } else if ( indexedOn.equals( ACTORS ) ) {
+            taggables = findIndexedActors();
+        } else if ( indexedOn.equals( ROLES ) ) {
+            taggables = findIndexedRoles();
+        } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
+            taggables = findIndexedOrganizations();
+        } else if ( indexedOn.equals( PLACES ) ) {
+            taggables = findIndexedPlaces();
+        } else if ( indexedOn.equals( EVENTS ) ) {
+            taggables = findIndexedEvents();
+        } else if ( indexedOn.equals( PHASES ) ) {
+            taggables = findIndexedPhases();
+        } else if ( indexedOn.equals( MEDIA ) ) {
+            taggables = findIndexedMedia();
+        } else if ( indexedOn.equals( TASKS ) ) {
+            taggables = findIndexedParts();
+        } else if ( indexedOn.equals( FLOWS ) ) {
+            taggables = findIndexedFlows();
+        } else if ( indexedOn.equals( EOIS ) ) {
+            taggables = new ArrayList<Taggable>();
+        } else if ( indexedOn.equals( SEGMENTS ) ) {
+            taggables = findIndexedSegments();
+        } else {
+            throw new IllegalStateException( "Can't index on " + indexedOn );
+        }
+        return (List<String>) CollectionUtils.collect(
+                CollectionUtils.select( taggables,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return !isFilteredOutByTags( (Taggable) obj );
+                            }
+                        } ),
+                new Transformer() {
+                    public Object transform( Object obj ) {
+                        return ( indexName( (Taggable) obj ) ).toLowerCase();
+                    }
+                } );
+
+    }
+
     /**
      * Get all distinct, filtered names to be indexed, as lowercase.
      *
      * @return a list of strings
      */
     @SuppressWarnings( "unchecked" )
-    public List<String> getIndexedNames() {
+    private List<String> getIndexedNamesFilteredByName() {
         List<String> names;
         if ( indexedOn.equals( ALL ) ) {
             names = getAllNames();
@@ -283,11 +411,12 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
         return (List<String>) CollectionUtils.collect(
-                CollectionUtils.select( names, new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return !isFilteredOut( (String) obj );
-                    }
-                } ),
+                CollectionUtils.select( names,
+                        new Predicate() {
+                            public boolean evaluate( Object obj ) {
+                                return !isFilteredOutByName( (String) obj );
+                            }
+                        } ),
                 new Transformer() {
                     public Object transform( Object obj ) {
                         return ( (String) obj ).toLowerCase();
@@ -309,6 +438,22 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         names.addAll( indexNamesFor( findIndexedParts() ) );
         names.addAll( indexNamesFor( findIndexedSegments() ) );
         return new ArrayList<String>( names );
+    }
+
+
+    private List<? extends Taggable> getAllTaggables() {
+        List<Taggable> taggables = new ArrayList<Taggable>();
+        taggables.addAll( findIndexedActors() );
+        taggables.addAll( findIndexedEvents() );
+        taggables.addAll( findIndexedOrganizations() );
+        taggables.addAll( findIndexedPhases() );
+        taggables.addAll( findIndexedMedia() );
+        taggables.addAll( findIndexedPlaces() );
+        taggables.addAll( findIndexedRoles() );
+        taggables.addAll( findIndexedFlows() );
+        taggables.addAll( findIndexedParts() );
+        taggables.addAll( findIndexedSegments() );
+        return taggables;
     }
 
     @SuppressWarnings( "unchecked" )
@@ -426,7 +571,9 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             } else if ( indexedOn.equals( FLOWS ) ) {
                 indices = indicesFor( findIndexedFlows() );
             } else if ( indexedOn.equals( EOIS ) ) {
-                indices = indicesFor( findIndexedEOIs() );
+                indices = isFilteredByName()
+                        ? indicesFor( findIndexedEOIs() )
+                        : indicesFor( new ArrayList<Modelable>() );
             } else if ( indexedOn.equals( SEGMENTS ) ) {
                 indices = indicesFor( findIndexedSegments() );
             } else {
@@ -448,6 +595,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         indexEntries.addAll( indicesFor( findIndexedMedia() ) );
         indexEntries.addAll( indicesFor( findIndexedParts() ) );
         indexEntries.addAll( indicesFor( findIndexedFlows() ) );
+        if ( isFilteredByName() ) indexEntries.addAll( indicesFor( findIndexedEOIs() ) );
         indexEntries.addAll( indicesFor( findIndexedSegments() ) );
         return indexEntries;
     }
@@ -482,7 +630,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         Map<String, IndexEntry> entries = new HashMap<String, IndexEntry>();
         for ( Modelable modelable : modelables ) {
             boolean included = nameRange.contains( rangeName( modelable ) ) &&
-                    !isFilteredOut( indexName( modelable ) );
+                    !isFilteredOut( modelable );
             if ( included ) {
                 String indexName = indexName( modelable );
                 IndexEntry entry = entries.get( indexName );
@@ -497,12 +645,22 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         return new ArrayList<IndexEntry>( entries.values() );
     }
 
-    protected boolean isNameIncluded( String name ) {
-        return nameRange.contains( name ) && !isFilteredOut( name );
+    private boolean isFilteredOut( Modelable modelable ) {
+        if ( isFilteredByName() ) {
+            return isFilteredOutByName( indexName( modelable ) );
+        } else {
+            assert isFilteredByTags();
+            return isFilteredOutByTags( modelable.getModelObject() );
+        }
     }
 
-    private boolean isFilteredOut( String name ) {
+    private boolean isFilteredOutByName( String name ) {
         return !filter.isEmpty() && name.toLowerCase().indexOf( filter ) < 0;
+    }
+
+    private boolean isFilteredOutByTags( Taggable taggable ) {
+        return !filter.isEmpty()
+                && !taggable.hasTags( filter );
     }
 
     private void italicizeIfEntityType( Component component, ModelObject mo ) {

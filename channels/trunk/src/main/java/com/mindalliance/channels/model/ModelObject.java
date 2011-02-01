@@ -1,5 +1,6 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -144,18 +145,39 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
         setTags( Tag.tagsFromString( s ) );
     }
 
+    @Override
+    // There is no tag from s such that there is no tag in tag that matches it
+    // (all tags from s match at least of this mo's tags)
+    public boolean hasTags( String s ) {
+        List<Tag> otherTags = Tag.tagsFromString( s );
+        final Matcher matcher = Matcher.getInstance();
+        return !CollectionUtils.exists( otherTags,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( final Object other ) {
+                        return !CollectionUtils.exists( getTags(),
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object tag ) {
+                                        return matcher.matches( (Tag) other, (Tag) tag );
+                                    }
+                                } );
+                    }
+                } );
+    }
+
     public void addTag( String s ) {
         addTag( new Tag( s ) );
     }
 
-    public void addTag (Tag tag ) {
+    public void addTag( Tag tag ) {
         if ( !tags.contains( tag ) )
             tags.add( tag );
     }
 
 
     public void addTags( String s ) {
-        for (Tag tag : Tag.tagsFromString( s ) ) {
+        for ( Tag tag : Tag.tagsFromString( s ) ) {
             addTag( tag );
         }
     }

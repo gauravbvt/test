@@ -11,9 +11,25 @@ import java.util.List;
  * Time: 1:20 PM
  */
 public interface Taggable extends Identifiable {
-
+    /**
+     * Get tags.
+     *
+     * @return a list of tags
+     */
     List<Tag> getTags();
 
+    /**
+     * Set tags from string.
+     *
+     * @param s a string
+     */
     void setTags( String s );
 
+    /**
+     * Whether this all all tags from a string.
+     *
+     * @param s a string
+     * @return a boolean
+     */
+    boolean hasTags( String s );
 }
