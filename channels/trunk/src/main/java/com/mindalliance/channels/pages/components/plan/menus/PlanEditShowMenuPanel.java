@@ -10,8 +10,8 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Plan edit show menu.
@@ -40,6 +40,7 @@ public class PlanEditShowMenuPanel extends MenuPanel {
                 newItem( "All issues", PlanEditPanel.ISSUES ),
                 newItem( "Bibliography", PlanEditPanel.BIBLIOGRAPHY ),
                 newItem( "Index", PlanEditPanel.INDEX ),
+                newItem( "All tags", PlanEditPanel.TAGS ),
                 newItem( "Evaluation", PlanEditPanel.EVAL ),
                 newItem( "Participations", PlanEditPanel.PARTICIPATIONS ),
                 newItem( "Versions", PlanEditPanel.VERSIONS ) );

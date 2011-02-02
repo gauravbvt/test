@@ -160,6 +160,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     private List<IndexEntry> indices;
     private String css;
 
+    public AbstractIndexPanel( String id, IModel<? extends Identifiable> model ) {
+        this( id, model, null, null );
+    }
+
     public AbstractIndexPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         this( id, model, null, expansions );
     }
@@ -170,7 +174,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         init();
     }
 
-    private void init() {
+    protected void init() {
         addIndexChoice();
         addByNameOrTags();
         addFilterField();
@@ -502,7 +506,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * @return a list of index entries.
      */
     public List<IndexEntry> getIndices1() {
-        List<IndexEntry> allIndices = getAllIndices();
+        List<IndexEntry> allIndices = getFilteredIndices();
         int fromIndex = 0;
         int toIndex = getRowCounts()[0];
         return ( toIndex > 0 )
@@ -516,7 +520,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * @return a list of index entries.
      */
     public List<IndexEntry> getIndices2() {
-        List<IndexEntry> allIndices = getAllIndices();
+        List<IndexEntry> allIndices = getFilteredIndices();
         int fromIndex = getRowCounts()[0];
         int toIndex = getRowCounts()[0] + getRowCounts()[1];
         return ( toIndex > 0 )
@@ -530,7 +534,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * @return a list of index entries.
      */
     public List<IndexEntry> getIndices3() {
-        List<IndexEntry> allIndices = getAllIndices();
+        List<IndexEntry> allIndices = getFilteredIndices();
         int fromIndex = getRowCounts()[0] + getRowCounts()[1];
         int toIndex = allIndices.size();
         return ( toIndex > 0 )
@@ -539,7 +543,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     }
 
     private int[] getRowCounts() {
-        int count = getAllIndices().size();
+        int count = getFilteredIndices().size();
         int split = count / 3;
         int[] rowCounts = new int[]{split, split, split};
         count = count % 3;
@@ -548,7 +552,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         return rowCounts;
     }
 
-    private List<IndexEntry> getAllIndices() {
+    private List<IndexEntry> getFilteredIndices() {
         if ( indices == null ) {
             if ( indexedOn.equals( ALL ) ) {
                 indices = getIndicesForAllNames();
@@ -660,7 +664,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
 
     private boolean isFilteredOutByTags( Taggable taggable ) {
         return !filter.isEmpty()
-                && !taggable.hasTags( filter );
+                && !taggable.isTaggedWith( filter );
     }
 
     private void italicizeIfEntityType( Component component, ModelObject mo ) {

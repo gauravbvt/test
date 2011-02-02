@@ -148,7 +148,7 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
     @Override
     // There is no tag from s such that there is no tag in tag that matches it
     // (all tags from s match at least of this mo's tags)
-    public boolean hasTags( String s ) {
+    public boolean isTaggedWith( String s ) {
         List<Tag> otherTags = Tag.tagsFromString( s );
         final Matcher matcher = Matcher.getInstance();
         return !CollectionUtils.exists( otherTags,
@@ -164,6 +164,18 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
                                 } );
                     }
                 } );
+    }
+
+    @Override
+    public boolean isTaggedWith( final Tag tag ) {
+        final Matcher matcher = Matcher.getInstance();
+        return CollectionUtils.exists( getTags(),
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        return matcher.matches( (Tag) object, tag );
+                                    }
+                                } );
     }
 
     public void addTag( String s ) {
