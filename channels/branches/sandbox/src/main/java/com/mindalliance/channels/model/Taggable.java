@@ -26,10 +26,18 @@ public interface Taggable extends Identifiable {
     void setTags( String s );
 
     /**
-     * Whether this all all tags from a string.
+     * Whether this has all tags from a string.
      *
      * @param s a string
      * @return a boolean
      */
-    boolean hasTags( String s );
+    boolean isTaggedWith( String s );
+
+    /**
+      * Whether this has a tag.
+      *
+      * @param tag a tag
+      * @return a boolean
+      */
+    boolean isTaggedWith( Tag tag );
 }

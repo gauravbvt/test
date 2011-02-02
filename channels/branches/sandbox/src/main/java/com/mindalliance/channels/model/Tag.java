@@ -3,6 +3,7 @@ package com.mindalliance.channels.model;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -16,7 +17,7 @@ import java.util.List;
  * Date: 1/27/11
  * Time: 1:11 PM
  */
-public class Tag implements Serializable, Nameable {
+public class Tag implements Serializable, Nameable, Comparable {
     /**
      * Tag composition string
      */
@@ -25,6 +26,8 @@ public class Tag implements Serializable, Nameable {
      * Tag separator
      */
     public static final String SEPARATOR = ",";
+
+    private static Collator collator = Collator.getInstance();
 
     private String name;
 
@@ -96,5 +99,14 @@ public class Tag implements Serializable, Nameable {
     @Override
     public String toString() {
         return getName();
+    }
+
+    public boolean isEmpty() {
+        return getName().isEmpty();
+    }
+
+    @Override
+    public int compareTo( Object other ) {
+        return collator.compare( getName(), ((Tag)other).getName() );
     }
 }

@@ -78,6 +78,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * Organizations in scope.
      */
     public static final String ORGANIZATIONS = "All organizations";
+    /**
+     * The plan's tag domain.
+     */
+    public static final String TAGS = "All tags";
 
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -177,6 +181,8 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanEvaluationPanel();
         }  else if ( aspect.equals( VERSIONS ) ) {
             return getPlanVersionsPanel();
+        }  else if ( aspect.equals( TAGS ) ) {
+            return getPlanTagsPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -229,6 +235,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
 
     private Component getPlanClassificationsPanel() {
         return new PlanClassificationSystemsPanel( "aspect" );
+    }
+
+    private Component getPlanTagsPanel() {
+        return new PlanTagsPanel( "aspect" );
     }
 
     public Plan getPlan() {
