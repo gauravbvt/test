@@ -21,6 +21,7 @@ import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
+import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
@@ -222,6 +223,13 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addTagsPanel() {
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getPart() ) );
         add( tagsPanel );
+        AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
+            }
+        };
+        tagsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );
+        add( tagsLink );
     }
 
     private void addSummaryPanel() {

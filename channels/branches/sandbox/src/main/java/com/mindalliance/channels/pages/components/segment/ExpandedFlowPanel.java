@@ -23,6 +23,7 @@ import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
+import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -231,6 +232,13 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addTagsPanel() {
+        AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
+            }
+        };
+        tagsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );
+        add( tagsLink );
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getFlow() ) );
         add( tagsPanel );
     }

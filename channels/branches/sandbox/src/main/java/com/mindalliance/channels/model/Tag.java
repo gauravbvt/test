@@ -35,6 +35,11 @@ public class Tag implements Serializable, Nameable, Comparable {
         name = StringUtils.strip( s.trim(), COMPOSITOR ).trim();
     }
 
+    public boolean isInfoStandard() {
+        return false;
+    }
+
+
     public String getName() {
         return name == null ? "" : name;
     }

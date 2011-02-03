@@ -2692,11 +2692,15 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /** @{inheritDoc} */
     public List<Tag> findTagDomain() {
         Set<Tag> domain = new HashSet<Tag>();
-        for ( ModelObject mo : findAllModelObjects(  ) ) {
+        for ( ModelObject mo : findAllModelObjects() ) {
             List<Tag> tags = mo.getTags();
             for ( Tag tag : tags ) {
-                for ( String s : tag.getAllComponents() ) {
-                    domain.add( new Tag( s ) );
+                if ( tag.isInfoStandard() ) {
+                    domain.add( tag );
+                } else {
+                    for ( String s : tag.getAllComponents() ) {
+                        domain.add( new Tag( s ) );
+                    }
                 }
             }
         }

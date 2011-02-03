@@ -47,7 +47,11 @@ public class Attachment implements Serializable, Comparable<Attachment> {
         /**
          * List of end-line or comma-separated tags to pre-load into a plan.
          */
-        TAGS( "Tags" );
+        TAGS( "Tags" ),
+        /**
+         * Info standards.
+         */
+        InfoStandards( "Info standards");
 
 
         //--------------------------------
@@ -164,6 +168,10 @@ public class Attachment implements Serializable, Comparable<Attachment> {
      */
     public boolean isTags() {
         return type == Type.TAGS;
+    }
+
+    public boolean isInfoStandards() {
+        return type == Type.InfoStandards;
     }
 
 
