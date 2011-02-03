@@ -1266,6 +1266,20 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return copy;
     }
 
+    @SuppressWarnings( "unchecked" )
+    /**
+     * Return all tags that are info standards.
+     * @return a list of info standards
+     */
+    public List<InfoStandard> getInfoStandards( Plan plan ) {
+        List<InfoStandard> infoStandards = new ArrayList<InfoStandard>();
+        for ( Tag tag : getTags() ) {
+            InfoStandard infoStandard = plan.getInfoStandard( tag.getName() );
+            if ( infoStandard != null ) infoStandards.add( infoStandard );
+        }
+        return infoStandards;
+    }
+
 
     /**
      * The significance of a flow.
@@ -1429,7 +1443,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
         public String getLabel( boolean isSend ) {
             if ( this == Supervisor ) {
-                return (isSend ? "to " : "from ") + toString();
+                return ( isSend ? "to " : "from " ) + toString();
             } else {
                 return "in " + toString();
             }
@@ -1458,8 +1472,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             if ( restriction == other ) return restriction;
             if ( restriction == SameTopOrganization && other == SameOrganization ) return SameOrganization;
             if ( other == SameTopOrganization && restriction == SameOrganization ) return SameOrganization;
-            if ( restriction == DifferentTopOrganizations && other == DifferentOrganizations ) return DifferentOrganizations;
-            if ( other == DifferentTopOrganizations && restriction == DifferentOrganizations ) return DifferentOrganizations;
+            if ( restriction == DifferentTopOrganizations && other == DifferentOrganizations )
+                return DifferentOrganizations;
+            if ( other == DifferentTopOrganizations && restriction == DifferentOrganizations )
+                return DifferentOrganizations;
             return null;
         }
 

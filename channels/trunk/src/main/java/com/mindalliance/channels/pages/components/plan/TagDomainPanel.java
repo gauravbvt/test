@@ -224,6 +224,18 @@ public class TagDomainPanel extends AbstractUpdatablePanel implements NameRangea
                         "title",
                         true,
                         new Model<String>( getTag().getName() ) ) );
+            } else if ( getTag().isInfoStandard() ) {
+                tagNameLabel.add( new AttributeModifier(
+                        "title",
+                        true,
+                        new Model<String>( "An info standard" ) ) );
+            }
+            if ( getTag().isInfoStandard() ) {
+                tagNameLabel.add(
+                    new AttributeModifier(
+                            "style",
+                            true,
+                            new Model<String>( "font-style: oblique" ) ) );
             }
             tagLink.add( tagNameLabel );
         }

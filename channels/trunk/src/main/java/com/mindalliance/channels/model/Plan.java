@@ -1,6 +1,10 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.util.InfoStandardsLoader;
+import com.mindalliance.channels.util.Loader;
+import com.mindalliance.channels.util.TagLoader;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -44,6 +48,18 @@ public class Plan extends ModelObject {
      * Timing of the default phase.
      */
     public static final Phase.Timing DEFAULT_PHASE_TIMING = Phase.Timing.Concurrent;
+
+    public InfoStandard getInfoStandard( final String name ) {
+        final Matcher matcher = Matcher.getInstance();
+        return (InfoStandard) CollectionUtils.find( getTags(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Tag tag = (Tag) object;
+                        return tag.isInfoStandard() && matcher.same( tag.getName(), name );
+                    }
+                } );
+    }
 
     /**
      * The status of a (version of) plan.
@@ -627,6 +643,7 @@ public class Plan extends ModelObject {
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = super.getAttachmentTypes();
         types.add( Attachment.Type.TAGS );
+        types.add( Attachment.Type.InfoStandards );
         return types;
     }
 
@@ -635,12 +652,16 @@ public class Plan extends ModelObject {
         for ( Attachment attachment : getAttachments() ) {
             if ( attachment.isTags() ) {
                 String url = attachment.getUrl();
-                reloadTagsFromUrl( url, attachmentManager );
+                reloadTagsFromUrl( url, attachmentManager, new TagLoader( this ) );
+            }
+            if ( attachment.isInfoStandards() ) {
+                String url = attachment.getUrl();
+                reloadTagsFromUrl( url, attachmentManager, new InfoStandardsLoader( this ) );
             }
         }
     }
 
-    private void reloadTagsFromUrl( String url, AttachmentManager attachmentManager ) {
+    private void reloadTagsFromUrl( String url, AttachmentManager attachmentManager, Loader loader ) {
         BufferedReader in = null;
         try {
             InputStreamReader reader;
@@ -651,10 +672,7 @@ public class Plan extends ModelObject {
                 reader = new InputStreamReader( new URL( url ).openStream() );
             }
             in = new BufferedReader( reader );
-            String inputLine;
-            while ( ( inputLine = in.readLine() ) != null ) {
-                addTags( inputLine );
-            }
+            loader.load( in );
         } catch ( IOException e ) {
             LOG.warn( "Failed to load tags file " + url, e );
         } finally {
@@ -671,14 +689,14 @@ public class Plan extends ModelObject {
     @Override
     protected void attachmentAdded( Attachment attachment, AttachmentManager attachmentManager ) {
         super.attachmentAdded( attachment, attachmentManager );
-        if ( attachment.isTags() )
+        if ( attachment.isTags() || attachment.isInfoStandards() )
             reloadTags( attachmentManager );
     }
 
     @Override
     protected void attachmentRemoved( Attachment attachment, AttachmentManager attachmentManager ) {
         super.attachmentRemoved( attachment, attachmentManager );
-        if ( attachment.isTags() )
+        if ( attachment.isTags() || attachment.isInfoStandards() )
             reloadTags( attachmentManager );
     }
 }
