@@ -244,9 +244,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
 
     private void addPartMenuBar() {
         addPartActionsMenu();
-        partShowMenu = new PartShowMenuPanel( "partShowMenu", partModel, getExpansions() );
-        partShowMenu.setOutputMarkupId( true );
-        add( partShowMenu );
+        addPartShowMenu();
         AjaxFallbackLink addPartLink = new AjaxFallbackLink( "addPart" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Command command = new AddPart( getSegment() );
@@ -256,6 +254,12 @@ public class SegmentPanel extends AbstractCommandablePanel {
         };
         addPartLink.setVisible( getPlan().isDevelopment() );
         add( addPartLink );
+    }
+
+    private void addPartShowMenu() {
+        partShowMenu = new PartShowMenuPanel( "partShowMenu", partModel, getExpansions() );
+        partShowMenu.setOutputMarkupId( true );
+        addOrReplace( partShowMenu );
     }
 
     private void addPartActionsMenu() {
@@ -669,6 +673,7 @@ public class SegmentPanel extends AbstractCommandablePanel {
      */
     public void refreshMenus( AjaxRequestTarget target ) {
         addPartActionsMenu();
+        addPartShowMenu();
         target.addComponent( partShowMenu );
         target.addComponent( partActionsMenu );
         receivesFlowPanel.refreshMenus( target );

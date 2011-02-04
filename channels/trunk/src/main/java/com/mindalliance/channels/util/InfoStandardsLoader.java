@@ -14,12 +14,12 @@ import java.io.IOException;
  *
  * # Comment line
  * tagName
- *  eoiName, description
- *  eoiName, description
+ *  eoiName - description
+ *  eoiName - description
  *  ...
  * <empty line>
  * tagName
- *  eoiName, description
+ *  eoiName - description
  *  ...
  *
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
