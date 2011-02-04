@@ -64,9 +64,18 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      */
     protected String getTitle() {
         return "About "
-                + (getEntity().isActual() ? " actual " : " type of ")
+                + getAboutString()
                 + getObject().getKindLabel().toLowerCase()
                 + ": " + getObject().getName();
+    }
+
+    private String getAboutString() {
+        ModelEntity entity = getEntity();
+        if ( ModelEntity.canBeActualOrType( entity.getClass() ) ) {
+            return  getEntity().isActual() ? " actual " : " type of ";
+        } else {
+            return "";
+        }
     }
 
     /**

@@ -16,7 +16,6 @@ import java.util.Set;
  * Time: 1:05:30 PM
  */
 public abstract class ModelEntity extends ModelObject {
-
     /**
      * Actual or Type.
      */
@@ -129,6 +128,8 @@ public abstract class ModelEntity extends ModelObject {
         return !(
                 Event.class.isAssignableFrom( entityClass )
                         || Role.class.isAssignableFrom( entityClass )
+                        || TransmissionMedium.class.isAssignableFrom( entityClass )
+                        || Phase.class.isAssignableFrom( entityClass )
         );
     }
 
@@ -420,7 +421,7 @@ public abstract class ModelEntity extends ModelObject {
     }
 
     private List<ModelEntity> safeAllTypes( Set<ModelEntity> visited ) {
-        List<ModelEntity> allTypes = new ArrayList<ModelEntity>();
+        Set<ModelEntity> allTypes = new HashSet<ModelEntity>();
         if ( !visited.contains( this ) ) {
             allTypes.addAll( getTypes() );
             allTypes.addAll( getImplicitTypes() );
@@ -429,7 +430,7 @@ public abstract class ModelEntity extends ModelObject {
                 allTypes.addAll( type.safeAllTypes( visited ) );
             }
         }
-        return allTypes;
+        return new ArrayList<ModelEntity>( allTypes );
     }
 
     private List<ModelEntity> safeAllImplicitTypes( Set<ModelEntity> visited ) {
