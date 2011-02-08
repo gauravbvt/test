@@ -246,6 +246,26 @@ public interface QueryService {
      */
     Boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind );
 
+
+    /**
+     * Find an actual entity by name, if it exists.
+     * @param entityClass a model entity class
+     * @param name a string
+     * @param <T> a subclass of model entity
+     * @return a model entity or null
+     */
+    <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name );
+
+    /**
+     * Find an entity type by name, if it exists.
+     * @param entityClass a model entity class
+     * @param name a string
+     * @param <T> a subclass of model entity
+     * @return a model entity or null
+     */
+    <T extends ModelEntity> T findEntityType( Class<T> entityClass, String name );
+
+
     /**
      * Create a connector in a plan segment.
      *
@@ -1228,4 +1248,5 @@ public interface QueryService {
      * @return a list of tags
      */
     List<Tag> findTagDomain();
+
 }

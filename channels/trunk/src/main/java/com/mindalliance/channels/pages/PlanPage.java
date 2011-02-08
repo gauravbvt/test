@@ -750,15 +750,17 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void addPlanMenubar() {
-        PropertyModel<Segment> sc = new PropertyModel<Segment>( this, "segment" );
-        Set<Long> exps = getReadOnlyExpansions();
-        planActionsMenu = new PlanActionsMenuPanel( "planActionsMenu", sc, exps );
-        planActionsMenu.setOutputMarkupId( true );
-        form.add( planActionsMenu );
-        planShowMenu = new PlanShowMenuPanel( "planShowMenu", sc, exps );
+        addPlanActionsMenu();
+        addPlanShowMenu();
+    }
+
+    private void addPlanShowMenu() {
+        planShowMenu = new PlanShowMenuPanel(
+                "planShowMenu",
+                new PropertyModel<Segment>( this, "segment" ),
+                getReadOnlyExpansions() );
         planShowMenu.setOutputMarkupId( true );
-        form.add( planShowMenu );
-        // form.add( new Label( "username", getUser().getUsername() ) );
+        form.addOrReplace( planShowMenu );
     }
 
     private void addPlanActionsMenu() {
@@ -1716,6 +1718,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshPlanMenus( AjaxRequestTarget target ) {
         addPlanActionsMenu();
+        addPlanShowMenu();
         target.addComponent( planActionsMenu );
         target.addComponent( planShowMenu );
     }

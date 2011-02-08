@@ -345,7 +345,17 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a boolean
      */
     protected boolean isExpanded( Identifiable identifiable ) {
-        return getExpansions().contains( identifiable.getId() );
+        return isExpanded( identifiable.getId() );
+    }
+
+    /**
+      * Whether or not the id is expanded.
+      *
+      * @param id an long
+      * @return a boolean
+      */
+    protected boolean isExpanded( long id ) {
+        return getExpansions().contains( id );
     }
 
     /**

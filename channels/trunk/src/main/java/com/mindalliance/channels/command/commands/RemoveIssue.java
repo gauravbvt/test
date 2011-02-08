@@ -5,7 +5,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.query.QueryService;
 
@@ -25,10 +25,17 @@ public class RemoveIssue extends AbstractCommand {
     public RemoveIssue() {
     }
 
-    public RemoveIssue( UserIssue issue ) {
+    public RemoveIssue( Issue issue ) {
         needLockOn( issue );
         needLockOn( issue.getAbout() );
         set( "issue", issue.getId() );
+        set( "modelObject", issue.getAbout().getId() );
+        Map<String, Object> state = new HashMap<String, Object>();
+        state.put( "description", issue.getDescription() );
+        state.put( "remediation", issue.getRemediation() );
+        state.put( "severity", issue.getSeverity() );
+        state.put( "reportedBy", issue.getReportedBy() );
+        set( "state", state );
     }
 
     /**
@@ -45,13 +52,6 @@ public class RemoveIssue extends AbstractCommand {
         QueryService queryService = commander.getQueryService();
         UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
         describeTarget( issue );
-        set( "modelObject", issue.getAbout().getId() );
-        Map<String, Object> state = new HashMap<String, Object>();
-        state.put( "description", issue.getDescription() );
-        state.put( "remediation", issue.getRemediation() );
-        state.put( "severity", issue.getSeverity() );
-        state.put( "reportedBy", issue.getReportedBy() );
-        set( "state", state );
         queryService.remove( issue );
         releaseAnyLockOn( issue, commander );
         return new Change( Change.Type.Removed, issue );
@@ -69,10 +69,12 @@ public class RemoveIssue extends AbstractCommand {
      */
     @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
+/*
         ModelObject modelObject = commander.resolve(
                 ModelObject.class,
                 (Long) get( "modelObject" ) );
-        AddUserIssue addIssue = new AddUserIssue( modelObject );
+*/
+        AddUserIssue addIssue = new AddUserIssue( (Long) get( "modelObject" ) );
         addIssue.set( "issue", get( "issue" ) );
         addIssue.set( "state", get( "state" ) );
         return addIssue;

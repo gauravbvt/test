@@ -229,8 +229,18 @@ public abstract class AbstractCommand implements Command {
      * @param identifiable an identifiable object
      */
     public void addConflicting( Identifiable identifiable ) {
-        conflictSet.add( identifiable.getId() );
+        addConflicting( identifiable.getId() );
     }
+
+    /**
+     * Add identifiable to conflict set.
+     *
+     * @param id an id
+     */
+    public void addConflicting( long id ) {
+        conflictSet.add( id );
+    }
+
 
     /**
      * Add identifiables to conflict set.

@@ -7,8 +7,10 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.List;
 
@@ -46,15 +48,25 @@ public class DisconnectAndRemoveSegment extends AbstractCommand {
         describeTarget( segment );                
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
-            multi = new MultiCommand( "remove plan segment - extra" );
-            for ( Flow externalFlow : segment.listExternalFlows() ) {
-                multi.addCommand( commander.makeRemoveFlowCommand( externalFlow ) );
-            }
-            multi.addCommand( new RemoveSegment( segment ) );
+            multi = makeSubCommands( segment, commander );
         }
         set( "subCommands", multi );
         multi.execute( commander );
         return new Change( Change.Type.Removed, segment );
+    }
+
+    private MultiCommand makeSubCommands( Segment segment, Commander commander  ) {
+        MultiCommand multi  = new MultiCommand( "remove plan segment - extra" );
+        for ( Flow externalFlow : segment.listExternalFlows() ) {
+            multi.addCommand( commander.makeRemoveFlowCommand( externalFlow ) );
+        }
+        QueryService queryService = commander.getQueryService();
+        for ( Issue userIssue : queryService.findAllUserIssues( segment ) ) {
+            RemoveIssue removeIssue = new RemoveIssue( userIssue );
+            multi.addCommand( removeIssue );
+        }
+        multi.addCommand( new RemoveSegment( segment ) );
+        return multi;
     }
 
     public boolean isUndoable() {

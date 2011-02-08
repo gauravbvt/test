@@ -30,6 +30,11 @@ public class AddUserIssue extends AbstractCommand {
         set( "modelObject", modelObject.getId() );
     }
 
+    public AddUserIssue( long aboutId ) {
+        addConflicting( aboutId );
+        set( "modelObject", aboutId );
+    }
+
     /**
      * {@inheritDoc}
      */

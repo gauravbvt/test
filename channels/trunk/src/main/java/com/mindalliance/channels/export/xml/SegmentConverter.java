@@ -7,7 +7,6 @@ import com.mindalliance.channels.model.EventTiming;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Level;
-import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Plan;
@@ -59,8 +58,6 @@ public class SegmentConverter extends AbstractChannelsConverter {
                          MarshallingContext context ) {
         Segment segment = (Segment) object;
         Plan plan = getContext().getPlan();
-        PlanDao planDao = getPlanDao();
-        boolean exportingInPlan = isExportingPlan( context ) || segment.isBeingDeleted();
         context.put( "segment", segment );
         writer.addAttribute( "plan", plan.getUri() );
         writer.addAttribute( "version", getVersion() );
@@ -73,7 +70,11 @@ public class SegmentConverter extends AbstractChannelsConverter {
         writeTags( writer, segment );
         exportDetectionWaivers( segment, writer );
         exportAttachments( segment, writer );
-        if ( !exportingInPlan ) {
+/*
+        PlanDao planDao = getPlanDao();
+        boolean exportingInPlan = isExportingPlan( context );
+        boolean segmentBeingDeleted = segment.isBeingDeleted();
+        if ( !exportingInPlan && !segmentBeingDeleted ) {
             // All entities if not within a plan export
             Iterator<ModelEntity> entities = planDao.iterateEntities();
             while ( entities.hasNext() ) {
@@ -89,6 +90,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
                 writer.endNode();
             }
         }
+*/
         // Segment event phase
         writer.startNode( "eventphase" );
         context.convertAnother( segment.getEventPhase() );
@@ -212,16 +214,17 @@ public class SegmentConverter extends AbstractChannelsConverter {
                     }
                     reader.moveUp();
                 }
-                // Parts and flows
+                // Goals
             } else if ( nodeName.equals( "goal" ) ) {
                 Goal goal = (Goal) context.convertAnother( segment, Goal.class );
                 segment.addGoal( goal );
-                // Issues
+                // Parts and flows
             } else if ( nodeName.equals( "part" ) ) {
                 context.convertAnother( segment, Part.class );
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( segment, Flow.class );
                 // Risks
+                // Issues
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( segment, UserIssue.class );
             } else {
