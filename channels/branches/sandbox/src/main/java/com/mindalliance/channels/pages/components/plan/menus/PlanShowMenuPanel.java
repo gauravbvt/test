@@ -3,9 +3,9 @@ package com.mindalliance.channels.pages.components.plan.menus;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.HelpPage;
@@ -19,18 +19,18 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.PopupSettings;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.Arrays;
 
 /**
  * Pages menu for  a segment.
@@ -74,7 +74,7 @@ public class PlanShowMenuPanel extends MenuPanel {
 
             menuItems.add(
                 newLink(
-                    "Info Sharing Procedures",
+                    "Procedures report",
                     newTargetedLink( "_blank", SOPsReportPage.class, null ) ) );
 
             if ( User.current().isAdmin() )
@@ -82,7 +82,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                     newLink(
                         "Admin page",
                         new BookmarkablePageLink<AdminPage>( "link", AdminPage.class ) ) );
-
+           // menuItems.add( newLink( "Procedures map", plan, PlanEditPanel.PROCEDURES ) );
             menuItems.addAll(
                 Arrays.asList(
                     newLink( "All segments", plan, PlanEditPanel.MAP ),
@@ -129,12 +129,12 @@ public class PlanShowMenuPanel extends MenuPanel {
     private LinkMenuItem collapsible( final long id,
                                       String expandedTitle, String collapsedTitle ) {
 
-        final boolean expanded = getExpansions().contains( id );
         return new LinkMenuItem( "menuItem",
-                new Model<String>( expanded ? expandedTitle : collapsedTitle ),
+                new Model<String>( isExpanded(id) ? expandedTitle : collapsedTitle ),
                 new AjaxFallbackLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
+                        final boolean expanded = isExpanded( id );
                         update( target,
                                 new Change( expanded ? Change.Type.Collapsed : Change.Type.Expanded,
                                             id ) );

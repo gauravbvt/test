@@ -82,6 +82,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * The plan's tag domain.
      */
     public static final String TAGS = "All tags";
+    /**
+     * Procedures diagrammed.
+     */
+    public static final String PROCEDURES = "Procedure Map";
 
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -183,6 +187,8 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanVersionsPanel();
         }  else if ( aspect.equals( TAGS ) ) {
             return getPlanTagsPanel();
+        }  else if ( aspect.equals( PROCEDURES ) ) {
+            return getPlanProcedureMapPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -239,6 +245,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
 
     private Component getPlanTagsPanel() {
         return new PlanTagsPanel( "aspect" );
+    }
+
+    private Component getPlanProcedureMapPanel() {
+        return new PlanProcedureMapPanel( "aspect" );
     }
 
     public Plan getPlan() {

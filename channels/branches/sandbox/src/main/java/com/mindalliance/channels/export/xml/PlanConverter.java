@@ -155,7 +155,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             context.convertAnother( segment, new SegmentConverter( getContext() ) );
             writer.endNode();
         }
-        // Export plan issues
+        // Export user issues
         exportUserIssues( plan, writer, context );
         Place locale = plan.getLocale();
         if ( locale != null && !locale.getName().trim().isEmpty() ) {

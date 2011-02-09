@@ -113,8 +113,10 @@ public class SegmentCausesPanel extends AbstractTablePanel<SegmentRelationship> 
         private boolean starts;
 
         public Causation( Part cause, boolean starts, Segment effected ) {
+            assert cause != null;
             this.cause = cause;
             this.starts = starts;
+            assert effected != null;
             this.effected = effected;
         }
 

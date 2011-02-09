@@ -673,8 +673,8 @@ public class Plan extends ModelObject {
             }
             in = new BufferedReader( reader );
             loader.load( in );
-        } catch ( IOException e ) {
-            LOG.warn( "Failed to load tags file " + url, e );
+        } catch ( Exception e ) {
+            LOG.error( "Failed to load tags file " + url, e );
         } finally {
             if ( in != null ) {
                 try {

@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.MultiCommand;
 import com.mindalliance.channels.dao.Exporter;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
@@ -65,6 +66,7 @@ public class RemoveSegment extends AbstractCommand {
                 set( "defaultSegment", defaultSegment.getId() );
             }
             queryService.remove( segment );
+            releaseAnyLockOn( segment, commander );
             return new Change( Change.Type.Removed, segment );
 
         } catch ( IOException e ) {
@@ -86,13 +88,15 @@ public class RemoveSegment extends AbstractCommand {
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         String xml = (String) get( "xml" );
         if ( xml != null ) {
+            MultiCommand multi = new MultiCommand( "restore segment" );
             RestoreSegment restoreSegment = new RestoreSegment();
             restoreSegment.set( "xml", xml );
             Long defaultSegmentId = (Long) get( "defaultSegment" );
             if ( defaultSegmentId != null ) {
                 restoreSegment.set( "defaultSegment", defaultSegmentId );
             }
-            return restoreSegment;
+            multi.addCommand( restoreSegment );
+            return multi;
         } else {
             throw new CommandException( "Can not restore plan segment." );
         }

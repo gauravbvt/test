@@ -310,6 +310,26 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    public <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name ) {
+        T result = null;
+        T entity = getDao().find( entityClass, name );
+        if ( entity != null ) {
+            if ( entity.isActual() ) result = entity;
+        }
+        return result;
+    }
+
+    @Override
+    public <T extends ModelEntity> T findEntityType( Class<T> entityClass, String name ) {
+        T result = null;
+        T entity = getDao().find( entityClass, name );
+        if ( entity != null ) {
+            if ( entity.isType() ) result = entity;
+        }
+        return result;
+    }
+
+    @Override
     public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id ) {
         T entityType = null;
         if ( name != null && !name.trim().isEmpty() ) {
@@ -1743,7 +1763,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         if ( user != null ) {
             return user.getNormalizedFullName();
         } else {
-            return null;
+            return "?";
         }
     }
 
