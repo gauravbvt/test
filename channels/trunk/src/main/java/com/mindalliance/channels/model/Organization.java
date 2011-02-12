@@ -84,6 +84,9 @@ public class Organization extends AbstractUnicastChannelable
                 || other instanceof Organization && isWithin( (Organization) other, locale );
     }
 
+    public boolean narrowsOrEqualsNotWithin( ModelEntity other, Place locale ) {
+        return super.narrowsOrEquals( other, locale );
+    }
 
     @Override
     public List<ModelEntity> getImplicitTypes() {
