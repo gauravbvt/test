@@ -82,7 +82,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      */
     private PlanMapDiagramPanel planMapDiagramPanel;
     /**
-     * Width, height dimension contraints on the plan map diagram.
+     * Width, height dimension constraints on the plan map diagram.
      * In inches.
      * None if any is 0.
      */

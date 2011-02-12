@@ -23,6 +23,11 @@ public class Assignment implements GeoLocatable, Specable {
      */
     private Part part;
 
+    public Assignment( Assignment assignment ) {
+        part = assignment.getPart();
+        employment = new Employment( assignment.getEmployment() );
+    }
+
     public Assignment( Employment employment, Part part ) {
         assert part != null && employment != null;
         this.part = part;
@@ -188,4 +193,33 @@ public class Assignment implements GeoLocatable, Specable {
         return results;
     }
 
+    public void setEmployment( Employment employment ) {
+        this.employment = employment;
+    }
+
+    public String getFullTitle( String sep ) {
+        String label = "";
+         if ( getActor() != null && !getActor().isUnknown()) {
+             label += getActor().getName();
+         }
+         if ( getRole() != null ) {
+             if ( !label.isEmpty() ) label += sep;
+             if ( !label.isEmpty() ) label += "as ";
+             label += getRole().getName();
+         }
+         if ( getJurisdiction() != null ) {
+             if ( !label.isEmpty() ) label += ( sep + "for " );
+             label += getJurisdiction().getName();
+         }
+         if ( getOrganization() != null ) {
+             if ( !label.isEmpty() ) label += ( sep + "at " );
+             label += getOrganization().getName();
+         }
+         if ( !label.isEmpty() ) label += sep;
+         label += part.getTask();
+         if ( part.isRepeating() ) {
+             label += " (every " + part.getRepeatsEvery().toString() + ")";
+         }
+         return label;
+    }
 }

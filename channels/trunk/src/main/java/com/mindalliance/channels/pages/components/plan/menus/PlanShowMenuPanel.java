@@ -63,39 +63,40 @@ public class PlanShowMenuPanel extends MenuPanel {
             List<Component> menuItems = new ArrayList<Component>();
 
             menuItems.addAll(
-                Arrays.asList(
-                    collapsible( Channels.SOCIAL_ID, "Hide planners", "Planners" ),
-                    collapsible( plan, "Hide about plan", "About plan" ),
-                    collapsible(
-                        getSegment(), "Hide about plan segment", "About plan segment" ) ) );
+                    Arrays.asList(
+                            collapsible( Channels.SOCIAL_ID, "Hide planners", "Planners" ),
+                            collapsible( plan, "Hide about plan", "About plan" ),
+                            collapsible(
+                                    getSegment(), "Hide about plan segment", "About plan segment" ) ) );
 
             if ( plan.isDevelopment() )
                 menuItems.add( collapsible( Survey.UNKNOWN, "Hide surveys", "Surveys" ) );
 
             menuItems.add(
-                newLink(
-                    "Procedures report",
-                    newTargetedLink( "_blank", SOPsReportPage.class, null ) ) );
+                    newLink(
+                            "Procedures report",
+                            newTargetedLink( "_blank", SOPsReportPage.class, null ) ) );
 
+            menuItems.add( newLink( "Procedures map", plan, PlanEditPanel.PROCEDURES ) );
             if ( User.current().isAdmin() )
                 menuItems.add(
-                    newLink(
-                        "Admin page",
-                        new BookmarkablePageLink<AdminPage>( "link", AdminPage.class ) ) );
-           // menuItems.add( newLink( "Procedures map", plan, PlanEditPanel.PROCEDURES ) );
+                        newLink(
+                                "Admin page",
+                                new BookmarkablePageLink<AdminPage>( "link", AdminPage.class ) ) );
             menuItems.addAll(
-                Arrays.asList(
-                    newLink( "All segments", plan, PlanEditPanel.MAP ),
-                    newLink( "All issues", plan, PlanEditPanel.ISSUES ),
-                    newLink( "Index", plan, PlanEditPanel.INDEX ),
-                    newLink(
-                        "Help", newTargetedLink(
-                        "help", HelpPage.class, new PopupSettings(
-                        PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS | PopupSettings.MENU_BAR
-                        | PopupSettings.TOOL_BAR ) ) ) ) );
+                    Arrays.asList(
+                            newLink( "All segments", plan, PlanEditPanel.MAP ),
+                            newLink( "All issues", plan, PlanEditPanel.ISSUES ),
+                            newLink( "Index", plan, PlanEditPanel.INDEX ),
+                            newLink(
+                                    "Help", newTargetedLink(
+                                    "help", HelpPage.class, new PopupSettings(
+                                            PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS | PopupSettings.MENU_BAR
+                                                    | PopupSettings.TOOL_BAR ) ) ) ) );
 
             return menuItems;
-        }    }
+        }
+    }
 
     private LinkMenuItem newLink( String title, final Plan plan, final String action ) {
         return newLink(
@@ -130,14 +131,14 @@ public class PlanShowMenuPanel extends MenuPanel {
                                       String expandedTitle, String collapsedTitle ) {
 
         return new LinkMenuItem( "menuItem",
-                new Model<String>( isExpanded(id) ? expandedTitle : collapsedTitle ),
+                new Model<String>( isExpanded( id ) ? expandedTitle : collapsedTitle ),
                 new AjaxFallbackLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         final boolean expanded = isExpanded( id );
                         update( target,
                                 new Change( expanded ? Change.Type.Collapsed : Change.Type.Expanded,
-                                            id ) );
+                                        id ) );
                     }
                 } );
     }
@@ -154,7 +155,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                     public void onClick( AjaxRequestTarget target ) {
                         update( target,
                                 new Change( expanded ? Change.Type.Collapsed : Change.Type.Expanded,
-                                            object ) );
+                                        object ) );
                     }
                 } );
     }

@@ -1,10 +1,9 @@
 package com.mindalliance.channels.imaging;
 
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.Assignments;
-import com.mindalliance.channels.query.QueryService;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,12 +60,21 @@ public interface ImagingService {
     String findIconName( ModelObject modelObject );
 
     /**
+     * Find icon name for given model object.
+     *
+     *
+     * @param assignment   an assignment
+     * @return a string
+     */
+    String findIconName( Assignment assignment );
+
+    /**
      * Find icon name for given part.
      *
      *
      *
-     * @param part a part
-     * @param assignments
+     * @param part a specable
+     * @param assignments a list of assignments
      * @return a string
      */
     String findIconName( Specable part, Assignments assignments );

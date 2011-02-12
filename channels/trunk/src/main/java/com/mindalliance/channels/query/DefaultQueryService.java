@@ -1888,17 +1888,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
-    public List<Commitment> findAllCommitments( Flow flow ) {
+    public List<Commitment> findAllCommitments( Flow flow, boolean allowCommitmentsToSelf ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         if ( flow.isSharing() ) {
-            List<Assignment> committers = findAllAssignments( (Part) flow.getSource(), false );
+            List<Assignment> committers = findAllAssignments( (Part) flow.getSource(), true );
             List<Assignment> beneficiaries = findAllAssignments( (Part) flow.getTarget(), true );
             Place place = getPlan().getLocale();
 
             for ( Assignment committer : committers ) {
                 Actor committerActor = committer.getActor();
                 for ( Assignment beneficiary : beneficiaries ) {
-                    if ( !committerActor.equals( beneficiary.getActor() )
+                    if ( ( allowCommitmentsToSelf || !committerActor.equals( beneficiary.getActor() ) )
                             && !flow.isProhibited()
                             && flow.allowsCommitment( committer, beneficiary, place, this )
                             )
@@ -1907,6 +1907,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
         }
         return new ArrayList<Commitment>( commitments );
+    }
+
+    @Override
+    public List<Commitment> findAllCommitments( Flow flow ) {
+        return findAllCommitments( flow, false );
     }
 
     @Override

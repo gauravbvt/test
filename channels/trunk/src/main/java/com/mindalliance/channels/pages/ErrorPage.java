@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
@@ -21,8 +20,9 @@ public class ErrorPage extends WebPage {
     /**
      * The logger.
      */
-    private final Logger LOG = LoggerFactory.getLogger( ErrorPage.class );
+    private static final Logger LOG = LoggerFactory.getLogger( ErrorPage.class );
     private String stackTrace;
+    private Exception exception;
 
     @SpringBean
     private MailSender mailSender;
@@ -31,26 +31,34 @@ public class ErrorPage extends WebPage {
     }
 
     public ErrorPage( RuntimeException e ) {
-        StringWriter writer = new StringWriter();
-        e.printStackTrace( new PrintWriter( writer ) );
-        stackTrace = writer.toString();
+        exception = e;
     }
 
     @Override
     protected void configureResponse() {
         super.configureResponse();
-        if ( stackTrace != null ) emailException();
+        String supportCommunity = getApp().getPlannerSupportCommunity();
+        if ( exception != null ) {
+            emailException(
+                    exception,
+                    mailSender,
+                    supportCommunity );
+        }
         getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
     }
 
-    private void emailException() {
+    static public void emailException(
+            Exception e,
+            MailSender mailSender,
+            String supportCommunity ) {
+        StringWriter writer = new StringWriter();
+        e.printStackTrace( new PrintWriter( writer ) );
+        String stackTrace = writer.toString();
         User currentUser = User.current();
-        Plan plan = currentUser.getPlan();
-        String toAddress = plan.getPlannerSupportCommunityUri( getApp().getSupportCommunityUri() );
         try {
             SimpleMailMessage email = new SimpleMailMessage();
-            email.setTo( toAddress );
+            email.setTo( supportCommunity );
             email.setFrom( currentUser.getEmail() );
             email.setReplyTo( currentUser.getEmail() );
             String subject = "SERVER ERROR from " + currentUser.getFullName();
@@ -58,11 +66,11 @@ public class ErrorPage extends WebPage {
             email.setText( stackTrace );
             LOG.info( currentUser.getUsername()
                     + " emailing \"" + subject + "\" to "
-                    + toAddress );
+                    + supportCommunity );
             mailSender.send( email );
-        } catch ( Exception e ) {
+        } catch ( Exception exc ) {
             LOG.warn( currentUser.getUsername()
-                    + " failed to email server error ", e );
+                    + " failed to email server error ", exc );
         }
     }
 
@@ -79,7 +87,6 @@ public class ErrorPage extends WebPage {
     private Channels getApp() {
         return (Channels) getApplication();
     }
-
 
 
 }

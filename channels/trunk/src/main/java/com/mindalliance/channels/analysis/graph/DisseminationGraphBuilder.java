@@ -62,11 +62,11 @@ public class DisseminationGraphBuilder implements GraphBuilder<Node, Disseminati
                     }
 
                 } );
-        populateSegmentGraph( digraph );
+        populateDisseminationGraph( digraph );
         return digraph;
     }
 
-    private void populateSegmentGraph( DirectedGraph<Node, Dissemination> graph ) {
+    private void populateDisseminationGraph( DirectedGraph<Node, Dissemination> graph ) {
         List<Dissemination> disseminations = getQueryService().findAllDisseminations(
                 segmentObject,
                 subject,

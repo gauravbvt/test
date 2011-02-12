@@ -2,6 +2,7 @@ package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.graph.diagrams.ProcedureMapDiagram;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
@@ -22,7 +23,7 @@ import java.util.List;
  * Time: 3:12:42 PM
  *
  * @param <Vertex> a vertex class
- * @param <Edge> an edge class
+ * @param <Edge>   an edge class
  */
 public interface DiagramFactory<Vertex, Edge> {
 
@@ -193,7 +194,7 @@ public interface DiagramFactory<Vertex, Edge> {
     QueryService getQueryService();
 
     /**
-     * Instnatiates a dissemination diagram.
+     * Instantiates a dissemination diagram.
      *
      * @param segmentObject a segment object (part or flow)
      * @param subject       a subject being disseminated
@@ -206,6 +207,25 @@ public interface DiagramFactory<Vertex, Edge> {
             SegmentObject segmentObject,
             Subject subject,
             boolean showTargets,
+            double[] diagramSize,
+            String orientation );
+
+    /**
+     * Instantiates a procedure map diagram.
+     *
+     * @param segment         segment as scope, or null for all plan
+     * @param summarizeByOrg  a boolean
+     * @param summarizeByRole a boolean
+     * @param focusEntity     an organization or agent
+     * @param diagramSize     an array of doubles
+     * @param orientation     a string
+     * @return a procedure map diagram
+     */
+    ProcedureMapDiagram newProcedureMapDiagram(
+            Segment segment,
+            boolean summarizeByOrg,
+            boolean summarizeByRole,
+            ModelEntity focusEntity,
             double[] diagramSize,
             String orientation );
 }

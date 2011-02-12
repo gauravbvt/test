@@ -14,17 +14,31 @@ import java.util.List;
  * Time: 3:36:42 PM
  */
 
-/** An actor's job in an organization (or with no job). */
+/**
+ * An actor's job in an organization (or with no job).
+ */
 public class Employment implements GeoLocatable, Specable {
 
-    /** Actor. */
+    /**
+     * Actor.
+     */
     private Actor actor;
 
-    /** Organization. */
+    /**
+     * Organization.
+     */
     private Organization organization;
 
-    /** Job. */
+    /**
+     * Job.
+     */
     private Job job;
+
+    public Employment( Employment employment ) {
+        actor = employment.getActor();
+        organization = employment.getOrganization();
+        job = new Job( employment.getJob() );
+    }
 
     public Employment( Actor actor ) {
         this.actor = actor;
@@ -45,6 +59,11 @@ public class Employment implements GeoLocatable, Specable {
         this.actor = actor;
         this.organization = organization;
         this.job = job;
+    }
+
+    public Employment( Organization organization, Role role ) {
+        this.organization = organization;
+        job = new Job( Actor.UNKNOWN, role, null );
     }
 
     @Override
@@ -147,16 +166,19 @@ public class Employment implements GeoLocatable, Specable {
         if ( obj instanceof Employment ) {
             Employment other = (Employment) obj;
 
-            if ( getActor() == other.getActor() && getOrganization() == other.getOrganization() )
-                return job == null ? other.getJob() == null : job.equals( other.getJob() );
+            if ( ModelEntity.areEqualOrNull( getActor(), other.getActor() )
+                    && ModelEntity.areEqualOrNull( getOrganization(), other.getOrganization() ) )
+                return job == null
+                        ? other.getJob() == null
+                        : job.equals( other.getJob() );
         }
-
         return false;
     }
 
     public int hashCode() {
         int hash = 1;
-        hash = hash * 31 + getActor().hashCode();
+        if ( getActor() != null )
+            hash = hash * 31 + getActor().hashCode();
         if ( job != null )
             hash = hash * 31 + job.hashCode();
         return hash;

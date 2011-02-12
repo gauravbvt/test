@@ -70,6 +70,7 @@ import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailSender;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -106,7 +107,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * The 'segment' parameter in the URL.
      */
-    static final String SEGMENT_PARM = "segment";                                       // NON-NLS
+    static public final String SEGMENT_PARM = "segment";                                       // NON-NLS
 
     /**
      * The 'part' parameter in the URL.
@@ -347,6 +348,11 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     @SpringBean
     private PlanManager planManager;
+    /**
+     * The mail sender.
+     */
+    @SpringBean
+    private MailSender mailSender;
 
     static {
         IE7CompatibilityScript =
@@ -611,9 +617,19 @@ public final class PlanPage extends WebPage implements Updatable {
         form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
             @Override
             protected void onTimer( AjaxRequestTarget target ) {
-                doTimedUpdate( target );
-                addSpinner();
-                target.addComponent( spinner );
+                try {
+                    doTimedUpdate( target );
+                    addSpinner();
+                    target.addComponent( spinner );
+                } catch ( Exception e ) {
+                    LOG.error( "Failed to do timed update", e );
+                    ErrorPage.emailException(
+                            new Exception( "Timed update failed", e ),
+                            mailSender,
+                            getApp().getPlannerSupportCommunity()
+                    );
+                    redirectToPlan();
+                }
             }
         } );
         form.add( refreshNeededComponent );

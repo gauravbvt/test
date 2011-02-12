@@ -18,6 +18,7 @@ import com.mindalliance.channels.pages.png.FailureImpactsPage;
 import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.HierarchyPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
+import com.mindalliance.channels.pages.png.ProceduresPage;
 import com.mindalliance.channels.pages.reports.AssignmentReportPage;
 import com.mindalliance.channels.pages.reports.FlowReportPage;
 import com.mindalliance.channels.pages.reports.SOPsReportPage;
@@ -156,6 +157,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "geomap.html", GeoMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "essential.png", FailureImpactsPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "dissemination.png", DisseminationPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "procedures.png", ProceduresPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE );
@@ -350,5 +352,14 @@ public class Channels extends WebApplication
                 }
             }
         };
+    }
+
+    /**
+     * Get planner support community.
+     * @return a string
+     */
+    public String getPlannerSupportCommunity() {
+        return User.current().getPlan()
+                            .getPlannerSupportCommunityUri( getSupportCommunityUri() );
     }
 }
