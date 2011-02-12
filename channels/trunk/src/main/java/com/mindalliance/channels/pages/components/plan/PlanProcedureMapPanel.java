@@ -345,7 +345,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                 entities = getQueryService().listActualEntities( Actor.class );
             }
             for ( ModelEntity entity : entities ) {
-                focusChoices.add( entity.getName() );
+                if ( !entity.isUnknown() )
+                    focusChoices.add( entity.getName() );
             }
             Collections.sort( focusChoices );
         }

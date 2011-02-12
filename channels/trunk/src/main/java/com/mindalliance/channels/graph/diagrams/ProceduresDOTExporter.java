@@ -419,7 +419,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
             Assignment assignment,
             PrintWriter out,
             AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
-        Part part = assignment.getPart();
+        Part part = assignment == null ? null : assignment.getPart();
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
         attributes.add( new DOTAttribute( "fontcolor", ifVisibleColor( part, AbstractMetaProvider.FONTCOLOR ) ) );
         attributes.add( new DOTAttribute( "fontsize", ProceduresMetaProvider.NODE_FONT_SIZE ) );
@@ -522,7 +522,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
             Graph<Assignment, Commitment> g ) {
         List<DOTAttribute> attributes = getNonFlowEdgeAttributes( assignment.getPart() );
         attributes.add( new DOTAttribute( "label", "terminates" ) );
-        String goalId = getGoalVertexId( getSegment(), goal );
+        String goalId = getGoalVertexId( segment, goal );
         out.print( getIndent() + getStopId( segment.getEventPhase() ) + getArrow( g ) + goalId );
         out.print( "[" );
         if ( !attributes.isEmpty() ) {

@@ -37,7 +37,12 @@ public class Employment implements GeoLocatable, Specable {
     public Employment( Employment employment ) {
         actor = employment.getActor();
         organization = employment.getOrganization();
-        job = new Job( employment.getJob() );
+        Job otherJob = employment.getJob();
+        if ( otherJob == null ) {
+           job = new Job( actor, Role.UNKNOWN, null );
+        } else {
+            job = new Job( otherJob );
+        }
     }
 
     public Employment( Actor actor ) {
