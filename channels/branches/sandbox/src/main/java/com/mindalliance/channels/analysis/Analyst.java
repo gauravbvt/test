@@ -3,6 +3,7 @@ package com.mindalliance.channels.analysis;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
@@ -73,6 +74,15 @@ public interface Analyst {
     List<Issue> listUnwaivedIssues( ModelObject modelObject, Boolean includingPropertySpecific );
 
     /**
+     * Use all unwaived issue detectors to find issues about an assignment.
+     *
+     * @param assignment               -- the assignment being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @return a list of issues detected
+     */
+    List<Issue> listUnwaivedIssues( Assignment assignment, Boolean includingPropertySpecific );
+
+    /**
      * Use all unwaived issue detectors to find issues about a model object's property.
      *
      * @param modelObject -- the model object being analyzed
@@ -118,6 +128,15 @@ public interface Analyst {
     Boolean hasUnwaivedIssues( ModelObject modelObject, Boolean includingPropertySpecific );
 
     /**
+     * Tests whether a model object has unwaived issues.
+     *
+     * @param assignment               -- the assignment being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @return whether a model object has issues
+     */
+    Boolean hasUnwaivedIssues( Assignment assignment, Boolean includingPropertySpecific );
+
+    /**
      * Produces an aggregate description of unwaived issues detected about a model object.
      *
      * @param modelObject               -- the model object being analyzed
@@ -125,6 +144,15 @@ public interface Analyst {
      * @return an aggregate description of issues or an empty string if none
      */
     String getIssuesSummary( ModelObject modelObject, Boolean includingPropertySpecific );
+
+    /**
+      * Produces an aggregate description of unwaived issues detected about an assignment.
+      *
+      * @param assignment               -- the assignment being analyzed
+      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+      * @return an aggregate description of issues or an empty string if none
+      */
+     String getIssuesSummary( Assignment assignment, Boolean includingPropertySpecific );
 
     /**
      * Produces an aggregate description of unwaived issues detected about a specific property.

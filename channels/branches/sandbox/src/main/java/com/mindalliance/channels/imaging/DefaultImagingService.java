@@ -3,6 +3,7 @@ package com.mindalliance.channels.imaging;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,10 +39,14 @@ import java.util.List;
  */
 public class DefaultImagingService implements ImagingService, InitializingBean {
 
-    /** Sizes of icons to generate. */
-    private static final int[] ICON_HEIGHTS = { 32, 56, 72, 84, 100, 116 };
+    /**
+     * Sizes of icons to generate.
+     */
+    private static final int[] ICON_HEIGHTS = {32, 56, 72, 84, 100, 116};
 
-    /** Attachment manager. */
+    /**
+     * Attachment manager.
+     */
     private AttachmentManager attachmentManager;
 
     /**
@@ -53,16 +59,24 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
      */
     //private String uploadPath = "";
 
-    /** Directory for generated icons. */
+    /**
+     * Directory for generated icons.
+     */
     private Resource iconDirectory;
 
-    /** Directory for default icons. */
+    /**
+     * Directory for default icons.
+     */
     private Resource imageDirectory;
 
-    /** The webapp-relative path to generated icons. */
+    /**
+     * The webapp-relative path to generated icons.
+     */
     private String iconPath;
 
-    /** Class logger. */
+    /**
+     * Class logger.
+     */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultImagingService.class );
 
     public DefaultImagingService() {
@@ -103,16 +117,16 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
     @Override
     public int[] getImageSize( String url ) {
-        int[] size = new int[ 2 ];
+        int[] size = new int[2];
         try {
             BufferedImage image = getImage( url );
-            size[ 0 ] = image.getWidth();
-            size[ 1 ] = image.getHeight();
+            size[0] = image.getWidth();
+            size[1] = image.getHeight();
 
         } catch ( IOException e ) {
             LOG.warn( "Unable to get image size for " + url, e );
-            size[ 0 ] = 0;
-            size[ 1 ] = 0;
+            size[0] = 0;
+            size[1] = 0;
         }
 
         return size;
@@ -120,8 +134,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
     private BufferedImage getImage( String url ) throws IOException {
         return isUploadedFileDocument( url ) ? ImageIO.read( getUploadedImageFile( url ) )
-             : isFileDocument( url )         ? ImageIO.read( new File( url ) )
-                                             : ImageIO.read( new URL( url ) );
+                : isFileDocument( url ) ? ImageIO.read( new File( url ) )
+                : ImageIO.read( new URL( url ) );
     }
 
     private static boolean isFileDocument( String url ) {
@@ -140,7 +154,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     public boolean iconize( String url, ModelObject modelObject ) {
         try {
             BufferedImage image = getImage( url );
-            int height = ICON_HEIGHTS[ 0 ];
+            int height = ICON_HEIGHTS[0];
             int width = height * image.getWidth() / image.getHeight();
 
             BufferedImage resized = resize( image, width, height );
@@ -149,7 +163,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
         } catch ( IOException e ) {
             LOG.warn( "Failed to iconize uploaded image at " + url + " (" + e.getMessage() + ')',
-                      e );
+                    e );
             return false;
         }
         return true;
@@ -166,11 +180,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
             icon.createGraphics();
             Graphics2D graphics = (Graphics2D) icon.getGraphics();
             graphics.drawImage( image,
-                                ( max - width ) / 2,
-                                ( max - height ) / 2,
-                                image.getWidth(),
-                                image.getHeight(),
-                                null );
+                    ( max - width ) / 2,
+                    ( max - height ) / 2,
+                    image.getWidth(),
+                    image.getHeight(),
+                    null );
 
             ImageIO.write( icon, "png", getIconFile( modelObject, "_squared.png" ) );
             graphics.dispose();
@@ -245,7 +259,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
     private String getIconFilePrefix() throws IOException {
         return iconDirectory.getFile().getAbsolutePath()
-               + File.separator + getFlattenedPlanUri( User.plan() ) + File.separator;
+                + File.separator + getFlattenedPlanUri( User.plan() ) + File.separator;
     }
 
     @Override
@@ -255,15 +269,15 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     private void createNumberedIcons( BufferedImage resized, int width, ModelObject modelObject )
-        throws IOException {
+            throws IOException {
 
         for ( int i = 1; i < ICON_HEIGHTS.length; i++ )
-            createNumberedIcon( resized, modelObject, width, ICON_HEIGHTS[ i ], i );
+            createNumberedIcon( resized, modelObject, width, ICON_HEIGHTS[i], i );
     }
 
     private void createNumberedIcon(
-        BufferedImage resized, ModelObject modelObject, int width, int height, int number )
-        throws IOException {
+            BufferedImage resized, ModelObject modelObject, int width, int height, int number )
+            throws IOException {
 
         BufferedImage icon = new BufferedImage( width, height, BufferedImage.TRANSLUCENT );
         icon.createGraphics();
@@ -284,11 +298,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         Graphics2D graphics2D = resizedImage.createGraphics();
         graphics2D.setComposite( AlphaComposite.Src );
         graphics2D.setRenderingHint( RenderingHints.KEY_INTERPOLATION,
-                                     RenderingHints.VALUE_INTERPOLATION_BILINEAR );
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR );
         graphics2D.setRenderingHint( RenderingHints.KEY_RENDERING,
-                                     RenderingHints.VALUE_RENDER_QUALITY );
+                RenderingHints.VALUE_RENDER_QUALITY );
         graphics2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
-                                     RenderingHints.VALUE_ANTIALIAS_ON );
+                RenderingHints.VALUE_ANTIALIAS_ON );
 
         graphics2D.drawImage( image, 0, 0, width, height, null );
         graphics2D.dispose();
@@ -308,14 +322,14 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
     private File getIconFile( ModelObject modelObject, String suffix ) throws IOException {
         return new File( getIconsDirectoryFor( modelObject ),
-                         sanitizeFileName( modelObject.getName() ) + suffix );
+                sanitizeFileName( modelObject.getName() ) + suffix );
     }
 
     private static String sanitizeFileName( String fileName ) {
 
         String sanitized = fileName
-            .replaceAll( File.separator.equals( "\\" ) ? "\\\\" : File.separator, "" )
-            .replaceAll( " ", "_" );
+                .replaceAll( File.separator.equals( "\\" ) ? "\\\\" : File.separator, "" )
+                .replaceAll( " ", "_" );
 
         try {
             sanitized = URLEncoder.encode( sanitized, "UTF-8" );
@@ -378,11 +392,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
             return iconName;
 
         return imageDirPath() + '/' +
-            ( modelObject instanceof Actor        ? ( (Actor) modelObject ).isSystem() ? "system"
-                                                                                       : "person"
-            : modelObject instanceof Role         ? "role"
-            : modelObject instanceof Organization ? "organization"
-                                                  : "unknown" );
+                ( modelObject instanceof Actor ? ( (Actor) modelObject ).isSystem() ? "system"
+                        : "person"
+                        : modelObject instanceof Role ? "role"
+                        : modelObject instanceof Organization ? "organization"
+                        : "unknown" );
     }
 
     private String imageDirPath() {
@@ -394,12 +408,33 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
+    public String findIconName( Assignment assignment ) {
+        String iconName = null;
+        Actor actor = assignment.getActor();
+        if ( actor != null && !actor.isUnknown() ) {
+            iconName = findSpecificIcon( actor, new ArrayList<Actor>() );
+        } else {
+            Role role = assignment.getRole();
+            if ( role != null && !role.isUnknown() ) {
+                iconName = findSpecificIcon( role, new ArrayList<Role>() );
+            } else {
+                Organization org = assignment.getOrganization();
+                if ( org != null && !org.isUnknown() ) {
+                    iconName = findSpecificIcon( org, new ArrayList<Organization>() );
+                }
+            }
+        }
+        return iconName == null ? findGenericIconName( assignment.getPart() )
+                : iconName;
+    }
+
+    @Override
     public String findIconName( Specable part, Assignments assignments ) {
 
         Assignments partAssignments = assignments.withAll( part );
         String specific = findSpecificIcon( part, partAssignments );
         return specific == null ? findGenericIconName( part )
-                                : specific;
+                : specific;
     }
 
     private String findSpecificIcon( Specable part, Assignments assignments ) {
@@ -410,8 +445,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
         String roleIcon = findSpecificIcon( part.getRole(), assignments.getRoles() );
         return roleIcon == null ? findSpecificOrgIcon( part.getOrganization(),
-                                                       assignments.getOrganizations() )
-                                : roleIcon;
+                assignments.getOrganizations() )
+                : roleIcon;
     }
 
     private String findSpecificOrgIcon( Organization spec, List<Organization> candidates ) {
@@ -461,10 +496,10 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     private String findGenericIconName( Specable specable ) {
         Actor actor = specable.getActor();
         return imageDirPath() + '/' + (
-            actor != null ? actor.isSystem() ? "system" : "person"
-          : specable.getRole() != null ? "role"
-          : specable.getOrganization() == null ? "unknown"
-                                               : "organization" );
+                actor != null ? actor.isSystem() ? "system" : "person"
+                        : specable.getRole() != null ? "role"
+                        : specable.getOrganization() == null ? "unknown"
+                        : "organization" );
     }
 
     @Override

@@ -189,5 +189,8 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
          return label;
      }
 
+    protected String sanitizeToId( String s ) {
+        return s.replaceAll("\\W", "");
+    }
 
 }

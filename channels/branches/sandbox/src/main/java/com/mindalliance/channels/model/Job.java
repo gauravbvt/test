@@ -49,6 +49,14 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     public Job() {
     }
 
+    public Job (Job job ) {
+        actor = job.getActor();
+        role = job.getRole();
+        jurisdiction = job.getJurisdiction();
+        title = job.getTitle();
+        supervisor = job.getSupervisor();
+    }
+
     public Job( Actor actor, Role role, Place jurisdiction ) {
         this.actor = actor;
         this.role = role;
@@ -153,9 +161,11 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     public boolean equals( Object obj ) {
         if ( obj instanceof Job ) {
             Job job = (Job) obj;
-            return actor == job.getActor()
-                    && role == job.getRole()
-                    && jurisdiction == job.getJurisdiction();
+            return ModelEntity.areEqualOrNull( actor, job.getActor() )
+                    && ModelEntity.areEqualOrNull( role, job.getRole() )
+                    && ModelEntity.areEqualOrNull( jurisdiction, job.getJurisdiction() )
+                    && ModelEntity.areEqualOrNull( supervisor, job.getSupervisor() )
+                    && title.equals( job.getTitle() );
         } else {
             return false;
         }
@@ -167,6 +177,8 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         if ( actor != null ) hash = hash * 31 + actor.hashCode();
         if ( role != null ) hash = hash * 31 + role.hashCode();
         if ( jurisdiction != null ) hash = hash * 31 + jurisdiction.hashCode();
+        if ( supervisor != null ) hash = hash * 31 + supervisor.hashCode();
+        hash = hash * 31 + title.hashCode();
         return hash;
     }
 

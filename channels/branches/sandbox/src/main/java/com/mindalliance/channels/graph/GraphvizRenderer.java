@@ -204,6 +204,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                           StyledDOTExporter<V, E> dotExporter ) {
         StringWriter writer = new StringWriter();
         dotExporter.export( writer, graph );
+        // System.out.println( writer.toString() );
         return writer.toString();
     }
 

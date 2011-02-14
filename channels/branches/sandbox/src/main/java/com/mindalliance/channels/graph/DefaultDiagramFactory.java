@@ -10,6 +10,7 @@ import com.mindalliance.channels.graph.diagrams.FailureImpactsDiagram;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
+import com.mindalliance.channels.graph.diagrams.ProcedureMapDiagram;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Node;
@@ -204,6 +205,9 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
                 orientation );
     }
 
+    /**
+      * {@inheritDoc}
+      */
     public Diagram newDisseminationDiagram(
             SegmentObject segmentObject,
             Subject subject,
@@ -215,6 +219,27 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
                 segmentObject,
                 subject,
                 showTargets,
+                diagramSize,
+                orientation );
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+    @Override
+    public ProcedureMapDiagram newProcedureMapDiagram(
+            Segment segment,
+            boolean summarizeByOrg,
+            boolean summarizeByRole,
+            ModelEntity focusEntity,
+            double[] diagramSize,
+            String orientation ) {
+        LOG.debug( "Making procedure map diagram" );
+        return new ProcedureMapDiagram(
+                segment,
+                summarizeByOrg,
+                summarizeByRole,
+                focusEntity,
                 diagramSize,
                 orientation );
     }

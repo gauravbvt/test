@@ -3,14 +3,18 @@ package com.mindalliance.channels.analysis;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.Play;
 import com.mindalliance.channels.query.QueryService;
@@ -166,6 +170,15 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     /**
+      * {@inheritDoc}
+      */
+     public List<Issue> listUnwaivedIssues( Assignment assignment, Boolean includingPropertySpecific ) {
+         return detectUnwaivedIssues( assignment, includingPropertySpecific );
+     }
+
+
+
+    /**
      * {@inheritDoc}
      */
     public Boolean hasIssues( ModelObject modelObject, String property ) {
@@ -196,10 +209,27 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     /**
      * {@inheritDoc}
      */
+    public Boolean hasUnwaivedIssues( Assignment assignment, Boolean includingPropertySpecific ) {
+        return !listUnwaivedIssues( assignment, includingPropertySpecific ).isEmpty();
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
     public String getIssuesSummary( ModelObject modelObject, Boolean includingPropertySpecific ) {
         List<Issue> issues = listUnwaivedIssues( modelObject, includingPropertySpecific );
         return summarize( issues );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getIssuesSummary( Assignment assignment, Boolean includingPropertySpecific ) {
+        List<Issue> issues = listUnwaivedIssues( assignment, includingPropertySpecific );
+        return summarize( issues );
+    }
+
 
     /**
      * {@inheritDoc}
@@ -414,6 +444,27 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             return issues;
         }
     }
+
+    private List<Issue> detectUnwaivedIssues(
+            Assignment assignment,
+            boolean includingPropertySpecific ) {
+        List<Issue> issues = new ArrayList<Issue> ();
+        issues.addAll( detectUnwaivedIssues( assignment.getPart(), null, includingPropertySpecific ));
+        Actor actor = assignment.getActor();
+        if ( actor != null && !actor.isUnknown() ) {
+            issues.addAll( detectUnwaivedIssues( actor, null, includingPropertySpecific ));
+        }
+        Role role = assignment.getRole();
+        if ( role != null && !role.isUnknown() ) {
+            issues.addAll( detectUnwaivedIssues( role, null, includingPropertySpecific ));
+        }
+        Organization org = assignment.getOrganization();
+        if ( org != null && !org.isUnknown() ) {
+            issues.addAll( detectUnwaivedIssues( org, null, includingPropertySpecific ));
+        }
+        return issues;
+    }
+
 
     /**
      * Get the imaging service.

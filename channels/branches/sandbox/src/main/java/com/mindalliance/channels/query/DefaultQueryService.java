@@ -1863,7 +1863,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns ) {
         Place locale = getPlan().getLocale();
-        List<Assignment> result = new ArrayList<Assignment>();
+        Set<Assignment> result = new HashSet<Assignment>();
 
         for ( Employment e : findAllEmployments( part, locale ) )
             if ( ModelEntity.implies( e.getActor(), part.getActor(), locale )
@@ -1872,33 +1872,48 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     && ModelEntity.implies( e.getJurisdiction(), part.getJurisdiction(), locale ) )
                 result.add( new Assignment( e, part ) );
 
-        // No actor for this part. Add an unknown one.
-        if ( includeUnknowns && result.isEmpty()
-                && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() )
+        if ( includeUnknowns
+                && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() ) {
+            Organization partOrg = part.getOrganizationOrUnknown();
+            if ( partOrg.isUnknown() ) {
+                result.add( new Assignment(
+                        new Employment( Actor.UNKNOWN,
+                                partOrg,
+                                new Job( Actor.UNKNOWN,
+                                        part.getRoleOrUnknown(),
+                                        part.getJurisdiction() ) ),
+                        part ) );
 
-            result.add( new Assignment(
-                    new Employment( Actor.UNKNOWN,
-                            part.getOrganizationOrUnknown(),
-                            new Job( Actor.UNKNOWN,
-                                    part.getRoleOrUnknown(),
-                                    part.getJurisdiction() ) ),
-                    part ) );
+            } else if ( partOrg.isType() ) {
+                for ( Organization actualOrg : listActualEntities( Organization.class ) ) {
+                    if ( actualOrg.getTypes().contains( partOrg ) ) {
+                        result.add( new Assignment(
+                                new Employment( Actor.UNKNOWN,
+                                        actualOrg,
+                                        new Job( Actor.UNKNOWN,
+                                                part.getRoleOrUnknown(),
+                                                part.getJurisdiction() ) ),
+                                part ) );
+                    }
+                }
+            }
+        }
 
-        return result;
+        return new ArrayList<Assignment>( result );
     }
 
     @Override
-    public List<Commitment> findAllCommitments( Flow flow ) {
+    public List<Commitment> findAllCommitments( Flow flow, boolean allowCommitmentsToSelf ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
         if ( flow.isSharing() ) {
-            List<Assignment> committers = findAllAssignments( (Part) flow.getSource(), false );
+            List<Assignment> committers = findAllAssignments( (Part) flow.getSource(), true );
             List<Assignment> beneficiaries = findAllAssignments( (Part) flow.getTarget(), true );
             Place place = getPlan().getLocale();
 
             for ( Assignment committer : committers ) {
                 Actor committerActor = committer.getActor();
                 for ( Assignment beneficiary : beneficiaries ) {
-                    if ( !committerActor.equals( beneficiary.getActor() )
+                    if ( ( allowCommitmentsToSelf || !committerActor.equals( beneficiary.getActor() ) )
                             && !flow.isProhibited()
                             && flow.allowsCommitment( committer, beneficiary, place, this )
                             )
@@ -1907,6 +1922,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
         }
         return new ArrayList<Commitment>( commitments );
+    }
+
+    @Override
+    public List<Commitment> findAllCommitments( Flow flow ) {
+        return findAllCommitments( flow, false );
     }
 
     @Override

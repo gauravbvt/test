@@ -1003,6 +1003,15 @@ public interface QueryService {
     List<Commitment> findAllCommitments( Flow flow );
 
     /**
+     * Find all commitments implied by a sharing flow.
+     *
+     * @param flow a flow
+     * @param allowCommitmentsToSelf a boolean
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitments( Flow flow, boolean allowCommitmentsToSelf );
+
+    /**
      * Find all commitments of an actor.
      *
      * @param actor an actor

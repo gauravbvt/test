@@ -12,17 +12,14 @@
         <option>the entire plan</option>
         <option>segment A</option>
         <option>segment B</option>
-    </select>
-        <div>
-            Focus on <select wicket:id="focusChoice">
+        </select>
+        Summarize <input wicket:id="summarizeByOrg" type="checkbox"> by organization
+        <input wicket:id="summarizeByRole" type="checkbox"> by role
+        &nbsp;Focus on <select wicket:id="focusChoice">
             <option>organization</option>
             <option>agent</option>
-            </select>  <input wicket:id="focus" type="text">
-        </div>
-        <div>
-           Summarize <input wicket:id="summarizeByOrg" type="checkbox"> by organization
-            <input wicket:id="summarizeByRole" type="checkbox"> by role
-        </div>
+        </select>
+        <input wicket:id="focus" type="text" class="filter-small">
     </div>
     <div class="picture" wicket:id="procedure-map">
         [procedure map diagram panel]
