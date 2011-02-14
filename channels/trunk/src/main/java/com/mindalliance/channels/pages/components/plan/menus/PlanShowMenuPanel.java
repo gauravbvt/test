@@ -77,8 +77,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                             "Procedures report",
                             newTargetedLink( "_blank", SOPsReportPage.class, null ) ) );
 
-            menuItems.add( newLink( "Procedures map", plan, PlanEditPanel.PROCEDURES ) );
-            if ( User.current().isAdmin() )
+             if ( User.current().isAdmin() )
                 menuItems.add(
                         newLink(
                                 "Admin page",
