@@ -7,7 +7,7 @@ import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.pages.reports.SOPsReportPage;
+import com.mindalliance.channels.pages.reports.ProceduresReportPage;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -237,7 +237,7 @@ public class AdminPage extends WebPage {
                                 } )
                                 .add( new ValidationStyler() ),
 
-                        new BookmarkablePageLink<SOPsReportPage>( "report", SOPsReportPage.class )
+                        new BookmarkablePageLink<ProceduresReportPage>( "report", ProceduresReportPage.class )
                                 .add( new AttributeModifier( "target",
                                         true, new Model<String>( "_blank" ) ) )
                 ) );

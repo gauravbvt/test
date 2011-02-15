@@ -63,7 +63,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
             add( a );
     }
 
-    private void add( Assignment assignment ) {
+    public void add( Assignment assignment ) {
         Segment segment = assignment.getPart().getSegment();
         Set<Assignment> as = segmentMap.get( segment );
         if ( as == null ) {

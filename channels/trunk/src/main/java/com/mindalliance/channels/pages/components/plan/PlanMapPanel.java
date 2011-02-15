@@ -536,7 +536,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      * {@inheritDoc}
      */
     @Override
-    protected Plan getPlan() {
+    public Plan getPlan() {
         return (Plan) getModel().getObject();
     }
 

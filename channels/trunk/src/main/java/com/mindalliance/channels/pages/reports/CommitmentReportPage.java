@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * Report L4.
  */
-public class FlowReportPage extends AbstractReportPage {
+public class CommitmentReportPage extends AbstractReportPage {
 
     /** Short-hands for vcard compatible channel types. */
     public enum PhoneType {
@@ -55,15 +55,15 @@ public class FlowReportPage extends AbstractReportPage {
     @SpringBean
     private ImagingService imagingService;
 
-    public FlowReportPage( PageParameters parameters ) {
+    public CommitmentReportPage( PageParameters parameters ) {
         super( parameters );
 
         add(
             new Label( "pageTitle" ),
             new Label( "reportTitle" ),
 
-            new BookmarkablePageLink<SOPsReportPage>( "top-link",
-                                                      SOPsReportPage.class, getTopParameters() ),
+            new BookmarkablePageLink<ProceduresReportPage>( "top-link",
+                                                      ProceduresReportPage.class, getTopParameters() ),
             new Label( "assignment.part.segment.event.name" ),
             new Label( "assignment.part.segment.phase.name" ),
             new Label( "type" ),

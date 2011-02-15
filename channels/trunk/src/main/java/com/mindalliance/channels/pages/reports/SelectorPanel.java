@@ -34,15 +34,15 @@ import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * The report fine-tuning gizmo.
  */
-public class SelectorPanel extends Panel {
+public class SelectorPanel extends Panel implements AssignmentsSelector {
 
     public static final String ACTOR_PARM = "agent";
     public static final String ORGANIZATION_PARM = "org";

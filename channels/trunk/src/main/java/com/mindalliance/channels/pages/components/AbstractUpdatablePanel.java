@@ -324,7 +324,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      *
      * @return a plan
      */
-    protected Plan getPlan() {
+    public Plan getPlan() {
         return User.plan();
     }
 

@@ -12,7 +12,7 @@ import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
-import com.mindalliance.channels.pages.reports.SOPsReportPage;
+import com.mindalliance.channels.pages.reports.ProceduresReportPage;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
@@ -75,8 +75,12 @@ public class PlanShowMenuPanel extends MenuPanel {
             menuItems.add(
                     newLink(
                             "Procedures report",
-                            newTargetedLink( "_blank", SOPsReportPage.class, null ) ) );
-
+                            newTargetedLink( "_blank", ProceduresReportPage.class, null ) ) );
+ /*           menuItems.add(
+                    newLink(
+                            "Procedures map",
+                            newTargetedLink( "_blank", ProcedureMapPage.class, null ) ) );
+*/
              if ( User.current().isAdmin() )
                 menuItems.add(
                         newLink(

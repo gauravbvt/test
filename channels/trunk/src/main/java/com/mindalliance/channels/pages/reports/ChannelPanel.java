@@ -104,7 +104,7 @@ public class ChannelPanel extends Panel {
             String name = medium.getName();
             return medium.narrowsOrEquals( type, null )
                 || "phone".equalsIgnoreCase( name )
-                || FlowReportPage.PhoneType.valueOf( name.toUpperCase() ) != null ;
+                || CommitmentReportPage.PhoneType.valueOf( name.toUpperCase() ) != null ;
 
         } catch ( IllegalArgumentException ignored ) {
             return false;
@@ -152,7 +152,7 @@ public class ChannelPanel extends Panel {
 
         public boolean isPhoneType() {
             try {
-                FlowReportPage.PhoneType.valueOf(
+                CommitmentReportPage.PhoneType.valueOf(
                     channel.getMedium().getLabel().toString().toUpperCase() );
                 return true;
             } catch ( IllegalArgumentException ignored ) {

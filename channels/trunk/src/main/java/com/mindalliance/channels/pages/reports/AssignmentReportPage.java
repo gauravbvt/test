@@ -55,8 +55,8 @@ public class AssignmentReportPage extends AbstractReportPage {
             new Label( "pageTitle" ),
             new Label( "reportTitle" ),
 
-            new BookmarkablePageLink<SOPsReportPage>( "top-link",
-                                                      SOPsReportPage.class, getTopParameters() ),
+            new BookmarkablePageLink<ProceduresReportPage>( "top-link",
+                                                      ProceduresReportPage.class, getTopParameters() ),
             new Label( "assignment.part.segment.event.name" ),
             new Label( "assignment.part.segment.phase.name" ),
             new Label( "type" ),
@@ -197,7 +197,7 @@ public class AssignmentReportPage extends AbstractReportPage {
         }
 
         Component result =
-                new BookmarkablePageLink<FlowReportPage>( "flow", FlowReportPage.class, parms )
+                new BookmarkablePageLink<CommitmentReportPage>( "flow", CommitmentReportPage.class, parms )
                         .add( new Label( "delay", delay ) );
 
         if ( flow != null )

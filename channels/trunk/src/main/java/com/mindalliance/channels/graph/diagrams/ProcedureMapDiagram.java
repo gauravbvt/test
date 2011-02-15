@@ -63,7 +63,7 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
                 segment,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                analyst );
+                analyst);
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }
@@ -77,4 +77,5 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
                 outputStream
         );
     }
+
 }

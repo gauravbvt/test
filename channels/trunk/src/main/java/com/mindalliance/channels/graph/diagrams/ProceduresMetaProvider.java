@@ -80,7 +80,11 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
 
     private Segment segment;
 
-    public ProceduresMetaProvider( Segment segment, String outputFormat, Resource imageDirectory, Analyst analyst ) {
+    public ProceduresMetaProvider(
+            Segment segment,
+            String outputFormat,
+            Resource imageDirectory,
+            Analyst analyst) {
         super( outputFormat, imageDirectory, analyst );
         this.segment = segment;
     }
@@ -177,7 +181,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
         return new VertexNameProvider<Assignment>() {
             @Override
             public String getVertexName( Assignment assignment ) {
-                return sanitizeToId( assignment.getFullTitle("|") ) + String.valueOf( assignment.getPart().getId()  );
+                return sanitizeToId( assignment.getFullTitle( "|" ) ) + String.valueOf( assignment.getPart().getId() );
             }
         };
     }
@@ -238,8 +242,8 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
             }
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
-                String tooltip = assignment.getPart().getTitle();
-                list.add( new DOTAttribute( "tooltip", tooltip ) );
+            String tooltip = assignment.getPart().getTitle();
+            list.add( new DOTAttribute( "tooltip", tooltip ) );
             return list;
         }
 
@@ -296,7 +300,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
                 list.add( new DOTAttribute( "labeldistance", LABEL_DISTANCE ) );
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
-                list.add( new DOTAttribute( "tooltip", sanitize( flow.getTitle() ) ) );
+            list.add( new DOTAttribute( "tooltip", sanitize( flow.getTitle() ) ) );
             return list;
         }
 

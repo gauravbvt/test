@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns:wicket="http://wicket.apache.org/"
+        lang="en">
+<head>
+    <title wicket:id="pageTitle">[Title]</title>
+    <link rel="stylesheet" href="css/procedures.css" type="text/css">
+</head>
+
+<body>
+<div wicket:id="header" id="header">
+    <h1 wicket:id="reportTitle">Report Title</h1>
+    <ul>
+        <li class="logout">
+            <a wicket:id="show" href="#"><span wicket:id="show-what">Show map</span> </a>
+        </li>
+
+        <li class="logout">
+            <wicket:link><a href="/logout">Sign out</a></wicket:link>
+        </li>
+    </ul>
+</div>
+<span wicket:id="selector"> [procedure map selector panel]</span>
+<span wicket:id="selected">[selected assignments panel]</span>
+
+<p id="notice">
+    Confidential. Copyright &copy; <span wicket:id="year">2011</span> <span
+        wicket:id="client">Mind-Alliance Systems LLC</span>.</p>
+</body>
+</html>

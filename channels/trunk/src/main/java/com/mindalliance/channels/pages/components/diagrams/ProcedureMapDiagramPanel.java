@@ -119,6 +119,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
             this.update( target, new Change( Change.Type.Selected, segment ) );
         } catch ( NotFoundException e ) {
             LOG.warn( "Selection not found", e );
+            this.update( target, new Change( Change.Type.Selected, getPlan() ) );
         }
     }
 
@@ -136,6 +137,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
             if ( part != null ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );
                 Change change = new Change( Change.Type.Selected, part );
+                change.addQualifier( "focus", focusEntity );
                 change.setScript( js );
                 this.update( target, change );
 
@@ -157,15 +159,15 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
             AjaxRequestTarget target ) {
         Long id = Long.valueOf( edgeId );
         try {
-            Flow flow = getQueryService().find( Flow.class, id );
+            Flow flow = getQueryService().find( Flow.class, Long.valueOf( edgeId ) );
             String js = scroll( domIdentifier, scrollTop, scrollLeft );
             Change change = new Change( Change.Type.Selected, flow );
+            change.addQualifier( "focus", focusEntity );
             change.setScript( js );
             update( target, change );
         } catch ( NotFoundException e ) {
             LOG.warn( "Selected flow not found at id " + id );
         }
     }
-
 
 }
