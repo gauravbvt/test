@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
-import org.apache.wicket.markup.html.panel.Panel;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Date: 2/14/11
  * Time: 2:43 PM
  */
-public class SelectedAssignmentsPanel extends Panel {
+public class SelectedAssignmentsPanel extends AbstractUpdatablePanel {
 
     private final AssignmentsSelector selector;
 
@@ -20,6 +20,6 @@ public class SelectedAssignmentsPanel extends Panel {
     }
 
     private void init() {
-        // todo
+        add( new AssignmentsReportPanel( "assignments-report", selector, new DefaultReportHelper( selector ) ) );
     }
 }

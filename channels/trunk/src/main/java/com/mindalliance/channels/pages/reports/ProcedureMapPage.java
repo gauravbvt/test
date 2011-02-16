@@ -1,6 +1,9 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -10,6 +13,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -39,6 +43,11 @@ public class ProcedureMapPage extends WebPage implements Updatable {
         init();
     }
 
+    public void renderHead( HtmlHeaderContainer container ) {
+        container.getHeaderResponse().renderJavascript( PlanPage.IE7CompatibilityScript, null );
+        super.renderHead( container );
+    }
+
     private void init() {
         add( new Label( "pageTitle" ) );
         addHeader();
@@ -57,9 +66,8 @@ public class ProcedureMapPage extends WebPage implements Updatable {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 showingMap = !showingMap;
-                showMapOrReport();
+                showMapOrReport( target );
                 target.addComponent( showLabel );
-                target.addComponent( selected );
             }
         };
         header.add( showLink );
@@ -69,20 +77,17 @@ public class ProcedureMapPage extends WebPage implements Updatable {
         addOrReplace( header );
     }
 
-    private void showMapOrReport() {
-        selector.add( new AttributeModifier(
-                "class",
-                true,
-                new Model<String>( showingMap ? "expanded" : "collapsed") ));
-        selected.add( new AttributeModifier(
-                "class",
-                true,
-                new Model<String>( showingMap ? "collapsed" : "expanded") ));
+    private void showMapOrReport( AjaxRequestTarget target ) {
+        makeVisible( selector, showingMap );
+        makeVisible( selected, !showingMap );
+        target.addComponent( selector );
+        target.addComponent( selected );
     }
 
     private void addSelector() {
         selector = new ProcedureMapSelectorPanel( "selector" );
         selector.setOutputMarkupId( true );
+        makeVisible( selector, showingMap );
         addOrReplace( selector );
     }
 
@@ -91,17 +96,18 @@ public class ProcedureMapPage extends WebPage implements Updatable {
                 "selected",
                 selector );
         selected.setOutputMarkupId( true );
+        makeVisible( selected, !showingMap );
         addOrReplace( selected );
     }
 
     public String getShowString() {
         return showingMap
-                ? "Show the report"
-                : "Show the map";
+                ? "Show report"
+                : "Show map";
     }
 
     public String getReportTitle() {
-        return "Procedures - " + selector.getSelection().toString();
+        return "Procedures - " + selector.getTitle();
     }
 
     public String getPageTitle() {
@@ -116,11 +122,13 @@ public class ProcedureMapPage extends WebPage implements Updatable {
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        addHeader();
-        addSelector();
-        addSelected();
-        target.addComponent( header );
-        target.addComponent( selected );
+        if ( change.isSelected() ) {
+            showingMap = change.isForInstanceOf( Segment.class ) || change.isForInstanceOf( Plan.class );
+            addHeader();
+            addSelected();
+            target.addComponent( header );
+            showMapOrReport( target );
+        }
     }
 
     @Override
@@ -142,4 +150,10 @@ public class ProcedureMapPage extends WebPage implements Updatable {
     public void refresh( AjaxRequestTarget target, Change change ) {
         // Do nothing
     }
+
+    private static void makeVisible( Component component, boolean visible ) {
+        component.add( new AttributeModifier( "style", true, new Model<String>(
+                visible ? "" : "display:none" ) ) );
+    }
+
 }

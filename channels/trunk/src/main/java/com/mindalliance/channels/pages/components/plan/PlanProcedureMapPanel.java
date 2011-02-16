@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
@@ -50,7 +51,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     /**
      * DOM identifier for resizeable element.
      */
-    private static final String DOM_IDENTIFIER = ".plan .picture";
+    private static final String DOM_IDENTIFIER = ".procedureMap";
 
     /**
      * Whether plan map is reduced to fit.
@@ -64,7 +65,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private String focus = "";
 
-    private boolean summarizeByOrg = false;
+    private boolean summarizeByOrg = true;
 
     private boolean summarizeByRole = false;
 
@@ -122,6 +123,10 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addProcedureMapDiagramPanel();
                 target.addComponent( procedureMapDiagramPanel );
+                Change change = segment == NONE
+                                    ? new Change(Change.Type.Selected, getPlan() )
+                                    : new Change( Change.Type.Selected, segment );
+                update( target, change );
             }
         } );
         add( segmentChoice );
@@ -224,9 +229,10 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private void addProcedureMapDiagramPanel() {
         Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(
-                ".plan .picture", null, null, true, true )
-                : new Settings( ".plan .picture", null, diagramSize, true, true );
-        procedureMapDiagramPanel = new ProcedureMapDiagramPanel(
+                DOM_IDENTIFIER, null, null, true, true )
+                : new Settings( DOM_IDENTIFIER, null, diagramSize, true, true );
+        procedureMapDiagramPanel =
+                new ProcedureMapDiagramPanel(
                 "procedure-map",
                 segment == NONE ? null : segment,
                 isSummarizeByOrg(),
@@ -353,6 +359,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         return focusChoices;
 
     }
+
 
 }
 

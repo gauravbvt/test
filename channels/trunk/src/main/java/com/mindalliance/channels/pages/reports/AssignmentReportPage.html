@@ -12,7 +12,7 @@
 
 <body>
 <div id="container">
-<div id="header">
+<div class="selector">
     <h1 wicket:id="reportTitle">Report Title</h1>
     <ul>
         <li class="logout"><wicket:link><a href="/logout">Sign out</a></wicket:link></li>
@@ -28,108 +28,8 @@
         <li class="last" wicket:id="assignment.part.task"><span>(Current)</span></li>
     </ul>
 </div>
+ <span wicket:id="assignment">[assignment report panel]</span>
 
-<div id="contents">
-    <div id="task">
-        <h2><span wicket:id="assignment.part.task">Task</span> - Task</h2>
-
-        <div wicket:id="instructions" id="instructions">
-            <h3>Instructions</h3>
-            <p wicket:id="assignment.part.description">(Instructions)</p>
-        </div>
-
-        <div id="role">
-            <h3>Executed As</h3>
-            <p wicket:id="assignment.employment.job.role">(Role)</p>
-        </div>
-
-        <div id="location">
-            <h3>Location</h3>
-            <p wicket:id="jurisdiction">(Location)</p>
-        </div>
-
-        <div id="timing">
-            <h3>Timing</h3>
-            <p wicket:id="timing">(Timing information)</p>
-        </div>
-
-        <div id="repeat">
-            <h3>Repeat</h3>
-            <p wicket:id="repeat">(Repeat information)</p>
-        </div>
-
-        <div id="documentation">
-            <h3>Documentation</h3>
-            <ul>
-                <li wicket:id="no-docs">(None)</li>
-                <li wicket:id="documentation"><a wicket:id="doc-link"><span wicket:id="doc-title">(Documentation link)</span></a></li>
-            </ul>
-        </div>
-
-        <div id="policies">
-            <h3>Policies</h3>
-            <ul>
-                <li wicket:id="no-policies">(None)</li>
-                <li wicket:id="policies"><a wicket:id="policy-link"><span wicket:id="policy-title">(Documentation link)</span></a></li>
-            </ul>
-        </div>
-
-        <div wicket:id="receives" id="receives">
-            <h3>Receives</h3>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th class="first">Flows</th>
-                        <th wicket:id="receives.headers">From <u wicket:id="head">Someone</u> <span wicket:id="tail"> at a place</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr wicket:id="receives.rows">
-                        <td class="first" wicket:id="flowName">(Flow name)</td>
-                        <td wicket:id="cells">
-                            <a href="#" wicket:id="flow"><span wicket:id="delay">immediately</span></a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div wicket:id="sends" id="sends">
-            <h3>Sends</h3>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th class="first">Flows</th>
-                        <th wicket:id="sends.headers">To <u wicket:id="head">Someone</u> <span wicket:id="tail"> at a place</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr wicket:id="sends.rows">
-                        <td class="first" wicket:id="flowName">(Flow name)</td>
-                        <td wicket:id="cells">
-                            <a href="#" wicket:id="flow"><span wicket:id="delay">immediately</span></a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="risks">
-            <h3>Failure Impacts - Unmitigated Risks</h3>
-            <ul>
-                <li wicket:id="no-risk">(None)</li>
-                <li wicket:id="risks"><span wicket:id="risk-description">(Risk description)</span></li>
-            </ul>
-        </div>
-
-        <div id="gains">
-            <h3>Failure Impacts - Unrealized Gains</h3>
-            <ul>
-                <li wicket:id="no-gain">(None)</li>
-                <li wicket:id="gains"><span wicket:id="gain-description">(Gain description)</span></li>
-            </ul>
-        </div>
-    </div>
-
-</div>
 <p id="notice">Confidential. Copyright &copy; <span wicket:id="year">2010</span> <span wicket:id="client">Mind-Alliance Systems LLC</span>.</p>
 </div>
 </body>

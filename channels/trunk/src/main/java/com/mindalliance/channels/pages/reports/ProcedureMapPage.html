@@ -5,27 +5,31 @@
         lang="en">
 <head>
     <title wicket:id="pageTitle">[Title]</title>
+    <script type="text/javascript" src="jquery-1.3.2.js"></script>
+    <script type="text/javascript" src="jquery-ui-1.7.2.custom.min.js"></script>
     <link rel="stylesheet" href="css/procedures.css" type="text/css">
 </head>
 
 <body>
-<div wicket:id="header" id="header">
-    <h1 wicket:id="reportTitle">Report Title</h1>
-    <ul>
-        <li class="logout">
-            <a wicket:id="show" href="#"><span wicket:id="show-what">Show map</span> </a>
-        </li>
+<div id="container">
+    <div wicket:id="header" class="selector">
+        <h1 wicket:id="reportTitle">Report Title</h1>
+        <ul>
+            <li>
+                <a wicket:id="show" href="#"><span wicket:id="show-what">Show map</span> </a>
+            </li>
 
-        <li class="logout">
-            <wicket:link><a href="/logout">Sign out</a></wicket:link>
-        </li>
-    </ul>
+            <li class="logout">
+                <wicket:link><a href="/logout">Sign out</a></wicket:link>
+            </li>
+        </ul>
+    </div>
+    <span wicket:id="selector"> [procedure map selector panel]</span>
+    <span wicket:id="selected">[selected assignments panel]</span>
+
+    <p id="notice">
+        Confidential. Copyright &copy; <span wicket:id="year">2011</span> <span
+            wicket:id="client">Mind-Alliance Systems LLC</span>.</p>
 </div>
-<span wicket:id="selector"> [procedure map selector panel]</span>
-<span wicket:id="selected">[selected assignments panel]</span>
-
-<p id="notice">
-    Confidential. Copyright &copy; <span wicket:id="year">2011</span> <span
-        wicket:id="client">Mind-Alliance Systems LLC</span>.</p>
 </body>
 </html>

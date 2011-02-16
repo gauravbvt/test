@@ -82,7 +82,7 @@ div#nav ul li#apply input {
 
 /* ----- Header ----- */
 
-div#header {
+.selector {
 	width:1000px;
 	height:60px;
 	background:url('../images/header.png') no-repeat #c3d9ff;
@@ -90,7 +90,7 @@ div#header {
 	float:left;
 }
 
-div#header h1 {
+.selector h1 {
 	display:block;
 	float:left;
 	width:640px;
@@ -99,23 +99,20 @@ div#header h1 {
 	padding:15px 0 0 60px;
 }
 
-
-/* ----- Header - Sign out ----- */
-
-div#header > ul {
+.selector > ul {
 	float:right;
 	list-style:none;
 	margin:18px 18px 0 0;
 	padding:0;
 }
 
-div#header > ul li {
+.selector > ul li {
 	list-style:none;
 	margin:0;
 	padding:0;
 }
 
-div#header > ul li.logout a {
+.selector > ul li.logout a {
 	background:url('../images/signout-bg.png') no-repeat;
 	border:medium none;
 	color:#727272;
@@ -127,9 +124,55 @@ div#header > ul li.logout a {
 	width:56px;
 }
 
-div#header > ul li.logout a:hover {
+.selector > ul li.logout a:hover {
 	color:#333333;
 }
+
+.filters {
+    padding: 5px 5px 5px 15px;
+    margin-top: 60px;
+}
+
+/* --------- Map ----------*/
+div.procedureMap {
+    overflow: scroll;
+}
+
+div.zoom {
+	background:#E8E8E8;
+	cursor:auto;
+	height:23px;
+	line-height:22px;
+	padding:0 5px;
+	text-align:right;
+	text-transform:uppercase;
+	left:0;
+	top:0;
+	z-index:1;
+	position:relative;
+	margin-bottom:10px;
+}
+
+div.zoom span {
+	padding:0 5px;
+	cursor:pointer;
+	color:#666666;
+	font-size:10px;
+	font-weight:bold;
+}
+
+div.zoom span:hover {
+	color:#333333;
+}
+
+div.zoom div.filters {
+	float:left;
+	border:none;
+	text-transform:none;
+	padding:0;
+}
+}
+
 
 
 /* ----- Breadcrumbs ----- */

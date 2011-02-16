@@ -180,10 +180,10 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
 
             output.flush();
         } catch ( IOException e ) {
-            throw new DiagramException( "Diagram generation failed", e );
+            throw new DiagramException( "Diagram generation failed on IO", e );
         } catch ( InterruptedException e ) {
             p.destroy();
-            throw new DiagramException( "Diagram generation failed", e );
+            throw new DiagramException( "Diagram generation interrupted", e );
         } catch ( DiagramException e ) {
             LOG.error( "Diagram generation failed", e );
             throw e;

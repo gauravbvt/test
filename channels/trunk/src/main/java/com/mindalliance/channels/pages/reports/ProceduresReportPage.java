@@ -1,17 +1,24 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * The plan SOPs report.
@@ -21,7 +28,7 @@ import java.util.Calendar;
  * Date: Feb 5, 2009
  * Time: 5:13:56 PM
  */
-public class ProceduresReportPage extends WebPage {
+public class ProceduresReportPage extends AbstractReportPage {
 
     /**
      * Restrictions to report generation.
@@ -41,6 +48,22 @@ public class ProceduresReportPage extends WebPage {
             throw new RestartResponseException( getClass(), selector.getParameters() );
         }
 
+        add( new BookmarkablePageLink<ProceduresReportPage>( "top-link", ProceduresReportPage.class ) );
+        add( new ListView<Organization>(
+                "breadcrumbs",
+                new PropertyModel<List<Organization>>( this, "breadcrumbs" )
+        ) {
+            @Override
+            protected void populateItem( ListItem<Organization> item ) {
+                Organization organization = item.getModelObject();
+                item.add( new WebMarkupContainer( "crumb" )
+                        .add( new Label( "text", organization.getName() ) )
+                        .setRenderBodyOnly( true ) );
+            }
+        } );
+
+
+        add( new Label( "selector.actor.name" ) );
         add( new Label( "pageTitle" ),
 
                 new Label( "reportTitle" ),
@@ -48,7 +71,7 @@ public class ProceduresReportPage extends WebPage {
                 selector.newPlanSelector()
                         .setVisible( !selector.isPlanner() && selector.getPlans().size() > 1 ),
                 selector.setVisible( selector.isPlanner() ),
-                new AssignmentsReportPanel( "assignments", (AssignmentsSelector) selector ),
+                new AssignmentsReportPanel( "assignments", (AssignmentsSelector) selector, ProceduresReportPage.this ),
                 new Label( "year", "" + Calendar.getInstance().get( Calendar.YEAR ) ),
                 new Label( "client", selector.getPlan().getClient() )
         );
@@ -72,6 +95,16 @@ public class ProceduresReportPage extends WebPage {
 //        response.setDateHeader( "Expires", now + 24L*60*60*1000 );
         response.setDateHeader( "Last-Modified", longTime );
     }
+
+    public List<Organization> getBreadcrumbs() {
+         List<Organization> result = new ArrayList<Organization>();
+         if ( selector.isOrgSelected() )
+             for ( Organization o = selector.getOrganization(); o != null; o = o.getParent() )
+                 result.add( 0, o );
+         return result;
+     }
+
+
 
     public String getReportTitle() {
         return "Procedures - " + selector.getSelection().toString();

@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns:wicket="http://wicket.apache.org/"
+        lang="en">
+<body>
+<wicket:panel>
+    <div id="contents">
+    <div id="flow">
+        <h2><span wicket:id="flow.name">Flow name</span> - Flow</h2>
+
+        <p class="description" wicket:id="flowTitle">(Some description)</p>
+
+        <div id="eois" wicket:id="eoi-div">
+            <h3>Elements</h3>
+            <ul>
+                <li class="eoi" wicket:id="flow.eois">
+                    <span class="label" wicket:id="content">Label</span>
+                    <span class="classifications" wicket:id="classifications">
+                        <span class="classification" wicket:id="classification">Classification</span>
+                    </span>
+                    <ul wicket:id="details">
+                        <li wicket:id="desc-div" class="description">
+							<em>Description:</em> <span wicket:id="description">(Description)</span>
+						</li>
+                        <li wicket:id="handling-div" class="handling">
+							<em>Handling:</em> <span wicket:id="specialHandling">(Handling information)</span>
+						</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div id="contacts">
+            <h3 wicket:id="commonContact">To/From someone</h3>
+
+            <div class="vcard" wicket:id="vcards">
+                <h4 class="fn" wicket:id="fullName">Full name</h4>
+				<div class="photo-cont">
+	                <img class="photo" wicket:id="pic" src="" alt="Picture">
+				</div>
+                <table>
+                    <tr wicket:id="agent-infos">
+                        <div wicket:id="cols">
+                            <th wicket:id="label">Description</th>
+                            <td wicket:id="value">(Description)</td>
+                        </div>
+                    </tr>
+
+                    <tr class="header">
+                        <th colspan="4">Agent channels</th>
+                    </tr>
+
+                    <div wicket:id="channels">
+                        <tr class="tel">
+                            <th class="type">Work</th>
+                            <td class="value">(Office Phone)</td>
+
+                            <th>Email</th>
+                            <td><a class="email" href="#">(Email)</a></td>
+                        </tr>
+                    </div>
+
+                    <div wicket:id="super-channels-wrapper">
+                        <tr class="header">
+                            <th colspan="4">Supervisor channels</th>
+                        </tr>
+                        <div wicket:id="super-channels">
+                            <tr class="tel">
+                                <th class="type">Work</th>
+                                <td class="value">(Office Phone)</td>
+
+                                <th>Email</th>
+                                <td><a class="email" href="#">(Email)</a></td>
+                            </tr>
+                        </div>
+                    </div>
+
+                    <div wicket:id="org-channels-wrapper">
+                        <tr class="header">
+                            <th colspan="4">Organization channels</th>
+                        </tr>
+                        <div wicket:id="org-channels">
+                            <tr class="tel">
+                                <th class="type">Work</th>
+                                <td class="value">(Office Phone)</td>
+
+                                <th>Email</th>
+                                <td><a class="email" href="#">(Email)</a></td>
+                            </tr>
+                        </div>
+                    </div>
+                </table>
+            </div>
+        </div>
+
+        <div wicket:id="instructions" id="instructions">
+            <h3>Instructions</h3>
+            <p wicket:id="flow.description">(Instructions)</p>
+        </div>
+
+        <div id="timing">
+            <h3>Timing</h3>
+            <p wicket:id="flow.maxDelay">(Timing information)</p>
+        </div>
+
+        <div id="agreement">
+            <h3>Sharing Agreement</h3>
+            <p wicket:id="agreement">(Sharing information)</p>
+        </div>
+
+        <div id="policies">
+            <h3>Mandating and Forbidding Policies</h3>
+            <ul>
+                <li wicket:id="no-policies">(None)</li>
+                <li wicket:id="policies"><a wicket:id="policy-link"><span wicket:id="policy-title">(Documentation link)</span></a></li>
+            </ul>
+        </div>
+
+        <div id="documentation">
+            <h3>Reference Documentation</h3>
+            <ul>
+                <li wicket:id="no-docs">(None)</li>
+                <li wicket:id="documentation"><a wicket:id="doc-link"><span wicket:id="doc-title">(Documentation link)</span></a></li>
+            </ul>
+        </div>
+
+        <div id="risks">
+            <h3>Failure Impacts - Unmitigated Risks</h3>
+            <ul>
+                <li wicket:id="no-risk">(None)</li>
+                <li wicket:id="risks"><span wicket:id="risk-description">(Risk description)</span></li>
+            </ul>
+        </div>
+
+        <div id="gains">
+            <h3>Failure Impacts - Unrealized Gains</h3>
+            <ul>
+                <li wicket:id="no-gain">(None)</li>
+                <li wicket:id="gains"><span wicket:id="gain-description">(Gain description)</span></li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+</wicket:panel>
+</body>
+</html>

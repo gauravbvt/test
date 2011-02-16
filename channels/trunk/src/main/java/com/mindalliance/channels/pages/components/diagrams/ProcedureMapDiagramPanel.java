@@ -137,6 +137,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
             if ( part != null ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );
                 Change change = new Change( Change.Type.Selected, part );
+                change.addQualifier( "segment", segment );
                 change.addQualifier( "focus", focusEntity );
                 change.setScript( js );
                 this.update( target, change );
@@ -162,12 +163,23 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
             Flow flow = getQueryService().find( Flow.class, Long.valueOf( edgeId ) );
             String js = scroll( domIdentifier, scrollTop, scrollLeft );
             Change change = new Change( Change.Type.Selected, flow );
+            change.addQualifier( "segment", segment );
             change.addQualifier( "focus", focusEntity );
             change.setScript( js );
             update( target, change );
         } catch ( NotFoundException e ) {
             LOG.warn( "Selected flow not found at id " + id );
         }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String makeSeed() {
+        // Force regeneration
+        return "&_modified=" + System.currentTimeMillis();
     }
 
 }

@@ -5,6 +5,7 @@ package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -42,7 +43,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     private final Place locale;
 
-    private final Map<Segment, Set<Assignment>> segmentMap = new HashMap<Segment,Set<Assignment>>();
+    private final Map<Segment, Set<Assignment>> segmentMap = new HashMap<Segment, Set<Assignment>>();
 
     //--------------------------------------
     public Assignments( Place locale ) {
@@ -103,7 +104,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
             if ( match )
                 result.add( assignment );
-            }
+        }
 
         return result;
     }
@@ -120,7 +121,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
             if ( !matchedOne )
                 result.add( assignment );
-            }
+        }
 
         return result;
     }
@@ -187,7 +188,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public List<Organization> getOrganizations() {
-        Map<Organization,Integer> orgCounts = new HashMap<Organization,Integer>();
+        Map<Organization, Integer> orgCounts = new HashMap<Organization, Integer>();
 
         for ( Assignment a : this ) {
             Organization organization = a.getOrganization();
@@ -237,7 +238,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     public List<Role> getRoles() {
         Set<Role> roles = new HashSet<Role>();
-        for ( Assignment a : this )  {
+        for ( Assignment a : this ) {
             Role role = a.getRole();
             if ( role != null ) roles.add( role );
         }
@@ -261,7 +262,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     public static String stringify( Specable specable ) {
         return specable instanceof Actor ? ( (Actor) specable ).getNormalizedName()
-                                         : ( (Role) specable ).reportString();
+                : ( (Role) specable ).reportString();
     }
 
     private static <T extends ModelObject> List<T> toSortedList( Collection<T> collection ) {
@@ -323,6 +324,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     /**
      * Find assignments that are started with the segments.
+     *
      * @return a list of assignments
      */
     public Assignments getImmediates() {
@@ -341,6 +343,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     /**
      * Find assignments associated with task with no specific start time (bug in the model).
+     *
      * @return a list of assignments
      */
     public Assignments getOptionals() {
@@ -359,6 +362,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     /**
      * Find assignments triggered by an incoming notification.
+     *
      * @return a list of assignments
      */
     public Assignments getNotifications() {
@@ -385,6 +389,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     /**
      * Find assignments triggered by a request for information.
+     *
      * @return a list of parts
      */
     public Assignments getRequests() {
@@ -409,6 +414,15 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return found;
     }
 
+    public Assignments forSegment( Segment segment ) {
+        Assignments result = new Assignments( locale );
+        if ( segmentMap.containsKey( segment ) )
+            for ( Assignment assignment : segmentMap.get( segment ) )
+                result.add( assignment );
+        return result;
+    }
+
+
     public Assignments assignedTo( Part part ) {
         Assignments result = new Assignments( locale );
 
@@ -419,14 +433,28 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
+    public Assignments assignedTo( Flow flow, QueryService queryService ) {
+        Assignments result = new Assignments( locale );
+        List<Commitment> commitments = queryService.findAllCommitments( flow );
+        for ( Commitment commitment : commitments ) {
+            for ( Assignment assignment : this ) {
+                if ( commitment.getCommitter().equals( assignment )
+                        || commitment.getBeneficiary().equals( assignment ) )
+                    result.add( assignment );
+            }
+        }
+        return result;
+    }
+
+
     public Assignments getSources( Part part ) {
         Assignments sources = new Assignments( locale );
         for ( Iterator<Flow> flows = part.flows(); flows.hasNext(); ) {
             Flow flow = flows.next();
             Node node =
-                part.equals( flow.getTarget() ) && flow.isTriggeringToTarget() ? flow.getSource()
-              : part.equals( flow.getSource() ) && flow.isTriggeringToSource() ? flow.getTarget()
-              : null;
+                    part.equals( flow.getTarget() ) && flow.isTriggeringToTarget() ? flow.getSource()
+                            : part.equals( flow.getSource() ) && flow.isTriggeringToSource() ? flow.getTarget()
+                            : null;
 
             if ( node != null ) {
                 if ( node.isPart() )
@@ -479,17 +507,18 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     //--------------------------------------
+
     /**
      * Returns an iterator over a set of elements of type T.
      *
      * @return an Iterator.
      */
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<Assignment> iterator() {
-        Iterator<Assignment>[] iterators = new Iterator[ segmentMap.size() ];
+        Iterator<Assignment>[] iterators = new Iterator[segmentMap.size()];
         int i = 0;
         for ( Segment s : getSegments() )
-            iterators[ i++ ] = segmentMap.get( s ).iterator();
+            iterators[i++] = segmentMap.get( s ).iterator();
 
         return (Iterator<Assignment>) IteratorUtils.chainedIterator( iterators );
     }
@@ -538,13 +567,13 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
             else if ( !spec.narrowsOrEquals( source, locale ) )
                 spec = new ResourceSpec(
-                            getCommon( spec.getActor(), source.getActor(),
-                                       basis == null ? null : basis.getActor() ),
-                            getCommon( spec.getRole(), source.getRole(),
-                                       basis == null ? null : basis.getRole() ),
-                            getCommon( spec.getOrganization(), source.getOrganization(),
-                                       basis == null ? null : basis.getOrganization() ),
-                            getCommon( spec.getJurisdiction(), source.getJurisdiction(), null ) );
+                        getCommon( spec.getActor(), source.getActor(),
+                                basis == null ? null : basis.getActor() ),
+                        getCommon( spec.getRole(), source.getRole(),
+                                basis == null ? null : basis.getRole() ),
+                        getCommon( spec.getOrganization(), source.getOrganization(),
+                                basis == null ? null : basis.getOrganization() ),
+                        getCommon( spec.getJurisdiction(), source.getJurisdiction(), null ) );
         }
 
         return spec;
@@ -553,4 +582,5 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     private <E extends ModelEntity> E getCommon( E common, E actor, E basis ) {
         return common != null && common.narrowsOrEquals( actor, locale ) ? common : basis;
     }
+
 }

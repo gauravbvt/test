@@ -4,35 +4,25 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.query.Assignments;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -43,33 +33,19 @@ import java.util.Set;
  * Date: 2/14/11
  * Time: 12:51 PM
  */
-public class AssignmentsReportPanel extends Panel {
+public class AssignmentsReportPanel extends AbstractUpdatablePanel {
 
     private final AssignmentsSelector selector;
+    private final ReportHelper reportHelper;
 
-    public AssignmentsReportPanel( String id, AssignmentsSelector selector ) {
+    public AssignmentsReportPanel( String id, AssignmentsSelector selector, ReportHelper reportHelper ) {
         super( id );
         this.selector = selector;
+        this.reportHelper = reportHelper;
         init();
     }
 
     private void init() {
-        add( new BookmarkablePageLink<ProceduresReportPage>( "top-link", ProceduresReportPage.class ) );
-        add( new ListView<Organization>(
-                "breadcrumbs",
-                new PropertyModel<List<Organization>>( this, "breadcrumbs" )
-        ) {
-            @Override
-            protected void populateItem( ListItem<Organization> item ) {
-                Organization organization = item.getModelObject();
-                item.add( new WebMarkupContainer( "crumb" )
-                        .add( new Label( "text", organization.getName() ) )
-                        .setRenderBodyOnly( true ) );
-            }
-        } );
-
-
-        add( new Label( "selector.actor.name" ) );
         add( new Label( "selector.plan.name" ) );
         add( new Label( "selector.plan.description" ) );
 
@@ -92,15 +68,7 @@ public class AssignmentsReportPanel extends Panel {
         } );
     }
 
-    public List<Organization> getBreadcrumbs() {
-        List<Organization> result = new ArrayList<Organization>();
-        if ( selector.isOrgSelected() )
-            for ( Organization o = selector.getOrganization(); o != null; o = o.getParent() )
-                result.add( 0, o );
-        return result;
-    }
-
-    private ListView<Phase> newPhaseList( final Assignments eventAssignments ) {
+     private ListView<Phase> newPhaseList( final Assignments eventAssignments ) {
         return new ListView<Phase>( "phases", eventAssignments.getPhases() ) {
             @Override
             protected IModel<Phase> getListItemModel(
@@ -144,7 +112,7 @@ public class AssignmentsReportPanel extends Panel {
                         Assignment assignment = item.getModelObject();
                         Actor actor = assignment.getActor();
                         item.add(
-                                newTaskLink( assignment.getPart(), actor ),
+                                reportHelper.newTaskLink( assignment.getPart(), actor ),
                                 new Label( "to", getToLabel( assignment ) )
                                         .setVisible( !selector.isActorSelected() ),
                                 newSubtaskList( getSubtasks( assignment ) )
@@ -166,7 +134,7 @@ public class AssignmentsReportPanel extends Panel {
 
                         ResourceSpec prefix = sources.getCommonSpec( null );
                         item.add(
-                                newFlowLink( part, actor ),
+                                reportHelper.newFlowLink( part, actor ),
                                 new Label( "to", getToLabel( assignment ) )
                                         .setVisible( !selector.isActorSelected() ),
                                 new Label( "source", prefix.getReportSource() )
@@ -189,7 +157,8 @@ public class AssignmentsReportPanel extends Panel {
 
                     int fromComparison = getFromLabel( o1 ).compareTo( getFromLabel( o2 ) );
                     return fromComparison == 0 ?
-                            getFlowString( o1.getPart() ).compareTo( getFlowString( o2.getPart() ) )
+                            reportHelper.getFlowString( o1.getPart() )
+                                    .compareTo( reportHelper.getFlowString( o2.getPart() ) )
                             : fromComparison;
                 } else
                     return toComparison;
@@ -229,63 +198,10 @@ public class AssignmentsReportPanel extends Panel {
                     @Override
                     protected void populateItem( ListItem<Assignment> item ) {
                         Assignment a = item.getModelObject();
-                        item.add( newTaskLink( a.getPart(), a.getActor() ) );
+                        item.add( reportHelper.newTaskLink( a.getPart(), a.getActor() ) );
                     }
                 } )
                 .setVisible( !subtasks.isEmpty() );
-    }
-
-    private MarkupContainer newFlowLink( Part part, Specable actor ) {
-        Plan plan = selector.getPlan();
-
-        PageParameters parms = new PageParameters();
-        parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
-        parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
-        parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
-        parms.put( "task", Long.toString( part.getId() ) );
-
-        return new BookmarkablePageLink<AssignmentReportPage>(
-                "task", AssignmentReportPage.class, parms )
-                .add( new Label( "name", getFlowString( part ) ) );
-    }
-
-    private MarkupContainer newTaskLink( Part part, Specable actor ) {
-        Plan plan = selector.getPlan();
-
-        PageParameters parms = new PageParameters();
-        parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
-        parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
-        parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
-        parms.put( AbstractReportPage.TASK_PARM, Long.toString( part.getId() ) );
-
-        return new BookmarkablePageLink<AssignmentReportPage>(
-                "task", AssignmentReportPage.class, parms )
-                .add( new Label( "name", part.getTask() ) );
-    }
-
-    private static String getFlowString( Part part ) {
-        StringBuilder result = new StringBuilder();
-        Set<String> flowNames = new HashSet<String>();
-
-        Iterator<Flow> iterator = part.flows();
-        while ( iterator.hasNext() ) {
-            Flow flow = iterator.next();
-            if ( part.equals( flow.getSource() ) && flow.isTriggeringToSource()
-                    || part.equals( flow.getTarget() ) && flow.isTriggeringToTarget() )
-                flowNames.add( flow.getName() );
-        }
-
-        List<String> sortedNames = new ArrayList<String>( flowNames );
-        if ( sortedNames.size() > 1 )
-            Collections.sort( sortedNames );
-        for ( int i = 0; i < sortedNames.size(); i++ ) {
-            if ( i != 0 )
-                result.append( i == sortedNames.size() - 1 ? " or " : ", " );
-
-            result.append( sortedNames.get( i ) );
-        }
-
-        return result.toString();
     }
 
     private List<Assignment> getSubtasks( Assignment parent ) {
@@ -330,18 +246,6 @@ public class AssignmentsReportPanel extends Panel {
 
     public AssignmentsSelector getSelector() {
         return selector;
-    }
-
-
-    /**
-     * Set a component's visibility.
-     *
-     * @param component a component
-     * @param visible   a boolean
-     */
-    private static void makeVisible( Component component, boolean visible ) {
-        component.add( new AttributeModifier( "style", true, new Model<String>(
-                visible ? "" : "display:none" ) ) );
     }
 
 
