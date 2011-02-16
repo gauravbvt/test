@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
@@ -85,13 +86,18 @@ public class SelectorPanel extends Panel implements AssignmentsSelector {
     private boolean showingIssues;
 
     @SpringBean
+    private User user;
+
+
+    @SpringBean
     private PlanManager planManager;
 
     @SpringBean
     private AttachmentManager attachmentManager;
 
     @SpringBean
-    private User user;
+    private ImagingService imagingService;
+
 
     private transient QueryService queryService;
 
@@ -518,4 +524,17 @@ public class SelectorPanel extends Panel implements AssignmentsSelector {
     public boolean isOrgSelected() {
         return !ALL_ORGS.equals( organization );
     }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public ImagingService getImagingService() {
+        return imagingService;
+    }
+
+    @Override
+    public PlanService getPlanService() {
+         return new PlanService( planManager, attachmentManager, getPlan() );
+     }
 }

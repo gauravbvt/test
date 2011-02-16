@@ -98,6 +98,11 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         return imagingService;
     }
 
+    @Override
+    public boolean isSending() {
+        return getPart().equals( getFlow().getSource() );
+    }
+
     public User getUser() {
         return user;
     }
@@ -121,10 +126,10 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
     }
 
     private Assignment getAssignment( long actorId, long taskId ) throws NotFoundException {
-        Part task = getService().find( Part.class, taskId );
+        Part task = getPlanService().find( Part.class, taskId );
         Specable actor = getActor( actorId );
 
-        Assignments assignments = getService().getAssignments()
+        Assignments assignments = getPlanService().getAssignments()
                                     .assignedTo( task ).with( actor );
         if ( assignments.isEmpty() )
             throw new NotFoundException();
@@ -136,11 +141,11 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         return assignments.getAssignments().iterator().next();
     }
 
-    public PlanService getService() {
+    public PlanService getPlanService() {
         if ( service == null )
             try {
                 PageParameters parameters = getPageParameters();
-                service = getService( parameters.getString( SelectorPanel.PLAN_PARM, null ),
+                service = getService( parameters.getString( SelectorPanel.PLAN_PARM, user.getPlanUri() ),
                                       parameters.getInt( SelectorPanel.VERSION_PARM, 0 ) );
 
             } catch ( StringValueConversionException ignored ) {
@@ -178,10 +183,10 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
 
     private Specable getActor( long actorId ) throws NotFoundException {
         try {
-            return getService().find( Actor.class, actorId );
+            return getPlanService().find( Actor.class, actorId );
 
         } catch ( NotFoundException ignored ) {
-            return getService().find( Role.class, actorId );
+            return getPlanService().find( Role.class, actorId );
         }
     }
 
@@ -199,7 +204,7 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
     }
 
     public PageParameters getTopParameters() {
-        Plan plan = getService().getPlan();
+        Plan plan = getPlanService().getPlan();
 
         PageParameters parms = new PageParameters();
         parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
@@ -228,7 +233,6 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
          parms.put( SelectorPanel.ACTOR_PARM,
                     Long.toString( ( (Identifiable) getActor() ) .getId() ) );
          parms.put( TASK_PARM, Long.toString( getPart().getId() ) );
-
          String delay;
          if ( flow == null )
              delay = "";
@@ -242,14 +246,14 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
                          .add( new Label( "delay", delay ) );
 
          if ( flow != null )
-             result.add( newCssClass( getService().computeSharingPriority( flow )
+             result.add( newCssClass( getPlanService().computeSharingPriority( flow )
                                              .toString().toLowerCase() ));
 
          return result.setVisible( flow != null );
      }
 
     public Component newFlowLink( Part part, Specable actor ) {
-         Plan plan = getService().getPlan();
+         Plan plan = getPlanService().getPlan();
 
          PageParameters parms = new PageParameters();
          parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
@@ -288,7 +292,7 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
     }
 
     public  MarkupContainer newTaskLink( Part part, Specable actor ) {
-        Plan plan = getService().getPlan();
+        Plan plan = getPlanService().getPlan();
 
         PageParameters parms = new PageParameters();
         parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
@@ -304,7 +308,7 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
     public Flow getFlow() {
         if ( flow == null ) {
             try {
-                flow = getService().find( Flow.class, getPageParameters().getAsLong( FLOW_PARM ) );
+                flow = getPlanService().find( Flow.class, getPageParameters().getAsLong( FLOW_PARM ) );
 
             } catch ( NumberFormatException ignored ) {
                 throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );

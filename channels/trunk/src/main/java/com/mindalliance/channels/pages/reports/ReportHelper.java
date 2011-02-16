@@ -28,7 +28,7 @@ public interface ReportHelper {
 
     AttachmentManager getAttachmentManager();
 
-    PlanService getService();
+    PlanService getPlanService();
 
     Assignment getAssignment();
 
@@ -45,4 +45,6 @@ public interface ReportHelper {
     Flow getFlow();
 
     ImagingService getImagingService();
+
+    boolean isSending();
 }

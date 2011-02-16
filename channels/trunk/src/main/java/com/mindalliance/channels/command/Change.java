@@ -236,7 +236,7 @@ public class Change implements Serializable {
      * Add a named qualifier.
      *
      * @param name a string
-     * @param val a serializable
+     * @param val  a serializable
      */
     public void addQualifier( String name, Serializable val ) {
         qualifiers.put( name, val );
@@ -246,12 +246,22 @@ public class Change implements Serializable {
      * Whether qualifier at index, if any, equals given value.
      *
      * @param name a string
-     * @param val   a serializable
+     * @param val  a serializable
      * @return a boolean
      */
     public boolean hasQualifier( String name, String val ) {
         Serializable value = qualifiers.get( name );
         return value != null && value.equals( val );
+    }
+
+    /**
+     * Whether a qualifier of a given name is set.
+     *
+     * @param name a string
+     * @return a boolean
+     */
+    public boolean hasQualifier( String name ) {
+        return qualifiers.containsKey( name );
     }
 
     /**

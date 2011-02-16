@@ -12,6 +12,7 @@ import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
+import com.mindalliance.channels.pages.reports.ProcedureMapPage;
 import com.mindalliance.channels.pages.reports.ProceduresReportPage;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
@@ -76,11 +77,11 @@ public class PlanShowMenuPanel extends MenuPanel {
                     newLink(
                             "Procedures report",
                             newTargetedLink( "_blank", ProceduresReportPage.class, null ) ) );
- /*           menuItems.add(
+          menuItems.add(
                     newLink(
-                            "Procedures map",
+                            "Mapped procedures",
                             newTargetedLink( "_blank", ProcedureMapPage.class, null ) ) );
-*/
+
              if ( User.current().isAdmin() )
                 menuItems.add(
                         newLink(

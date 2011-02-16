@@ -224,7 +224,7 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
     public List<Goal> getRisks() {
         List<Goal> result = new ArrayList<Goal>();
 
-        for ( Goal goal : reportHelper.getService()
+        for ( Goal goal : reportHelper.getPlanService()
                 .findAllGoalsImpactedByFailure( reportHelper.getPart() ) )
             if ( !goal.isGain() )
                 result.add( goal );
@@ -235,7 +235,7 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
     public List<Goal> getGains() {
         List<Goal> result = new ArrayList<Goal>();
 
-        for ( Goal goal : reportHelper.getService()
+        for ( Goal goal : reportHelper.getPlanService()
                 .findAllGoalsImpactedByFailure( reportHelper.getPart() ) )
             if ( goal.isGain() )
                 result.add( goal );
@@ -335,7 +335,7 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
 
             private void put( Part part, Flow flow ) {
                 Assignments all =
-                        reportHelper.getService().getAssignments()
+                        reportHelper.getPlanService().getAssignments()
                                 .without( reportHelper.getActor() ).assignedTo( part );
 
                 if ( !all.isEmpty() ) {

@@ -36,6 +36,7 @@ public class ProcedureMapPage extends WebPage implements Updatable {
     private Component selected;
     private Label showLabel;
     private boolean showingMap = true;
+    private Label reportTitle;
 
     public ProcedureMapPage( PageParameters parameters ) {
         super( parameters );
@@ -60,12 +61,17 @@ public class ProcedureMapPage extends WebPage implements Updatable {
     private void addHeader() {
         header = new WebMarkupContainer( "header" );
         header.setOutputMarkupId( true );
-        Label reportTitle = new Label( "reportTitle" );
-        header.add( reportTitle );
+        addReportTitle();
         AjaxLink showLink = new AjaxLink( "show" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 showingMap = !showingMap;
+                if ( showingMap ) {
+                    selector.resetSelected();
+                    addSelected();
+                }
+                addReportTitle();
+                target.addComponent( reportTitle );
                 showMapOrReport( target );
                 target.addComponent( showLabel );
             }
@@ -75,6 +81,12 @@ public class ProcedureMapPage extends WebPage implements Updatable {
         showLabel.setOutputMarkupId( true );
         showLink.add( showLabel );
         addOrReplace( header );
+    }
+
+    private void addReportTitle() {
+        reportTitle = new Label( "reportTitle" );
+        reportTitle.setOutputMarkupId( true );
+        header.addOrReplace( reportTitle );
     }
 
     private void showMapOrReport( AjaxRequestTarget target ) {
@@ -92,9 +104,23 @@ public class ProcedureMapPage extends WebPage implements Updatable {
     }
 
     private void addSelected() {
-        selected = new SelectedAssignmentsPanel(
-                "selected",
-                selector );
+        if ( selector.getAssignment() != null ) {
+            selected = new AssignmentReportPanel(
+                    "selected", new DefaultReportHelper( selector, this, selector.getAssignment() ) );
+        } else if ( selector.getFlow() != null && selector.getPart() != null && selector.getActor() != null ) {
+            selected = new CommitmentReportPanel(
+                    "selected",
+                    new DefaultReportHelper(
+                            selector,
+                            this,
+                            selector.getFlow(),
+                            selector.getPart()) );
+        } else {
+            selected = new AssignmentsReportPanel(
+                    "selected",
+                    selector,
+                    new DefaultReportHelper( selector, this ) );
+        }
         selected.setOutputMarkupId( true );
         makeVisible( selected, !showingMap );
         addOrReplace( selected );
@@ -107,7 +133,7 @@ public class ProcedureMapPage extends WebPage implements Updatable {
     }
 
     public String getReportTitle() {
-        return "Procedures - " + selector.getTitle();
+        return selector.getTitle();
     }
 
     public String getPageTitle() {
@@ -117,8 +143,9 @@ public class ProcedureMapPage extends WebPage implements Updatable {
 
     @Override
     public void changed( Change change ) {
-        // Do nothing.
+        selector.changed( change );
     }
+
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
@@ -126,6 +153,7 @@ public class ProcedureMapPage extends WebPage implements Updatable {
             showingMap = change.isForInstanceOf( Segment.class ) || change.isForInstanceOf( Plan.class );
             addHeader();
             addSelected();
+            addReportTitle();
             target.addComponent( header );
             showMapOrReport( target );
         }

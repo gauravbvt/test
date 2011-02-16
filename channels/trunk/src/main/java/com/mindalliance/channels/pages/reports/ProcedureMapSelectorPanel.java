@@ -1,8 +1,12 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
@@ -11,9 +15,15 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanProcedureMapPanel;
 import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.query.PlanService;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
+import java.util.List;
 
 /**
  * Procedure map selector panel.
@@ -28,7 +38,20 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     private Part selectedPart;
     private ModelEntity focusEntity;
     private Segment segment;
-    private Assignments assignments;
+    private Assignment assignment;
+    private Flow selectedFlow;
+    private Actor selectedActor;
+
+    @SpringBean
+    private AttachmentManager attachmentManager;
+
+    @SpringBean
+    private ImagingService imagingService;
+
+    @SpringBean
+    private PlanManager planManager;
+
+    private PlanProcedureMapPanel procedureMapPanel;
 
     public ProcedureMapSelectorPanel( String id ) {
         super( id );
@@ -36,7 +59,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     private void init() {
-        PlanProcedureMapPanel procedureMapPanel = new PlanProcedureMapPanel( "procedure-map" );
+        procedureMapPanel = new PlanProcedureMapPanel( "procedure-map" );
         add( procedureMapPanel );
     }
 
@@ -45,40 +68,63 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         if ( change.isSelected() ) {
             Identifiable identifiable = change.getSubject( getQueryService() );
             focusEntity = (ModelEntity) change.getQualifier( "focus" );
-            segment = (Segment) change.getQualifier( "segment" );
-            if ( identifiable instanceof Part ) {
+           if ( identifiable instanceof Part ) {
+                resetSelected();
                 selectedPart = (Part) identifiable;
             } else if ( identifiable instanceof Flow ) {
-                selectedPart = (Part)((Flow) identifiable).getSource();
+                resetSelected();
+                selectedFlow = (Flow) identifiable;
+                selectedPart = (Part) change.getQualifier( "part" );
+                if ( selectedPart == null )
+                    selectedPart = (Part) ( (Flow) identifiable ).getSource();
+                selectedActor = (Actor) change.getQualifier( "actor" );
             } else if ( identifiable instanceof Segment ) {
-                selectedPart = null;
+                resetSelected();
                 segment = (Segment) identifiable;
             } else if ( identifiable instanceof Plan ) {
-                selectedPart = null;
+                resetSelected();
                 segment = null;
+            } else if ( identifiable instanceof Assignment ) {
+                resetSelected();
+                setAssignment( (Assignment) identifiable );
             } else {
-                selectedPart = null;
+                resetSelected();
             }
         }
-        super.changed( change );
+    }
+
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        Segment impliedSegment = (Segment) change.getQualifier( "segment" );
+         if ( impliedSegment != null && ( segment == null || !segment.equals( impliedSegment) ) ) {
+             segment = impliedSegment;
+             procedureMapPanel.refreshSegment( target, segment );
+         }
+         super.updateWith( target, change, updated );
+    }
+
+    public void resetSelected() {
+        assignment = null;
+        selectedPart = null;
+        selectedFlow = null;
+        selectedActor = null;
     }
 
     @Override
     public Assignments getAssignments() {
         Assignments as = getAllAssignments();
-        Assignments focused =  isActorSelected()
-                ? as.notFrom( (Actor)focusEntity ).with( (Actor)focusEntity )
+        Assignments partAssignments;
+        if ( selectedPart != null )
+             partAssignments = as.assignedTo( selectedPart );
+        else
+            partAssignments = as;
+        Assignments focused = isActorSelected()
+                ? partAssignments.notFrom( (Actor) focusEntity ).with( (Actor) focusEntity )
                 : isOrgSelected()
-                ? as.with( (Organization)focusEntity )
-                : as;
-        Assignments inSegment =  segment != null
+                ? partAssignments.with( (Organization) focusEntity )
+                : partAssignments;
+        return segment != null
                 ? focused.forSegment( segment )
                 : focused;
-
-        if ( selectedPart != null )
-            return inSegment.assignedTo( selectedPart );
-        else
-            return inSegment;
     }
 
     @Override
@@ -93,9 +139,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     @Override
     public Assignments getAllAssignments() {
-        if ( assignments == null )
-            assignments = getQueryService().getAssignments();
-        return assignments;
+        return getQueryService().getAssignments();
     }
 
     @Override
@@ -109,7 +153,8 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     public Actor getActor() {
-        return focusEntity instanceof Actor ? (Actor) focusEntity : null;
+        return selectedActor;
+        // return focusEntity instanceof Actor ? (Actor) focusEntity : null;
     }
 
     @Override
@@ -123,11 +168,65 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     public String getTitle() {
-        return  selectedPart != null
-                ? "Assignments to \"" + selectedPart.getTask() + "\""
-                : segment != null
-                ? "All assignments in \"" + segment.getName() + "\""
-                : "All assignments";
+        if ( assignment != null ) {
+            String title = "";
+            if ( ! assignment.getActor().isUnknown() ) {
+                title += assignment.getActor().getName() + " doing \"";
+            } else {
+            title += "Task \"";
+            }
+            title +=  assignment.getPart().getTask() + "\"";
+            return title;
+        } else if ( selectedFlow != null && selectedPart != null && selectedActor != null ) {
+            return selectedActor.getName()
+                    + ( isSending() ? " sending " : " receiving " )
+                    + "\""
+                    + selectedFlow.getName() + "\"";
+        }
+        else if ( selectedPart != null ) {
+                return "Task \"" + selectedPart.getTask() + "\"";
+        } else if ( segment != null ) {
+                return "Procedures in \"" + segment.getName() + "\"";
+        } else {
+                return "All procedures";
+        }
 
     }
+
+    private boolean isSending() {
+        return getPart().equals( getFlow().getSource() );
+    }
+
+
+    public void setAssignment( Assignment assignment ) {
+        this.assignment = assignment;
+    }
+
+    public Assignment getAssignment() {
+        return assignment;
+    }
+
+    public Flow getFlow() {
+        return selectedFlow;
+    }
+
+    public Part getPart() {
+        return selectedPart;
+    }
+
+    @Override
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    @Override
+    public PlanService getPlanService() {
+        return new PlanService( planManager, attachmentManager, getPlan() );
+    }
+
+    @Override
+    public ImagingService getImagingService() {
+        return imagingService;
+    }
+
 }

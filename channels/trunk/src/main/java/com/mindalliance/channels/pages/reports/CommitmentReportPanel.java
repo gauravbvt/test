@@ -102,7 +102,8 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
                         } )
                         .setVisible( !reportHelper.getFlow().getEois().isEmpty() ),
 
-                new Label( "commonContact", new PropertyModel<String>( this, "commonContact" ) ),
+                new Label( "commonContact", new PropertyModel<String>( this, "commonContact" ) )
+                        .add( reportHelper.newCssClass( isSending() ? "sending" : "receiving" ) ),
                 newVcards(),
 
                 new ListView<Attachment>(
@@ -221,17 +222,17 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
                         }
                                 .setColumns( 2 ),
 
-                        new ChannelPanel( "channels", reportHelper.getService(), assignment.getSpecableActor() )
+                        new ChannelPanel( "channels", reportHelper.getPlanService(), assignment.getSpecableActor() )
                                 .setRenderBodyOnly( true ),
                         new WebMarkupContainer( "super-channels-wrapper" )
                                 .add( new ChannelPanel( "super-channels",
-                                        reportHelper.getService(), assignment.getEmployment().getSupervisor() )
+                                        reportHelper.getPlanService(), assignment.getEmployment().getSupervisor() )
                                 )
                                 .setVisible( employment.getSupervisor() != null )
                                 .setRenderBodyOnly( true ),
                         new WebMarkupContainer( "org-channels-wrapper" )
                                 .add( new ChannelPanel( "org-channels",
-                                        reportHelper.getService(), assignment.getOrganization() ) )
+                                        reportHelper.getPlanService(), assignment.getOrganization() ) )
                                 .setVisible( assignment.getOrganization() != null )
                                 .setRenderBodyOnly( true ),
 
@@ -267,14 +268,14 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
     public String getAgreement() {
         Flow flow = reportHelper.getFlow();
         if ( flow.isSharing() && !flow.isProhibited() ) {
-            Assignments assignments = reportHelper.getService().getAssignments();
+            Assignments assignments = reportHelper.getPlanService().getAssignments();
             Place locale = assignments.getLocale();
 
             for ( Assignment committer : assignments.with( flow.getSource() ) ) {
                 Specable committerActor = committer.getSpecableActor();
                 for ( Assignment beneficiary : assignments.with( flow.getTarget() ) )
                     if ( !committerActor.equals( beneficiary.getSpecableActor() )
-                            && flow.allowsCommitment( committer, beneficiary, locale, reportHelper.getService() )
+                            && flow.allowsCommitment( committer, beneficiary, locale, reportHelper.getPlanService() )
                             )
                         return "Yes, covered by a sharing agreement";
             }
@@ -305,7 +306,7 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
     public List<Goal> getRisks() {
         List<Goal> result = new ArrayList<Goal>();
 
-        for ( Goal goal : reportHelper.getService().findAllGoalsImpactedByFailure( getOtherPart() ) )
+        for ( Goal goal : reportHelper.getPlanService().findAllGoalsImpactedByFailure( getOtherPart() ) )
             if ( !goal.isGain() )
                 result.add( goal );
 
@@ -315,7 +316,7 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
     public List<Goal> getGains() {
         List<Goal> result = new ArrayList<Goal>();
 
-        for ( Goal goal : reportHelper.getService().findAllGoalsImpactedByFailure( getOtherPart() ) )
+        for ( Goal goal : reportHelper.getPlanService().findAllGoalsImpactedByFailure( getOtherPart() ) )
             if ( goal.isGain() )
                 result.add( goal );
 
@@ -323,13 +324,13 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
     }
 
     public List<Assignment> getVcards() {
-        return reportHelper.getService().getAssignments().assignedTo( getOtherPart() ).getAssignments();
+        return reportHelper.getPlanService().getAssignments().assignedTo( getOtherPart() ).getAssignments();
     }
 
     public String getCommonContact() {
         Part otherPart = getOtherPart();
         return ( isSending() ? "To " : "From " )
-                + reportHelper.getService().getAssignments().assignedTo( otherPart
+                + reportHelper.getPlanService().getAssignments().assignedTo( otherPart
         ).getCommonSpec( otherPart ).getReportSource();
     }
 
@@ -339,7 +340,7 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
     }
 
     private boolean isSending() {
-        return reportHelper.getPart().equals( reportHelper.getFlow().getSource() );
+        return reportHelper.isSending();
     }
 
 

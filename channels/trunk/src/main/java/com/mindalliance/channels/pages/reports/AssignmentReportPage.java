@@ -30,7 +30,7 @@ public class AssignmentReportPage extends AbstractReportPage {
             new Label( "assignment.part.task" ),
             new AssignmentReportPanel("assignment", this),
             new Label("year", "" + Calendar.getInstance().get(Calendar.YEAR) ),
-            new Label("client", getService().getPlan().getClient() )
+            new Label("client", getPlanService().getPlan().getClient() )
 
         );
     }

@@ -65,6 +65,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private String focus = "";
 
+    private DropDownChoice<Segment> segmentChoice;
+
     private boolean summarizeByOrg = true;
 
     private boolean summarizeByRole = false;
@@ -103,14 +105,14 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addSegmentChoice() {
-        DropDownChoice<Segment> segmentChoice = new DropDownChoice<Segment>(
+        segmentChoice = new DropDownChoice<Segment>(
                 "segment",
                 new PropertyModel<Segment>( this, "segment" ),
                 getAllSegments(),
                 new ChoiceRenderer<Segment>() {
                     @Override
                     public Object getDisplayValue( Segment seg ) {
-                        if ( seg == NONE ) {
+                        if ( seg.getName().isEmpty() ) {
                             return "the entire plan";
                         } else {
                             return "segment \"" + seg.getName() + "\"";
@@ -118,6 +120,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                     }
                 }
         );
+        segmentChoice.setOutputMarkupId( true );
         segmentChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -129,7 +132,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                 update( target, change );
             }
         } );
-        add( segmentChoice );
+        addOrReplace( segmentChoice );
     }
 
     private List<Segment> getAllSegments() {
@@ -361,5 +364,12 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
 
+    public void refreshSegment( AjaxRequestTarget target, Segment segment ) {
+        this.segment = segment;
+        addSegmentChoice();
+        target.addComponent( segmentChoice );
+        addProcedureMapDiagramPanel();
+        target.addComponent( procedureMapDiagramPanel );
+    }
 }
 

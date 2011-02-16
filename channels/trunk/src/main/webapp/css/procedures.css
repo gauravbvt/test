@@ -94,9 +94,9 @@ div#nav ul li#apply input {
 	display:block;
 	float:left;
 	width:640px;
-	font-size:24px;
+	font-size:large;
 	font-weight:bold;
-	padding:15px 0 0 60px;
+	padding:20px 0 0 60px;
 }
 
 .selector > ul {
@@ -764,7 +764,14 @@ div#contacts h3 {
 	font-size:14px;
 	padding:6px 0 0 31px;
 	margin:10px 0 5px 0;
-	background:url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
+}
+
+.sending {
+    background:url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
+}
+
+.receiving {
+    background:url('../images/receives.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div.vcard {

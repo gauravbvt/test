@@ -30,7 +30,7 @@ public class CommitmentReportPage extends AbstractReportPage {
                 new Label( "flow.name" ),
                 new CommitmentReportPanel( "commitment", this ),
                 new Label( "year", "" + Calendar.getInstance().get( Calendar.YEAR ) ),
-                new Label( "client", getService().getPlan().getClient() )
+                new Label( "client", getPlanService().getPlan().getClient() )
         );
     }
 
