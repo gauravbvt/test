@@ -106,40 +106,73 @@ div#nav ul li#apply input {
 .selector > ul {
 	float:right;
 	list-style:none;
-	margin:18px 18px 0 0;
+	margin:20px 20px 0 0;
 	padding:0;
+	display:inline;
 }
 
 .selector > ul li {
 	list-style:none;
 	margin:0;
 	padding:0;
+	display:inline;
 }
 
-.selector > ul li.logout a {
-	background:url('../images/signout-bg.png') no-repeat;
-	border:medium none;
+.selector > ul li a {
+	background:url('../images/signout-bg.png') repeat-x;
+	border:1px solid #a7a9ac;
 	color:#727272;
-	display:block;
 	font-size:10px;
 	font-weight:bold;
-	height:18px;
-	padding:4px 0 0 14px;
-	width:56px;
+	padding:4px;
+	margin-left:5px;
+	text-transform:capitalize;
+	outline:none;
 }
 
-.selector > ul li.logout a:hover {
+.selector > ul li a:hover {
 	color:#333333;
 }
 
-.filters {
-    padding: 5px 5px 5px 15px;
-    margin-top: 60px;
-}
 
 /* --------- Map ----------*/
+
+div.procedureMapContainer {
+	border: 1px solid #999999;
+	float: left;
+	margin: 10px;
+}
+
+.filters {
+    padding: 5px 0 7px 10px;
+    background: #E8E8E8;
+    border-bottom: 1px solid #999999;
+	color:#666666;
+	font-size:11px;
+	font-weight:bold;
+}
+
+.filters select {
+	font-size: 11px;
+	text-transform: none;
+	width: 150px;
+}
+
+.filters input.filter-small {
+	font-size: 11px;
+	text-transform: none;
+	width: 100px;
+}
+
 div.procedureMap {
     overflow: scroll;
+	width:978px;
+	background:url('../images/map-loading.png') 270px 0 no-repeat #ffffff;
+	min-height:400px;
+}
+
+div.procedureMap img {
+	border:none;
 }
 
 div.zoom {
@@ -155,6 +188,11 @@ div.zoom {
 	z-index:1;
 	position:relative;
 	margin-bottom:10px;
+}
+
+div.procedureMapContainer div.zoom {
+	margin-bottom:0;
+	border-top:1px solid #999999;
 }
 
 div.zoom span {
