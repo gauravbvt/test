@@ -217,7 +217,11 @@ div.zoom div.filters {
 	padding:0;
 }
 
-
+.noProcedures {
+    font-size: large;
+    text-align: center;
+    margin-top: 200px;
+}
 
 /* ----- Breadcrumbs ----- */
 

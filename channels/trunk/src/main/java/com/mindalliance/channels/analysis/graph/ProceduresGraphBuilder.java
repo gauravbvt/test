@@ -72,6 +72,10 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
         }
     }
 
+    public boolean hasCommitments() {
+        return !findCommitments().isEmpty();
+    }
+
     private List<Commitment> findCommitments() {
         List<Commitment> commitments = new ArrayList<Commitment>();
         Set<Flow> flows = findAllFlows();
