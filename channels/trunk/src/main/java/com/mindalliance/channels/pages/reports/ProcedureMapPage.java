@@ -81,6 +81,7 @@ public class ProcedureMapPage extends WebPage implements Updatable {
                 target.addComponent( showLabel );
             }
         };
+        makeVisible( showLink, ( !showingMap || selector.hasProcedures() ) );
         header.add( showLink );
         showLabel = new Label( "show-what", new PropertyModel<String>( this, "showString" ) );
         showLabel.setOutputMarkupId( true );

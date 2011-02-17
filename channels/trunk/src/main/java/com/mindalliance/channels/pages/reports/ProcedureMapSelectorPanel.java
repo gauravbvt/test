@@ -78,7 +78,8 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
             resetSelected();
             setSelected( change );
             Identifiable identifiable = change.getSubject( getQueryService() );
-            focusEntity = (ModelEntity) change.getQualifier( "focus" );
+            if (change.hasQualifier( "focus" ) )
+                focusEntity = (ModelEntity) change.getQualifier( "focus" );
             if ( identifiable instanceof Part ) {
                 selectedPart = (Part) identifiable;
             } else if ( identifiable instanceof Flow ) {
@@ -126,8 +127,6 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     private Change baseChange() {
         Change change = new Change( Change.Type.Selected, segment == null ? getPlan() : segment );
-        if ( focusEntity != null )
-            change.addQualifier( "focus", focusEntity );
         change.setProperty( "showReport" );
         return change;
     }
@@ -174,7 +173,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
                 .with( selectedActor )
                 .with( selectedOrganization )
                 .with( selectedRole )
-                .forSegment( segment );
+                .involving( focusEntity, selectedPart == null ? segment : null, getQueryService() );
     }
 
     private boolean isOrgFocused() {
@@ -236,11 +235,22 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         } else if ( selectedPart != null ) {
             return titleForTask( selectedPart, selectedActor );
         } else if ( segment != null ) {
-            return "Procedures in \"" + segment.getName() + "\"";
+            return titleForSegment ( segment );
         } else {
             return "All procedures";
         }
 
+    }
+
+    private String titleForSegment( Segment seg ) {
+        return "Procedures in \""
+                + seg.getName()
+                + "\""
+/*
+                + " - "
+                + seg.getPhaseEventTitle()
+*/
+                ;
     }
 
     private String titleForTask( Assignment assign ) {
@@ -324,4 +334,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         return imagingService;
     }
 
+    public boolean hasProcedures() {
+        return !getAssignments().isEmpty();
+    }
 }

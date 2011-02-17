@@ -15,9 +15,7 @@ import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -78,7 +76,7 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
 
     private List<Commitment> findCommitments() {
         List<Commitment> commitments = new ArrayList<Commitment>();
-        Set<Flow> flows = findAllFlows();
+        List<Flow> flows = findAllFlows();
         for ( Flow flow : flows ) {
             List<Commitment> flowCommitments = new ArrayList<Commitment>( queryService.findAllCommitments( flow, true ) );
             for ( Commitment commitment : flowCommitments ) {
@@ -137,18 +135,8 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
     }
 
 
-    private Set<Flow> findAllFlows() {
-        Set<Flow> flows = new HashSet<Flow>();
-        List<Segment> segments = new ArrayList<Segment>();
-        if ( segment == null ) {
-            segments.addAll( getQueryService().getPlan().getSegments() );
-        } else {
-            segments.add( segment );
-        }
-        for ( Segment seg : segments ) {
-            flows.addAll( seg.getAllSharingFlows() );
-        }
-        return flows;
+    private List<Flow> findAllFlows() {
+        return getQueryService().findAllSharingFlows( segment );
     }
 
     public QueryService getQueryService() {

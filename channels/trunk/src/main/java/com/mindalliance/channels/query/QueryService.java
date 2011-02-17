@@ -249,18 +249,20 @@ public interface QueryService {
 
     /**
      * Find an actual entity by name, if it exists.
+     *
      * @param entityClass a model entity class
-     * @param name a string
-     * @param <T> a subclass of model entity
+     * @param name        a string
+     * @param <T>         a subclass of model entity
      * @return a model entity or null
      */
     <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name );
 
     /**
      * Find an entity type by name, if it exists.
+     *
      * @param entityClass a model entity class
-     * @param name a string
-     * @param <T> a subclass of model entity
+     * @param name        a string
+     * @param <T>         a subclass of model entity
      * @return a model entity or null
      */
     <T extends ModelEntity> T findEntityType( Class<T> entityClass, String name );
@@ -560,7 +562,7 @@ public interface QueryService {
      * Find all parts that has the specified resource.
      *
      * @param segment    a plan segment
-     * @param specable a specable
+     * @param specable   a specable
      * @param exactMatch a boolean @return a list of parts
      * @return a list of parts
      */
@@ -694,6 +696,14 @@ public interface QueryService {
      * @return a list of flows
      */
     List<Flow> findAllFlows();
+
+    /**
+     * Find all sharing flows in plan or segment.
+     *
+     * @param segment null or a segment
+     * @return a list of flows
+     */
+    List<Flow> findAllSharingFlows( Segment segment );
 
     /**
      * Find all roles played by an actor.
@@ -1005,7 +1015,7 @@ public interface QueryService {
     /**
      * Find all commitments implied by a sharing flow.
      *
-     * @param flow a flow
+     * @param flow                   a flow
      * @param allowCommitmentsToSelf a boolean
      * @return a list of commitments
      */
