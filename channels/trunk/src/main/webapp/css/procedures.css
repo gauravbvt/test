@@ -163,7 +163,7 @@ div.procedureMapContainer div.filters select {
 div.procedureMapContainer div.filters input.filter-small {
 	font-size: 11px;
 	text-transform: none;
-	width: 100px;
+	width: 220px;
 }
 
 div.procedureMap {
@@ -933,6 +933,7 @@ div.wicket-aa ul {
 
 div.wicket-aa ul li {
     cursor: pointer;
+    text-align: left;
 }
 
 div.wicket-aa ul li:hover {

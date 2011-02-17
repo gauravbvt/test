@@ -76,6 +76,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     //--------------------------------------
     public Assignments withAll( Collection<? extends Specable> specs ) {
+        if ( specs == null ) return this;
         Assignments result = new Assignments( locale );
 
         for ( Assignment assignment : this ) {
@@ -93,6 +94,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments with( Collection<? extends Specable> parms ) {
+        if ( parms == null ) return this;
         Assignments result = new Assignments( locale );
 
         for ( Assignment assignment : this ) {
@@ -110,6 +112,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments without( Collection<? extends Specable> parms ) {
+        if ( parms == null ) return this;
         Assignments result = new Assignments( locale );
 
         for ( Assignment assignment : this ) {
@@ -127,18 +130,22 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments withAll( Specable... specs ) {
+        if ( specs[0] == null ) return this;
         return withAll( Arrays.asList( specs ) );
     }
 
     public Assignments with( Specable... specs ) {
+        if ( specs[0] == null ) return this;
         return with( Arrays.asList( specs ) );
     }
 
     public Assignments without( Specable... specs ) {
+        if ( specs[0] == null ) return this;
         return without( Arrays.asList( specs ) );
     }
 
     public Assignments with( Segment... segments ) {
+        if ( segments == null ) return this;
         Assignments result = new Assignments( locale );
 
         for ( Segment segment : segments ) {
@@ -151,6 +158,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments with( Event... events ) {
+        if ( events == null ) return this;
         Set<Event> eventSet = new HashSet<Event>( Arrays.asList( events ) );
         Assignments result = new Assignments( locale );
 
@@ -162,6 +170,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments with( Phase... phases ) {
+        if ( phases == null ) return this;
         Set<Phase> phaseSet = new HashSet<Phase>( Arrays.asList( phases ) );
         Assignments result = new Assignments( locale );
 
@@ -173,6 +182,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments with( Node node ) {
+        if ( node == null ) return this;
         if ( node.isPart() )
             return with( (Specable) node );
 
@@ -415,6 +425,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments forSegment( Segment segment ) {
+        if ( segment == null ) return this;
         Assignments result = new Assignments( locale );
         if ( segmentMap.containsKey( segment ) )
             for ( Assignment assignment : segmentMap.get( segment ) )
@@ -424,6 +435,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
 
     public Assignments assignedTo( Part part ) {
+        if ( part == null ) return this;
         Assignments result = new Assignments( locale );
         if ( segmentMap.containsKey( part.getSegment() ) ) {
             for ( Assignment assignment : segmentMap.get( part.getSegment() ) )
@@ -434,6 +446,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments assignedTo( Flow flow, QueryService queryService ) {
+        if ( flow == null ) return this;
         Assignments result = new Assignments( locale );
         List<Commitment> commitments = queryService.findAllCommitments( flow );
         for ( Commitment commitment : commitments ) {
@@ -448,6 +461,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
 
     public Assignments getSources( Part part ) {
+        if ( part == null ) return this;
         Assignments sources = new Assignments( locale );
         for ( Iterator<Flow> flows = part.flows(); flows.hasNext(); ) {
             Flow flow = flows.next();
@@ -469,6 +483,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments notFrom( Specable source ) {
+        if ( source == null ) return this;
         Assignments result = new Assignments( locale );
         for ( Assignment assignment : this ) {
             boolean found = false;
@@ -484,6 +499,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments from( Specable source ) {
+        if ( source == null ) return this;
         Assignments result = new Assignments( locale );
         for ( Assignment other : this ) {
             boolean found = false;
@@ -499,6 +515,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public Assignments from( Assignment source ) {
+        if ( source == null ) return this;
         Assignments result = new Assignments( locale );
         for ( Assignment other : this )
             if ( getSources( other.getPart() ).contains( source ) )

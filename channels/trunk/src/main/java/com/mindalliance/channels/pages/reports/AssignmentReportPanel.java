@@ -62,7 +62,7 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
                         .add( new Label( "assignment.part.description" ) )
                         .setVisible( !part.getDescription().isEmpty() ),
 
-                new Label( "assignment.employment.job.role" ),
+                new Label( "assignment.employment.label" ),
                 new Label( "jurisdiction", new PropertyModel<Place>( this, "jurisdiction" ) ),
                 new Label( "timing", new PropertyModel<String>( this, "timing" ) ),
                 new Label( "repeat", new PropertyModel<String>( this, "repeat" ) ),

@@ -4,6 +4,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.ResourceSpec;
@@ -214,7 +215,19 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
     }
 
     private static String getToLabel( Assignment assignment ) {
-        return "By " + assignment.getSpecableActor() + " - ";
+        return "By "
+                + assignment.getSpecableActor()
+                + organizationToLabel( assignment )
+                + " - ";
+    }
+
+    private static String organizationToLabel( Assignment assignment ) {
+        Organization org = assignment.getOrganization();
+        if ( org == null || org.isUnknown() ) {
+            return "";
+        } else {
+            return " at " + org.getName();
+        }
     }
 
     private static String getSourcesList( Assignments assignments, ResourceSpec prefix ) {

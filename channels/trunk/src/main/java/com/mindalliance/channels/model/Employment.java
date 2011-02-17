@@ -39,7 +39,7 @@ public class Employment implements GeoLocatable, Specable {
         organization = employment.getOrganization();
         Job otherJob = employment.getJob();
         if ( otherJob == null ) {
-           job = new Job( actor, Role.UNKNOWN, null );
+            job = new Job( actor, Role.UNKNOWN, null );
         } else {
             job = new Job( otherJob );
         }
@@ -150,6 +150,18 @@ public class Employment implements GeoLocatable, Specable {
         return sb.toString();
     }
 
+    public String getLabel() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( getRole() );
+        Organization org = getOrganization();
+        if ( org != null && !org.isUnknown() ) {
+            sb.append( " at " );
+            sb.append( getOrganization().getName() );
+        }
+        return sb.toString();
+
+    }
+
     @Override
     public Place getPlaceBasis() {
         return getOrganization().getPlaceBasis();
@@ -184,6 +196,8 @@ public class Employment implements GeoLocatable, Specable {
         int hash = 1;
         if ( getActor() != null )
             hash = hash * 31 + getActor().hashCode();
+        if ( getOrganization() != null )
+            hash = hash * 31 + getOrganization().hashCode();
         if ( job != null )
             hash = hash * 31 + job.hashCode();
         return hash;

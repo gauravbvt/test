@@ -169,15 +169,12 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     @Override
     public Assignments getAssignments() {
-        Assignments as = getAllAssignments();
-        Assignments partAssignments;
-        if ( selectedPart != null )
-            partAssignments = as.assignedTo( selectedPart );
-        else
-            partAssignments = as;
-        return segment != null
-                ? partAssignments.forSegment( segment )
-                : partAssignments;
+        return getAllAssignments()
+                .assignedTo( selectedPart )
+                .with( selectedActor )
+                .with( selectedOrganization )
+                .with( selectedRole )
+                .forSegment( segment );
     }
 
     private boolean isOrgFocused() {
@@ -233,16 +230,9 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     public String getTitle() {
         if ( assignment != null ) {
-            Actor actor = selectedActor;
-            if ( actor == null ) {
-                actor = assignment.getActor();
-            }
-            return titleForTask( assignment.getPart(), actor );
+            return titleForTask( assignment );
         } else if ( selectedFlow != null && selectedPart != null && selectedActor != null ) {
-            return selectedActor.getName()
-                    + ( isSending() ? " sending " : " receiving " )
-                    + "\""
-                    + selectedFlow.getName() + "\"";
+            return titleForFlow();
         } else if ( selectedPart != null ) {
             return titleForTask( selectedPart, selectedActor );
         } else if ( segment != null ) {
@@ -253,19 +243,53 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     }
 
-    private String titleForTask( Part part, Actor actor ) {
-        String title = "";
-        if ( actor != null && !actor.isUnknown() ) {
-            title += actor.getName() + " doing \"";
-        } else {
-            title += "Task \"";
+    private String titleForTask( Assignment assign ) {
+        Actor actor = selectedActor;
+        if ( actor == null ) {
+            actor = assign.getActor();
         }
-        title += part.getTask() + "\"";
-        return title;
+        Part part = assign.getPart();
+        return titleForTask( part, actor );
     }
 
-    private boolean isSending() {
-        return getPart().equals( getFlow().getSource() );
+    private String titleForTask( Part part, Actor actor ) {
+        return titlePersona( part, actor )
+                +  " doing...";
+    }
+
+    private String titlePersona(Part part, Actor actor ) {
+        String persona = "";
+        String acting = ( actor != null && !actor.isUnknown() )
+                ? actor.getName()
+                : "";
+        persona += acting;
+        Role role = selectedRole != null
+                ? selectedRole
+                : part != null
+                ? part.getRole()
+                : null;
+        if ( role != null && !role.isUnknown() ) {
+            persona += (persona.isEmpty() ? "" : " as ") + role.getName();
+        }
+        Organization org = selectedOrganization != null
+                ? selectedOrganization
+                : part != null
+                ? part.getOrganization()
+                : null;
+        if ( org != null && !org.isUnknown() ) {
+            persona += (persona.isEmpty() ? "Someone at " : " at ") + org.getName();
+        }
+        if ( persona.isEmpty() ) persona = "Someone";
+        return persona;
+    }
+
+    private String titleForFlow() {
+        return titlePersona( selectedPart, selectedActor )
+                + ( isSending( selectedPart ) ? " sending..." : " receiving..." );
+    }
+
+    private boolean isSending( Part part ) {
+        return part.equals( getFlow().getSource() );
     }
 
 
