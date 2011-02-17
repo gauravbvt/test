@@ -7,10 +7,13 @@ import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
@@ -79,8 +82,17 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
     protected static final String HIGHLIGHT_NODE_FONT = "Arial Bold";
 
     private Segment segment;
+    // Extra arguments MUST start with '_'
+    private static final String PROC_VERTEX_URL_FORMAT =  "?graph={0,number,0}&vertex={1,number,0}&_actor={2,number,0}&_role={3,number,0}&_org={4,number,0}";
+    // Extra arguments MUST start with '_'
+    private static final String PROC_EDGE_URL_FORMAT =  "?graph={0,number,0}&edge={1,number,0}&_actor={2,number,0}&_role={3,number,0}&_org={4,number,0}";
 
-    public ProceduresMetaProvider( Segment segment, String outputFormat, Resource imageDirectory, Analyst analyst ) {
+
+    public ProceduresMetaProvider(
+            Segment segment,
+            String outputFormat,
+            Resource imageDirectory,
+            Analyst analyst) {
         super( outputFormat, imageDirectory, analyst );
         this.segment = segment;
     }
@@ -115,8 +127,17 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
              */
             public String getVertexURL( Assignment assignment ) {
                 Part part = assignment.getPart();
-                Object[] args = {part.getSegment().getId(), part.getId()};
-                return MessageFormat.format( VERTEX_URL_FORMAT, args );
+                Actor actor = assignment.getActor();
+                Role role = assignment.getRole();
+                Organization organization = assignment.getOrganization();
+                Object[] args = {
+                        part.getSegment().getId(),
+                         part.getId(),
+                        (actor == null || actor.isUnknown() ? 0 : actor.getId() ),
+                        (role == null || role.isUnknown() ? 0 : role.getId() ),
+                        (organization == null  || organization.isUnknown() ? 0 : organization.getId()  )
+                };
+                return MessageFormat.format( PROC_VERTEX_URL_FORMAT, args );
             }
 
             /**
@@ -126,8 +147,19 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
              * @return a URL string
              */
             public String getEdgeURL( Commitment commitment ) {
-                Object[] args = {0, commitment.getSharing().getId()};
-                return MessageFormat.format( EDGE_URL_FORMAT, args );
+                Flow flow = commitment.getSharing();
+                Assignment assignment = commitment.getCommitter();
+                Actor actor = assignment.getActor();
+                Role role = assignment.getRole();
+                Organization organization = assignment.getOrganization();
+                Object[] args = {
+                        flow.getSegment().getId(),
+                         flow.getId(),
+                        (actor == null || actor.isUnknown() ? 0 : actor.getId() ),
+                        (role == null || role.isUnknown() ? 0 : role.getId() ),
+                        (organization == null  || organization.isUnknown() ? 0 : organization.getId()  )
+                };
+                return MessageFormat.format( PROC_EDGE_URL_FORMAT, args );
             }
         };
     }
@@ -177,7 +209,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
         return new VertexNameProvider<Assignment>() {
             @Override
             public String getVertexName( Assignment assignment ) {
-                return sanitizeToId( assignment.getFullTitle("|") ) + String.valueOf( assignment.getPart().getId()  );
+                return sanitizeToId( assignment.getFullTitle( "|" ) ) + String.valueOf( assignment.getPart().getId() );
             }
         };
     }
@@ -238,8 +270,8 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
             }
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
-                String tooltip = assignment.getPart().getTitle();
-                list.add( new DOTAttribute( "tooltip", tooltip ) );
+            String tooltip = assignment.getPart().getTitle();
+            list.add( new DOTAttribute( "tooltip", tooltip ) );
             return list;
         }
 
@@ -296,7 +328,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
                 list.add( new DOTAttribute( "labeldistance", LABEL_DISTANCE ) );
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
-                list.add( new DOTAttribute( "tooltip", sanitize( flow.getTitle() ) ) );
+            list.add( new DOTAttribute( "tooltip", sanitize( flow.getTitle() ) ) );
             return list;
         }
 

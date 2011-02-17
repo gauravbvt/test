@@ -4,7 +4,7 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.pages.AdminPage;
-import com.mindalliance.channels.pages.reports.FlowReportPage;
+import com.mindalliance.channels.pages.reports.CommitmentReportPage;
 import org.junit.Test;
 import org.springframework.test.context.TestExecutionListeners;
 
@@ -38,6 +38,6 @@ public class RailTest extends WalkthroughTest {
         login( "denis" );
         wicketApplication.getDebugSettings().setComponentUseCheck( false );
         assertRendered( "flow?plan=mindalliance.com/channels/plans/railsec&v=1&agent=293&task=235&flow=527",
-                              FlowReportPage.class );
+                              CommitmentReportPage.class );
     }
 }

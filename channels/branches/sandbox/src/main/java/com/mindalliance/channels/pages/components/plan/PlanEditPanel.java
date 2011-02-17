@@ -167,11 +167,11 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanMapPanel();
         } else if ( aspect.equals( PARTICIPATIONS ) ) {
             return getPlanParticipationsPanel();
-        }  else if ( aspect.equals( EVENTS ) ) {
+        } else if ( aspect.equals( EVENTS ) ) {
             return getPlanIncidentsPanel();
         } else if ( aspect.equals( CLASSIFICATIONS ) ) {
             return getPlanClassificationsPanel();
-        }  else if ( aspect.equals( ORGANIZATIONS ) ) {
+        } else if ( aspect.equals( ORGANIZATIONS ) ) {
             return getPlanOrganizationsPanel();
         } else if ( aspect.equals( WHOSWHO ) ) {
             return getPlanWhoswhoPanel();
@@ -183,11 +183,11 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanIndexPanel();
         } else if ( aspect.equals( EVAL ) ) {
             return getPlanEvaluationPanel();
-        }  else if ( aspect.equals( VERSIONS ) ) {
+        } else if ( aspect.equals( VERSIONS ) ) {
             return getPlanVersionsPanel();
-        }  else if ( aspect.equals( TAGS ) ) {
+        } else if ( aspect.equals( TAGS ) ) {
             return getPlanTagsPanel();
-        }  else if ( aspect.equals( PROCEDURES ) ) {
+        } else if ( aspect.equals( PROCEDURES ) ) {
             return getPlanProcedureMapPanel();
         } else {
             // Should never happen
@@ -262,7 +262,9 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( Issue.class ) )
             setAspectShown( target, DETAILS );
-        super.updateWith( target, change, updated );
+        if ( !( change.isSelected() && ( change.isForInstanceOf( Plan.class ) ) ) ) {
+            super.updateWith( target, change, updated );
+        }
     }
 
 }

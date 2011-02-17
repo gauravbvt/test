@@ -8,6 +8,8 @@
 <head>
     <title wicket:id="pageTitle">[Title]</title>
     <link rel="stylesheet" href="css/procedures.css" type="text/css">
+    <link rel="profile" href="http://microformats.org/profile/hcard">
+
 </head>
 
 <body>
@@ -25,11 +27,12 @@
         <li><span wicket:id="assignment.part.segment.event.name">Event</span></li>
         <li><span wicket:id="assignment.part.segment.phase.name">Phase</span></li>
         <li><span wicket:id="type">Information Notified</span></li>
-        <li class="last" wicket:id="assignment.part.task"><span>(Current)</span></li>
+        <li><span wicket:id="assignment.part.task">(Current)</span></li>
+        <li class="last" wicket:id="flow.name"><span>(Current)</span></li>
     </ul>
 </div>
- <span wicket:id="assignment">[assignment report panel]</span>
 
+<span wicket:id="commitment">[Commitment report panel]</span>
 <p id="notice">Confidential. Copyright &copy; <span wicket:id="year">2010</span> <span wicket:id="client">Mind-Alliance Systems LLC</span>.</p>
 </div>
 </body>

@@ -1,38 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
 <html
-        xmlns="http://www.w3.org/1999/xhtml"
         xmlns:wicket="http://wicket.apache.org/"
-        xml:lang="en"
         lang="en">
-<head>
-    <title wicket:id="pageTitle">[Title]</title>
-    <link rel="stylesheet" href="css/procedures.css" type="text/css">
-    <link rel="profile" href="http://microformats.org/profile/hcard">
-
-</head>
-
 <body>
-<div id="container">
-<div id="header">
-    <h1 wicket:id="reportTitle">Report Title</h1>
-    <ul>
-        <li class="logout"><wicket:link><a href="/logout">Sign out</a></wicket:link></li>
-    </ul>
-</div>
-
-<div id="breadcrumbs">
-    <ul>
-        <li><a wicket:id="top-link">Home</a></li>
-        <li><span wicket:id="assignment.part.segment.event.name">Event</span></li>
-        <li><span wicket:id="assignment.part.segment.phase.name">Phase</span></li>
-        <li><span wicket:id="type">Information Notified</span></li>
-        <li><span wicket:id="assignment.part.task">(Current)</span></li>
-        <li class="last" wicket:id="flow.name"><span>(Current)</span></li>
-    </ul>
-</div>
-
-<div id="contents">
+<wicket:panel>
+    <div id="contents">
     <div id="flow">
         <h2><span wicket:id="flow.name">Flow name</span> - Flow</h2>
 
@@ -170,7 +143,6 @@
     </div>
 
 </div>
-<p id="notice">Confidential. Copyright &copy; <span wicket:id="year">2010</span> <span wicket:id="client">Mind-Alliance Systems LLC</span>.</p>
-</div>
+</wicket:panel>
 </body>
 </html>

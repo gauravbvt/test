@@ -20,8 +20,8 @@ import com.mindalliance.channels.pages.png.HierarchyPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
 import com.mindalliance.channels.pages.png.ProceduresPage;
 import com.mindalliance.channels.pages.reports.AssignmentReportPage;
-import com.mindalliance.channels.pages.reports.FlowReportPage;
-import com.mindalliance.channels.pages.reports.SOPsReportPage;
+import com.mindalliance.channels.pages.reports.CommitmentReportPage;
+import com.mindalliance.channels.pages.reports.ProceduresReportPage;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
@@ -134,9 +134,9 @@ public class Channels extends WebApplication
 
         getMarkupSettings().setStripWicketTags( true );
 
-        mount( new QueryStringUrlCodingStrategy( "procedures", SOPsReportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "procedures", ProceduresReportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "task", AssignmentReportPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "flow", FlowReportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "flow", CommitmentReportPage.class ) );
 
         mount( new IndexedParamUrlCodingStrategy( "vcards", VCardPage.class ) );
         mount( new IndexedParamUrlCodingStrategy( "contacts", ContactPage.class ) );
@@ -196,7 +196,7 @@ public class Channels extends WebApplication
         return user.isAdmin() ? PlanPage.class // was AdminPage.class
                 : plan == null ? NoAccessPage.class
                 : user.isPlanner( plan.getUri() ) ? PlanPage.class
-                : SOPsReportPage.class;
+                : ProceduresReportPage.class;
     }
 
     public QueryService getQueryService() {

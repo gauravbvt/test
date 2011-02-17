@@ -6,8 +6,11 @@ import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
@@ -16,8 +19,12 @@ import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
@@ -26,11 +33,17 @@ import org.apache.wicket.util.string.StringValueConversionException;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * ...
  */
-public class AbstractReportPage extends WebPage {
+public class AbstractReportPage extends WebPage implements ReportHelper {
 
     public static final String FLOW_PARM = "flow";
 
@@ -39,6 +52,9 @@ public class AbstractReportPage extends WebPage {
     private transient PlanService service;
 
     private transient Assignment assignment;
+
+    private Flow flow;
+
 
     @SpringBean
     private User user;
@@ -49,9 +65,18 @@ public class AbstractReportPage extends WebPage {
     @SpringBean
     private AttachmentManager attachmentManager;
 
+    @SpringBean
+    private ImagingService imagingService;
+
     public AbstractReportPage( PageParameters parameters ) {
         super( parameters );
-        setDefaultModel( new CompoundPropertyModel<Object>( this ) {
+        setAsDefaultModel( this );
+
+
+    }
+
+    public void setAsDefaultModel( Component component ) {
+        component.setDefaultModel( new CompoundPropertyModel<Object>( this ) {
             @Override
             public void detach() {
                 super.detach();
@@ -59,8 +84,6 @@ public class AbstractReportPage extends WebPage {
                 assignment = null;
             }
         } );
-
-
     }
 
     public AttachmentManager getAttachmentManager() {
@@ -69,6 +92,15 @@ public class AbstractReportPage extends WebPage {
 
     public PlanManager getPlanManager() {
         return planManager;
+    }
+
+    public ImagingService getImagingService() {
+        return imagingService;
+    }
+
+    @Override
+    public boolean isSending() {
+        return getPart().equals( getFlow().getSource() );
     }
 
     public User getUser() {
@@ -94,10 +126,10 @@ public class AbstractReportPage extends WebPage {
     }
 
     private Assignment getAssignment( long actorId, long taskId ) throws NotFoundException {
-        Part task = getService().find( Part.class, taskId );
+        Part task = getPlanService().find( Part.class, taskId );
         Specable actor = getActor( actorId );
 
-        Assignments assignments = getService().getAssignments()
+        Assignments assignments = getPlanService().getAssignments()
                                     .assignedTo( task ).with( actor );
         if ( assignments.isEmpty() )
             throw new NotFoundException();
@@ -109,11 +141,11 @@ public class AbstractReportPage extends WebPage {
         return assignments.getAssignments().iterator().next();
     }
 
-    protected PlanService getService() {
+    public PlanService getPlanService() {
         if ( service == null )
             try {
                 PageParameters parameters = getPageParameters();
-                service = getService( parameters.getString( SelectorPanel.PLAN_PARM, null ),
+                service = getService( parameters.getString( SelectorPanel.PLAN_PARM, user.getPlanUri() ),
                                       parameters.getInt( SelectorPanel.VERSION_PARM, 0 ) );
 
             } catch ( StringValueConversionException ignored ) {
@@ -151,10 +183,10 @@ public class AbstractReportPage extends WebPage {
 
     private Specable getActor( long actorId ) throws NotFoundException {
         try {
-            return getService().find( Actor.class, actorId );
+            return getPlanService().find( Actor.class, actorId );
 
         } catch ( NotFoundException ignored ) {
-            return getService().find( Role.class, actorId );
+            return getPlanService().find( Role.class, actorId );
         }
     }
 
@@ -172,7 +204,7 @@ public class AbstractReportPage extends WebPage {
     }
 
     public PageParameters getTopParameters() {
-        Plan plan = getService().getPlan();
+        Plan plan = getPlanService().getPlan();
 
         PageParameters parms = new PageParameters();
         parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
@@ -195,4 +227,99 @@ public class AbstractReportPage extends WebPage {
     public AttributeModifier newCssClass( String cssClass ) {
         return new AttributeModifier( "class", true, new Model<String>( cssClass ) );
     }
+
+    public Component newFlowLink( Flow flow ) {
+         PageParameters parms = getTopParameters();
+         parms.put( SelectorPanel.ACTOR_PARM,
+                    Long.toString( ( (Identifiable) getActor() ) .getId() ) );
+         parms.put( TASK_PARM, Long.toString( getPart().getId() ) );
+         String delay;
+         if ( flow == null )
+             delay = "";
+         else {
+             parms.put( FLOW_PARM, Long.toString( flow.getId() ) );
+             delay = flow.getMaxDelay().toString();
+         }
+
+         Component result =
+                 new BookmarkablePageLink<CommitmentReportPage>( "flow", CommitmentReportPage.class, parms )
+                         .add( new Label( "delay", delay ) );
+
+         if ( flow != null )
+             result.add( newCssClass( getPlanService().computeSharingPriority( flow )
+                                             .toString().toLowerCase() ));
+
+         return result.setVisible( flow != null );
+     }
+
+    public Component newFlowLink( Part part, Specable actor ) {
+         Plan plan = getPlanService().getPlan();
+
+         PageParameters parms = new PageParameters();
+         parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
+         parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
+         parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
+         parms.put( "task", Long.toString( part.getId() ) );
+
+         return new BookmarkablePageLink<AssignmentReportPage>(
+                 "task", AssignmentReportPage.class, parms )
+                 .add( new Label( "name", getFlowString( part ) ) );
+     }
+
+    public String getFlowString( Part part ) {
+        StringBuilder result = new StringBuilder();
+        Set<String> flowNames = new HashSet<String>();
+
+        Iterator<Flow> iterator = part.flows();
+        while ( iterator.hasNext() ) {
+            Flow flow = iterator.next();
+            if ( part.equals( flow.getSource() ) && flow.isTriggeringToSource()
+                    || part.equals( flow.getTarget() ) && flow.isTriggeringToTarget() )
+                flowNames.add( flow.getName() );
+        }
+
+        List<String> sortedNames = new ArrayList<String>( flowNames );
+        if ( sortedNames.size() > 1 )
+            Collections.sort( sortedNames );
+        for ( int i = 0; i < sortedNames.size(); i++ ) {
+            if ( i != 0 )
+                result.append( i == sortedNames.size() - 1 ? " or " : ", " );
+
+            result.append( sortedNames.get( i ) );
+        }
+
+        return result.toString();
+    }
+
+    public  MarkupContainer newTaskLink( Part part, Specable actor ) {
+        Plan plan = getPlanService().getPlan();
+
+        PageParameters parms = new PageParameters();
+        parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
+        parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
+        parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
+        parms.put( AbstractReportPage.TASK_PARM, Long.toString( part.getId() ) );
+
+        return new BookmarkablePageLink<AssignmentReportPage>(
+                "task", AssignmentReportPage.class, parms )
+                .add( new Label( "name", part.getTask() ) );
+    }
+
+    public Flow getFlow() {
+        if ( flow == null ) {
+            try {
+                flow = getPlanService().find( Flow.class, getPageParameters().getAsLong( FLOW_PARM ) );
+
+            } catch ( NumberFormatException ignored ) {
+                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
+
+            } catch ( NotFoundException ignored ) {
+                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
+            }
+        }
+
+        return flow;
+    }
+
+
 }

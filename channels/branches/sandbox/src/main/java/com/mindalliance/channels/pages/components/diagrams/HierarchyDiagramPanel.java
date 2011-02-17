@@ -1,14 +1,16 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -82,6 +84,7 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         // Do nothing -- never called
     }
@@ -93,6 +96,7 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         try {
             Hierarchical hierarchical = (Hierarchical) getQueryService().find(
@@ -116,6 +120,7 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         // Never called
     }

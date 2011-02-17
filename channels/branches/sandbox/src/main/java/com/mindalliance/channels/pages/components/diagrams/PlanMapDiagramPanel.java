@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Plan map diagram panel.
@@ -194,6 +195,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         try {
@@ -216,6 +218,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         try {
             String js = scroll( domIdentifier, scrollTop, scrollLeft );
@@ -238,6 +241,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         SegmentRelationship scRel = new SegmentRelationship();
         scRel.setId( Long.valueOf( edgeId ), getQueryService(), getAnalyst() );

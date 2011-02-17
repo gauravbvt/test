@@ -82,7 +82,7 @@ div#nav ul li#apply input {
 
 /* ----- Header ----- */
 
-div#header {
+.selector {
 	width:1000px;
 	height:60px;
 	background:url('../images/header.png') no-repeat #c3d9ff;
@@ -90,46 +90,133 @@ div#header {
 	float:left;
 }
 
-div#header h1 {
+.selector img {
+    border: 0;
+}
+
+.selector h1 {
 	display:block;
 	float:left;
 	width:640px;
-	font-size:24px;
+	font-size:large;
 	font-weight:bold;
-	padding:15px 0 0 60px;
+	padding:20px 0 0 60px;
 }
 
-
-/* ----- Header - Sign out ----- */
-
-div#header > ul {
+.selector > ul {
 	float:right;
 	list-style:none;
-	margin:18px 18px 0 0;
+	margin:20px 20px 0 0;
 	padding:0;
+	display:inline;
 }
 
-div#header > ul li {
+.selector > ul li {
 	list-style:none;
 	margin:0;
 	padding:0;
+	display:inline;
 }
 
-div#header > ul li.logout a {
-	background:url('../images/signout-bg.png') no-repeat;
-	border:medium none;
+.selector > ul li a {
+	background:url('../images/signout-bg.png') repeat-x;
+	border:1px solid #a7a9ac;
 	color:#727272;
-	display:block;
 	font-size:10px;
 	font-weight:bold;
-	height:18px;
-	padding:4px 0 0 14px;
-	width:56px;
+	padding:4px;
+	margin-left:5px;
+	text-transform:capitalize;
+	outline:none;
 }
 
-div#header > ul li.logout a:hover {
+.selector > ul li a:hover {
 	color:#333333;
 }
+
+
+/* --------- Map ----------*/
+
+div.procedureMapContainer {
+	border: 1px solid #999999;
+	float: left;
+	margin: 10px;
+    width: 978px;
+}
+
+div.procedureMapContainer div.filters {
+    padding: 5px 0 7px 10px;
+    background: #E8E8E8;
+    border-bottom: 1px solid #999999;
+	color:#666666;
+	font-size:11px;
+	font-weight:bold;
+	width:968px;
+}
+
+div.procedureMapContainer div.filters select {
+	font-size: 11px;
+	text-transform: none;
+	width: 150px;
+}
+
+div.procedureMapContainer div.filters input.filter-small {
+	font-size: 11px;
+	text-transform: none;
+	width: 220px;
+}
+
+div.procedureMap {
+    overflow: scroll;
+	width:978px;
+	background:url('../images/map-loading.png') 270px 0 no-repeat #ffffff;
+	min-height:400px;
+}
+
+div.procedureMap img {
+	border:none;
+}
+
+div.zoom {
+	background:#E8E8E8;
+	cursor:auto;
+	height:23px;
+	line-height:22px;
+	padding:0 5px;
+	text-align:right;
+	text-transform:uppercase;
+	left:0;
+	top:0;
+	z-index:1;
+	position:relative;
+	margin-bottom:10px;
+}
+
+div.procedureMapContainer div.zoom {
+	margin-bottom:0;
+	border-top:1px solid #999999;
+	width:968px;
+}
+
+div.zoom span {
+	padding:0 5px;
+	cursor:pointer;
+	color:#666666;
+	font-size:10px;
+	font-weight:bold;
+}
+
+div.zoom span:hover {
+	color:#333333;
+}
+
+div.zoom div.filters {
+	float:left;
+	border:none;
+	text-transform:none;
+	padding:0;
+}
+
 
 
 /* ----- Breadcrumbs ----- */
@@ -721,7 +808,14 @@ div#contacts h3 {
 	font-size:14px;
 	padding:6px 0 0 31px;
 	margin:10px 0 5px 0;
-	background:url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
+}
+
+.sending {
+    background:url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
+}
+
+.receiving {
+    background:url('../images/receives.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div.vcard {
@@ -820,8 +914,28 @@ p#notice {
 }
 
 
-/* ----- BetaEasy - Override ----- */
+/* ----- Autocomplete ----- */
 
-#BetaEasyInvokeButton a {
-	border:none;
+div.wicket-aa-container {
+    background: white;
+    border: 1px outset #808080;
+    margin: 2px;
+}
+
+div.wicket-aa {
+}
+
+div.wicket-aa ul {
+    margin: 0;
+    padding: 2px;
+    list-style: none;
+}
+
+div.wicket-aa ul li {
+    cursor: pointer;
+    text-align: left;
+}
+
+div.wicket-aa ul li:hover {
+    background: #c3d9ff;
 }

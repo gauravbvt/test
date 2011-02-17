@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.pages.reports.SOPsReportPage;
+import com.mindalliance.channels.pages.reports.ProceduresReportPage;
 import org.junit.Test;
 
 /**
@@ -15,7 +15,7 @@ public class TestPlanReportPage extends AbstractChannelsTest {
 
     @Test
     public void testPage() {
-        assertRendered( "procedures", SOPsReportPage.class );
+        assertRendered( "procedures", ProceduresReportPage.class );
     }
 
 

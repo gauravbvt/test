@@ -11,6 +11,8 @@ import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -150,6 +152,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         try {
             Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
@@ -169,6 +172,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         try {
             Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
@@ -197,6 +201,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         long id =  Long.valueOf( edgeId );
         try {

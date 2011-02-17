@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
@@ -50,7 +51,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     /**
      * DOM identifier for resizeable element.
      */
-    private static final String DOM_IDENTIFIER = ".plan .picture";
+    private static final String DOM_IDENTIFIER = ".procedureMap";
 
     /**
      * Whether plan map is reduced to fit.
@@ -64,7 +65,9 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private String focus = "";
 
-    private boolean summarizeByOrg = false;
+    private DropDownChoice<Segment> segmentChoice;
+
+    private boolean summarizeByOrg = true;
 
     private boolean summarizeByRole = false;
 
@@ -102,14 +105,14 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addSegmentChoice() {
-        DropDownChoice<Segment> segmentChoice = new DropDownChoice<Segment>(
+        segmentChoice = new DropDownChoice<Segment>(
                 "segment",
                 new PropertyModel<Segment>( this, "segment" ),
                 getAllSegments(),
                 new ChoiceRenderer<Segment>() {
                     @Override
                     public Object getDisplayValue( Segment seg ) {
-                        if ( seg == NONE ) {
+                        if ( seg.getName().isEmpty() ) {
                             return "the entire plan";
                         } else {
                             return "segment \"" + seg.getName() + "\"";
@@ -117,14 +120,19 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                     }
                 }
         );
+        segmentChoice.setOutputMarkupId( true );
         segmentChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addProcedureMapDiagramPanel();
                 target.addComponent( procedureMapDiagramPanel );
+                Change change = isPlanSelected()
+                                    ? new Change(Change.Type.Selected, getPlan() )
+                                    : new Change( Change.Type.Selected, segment );
+                update( target, change );
             }
         } );
-        add( segmentChoice );
+        addOrReplace( segmentChoice );
     }
 
     private List<Segment> getAllSegments() {
@@ -224,17 +232,22 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private void addProcedureMapDiagramPanel() {
         Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(
-                ".plan .picture", null, null, true, true )
-                : new Settings( ".plan .picture", null, diagramSize, true, true );
-        procedureMapDiagramPanel = new ProcedureMapDiagramPanel(
+                DOM_IDENTIFIER, null, null, true, true )
+                : new Settings( DOM_IDENTIFIER, null, diagramSize, true, true );
+        procedureMapDiagramPanel =
+                new ProcedureMapDiagramPanel(
                 "procedure-map",
-                segment == NONE ? null : segment,
+                isPlanSelected() ? null : segment,
                 isSummarizeByOrg(),
                 isSummarizeByRole(),
                 getFocusEntity(),
                 settings );
         procedureMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( procedureMapDiagramPanel );
+    }
+
+    public boolean isPlanSelected() {
+        return segment == null || segment.getName().isEmpty();
     }
 
     private void addMapSizing() {
@@ -354,5 +367,13 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     }
 
+
+    public void refreshSegment( AjaxRequestTarget target, Segment segment ) {
+        this.segment = segment;
+        addSegmentChoice();
+        target.addComponent( segmentChoice );
+        addProcedureMapDiagramPanel();
+        target.addComponent( procedureMapDiagramPanel );
+    }
 }
 

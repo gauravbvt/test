@@ -13,7 +13,7 @@ import java.util.List;
  * Date: Oct 28, 2009
  * Time: 9:55:15 AM
  */
-public class Assignment implements GeoLocatable, Specable {
+public class Assignment implements GeoLocatable, Specable, Identifiable {
     /**
      * Employment playing a part.
      */
@@ -221,5 +221,26 @@ public class Assignment implements GeoLocatable, Specable {
              label += " (every " + part.getRepeatsEvery().toString() + ")";
          }
          return label;
+    }
+     // Identifiable
+
+    @Override
+    public long getId() {
+        return part.getId();
+    }
+
+    @Override
+    public String getDescription() {
+        return part.getDescription();
+    }
+
+    @Override
+    public String getTypeName() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    public String getName() {
+        return part.getTask();
     }
 }

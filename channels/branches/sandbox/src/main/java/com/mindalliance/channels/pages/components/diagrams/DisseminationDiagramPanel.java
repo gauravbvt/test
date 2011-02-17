@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Map;
 
 /**
  * Dissemination diagram panel.
@@ -143,6 +144,7 @@ public class DisseminationDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         try {
             Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
@@ -155,7 +157,14 @@ public class DisseminationDiagramPanel extends AbstractDiagramPanel {
     /**
      * @inheritDoc
      */
-    protected void onSelectVertex( String graphId, String vertexId, String domIdentifier, int scrollTop, int scrollLeft, AjaxRequestTarget target ) {
+    protected void onSelectVertex(
+            String graphId,
+            String vertexId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            Map<String,String> extras,
+            AjaxRequestTarget target ) {
         try {
             Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
             Part part = (Part) segment.getNode( Long.valueOf( vertexId ) );
@@ -182,6 +191,7 @@ public class DisseminationDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         long id = extractFlowId( edgeId );
         try {

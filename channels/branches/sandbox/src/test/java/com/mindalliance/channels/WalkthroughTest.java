@@ -8,14 +8,15 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.reports.AssignmentReportPage;
-import com.mindalliance.channels.pages.reports.SOPsReportPage;
+import com.mindalliance.channels.pages.reports.ProceduresReportPage;
 import com.mindalliance.channels.query.Assignments;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Basic test that follows every links to make sure there are no display errors.
@@ -34,7 +35,7 @@ public abstract class WalkthroughTest extends AbstractChannelsTest {
 
     @Test
     public void testProcedures() {
-        assertRendered( "procedures", SOPsReportPage.class );
+        assertRendered( "procedures", ProceduresReportPage.class );
     }
 
     @Test
