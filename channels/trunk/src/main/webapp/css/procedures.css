@@ -914,8 +914,27 @@ p#notice {
 }
 
 
-/* ----- BetaEasy - Override ----- */
+/* ----- Autocomplete ----- */
 
-#BetaEasyInvokeButton a {
-	border:none;
+div.wicket-aa-container {
+    background: white;
+    border: 1px outset #808080;
+    margin: 2px;
+}
+
+div.wicket-aa {
+}
+
+div.wicket-aa ul {
+    margin: 0;
+    padding: 2px;
+    list-style: none;
+}
+
+div.wicket-aa ul li {
+    cursor: pointer;
+}
+
+div.wicket-aa ul li:hover {
+    background: #c3d9ff;
 }
