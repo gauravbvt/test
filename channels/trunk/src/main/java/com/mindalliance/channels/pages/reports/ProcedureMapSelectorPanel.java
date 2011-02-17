@@ -57,7 +57,8 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     private PlanProcedureMapPanel procedureMapPanel;
 
-    private List<Change> history = new ArrayList<Change>();;
+    private List<Change> history = new ArrayList<Change>();
+    ;
 
     private boolean goingBack = false;
 
@@ -101,10 +102,10 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     public void addToHistory( Change change ) {
-        if ( !change.isForInstanceOf( Plan.class ) && !change.isForInstanceOf( Segment.class )  ) {
+        if ( !change.isForInstanceOf( Plan.class ) && !change.isForInstanceOf( Segment.class ) ) {
             goingBack = change.hasQualifier( "goingBack" );
             if ( !goingBack ) {
-                if ( history.isEmpty() ) resetHistory();
+                if ( history.isEmpty() ) history.add( baseChange() );
                 history.add( change );
             }
         }
@@ -133,7 +134,11 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     private void resetHistory() {
         history = new ArrayList<Change>();
-        history.add( baseChange() );
+    }
+
+    public void setGoingForward() {
+        goingBack = false;
+        resetHistory();
     }
 
     private void setSelected( Change change ) {
@@ -143,10 +148,12 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Segment impliedSegment = (Segment) change.getQualifier( "segment" );
-        if ( impliedSegment != null && ( segment == null || !segment.equals( impliedSegment ) ) ) {
-            segment = impliedSegment;
-            procedureMapPanel.refreshSegment( target, segment );
+        if ( !procedureMapPanel.isPlanSelected() ) {
+            Segment impliedSegment = (Segment) change.getQualifier( "segment" );
+            if ( impliedSegment != null && !segment.equals( impliedSegment ) ) {
+                segment = impliedSegment;
+                procedureMapPanel.refreshSegment( target, segment );
+            }
         }
         super.updateWith( target, change, updated );
     }

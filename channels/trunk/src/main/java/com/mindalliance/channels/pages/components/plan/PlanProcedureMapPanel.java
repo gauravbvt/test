@@ -246,7 +246,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         addOrReplace( procedureMapDiagramPanel );
     }
 
-    private boolean isPlanSelected() {
+    public boolean isPlanSelected() {
         return segment == null || segment.getName().isEmpty();
     }
 

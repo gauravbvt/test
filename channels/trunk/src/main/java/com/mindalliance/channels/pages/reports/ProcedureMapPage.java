@@ -67,6 +67,9 @@ public class ProcedureMapPage extends WebPage implements Updatable {
         AjaxLink showLink = new AjaxLink( "show" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+                selector.setGoingForward( );
+                makeVisible( goBackLink, selector.canGoBack() );
+                target.addComponent( goBackLink );
                 showingMap = !showingMap;
                 if ( showingMap ) {
                     selector.resetSelected();

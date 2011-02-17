@@ -141,6 +141,7 @@ div.procedureMapContainer {
 	border: 1px solid #999999;
 	float: left;
 	margin: 10px;
+    width: 978px;
 }
 
 div.procedureMapContainer div.filters {
