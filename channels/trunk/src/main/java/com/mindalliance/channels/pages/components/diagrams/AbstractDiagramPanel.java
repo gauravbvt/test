@@ -18,6 +18,10 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,12 +40,16 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractDiagramPanel.class );
 
+    private static String[] STANDARD_ARGS = { "graph", "vertex", "edge", "width", "height" };
+
     /**
      * The flow diagram.
      */
     private Diagram diagram;
 
-    /** Diagram generation settings. */
+    /**
+     * Diagram generation settings.
+     */
     private final Settings settings;
 
     /**
@@ -84,6 +92,8 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         diagram = makeDiagram();
         if ( isWithImageMap() ) {
             imageMapHolder = createMapHolder( analyst, diagramFactory );
+            if ( imageMapHolder.toString().isEmpty() )
+                LOG.warn( "Empty image map" );
             if ( isUsingAjax() )
                 add( new DiagramAjaxBehavior( imageMapHolder, getDomIdentifier() ) {
                     @Override
@@ -94,17 +104,24 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
                         String edgeId = requestCycle.getRequest().getParameter( "edge" );
                         String width = requestCycle.getRequest().getParameter( "width" );
                         String height = requestCycle.getRequest().getParameter( "height" );
+                        Map<String, String>extras = new HashMap<String,String>();
+                        List<String> standardArgs = Arrays.asList( STANDARD_ARGS );
+                        for ( String argName : requestCycle.getRequest().getParameterMap().keySet() ) {
+                            if ( !standardArgs.contains( argName ) ) {
+                                extras.put( argName, requestCycle.getRequest().getParameter( argName ));
+                            }
+                        }
                         if ( graphId != null ) {
                             if ( vertexId == null && edgeId == null ) {
-                                onSelectGraph( graphId, getDomIdentifier(), 0, 0, target );
+                                onSelectGraph( graphId, getDomIdentifier(), 0, 0, extras, target );
                             } else if ( vertexId != null ) {
                                 int[] scroll = calculateVertexScroll( vertexId, width, height );
                                 onSelectVertex( graphId, vertexId,
-                                                getDomIdentifier(), scroll[0], scroll[1], target );
+                                        getDomIdentifier(), scroll[0], scroll[1], extras, target );
                             } else {
                                 int[] scroll = calculateEdgeScroll( imageMapHolder, edgeId, width, height );
                                 onSelectEdge( graphId, edgeId,
-                                              getDomIdentifier(), scroll[0], scroll[1], target );
+                                        getDomIdentifier(), scroll[0], scroll[1], extras, target );
                             }
                         }
                     }
@@ -129,6 +146,8 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
                 if ( isWithImageMap() ) {
                     try {
                         LOG.debug( "Rendering image map " );
+                        if ( imageMapHolder.toString().isEmpty() )
+                            LOG.warn( "Empty image map" );
                         getResponse().write( imageMapHolder.toString() );
                     } catch ( DiagramException e ) {
                         LOG.error( "Can't generate image map", e );
@@ -211,6 +230,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
 
     /**
      * Add a parameter to the URL to control browser caching.
+     *
      * @return a string
      */
     protected String makeSeed() {
@@ -263,6 +283,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * @param domIdentifier -- dom identifier of diagram container - can be null
      * @param scrollTop     where to scroll to top
      * @param scrollLeft    where to scroll to left
+     * @param extras        a map of string to string
      * @param target        an ajax request target
      */
     protected abstract void onSelectGraph(
@@ -270,6 +291,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target );
 
     /**
@@ -280,6 +302,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * @param domIdentifier -- dom identifier of diagram container - can be null
      * @param scrollTop     where to scroll to top
      * @param scrollLeft    where to scroll to left
+     * @param extras        a map of string to string
      * @param target        an ajax request target
      */
     protected abstract void onSelectVertex(
@@ -288,6 +311,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target );
 
     /**
@@ -298,6 +322,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * @param domIdentifier -- dom identifier of diagram container - can be null
      * @param scrollTop     where to scroll to top
      * @param scrollLeft    where to scroll to left
+     * @param extras        a map of string to string
      * @param target        an ajax request target
      */
     protected abstract void onSelectEdge(
@@ -306,6 +331,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target );
 
 

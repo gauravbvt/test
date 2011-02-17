@@ -425,11 +425,11 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     public Assignments assignedTo( Part part ) {
         Assignments result = new Assignments( locale );
-
-        for ( Assignment assignment : segmentMap.get( part.getSegment() ) )
-            if ( part.equals( assignment.getPart() ) )
-                result.add( assignment );
-
+        if ( segmentMap.containsKey( part.getSegment() ) ) {
+            for ( Assignment assignment : segmentMap.get( part.getSegment() ) )
+                if ( part.equals( assignment.getPart() ) )
+                    result.add( assignment );
+        }
         return result;
     }
 

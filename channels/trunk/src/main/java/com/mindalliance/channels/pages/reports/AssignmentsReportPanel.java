@@ -111,6 +111,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                     protected void populateItem( ListItem<Assignment> item ) {
                         Assignment assignment = item.getModelObject();
                         Actor actor = assignment.getActor();
+                        if ( actor == null || actor.isUnknown() ) actor = (Actor) selector.getActor();
                         item.add(
                                 reportHelper.newTaskLink( assignment.getPart(), actor ),
                                 new Label( "to", getToLabel( assignment ) )

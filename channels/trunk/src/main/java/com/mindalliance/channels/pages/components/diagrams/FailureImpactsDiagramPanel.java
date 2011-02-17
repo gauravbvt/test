@@ -13,6 +13,8 @@ import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 /**
  * Critical flows diagram panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -101,6 +103,7 @@ public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         try {
             Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
@@ -110,7 +113,14 @@ public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
         }
     }
 
-    protected void onSelectVertex( String graphId, String vertexId, String domIdentifier, int scrollTop, int scrollLeft, AjaxRequestTarget target ) {
+    protected void onSelectVertex(
+            String graphId,
+            String vertexId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            Map<String,String> extras,
+            AjaxRequestTarget target ) {
         try {
             Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
             Part part = (Part) segment.getNode( Long.valueOf( vertexId ) );
@@ -128,7 +138,14 @@ public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
         }
     }
 
-    protected void onSelectEdge( String graphId, String edgeId, String domIdentifier, int scrollTop, int scrollLeft, AjaxRequestTarget target ) {
+    protected void onSelectEdge(
+            String graphId,
+            String edgeId,
+            String domIdentifier,
+            int scrollTop,
+            int scrollLeft,
+            Map<String,String> extras,
+            AjaxRequestTarget target ) {
         long id =  Long.valueOf( edgeId );
         try {
             Flow flow = getQueryService().find( Flow.class, id );

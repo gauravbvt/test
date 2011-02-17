@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
@@ -57,6 +58,10 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      * The edges to highlight
      */
     private Set<E> highlightedEdges;
+    /**
+     * Max attempts at rendering.
+     */
+    private static final int MAX_ATTEMPTS = 5;
 
     public GraphvizRenderer() {
         resetHighlight();
@@ -119,7 +124,33 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         dotExporter.setHighlightedEdges( highlightedEdges );
         String dot = getDOT( graph, dotExporter );
         // System.out.println( dot );
-        doRender( dot, format, output );
+        boolean success = false;
+        int attempts = 0;
+        while ( !success && attempts < MAX_ATTEMPTS ) {
+            ByteArrayOutputStream baos = null;
+            try {
+                baos = new ByteArrayOutputStream() ;
+                doRender( dot, format, baos );
+                baos.writeTo( output );
+                success = true;
+            } catch ( IOException e ) {
+                attempts++;
+            } catch ( InterruptedException e ) {
+                attempts++;
+            } finally {
+                if ( baos != null) {
+                    try {
+                        baos.flush();
+                        baos.close();
+                    } catch ( IOException e ) {
+                        LOG.warn( "Error closing ", e);
+                    }
+                }
+            }
+        }
+        if ( !success ) {
+            throw new DiagramException( "Diagram generation failed" );
+        }
     }
 
     /**
@@ -128,14 +159,15 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      * @param dot    Graph description in DOT language
      * @param format a Grpahviz output format ("png", "svg", "imap" etc.)
      * @param output the rendered graph
-     * @throws DiagramException if generation fails
+     * @throws IOException          if generation fails
+     * @throws InterruptedException if generation fails
      */
     private void doRender( String dot, String format,
-                           OutputStream output ) throws DiagramException {
+                           OutputStream output ) throws IOException, InterruptedException {
         String command = getDotPath()
                 + System.getProperty( "file.separator" )
                 + algo
-                + " -Gcharset=latin1"  
+                + " -Gcharset=latin1"
                 + " -T" + format;
         Process p = null;
         int exitValue;
@@ -180,12 +212,11 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
 
             output.flush();
         } catch ( IOException e ) {
-            throw new DiagramException( "Diagram generation failed on IO", e );
+            LOG.error( "Diagram generation failed on IO", e );
+            throw e;
         } catch ( InterruptedException e ) {
             p.destroy();
-            throw new DiagramException( "Diagram generation interrupted", e );
-        } catch ( DiagramException e ) {
-            LOG.error( "Diagram generation failed", e );
+            LOG.error( "Diagram generation interrupted", e );
             throw e;
         } finally {
             // Stop the timer
@@ -208,7 +239,9 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         return writer.toString();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void highlight( V vertex, E edge ) {
         resetHighlight();
 

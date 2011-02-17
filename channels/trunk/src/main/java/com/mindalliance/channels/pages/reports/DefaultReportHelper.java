@@ -59,15 +59,15 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
             AssignmentsSelector selector,
             Updatable updatable,
             Flow flow,
-            Part part) {
-         this( selector, updatable );
+            Part part ) {
+        this( selector, updatable );
         this.flow = flow;
         this.part = part;
     }
 
 
     @Override
-   public void setAsDefaultModel( Component component ) {
+    public void setAsDefaultModel( Component component ) {
         component.setDefaultModel( new CompoundPropertyModel<Object>( this ) {
             @Override
             public void detach() {
@@ -75,6 +75,7 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
             }
         } );
     }
+
     @Override
     public Part getPart() {
         return assignment == null ? part : assignment.getPart();
@@ -107,53 +108,53 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
 
     @Override
     public Component newFlowLink( final Flow flow ) {
-        AjaxLink link = new AjaxLink<String>("flow"){
-             @Override
-             public void onClick( AjaxRequestTarget target ) {
-                 Change change = new Change( Change.Type.Selected, flow );
-                 change.addQualifier( "part", getPart() );
-                 change.addQualifier( "actor", (Actor)getActor() );
-                 update( target, change );
-             }
-         };
+        AjaxLink link = new AjaxLink<String>( "flow" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                Change change = new Change( Change.Type.Selected, flow );
+                change.addQualifier( "part", getPart() );
+                change.addQualifier( "actor", (Actor) getActor() );
+                update( target, change );
+            }
+        };
         String delay;
         if ( flow == null )
             delay = "";
         else {
             delay = flow.getMaxDelay().toString();
         }
-         link.add( new Label( "delay", delay ) );
+        link.add( new Label( "delay", delay ) );
 
         if ( flow != null )
             link.add( newCssClass( getPlanService().computeSharingPriority( flow )
-                                            .toString().toLowerCase() ));
+                    .toString().toLowerCase() ) );
 
-         link.setVisible( flow != null );
-         return link;
+        link.setVisible( flow != null );
+        return link;
 
     }
 
     @Override
     public Component newFlowLink( Part part, final Specable actor ) {
-        final Assignment assign = (Assignment)CollectionUtils.find(
-                 getPlanService().findAllAssignments( part, true ),
-                 new Predicate() {
-                     @Override
-                     public boolean evaluate( Object object ) {
-                         return ((Assignment)object).getActor().equals( actor );
-                     }
-                 } );
-        AjaxLink link = new AjaxLink<String>("task"){
-             @Override
-             public void onClick( AjaxRequestTarget target ) {
-                 update( target,
-                         new Change( Change.Type.Selected, assign ) );
-             }
-         };
-         link.add( new Label( "name", getFlowString( part ) ) );
-         return link;
+        final Assignment assign = (Assignment) CollectionUtils.find(
+                getPlanService().findAllAssignments( part, true ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Assignment) object ).getActor().equals( actor );
+                    }
+                } );
+        AjaxLink link = new AjaxLink<String>( "task" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target,
+                        new Change( Change.Type.Selected, assign ) );
+            }
+        };
+        link.add( new Label( "name", getFlowString( part ) ) );
+        return link;
 
-      }
+    }
 
     @Override
     public String getFlowString( Part part ) {
@@ -183,19 +184,25 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
 
     @Override
     public MarkupContainer newTaskLink( Part part, final Specable actor ) {
-        final Assignment assign = (Assignment)CollectionUtils.find(
+        final Assignment assign = (Assignment) CollectionUtils.find(
                 getPlanService().findAllAssignments( part, true ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Assignment)object).getActor().equals( actor );
+                        return actor == null
+                                || ( (Actor) actor ).isUnknown()
+                                || ( (Assignment) object ).getActor().equals( actor );
                     }
                 } );
-        AjaxLink link = new AjaxLink<String>("task"){
+        AjaxLink link = new AjaxLink<String>( "task" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target,
-                        new Change( Change.Type.Selected, assign ) );
+                if ( assign != null ) {
+                    // assign should never be null
+                    Change change = new Change( Change.Type.Selected, assign );
+                    if ( actor != null ) change.addQualifier( "actor", (Actor) actor );
+                    update( target, change );
+                }
             }
         };
         link.add( new Label( "name", part.getTask() ) );
@@ -220,9 +227,9 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
     private void update( AjaxRequestTarget target, Change change ) {
         updatable.changed( change );
         updatable.updateWith(
-                        target,
-                        change,
-                        new ArrayList<Updatable>() );
+                target,
+                change,
+                new ArrayList<Updatable>() );
     }
 
 }

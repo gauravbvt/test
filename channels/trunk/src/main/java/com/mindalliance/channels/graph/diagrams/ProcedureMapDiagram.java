@@ -10,6 +10,8 @@ import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Segment;
 import org.jgrapht.Graph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
 
@@ -22,6 +24,10 @@ import java.io.OutputStream;
  */
 public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment> {
 
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( ProcedureMapDiagram.class );
     private Segment segment;
     private boolean summarizeByOrg;
     private boolean summarizeByRole;

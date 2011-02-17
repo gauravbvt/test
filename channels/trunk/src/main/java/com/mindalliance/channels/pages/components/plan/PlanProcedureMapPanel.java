@@ -126,7 +126,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addProcedureMapDiagramPanel();
                 target.addComponent( procedureMapDiagramPanel );
-                Change change = segment == NONE
+                Change change = isPlanSelected()
                                     ? new Change(Change.Type.Selected, getPlan() )
                                     : new Change( Change.Type.Selected, segment );
                 update( target, change );
@@ -237,13 +237,17 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         procedureMapDiagramPanel =
                 new ProcedureMapDiagramPanel(
                 "procedure-map",
-                segment == NONE ? null : segment,
+                isPlanSelected() ? null : segment,
                 isSummarizeByOrg(),
                 isSummarizeByRole(),
                 getFocusEntity(),
                 settings );
         procedureMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( procedureMapDiagramPanel );
+    }
+
+    private boolean isPlanSelected() {
+        return segment == null || segment.getName().isEmpty();
     }
 
     private void addMapSizing() {

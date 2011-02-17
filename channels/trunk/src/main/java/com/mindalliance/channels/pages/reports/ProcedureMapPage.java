@@ -18,6 +18,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class ProcedureMapPage extends WebPage implements Updatable {
     private Label showLabel;
     private boolean showingMap = true;
     private Label reportTitle;
+    private AjaxLink goBackLink = null;
 
     public ProcedureMapPage( PageParameters parameters ) {
         super( parameters );
@@ -51,8 +53,8 @@ public class ProcedureMapPage extends WebPage implements Updatable {
 
     private void init() {
         add( new Label( "pageTitle" ) );
-        addHeader();
         addSelector();
+        addHeader();
         addSelected();
         add( new Label( "year", "" + Calendar.getInstance().get( Calendar.YEAR ) ) );
         add( new Label( "client", selector.getPlan().getClient() ) );
@@ -80,6 +82,20 @@ public class ProcedureMapPage extends WebPage implements Updatable {
         showLabel = new Label( "show-what", new PropertyModel<String>( this, "showString" ) );
         showLabel.setOutputMarkupId( true );
         showLink.add( showLabel );
+        goBackLink = new AjaxLink( "back" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                Change change = selector.goBack();
+                if ( change != null ) {
+                    changed( change );
+                    makeVisible( goBackLink, selector.canGoBack() );
+                    target.addComponent( goBackLink );
+                    updateWith( target, change, new ArrayList<Updatable>() );
+                }
+            }
+        };
+        makeVisible( goBackLink, selector.canGoBack() );
+        header.add( goBackLink );
         addOrReplace( header );
     }
 
@@ -150,7 +166,8 @@ public class ProcedureMapPage extends WebPage implements Updatable {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
-            showingMap = change.isForInstanceOf( Segment.class ) || change.isForInstanceOf( Plan.class );
+            showingMap = !change.isForProperty( "showReport" )
+                    && (change.isForInstanceOf( Segment.class ) || change.isForInstanceOf( Plan.class ) );
             addHeader();
             addSelected();
             addReportTitle();

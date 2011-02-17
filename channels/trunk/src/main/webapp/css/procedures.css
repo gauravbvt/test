@@ -90,6 +90,10 @@ div#nav ul li#apply input {
 	float:left;
 }
 
+.selector img {
+    border: 0;
+}
+
 .selector h1 {
 	display:block;
 	float:left;
@@ -170,7 +174,6 @@ div.zoom div.filters {
 	border:none;
 	text-transform:none;
 	padding:0;
-}
 }
 
 

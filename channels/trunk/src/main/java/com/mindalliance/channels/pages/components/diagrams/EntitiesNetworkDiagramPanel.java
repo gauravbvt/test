@@ -2,14 +2,16 @@ package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -108,6 +110,7 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         // Do nothing
     }
@@ -121,6 +124,7 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         try {
             ModelEntity entity = getQueryService().find( Organization.class, Long.valueOf( vertexId ) );
@@ -142,6 +146,7 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         EntityRelationship<T> entityRelationship = new EntityRelationship<T>();
         entityRelationship.setId( Long.valueOf( edgeId ), segment, getQueryService(), getAnalyst() );

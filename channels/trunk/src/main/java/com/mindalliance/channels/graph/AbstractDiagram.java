@@ -4,7 +4,6 @@ import com.mindalliance.channels.analysis.Analyst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -78,10 +77,10 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
         if ( imageMap == null ) {
             LOG.debug( "Making image map for " + this.getClass().getSimpleName() );
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            render( DiagramFactory.IMAGE_MAP, new BufferedOutputStream( baos ), analyst, diagramFactory );
+            render( DiagramFactory.IMAGE_MAP,  baos, analyst, diagramFactory );
             // System.out.println( "*** Image map generated at " + System.currentTimeMillis() );
-            imageMap = baos.toString();
-            // System.out.println( imageMap );
+             imageMap = baos.toString();
+             // System.out.println( imageMap );
         }
         return imageMap;
     }

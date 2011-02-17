@@ -2,16 +2,22 @@ package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.png.ProceduresPage;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -50,7 +56,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
 
     @Override
     protected String getContainerId() {
-        return "procedure-map";
+        return "mappedProcedures";
     }
 
     @Override
@@ -113,6 +119,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         try {
             Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
@@ -130,15 +137,20 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         try {
-            Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
+            QueryService queryService = getQueryService();
+            Segment segment = queryService.find( Segment.class, Long.valueOf( graphId ) );
+
+            // todo - deconstruct vertex id
             Part part = (Part) segment.getNode( Long.valueOf( vertexId ) );
             if ( part != null ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );
                 Change change = new Change( Change.Type.Selected, part );
                 change.addQualifier( "segment", segment );
                 change.addQualifier( "focus", focusEntity );
+                processExtras( extras, change );
                 change.setScript( js );
                 this.update( target, change );
 
@@ -150,6 +162,31 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
         }
     }
 
+    private void processExtras( Map<String, String> extras, Change change ) throws NotFoundException {
+        QueryService queryService = getQueryService();
+        if ( extras.containsKey( "_actor" ) ) {
+            long id = Long.valueOf( extras.get("_actor") );
+            if ( id != 0 )
+                change.addQualifier(
+                        "actor",
+                        queryService.find(Actor.class, id ) );
+        }
+        if ( extras.containsKey( "_role" ) ) {
+            long id = Long.valueOf( extras.get("_role") );
+            if ( id != 0 )
+                change.addQualifier(
+                        "role",
+                        queryService.find(Role.class, id ) );
+        }
+        if ( extras.containsKey( "_org" ) ) {
+            long id = Long.valueOf( extras.get("_org") );
+            if ( id != 0 )
+                change.addQualifier(
+                        "organization",
+                        queryService.find(Organization.class, id ) );
+        }
+    }
+
     @Override
     protected void onSelectEdge(
             String graphId,
@@ -157,6 +194,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
+            Map<String,String> extras,
             AjaxRequestTarget target ) {
         Long id = Long.valueOf( edgeId );
         try {
@@ -165,6 +203,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
             Change change = new Change( Change.Type.Selected, flow );
             change.addQualifier( "segment", segment );
             change.addQualifier( "focus", focusEntity );
+            processExtras( extras, change );
             change.setScript( js );
             update( target, change );
         } catch ( NotFoundException e ) {

@@ -3,6 +3,8 @@ package com.mindalliance.channels.graph.diagrams;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.markup.ComponentTag;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,11 +36,13 @@ public abstract class DiagramAjaxBehavior extends AbstractDefaultAjaxBehavior {
     /**
      * Pattern for vertex parameter in url.
      */
-    private static Pattern VERTEX = Pattern.compile( "graph=(\\d+)&amp;vertex=(\\d+)" );
+    private static Pattern VERTEX = Pattern.compile( "graph=(\\d+)&amp;vertex=(\\d+).*" );
     /**
      * Pattern for edge parameter in url.
      */
-    private static Pattern EDGE = Pattern.compile( "graph=(\\d+)&amp;edge=([\\d,]+)" );
+    private static Pattern EDGE = Pattern.compile( "graph=(\\d+)&amp;edge=([\\d,]+).*" );
+
+    private static Pattern EXTRA = Pattern.compile( "&amp;(_\\w+)=(\\w+)");
 
     public DiagramAjaxBehavior( StringBuilder imageMapHolder, String domIdentifier ) {
         this.imageMapHolder = imageMapHolder;
@@ -82,10 +86,17 @@ public abstract class DiagramAjaxBehavior extends AbstractDefaultAjaxBehavior {
                 }
             }
         }
-        return makeCallback( graphId, vertexId, edgeId);
+        Matcher extraMatcher = EXTRA.matcher( query );
+        Map<String,String> extras = new HashMap<String,String>();
+        while( extraMatcher.find() ) {
+            String name = extraMatcher.group( 1 );
+            String value = extraMatcher.group( 2 );
+            extras.put( name, value );
+        }
+        return makeCallback( graphId, vertexId, edgeId, extras );
     }
 
-    private String makeCallback( String graphId, String vertexId, String edgeId ) {
+    private String makeCallback( String graphId, String vertexId, String edgeId, Map<String, String> extras ) {
         StringBuilder cb = new StringBuilder();
         cb.append("javascript:");
         //cb.append("{alert('boo');");
@@ -93,7 +104,11 @@ public abstract class DiagramAjaxBehavior extends AbstractDefaultAjaxBehavior {
                         + getCallbackUrl(true)
                         + (graphId != null ? "&graph=" + graphId : "")
                         + (vertexId != null ? "&vertex=" + vertexId : "")
-                        + (edgeId != null ? "&edge=" + edgeId : "")
+                        + (edgeId != null ? "&edge=" + edgeId : "");
+        for ( String extra : extras.keySet() ) {
+            script += "&" + extra + "=" + extras.get( extra );
+        }
+        script = script
                         + (domIdentifier != null
                                 ? "&width='+$('"+domIdentifier+"').width()+'"
                                 : "")

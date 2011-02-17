@@ -14,6 +14,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -23,6 +24,7 @@ import com.mindalliance.channels.query.PlanService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +43,8 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     private Assignment assignment;
     private Flow selectedFlow;
     private Actor selectedActor;
+    private Role selectedRole;
+    private Organization selectedOrganization;
 
     @SpringBean
     private AttachmentManager attachmentManager;
@@ -52,6 +56,10 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     private PlanManager planManager;
 
     private PlanProcedureMapPanel procedureMapPanel;
+
+    private List<Change> history = new ArrayList<Change>();;
+
+    private boolean goingBack = false;
 
     public ProcedureMapSelectorPanel( String id ) {
         super( id );
@@ -66,40 +74,81 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     @Override
     public void changed( Change change ) {
         if ( change.isSelected() ) {
+            resetSelected();
+            setSelected( change );
             Identifiable identifiable = change.getSubject( getQueryService() );
             focusEntity = (ModelEntity) change.getQualifier( "focus" );
-           if ( identifiable instanceof Part ) {
-                resetSelected();
+            if ( identifiable instanceof Part ) {
                 selectedPart = (Part) identifiable;
             } else if ( identifiable instanceof Flow ) {
-                resetSelected();
                 selectedFlow = (Flow) identifiable;
                 selectedPart = (Part) change.getQualifier( "part" );
                 if ( selectedPart == null )
                     selectedPart = (Part) ( (Flow) identifiable ).getSource();
-                selectedActor = (Actor) change.getQualifier( "actor" );
             } else if ( identifiable instanceof Segment ) {
-                resetSelected();
                 segment = (Segment) identifiable;
             } else if ( identifiable instanceof Plan ) {
-                resetSelected();
                 segment = null;
             } else if ( identifiable instanceof Assignment ) {
-                resetSelected();
                 setAssignment( (Assignment) identifiable );
-            } else {
-                resetSelected();
+            }
+            addToHistory( change );
+        }
+    }
+
+    public boolean canGoBack() {
+        return history.size() > 0;
+    }
+
+    public void addToHistory( Change change ) {
+        if ( !change.isForInstanceOf( Plan.class ) && !change.isForInstanceOf( Segment.class )  ) {
+            goingBack = change.hasQualifier( "goingBack" );
+            if ( !goingBack ) {
+                if ( history.isEmpty() ) resetHistory();
+                history.add( change );
             }
         }
     }
 
+    public Change goBack() {
+        Change change;
+        if ( !canGoBack() ) {
+            change = baseChange();
+        } else {
+            change = history.remove( history.size() - 1 );
+            if ( !goingBack && !history.isEmpty() ) change = history.remove( history.size() - 1 );
+        }
+        change.addQualifier( "goingBack", true );
+        goingBack = true;
+        return change;
+    }
+
+    private Change baseChange() {
+        Change change = new Change( Change.Type.Selected, segment == null ? getPlan() : segment );
+        if ( focusEntity != null )
+            change.addQualifier( "focus", focusEntity );
+        change.setProperty( "showReport" );
+        return change;
+    }
+
+    private void resetHistory() {
+        history = new ArrayList<Change>();
+        history.add( baseChange() );
+    }
+
+    private void setSelected( Change change ) {
+        selectedActor = (Actor) change.getQualifier( "actor" );
+        selectedRole = (Role) change.getQualifier( "role" );
+        selectedOrganization = (Organization) change.getQualifier( "organization" );
+    }
+
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Segment impliedSegment = (Segment) change.getQualifier( "segment" );
-         if ( impliedSegment != null && ( segment == null || !segment.equals( impliedSegment) ) ) {
-             segment = impliedSegment;
-             procedureMapPanel.refreshSegment( target, segment );
-         }
-         super.updateWith( target, change, updated );
+        if ( impliedSegment != null && ( segment == null || !segment.equals( impliedSegment ) ) ) {
+            segment = impliedSegment;
+            procedureMapPanel.refreshSegment( target, segment );
+        }
+        super.updateWith( target, change, updated );
     }
 
     public void resetSelected() {
@@ -107,6 +156,8 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         selectedPart = null;
         selectedFlow = null;
         selectedActor = null;
+        selectedRole = null;
+        selectedOrganization = null;
     }
 
     @Override
@@ -114,17 +165,20 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         Assignments as = getAllAssignments();
         Assignments partAssignments;
         if ( selectedPart != null )
-             partAssignments = as.assignedTo( selectedPart );
+            partAssignments = as.assignedTo( selectedPart );
         else
             partAssignments = as;
-        Assignments focused = isActorSelected()
-                ? partAssignments.notFrom( (Actor) focusEntity ).with( (Actor) focusEntity )
-                : isOrgSelected()
-                ? partAssignments.with( (Organization) focusEntity )
-                : partAssignments;
         return segment != null
-                ? focused.forSegment( segment )
-                : focused;
+                ? partAssignments.forSegment( segment )
+                : partAssignments;
+    }
+
+    private boolean isOrgFocused() {
+        return focusEntity != null && focusEntity instanceof Organization;
+    }
+
+    private boolean isActorFocused() {
+        return focusEntity != null && focusEntity instanceof Actor;
     }
 
     @Override
@@ -149,12 +203,15 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     @Override
     public Organization getOrganization() {
-        return focusEntity instanceof Organization ? (Organization) focusEntity : null;
+        return selectedOrganization;
     }
 
     public Actor getActor() {
         return selectedActor;
-        // return focusEntity instanceof Actor ? (Actor) focusEntity : null;
+    }
+
+    public Role getRole() {
+        return selectedRole;
     }
 
     @Override
@@ -169,28 +226,35 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     public String getTitle() {
         if ( assignment != null ) {
-            String title = "";
-            if ( ! assignment.getActor().isUnknown() ) {
-                title += assignment.getActor().getName() + " doing \"";
-            } else {
-            title += "Task \"";
+            Actor actor = selectedActor;
+            if ( actor == null ) {
+                actor = assignment.getActor();
             }
-            title +=  assignment.getPart().getTask() + "\"";
-            return title;
+            return titleForTask( assignment.getPart(), actor );
         } else if ( selectedFlow != null && selectedPart != null && selectedActor != null ) {
             return selectedActor.getName()
                     + ( isSending() ? " sending " : " receiving " )
                     + "\""
                     + selectedFlow.getName() + "\"";
-        }
-        else if ( selectedPart != null ) {
-                return "Task \"" + selectedPart.getTask() + "\"";
+        } else if ( selectedPart != null ) {
+            return titleForTask( selectedPart, selectedActor );
         } else if ( segment != null ) {
-                return "Procedures in \"" + segment.getName() + "\"";
+            return "Procedures in \"" + segment.getName() + "\"";
         } else {
-                return "All procedures";
+            return "All procedures";
         }
 
+    }
+
+    private String titleForTask( Part part, Actor actor ) {
+        String title = "";
+        if ( actor != null && !actor.isUnknown() ) {
+            title += actor.getName() + " doing \"";
+        } else {
+            title += "Task \"";
+        }
+        title += part.getTask() + "\"";
+        return title;
     }
 
     private boolean isSending() {
