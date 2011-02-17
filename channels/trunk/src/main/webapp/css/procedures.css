@@ -143,22 +143,23 @@ div.procedureMapContainer {
 	margin: 10px;
 }
 
-.filters {
+div.procedureMapContainer div.filters {
     padding: 5px 0 7px 10px;
     background: #E8E8E8;
     border-bottom: 1px solid #999999;
 	color:#666666;
 	font-size:11px;
 	font-weight:bold;
+	width:968px;
 }
 
-.filters select {
+div.procedureMapContainer div.filters select {
 	font-size: 11px;
 	text-transform: none;
 	width: 150px;
 }
 
-.filters input.filter-small {
+div.procedureMapContainer div.filters input.filter-small {
 	font-size: 11px;
 	text-transform: none;
 	width: 100px;
@@ -193,6 +194,7 @@ div.zoom {
 div.procedureMapContainer div.zoom {
 	margin-bottom:0;
 	border-top:1px solid #999999;
+	width:968px;
 }
 
 div.zoom span {
