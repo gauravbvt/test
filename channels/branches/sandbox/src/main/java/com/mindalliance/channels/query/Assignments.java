@@ -523,6 +523,38 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
+    /**
+     * Filter on assignments that are in a segment (if set) or involve an entity (if set)
+     * @param focusEntity an entity
+     * @param segment a segment
+     * @param queryService  a query service
+     * @return  assignments
+     */
+    public Assignments involving( ModelEntity focusEntity, Segment segment, QueryService queryService ) {
+        Assignments result = new Assignments( locale );
+        Set<Commitment> commitments = new HashSet<Commitment>();
+        for ( Flow flow : queryService.findAllSharingFlows( segment ) ) {
+            commitments.addAll( queryService.findAllCommitments( flow ) );
+        }
+        for ( Assignment other : this ) {
+            for ( Commitment commitment : commitments ) {
+                if ( ( commitment.getCommitter().equals( other )
+                        && isInvolved( commitment.getCommitter(), segment, focusEntity )
+                        || ( commitment.getBeneficiary().equals( other )
+                        && isInvolved( commitment.getBeneficiary(), segment, focusEntity ) ) ) ) {
+                    result.add( other );
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean isInvolved( Assignment assignment, Segment segment, ModelEntity focusEntity ) {
+        return ( segment == null || assignment.getPart().getSegment().equals( segment ) )
+                && ( focusEntity == null || assignment.involves( focusEntity ) );
+    }
+
+
     //--------------------------------------
 
     /**

@@ -1376,6 +1376,21 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    public List<Flow> findAllSharingFlows( Segment segment ) {
+        Set<Flow> flows = new HashSet<Flow>();
+        List<Segment> segments = new ArrayList<Segment>();
+        if ( segment == null ) {
+            segments.addAll( getPlan().getSegments() );
+        } else {
+            segments.add( segment );
+        }
+        for ( Segment seg : segments ) {
+            flows.addAll( seg.getAllSharingFlows() );
+        }
+        return new ArrayList<Flow>( flows );
+    }
+
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Segment> findSegmentsRespondingTo( final Event event ) {
         return (List<Segment>) CollectionUtils.select(

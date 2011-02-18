@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.analysis.graph.ProceduresGraphBuilder;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.ModelEntity;
@@ -8,6 +9,8 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.diagrams.ProcedureMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -80,7 +83,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private Label sizingLabel;
 
-    private ProcedureMapDiagramPanel procedureMapDiagramPanel;
+    private Component procedureMapDiagramPanel;
 
     /**
      * Width, height dimension constraints on the plan map diagram.
@@ -127,8 +130,9 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                 addProcedureMapDiagramPanel();
                 target.addComponent( procedureMapDiagramPanel );
                 Change change = isPlanSelected()
-                                    ? new Change(Change.Type.Selected, getPlan() )
-                                    : new Change( Change.Type.Selected, segment );
+                        ? new Change( Change.Type.Selected, getPlan() )
+                        : new Change( Change.Type.Selected, segment );
+                change.addQualifier( "focus", getFocusEntity() );
                 update( target, change );
             }
         } );
@@ -190,6 +194,11 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addProcedureMapDiagramPanel();
                 target.addComponent( procedureMapDiagramPanel );
+                Change change = isPlanSelected()
+                        ? new Change( Change.Type.Selected, getPlan() )
+                        : new Change( Change.Type.Selected, segment );
+                change.addQualifier( "focus", getFocusEntity() );
+                update( target, change );
             }
         } );
         addOrReplace( focusField );
@@ -236,14 +245,27 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                 : new Settings( DOM_IDENTIFIER, null, diagramSize, true, true );
         procedureMapDiagramPanel =
                 new ProcedureMapDiagramPanel(
-                "procedure-map",
+                        "procedure-map",
+                        isPlanSelected() ? null : segment,
+                        isSummarizeByOrg(),
+                        isSummarizeByRole(),
+                        getFocusEntity(),
+                        settings );
+        procedureMapDiagramPanel.setOutputMarkupId( true );
+        addOrReplace( procedureMapDiagramPanel );
+        ProceduresGraphBuilder graphBuilder = new ProceduresGraphBuilder(
                 isPlanSelected() ? null : segment,
                 isSummarizeByOrg(),
                 isSummarizeByRole(),
-                getFocusEntity(),
-                settings );
-        procedureMapDiagramPanel.setOutputMarkupId( true );
-        addOrReplace( procedureMapDiagramPanel );
+                getFocusEntity() );
+        graphBuilder.setQueryService( getQueryService() );
+        boolean noProcedures = !graphBuilder.hasCommitments();
+        if ( noProcedures ) {
+            procedureMapDiagramPanel.add( new AttributeModifier(
+                    "style",
+                    true,
+                    new Model<String>( "background:url('../images/no-procedures.png') 270px 0 no-repeat #ffffff;" ) ) );
+        }
     }
 
     public boolean isPlanSelected() {
