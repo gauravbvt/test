@@ -4,6 +4,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
@@ -60,10 +61,14 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
 
             @Override
             protected void populateItem( ListItem<Event> item ) {
+                Event event = item.getModelObject();
                 item.add(
-                        new Label( "name" ),
+                        new WebMarkupContainer( "evName" )
+                            .add( new Label( "name" ) )
+                            .add( new AttributeModifier( "name", true,
+                                    new Model<String>( String.valueOf( event.getId() ) ) ) ),
                         new Label( "description" ),
-                        newPhaseList( selector.getAssignments().with( item.getModelObject() ) )
+                        newPhaseList( selector.getAssignments().with( event ) )
                 );
             }
         } );
@@ -82,19 +87,27 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Phase> item ) {
                 Assignments phaseAssignments = eventAssignments.with( item.getModelObject() );
 
+                Phase phase = item.getModelObject();
                 item.add(
-                        new Label( "name" ),
+                        new WebMarkupContainer( "pName" )
+                            .add( new Label( "name" ) )
+                            .add( new AttributeModifier( "name", true,
+                                    new Model<String>( String.valueOf( phase.getId() ) ) ) ),
                         new Label( "description" ),
-                        newTaskList( "immediates", phaseAssignments.getImmediates() ),
-                        newTaskList( "optionals", phaseAssignments.getOptionals() ),
-                        newIncomingList( "notified", phaseAssignments.getNotifications() ),
-                        newIncomingList( "requested", phaseAssignments.getRequests() )
+                        newTaskList( "immediates",
+                                     "a" + phase.getId(),
+                                     phaseAssignments.getImmediates() ),
+                        newIncomingList( "notified",
+                                         "b" + phase.getId(),
+                                         phaseAssignments.getNotifications() ),
+                        newIncomingList( "requested",  "c" + phase.getId(), phaseAssignments.getRequests() ),
+                        newTaskList( "optionals", "d" + phase.getId(), phaseAssignments.getOptionals() )
                 );
             }
         };
     }
 
-    private Component newTaskList( String id, Assignments assignments ) {
+    private Component newTaskList( String id, String anchor, Assignments assignments ) {
         List<Assignment> a = assignments.getAssignments();
         Collections.sort( a, new Comparator<Assignment>() {
             public int compare( Assignment o1, Assignment o2 ) {
@@ -121,10 +134,12 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         );
                     }
                 } )
+                .add( new WebMarkupContainer( "anchor" )
+                    .add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) ) )
                 .setVisible( !assignments.isEmpty() );
     }
 
-    private Component newIncomingList( String id, final Assignments assignments ) {
+    private Component newIncomingList( String id, String anchor, final Assignments assignments ) {
         return new WebMarkupContainer( id )
                 .add( new ListView<Assignment>( "tasks", toSortedFlowList( assignments ) ) {
                     @Override
@@ -147,6 +162,10 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         );
                     }
                 } )
+                .add( new WebMarkupContainer( "anchor" ).add( new AttributeModifier( "name",
+                                                                                     true,
+                                                                                     new Model<String>(
+                                                                                         anchor ) ) ) )
                 .setVisible( !assignments.isEmpty() );
     }
 
@@ -207,10 +226,8 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
     }
 
     private List<Assignment> getSubtasks( Assignment parent ) {
-        return toSortedTaskList(
-                selector.getAllAssignments()
-                        .from( parent )
-                        .with( parent.getActor() ) );
+        return toSortedTaskList( selector.getAllAssignments().from( parent ).with( parent
+                                                                                       .getActor() ) );
 
     }
 

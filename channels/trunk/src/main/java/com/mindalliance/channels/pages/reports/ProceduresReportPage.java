@@ -14,6 +14,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class ProceduresReportPage extends AbstractReportPage {
      */
     @Override
     protected void setHeaders( WebResponse response ) {
-        super.setHeaders( response );
+//        super.setHeaders( response );
 
         Channels channels = (Channels) getApplication();
         Commander commander = channels.getCommander( selector.getPlan() );
@@ -92,6 +93,8 @@ public class ProceduresReportPage extends AbstractReportPage {
         long now = System.currentTimeMillis();
 
         response.setDateHeader( "Date", now );
+        response.setHeader( "Cache-Control", "max-age=0, private, must-revalidate" );
+//        response.setDateHeader( "Expires", now );
 //        response.setDateHeader( "Expires", now + 24L*60*60*1000 );
         response.setDateHeader( "Last-Modified", longTime );
     }

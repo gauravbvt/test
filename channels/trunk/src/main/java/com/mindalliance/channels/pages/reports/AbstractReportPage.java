@@ -203,6 +203,15 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
                                                   : "Other";
     }
 
+    public String getTypePrefix() {
+        Part part = getAssignment().getPart();
+        return Assignments.isImmediate( part )    ? "a"
+             : Assignments.isOptional( part )     ? "d"
+             : Assignments.isNotification( part ) ? "b"
+             : Assignments.isRequest( part )      ? "c"
+                                                  : "e";
+    }
+
     public PageParameters getTopParameters() {
         Plan plan = getPlanService().getPlan();
 
