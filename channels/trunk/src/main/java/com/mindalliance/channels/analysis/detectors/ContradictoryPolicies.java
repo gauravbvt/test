@@ -4,6 +4,7 @@ import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Prohibitable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +27,14 @@ public class ContradictoryPolicies extends AbstractIssueDetector {
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
-        if ( modelObject.isProhibited() && modelObject.isMandated() ) {
+        if ( ((Prohibitable)modelObject).isProhibited() && modelObject.hasMandatingPolicy() ) {
             Issue issue = makeIssue( Issue.VALIDITY, modelObject );
-            issue.setDescription( "Prohibiting and mandating policies are attached." );
+            issue.setDescription( "Mandating policy attached to prohibited "
+                    + modelObject.getKindLabel()
+                    + "." );
             issue.setSeverity( Level.Medium );
-            issue.setRemediation( "Remove all prohibiting policies"
-                    + "\nor remove all mandating policies\n"
-                    + "or remove all mandating and prohibiting policies" );
+            issue.setRemediation( "Remove prohibition"
+                    + "\nor remove all mandating policies" );
             issues.add( issue );
         }
         return issues;
@@ -42,7 +44,7 @@ public class ContradictoryPolicies extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public boolean appliesTo( ModelObject modelObject ) {
-        return true;
+        return modelObject instanceof Prohibitable;
     }
 
     /**

@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * An arrow between two nodes in the information flow graph.
  */
-public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Operationable {
+public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Operationable, Prohibitable {
 
     /**
      * A list of alternate communication channels for the flow.
@@ -75,6 +75,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Whether operational.
      */
     private boolean operational = true;
+    /**
+     * Whether the flow is prohibited.
+     */
+    private boolean prohibited = false;
 
     protected Flow() {
     }
@@ -272,6 +276,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.operational = operational;
     }
 
+    public boolean isProhibited() {
+        return prohibited;
+    }
+
+    public void setProhibited( boolean prohibited ) {
+        this.prohibited = prohibited;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -289,6 +301,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public boolean canSetOperational() {
         return isOperationalizable();
+    }
+
+    public boolean canGetProhibited() {
+        return isSharing();
+    }
+
+    public boolean canSetProhibited() {
+        return canGetProhibited();
     }
 
     public boolean isOperationalizable() {
@@ -338,6 +358,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return the description
      */
     public String getReceiveTitle() {
+        String title;
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = /*!isAskedFor() && isTriggeringToTarget() ? "do something" :*/ "something";
@@ -346,7 +367,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
         Node source = getSource();
         if ( source.isConnector() ) {
-            return MessageFormat.format(
+            title = MessageFormat.format(
                     isAskedFor() ? "Needs to ask for \"{0}\""
                             //  : isTriggeringToTarget() ? "Needs to be told to {0}"
                             : "Needs to be notified of \"{0}\"",
@@ -354,7 +375,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
         } else {
             Part part = (Part) source;
-            return MessageFormat.format(
+            title = MessageFormat.format(
                     isAskedFor() ? "Ask {1}{2}{3} for \"{0}\""
                             //   : isTriggeringToTarget() ? "Told to {0} by {1}{2}{3}"
                             : "Notified of \"{0}\" by {1}{2}{3}",
@@ -363,6 +384,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     getOrganizationString( part ),
                     getJurisdictionString( part ) );
         }
+        return ( isProhibited() ? "Prohibited: " : "" ) + title;
     }
 
     public static String getOrganizationString( Part part ) {
@@ -383,6 +405,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return the description
      */
     public String getSendTitle() {
+        String title;
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
@@ -395,7 +418,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     //   : isTriggeringToTarget() ? "Can tell to {0}"
                     : "Can notify of \"{0}\"";
 
-            return MessageFormat.format( format, message.toLowerCase() );
+            title = MessageFormat.format( format, message.toLowerCase() );
 
         } else {
             Part part = (Part) node;
@@ -403,12 +426,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     //  : isTriggeringToTarget() ? "Tell {1}{2}{3} to {0}"
                     : "Notify {1}{2}{3} of \"{0}\"";
 
-            return MessageFormat.format(
+            title = MessageFormat.format(
                     format, message.toLowerCase(),
                     getShortName( node, true ),
                     getOrganizationString( part ),
                     getJurisdictionString( part ) );
         }
+        return ( isProhibited() ? "Prohibited: " : "" ) + title;
     }
 
     /**
@@ -1121,23 +1145,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return new ArrayList<ElementOfInformation>( eois );
     }
 
-    /**
-     * Whether flow is prohibited beacuse it has at least one forbidding policy attached.
-     *
-     * @return a boolean
-     */
-    public boolean isProhibited() {
-        return CollectionUtils.exists(
-                getAttachments(),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        Attachment attachment = (Attachment) object;
-                        return attachment.getType().equals( Attachment.Type.PolicyCant );
-                    }
-                }
-        );
-    }
-
     public String getRestrictionString( boolean isSend ) {
         if ( getRestriction() == null ) {
             return "";
@@ -1278,6 +1285,25 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             if ( infoStandard != null ) infoStandards.add( infoStandard );
         }
         return infoStandards;
+    }
+
+    public boolean matchesInfoOf( Flow other, Place locale ) {
+        return Matcher.getInstance().same( getName(), other.getName() )
+                && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
+    }
+
+    /**
+     * Whether this overrides another flow.
+     *
+     * @param other  a flow
+     * @param locale a place
+     * @return a boolean
+     */
+    public boolean overrides( Flow other, Place locale ) {
+        return isSharing() && other.isSharing()
+                && matchesInfoOf( other, locale )
+                && ( (Part) getSource() ).overrides( (Part) other.getSource(), locale )
+                && ( (Part) getTarget() ).overrides( (Part) other.getTarget(), locale );
     }
 
 

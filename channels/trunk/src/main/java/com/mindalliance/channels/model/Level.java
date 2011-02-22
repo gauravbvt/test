@@ -67,4 +67,10 @@ public enum Level {
                 return "UNKNOWN";
         }
     }
+
+    public static boolean isSubsumedBy( Level level, Level otherLevel ) {
+        return level == null && otherLevel == null
+                || otherLevel == null
+                || level != null && level.compareTo( otherLevel ) >= 0;
+    }
 }

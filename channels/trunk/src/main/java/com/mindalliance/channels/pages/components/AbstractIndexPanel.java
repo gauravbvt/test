@@ -18,6 +18,7 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Taggable;
 import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.NameRange;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -677,6 +678,34 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         }
     }
 
+    protected String addToCss( ModelObject modelObject, String css ) {
+        String added = "";
+        if ( modelObject instanceof Part ) {
+            QueryService queryService = getQueryService();
+            boolean overridden = queryService.isOverridden( (Part)modelObject );
+            boolean overriding = queryService.isOverriding( (Part)modelObject );
+            added = overriding && overridden
+                            ? "overridden-overriding"
+                            : overriding
+                            ? "overriding"
+                            : overridden
+                            ? "overridden"
+                            : "";
+        } else if ( modelObject instanceof Flow ) {
+            QueryService queryService = getQueryService();
+            boolean overridden = queryService.isOverridden( (Flow)modelObject );
+            boolean overriding = queryService.isOverriding( (Flow)modelObject );
+            added = overriding && overridden
+                            ? "overridden-overriding"
+                            : overriding
+                            ? "overriding"
+                            : overridden
+                            ? "overridden"
+                            : "";
+        }
+        return css + (added.isEmpty() ? "" : (" " + added));
+    }
+
 
     /**
      * An index entry.
@@ -848,12 +877,13 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     new Model<ModelObject>( getIndexedModelObject() ),
                     new Model<String>( getAbbreviatedName() ),
                     getTitle(),
-                    css );
+                    addToCss( getIndexedModelObject(), css  ) );
             italicizeIfEntityType( moLink, getIndexedModelObject() );
             add( moLink );
         }
 
     }
+
 
     /**
      * A planel showing a repeated index entry.
@@ -888,7 +918,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                             new Model<ModelObject>( item.getModelObject() ),
                             new Model<String>( getRank( item.getModelObject() ) ),
                             getKind( item.getModelObject() ),
-                            css );
+                            addToCss( item.getModelObject(), css ) );
                     item.add( moLink );
                 }
             };

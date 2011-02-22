@@ -176,6 +176,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * If operational.
      */
     private CheckBox operationalCheckBox;
+    /**
+     * Prohibited checkbox container.
+     */
+    private WebMarkupContainer prohibitedContainer;
+    /**
+     * If prohibited.
+     */
+    private CheckBox prohibitedCheckBox;
 
     /**
      * Flow is to be restricted.
@@ -206,6 +214,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addRestrictionFields();
         addIfTaskFails();
         addOperationalField();
+        addProhibitedField();
         addAllField();
 
         Node node = getOther();
@@ -384,8 +393,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
         makeVisible( ifTaskFailsContainer, canGetIfTaskFails() );
         ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
+        makeVisible( prohibitedContainer, f.canGetProhibited() );
+        prohibitedCheckBox.setEnabled( lockedByUser && f.canSetProhibited() );
         makeVisible( operationalContainer, f.canGetOperational() );
-        operationalCheckBox.setEnabled( f.canSetOperational() );
+        operationalCheckBox.setEnabled( lockedByUser && f.canSetOperational() );
     }
 
     private boolean canSetIfTaskFails() {
@@ -602,6 +613,24 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         operationalContainer.add( operationalCheckBox );
      }
 
+    private void addProhibitedField() {
+        prohibitedContainer = new WebMarkupContainer( "prohibitedContainer" );
+        prohibitedContainer.setOutputMarkupId( true );
+        add( prohibitedContainer );
+        prohibitedCheckBox = new CheckBox(
+                "prohibited",
+                new PropertyModel<Boolean>( this, "prohibited" )
+        );
+        prohibitedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getFlow(), "prohibited" ) );
+            }
+        } );
+        prohibitedContainer.add( prohibitedCheckBox );
+     }
 
 
 
@@ -1371,6 +1400,21 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             doCommand( new UpdateSegmentObject( getFlow(), "operational", val ) );
         }
     }
+
+    /**
+      * Get whether flow is prohibited.
+      *
+      * @return a boolean
+      */
+     public boolean isProhibited() {
+         return getFlow().isProhibited();
+     }
+
+     public void setProhibited( boolean val ) {
+         if ( val != getFlow().isProhibited() ) {
+             doCommand( new UpdateSegmentObject( getFlow(), "prohibited", val ) );
+         }
+     }
 
 
     /**

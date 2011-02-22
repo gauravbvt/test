@@ -435,7 +435,7 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
      *
      * @return a boolean
      */
-    public boolean isProhibited() {
+    public boolean hasProhibitionPolicy() {
         return CollectionUtils.exists(
                 getAttachments(),
                 new Predicate() {
@@ -451,7 +451,7 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
      *
      * @return a boolean
      */
-    public boolean isMandated() {
+    public boolean hasMandatingPolicy() {
         return CollectionUtils.exists(
                 getAttachments(),
                 new Predicate() {

@@ -63,6 +63,20 @@ public class PartShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Assignments" ),
                 assignmentsLink ) );
+        // View part overrides
+        if ( getQueryService().isOverridden( getPart() )
+                || getQueryService().isOverriding( getPart() ) ) {
+            AjaxFallbackLink overridesLink = new AjaxFallbackLink( "link" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    update( target, new Change( Change.Type.AspectViewed, getPart(), "overrides" ) );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Overrides" ),
+                    overridesLink ) );
+        }
         // View failure impacts
         AjaxFallbackLink failureImpactsLink = new AjaxFallbackLink( "link" ) {
             @Override
@@ -76,17 +90,17 @@ public class PartShowMenuPanel extends MenuPanel {
                 failureImpactsLink ) );
         // Dissemination
         AjaxFallbackLink disseminationLink = new AjaxFallbackLink( "link" ) {
-             @Override
-             public void onClick( AjaxRequestTarget target ) {
-                 Change change = new Change( Change.Type.AspectViewed, getPart(), "dissemination" );
-                 change.addQualifier( "show", "targets" );
-                 update( target, change );
-             }
-         };
-         menuItems.add( new LinkMenuItem(
-                 "menuItem",
-                 new Model<String>( "Dissemination" ),
-                 disseminationLink ) );
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                Change change = new Change( Change.Type.AspectViewed, getPart(), "dissemination" );
+                change.addQualifier( "show", "targets" );
+                update( target, change );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Dissemination" ),
+                disseminationLink ) );
         // View part entities
         menuItems.addAll( getModelObjectMenuItems( "menuItem", getModelObjectWrappers() ) );
         return menuItems;

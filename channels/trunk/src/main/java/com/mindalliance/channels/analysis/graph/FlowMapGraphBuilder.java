@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis.graph;
 
 import com.mindalliance.channels.analysis.GraphBuilder;
+import com.mindalliance.channels.graph.diagrams.DirectedMultiGraphWithProperties;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
@@ -12,9 +13,10 @@ import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.Graph;
-import org.jgrapht.graph.DirectedMultigraph;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Flow map graph builder.
@@ -44,7 +46,7 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
     }
 
     public DirectedGraph<Node, Flow> buildDirectedGraph() {
-        DirectedGraph<Node, Flow> digraph = new DirectedMultigraph<Node, Flow>(
+        DirectedMultiGraphWithProperties<Node, Flow> digraph = new DirectedMultiGraphWithProperties<Node, Flow>(
                 new EdgeFactory<Node, Flow>() {
                     /**
                      * Separate id generator for diagram-based flows.
@@ -58,6 +60,7 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
                     }
 
                 } );
+        digraph.setProperty( "impliedFlows", new ArrayList<Flow>() );
         populateSegmentGraph( digraph, segment );
         return digraph;
     }
@@ -80,6 +83,7 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
         for ( Part terminator : queryService.findExternalTerminators( segment ) ) {
             graph.addVertex( terminator );
         }
+
         // add parts/connectors as nodes and flows as edges
         Iterator<Flow> flows = segment.flows();
         while ( flows.hasNext() ) {
@@ -101,7 +105,27 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
                 }
             }
         }
+        addFlowsFromOverridden( graph, segment );
+
     }
+     @SuppressWarnings( "unchecked" )
+     private void addFlowsFromOverridden(
+            Graph<Node, Flow> graph,
+            Segment segment  ) {
+         List<Flow> impliedFlows = (List<Flow>)((DirectedMultiGraphWithProperties)graph).getProperty( "impliedFlows" );
+         for ( Part part : segment.listParts() ) {
+             for ( Flow impliedFlow : queryService.findImpliedSharingSends( part ) ) {
+                  graph.addVertex( impliedFlow.getTarget() );
+                  graph.addEdge( part, impliedFlow.getTarget(), impliedFlow );
+                 impliedFlows.add( impliedFlow );
+             }
+             for ( Flow impliedFlow : queryService.findImpliedSharingReceives( part ) ) {
+                  graph.addVertex( impliedFlow.getTarget() );
+                  graph.addEdge( impliedFlow.getSource(), part, impliedFlow );
+                 impliedFlows.add( impliedFlow );
+             }
+         }
+     }
 
     private boolean disconnected( Node node ) {
         if ( includeConnectors ) {

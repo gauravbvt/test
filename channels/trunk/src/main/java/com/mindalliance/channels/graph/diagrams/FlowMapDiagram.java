@@ -96,6 +96,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
                 showingGoals,
                 showingConnectors,
                 hidingNoop );
+        metaProvider.setGraphProperties( ( (DirectedMultiGraphWithProperties) graph ).getProperties() );
         if ( diagramSize != null ) {
             metaProvider.setGraphSize( diagramSize );
         }

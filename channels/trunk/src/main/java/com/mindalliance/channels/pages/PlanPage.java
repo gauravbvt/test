@@ -31,6 +31,7 @@ import com.mindalliance.channels.pages.components.plan.menus.PlanShowMenuPanel;
 import com.mindalliance.channels.pages.components.segment.FailureImpactsPanel;
 import com.mindalliance.channels.pages.components.segment.FlowEOIsPanel;
 import com.mindalliance.channels.pages.components.segment.MaximizedFlowPanel;
+import com.mindalliance.channels.pages.components.segment.OverridesPanel;
 import com.mindalliance.channels.pages.components.segment.PartAssignmentsPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentPanel;
@@ -269,6 +270,11 @@ public final class PlanPage extends WebPage implements Updatable {
     private Component disseminationPanel;
 
     /**
+     * Overrides panel.
+     */
+    private Component overridesPanel;
+
+    /**
      * The aspect for entity panel.
      */
     // private String entityAspect = EntityPanel.DETAILS;
@@ -448,6 +454,7 @@ public final class PlanPage extends WebPage implements Updatable {
         addEOIsPanel();
         addFailureImpactsPanel();
         addDisseminationPanel( null, false );
+        addOverridesPanel( );
         addSegmentEditPanel();
         addPlanEditPanel();
         addSurveysPanel( Survey.UNKNOWN );
@@ -943,6 +950,20 @@ public final class PlanPage extends WebPage implements Updatable {
                     getReadOnlyExpansions() );
         }
         form.addOrReplace( disseminationPanel );
+    }
+
+    private void addOverridesPanel(  ) {
+        Part viewed = (Part) getModelObjectViewed( ModelObject.class, "overrides" );
+        if ( viewed == null ) {
+            overridesPanel = new Label( "overrides", "" );
+            overridesPanel.setOutputMarkupId( true );
+            makeVisible( overridesPanel, false );
+        } else {
+            overridesPanel = new OverridesPanel( "overrides",
+                    new Model<Part>( viewed ),
+                    getReadOnlyExpansions() );
+        }
+        form.addOrReplace( overridesPanel );
     }
 
     /**
@@ -1768,6 +1789,7 @@ public final class PlanPage extends WebPage implements Updatable {
         refreshSegmentPanel( target, change, updated );
         refreshFailureImpactsPanel( target, change, updated );
         refreshDisseminationPanel( target, change, updated );
+        refreshOverridesPanel( target, change, updated );
     }
 
 
@@ -1902,6 +1924,18 @@ public final class PlanPage extends WebPage implements Updatable {
             target.addComponent( disseminationPanel );
         } else if ( disseminationPanel instanceof DisseminationPanel ) {
             ( (DisseminationPanel) disseminationPanel ).refresh( target, change, updated );
+        }
+    }
+
+    private void refreshOverridesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated )  {
+        Identifiable identifiable = change.getSubject( queryService );
+        if ( change.isUnknown()
+                || identifiable instanceof Part
+                && change.isAspect( "overrides" ) ) {
+            addOverridesPanel();
+            target.addComponent( overridesPanel );
+        } else if ( overridesPanel instanceof OverridesPanel ) {
+            ( (OverridesPanel) overridesPanel ).refresh( target, change, updated );
         }
     }
 

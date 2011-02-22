@@ -168,6 +168,9 @@ public class PartSummaryPanel extends Panel {
         if ( !part.isOperational() ) {
             sb.append( " Not operational." );
         }
+        if ( part.isProhibited() ) {
+            sb.append( " PROHIBITED." );
+        }
         return sb.toString();
     }
 

@@ -133,4 +133,10 @@ public class EventTiming implements Serializable {
         return eventLevel == null
                 || other != null && eventLevel.compareTo( other ) <= 0;
     }
+
+    public boolean narrowsOrEquals( EventTiming other, Place locale ) {
+        return timing == other.getTiming()
+                && Level.isSubsumedBy( eventLevel, other.getEventLevel() )
+                && event.narrowsOrEquals( other.getEvent(), locale );
+    }
 }

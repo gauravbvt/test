@@ -20,6 +20,7 @@ import org.springframework.core.io.Resource;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provider of providers for segments.
@@ -31,6 +32,8 @@ import java.util.List;
  * A provider of graph attribute providers needed for rendering a segment
  */
 public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
+
+    private Map<String, Object> graphProperties;
 
     public FlowMapMetaProvider( ModelObject modelObject,
                                 String outputFormat,
@@ -102,6 +105,14 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         };
     }
 
+    @Override
+    protected String getNodeLabel( Node node ) {
+        return super.getNodeLabel( node )
+                + ( node.isPart() && ( (Part) node ).isProhibited()
+                ? " -PROHIBITED-"
+                : "" );
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -130,6 +141,10 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
 
     public DOTAttributeProvider<Node, Flow> getDOTAttributeProvider() {
         return new SegmentDOTAttributeProvider();
+    }
+
+    public void setGraphProperties( Map<String, Object> graphProperties ) {
+        this.graphProperties = graphProperties;
     }
 
     /**
@@ -249,14 +264,18 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         private String getFontColor( Node vertex ) {
             return isInvisible( vertex )
                     ? vertex.getSegment().equals( getSegment() )
-                        ? INVISIBLE_COLOR
-                        : SUBGRAPH_COLOR
+                    ? INVISIBLE_COLOR
+                    : SUBGRAPH_COLOR
                     : FONTCOLOR;
         }
 
         public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "color", colorIfVisible( edge, "black" ) ) );
+            list.add( new DOTAttribute(
+                    "color",
+                    colorIfVisible(
+                            edge,
+                            isImplied( edge ) ? IMPLIED_COLOR : "black" ) ) );
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             // list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             if ( highlighted ) {
@@ -265,7 +284,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             }
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
-            list.add( new DOTAttribute( "fontcolor", colorIfVisible( edge, "darkslategray" ) ) );
+            list.add( new DOTAttribute(
+                    "fontcolor",
+                    colorIfVisible(
+                            edge,
+                            isImplied( edge ) ? IMPLIED_COLOR : "darkslategray" ) ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( edge.isAskedFor() ) {
@@ -281,10 +304,18 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 if ( edge.isIfTaskFails() ) {
                     list.add( new DOTAttribute( "style", "dotted" ) );
                     if ( edge.isCritical() )
-                        list.add( new DOTAttribute( "fontcolor", colorIfVisible( edge, "black" ) ) );
+                        list.add( new DOTAttribute(
+                                "fontcolor",
+                                colorIfVisible(
+                                        edge,
+                                        isImplied( edge ) ? IMPLIED_COLOR : "black" ) ) );
                 } else if ( edge.isCritical() ) {
                     list.add( new DOTAttribute( "style", "bold" ) );
-                    list.add( new DOTAttribute( "fontcolor", colorIfVisible( edge, "black" ) ) );
+                    list.add( new DOTAttribute(
+                            "fontcolor",
+                            colorIfVisible(
+                                    edge,
+                                    isImplied( edge ) ? IMPLIED_COLOR : "black" ) ) );
                 }
             }
             // head and tail labels
@@ -331,7 +362,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         private String colorIfVisible( Flow edge, String color ) {
-            return isInvisible( edge) ? INVISIBLE_COLOR : color;
+            return isInvisible( edge ) ? INVISIBLE_COLOR : color;
         }
 
         private boolean isInvisible( Flow edge ) {
@@ -339,6 +370,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
 
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private boolean isImplied( Flow flow ) {
+        return ( (List<Flow>) graphProperties.get( "impliedFlows" ) ).contains( flow );
     }
 
     private String summarizeExternalFlows( Iterator<ExternalFlow> externalFlows ) {

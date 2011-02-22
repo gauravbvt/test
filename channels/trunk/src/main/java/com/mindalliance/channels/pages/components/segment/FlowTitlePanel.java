@@ -43,8 +43,16 @@ public class FlowTitlePanel extends Panel {
         add( preLabel );
         Label infoLabel = new Label( "info", new Model<String>( getInfo() ) );
         add( infoLabel );
-        Label postLabel = new Label( "post", new Model<String>( getPost() + "." + operationalString() ) );
+        Label postLabel = new Label(
+                "post",
+                new Model<String>( getPost() + "." + operationalString() + prohibitedString() ) );
         add( postLabel );
+    }
+
+    private String prohibitedString() {
+        return flow.canGetProhibited() && flow.isProhibited()
+                ? " PROHIBITED."
+                : "";
     }
 
     private String operationalString() {

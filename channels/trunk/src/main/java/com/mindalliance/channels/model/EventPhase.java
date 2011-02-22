@@ -93,4 +93,10 @@ public class EventPhase implements Serializable {
         return ModelObject.areIdentical( getPhase(), mo )
                 || ModelObject.areIdentical( getEvent(), mo );
     }
+
+    public boolean narrowsOrEquals( EventPhase other, Place locale ) {
+        return phase.equals( other.getPhase() )
+                && event.narrowsOrEquals( other.getEvent(), locale )
+                && Level.isSubsumedBy( eventLevel, other.getEventLevel() );
+    }
 }
