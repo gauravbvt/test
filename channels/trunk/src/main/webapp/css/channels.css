@@ -1480,11 +1480,15 @@ input[disabled] {
     left: 2em;
 }
 
-.overrides {
+.task-overrides {
     margin: 0;
     position: absolute;
     top: 2px;
     left: 3.8em;
+}
+
+.flow-overrides {
+    display: inline;
 }
 
 .flowMediaRefs ul {
