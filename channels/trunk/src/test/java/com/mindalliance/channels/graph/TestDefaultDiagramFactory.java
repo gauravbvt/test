@@ -3,18 +3,17 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Segment;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -31,25 +30,6 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
     public void setUp() throws IOException {
         super.setUp();
         segments = queryService.list( Segment.class );
-    }
-
-    @Test
-    public void testGetSVG() {
-        for ( Segment segment : segments ) {
-            Node selectedNode = findSelected( segment );
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            DiagramFactory diagramFactory = wicketApplication.getDiagramFactory();
-            Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, selectedNode, null, null );
-            flowDiagram.render(
-                    DiagramFactory.SVG,
-                    new BufferedOutputStream( baos ),
-                    getAnalyst(),
-                    diagramFactory);
-            String svg = baos.toString();
-            assertFalse( svg.isEmpty() );
-            assertTrue( svg.startsWith( "<?xml" ) );
-            // System.out.print( svg );
-        }
     }
 
     @Test

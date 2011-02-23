@@ -1879,7 +1879,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns ) {
         Place locale = getPlan().getLocale();
         Set<Assignment> result = new HashSet<Assignment>();
-
         for ( Employment e : findAllEmployments( part, locale ) )
             if ( ModelEntity.implies( e.getActor(), part.getActor(), locale )
                     && ModelEntity.implies( e.getRole(), part.getRole(), locale )
@@ -1918,15 +1917,16 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    /** {@inheritDoc } */
     public List<Commitment> findAllCommitments( Flow flow, boolean allowCommitmentsToSelf ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
-        if ( flow.isSharing() ) {
+        if ( flow.isSharing() && !flow.isProhibited() ) {
             Assignments allAssignments = getAssignments();
             Assignments committers = allAssignments.assignedTo( (Part) flow.getSource() );
             Assignments beneficiaries = allAssignments.assignedTo( (Part) flow.getTarget() );
             Place place = getPlan().getLocale();
 
-            for ( Assignment committer : committers ) {
+                for ( Assignment committer : committers ) {
                 Actor committerActor = committer.getActor();
                 for ( Assignment beneficiary : beneficiaries ) {
                     if ( ( allowCommitmentsToSelf || !committerActor.equals( beneficiary.getActor() ) )
@@ -1936,6 +1936,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 }
             }
         }
+        return new ArrayList<Commitment>( commitments );
+    }
+
+    @Override
+    /** {@inheritDoc } */
+    public List<Commitment> removeOverriddenAndProhibited( Collection<Commitment> commitments ) {
         return removeProhibitedCommitments(
                 removeOverriddenCommitments( commitments, getPlan().getLocale() ) );
     }
@@ -1943,10 +1949,22 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     private List<Commitment> removeProhibitedCommitments( Collection<Commitment> commitments ) {
         List<Commitment> notForbidden = new ArrayList<Commitment>();
         for ( Commitment commitment : commitments ) {
-            if ( !commitment.isProhibited() )
+            if ( !isImplicitlyProhibited( commitment.getSharing() ) )
                 notForbidden.add( commitment );
         }
         return notForbidden;
+    }
+
+    @Override
+    /** {@inheritDoc } */
+    public Boolean isImplicitlyProhibited( Flow sharing ) {
+        boolean prohibited = false;
+        Iterator<Flow> flows = findAllFlows().iterator();
+        while ( !prohibited && flows.hasNext() ) {
+            Flow other = flows.next();
+            prohibited = other.isProhibited() && other.overrides( sharing, getPlan().getLocale() );
+        }
+        return prohibited;
     }
 
     private List<Commitment> removeOverriddenCommitments( Collection<Commitment> commitments, final Place locale ) {
@@ -1957,7 +1975,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             while ( !overridden && iter.hasNext() ) {
                 Commitment c = iter.next();
                 overridden = !commitment.equals( c )
-                        && c.overrides( commitment, locale );
+                        && c.getSharing().overrides( commitment.getSharing(), locale );
             }
             if ( !overridden )
                 notOverridden.add( commitment );
@@ -1991,8 +2009,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 }
             }
         }
-        return removeProhibitedCommitments(
-                removeOverriddenCommitments( commitments, getPlan().getLocale() ) );
+        return removeOverriddenAndProhibited( commitments  );
     }
 
     @Override
@@ -2002,8 +2019,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             for ( Commitment commitment : findAllCommitmentsOf( actor ) )
                 if ( commitment.getCommitter().getOrganization().equals( organization ) )
                     commitments.add( commitment );
-        return removeProhibitedCommitments(
-                removeOverriddenCommitments( commitments, getPlan().getLocale() ) );
+        return removeOverriddenAndProhibited( commitments );
     }
 
     @Override
@@ -2012,7 +2028,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( Flow flow : findAllRelatedFlows( new ResourceSpec( actor ), false ) ) {
             commitments.addAll( findAllCommitments( flow ) );
         }
-        return new ArrayList<Commitment>( commitments );
+        return removeOverriddenAndProhibited( commitments );
     }
 
     @Override

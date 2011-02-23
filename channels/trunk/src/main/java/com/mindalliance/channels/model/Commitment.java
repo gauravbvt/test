@@ -112,23 +112,13 @@ public class Commitment implements Serializable {
 
     /**
      * Commitment crosses organization boundaries.
+     *
      * @return a boolean
      */
     public boolean isBetweenOrganizations() {
         return !committer.getOrganization().equals( beneficiary.getOrganization() );
     }
 
-    /**
-     * Whether this overrides another commitment.
-     * @param other a commitment
-     * @param locale a place
-     * @return a boolean
-     */
-    public boolean overrides( Commitment other, Place locale ) {
-        return ( committer.overrides( other.getCommitter(), locale )
-                || beneficiary.overrides( other.getBeneficiary(), locale ) )
-                && sharing.matchesInfoOf( other.getSharing(), locale );
-    }
 
     public boolean isProhibited() {
         return getSharing().isProhibited();

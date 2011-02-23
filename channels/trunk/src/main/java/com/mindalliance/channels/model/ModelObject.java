@@ -462,4 +462,7 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
         );
     }
 
+    public static boolean isNullOrUnknown( ModelObject modelObject ) {
+        return modelObject == null || modelObject.isUnknown();
+    }
 }

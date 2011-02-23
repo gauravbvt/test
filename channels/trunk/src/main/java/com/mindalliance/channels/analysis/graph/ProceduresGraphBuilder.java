@@ -78,24 +78,25 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
         List<Commitment> commitments = new ArrayList<Commitment>();
         List<Flow> flows = findAllFlows();
         for ( Flow flow : flows ) {
-            List<Commitment> flowCommitments = new ArrayList<Commitment>( queryService.findAllCommitments( flow, true ) );
-            for ( Commitment commitment : flowCommitments ) {
-                if ( focusEntity != null ) {
-                    if ( isFocusedOn( commitment ) ) {
-                        commitments.add( summarize( commitment ) );
-                    }
-                } else {
-                    commitments.add( summarize( commitment ) );
+            commitments.addAll( queryService.findAllCommitments( flow, true ) );
+        }
+        List<Commitment> results = new ArrayList<Commitment>();
+        for ( Commitment commitment : queryService.removeOverriddenAndProhibited( commitments ) ) {
+            if ( focusEntity != null ) {
+                if ( isFocusedOn( commitment ) ) {
+                    results.add( summarize( commitment ) );
                 }
+            } else {
+                results.add( summarize( commitment ) );
             }
         }
-        return commitments;
+        return results;
     }
 
     private boolean isFocusedOn( Commitment commitment ) {
         return focusEntity != null
                 && (
-                isFocusedOn( commitment.getCommitter())
+                isFocusedOn( commitment.getCommitter() )
                         || isFocusedOn( commitment.getBeneficiary() )
         );
     }
@@ -105,14 +106,14 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
     }
 
     private boolean isFocusedOnAgent( Assignment assignment ) {
-         return focusEntity != null &&  assignment.getActor().equals( focusEntity );
+        return focusEntity != null && assignment.getActor().equals( focusEntity );
     }
 
     private boolean isFocusedOnOrganization( Assignment assignment ) {
-         return focusEntity != null
-                 &&  assignment.getOrganization().narrowsOrEquals(
-                 focusEntity,
-                 getQueryService().getPlan().getLocale() );
+        return focusEntity != null
+                && assignment.getOrganization().narrowsOrEquals(
+                focusEntity,
+                getQueryService().getPlan().getLocale() );
     }
 
     private Commitment summarize( Commitment commitment ) {
@@ -121,14 +122,14 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
         if ( summarizedByOrg ) {
             Organization committerOrg = committer.getOrganization();
             Organization beneficiaryOrg = beneficiary.getOrganization();
-            if (!isFocusedOnAgent( committer ))
+            if ( !isFocusedOnAgent( committer ) )
                 committer.setEmployment( new Employment( committerOrg ) );
-            if (!isFocusedOnAgent( beneficiary ))
+            if ( !isFocusedOnAgent( beneficiary ) )
                 beneficiary.setEmployment( new Employment( beneficiaryOrg ) );
         } else if ( summarizedByRole ) {
-            if (!isFocusedOnAgent( committer ))
+            if ( !isFocusedOnAgent( committer ) )
                 committer.setEmployment( new Employment( committer.getOrganization(), committer.getRole() ) );
-            if (!isFocusedOnAgent( beneficiary ))
+            if ( !isFocusedOnAgent( beneficiary ) )
                 beneficiary.setEmployment( new Employment( beneficiary.getOrganization(), beneficiary.getRole() ) );
         }
         return new Commitment( committer, beneficiary, commitment.getSharing() );

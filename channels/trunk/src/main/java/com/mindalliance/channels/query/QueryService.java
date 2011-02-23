@@ -40,6 +40,7 @@ import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.model.Tag;
 import com.mindalliance.channels.nlp.Proximity;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -1020,6 +1021,20 @@ public interface QueryService {
      * @return a list of commitments
      */
     List<Commitment> findAllCommitments( Flow flow, boolean allowCommitmentsToSelf );
+
+    /**
+     * Remove overridden and implicitly prohibited commitments.
+     * @param commitments a list of commitments
+     * @return a list of commitments
+     */
+    List<Commitment> removeOverriddenAndProhibited( Collection<Commitment> commitments );
+
+    /**
+     * Whether a sharing flow is implicitly prohibited by one it is overriden by.
+     * @param sharing a flow
+     * @return a boolean
+     */
+    Boolean isImplicitlyProhibited( Flow sharing );
 
     /**
      * Find all commitments of an actor.

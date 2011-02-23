@@ -1202,44 +1202,44 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             Place beneficiaryLocation = beneficiary.getLocation();
             switch ( restriction ) {
                 case SameTopOrganization:
-                    return committerOrg == null
-                            || beneficiaryOrg == null
+                    return ModelObject.isNullOrUnknown( committerOrg )
+                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
                             || committerOrg.getTopOrganization()
                             .equals( beneficiaryOrg.getTopOrganization() );
 
                 case SameOrganization:
-                    return committerOrg == null
-                            || beneficiaryOrg == null
+                    return ModelObject.isNullOrUnknown( committerOrg )
+                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
                             || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
                             || beneficiaryOrg.narrowsOrEquals( committerOrg, locale );
 
                 case DifferentOrganizations:
-                    return committerOrg == null
-                            || beneficiaryOrg == null
+                    return ModelObject.isNullOrUnknown( committerOrg )
+                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
                             || ( !committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
                             && !beneficiaryOrg.narrowsOrEquals( committerOrg, locale ) );
 
                 case DifferentTopOrganizations:
-                    return committerOrg == null
-                            || beneficiaryOrg == null
+                    return ModelObject.isNullOrUnknown( committerOrg )
+                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
                             || !committerOrg.getTopOrganization()
                             .equals( beneficiaryOrg.getTopOrganization() );
 
                 case SameLocation:
-                    return committerLocation == null
-                            || beneficiaryLocation == null
+                    return ModelObject.isNullOrUnknown( committerLocation )
+                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
                             || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
                             || beneficiaryLocation.narrowsOrEquals( committerLocation, locale );
 
                 case DifferentLocations:
-                    return committerLocation == null
-                            || beneficiaryLocation == null
+                    return ModelObject.isNullOrUnknown( committerLocation )
+                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
                             || ( !committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
                             && !beneficiaryLocation.narrowsOrEquals( committerLocation, locale ) );
 
                 case Supervisor:
-                    return committer.getActor() == null
-                            || beneficiary.getActor() == null
+                    return ModelObject.isNullOrUnknown( committer.getActor() )
+                            || ModelObject.isNullOrUnknown( beneficiary.getActor() )
                             || queryService.isSupervisorOf( beneficiary.getActor(), committer.getActor() );
             }
         }
@@ -1289,6 +1289,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public boolean matchesInfoOf( Flow other, Place locale ) {
         return Matcher.getInstance().same( getName(), other.getName() )
+                && Restriction.matchedBy( getRestriction(), other.getRestriction() )
                 && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
     }
 
@@ -1300,10 +1301,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean overrides( Flow other, Place locale ) {
-        return isSharing() && other.isSharing()
-                && matchesInfoOf( other, locale )
-                && ( (Part) getSource() ).overrides( (Part) other.getSource(), locale )
-                && ( (Part) getTarget() ).overrides( (Part) other.getTarget(), locale );
+        if ( !equals( other ) && isSharing() && other.isSharing()
+                && matchesInfoOf( other, locale ) ) {
+            return ( (Part) getSource() ).overridesOrEquals( (Part) other.getSource(), locale )
+                    && ( (Part) getTarget() ).overridesOrEquals( (Part) other.getTarget(), locale )
+                    && !( getTarget().equals( other.getTarget() ) && getSource().equals( other.getSource() ) );
+        } else
+            return false;
     }
 
 

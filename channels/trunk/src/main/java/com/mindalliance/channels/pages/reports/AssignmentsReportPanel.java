@@ -4,7 +4,6 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
@@ -96,12 +95,12 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         new Label( "description" ),
                         newTaskList( "immediates",
                                      "a" + phase.getId(),
-                                     phaseAssignments.getImmediates() ),
+                                     phaseAssignments.getImmediates( getQueryService() ) ),
                         newIncomingList( "notified",
                                          "b" + phase.getId(),
-                                         phaseAssignments.getNotifications() ),
+                                         phaseAssignments.getNotifications( getQueryService() ) ),
                         newIncomingList( "requested",  "c" + phase.getId(), phaseAssignments.getRequests() ),
-                        newTaskList( "optionals", "d" + phase.getId(), phaseAssignments.getOptionals() )
+                        newTaskList( "optionals", "d" + phase.getId(), phaseAssignments.getOptionals(  getQueryService() ) )
                 );
             }
         };
