@@ -131,9 +131,9 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
 
     public boolean hasEntityOrBroader( ModelEntity entity, Place locale ) {
         return entity.narrowsOrEquals( getActor(), locale )
-            || entity.narrowsOrEquals( getRole(), locale )
-            || entity.narrowsOrEquals( getOrganization(), locale )
-            || entity.narrowsOrEquals( getJurisdiction(), locale );
+                || entity.narrowsOrEquals( getRole(), locale )
+                || entity.narrowsOrEquals( getOrganization(), locale )
+                || entity.narrowsOrEquals( getJurisdiction(), locale );
     }
 
 
@@ -199,30 +199,30 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
 
     public String getFullTitle( String sep ) {
         String label = "";
-         if ( getActor() != null && !getActor().isUnknown()) {
-             label += getActor().getName();
-         }
-         if ( getRole() != null ) {
-             if ( !label.isEmpty() ) label += sep;
-             if ( !label.isEmpty() ) label += "as ";
-             label += getRole().getName();
-         }
-         if ( getJurisdiction() != null ) {
-             if ( !label.isEmpty() ) label += ( sep + "for " );
-             label += getJurisdiction().getName();
-         }
-         if ( getOrganization() != null ) {
-             if ( !label.isEmpty() ) label += ( sep + "at " );
-             label += getOrganization().getName();
-         }
-         if ( !label.isEmpty() ) label += sep;
-         label += part.getTask();
-         if ( part.isRepeating() ) {
-             label += " (every " + part.getRepeatsEvery().toString() + ")";
-         }
-         return label;
+        if ( getActor() != null && !getActor().isUnknown() ) {
+            label += getActor().getName();
+        }
+        if ( getRole() != null ) {
+            if ( !label.isEmpty() ) label += sep;
+            if ( !label.isEmpty() ) label += "as ";
+            label += getRole().getName();
+        }
+        if ( getJurisdiction() != null ) {
+            if ( !label.isEmpty() ) label += ( sep + "for " );
+            label += getJurisdiction().getName();
+        }
+        if ( getOrganization() != null ) {
+            if ( !label.isEmpty() ) label += ( sep + "at " );
+            label += getOrganization().getName();
+        }
+        if ( !label.isEmpty() ) label += sep;
+        label += part.getTask();
+        if ( part.isRepeating() ) {
+            label += " (every " + part.getRepeatsEvery().toString() + ")";
+        }
+        return label;
     }
-     // Identifiable
+    // Identifiable
 
     @Override
     public long getId() {
@@ -245,6 +245,23 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
     }
 
     public boolean involves( ModelEntity focusEntity ) {
-        return getActor().equals( focusEntity ) || getOrganization().equals( focusEntity ) ;
+        return getActor().equals( focusEntity ) || getOrganization().equals( focusEntity );
+    }
+
+    /**
+     * Assignment overrides another.
+     *
+     * @param other an assignment
+     * @param locale a place
+     * @return a boolean
+     */
+    public boolean overrides( Assignment other, Place locale ) {
+        return employment.equals( other.employment )
+                && part.matchesTaskOf( other.getPart(), locale )
+                && part.resourceSpec().narrows( other.getPart().resourceSpec(), locale );
+    }
+
+    public boolean isProhibited() {
+        return part.isProhibited();
     }
 }

@@ -1879,7 +1879,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns ) {
         Place locale = getPlan().getLocale();
         Set<Assignment> result = new HashSet<Assignment>();
-
         for ( Employment e : findAllEmployments( part, locale ) )
             if ( ModelEntity.implies( e.getActor(), part.getActor(), locale )
                     && ModelEntity.implies( e.getRole(), part.getRole(), locale )
@@ -1918,18 +1917,19 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    /** {@inheritDoc } */
     public List<Commitment> findAllCommitments( Flow flow, boolean allowCommitmentsToSelf ) {
         Set<Commitment> commitments = new HashSet<Commitment>();
-        if ( flow.isSharing() ) {
-            List<Assignment> committers = findAllAssignments( (Part) flow.getSource(), true );
-            List<Assignment> beneficiaries = findAllAssignments( (Part) flow.getTarget(), true );
+        if ( flow.isSharing() && !flow.isProhibited() ) {
+            Assignments allAssignments = getAssignments();
+            Assignments committers = allAssignments.assignedTo( (Part) flow.getSource() );
+            Assignments beneficiaries = allAssignments.assignedTo( (Part) flow.getTarget() );
             Place place = getPlan().getLocale();
 
-            for ( Assignment committer : committers ) {
+                for ( Assignment committer : committers ) {
                 Actor committerActor = committer.getActor();
                 for ( Assignment beneficiary : beneficiaries ) {
                     if ( ( allowCommitmentsToSelf || !committerActor.equals( beneficiary.getActor() ) )
-                            && !flow.isProhibited()
                             && flow.allowsCommitment( committer, beneficiary, place, this )
                             )
                         commitments.add( new Commitment( committer, beneficiary, flow ) );
@@ -1938,6 +1938,51 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return new ArrayList<Commitment>( commitments );
     }
+
+    @Override
+    /** {@inheritDoc } */
+    public List<Commitment> removeOverriddenAndProhibited( Collection<Commitment> commitments ) {
+        return removeProhibitedCommitments(
+                removeOverriddenCommitments( commitments, getPlan().getLocale() ) );
+    }
+
+    private List<Commitment> removeProhibitedCommitments( Collection<Commitment> commitments ) {
+        List<Commitment> notForbidden = new ArrayList<Commitment>();
+        for ( Commitment commitment : commitments ) {
+            if ( !isImplicitlyProhibited( commitment.getSharing() ) )
+                notForbidden.add( commitment );
+        }
+        return notForbidden;
+    }
+
+    @Override
+    /** {@inheritDoc } */
+    public Boolean isImplicitlyProhibited( Flow sharing ) {
+        boolean prohibited = false;
+        Iterator<Flow> flows = findAllFlows().iterator();
+        while ( !prohibited && flows.hasNext() ) {
+            Flow other = flows.next();
+            prohibited = other.isProhibited() && other.overrides( sharing, getPlan().getLocale() );
+        }
+        return prohibited;
+    }
+
+    private List<Commitment> removeOverriddenCommitments( Collection<Commitment> commitments, final Place locale ) {
+        List<Commitment> notOverridden = new ArrayList<Commitment>();
+        for ( final Commitment commitment : commitments ) {
+            Iterator<Commitment> iter = commitments.iterator();
+            boolean overridden = false;
+            while ( !overridden && iter.hasNext() ) {
+                Commitment c = iter.next();
+                overridden = !commitment.equals( c )
+                        && c.getSharing().overrides( commitment.getSharing(), locale );
+            }
+            if ( !overridden )
+                notOverridden.add( commitment );
+        }
+        return notOverridden;
+    }
+
 
     @Override
     public List<Commitment> findAllCommitments( Flow flow ) {
@@ -1964,7 +2009,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 }
             }
         }
-        return new ArrayList<Commitment>( commitments );
+        return removeOverriddenAndProhibited( commitments  );
     }
 
     @Override
@@ -1974,7 +2019,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             for ( Commitment commitment : findAllCommitmentsOf( actor ) )
                 if ( commitment.getCommitter().getOrganization().equals( organization ) )
                     commitments.add( commitment );
-        return new ArrayList<Commitment>( commitments );
+        return removeOverriddenAndProhibited( commitments );
     }
 
     @Override
@@ -1983,7 +2028,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         for ( Flow flow : findAllRelatedFlows( new ResourceSpec( actor ), false ) ) {
             commitments.addAll( findAllCommitments( flow ) );
         }
-        return new ArrayList<Commitment>( commitments );
+        return removeOverriddenAndProhibited( commitments );
     }
 
     @Override
@@ -2715,13 +2760,34 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     /** @{inheritDoc} */
     public Assignments getAssignments() {
-        Assignments result = new Assignments( getPlan().getLocale() );
-
+        Place locale = getPlan().getLocale();
+        Assignments result = new Assignments( locale );
+        Set<Assignment> assignments = new HashSet<Assignment>();
         for ( Segment segment : list( Segment.class ) )
             for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); )
-                result.add( findAllAssignments( pi.next(), true ) );
+                assignments.addAll( findAllAssignments( pi.next(), true ) );
 
+        result.add( removeProhibitedAssignments(
+                removeProhibitedAssignments( assignments ) ) );
         return result;
+    }
+
+    private List<Assignment> removeProhibitedAssignments( List<Assignment> assignments ) {
+        List<Assignment> notForbidden = new ArrayList<Assignment>();
+        for ( Assignment assignment : assignments ) {
+            if ( !assignment.getPart().isProhibited() )
+                notForbidden.add( assignment );
+        }
+        return notForbidden;
+    }
+
+    private List<Assignment> removeProhibitedAssignments( Collection<Assignment> assignments ) {
+        List<Assignment> notProhibited = new ArrayList<Assignment>();
+        for ( final Assignment assignment : assignments ) {
+            if ( !assignment.isProhibited() )
+                notProhibited.add( assignment );
+        }
+        return notProhibited;
     }
 
     @Override
@@ -2762,6 +2828,137 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Tag>( domain );
     }
 
+    @Override
+    /** @{inheritDoc} */
+    public List<Part> findAllOverridingParts( Part part ) {
+        List<Part> overridingParts = new ArrayList<Part>();
+        Place locale = getPlan().getLocale();
+        for ( Segment segment : getPlan().getSegments() ) {
+            for ( Part p : segment.listParts() ) {
+                if ( p.overrides( part, locale ) ) {
+                    overridingParts.add( p );
+                }
+            }
+        }
+        return overridingParts;
+    }
+
+    @Override
+    /** @{inheritDoc} */
+    public List<Part> findAllOverriddenParts( Part part ) {
+        List<Part> overriddenParts = new ArrayList<Part>();
+        Place locale = getPlan().getLocale();
+        for ( Segment segment : getPlan().getSegments() ) {
+            for ( Part p : segment.listParts() ) {
+                if ( part.overrides( p, locale ) ) {
+                    overriddenParts.add( p );
+                }
+            }
+        }
+        return overriddenParts;
+    }
+
+    @Override
+    /** @{inheritDoc} */
+    public Boolean isOverridden( Part part ) {
+        return !findAllOverriddenParts( part ).isEmpty();
+    }
+
+    @Override
+    public Boolean isOverriding( Part part ) {
+        return !findAllOverridingParts( part ).isEmpty();
+    }
+
+    @Override
+    /** @{inheritDoc} */
+    public Boolean isOverridden( Flow flow ) {
+        return !findAllOverriddenFlows( flow ).isEmpty();
+    }
+
+    @Override
+    public Boolean isOverriding( Flow flow ) {
+        return !findAllOverridingFlows( flow ).isEmpty();
+    }
+
+    @Override
+    /** @{inheritDoc} */
+    public List<Flow> findAllOverridingFlows( Flow sharing ) {
+        List<Flow> overridingFlows = new ArrayList<Flow>();
+        if ( sharing.isSharing() ) {
+            Place locale = getPlan().getLocale();
+            for ( Segment segment : getPlan().getSegments() ) {
+                for ( Flow s : segment.getAllSharingFlows() ) {
+                    if ( s.overrides( sharing, locale ) ) {
+                        overridingFlows.add( s );
+                    }
+                }
+            }
+        }
+        return overridingFlows;
+    }
+
+    @Override
+    /** @{inheritDoc} */
+    public List<Flow> findAllOverriddenFlows( Flow sharing ) {
+        List<Flow> overriddenFlows = new ArrayList<Flow>();
+        if ( sharing.isSharing() ) {
+            Place locale = getPlan().getLocale();
+            for ( Segment segment : getPlan().getSegments() ) {
+                for ( Flow s : segment.getAllSharingFlows() ) {
+                    if ( sharing.overrides( s, locale ) ) {
+                        overriddenFlows.add( s );
+                    }
+                }
+            }
+        }
+        return overriddenFlows;
+    }
+
+    @Override
+    public List<Flow> findImpliedSharingSends( Part part ) {
+        List<Flow> implied = new ArrayList<Flow>();
+        final Place locale = getPlan().getLocale();
+        for ( Part overridden : findAllOverriddenParts( part ) ) {
+            for ( final Flow sharingSendFromOverridden : overridden.getAllSharingSends() ) {
+                boolean matched = CollectionUtils.exists(
+                        part.getAllSharingSends(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ( (Flow) object ).matchesInfoOf( sharingSendFromOverridden, locale );
+                            }
+                        }
+                );
+                if ( !matched ) {
+                    implied.add( sharingSendFromOverridden );
+                }
+            }
+        }
+        return implied;
+    }
+
+    @Override
+    public List<Flow> findImpliedSharingReceives( Part part ) {
+        List<Flow> implied = new ArrayList<Flow>();
+        final Place locale = getPlan().getLocale();
+        for ( Part overridden : findAllOverriddenParts( part ) ) {
+            for ( final Flow sharingReceiveFromOverridden : overridden.getAllSharingReceives() ) {
+                boolean matched = CollectionUtils.exists(
+                        part.getAllSharingReceives(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ( (Flow) object ).matchesInfoOf( sharingReceiveFromOverridden, locale );
+                            }
+                        }
+                );
+                if ( !matched ) {
+                    implied.add( sharingReceiveFromOverridden );
+                }
+            }
+        }
+        return implied;
+    }
 
 }
 

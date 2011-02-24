@@ -18,6 +18,7 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -67,6 +68,9 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
 
     @SpringBean
     private ImagingService imagingService;
+
+    @SpringBean
+    private QueryService queryService;
 
     public AbstractReportPage( PageParameters parameters ) {
         super( parameters );
@@ -196,11 +200,20 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
 
     public String getType() {
         Part part = getAssignment().getPart();
-        return Assignments.isImmediate( part )    ? "Immediate Tasks"
-             : Assignments.isOptional( part )     ? "Optional Task"
-             : Assignments.isNotification( part ) ? "Information Received"
+        return Assignments.isImmediate( part, queryService )    ? "Immediate Tasks"
+             : Assignments.isOptional( part, queryService )     ? "Optional Task"
+             : Assignments.isNotification( part, queryService  ) ? "Information Received"
              : Assignments.isRequest( part )      ? "Information Requested"
                                                   : "Other";
+    }
+
+    public String getTypePrefix() {
+        Part part = getAssignment().getPart();
+        return Assignments.isImmediate( part, queryService )    ? "a"
+             : Assignments.isOptional( part, queryService  )     ? "d"
+             : Assignments.isNotification( part, queryService  ) ? "b"
+             : Assignments.isRequest( part )      ? "c"
+                                                  : "e";
     }
 
     public PageParameters getTopParameters() {

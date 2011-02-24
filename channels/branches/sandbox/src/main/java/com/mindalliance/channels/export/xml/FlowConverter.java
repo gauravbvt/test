@@ -128,6 +128,10 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.startNode( "operational" );
         writer.setValue( Boolean.toString( flow.isOperational() ) );
         writer.endNode();
+        // Prohibited
+        writer.startNode( "prohibited" );
+        writer.setValue( Boolean.toString( flow.isProhibited() ) );
+        writer.endNode();
 
     }
 
@@ -262,6 +266,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setIfTaskFails( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "operational" ) ) {
                 flow.setOperational( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "prohibited" ) ) {
+                flow.setProhibited( reader.getValue().equals( "true" ) );
             } else {
                 throw new ConversionException( "Unknown element " + nodeName );
             }

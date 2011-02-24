@@ -51,6 +51,10 @@ public class TestAssignments extends AbstractChannelsTest {
         assertEquals( 58, assignments.size() );
     }
 
+    private QueryService getQueryService() {
+        return getAnalyst().getQueryService();
+    }
+
     @Test
     public void testGetSegments() {
         List<Segment> segments = assignments.getSegments();
@@ -142,48 +146,48 @@ public class TestAssignments extends AbstractChannelsTest {
         assertEquals( 2, actors.size() );
     }
 
-     // todo - Reactivate this test?
-  /*
-   @Test
-   public void testWithSome() {
-        int size = assignments.size();
-        assertEquals( size, assignments.with( assignments.getOrganizations() ).size() );
+    // todo - Reactivate this test?
+    /*
+       @Test
+       public void testWithSome() {
+            int size = assignments.size();
+            assertEquals( size, assignments.with( assignments.getOrganizations() ).size() );
 
-        assertEquals( size, assignments.with( assignments.getRoles() ).size() );
-        int total = 0;
-        for ( Role role : assignments.getRoles() )
-            total += assignments.with( role ).size();
-        assertEquals( size, total );
+            assertEquals( size, assignments.with( assignments.getRoles() ).size() );
+            int total = 0;
+            for ( Role role : assignments.getRoles() )
+                total += assignments.with( role ).size();
+            assertEquals( size, total );
 
-        assertEquals( size, assignments.with( assignments.getActors() ).size() );
-        total = 0;
-        for ( Specable actor : assignments.getActors() )
-            total += assignments.with( actor ).size();
-        assertEquals( size, total );
+            assertEquals( size, assignments.with( assignments.getActors() ).size() );
+            total = 0;
+            for ( Specable actor : assignments.getActors() )
+                total += assignments.with( actor ).size();
+            assertEquals( size, total );
 
-        assertEquals( size, assignments.with( assignments.getActualActors() ).size() );
-        total = 0;
-        for ( Actor actor : assignments.getActualActors() )
-            total += assignments.with( actor ).size();
-        assertEquals( size, total );
+            assertEquals( size, assignments.with( assignments.getActualActors() ).size() );
+            total = 0;
+            for ( Actor actor : assignments.getActualActors() )
+                total += assignments.with( actor ).size();
+            assertEquals( size, total );
 
-        assertEquals( size, assignments.with( assignments.getJurisdictions() ).size() );
-        total = 0;
-        for ( Specable place : assignments.getJurisdictions() )
-            total += assignments.with( place ).size();
-        assertEquals( size, total );
+            assertEquals( size, assignments.with( assignments.getJurisdictions() ).size() );
+            total = 0;
+            for ( Specable place : assignments.getJurisdictions() )
+                total += assignments.with( place ).size();
+            assertEquals( size, total );
 
-        total = 0;
-        for ( Event event : assignments.getEvents() )
-            total += assignments.with( event ).size();
-        assertEquals( size, total );
+            total = 0;
+            for ( Event event : assignments.getEvents() )
+                total += assignments.with( event ).size();
+            assertEquals( size, total );
 
-        total = 0;
-        for ( Phase phase : assignments.getPhases() )
-            total += assignments.with( phase ).size();
-        assertEquals( size, total );
-    }
-*/
+            total = 0;
+            for ( Phase phase : assignments.getPhases() )
+                total += assignments.with( phase ).size();
+            assertEquals( size, total );
+        }
+    */
     @Test
     public void testWithSome2() {
         Assignments a = assignments.with( Actor.UNKNOWN );
@@ -194,39 +198,39 @@ public class TestAssignments extends AbstractChannelsTest {
     public void testGetAssignments() {
         assertEquals( assignments.size(), assignments.getAssignments().size() );
 
-        assertEquals( assignments.size(), assignments.getNotifications().size()
-                                        + assignments.getRequests().size()
-                                        + assignments.getImmediates().size()
-                                        + assignments.getOptionals().size() );
+        assertEquals( assignments.size(), assignments.getNotifications( getQueryService() ).size()
+                + assignments.getRequests().size()
+                + assignments.getImmediates( queryService ).size()
+                + assignments.getOptionals( getQueryService() ).size() );
     }
 
     @Test
     public void testImmediates() {
-        Assignments immediates = assignments.getImmediates();
+        Assignments immediates = assignments.getImmediates( queryService );
 
         List<Assignment> as = immediates.getAssignments();
         as.retainAll( assignments.getRequests().getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = immediates.getAssignments();
-        as.retainAll( assignments.getNotifications().getAssignments() );
+        as.retainAll( assignments.getNotifications( getQueryService() ).getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = immediates.getAssignments();
-        as.retainAll( assignments.getOptionals().getAssignments() );
+        as.retainAll( assignments.getOptionals( getQueryService() ).getAssignments() );
         assertTrue( as.isEmpty() );
     }
 
     @Test
     public void testNotifications() {
-        Assignments notifications = assignments.getNotifications();
+        Assignments notifications = assignments.getNotifications( getQueryService() );
 
         List<Assignment> as = notifications.getAssignments();
-        as.retainAll( assignments.getImmediates().getAssignments() );
+        as.retainAll( assignments.getImmediates( queryService ).getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = notifications.getAssignments();
-        as.retainAll( assignments.getOptionals().getAssignments() );
+        as.retainAll( assignments.getOptionals( getQueryService() ).getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = notifications.getAssignments();
@@ -239,24 +243,24 @@ public class TestAssignments extends AbstractChannelsTest {
         Assignments requests = assignments.getRequests();
 
         List<Assignment> as = requests.getAssignments();
-        as.retainAll( assignments.getImmediates().getAssignments() );
+        as.retainAll( assignments.getImmediates( queryService ).getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = requests.getAssignments();
-        as.retainAll( assignments.getOptionals().getAssignments() );
+        as.retainAll( assignments.getOptionals( getQueryService() ).getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = requests.getAssignments();
-        as.retainAll( assignments.getNotifications().getAssignments() );
+        as.retainAll( assignments.getNotifications( getQueryService() ).getAssignments() );
         assertTrue( as.isEmpty() );
     }
 
     @Test
     public void testOptionals() {
-        Assignments optionals = assignments.getOptionals();
+        Assignments optionals = assignments.getOptionals( getQueryService() );
 
         List<Assignment> as = optionals.getAssignments();
-        as.retainAll( assignments.getImmediates().getAssignments() );
+        as.retainAll( assignments.getImmediates( queryService ).getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = optionals.getAssignments();
@@ -264,7 +268,7 @@ public class TestAssignments extends AbstractChannelsTest {
         assertTrue( as.isEmpty() );
 
         as = optionals.getAssignments();
-        as.retainAll( assignments.getNotifications().getAssignments() );
+        as.retainAll( assignments.getNotifications( getQueryService() ).getAssignments() );
         assertTrue( as.isEmpty() );
     }
 
@@ -274,7 +278,7 @@ public class TestAssignments extends AbstractChannelsTest {
         Assignments a = assignments.with( jd );
 
         assertEquals( 3, a.size() );
-        Assignments a1 = a.getNotifications();
+        Assignments a1 = a.getNotifications( getQueryService() );
         assertEquals( 1, a1.size() );
 
         Assignment n = a1.iterator().next();
@@ -332,13 +336,13 @@ public class TestAssignments extends AbstractChannelsTest {
 
         Actor jd = queryService.find( Actor.class, 283 );
         Assignments a2 = assignments.with( jd );
-        assertEquals( 1, a2.from(  jd  ).size() );
+        assertEquals( 1, a2.from( jd ).size() );
     }
 
     @Test
     public void testNotFrom() throws NotFoundException {
         Actor jd = queryService.find( Actor.class, 283 );
         Assignments a2 = assignments.with( jd );
-        assertEquals( 2, a2.notFrom(  jd  ).size() );
+        assertEquals( 2, a2.notFrom( jd ).size() );
     }
 }

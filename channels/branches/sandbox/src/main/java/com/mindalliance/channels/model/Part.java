@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * A part in a segment.
  */
-public class Part extends Node implements GeoLocatable, Specable, Operationable {
+public class Part extends Node implements GeoLocatable, Specable, Operationable, Prohibitable {
 
     /**
      * Default actor label, when unknown.
@@ -96,6 +96,10 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
      * Whether a task is operational.
      */
     private boolean operational = true;
+    /**
+     * Whether the part is prohibited.
+     */
+    private boolean prohibited = false;
 
     public Part() {
         adjustName();
@@ -405,6 +409,14 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
     @Override
     public boolean isEffectivelyOperational() {
         return isOperational();
+    }
+
+    public boolean isProhibited() {
+        return prohibited;
+    }
+
+    public void setProhibited( boolean prohibited ) {
+        this.prohibited = prohibited;
     }
 
     /**
@@ -944,6 +956,17 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public List<Attachment.Type> getAttachmentTypes() {
+        List<Attachment.Type> types = super.getAttachmentTypes();
+        types.add( Attachment.Type.PolicyMust );
+        types.add( Attachment.Type.PolicyCant );
+        return types;
+    }
+
+
+    /**
      * Serialize the state of the part, minus its flows
      *
      * @return a map of attribute names and values
@@ -1118,6 +1141,35 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable 
                     }
                 } );
     }
+
+    public boolean matchesTaskOf( Part other, Place locale ) {
+        return Matcher.getInstance().same( getTask(), other.getTask() )
+                && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
+    }
+
+    /**
+     * Whether this overrides another part.
+     * @param other a part
+     * @param locale a place
+     * @return a boolean
+     */
+    public boolean overrides( Part other, Place locale ) {
+        return !equals( other ) && matchesTaskOf( other, locale )
+                && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale )
+                && !resourceSpec().equals( other.resourceSpec() );
+    }
+
+    /**
+     * Whether this equals or overrides another part.
+     * @param other a part
+     * @param locale a place
+     * @return a boolean
+     */
+    public boolean overridesOrEquals( Part other, Place locale ) {
+        return matchesTaskOf( other, locale )
+                && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale );
+    }
+
 
     /**
      * Category of tasks.

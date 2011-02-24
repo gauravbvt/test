@@ -342,6 +342,10 @@ public class ResourceSpec extends ModelObject implements Specable {
             && ( anyOtherJ || jurisdiction != null && jurisdiction.narrowsOrEquals( oJ, locale ) );
     }
 
+    public boolean narrows( Specable other, Place locale ) {
+        return narrowsOrEquals( other, locale ) && !equals( other );
+    }
+
     /**
      * Whether this resource spec references the entity or an entity that broadens it.
      *

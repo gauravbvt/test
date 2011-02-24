@@ -151,6 +151,10 @@ public class SegmentPanel extends AbstractCommandablePanel {
      */
     private static final String SEND_PANEL_ID = ".sends";
     /**
+     * Overrides indicator.
+     */
+    private WebMarkupContainer overridesImage;
+    /**
      * Quick access panel to part's media references.
      */
     private MediaReferencesPanel partMediaPanel;
@@ -178,12 +182,50 @@ public class SegmentPanel extends AbstractCommandablePanel {
         addPartMenuBar();
         addPartTitleContainer();
         addPartMediaPanel();
+        addOverridesImage();
         addPartPanel();
         addReceivesFlowPanel();
         addSendsFlowPanel();
         addSocialPanel();
         adjustComponents();
     }
+
+    private void addOverridesImage() {
+        boolean overriding = getQueryService().isOverriding( getPart() );
+        boolean overridden = getQueryService().isOverridden( getPart() );
+        boolean overrides = overriding && overridden;
+        String image = overrides
+                ? "overridden-overriding.png"
+                : overriding
+                ? "overriding.png"
+                : overridden
+                ? "overridden.png"
+                : "";
+        String title = overrides
+                ? "This task is overridden by and is overriding one or more tasks"
+                : overriding
+                ? "This task is overriding one or more tasks"
+                : overridden
+                ? "This task is overridden by one or more tasks"
+                : "";
+        overridesImage = new WebMarkupContainer( "overrides" );
+        overridesImage.setOutputMarkupId( true );
+        if ( overridden || overriding ) {
+            overridesImage.add( new AttributeModifier(
+                    "src",
+                    true,
+                    new Model<String>( "images/" + image )
+            ) );
+            overridesImage.add( new AttributeModifier(
+                    "title",
+                    true,
+                    new Model<String>( title )
+            ) );
+        }
+        makeVisible( overridesImage, overridden || overriding );
+        addOrReplace( overridesImage );
+    }
+
 
     private void addPartMediaPanel() {
         partMediaPanel = new MediaReferencesPanel(
@@ -202,8 +244,12 @@ public class SegmentPanel extends AbstractCommandablePanel {
         taskTitleContainer.add( new AttributeModifier(
                 "class",
                 true,
-                new Model<String>( getPart().isOperational() ? "task-title" : "task-title-noop" ) ) );
+                new Model<String>( cssClasses() ) ) );
         addOrReplace( taskTitleContainer );
+    }
+
+    private String cssClasses() {
+        return getPart().isOperational() ? "task-title" : "task-title-noop";
     }
 
     private void addReceivesFlowPanel() {
@@ -443,7 +489,9 @@ public class SegmentPanel extends AbstractCommandablePanel {
             if ( identifiable == getPart() ) {
                 if ( change.isUpdated() ) {
                     addPartMediaPanel();
+                    addOverridesImage();
                     target.addComponent( partMediaPanel );
+                    target.addComponent( overridesImage );
                     addPartTitleContainer();
                     target.addComponent( taskTitleContainer );
                     if ( partPanel instanceof ExpandedPartPanel ) {
@@ -524,7 +572,9 @@ public class SegmentPanel extends AbstractCommandablePanel {
             addPartTitleContainer();
             target.addComponent( taskTitleContainer );
             addPartMediaPanel();
+            addOverridesImage();
             target.addComponent( partMediaPanel );
+            target.addComponent( overridesImage );
             resizePartPanels( target );
             adjustComponents();
         }

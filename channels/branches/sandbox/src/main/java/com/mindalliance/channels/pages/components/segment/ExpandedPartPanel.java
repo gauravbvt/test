@@ -197,6 +197,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     private CheckBox operationalCheckBox;
 
+    /**
+     * Prohibited checkbox.
+     */
+    private CheckBox prohibitedCheckBox;
 
     //====================================
     public ExpandedPartPanel( String id, IModel<Part> model, Set<Long> expansions ) {
@@ -210,6 +214,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addTaskField();
         addCategoryField();
         addOperationalField();
+        addProhibitedField();
         addEntityFields();
         addEventInitiation();
         addAsTeam();
@@ -296,6 +301,17 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     }
 
+    private void addProhibitedField() {
+         prohibitedCheckBox = new CheckBox("prohibited", new PropertyModel<Boolean>( this, "prohibited"));
+         add( prohibitedCheckBox );
+         prohibitedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+             protected void onUpdate( AjaxRequestTarget target ) {
+                 update( target, new Change( Change.Type.Updated, getPart(), "prohibited" ) );
+             }
+         } );
+
+     }
+
     private List<String> getCategoryLabels() {
         List<String> labels = new ArrayList<String>();
         labels.add( NO_CATEGORY );
@@ -352,6 +368,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         taskField.setEnabled( isLockedByUser( getPart() ) );
         categoryChoice.setEnabled( isLockedByUser( getPart() ) );
         operationalCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        prohibitedCheckBox.setEnabled( isLockedByUser( getPart() ) );
         for ( EntityReferencePanel entityReferencePanel : entityFields ) {
             entityReferencePanel.enable( isLockedByUser( getPart() ) );
         }
@@ -981,6 +998,16 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             doCommand( new UpdateSegmentObject( getPart(), "operational", val ) );
         }
     }
+
+    public boolean isProhibited() {
+         return getPart().isProhibited();
+     }
+
+     public void setProhibited( boolean val ) {
+         if ( val != isProhibited() ) {
+             doCommand( new UpdateSegmentObject( getPart(), "prohibited", val ) );
+         }
+     }
 
     /**
      * Get edited part.

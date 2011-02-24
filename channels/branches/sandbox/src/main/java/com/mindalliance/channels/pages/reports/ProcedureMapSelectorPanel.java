@@ -167,7 +167,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     @Override
-    public Assignments getAssignments() {
+    public Assignments getAssignments() {   // todo - filters too much when focused
         return getAllAssignments()
                 .assignedTo( selectedPart )
                 .with( selectedActor )

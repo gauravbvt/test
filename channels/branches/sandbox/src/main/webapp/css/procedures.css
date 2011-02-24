@@ -13,8 +13,8 @@
 }
 
 a {
-	color:#333333;
-	border-bottom:1px dotted #666666;
+	color:#333333; 
+	border-bottom:1px dotted #666666; 
 	text-decoration:none;
 }
 
@@ -305,7 +305,7 @@ div#flow p.description {
 div.event {
 	clear:both;
 }
-
+	
 div.event h3 {
 	width:943px;
 	float:left;
@@ -518,7 +518,7 @@ div#gains {
 	float:left;
 	width:479px;
 }
-
+	
 div#role h3,
 div#location h3,
 div#timing h3,
@@ -727,7 +727,7 @@ div#receives table tbody tr td a.highest {
 
 div#sends table tbody tr td a:hover,
 div#receives table tbody tr td a:hover {
-	border-bottom:1px dotted #666666;
+	border-bottom:1px dotted #666666; 
 }
 
 

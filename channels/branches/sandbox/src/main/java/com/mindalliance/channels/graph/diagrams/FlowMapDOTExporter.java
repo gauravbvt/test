@@ -14,6 +14,7 @@ import org.jgrapht.Graph;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +56,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
      * Parts that start events.
      */
     Set<Part> eventStarters = new HashSet<Part>();
+
+    List<Flow> impliedFlows = new ArrayList<Flow>(  );
 
     public FlowMapDOTExporter( MetaProvider<Node, Flow> metaProvider ) {
         super( metaProvider );

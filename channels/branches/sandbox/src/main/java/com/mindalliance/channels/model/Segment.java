@@ -709,6 +709,34 @@ public class Segment extends ModelObject {
         this.eventPhase.initFrom( eventPhase );
     }
 
+    public boolean impliesEventPhaseAndContextOf( Segment other, Place locale ) {
+        return getEventPhase().narrowsOrEquals( other.getEventPhase(), locale )
+                && impliesContext( other.getContext(), locale );
+    }
+
+    // All event timings in other context are narrowed or equaled by an event timing in this.
+    private boolean impliesContext( List<EventTiming> otherContext, final Place locale ) {
+        return !CollectionUtils.exists(
+                otherContext,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final EventTiming otherEventTiming = (EventTiming)object;
+                        return !CollectionUtils.exists(
+                            getContext(),
+                            new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    EventTiming eventTiming = (EventTiming)object;
+                                    return eventTiming.narrowsOrEquals( otherEventTiming, locale );
+                                }
+                            }
+                        );
+                    }
+                }
+        );
+    }
+
 
     //=================================================
     /**

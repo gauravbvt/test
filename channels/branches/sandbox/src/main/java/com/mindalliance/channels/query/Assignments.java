@@ -337,18 +337,18 @@ public class Assignments implements Iterable<Assignment>, Serializable {
      *
      * @return a list of assignments
      */
-    public Assignments getImmediates() {
+    public Assignments getImmediates( QueryService queryService ) {
         Assignments result = new Assignments( locale );
 
         for ( Assignment assignment : this )
-            if ( isImmediate( assignment.getPart() ) )
+            if ( isImmediate( assignment.getPart(), queryService ) )
                 result.add( assignment );
 
         return result;
     }
 
-    public static boolean isImmediate( Part part ) {
-        return part.isStartsWithSegment();
+    public static boolean isImmediate( Part part, QueryService queryService ) {
+        return part.isStartsWithSegment() && !queryService.isOverridden( part );
     }
 
     /**
@@ -356,18 +356,18 @@ public class Assignments implements Iterable<Assignment>, Serializable {
      *
      * @return a list of assignments
      */
-    public Assignments getOptionals() {
+    public Assignments getOptionals( QueryService queryService) {
         Assignments result = new Assignments( locale );
 
         for ( Assignment assignment : this )
-            if ( isOptional( assignment.getPart() ) )
+            if ( isOptional( assignment.getPart(), queryService ) )
                 result.add( assignment );
 
         return result;
     }
 
-    public static boolean isOptional( Part part ) {
-        return !isImmediate( part ) && !isNotification( part ) && !isRequest( part );
+    public static boolean isOptional( Part part, QueryService queryService) {
+        return !isImmediate( part, queryService ) && !isNotification( part, queryService ) && !isRequest( part );
     }
 
     /**
@@ -375,24 +375,26 @@ public class Assignments implements Iterable<Assignment>, Serializable {
      *
      * @return a list of assignments
      */
-    public Assignments getNotifications() {
+    public Assignments getNotifications( QueryService queryService ) {
         Assignments result = new Assignments( locale );
 
         for ( Assignment assignment : this )
-            if ( isNotification( assignment.getPart() ) )
+            if ( isNotification( assignment.getPart(), queryService ) )
                 result.add( assignment );
 
         return result;
     }
 
-    public static boolean isNotification( Part part ) {
+    public static boolean isNotification( Part part, QueryService queryService) {
         boolean found = false;
         Iterator<Flow> flows = part.flows();
         while ( flows.hasNext() && !found ) {
             Flow flow = flows.next();
             found = part.equals( flow.getTarget() )
                     && flow.isTriggeringToTarget()
-                    && !flow.isAskedFor();
+                    && !flow.isAskedFor()
+                    && !flow.isProhibited()
+                    && !queryService.isImplicitlyProhibited( flow );
         }
         return found;
     }

@@ -1477,7 +1477,18 @@ input[disabled] {
     margin: 0;
     position: absolute;
     top: 2px;
-    left: 1.5em;
+    left: 2em;
+}
+
+.task-overrides {
+    margin: 0;
+    position: absolute;
+    top: 2px;
+    left: 3.8em;
+}
+
+.flow-overrides {
+    display: inline;
 }
 
 .flowMediaRefs ul {
@@ -2157,4 +2168,17 @@ a.window:hover {
 
 .incDec {
     min-width: 2em;
+}
+
+/* overrides */
+a.overridden-overriding:after {
+    content:url( '../images/overridden-overriding.png');
+}
+
+a.overridden:after {
+    content:url( '../images/overridden.png');
+}
+
+a.overriding:after {
+    content:url( '../images/overriding.png');
 }

@@ -24,57 +24,95 @@ import java.util.List;
  * Time: 3:14:04 PM
  */
 public abstract class AbstractFlowMetaProvider<V extends Node, E>
-    extends AbstractMetaProvider<V, E> {
+        extends AbstractMetaProvider<V, E> {
 
-    /** Color for subgraph contour */
+    /**
+     * Color for subgraph contour
+     */
     protected static final String SUBGRAPH_COLOR = "azure2";
 
-    /** Font for subgraph labels. */
+    /**
+     * Font for subgraph labels.
+     */
     protected static final String SUBGRAPH_FONT = "Arial Bold Oblique";
 
-    /** Font size for subgraph labels. */
+    /**
+     * Font size for subgraph labels.
+     */
     protected static final String SUBGRAPH_FONT_SIZE = "10";
 
-    /** Font for node labels */
+    /**
+     * Font for node labels
+     */
     public static final String NODE_FONT = "Arial";
 
-    /** Font size for node labels. */
+    /**
+     * Font size for node labels.
+     */
     public static final String NODE_FONT_SIZE = "10";
 
-    /** Distance for edge head and tail labels. */
+    /**
+     * Distance for edge head and tail labels.
+     */
     protected static final String LABEL_DISTANCE = "1.0";
 
-    /** Distance for edge head and tail labels. */
+    /**
+     * Distance for edge head and tail labels.
+     */
     protected static final String LABEL_ANGLE = "45";
 
-    /** Highlight pen width. */
+    /**
+     * Highlight pen width.
+     */
     protected static final String HIGHLIGHT_PENWIDTH = "2.0";
 
-    /** Highlight pen color. */
+    /**
+     * Highlight pen color.
+     */
     protected static final String HIGHLIGHT_COLOR = "gray";
 
-    /** Font of highlighted node. */
+    /**
+     * Font of highlighted node.
+     */
     protected static final String HIGHLIGHT_NODE_FONT = "Arial Bold";
+    /**
+     * Color for implied flows.
+     */
+    protected static final String IMPLIED_COLOR = "gray";
 
-    /** Segment in context. */
+    /**
+     * Segment in context.
+     */
     private ModelObject context;
 
-    /** Whether to show goals. */
+    /**
+     * Whether to show goals.
+     */
     private boolean showingGoals;
 
-    /** Whether to show connectors. */
+    /**
+     * Whether to show connectors.
+     */
     private boolean showingConnectors;
 
     private boolean hidingNoop;
 
     protected AbstractFlowMetaProvider(
-        ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst ) {
+            ModelObject modelObject,
+            String outputFormat,
+            Resource imageDirectory,
+            Analyst analyst ) {
         this( modelObject, outputFormat, imageDirectory, analyst, false, false, false );
     }
 
     protected AbstractFlowMetaProvider(
-        ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
-        boolean showingGoals, boolean showingConnectors, boolean hidingNoop ) {
+            ModelObject modelObject,
+            String outputFormat,
+            Resource imageDirectory,
+            Analyst analyst,
+            boolean showingGoals,
+            boolean showingConnectors,
+            boolean hidingNoop ) {
         super( outputFormat, imageDirectory, analyst );
         this.context = modelObject;
         this.showingGoals = showingGoals;
@@ -162,12 +200,12 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
         if ( node.isConnector() ) {
             Flow flow = ( (Connector) node ).getInnerFlow();
             boolean satisfaction = flow.isNeed() && flow.isSatisfied()
-                                   || flow.isCapability() && flow.isSatisfying();
+                    || flow.isCapability() && flow.isSatisfying();
 
             iconName = imagesDirName +
-                (   hidingNoop && !flow.isEffectivelyOperational() ? "/connector_blank"
-                  : satisfaction ? "/connector"
-                                 : "/connector_red" );
+                    ( hidingNoop && !flow.isEffectivelyOperational() ? "/connector_blank"
+                            : satisfaction ? "/connector"
+                            : "/connector_red" );
         }
 
         // node is a part
@@ -179,8 +217,8 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                 iconName = "blank";
             else
                 iconName = imagingService.findIconName(
-                    part,
-                    getAnalyst().getQueryService().getAssignments() );
+                        part,
+                        getAnalyst().getQueryService().getAssignments() );
         }
 
         return iconName + ( numLines > 0 ? numLines : "" ) + ".png";

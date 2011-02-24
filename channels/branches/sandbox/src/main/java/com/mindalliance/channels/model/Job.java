@@ -49,7 +49,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     public Job() {
     }
 
-    public Job (Job job ) {
+    public Job( Job job ) {
         actor = job.getActor();
         role = job.getRole();
         jurisdiction = job.getJurisdiction();
@@ -244,7 +244,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     @Override
     public String getGeoMarkerLabel( QueryService queryService ) {
         return jurisdiction == null ? ""
-                                    : jurisdiction.getGeoMarkerLabel( queryService );
+                : jurisdiction.getGeoMarkerLabel( queryService );
     }
 
     /**
@@ -260,4 +260,12 @@ public class Job implements Serializable, Mappable, GeoLocatable {
                 || ModelObject.areIdentical( supervisor, mo );
     }
 
+    public boolean narrowsOrEquals( Job other, Place locale ) {
+        return ( other.getActor() == null || other.getActor().isUnknown()
+                || ( getActor() != null && getActor().narrowsOrEquals( other.getActor(), locale ) ) )
+                && ( other.getActor() == null || other.getRole().isUnknown()
+                || ( getRole() != null && getRole().narrowsOrEquals( other.getRole(), locale ) ) )
+                && ( other.getJurisdiction() == null || other.getJurisdiction().isUnknown()
+                || ( getJurisdiction() != null && getJurisdiction().narrowsOrEquals( other.getJurisdiction(), locale ) ) );
+    }
 }

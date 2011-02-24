@@ -14,17 +14,17 @@
         </div>
 
         <div class="event" wicket:id="selector.assignments.events">
-            <h3>Event - <span wicket:id="name">Event Title</span></h3>
+            <h3><a wicket:id="evName">Event - <span wicket:id="name">Event Title</span></a></h3>
 
             <p class="description" wicket:id="description">(Description)</p>
 
             <div class="phase" wicket:id="phases">
-                <h4>Phase - <span wicket:id="name">Phase Title</span></h4>
+                <h4><a wicket:id="pName">Phase - <span wicket:id="name">Phase Title</span></a></h4>
 
                 <p class="description" wicket:id="description">(Description)</p>
 
                 <div class="immediates" wicket:id="immediates">
-                    <h5>Immediate Tasks</h5>
+                    <h5><a wicket:id="anchor">Immediate Tasks</a></h5>
                     <ul>
                         <li wicket:id="tasks">
                             <span class="by" wicket:id="to">(To actor, planner mode with org selected)</span>
@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="notified" wicket:id="notified">
-                    <h5>Information Received</h5>
+                    <h5><a wicket:id="anchor">Information Received</a></h5>
                     <ul>
                         <li wicket:id="tasks">
                             <span class="by" wicket:id="to">(To actor, planner mode with org selected)</span>
@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="requested" wicket:id="requested">
-                    <h5>Information Requested</h5>
+                    <h5><a wicket:id="anchor">Information Requested</a></h5>
                     <ul>
                         <li wicket:id="tasks">
                             <span class="by" wicket:id="to">(To actor, planner mode with org selected)</span>
@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="optionals" wicket:id="optionals">
-                    <h5>Optional Tasks</h5>
+                    <h5><a wicket:id="anchor">Optional Tasks</a></h5>
                     <ul>
                         <li wicket:id="tasks">
                             <span class="by" wicket:id="to">(To actor, planner mode with org selected)</span>

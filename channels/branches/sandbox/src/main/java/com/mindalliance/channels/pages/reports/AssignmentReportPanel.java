@@ -251,7 +251,7 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
     public FlowTable getSends() {
         if ( sends == null ) {
             Part part = reportHelper.getPart();
-            sends = new FlowTable( part, part.sends() );
+            sends = new FlowTable( part, removeProhibited( part.sends() ) );
         }
         return sends;
     }
@@ -259,9 +259,20 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
     public FlowTable getReceives() {
         if ( receives == null ) {
             Part part = reportHelper.getPart();
-            receives = new FlowTable( part, part.receives() );
+            receives = new FlowTable( part, removeProhibited( part.receives() ) );
         }
         return receives;
+    }
+
+    private Iterator<Flow> removeProhibited( Iterator<Flow> flows ) {
+        List<Flow> result = new ArrayList<Flow>(  );
+        while( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( !flow.isProhibited() && !getQueryService().isImplicitlyProhibited( flow ) ) {
+                result.add( flow );
+            }
+        }
+        return result.iterator();
     }
 
 
@@ -436,7 +447,11 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
 
         public String getHead() {
             if ( all || !isActor() || getActor().isArchetype() || getActor().isUnknown() )
-                return receiving ? "Any" : "All";
+                return receiving
+                        ? "Any"
+                        : all
+                        ? "All"
+                        : "Any";
             else
                 return getActor().getName();
         }

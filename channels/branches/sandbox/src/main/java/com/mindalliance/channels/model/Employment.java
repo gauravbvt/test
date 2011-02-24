@@ -202,4 +202,16 @@ public class Employment implements GeoLocatable, Specable {
             hash = hash * 31 + job.hashCode();
         return hash;
     }
+
+    public boolean narrowsOrEquals( Employment other, Place locale ) {
+        return getActor() != null
+                && ( other.getActor() == null || other.getActor().isUnknown()
+                    || getActor().narrowsOrEquals( other.getActor(), locale ))
+                && getOrganization() != null
+                && ( other.getOrganization() == null || other.getOrganization().isUnknown()
+                    || getOrganization().narrowsOrEquals( other.getOrganization(), locale ))
+                && job.narrowsOrEquals( other.getJob(), locale  );
+    }
+
+
 }

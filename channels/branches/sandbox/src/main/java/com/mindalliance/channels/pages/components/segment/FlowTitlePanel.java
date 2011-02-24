@@ -4,6 +4,8 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.query.QueryService;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
@@ -36,6 +38,7 @@ public class FlowTitlePanel extends Panel {
 
     private void init() {
         addTitleLabels();
+        addOverridesImage();
     }
 
     private void addTitleLabels() {
@@ -43,8 +46,16 @@ public class FlowTitlePanel extends Panel {
         add( preLabel );
         Label infoLabel = new Label( "info", new Model<String>( getInfo() ) );
         add( infoLabel );
-        Label postLabel = new Label( "post", new Model<String>( getPost() + "." + operationalString() ) );
+        Label postLabel = new Label(
+                "post",
+                new Model<String>( getPost() + "." + operationalString() + prohibitedString() ) );
         add( postLabel );
+    }
+
+    private String prohibitedString() {
+        return flow.canGetProhibited() && flow.isProhibited()
+                ? " PROHIBITED."
+                : "";
     }
 
     private String operationalString() {
@@ -76,7 +87,7 @@ public class FlowTitlePanel extends Panel {
                         flow.getShortName( node, true ),
                         Flow.getOrganizationString( part ),
                         Flow.getJurisdictionString( part ),
-                        flow.getRestrictionString(isSend) );
+                        flow.getRestrictionString( isSend ) );
             }
         } else {
             // receive
@@ -99,7 +110,7 @@ public class FlowTitlePanel extends Panel {
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
                             Flow.getJurisdictionString( part ),
-                            flow.getRestrictionString(isSend) );
+                            flow.getRestrictionString( isSend ) );
                 } else
                     return "Notified of";
             }
@@ -130,7 +141,7 @@ public class FlowTitlePanel extends Panel {
             // receive
             Node source = flow.getSource();
             if ( source.isConnector() ) {
-                return flow.getRestrictionString(isSend);
+                return flow.getRestrictionString( isSend );
 
             } else {
                 Part part = (Part) source;
@@ -142,10 +153,49 @@ public class FlowTitlePanel extends Panel {
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
                             Flow.getJurisdictionString( part ),
-                            flow.getRestrictionString(isSend) );
+                            flow.getRestrictionString( isSend ) );
                 }
             }
         }
 
+    }
+
+    private void addOverridesImage() {
+        boolean overriding = getQueryService().isOverriding( flow );
+        boolean overridden = getQueryService().isOverridden( flow );
+        boolean overrides = overriding && overridden;
+        String image = overrides
+                ? "overridden-overriding.png"
+                : overriding
+                ? "overriding.png"
+                : overridden
+                ? "overridden.png"
+                : "";
+        String title = overrides
+                ? "This flow is overridden by and is overriding one or more flows"
+                : overriding
+                ? "This flow is overriding one or more flows"
+                : overridden
+                ? "This flow is overridden by one or more flows"
+                : "";
+        WebMarkupContainer overridesImage = new WebMarkupContainer( "overrides" );
+        if ( overridden || overriding ) {
+            overridesImage.add( new AttributeModifier(
+                    "src",
+                    true,
+                    new Model<String>( "images/" + image )
+            ) );
+            overridesImage.add( new AttributeModifier(
+                    "title",
+                    true,
+                    new Model<String>( title )
+            ) );
+        }
+        overridesImage.setVisible( overridden || overriding );
+        addOrReplace( overridesImage );
+    }
+
+    public QueryService getQueryService() {
+        return queryService;
     }
 }
