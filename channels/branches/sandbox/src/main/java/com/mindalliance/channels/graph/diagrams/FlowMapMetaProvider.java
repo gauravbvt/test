@@ -374,7 +374,12 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
 
     @SuppressWarnings( "unchecked" )
     private boolean isImplied( Flow flow ) {
-        return ( (List<Flow>) graphProperties.get( "impliedFlows" ) ).contains( flow );
+        if ( graphProperties != null && graphProperties.get( "impliedFlows" ) != null ) {
+            List<Flow> impliedFlows = (List<Flow>) graphProperties.get( "impliedFlows" );
+            return impliedFlows.contains( flow );
+        } else {
+            return false;
+        }
     }
 
     private String summarizeExternalFlows( Iterator<ExternalFlow> externalFlows ) {
