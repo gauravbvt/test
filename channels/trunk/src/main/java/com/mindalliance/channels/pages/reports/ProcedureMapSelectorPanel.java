@@ -9,13 +9,13 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanProcedureMapPanel;
@@ -38,7 +38,7 @@ import java.util.List;
 public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements AssignmentsSelector {
 
     private Part selectedPart;
-    private ModelEntity focusEntity;
+    private Specable focusEntity;
     private Segment segment;
     private Assignment assignment;
     private Flow selectedFlow;
@@ -79,7 +79,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
             setSelected( change );
             Identifiable identifiable = change.getSubject( getQueryService() );
             if (change.hasQualifier( "focus" ) )
-                focusEntity = (ModelEntity) change.getQualifier( "focus" );
+                focusEntity = (Specable) change.getQualifier( "focus" );
             if ( identifiable instanceof Part ) {
                 selectedPart = (Part) identifiable;
             } else if ( identifiable instanceof Flow ) {
@@ -173,7 +173,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
                 .with( selectedActor )
                 .with( selectedOrganization )
                 .with( selectedRole )
-                .involving( focusEntity, selectedPart == null ? segment : null, getQueryService() );
+                .involving( focusEntity, segment, selectedFlow, getQueryService() );
     }
 
     private boolean isOrgFocused() {
@@ -230,7 +230,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     public String getTitle() {
         if ( assignment != null ) {
             return titleForTask( assignment );
-        } else if ( selectedFlow != null && selectedPart != null && selectedActor != null ) {
+        } else if ( selectedFlow != null && selectedPart != null /*&& selectedActor != null*/ ) {
             return titleForFlow();
         } else if ( selectedPart != null ) {
             return titleForTask( selectedPart, selectedActor );
@@ -315,6 +315,11 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         return selectedFlow;
     }
 
+    @Override
+    public Segment getSegment() {
+        return segment;
+    }
+
     public Part getPart() {
         return selectedPart;
     }
@@ -337,4 +342,9 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     public boolean hasProcedures() {
         return !getAssignments().isEmpty();
     }
+
+    public Specable getFocusEntity() {
+        return focusEntity;
+    }
+
 }

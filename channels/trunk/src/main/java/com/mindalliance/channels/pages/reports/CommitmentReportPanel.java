@@ -49,7 +49,6 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
         HOME, MSG, WORK, PREF, FAX, CELL, VIDEO, PAGER, BBS, MODEM, CAR, ISDN, PCS, VOICE
     }
 
-
     private final ReportHelper reportHelper;
 
     public CommitmentReportPanel( String id, ReportHelper reportHelper ) {
@@ -324,7 +323,10 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
     }
 
     public List<Assignment> getVcards() {
-        return reportHelper.getPlanService().getAssignments().assignedTo( getOtherPart() ).getAssignments();
+        return reportHelper.getPlanService().getAssignments()
+                .assignedTo( getOtherPart() )
+                .with( (Specable) reportHelper.getFocusEntity() )
+                .getAssignments();
     }
 
     public String getCommonContact() {

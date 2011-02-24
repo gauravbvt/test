@@ -2,9 +2,11 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
@@ -49,4 +51,10 @@ public interface AssignmentsSelector {
     ImagingService getImagingService();
 
     Specable getActor();
+
+    Specable getFocusEntity();
+
+    Flow getFlow();
+
+    Segment getSegment();
 }

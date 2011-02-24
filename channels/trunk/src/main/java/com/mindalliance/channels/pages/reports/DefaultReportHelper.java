@@ -224,6 +224,11 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
         return getPart().equals( getFlow().getSource() );
     }
 
+    @Override
+    public Specable getFocusEntity() {
+        return selector.getFocusEntity();
+    }
+
     private void update( AjaxRequestTarget target, Change change ) {
         updatable.changed( change );
         updatable.updateWith(

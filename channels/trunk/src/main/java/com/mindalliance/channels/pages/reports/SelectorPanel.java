@@ -5,6 +5,7 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
@@ -14,6 +15,7 @@ import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
@@ -478,6 +480,21 @@ public class SelectorPanel extends Panel implements AssignmentsSelector {
 
     public Specable getActor() {
         return actor;
+    }
+
+    @Override
+    public Specable getFocusEntity() {
+        return null;
+    }
+
+    @Override
+    public Flow getFlow() {
+        return null;
+    }
+
+    @Override
+    public Segment getSegment() {
+        return null;
     }
 
     public void setActor( Specable actor ) {

@@ -47,4 +47,6 @@ public interface ReportHelper {
     ImagingService getImagingService();
 
     boolean isSending();
+
+    Specable getFocusEntity();
 }
