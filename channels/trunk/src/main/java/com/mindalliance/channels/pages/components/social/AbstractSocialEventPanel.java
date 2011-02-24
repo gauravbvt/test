@@ -186,7 +186,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 url = actor.getImageUrl();
         }
         if ( url == null ) {
-            url = "/images/actor.user.png";
+            url = "images/actor.user.png";
         }
         return url;
     }
@@ -201,7 +201,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 url = imagingService.getSquareIconUrl( actor );
         }
         if ( url == null ) {
-            url = "/images/actor.user.png";
+            url = "images/actor.user.png";
         }
         return url;
     }
