@@ -107,6 +107,11 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         return getPart().equals( getFlow().getSource() );
     }
 
+    @Override
+    public Specable getFocusEntity() {
+        return null;
+    }
+
     public User getUser() {
         return user;
     }

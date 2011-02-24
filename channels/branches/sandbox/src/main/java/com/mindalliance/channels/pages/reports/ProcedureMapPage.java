@@ -127,7 +127,7 @@ public class ProcedureMapPage extends WebPage implements Updatable {
         if ( selector.getAssignment() != null ) {
             selected = new AssignmentReportPanel(
                     "selected", new DefaultReportHelper( selector, this, selector.getAssignment() ) );
-        } else if ( selector.getFlow() != null && selector.getPart() != null && selector.getActor() != null ) {
+        } else if ( selector.getFlow() != null && selector.getPart() != null /*&& selector.getActor() != null*/ ) {
             selected = new CommitmentReportPanel(
                     "selected",
                     new DefaultReportHelper(

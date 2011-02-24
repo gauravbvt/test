@@ -244,7 +244,7 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
         return part.getTask();
     }
 
-    public boolean involves( ModelEntity focusEntity ) {
+    public boolean involves( Specable focusEntity ) {
         return getActor().equals( focusEntity ) || getOrganization().equals( focusEntity );
     }
 
