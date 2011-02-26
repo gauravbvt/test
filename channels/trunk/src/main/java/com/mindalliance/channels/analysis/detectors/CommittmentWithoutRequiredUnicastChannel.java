@@ -38,7 +38,7 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
         if ( flow.isSharing() ) {
             final QueryService queryService = getQueryService();
             Set<Channelable> contactedEntities = new HashSet<Channelable>();
-            for ( final Commitment commitment : queryService.findAllCommitments( flow ) ) {
+            for ( final Commitment commitment : queryService.findAllCommitments( flow, false, false ) ) {
                 contactedEntities.add( contactedEntity( commitment ) );
             }
             final Place locale = getPlan().getLocale();

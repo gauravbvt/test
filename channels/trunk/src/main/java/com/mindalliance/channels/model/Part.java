@@ -1170,6 +1170,14 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
                 && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale );
     }
 
+    public boolean hasActualOrganization() {
+        return getOrganization() != null && getOrganization().isActual();
+    }
+
+    public boolean hasRole() {
+        return getRole() != null;
+    }
+
 
     /**
      * Category of tasks.

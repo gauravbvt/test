@@ -377,7 +377,7 @@ public interface QueryService {
      * @param asSource     a boolean
      * @return a list of flows
      */
-    List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource );
+    List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, Boolean asSource );
 
     /**
      * Find all plays for the resource
@@ -394,7 +394,7 @@ public interface QueryService {
      * @param specific     whether the plays are specific to the resourceSpec
      * @return a list of plays
      */
-    List<Play> findAllPlays( Specable resourceSpec, boolean specific );
+    List<Play> findAllPlays( Specable resourceSpec, Boolean specific );
 
     /**
      * Find all contact of specified resources
@@ -403,7 +403,7 @@ public interface QueryService {
      * @param isSelf   find resources specified by spec, or else who specified resources need to know @return a list of ResourceSpec's
      * @return a list of resource specs
      */
-    List<ResourceSpec> findAllContacts( Specable specable, boolean isSelf );
+    List<ResourceSpec> findAllContacts( Specable specable, Boolean isSelf );
 
     /**
      * Find all user issues about a model object
@@ -567,7 +567,7 @@ public interface QueryService {
      * @param exactMatch a boolean @return a list of parts
      * @return a list of parts
      */
-    List<Part> findAllParts( Segment segment, Specable specable, boolean exactMatch );
+    List<Part> findAllParts( Segment segment, Specable specable, Boolean exactMatch );
 
     /**
      * Find all parts located at a given place.
@@ -1006,6 +1006,16 @@ public interface QueryService {
     List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns );
 
     /**
+     * Find all assignments that match a part, including prohibited.
+     *
+     * @param part              a part
+     * @param includeProhibited a boolean
+     * @param includeUnknowns   whether to include assignment of unknown actors
+     * @return a list of assignments
+     */
+    List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns, Boolean includeProhibited );
+
+    /**
      * Find all commitments implied by a sharing flow.
      *
      * @param flow a flow
@@ -1020,10 +1030,21 @@ public interface QueryService {
      * @param allowCommitmentsToSelf a boolean
      * @return a list of commitments
      */
-    List<Commitment> findAllCommitments( Flow flow, boolean allowCommitmentsToSelf );
+    List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf );
+
+    /**
+     * Find all commitments implied by a sharing flow.
+     *
+     * @param flow                   a flow
+     * @param allowCommitmentsToSelf a boolean
+     * @param includeUnknowns        a boolean
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Boolean includeUnknowns );
 
     /**
      * Remove overridden and implicitly prohibited commitments.
+     *
      * @param commitments a list of commitments
      * @return a list of commitments
      */
@@ -1031,10 +1052,19 @@ public interface QueryService {
 
     /**
      * Whether a sharing flow is implicitly prohibited by one it is overriden by.
+     *
      * @param sharing a flow
      * @return a boolean
      */
     Boolean isImplicitlyProhibited( Flow sharing );
+
+    /**
+     * Filter out overridden commitments.
+     *
+     * @param commitments a list of commitments
+     * @return a list of commitments
+     */
+    List<Commitment> removeOverriddenCommitments( Collection<Commitment> commitments );
 
     /**
      * Find all commitments of an actor.
@@ -1094,7 +1124,7 @@ public interface QueryService {
      * @param assumeFails boolean whether downstream alternate flows assumed to fail
      * @return a list of flows
      */
-    List<Flow> findEssentialFlowsFrom( Part part, boolean assumeFails );
+    List<Flow> findEssentialFlowsFrom( Part part, Boolean assumeFails );
 
     /**
      * If a part or sharing flow fail, what risk mitigating parts would also fail?
@@ -1103,7 +1133,7 @@ public interface QueryService {
      * @param assumeFails   whether all alternate sharing flows are assumed to fail (no redundancy)
      * @return a list of risk-mitigating parts that would fail
      */
-    List<Part> findFailureImpacts( SegmentObject segmentObject, boolean assumeFails );
+    List<Part> findFailureImpacts( SegmentObject segmentObject, Boolean assumeFails );
 
     /**
      * Find all actual entities matching an entity type.
@@ -1262,19 +1292,39 @@ public interface QueryService {
 
     /**
      * Get assignments factory.
+     * Exclude assignments to unknown actors.
      *
      * @return assignments factory
      */
     Assignments getAssignments();
 
     /**
+     * Get assignments factory.
+     *
+     * @param includeUnknowns a boolean
+     * @return assignments factory
+     */
+    Assignments getAssignments( Boolean includeUnknowns );
+
+    /**
+     * Get assignments factory.
+     * Exclude assignments to unknown actors.
+     * Include prohibited.
+     *
+     * @param includeUnknowns   include assignments to unknown actors
+     * @param includeProhibited a boolean
+     * @return assignments factory
+     */
+    Assignments getAssignments( Boolean includeUnknowns, Boolean includeProhibited );
+
+    /**
      * Whether an actor is a direct or indirect supervisor of another.
      *
-     * @param actor an actor
-     * @param other an actor
+     * @param actor      an actor
+     * @param supervisor an actor
      * @return a Boolean
      */
-    Boolean isSupervisorOf( Actor actor, Actor other );
+    Boolean hasSupervisor( Actor actor, Actor supervisor );
 
     /**
      * Find all tags in domain.
@@ -1285,20 +1335,23 @@ public interface QueryService {
 
     /**
      * Find all parts that override a given part.
+     *
      * @param part a part
      * @return a list of parts
      */
     List<Part> findAllOverridingParts( Part part );
 
     /**
-      * Find all parts that are overridden by a given part.
-      * @param part a part
-      * @return a list of parts
-      */
+     * Find all parts that are overridden by a given part.
+     *
+     * @param part a part
+     * @return a list of parts
+     */
     List<Part> findAllOverriddenParts( Part part );
 
     /**
      * Whether part is overridden by another.
+     *
      * @param part a part
      * @return a boolean
      */
@@ -1306,48 +1359,57 @@ public interface QueryService {
 
     /**
      * Whether part is overriding another.
+     *
      * @param part a part
      * @return a boolean
      */
     Boolean isOverriding( Part part );
-    /**
-      * Whether flow is overridden by another.
-      * @param flow a flow
-      * @return a boolean
-      */
-     Boolean isOverridden( Flow flow );
 
-     /**
-      * Whether flow is overriding another.
-      * @param flow a flow
-      * @return a boolean
-      */
-     Boolean isOverriding( Flow flow );
     /**
-      * Find all flows that override a given flow.
-      * @param flow a flow
-      * @return a list of flows
-      */
+     * Whether flow is overridden by another.
+     *
+     * @param flow a flow
+     * @return a boolean
+     */
+    Boolean isOverridden( Flow flow );
+
+    /**
+     * Whether flow is overriding another.
+     *
+     * @param flow a flow
+     * @return a boolean
+     */
+    Boolean isOverriding( Flow flow );
+
+    /**
+     * Find all flows that override a given flow.
+     *
+     * @param flow a flow
+     * @return a list of flows
+     */
     List<Flow> findAllOverridingFlows( Flow flow );
 
     /**
-      * Find all flows that are overriden by a given flow.
-      * @param flow a flow
-      * @return a list of flows
-      */
+     * Find all flows that are overriden by a given flow.
+     *
+     * @param flow a flow
+     * @return a list of flows
+     */
     List<Flow> findAllOverriddenFlows( Flow flow );
 
     /**
      * Find non-overridden sharing send flows from overridden parts.
+     *
      * @param part a part
      * @return list of flows
      */
     List<Flow> findImpliedSharingSends( Part part );
 
     /**
-      * Find non-overridden sharing send flows from overridden parts.
-      * @param part a part
-      * @return list of flows
-      */
+     * Find non-overridden sharing send flows from overridden parts.
+     *
+     * @param part a part
+     * @return list of flows
+     */
     List<Flow> findImpliedSharingReceives( Part part );
 }

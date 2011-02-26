@@ -112,6 +112,16 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         return null;
     }
 
+    @Override
+    public Assignments getNotifications( Assignments assignments, QueryService queryService ) {
+        return assignments.getNotifications( queryService );
+    }
+
+    @Override
+    public Assignments getRequests( Assignments assignments, QueryService queryService ) {
+        return assignments.getRequests();
+    }
+
     public User getUser() {
         return user;
     }

@@ -5,7 +5,6 @@ package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -393,8 +392,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
             found = part.equals( flow.getTarget() )
                     && flow.isTriggeringToTarget()
                     && !flow.isAskedFor()
-                    && !flow.isProhibited()
-                    && !queryService.isImplicitlyProhibited( flow );
+                    && !flow.isProhibited();
         }
         return found;
     }
@@ -446,21 +444,6 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         }
         return result;
     }
-
-    public Assignments assignedTo( Flow flow, QueryService queryService ) {
-        if ( flow == null ) return this;
-        Assignments result = new Assignments( locale );
-        List<Commitment> commitments = queryService.findAllCommitments( flow );
-        for ( Commitment commitment : commitments ) {
-            for ( Assignment assignment : this ) {
-                if ( commitment.getCommitter().equals( assignment )
-                        || commitment.getBeneficiary().equals( assignment ) )
-                    result.add( assignment );
-            }
-        }
-        return result;
-    }
-
 
     public Assignments getSources( Part part ) {
         if ( part == null ) return this;
@@ -523,41 +506,6 @@ public class Assignments implements Iterable<Assignment>, Serializable {
             if ( getSources( other.getPart() ).contains( source ) )
                 result.add( other );
         return result;
-    }
-
-    /**
-     * Filter on assignments that are in a segment (if set) or involve an entity (if set)
-     * @param focusEntity an entity or null
-     * @param segment a segment or null
-     * @param sharing a sharing flow or null
-     * @param queryService  a query service
-     * @return  assignments
-     */
-    public Assignments involving( Specable focusEntity, Segment segment, Flow sharing, QueryService queryService ) {
-        Assignments result = new Assignments( locale );
-        Set<Commitment> commitments = new HashSet<Commitment>();
-        for ( Flow flow : queryService.findAllSharingFlows( segment ) ) {
-            if ( sharing == null || flow.equals( sharing ) )
-                commitments.addAll( queryService.findAllCommitments( flow ) );
-        }
-        queryService.removeOverriddenAndProhibited( commitments );
-        for ( Assignment other : this ) {
-            for ( Commitment commitment : commitments ) {
-                if ( ( commitment.getCommitter().equals( other )
-                        && isInvolved( commitment.getBeneficiary(), segment, focusEntity )
-                        ||
-                        ( commitment.getBeneficiary().equals( other )
-                        && isInvolved( commitment.getCommitter(), segment, focusEntity ) ) ) ) {
-                    result.add( other );
-                }
-            }
-        }
-        return result;
-    }
-
-    private boolean isInvolved( Assignment assignment, Segment segment, Specable focusEntity ) {
-        return ( segment == null || assignment.getPart().getSegment().equals( segment ) )
-                && ( focusEntity == null || assignment.involves( focusEntity ) );
     }
 
 

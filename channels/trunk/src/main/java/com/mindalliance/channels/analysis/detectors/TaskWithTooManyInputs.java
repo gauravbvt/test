@@ -87,7 +87,7 @@ public class TaskWithTooManyInputs extends AbstractIssueDetector {
         );
         Set<ModelEntity> committers = new HashSet<ModelEntity>();
         for ( Flow sharingReceive : part.getAllSharingReceives() ) {
-            List<Commitment> commitments = getQueryService().findAllCommitments( sharingReceive );
+            List<Commitment> commitments = getQueryService().findAllCommitments( sharingReceive, false, false );
             for ( Commitment commitment : commitments ) {
                 Assignment assignment = commitment.getCommitter();
                 ModelEntity assignee = assignment.getKnownAssignee();

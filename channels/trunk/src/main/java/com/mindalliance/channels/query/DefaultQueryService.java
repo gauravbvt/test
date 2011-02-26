@@ -645,7 +645,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
-    public List<ResourceSpec> findAllContacts( Specable specable, boolean isSelf ) {
+    public List<ResourceSpec> findAllContacts( Specable specable, Boolean isSelf ) {
         Set<ResourceSpec> contacts = new HashSet<ResourceSpec>();
         if ( isSelf ) {
             contacts.addAll( findAllResourcesNarrowingOrEqualTo( specable ) );
@@ -667,7 +667,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
-    public List<Play> findAllPlays( Specable resourceSpec, boolean specific ) {
+    public List<Play> findAllPlays( Specable resourceSpec, Boolean specific ) {
         Set<Play> plays = new HashSet<Play>();
         for ( Segment segment : list( Segment.class ) ) {
             Iterator<Flow> flows = segment.flows();
@@ -769,7 +769,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
 
     @Override
-    public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, boolean asSource ) {
+    public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, Boolean asSource ) {
         List<Flow> relatedFlows = new ArrayList<Flow>();
         Place locale = getPlan().getLocale();
         for ( Segment segment : list( Segment.class ) ) {
@@ -1133,7 +1133,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
-    public List<Part> findAllParts( Segment segment, Specable specable, boolean exactMatch ) {
+    public List<Part> findAllParts( Segment segment, Specable specable, Boolean exactMatch ) {
         Set<Part> list = new HashSet<Part>();
         Set<Segment> segments;
         Plan plan = getPlan();
@@ -1876,68 +1876,122 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
-    public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns ) {
+    public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns, Boolean includeProhibited ) {
         Place locale = getPlan().getLocale();
         Set<Assignment> result = new HashSet<Assignment>();
-        for ( Employment e : findAllEmployments( part, locale ) )
-            if ( ModelEntity.implies( e.getActor(), part.getActor(), locale )
-                    && ModelEntity.implies( e.getRole(), part.getRole(), locale )
-                    && ModelEntity.implies( e.getOrganization(), part.getOrganization(), locale )
-                    && ModelEntity.implies( e.getJurisdiction(), part.getJurisdiction(), locale ) )
-                result.add( new Assignment( e, part ) );
+        if ( includeProhibited || !part.isProhibited() ) {
+            for ( Employment e : findAllEmployments( part, locale ) ) {
+                Assignment assignment = new Assignment( e, part );
+                if ( !isProhibited( assignment ) )
+                    result.add( assignment );
+            }
 
-        if ( includeUnknowns
-                && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() ) {
-            Organization partOrg = part.getOrganizationOrUnknown();
-            if ( partOrg.isUnknown() ) {
-                result.add( new Assignment(
-                        new Employment( Actor.UNKNOWN,
-                                partOrg,
-                                new Job( Actor.UNKNOWN,
-                                        part.getRoleOrUnknown(),
-                                        part.getJurisdiction() ) ),
-                        part ) );
+            if ( includeUnknowns
+                    && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() ) {
+                Organization partOrg = part.getOrganizationOrUnknown();
+                if ( partOrg.isUnknown() ) {
+                    Assignment assignment = new Assignment(
+                            new Employment( Actor.UNKNOWN,
+                                    partOrg,
+                                    new Job( Actor.UNKNOWN,
+                                            part.getRoleOrUnknown(),
+                                            part.getJurisdiction() ) ),
+                            part );
+                    if ( !isProhibited( assignment ) ) result.add( assignment );
 
-            } else if ( partOrg.isType() ) {
-                for ( Organization actualOrg : listActualEntities( Organization.class ) ) {
-                    if ( actualOrg.getTypes().contains( partOrg ) ) {
-                        result.add( new Assignment(
-                                new Employment( Actor.UNKNOWN,
-                                        actualOrg,
-                                        new Job( Actor.UNKNOWN,
-                                                part.getRoleOrUnknown(),
-                                                part.getJurisdiction() ) ),
-                                part ) );
+                } else if ( partOrg.isType() ) {
+                    for ( Organization actualOrg : listActualEntities( Organization.class ) ) {
+                        if ( actualOrg.getTypes().contains( partOrg ) ) {
+                            Assignment assignment = new Assignment(
+                                    new Employment( Actor.UNKNOWN,
+                                            actualOrg,
+                                            new Job( Actor.UNKNOWN,
+                                                    part.getRoleOrUnknown(),
+                                                    part.getJurisdiction() ) ),
+                                    part );
+                            if ( !isProhibited( assignment ) ) result.add( assignment );
+                        }
                     }
                 }
             }
         }
-
         return new ArrayList<Assignment>( result );
     }
 
     @Override
-    /** {@inheritDoc } */
-    public List<Commitment> findAllCommitments( Flow flow, boolean allowCommitmentsToSelf ) {
-        Set<Commitment> commitments = new HashSet<Commitment>();
-        if ( flow.isSharing() && !flow.isProhibited() ) {
-            Assignments allAssignments = getAssignments();
-            Assignments committers = allAssignments.assignedTo( (Part) flow.getSource() );
-            Assignments beneficiaries = allAssignments.assignedTo( (Part) flow.getTarget() );
-            Place place = getPlan().getLocale();
+    public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns ) {
+        return findAllAssignments( part, includeUnknowns, false );
+    }
 
+    private boolean isProhibited( Assignment assignment ) {
+        Part part = assignment.getPart();
+        boolean prohibited = false;
+        Iterator<Part> overridingParts = findAllOverridingParts( part ).iterator();
+        while ( !prohibited && overridingParts.hasNext() ) {
+            Part overridingPart = overridingParts.next();
+            if ( overridingPart.isProhibited() ) {
+                List<Assignment> overridingAssignments = findAllAssignments( overridingPart, true );
+                prohibited = overridingAssignments.contains( assignment );
+            }
+        }
+        return prohibited;
+    }
+
+
+    @Override
+    /** {@inheritDoc } */
+    public List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf ) {
+        return findAllCommitments( flow, allowCommitmentsToSelf, true );
+    }
+
+
+    @Override
+    /** {@inheritDoc } */
+    public List<Commitment> findAllCommitments(
+            Flow flow,
+            Boolean allowCommitmentsToSelf,
+            Boolean includeUnknowns ) {
+        Set<Commitment> commitments = new HashSet<Commitment>();
+        if ( flow.isSharing() ) {
+            if ( !flow.isProhibited() ) {
+                List<Assignment> committers = findAllAssignments( (Part) flow.getSource(), includeUnknowns );
+                List<Assignment> beneficiaries = findAllAssignments( (Part) flow.getTarget(), includeUnknowns );
+                Place place = getPlan().getLocale();
                 for ( Assignment committer : committers ) {
-                Actor committerActor = committer.getActor();
-                for ( Assignment beneficiary : beneficiaries ) {
-                    if ( ( allowCommitmentsToSelf || !committerActor.equals( beneficiary.getActor() ) )
-                            && flow.allowsCommitment( committer, beneficiary, place, this )
-                            )
-                        commitments.add( new Commitment( committer, beneficiary, flow ) );
+                    Actor committerActor = committer.getActor();
+                    for ( Assignment beneficiary : beneficiaries ) {
+                        if ( ( allowCommitmentsToSelf || !committerActor.equals( beneficiary.getActor() ) )
+                                && flow.allowsCommitment( committer, beneficiary, place, this )
+                                ) {
+                            Commitment commitment = new Commitment( committer, beneficiary, flow );
+                            if ( !isImplicitlyProhibited( commitment ) ) {
+                                commitments.add( commitment );
+                            }
+                        }
+                    }
                 }
             }
         }
         return new ArrayList<Commitment>( commitments );
     }
+
+    private boolean isImplicitlyProhibited( Commitment commitment ) {
+        boolean prohibited = false;
+        Flow sharing = commitment.getSharing();
+        Iterator<Flow> overriddingFlows = findAllOverridingFlows( sharing ).iterator();
+        Place locale = getPlan().getLocale();
+        while ( !prohibited && overriddingFlows.hasNext() ) {
+            Flow overridingFlow = overriddingFlows.next();
+            if ( overridingFlow.isProhibited() ) {
+                ResourceSpec committerRes = commitment.getCommitter().getResourceSpec();
+                ResourceSpec beneficiaryRes = commitment.getBeneficiary().getResourceSpec();
+                prohibited = committerRes.narrowsOrEquals( ( (Part) overridingFlow.getSource() ).resourceSpec(), locale )
+                        && beneficiaryRes.narrowsOrEquals( ( (Part) overridingFlow.getTarget() ).resourceSpec(), locale );
+            }
+        }
+        return prohibited;
+    }
+
 
     @Override
     /** {@inheritDoc } */
@@ -1965,6 +2019,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             prohibited = other.isProhibited() && other.overrides( sharing, getPlan().getLocale() );
         }
         return prohibited;
+    }
+
+    @Override
+    /** {@inheritDoc } */
+    public List<Commitment> removeOverriddenCommitments( Collection<Commitment> commitments ) {
+        return removeOverriddenCommitments( commitments, getPlan().getLocale() );
     }
 
     private List<Commitment> removeOverriddenCommitments( Collection<Commitment> commitments, final Place locale ) {
@@ -2009,7 +2069,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 }
             }
         }
-        return removeOverriddenAndProhibited( commitments  );
+        return removeOverriddenAndProhibited( commitments );
     }
 
     @Override
@@ -2095,7 +2155,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Flow> findEssentialFlowsFrom( Part part, boolean assumeFails ) {
+    public List<Flow> findEssentialFlowsFrom( Part part, Boolean assumeFails ) {
         // Find all downstream important flows, avoiding circularities
         List<Flow> importantFlows = part.findImportantFlowsFrom( new HashSet<Part>() );
         // Iteratively trim "end flows" to non-useful parts
@@ -2120,7 +2180,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
-    public List<Part> findFailureImpacts( SegmentObject segmentObject, boolean assumeFails ) {
+    public List<Part> findFailureImpacts( SegmentObject segmentObject, Boolean assumeFails ) {
         if ( segmentObject instanceof Flow ) {
             Flow flow = (Flow) segmentObject;
             if ( ( (Flow) segmentObject ).isEssential( assumeFails, this ) ) {
@@ -2726,50 +2786,53 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /** @{inheritDoc} */
     public List<Employment> findAllEmployments( Part part, Place locale ) {
 
-        Set<Actor> employed = new HashSet<Actor>();
-        List<Employment> employments = new ArrayList<Employment>();
-
+        Set<Employment> employments = new HashSet<Employment>();
+        // From confirmed jobs matching the part
         for ( Organization org : listActualEntities( Organization.class ) ) {
-            List<Job> confirmedJobs = org.getJobs();
-
-            for ( Job job : confirmedJobs ) {
-                employments.add( new Employment( job.getActor(), org, job ) );
-                employed.add( job.getActor() );
-            }
-
-            if ( org.narrowsOrEquals( part.getOrganizationOrUnknown(), locale )
-                    && part.hasActualActor() && part.getOrganization() != null ) {
-
-                Actor actor = part.getActor();
-                Job j = new Job( actor, part.getRole(), part.getJurisdiction() );
-                if ( !confirmedJobs.contains( j )
-                        && ( !actor.isArchetype() || !employed.contains( actor ) ) ) {
-                    employments.add( new Employment( actor, org, j ) );
-                    employed.add( actor );
+            for ( Job job : org.getJobs() ) {
+                if ( ModelEntity.implies( job.getActor(), part.getActor(), locale )
+                        && ModelEntity.implies( job.getRole(), part.getRole(), locale )
+                        && ModelEntity.implies( org, part.getOrganization(), locale )
+                        && ModelEntity.implies( job.getJurisdiction(), part.getJurisdiction(), locale ) ) {
+                    employments.add( new Employment( job.getActor(), org, job ) );
                 }
             }
         }
+        // Inferred from the part
+        if ( part.hasActualActor() && part.hasActualOrganization() ) {
+            Actor actor = part.getActor();
+            Role partRole = part.hasRole() ? part.getRole() : Role.UNKNOWN;
+            Job j = new Job( actor, partRole, part.getJurisdiction() );
+            employments.add( new Employment( actor, part.getOrganization(), j ) );
+        }
 
-        for ( Actor actor : listActualEntities( Actor.class ) )
-            if ( !employed.contains( actor ) )
-                employments.add( new Employment( actor ) );
-
-        return employments;
+        return new ArrayList<Employment>( employments );
     }
 
     @Override
     /** @{inheritDoc} */
-    public Assignments getAssignments() {
+    public Assignments getAssignments( Boolean includeUnknowns, Boolean includeProhibited ) {
         Place locale = getPlan().getLocale();
         Assignments result = new Assignments( locale );
         Set<Assignment> assignments = new HashSet<Assignment>();
         for ( Segment segment : list( Segment.class ) )
             for ( Iterator<Part> pi = segment.parts(); pi.hasNext(); )
-                assignments.addAll( findAllAssignments( pi.next(), true ) );
+                assignments.addAll( findAllAssignments( pi.next(), includeUnknowns, includeProhibited ) );
 
-        result.add( removeProhibitedAssignments(
-                removeProhibitedAssignments( assignments ) ) );
+        result.add( assignments );
         return result;
+    }
+
+    @Override
+    /** @{inheritDoc} */
+    public Assignments getAssignments( Boolean includeUnknowns ) {
+        return getAssignments( includeUnknowns, false );
+    }
+
+    @Override
+    /** @{inheritDoc} */
+    public Assignments getAssignments() {
+        return getAssignments( true );
     }
 
     private List<Assignment> removeProhibitedAssignments( List<Assignment> assignments ) {
@@ -2792,18 +2855,18 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     /** @{inheritDoc} */
-    public Boolean isSupervisorOf( Actor actor, Actor other ) {
-        return isSupervisorOf( actor, other, new HashSet<Actor>() );
+    public Boolean hasSupervisor( Actor actor, Actor supervisor ) {
+        return hasSupervisor( actor, supervisor, new HashSet<Actor>() );
     }
 
-    private boolean isSupervisorOf( Actor actor, Actor other, Set<Actor> visited ) {
-        if ( actor.isUnknown() || actor.equals( other ) || visited.contains( actor ) ) return false;
+    private boolean hasSupervisor( Actor actor, Actor supervisor, Set<Actor> visited ) {
+        if ( actor.isUnknown() || actor.equals( supervisor ) || visited.contains( actor ) ) return false;
         visited.add( actor );
         List<Employment> employments = findAllEmploymentsForActor( actor );
         for ( Employment employment : employments ) {
-            Actor supervisor = employment.getSupervisor();
-            if ( supervisor != null ) {
-                if ( supervisor.equals( other ) || isSupervisorOf( supervisor, other, visited ) ) return true;
+            Actor boss = employment.getSupervisor();
+            if ( boss != null ) {
+                if ( boss.equals( supervisor ) || hasSupervisor( boss, supervisor, visited ) ) return true;
             }
         }
         return false;

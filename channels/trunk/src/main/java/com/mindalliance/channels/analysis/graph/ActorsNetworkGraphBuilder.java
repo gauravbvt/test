@@ -68,7 +68,7 @@ public class ActorsNetworkGraphBuilder implements GraphBuilder<Actor, EntityRela
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
-                    List<Commitment> commitments = queryService.findAllCommitments( flow );
+                    List<Commitment> commitments = queryService.findAllCommitments( flow, false, false );
                     for ( Commitment commitment : commitments ) {
                         Actor fromActor = commitment.getCommitter().getActor();
                         Actor toActor = commitment.getBeneficiary().getActor();
