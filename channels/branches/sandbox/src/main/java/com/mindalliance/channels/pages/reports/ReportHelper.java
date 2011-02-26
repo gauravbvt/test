@@ -6,7 +6,9 @@ import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 
@@ -49,4 +51,8 @@ public interface ReportHelper {
     boolean isSending();
 
     Specable getFocusEntity();
+
+    Assignments getNotifications( Assignments assignments, QueryService queryService );
+
+    Assignments getRequests( Assignments assignments, QueryService queryService );
 }

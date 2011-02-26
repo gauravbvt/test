@@ -5,11 +5,14 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -137,7 +140,7 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
     @Override
     public Component newFlowLink( Part part, final Specable actor ) {
         final Assignment assign = (Assignment) CollectionUtils.find(
-                getPlanService().findAllAssignments( part, true ),
+                selector.getAllAssignments().assignedTo( part ).getAssignments(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -161,12 +164,10 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
         StringBuilder result = new StringBuilder();
         Set<String> flowNames = new HashSet<String>();
 
-        Iterator<Flow> iterator = part.flows();
+        Iterator<Commitment> iterator = selector.getCommitmentsTriggering( part ).iterator();
         while ( iterator.hasNext() ) {
-            Flow flow = iterator.next();
-            if ( part.equals( flow.getSource() ) && flow.isTriggeringToSource()
-                    || part.equals( flow.getTarget() ) && flow.isTriggeringToTarget() )
-                flowNames.add( flow.getName() );
+            Flow flow = iterator.next().getSharing();
+            flowNames.add( flow.getName() );
         }
 
         List<String> sortedNames = new ArrayList<String>( flowNames );
@@ -181,6 +182,7 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
 
         return result.toString();
     }
+
 
     @Override
     public MarkupContainer newTaskLink( Part part, final Specable actor ) {
@@ -227,6 +229,39 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
     @Override
     public Specable getFocusEntity() {
         return selector.getFocusEntity();
+    }
+
+    @Override
+    public Assignments getNotifications( Assignments assignments, QueryService queryService ) {
+        Assignments result = new Assignments( queryService.getPlan().getLocale() );
+        for ( Assignment assignment : assignments.getAssignments() ) {
+            if ( !selector.getCommitmentsTriggering( assignment.getPart() ).isEmpty() )
+                result.add( assignment );
+        }
+        return result;
+    }
+
+    @Override
+    public Assignments getRequests( Assignments assignments, QueryService queryService ) {
+        Assignments result = new Assignments( queryService.getPlan().getLocale() );
+        for ( final Assignment assignment : assignments.getAssignments() ) {
+            boolean triggeredByRequest = CollectionUtils.exists(
+                    selector.getCommitments(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            Flow flow = ( (Commitment) object ).getSharing();
+                            Part part = assignment.getPart();
+                            return part.equals( flow.getSource() )
+                                    && flow.isTriggeringToSource()
+                                    && flow.isAskedFor();
+                        }
+                    }
+            );
+            if ( triggeredByRequest )
+                result.add( assignment );
+        }
+        return result;
     }
 
     private void update( AjaxRequestTarget target, Change change ) {

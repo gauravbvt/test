@@ -5,12 +5,14 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
@@ -26,7 +28,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -158,11 +159,11 @@ public class SelectorPanel extends Panel implements AssignmentsSelector {
                                         ALL : Long.toString( ( (ModelObject) object ).getId() );
                          }
                      } ).add( newOnChange( "onchange" ) ) )
-                ,//.setVisible( getActorChoices().size() > 1 ),
+                //.setVisible( getActorChoices().size() > 1 ),
 
-            new WebMarkupContainer( "optionals" )
+       /*    , new WebMarkupContainer( "optionals" )
                 .add( new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) )
-                .setVisible( isPlanner() )
+                .setVisible( isPlanner() )*/
         );
 
         add( form );
@@ -417,7 +418,11 @@ public class SelectorPanel extends Panel implements AssignmentsSelector {
 
     //---------------------------------
     private List<Specable> getActorChoices() {
-        List<Specable> result = getAllActors( getAllAssignments() );
+        List<Specable> result = new ArrayList<Specable>();
+        for (Specable specable : getAllActors( getAllAssignments() ) ) {
+            if ( specable instanceof Actor)
+                result.add( specable );
+        }
         if ( result.size() > 1 )
             result.add( 0, ALL_ACTORS );
         return result;
@@ -495,6 +500,21 @@ public class SelectorPanel extends Panel implements AssignmentsSelector {
     @Override
     public Segment getSegment() {
         return null;
+    }
+
+    @Override
+    public Assignments getSources( Part part ) {
+        return getAllAssignments().getSources( part );
+    }
+
+    @Override
+    public List<Commitment> getCommitments() {
+        return null; // Todo
+    }
+
+    @Override
+    public List<Commitment> getCommitmentsTriggering( Part part ) {
+        return null;  //Todo
     }
 
     public void setActor( Specable actor ) {

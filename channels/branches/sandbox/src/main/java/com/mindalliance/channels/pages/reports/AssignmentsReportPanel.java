@@ -98,9 +98,15 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                                      phaseAssignments.getImmediates( getQueryService() ) ),
                         newIncomingList( "notified",
                                          "b" + phase.getId(),
-                                         phaseAssignments.getNotifications( getQueryService() ) ),
-                        newIncomingList( "requested",  "c" + phase.getId(), phaseAssignments.getRequests() ),
-                        newTaskList( "optionals", "d" + phase.getId(), phaseAssignments.getOptionals(  getQueryService() ) )
+                                         reportHelper.getNotifications( phaseAssignments, getQueryService() ) ),
+                        newIncomingList(
+                                "requested",
+                                "c" + phase.getId(),
+                                reportHelper.getRequests( phaseAssignments, getQueryService() ) ),
+                        newTaskList(
+                                "optionals",
+                                "d" + phase.getId(),
+                                phaseAssignments.getOptionals(  getQueryService() ) )
                 );
             }
         };
@@ -146,7 +152,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         Assignment assignment = item.getModelObject();
                         Part part = assignment.getPart();
                         Actor actor = assignment.getActor();
-                        Assignments sources = selector.getAllAssignments().getSources( part );
+                        Assignments sources = selector.getSources( part );
 
                         ResourceSpec prefix = sources.getCommonSpec( null );
                         item.add(

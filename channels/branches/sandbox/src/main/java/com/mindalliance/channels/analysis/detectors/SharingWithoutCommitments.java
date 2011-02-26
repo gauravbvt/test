@@ -29,7 +29,7 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        List<Commitment> commitments = getQueryService().findAllCommitments( flow );
+        List<Commitment> commitments = getQueryService().findAllCommitments( flow, false, false );
         if ( commitments.isEmpty() ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, flow );
             Part source = (Part)flow.getSource();

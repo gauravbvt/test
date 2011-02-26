@@ -88,7 +88,8 @@ public class SharingCommitmentsPanel extends FloatingCommandablePanel {
     }
 
     public List<Commitment> getCommitments() {
-        return getQueryService().findAllCommitments( getFlow() );
+        // exclude commitments to self and to or by unknown actors.
+        return getQueryService().findAllCommitments( getFlow(), false, false );
     }
 
 

@@ -268,7 +268,7 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
         List<Flow> result = new ArrayList<Flow>(  );
         while( flows.hasNext() ) {
             Flow flow = flows.next();
-            if ( !flow.isProhibited() && !getQueryService().isImplicitlyProhibited( flow ) ) {
+            if ( !flow.isProhibited() ) {
                 result.add( flow );
             }
         }

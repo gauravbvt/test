@@ -7,8 +7,10 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
@@ -21,11 +23,14 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanProcedureMapPanel;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Procedure map selector panel.
@@ -78,7 +83,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
             resetSelected();
             setSelected( change );
             Identifiable identifiable = change.getSubject( getQueryService() );
-            if (change.hasQualifier( "focus" ) )
+            if ( change.hasQualifier( "focus" ) )
                 focusEntity = (Specable) change.getQualifier( "focus" );
             if ( identifiable instanceof Part ) {
                 selectedPart = (Part) identifiable;
@@ -167,22 +172,69 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     @Override
-    public Assignments getAssignments() {   // todo - filters too much when focused
+    public Assignments getAssignments() {
+
         return getAllAssignments()
                 .assignedTo( selectedPart )
                 .with( selectedActor )
                 .with( selectedOrganization )
-                .with( selectedRole )
-                .involving( focusEntity, segment, selectedFlow, getQueryService() );
+                .with( selectedRole );
+
     }
 
-    private boolean isOrgFocused() {
-        return focusEntity != null && focusEntity instanceof Organization;
+    public Assignments getAllAssignments() {
+        Set<Assignment> assignments = new HashSet<Assignment>();
+        for ( Commitment commitment : getCommitments() ) {
+            assignments.add( commitment.getCommitter() );
+            assignments.add( commitment.getBeneficiary() );
+        }
+        Assignments results = new Assignments( getPlan().getLocale() );
+        for ( Assignment assignment : assignments )
+            results.add( assignment );
+        return results;
     }
 
-    private boolean isActorFocused() {
-        return focusEntity != null && focusEntity instanceof Actor;
+    @Override
+    public List<Commitment> getCommitments() {
+        QueryService queryService = getQueryService();
+        List<Commitment> commitments = new ArrayList<Commitment>();
+        List<Flow> allFlows = queryService.findAllSharingFlows( segment );
+        for ( Flow flow : allFlows ) {
+            commitments.addAll( queryService.findAllCommitments( flow, true ) );
+        }
+        List<Commitment> results = new ArrayList<Commitment>();
+        List<Commitment> notOverridden = queryService.removeOverriddenCommitments( commitments );
+        for ( Commitment commitment : notOverridden ) {
+            if ( focusEntity == null || isFocusedOn( commitment ) ) {
+                results.add( commitment );
+            }
+        }
+        return results;
     }
+
+    private boolean isFocusedOn( Commitment commitment ) {
+        return focusEntity != null
+                && (
+                isFocusedOn( commitment.getCommitter() )
+                        || isFocusedOn( commitment.getBeneficiary() )
+        );
+    }
+
+    private boolean isFocusedOn( Assignment assignment ) {
+        return isFocusedOnAgent( assignment ) || isFocusedOnOrganization( assignment );
+    }
+
+    private boolean isFocusedOnAgent( Assignment assignment ) {
+        return focusEntity != null && assignment.getActor().equals( focusEntity );
+    }
+
+    private boolean isFocusedOnOrganization( Assignment assignment ) {
+        return focusEntity != null
+                && assignment.getOrganization().narrowsOrEquals(
+                (ModelEntity) focusEntity,
+                getQueryService().getPlan().getLocale() );
+    }
+
 
     @Override
     public ResourceSpec getSelection() {
@@ -194,10 +246,12 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         );
     }
 
+/*
     @Override
     public Assignments getAllAssignments() {
         return getQueryService().getAssignments();
     }
+*/
 
     @Override
     public boolean isPlanner() {
@@ -235,21 +289,28 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         } else if ( selectedPart != null ) {
             return titleForTask( selectedPart, selectedActor );
         } else if ( segment != null ) {
-            return titleForSegment ( segment );
+            return titleForSegment( segment );
         } else {
-            return "All procedures";
+            return titleForPlan();
         }
 
+    }
+
+    private String titleForPlan() {
+        return "All procedures"
+                + ( focusEntity != null
+                ? ( " for " + ( (ModelEntity) focusEntity ).getName() )
+                : "" )
+                ;
     }
 
     private String titleForSegment( Segment seg ) {
         return "Procedures in \""
                 + seg.getName()
                 + "\""
-/*
-                + " - "
-                + seg.getPhaseEventTitle()
-*/
+                + ( focusEntity != null
+                ? ( " for " + ( (ModelEntity) focusEntity ).getName() )
+                : "" )
                 ;
     }
 
@@ -264,10 +325,10 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     private String titleForTask( Part part, Actor actor ) {
         return titlePersona( part, actor )
-                +  " doing...";
+                + " doing...";
     }
 
-    private String titlePersona(Part part, Actor actor ) {
+    private String titlePersona( Part part, Actor actor ) {
         String persona = "";
         String acting = ( actor != null && !actor.isUnknown() )
                 ? actor.getName()
@@ -279,7 +340,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
                 ? part.getRole()
                 : null;
         if ( role != null && !role.isUnknown() ) {
-            persona += (persona.isEmpty() ? "" : " as ") + role.getName();
+            persona += ( persona.isEmpty() ? "" : " as " ) + role.getName();
         }
         Organization org = selectedOrganization != null
                 ? selectedOrganization
@@ -287,7 +348,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
                 ? part.getOrganization()
                 : null;
         if ( org != null && !org.isUnknown() ) {
-            persona += (persona.isEmpty() ? "Someone at " : " at ") + org.getName();
+            persona += ( persona.isEmpty() ? "Someone at " : " at " ) + org.getName();
         }
         if ( persona.isEmpty() ) persona = "Someone";
         return persona;
@@ -318,6 +379,28 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     @Override
     public Segment getSegment() {
         return segment;
+    }
+
+    @Override
+    public Assignments getSources( Part part ) {
+        Assignments results = new Assignments( getPlan().getLocale() );
+        for ( Commitment commitment : getCommitmentsTriggering( part ) ) {
+            results.add( commitment.getCommitter() );
+        }
+        return results;
+    }
+
+    @Override
+    public List<Commitment> getCommitmentsTriggering( Part part ) {
+        List<Commitment> results = new ArrayList<Commitment>();
+        for ( Commitment commitment : getCommitments() ) {
+            if ( commitment.getBeneficiary().getPart().equals( part )
+                    && commitment.getSharing().isTriggeringToTarget()
+                    || commitment.getCommitter().getPart().equals( part )
+                    && commitment.getSharing().isTriggeringToSource() )
+                results.add( commitment );
+        }
+        return results;
     }
 
     public Part getPart() {

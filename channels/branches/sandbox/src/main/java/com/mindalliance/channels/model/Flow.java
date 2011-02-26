@@ -1240,7 +1240,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 case Supervisor:
                     return ModelObject.isNullOrUnknown( committer.getActor() )
                             || ModelObject.isNullOrUnknown( beneficiary.getActor() )
-                            || queryService.isSupervisorOf( beneficiary.getActor(), committer.getActor() );
+                            || queryService.hasSupervisor( committer.getActor(), beneficiary.getActor() );
             }
         }
 

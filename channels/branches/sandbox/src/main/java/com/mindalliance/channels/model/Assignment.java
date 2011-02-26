@@ -264,4 +264,8 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
     public boolean isProhibited() {
         return part.isProhibited();
     }
+
+    public ResourceSpec getResourceSpec() {
+        return new ResourceSpec( getActor(), getRole(), getOrganization(), getJurisdiction() );
+    }
 }

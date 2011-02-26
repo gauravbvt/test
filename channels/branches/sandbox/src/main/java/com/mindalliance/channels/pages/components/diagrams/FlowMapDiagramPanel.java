@@ -99,7 +99,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/segment.png?segment=" );
+        sb.append( "segment.png?segment=" );
         sb.append( getSegment().getId() );
         sb.append( "&node=" );
         if ( getPart() != null ) {

@@ -90,7 +90,7 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
         );
         Set<ModelEntity> beneficiaries = new HashSet<ModelEntity>();
         for ( Flow sharingSend : part.getAllSharingSends() ) {
-            List<Commitment> commitments = getQueryService().findAllCommitments( sharingSend );
+            List<Commitment> commitments = getQueryService().findAllCommitments( sharingSend, false, false );
             for ( Commitment commitment : commitments ) {
                 Assignment assignment = commitment.getBeneficiary();
                 ModelEntity assignee = assignment.getKnownAssignee();
