@@ -264,9 +264,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         private String getFontColor( Node vertex ) {
             return isInvisible( vertex )
                     ? vertex.getSegment().equals( getSegment() )
-                    ? INVISIBLE_COLOR
-                    : SUBGRAPH_COLOR
-                    : FONTCOLOR;
+                        ? INVISIBLE_COLOR
+                        : SUBGRAPH_COLOR
+                    : isOverridden( vertex )
+                        ? OVERRIDDEN_COLOR
+                        : FONTCOLOR;
         }
 
         public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
@@ -275,7 +277,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     "color",
                     colorIfVisible(
                             edge,
-                            isImplied( edge ) ? IMPLIED_COLOR : "black" ) ) );
+                            isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             // list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             if ( highlighted ) {
@@ -288,7 +290,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     "fontcolor",
                     colorIfVisible(
                             edge,
-                            isImplied( edge ) ? IMPLIED_COLOR : "darkslategray" ) ) );
+                            isOverridden( edge ) ? OVERRIDDEN_COLOR : "darkslategray" ) ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( edge.isAskedFor() ) {
@@ -308,14 +310,14 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                                 "fontcolor",
                                 colorIfVisible(
                                         edge,
-                                        isImplied( edge ) ? IMPLIED_COLOR : "black" ) ) );
+                                        isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
                 } else if ( edge.isCritical() ) {
                     list.add( new DOTAttribute( "style", "bold" ) );
                     list.add( new DOTAttribute(
                             "fontcolor",
                             colorIfVisible(
                                     edge,
-                                    isImplied( edge ) ? IMPLIED_COLOR : "black" ) ) );
+                                    isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
                 }
             }
             // head and tail labels
@@ -373,14 +375,25 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
     }
 
     @SuppressWarnings( "unchecked" )
-    private boolean isImplied( Flow flow ) {
-        if ( graphProperties != null && graphProperties.get( "impliedFlows" ) != null ) {
-            List<Flow> impliedFlows = (List<Flow>) graphProperties.get( "impliedFlows" );
+    private boolean isOverridden( Flow flow ) {
+        if ( graphProperties != null && graphProperties.get( "overriddenFlows" ) != null ) {
+            List<Flow> impliedFlows = (List<Flow>) graphProperties.get( "overriddenFlows" );
             return impliedFlows.contains( flow );
         } else {
             return false;
         }
     }
+
+    @SuppressWarnings( "unchecked" )
+    private boolean isOverridden( Node node ) {
+        if ( node.isPart() && graphProperties != null && graphProperties.get( "overriddenParts" ) != null ) {
+            List<Part> impliedParts = (List<Part>) graphProperties.get( "overriddenParts" );
+            return impliedParts.contains( (Part)node );
+        } else {
+            return false;
+        }
+    }
+
 
     private String summarizeExternalFlows( Iterator<ExternalFlow> externalFlows ) {
         StringBuilder sb = new StringBuilder();

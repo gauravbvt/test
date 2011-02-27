@@ -64,7 +64,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private Segment segment = NONE; // new Segment stands for all segments
 
-    private String focusKind;
+    private String focusKind = ORG;
 
     private String focus = "";
 
@@ -240,32 +240,40 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addProcedureMapDiagramPanel() {
-        Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(
-                DOM_IDENTIFIER, null, null, true, true )
-                : new Settings( DOM_IDENTIFIER, null, diagramSize, true, true );
-        procedureMapDiagramPanel =
-                new ProcedureMapDiagramPanel(
-                        "procedure-map",
-                        isPlanSelected() ? null : segment,
-                        isSummarizeByOrg(),
-                        isSummarizeByRole(),
-                        getFocusEntity(),
-                        settings );
-        procedureMapDiagramPanel.setOutputMarkupId( true );
-        addOrReplace( procedureMapDiagramPanel );
-        ProceduresGraphBuilder graphBuilder = new ProceduresGraphBuilder(
-                isPlanSelected() ? null : segment,
-                isSummarizeByOrg(),
-                isSummarizeByRole(),
-                getFocusEntity() );
-        graphBuilder.setQueryService( getQueryService() );
-        boolean noProcedures = !graphBuilder.hasCommitments();
-        if ( noProcedures ) {
+        if ( focus == null || focus.isEmpty() ) {
+            procedureMapDiagramPanel = new Label( "procedure-map", "" );
             procedureMapDiagramPanel.add( new AttributeModifier(
                     "style",
                     true,
-                    new Model<String>( "background:url('../images/no-procedures.png') 270px 0 no-repeat #ffffff;" ) ) );
+                    new Model<String>( "background:url('../images/map-loading.png') 270px 0 no-repeat #ffffff;" ) ) );
+        } else {
+            Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(
+                    DOM_IDENTIFIER, null, null, true, true )
+                    : new Settings( DOM_IDENTIFIER, null, diagramSize, true, true );
+            procedureMapDiagramPanel =
+                    new ProcedureMapDiagramPanel(
+                            "procedure-map",
+                            isPlanSelected() ? null : segment,
+                            isSummarizeByOrg(),
+                            isSummarizeByRole(),
+                            getFocusEntity(),
+                            settings );
+            ProceduresGraphBuilder graphBuilder = new ProceduresGraphBuilder(
+                    isPlanSelected() ? null : segment,
+                    isSummarizeByOrg(),
+                    isSummarizeByRole(),
+                    getFocusEntity() );
+            graphBuilder.setQueryService( getQueryService() );
+            boolean noProcedures = !graphBuilder.hasCommitments();
+            if ( noProcedures ) {
+                procedureMapDiagramPanel.add( new AttributeModifier(
+                        "style",
+                        true,
+                        new Model<String>( "background:url('../images/no-procedures.png') 270px 0 no-repeat #ffffff;" ) ) );
+            }
         }
+        procedureMapDiagramPanel.setOutputMarkupId( true );
+        addOrReplace( procedureMapDiagramPanel );
     }
 
     public boolean isPlanSelected() {

@@ -60,7 +60,8 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
                     }
 
                 } );
-        digraph.setProperty( "impliedFlows", new ArrayList<Flow>() );
+        digraph.setProperty( "overriddenFlows", new ArrayList<Flow>() );
+        digraph.setProperty( "overriddenParts", new ArrayList<Part>() );
         populateSegmentGraph( digraph, segment );
         return digraph;
     }
@@ -105,27 +106,30 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
                 }
             }
         }
-        addFlowsFromOverridden( graph, segment );
+        findOverridden( graph, segment );
 
     }
-     @SuppressWarnings( "unchecked" )
-     private void addFlowsFromOverridden(
+
+    @SuppressWarnings( "unchecked" )
+    private void findOverridden(
             Graph<Node, Flow> graph,
-            Segment segment  ) {
-         List<Flow> impliedFlows = (List<Flow>)((DirectedMultiGraphWithProperties)graph).getProperty( "impliedFlows" );
-         for ( Part part : segment.listParts() ) {
-             for ( Flow impliedFlow : queryService.findImpliedSharingSends( part ) ) {
-                  graph.addVertex( impliedFlow.getTarget() );
-                  graph.addEdge( part, impliedFlow.getTarget(), impliedFlow );
-                 impliedFlows.add( impliedFlow );
-             }
-             for ( Flow impliedFlow : queryService.findImpliedSharingReceives( part ) ) {
-                  graph.addVertex( impliedFlow.getTarget() );
-                  graph.addEdge( impliedFlow.getSource(), part, impliedFlow );
-                 impliedFlows.add( impliedFlow );
-             }
-         }
-     }
+            Segment segment ) {
+        List<Flow> overriddenFlows = (List<Flow>) ( (DirectedMultiGraphWithProperties) graph )
+                .getProperty( "overriddenFlows" );
+        List<Part> overriddenParts = (List<Part>) ( (DirectedMultiGraphWithProperties) graph )
+                .getProperty( "overriddenParts" );
+        for ( Part part : segment.listParts() ) {
+            if ( queryService.isOverridden( part ) ) {
+                overriddenParts.add( part );
+                for ( Flow impliedFlow : queryService.findOverriddenSharingSends( part ) ) {
+                    overriddenFlows.add( impliedFlow );
+                }
+                for ( Flow impliedFlow : queryService.findOverriddenSharingReceives( part ) ) {
+                    overriddenFlows.add( impliedFlow );
+                }
+            }
+        }
+    }
 
     private boolean disconnected( Node node ) {
         if ( includeConnectors ) {

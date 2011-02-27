@@ -2964,23 +2964,23 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     /** @{inheritDoc} */
     public Boolean isOverridden( Part part ) {
-        return !findAllOverriddenParts( part ).isEmpty();
+        return !findAllOverridingParts( part ).isEmpty();
     }
 
     @Override
     public Boolean isOverriding( Part part ) {
-        return !findAllOverridingParts( part ).isEmpty();
+        return !findAllOverriddenParts( part ).isEmpty();
     }
 
     @Override
     /** @{inheritDoc} */
     public Boolean isOverridden( Flow flow ) {
-        return !findAllOverriddenFlows( flow ).isEmpty();
+        return !findAllOverridingFlows( flow ).isEmpty();
     }
 
     @Override
     public Boolean isOverriding( Flow flow ) {
-        return !findAllOverridingFlows( flow ).isEmpty();
+        return !findAllOverriddenFlows( flow ).isEmpty();
     }
 
     @Override
@@ -3018,49 +3018,49 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
-    public List<Flow> findImpliedSharingSends( Part part ) {
-        List<Flow> implied = new ArrayList<Flow>();
+    public List<Flow> findOverriddenSharingSends( Part part ) {
+        List<Flow> overriddenSends = new ArrayList<Flow>();
         final Place locale = getPlan().getLocale();
-        for ( Part overridden : findAllOverriddenParts( part ) ) {
-            for ( final Flow sharingSendFromOverridden : overridden.getAllSharingSends() ) {
+        for ( Part overriding : findAllOverridingParts( part ) ) {
+            for ( final Flow sharingSend : part.getAllSharingSends() ) {
                 boolean matched = CollectionUtils.exists(
-                        part.getAllSharingSends(),
+                        overriding.getAllSharingSends(),
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return ( (Flow) object ).matchesInfoOf( sharingSendFromOverridden, locale );
+                                return ( (Flow) object ).matchesInfoOf( sharingSend, locale );
                             }
                         }
                 );
-                if ( !matched ) {
-                    implied.add( sharingSendFromOverridden );
+                if ( matched ) {
+                    overriddenSends.add( sharingSend );
                 }
             }
         }
-        return implied;
+        return overriddenSends;
     }
 
     @Override
-    public List<Flow> findImpliedSharingReceives( Part part ) {
-        List<Flow> implied = new ArrayList<Flow>();
+    public List<Flow> findOverriddenSharingReceives( Part part ) {
+        List<Flow>overriddenReceives = new ArrayList<Flow>();
         final Place locale = getPlan().getLocale();
-        for ( Part overridden : findAllOverriddenParts( part ) ) {
-            for ( final Flow sharingReceiveFromOverridden : overridden.getAllSharingReceives() ) {
+        for ( Part overriding : findAllOverridingParts( part ) ) {
+            for ( final Flow sharingReceive : part.getAllSharingReceives() ) {
                 boolean matched = CollectionUtils.exists(
-                        part.getAllSharingReceives(),
+                        overriding.getAllSharingReceives(),
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return ( (Flow) object ).matchesInfoOf( sharingReceiveFromOverridden, locale );
+                                return ( (Flow) object ).matchesInfoOf( sharingReceive, locale );
                             }
                         }
                 );
-                if ( !matched ) {
-                    implied.add( sharingReceiveFromOverridden );
+                if ( matched ) {
+                    overriddenReceives.add( sharingReceive );
                 }
             }
         }
-        return implied;
+        return overriddenReceives;
     }
 
 }

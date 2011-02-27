@@ -1412,18 +1412,18 @@ public interface QueryService {
     List<Flow> findAllOverriddenFlows( Flow flow );
 
     /**
-     * Find non-overridden sharing send flows from overridden parts.
+     * Find overridden sharing send flows from overridden parts.
      *
      * @param part a part
      * @return list of flows
      */
-    List<Flow> findImpliedSharingSends( Part part );
+    List<Flow> findOverriddenSharingSends( Part part );
 
     /**
-     * Find non-overridden sharing send flows from overridden parts.
+     * Find overridden sharing send flows from overridden parts.
      *
      * @param part a part
      * @return list of flows
      */
-    List<Flow> findImpliedSharingReceives( Part part );
+    List<Flow> findOverriddenSharingReceives( Part part );
 }
