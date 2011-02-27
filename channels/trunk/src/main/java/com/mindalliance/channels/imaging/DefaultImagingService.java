@@ -413,18 +413,21 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         Actor actor = assignment.getActor();
         if ( actor != null && !actor.isUnknown() ) {
             iconName = findSpecificIcon( actor, new ArrayList<Actor>() );
-        } else {
+        }
+        if ( iconName == null ) {
             Role role = assignment.getRole();
             if ( role != null && !role.isUnknown() ) {
                 iconName = findSpecificIcon( role, new ArrayList<Role>() );
-            } else {
-                Organization org = assignment.getOrganization();
-                if ( org != null && !org.isUnknown() ) {
-                    iconName = findSpecificIcon( org, new ArrayList<Organization>() );
-                }
             }
         }
-        return iconName == null ? findGenericIconName( assignment.getPart() )
+        if ( iconName == null ) {
+            Organization org = assignment.getOrganization();
+            if ( org != null && !org.isUnknown() ) {
+                iconName = findSpecificIcon( org, new ArrayList<Organization>() );
+            }
+        }
+        return iconName == null
+                ? findGenericIconName( assignment.getPart() )
                 : iconName;
     }
 

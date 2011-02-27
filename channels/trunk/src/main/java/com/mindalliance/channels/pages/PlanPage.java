@@ -123,7 +123,7 @@ public final class PlanPage extends WebPage implements Updatable {
     /**
      * Length a segment title is abbreviated to
      */
-    private static final int SEGMENT_TITLE_MAX_LENGTH = 40;
+    private static final int SEGMENT_TITLE_MAX_LENGTH = 50;
 
     /**
      * Length a segment title is abbreviated to

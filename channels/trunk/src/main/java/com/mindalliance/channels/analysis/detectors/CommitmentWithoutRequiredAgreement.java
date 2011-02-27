@@ -1,16 +1,13 @@
 package com.mindalliance.channels.analysis.detectors;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.analysis.DetectedIssue;
-import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +33,8 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         for ( final Commitment commitment : queryService.findAllCommitmentsOf( org ) ) {
-            if ( org.isAgreementsRequired()
-                    && commitment.isBetweenOrganizations() ) {
-                if ( !CollectionUtils.exists(
-                        org.getAgreements(),
-                        new Predicate() {
-                            public boolean evaluate( Object object ) {
-                                return queryService.covers( ( (Agreement) object ),
-                                                         commitment );
-                            }
-                        }
-                ) ) {
+            if ( queryService.isAgreementRequired( commitment )
+                    && !queryService.isCoveredByAgreement( commitment ) ) {
                     DetectedIssue issue = makeIssue( Issue.COMPLETENESS, org );
                     issue.setDescription( commitment.toString()
                             + ", but this is not backed by a sharing agreement." );
@@ -56,7 +44,6 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
                     issue.setSeverity( Level.Low );
                     issues.add( issue );
                 }
-            }
         }
         return issues;
     }

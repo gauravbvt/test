@@ -1901,21 +1901,37 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
                 } else if ( partOrg.isType() ) {
                     for ( Organization actualOrg : listActualEntities( Organization.class ) ) {
-                        if ( actualOrg.getTypes().contains( partOrg ) ) {
-                            Assignment assignment = new Assignment(
-                                    new Employment( Actor.UNKNOWN,
-                                            actualOrg,
-                                            new Job( Actor.UNKNOWN,
-                                                    part.getRoleOrUnknown(),
-                                                    part.getJurisdiction() ) ),
-                                    part );
-                            if ( !isProhibited( assignment ) ) result.add( assignment );
+                        if ( !containsParentOf( result, actualOrg ) ) {
+                            if ( actualOrg.getAllTypes().contains( partOrg ) ) {
+                                Assignment assignment = new Assignment(
+                                        new Employment( Actor.UNKNOWN,
+                                                actualOrg,
+                                                new Job( Actor.UNKNOWN,
+                                                        part.getRoleOrUnknown(),
+                                                        part.getJurisdiction() ) ),
+                                        part );
+                                if ( !isProhibited( assignment ) ) result.add( assignment );
+                            }
                         }
                     }
                 }
             }
         }
         return new ArrayList<Assignment>( result );
+    }
+
+    private boolean containsParentOf( Set<Assignment> assignments, final Organization org ) {
+        return CollectionUtils.exists(
+                assignments,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Assignment assignment = (Assignment)object;
+                        Organization other = assignment.getOrganization();
+                        return !other.isUnknown() && org.ancestors().contains( other );
+                    }
+                }
+        );
     }
 
     @Override
@@ -2256,6 +2272,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    /** {@inheritDoc} */
     public List<Employment> findAllSupervisedBy( Actor actor ) {
         return findAllSupervisedBy( actor, new HashSet<Actor>() );
     }
@@ -2280,11 +2297,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    /** {@inheritDoc} */
     public UserService getUserService() {
         return userService;
     }
 
     @Override
+    /** {@inheritDoc} */
     public Participation findParticipation( final String username ) {
         return (Participation) CollectionUtils.find(
                 getDao().list( Participation.class ),
@@ -2298,7 +2317,29 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    /** {@inheritDoc} */
+    public Boolean isCoveredByAgreement( final Commitment commitment ) {
+        return CollectionUtils.exists(
+                        commitment.getCommitter().getOrganization().getAgreements(),
+                        new Predicate() {
+                            public boolean evaluate( Object object ) {
+                                return covers( ( (Agreement) object ),
+                                                         commitment );
+                            }
+                        }
+                );
+    }
+
+    @Override
+    /** {@inheritDoc} */
+    public Boolean isAgreementRequired( Commitment commitment ) {
+        return commitment.getCommitter().getOrganization().isAgreementsRequired()
+                    && commitment.isBetweenOrganizations();
+    }
+
+    @Override
     @SuppressWarnings( "unchecked" )
+    /** {@inheritDoc} */
     public List<ModelEntity> findTaskedEntities(
             Segment segment,
             Class entityClass,
@@ -2785,7 +2826,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     /** @{inheritDoc} */
     public List<Employment> findAllEmployments( Part part, Place locale ) {
-
         Set<Employment> employments = new HashSet<Employment>();
         // From confirmed jobs matching the part
         for ( Organization org : listActualEntities( Organization.class ) ) {

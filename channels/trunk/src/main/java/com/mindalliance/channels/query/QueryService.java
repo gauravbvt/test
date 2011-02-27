@@ -1170,6 +1170,20 @@ public interface QueryService {
     Participation findParticipation( String username );
 
     /**
+     * Whether a commitment is covered by an agreement.
+     * @param commitment a sharing commitment
+     * @return a boolean
+     */
+    Boolean isCoveredByAgreement( Commitment commitment );
+
+    /**
+     * Whether a commitment requires an agreement.
+     * @param commitment a sharing commitment
+     * @return a boolean
+     */
+    Boolean isAgreementRequired( Commitment commitment );
+
+    /**
      * Whether an agreement covers a sharing commitment.
      *
      * @param agreement  the agreement

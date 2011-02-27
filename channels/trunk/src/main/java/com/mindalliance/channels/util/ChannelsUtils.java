@@ -17,6 +17,7 @@ import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -578,5 +579,21 @@ public final class ChannelsUtils {
      */
     public static boolean startsWithVowel( String str ) {
         return !str.isEmpty() && "AEIOUaeiou".indexOf( str.charAt( 0 ) ) != -1;
+    }
+
+    /**
+     * Uncapitalize if both the first and second letters are not uppercase.
+     *
+     * @param s a string
+     * @return a string
+     */
+    public static String smartUncapitalize( String s ) {
+        if ( s.length() > 1
+                && Character.isUpperCase( s.charAt( 0 ) )
+                && Character.isUpperCase( s.charAt( 1 ) ) )
+            return s;
+        else
+            return StringUtils.uncapitalize( s );
+
     }
 }

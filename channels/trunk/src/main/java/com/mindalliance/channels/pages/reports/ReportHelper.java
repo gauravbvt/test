@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Assignment;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Specable;
@@ -11,6 +12,8 @@ import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+
+import java.util.List;
 
 /**
  * Procedures report helper.
@@ -55,4 +58,8 @@ public interface ReportHelper {
     Assignments getNotifications( Assignments assignments, QueryService queryService );
 
     Assignments getRequests( Assignments assignments, QueryService queryService );
+
+    Assignments getAssignments();
+
+    List<Commitment> getCommitments( Flow flow );
 }

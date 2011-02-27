@@ -264,6 +264,25 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
         return result;
     }
 
+    @Override
+    public Assignments getAssignments() {
+        return selector.getAssignments();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Commitment> getCommitments( final Flow flow ) {
+        return (List<Commitment>) CollectionUtils.select(
+                selector.getCommitments(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Commitment)object).getSharing().equals( flow );
+                    }
+                }
+        );
+    }
+
     private void update( AjaxRequestTarget target, Change change ) {
         updatable.changed( change );
         updatable.updateWith(

@@ -3,17 +3,17 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Classification;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.query.Assignments;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -267,20 +267,18 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
     public String getAgreement() {
         Flow flow = reportHelper.getFlow();
         if ( flow.isSharing() && !flow.isProhibited() ) {
-            Assignments assignments = reportHelper.getPlanService().getAssignments();
-            Place locale = assignments.getLocale();
-
-            for ( Assignment committer : assignments.with( flow.getSource() ) ) {
-                Specable committerActor = committer.getSpecableActor();
-                for ( Assignment beneficiary : assignments.with( flow.getTarget() ) )
-                    if ( !committerActor.equals( beneficiary.getSpecableActor() )
-                            && flow.allowsCommitment( committer, beneficiary, locale, reportHelper.getPlanService() )
-                            )
-                        return "Yes, covered by a sharing agreement";
+            List<Commitment> commitments = reportHelper.getCommitments( flow );
+            for ( Commitment commitment : commitments ) {
+                Organization committerOrg = commitment.getCommitter().getOrganization();
+                Organization beneficiaryOrg = commitment.getBeneficiary().getOrganization();
+                if ( committerOrg.isUnknown() || beneficiaryOrg.isUnknown()
+                        || ( !committerOrg.equals( beneficiaryOrg )
+                        && committerOrg.isAgreementsRequired() ) ) {
+                    return "A sharing agreement may be required";
+                }
             }
         }
-
-        return "Not covered by a sharing agreement";
+        return "N/A";
     }
 
     public List<Attachment> getDocumentation() {

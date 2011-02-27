@@ -222,7 +222,7 @@ public class TypesPanel extends AbstractCommandablePanel {
         public boolean isInherited() {
             return type != null
                     && !getEntity().getTypes().contains( type )
-                    && !isImplicit()
+                   // && !isImplicit()
                     && getEntity().hasType( type );
         }
 

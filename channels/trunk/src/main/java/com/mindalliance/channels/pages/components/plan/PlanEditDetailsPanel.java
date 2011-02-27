@@ -19,6 +19,7 @@ import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -59,7 +60,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
         init( getPlan() );
     }
 
-    private void init( Plan plan ) {
+    private void init( final Plan plan ) {
         add(    new Label( "uri", plan.getUri() ),
                 new TextField<String>( "name", new PropertyModel<String>( this, "name" ) )
                 .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -79,7 +80,14 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                         }
                     } )
                 .setEnabled( isLockedByUser( plan ) ),
-
+             new AjaxCheckBox(
+                     "template",
+                     new PropertyModel<Boolean>( this, "template") ) {
+                 @Override
+                 protected void onUpdate( AjaxRequestTarget target ) {
+                     update( target, new Change( Change.Type.Updated, plan) );
+                 }
+             },
              new PhaseListPanel( "phases" ),
 
              new ModelObjectLink( "locale-link",
@@ -170,6 +178,22 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                             "description",
                             desc,
                             UpdateObject.Action.Set ) );
+    }
+
+    public boolean isTemplate() {
+        return getPlan().isTemplate();
+    }
+
+    public void setTemplate( boolean val ) {
+        if ( val != isTemplate() ) {
+            doCommand(
+                    new UpdatePlanObject(
+                            getPlan(),
+                            "template",
+                            val,
+                            UpdateObject.Action.Set )
+                    );
+        }
     }
 
     /**

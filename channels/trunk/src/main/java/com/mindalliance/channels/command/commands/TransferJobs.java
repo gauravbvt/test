@@ -29,12 +29,20 @@ public class TransferJobs extends AbstractCommand {
 
     public TransferJobs( Organization fromOrganization,
                          Organization toOrganization,
-                         List<Job> jobs ) {
+                         List<Job> jobs,
+                         boolean copying) {
         needLockOn( fromOrganization );
         needLockOn( toOrganization );
         set( "fromOrganization", fromOrganization.getId() );
         set( "toOrganization", toOrganization.getId() );
         set( "jobs", mapJobs( jobs ) );
+        set( "copying", copying );
+    }
+
+    public TransferJobs( Organization fromOrganization,
+                         Organization toOrganization,
+                         List<Job> jobs ) {
+        this( fromOrganization, toOrganization, jobs, false );
     }
 
     /**
@@ -52,10 +60,11 @@ public class TransferJobs extends AbstractCommand {
         QueryService queryService = commander.getQueryService();
         Organization fromOrg = commander.resolve( Organization.class, (Long) get( "fromOrganization" ) );
         Organization toOrg = commander.resolve( Organization.class, (Long) get( "toOrganization" ) );
+        boolean copying = (Boolean)get( "copying" );
         List<Job> jobs = unmapJobs( (List<MappedObject>) get( "jobs" ), commander );
         MultiCommand multi = (MultiCommand)get( "subCommands");
         if (multi == null ) {
-            multi = makeSubCommands( fromOrg, toOrg, jobs );
+            multi = makeSubCommands( fromOrg, toOrg, jobs, copying );
             set("subCommands", multi);
         }
         multi.execute( commander );
@@ -63,19 +72,24 @@ public class TransferJobs extends AbstractCommand {
         return new Change( Change.Type.Updated, queryService.getPlan() );
     }
 
-    private MultiCommand makeSubCommands( Organization fromOrg, Organization toOrg, List<Job> jobs ) {
+    private MultiCommand makeSubCommands(
+            Organization fromOrg,
+            Organization toOrg,
+            List<Job> jobs,
+            boolean copying ) {
         MultiCommand subCommands = new MultiCommand( "transfer jobs - internal" );
         for ( Job job : jobs ) {
-            subCommands.addCommand( new UpdatePlanObject (
-                    fromOrg,
-                    "jobs",
-                    job,
-                    UpdateObject.Action.Remove
-            ));
+            if ( !copying )
+                subCommands.addCommand( new UpdatePlanObject (
+                        fromOrg,
+                        "jobs",
+                        job,
+                        UpdateObject.Action.Remove
+                ));
             subCommands.addCommand( new UpdatePlanObject (
                     toOrg,
                     "jobs",
-                    job,
+                    copying ? new Job(job) : job,
                     UpdateObject.Action.Add
             ));
         }

@@ -114,9 +114,13 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
      */
     private Organization transferFrom;
     /**
-     * Jobs tranfer panel.
+     * Jobs transfer panel.
      */
     private Component jobTransferPanel;
+    /**
+     * Whether copying the jobs.
+     */
+     private boolean copying = false;
     /**
      * Do transfer button.
      */
@@ -222,6 +226,19 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         } );
         jobTransferDiv.add( transferFromChoice );
         addJobTransferPanel( jobTransferDiv );
+        // take copies option
+        CheckBox copyingCheckBox = new CheckBox(
+                "copying",
+                new PropertyModel<Boolean>( this, "copying" )
+                );
+        copyingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        });
+        jobTransferDiv.add( copyingCheckBox );
+        // do transfer button
         doTransfer = new AjaxFallbackLink<String>(
                 "doTransfer",
                 new PropertyModel<String>( this, "transferButtonLabel" ) ) {
@@ -242,6 +259,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         doTransfer.setOutputMarkupId( true );
         makeVisible( doTransfer, isTransferring() );
         jobTransferDiv.add( doTransfer );
+
         WebMarkupContainer transferContainer = new WebMarkupContainer( "transferContainer" );
         transferContainer.setOutputMarkupId( true );
         transferContainer.setVisible( getPlan().isDevelopment() );
@@ -268,9 +286,18 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             doCommand( new TransferJobs(
                     getTransferFrom(),
                     getOrganization(),
-                    transferredJobs ) );
+                    transferredJobs,
+                    copying ) );
             return true;
         }
+    }
+
+    public boolean isCopying() {
+        return copying;
+    }
+
+    public void setCopying( boolean copying ) {
+        this.copying = copying;
     }
 
     private void addJobTransferPanel( WebMarkupContainer transferringDiv ) {
@@ -293,6 +320,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
     public void setTransferring( boolean transferring ) {
         this.transferring = transferring;
+        copying = false;
     }
 
     public Organization getTransferFrom() {
