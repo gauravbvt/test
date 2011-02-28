@@ -19,6 +19,7 @@ import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Flow.Restriction;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.InvalidEntityKindException;
@@ -1963,42 +1964,31 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
-    /** {@inheritDoc } */
     public List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf ) {
-        return findAllCommitments( flow, allowCommitmentsToSelf, true );
+        return findAllCommitments( flow, allowCommitmentsToSelf, getAssignments( true ) );
     }
 
 
     @Override
-    /** {@inheritDoc } */
-    public List<Commitment> findAllCommitments(
-            Flow flow,
-            Boolean allowCommitmentsToSelf,
-            Boolean includeUnknowns ) {
+    public List<Commitment> findAllCommitments( Flow flow, Boolean selfCommits, Assignments assignments ) {
+
         Set<Commitment> commitments = new HashSet<Commitment>();
-        if ( flow.isSharing() ) {
-            if ( !flow.isProhibited() ) {
-                List<Flow> allFlows = findAllFlows();
-                Place locale = getPlan().getLocale();
-                List<Assignment> committers = findAllAssignments( (Part) flow.getSource(), includeUnknowns );
-                List<Assignment> beneficiaries = findAllAssignments( (Part) flow.getTarget(), includeUnknowns );
-                Place place = getPlan().getLocale();
-                for ( Assignment committer : committers ) {
-                    Actor committerActor = committer.getActor();
-                    for ( Assignment beneficiary : beneficiaries ) {
-                        if ( ( allowCommitmentsToSelf || !committerActor.equals( beneficiary.getActor() ) )
-                                && flow.allowsCommitment( committer, beneficiary, place, this )
-                                ) {
-                            Commitment commitment = new Commitment( committer, beneficiary, flow );
-                            addCommitment( commitment,
-                                    commitments,
-                                    locale,
-                                    allFlows );
-                        }
-                    }
+        if ( flow.isSharing() && !flow.isProhibited() ) {
+            List<Flow> allFlows = findAllFlows();
+            Place locale = getPlan().getLocale();
+            Assignments beneficiaries = assignments.assignedTo( (Part) flow.getTarget() );
+            for ( Assignment committer : assignments.assignedTo( (Part) flow.getSource() ) ) {
+                Actor committerActor = committer.getActor();
+                for ( Assignment beneficiary : beneficiaries ) {
+                    if ( ( selfCommits || !committerActor.equals( beneficiary.getActor() ) )
+                         && allowsCommitment( committer, beneficiary, locale, flow ) )
+
+                        addCommitment( new Commitment( committer, beneficiary, flow ),
+                                      commitments, locale, allFlows );
                 }
             }
         }
+
         return new ArrayList<Commitment>( commitments );
     }
 
@@ -2014,7 +2004,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Flow flow = flows.next();
                 if ( flow.isSharing() && flow.getSource().equals( assignment.getPart() ) ) {
                     for ( Assignment beneficiary : assignments.assignedTo( (Part) flow.getTarget() ) ) {
-                        if ( flow.allowsCommitment( assignment, beneficiary, locale, this ) ) {
+                        if ( allowsCommitment( assignment, beneficiary, locale, flow ) ) {
                             Commitment commitment = new Commitment(
                                     assignment,
                                     beneficiary,
@@ -2032,25 +2022,25 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     private void addCommitment(
-            Commitment commitment,
-            Set<Commitment> commitments,
-            Place locale,
-            List<Flow> allFlows ) {
-        if ( !isImplicitlyProhibited( commitment, allFlows ) ) {
-            if ( !commitments.contains( commitment ) ) {
-                // TODO - This is where the time goes. How can this be optimized?  -->
-                List<Commitment> toRemove = new ArrayList<Commitment>();
-                for ( Commitment c : commitments ) {
-                    if ( c.getSharing().overrides( commitment.getSharing(), locale ) )
-                        return;
-                    else if ( commitment.getSharing().overrides( c.getSharing(), locale ) ) {
-                        toRemove.add( c );
-                    }
-                }
-                commitments.removeAll( toRemove );
-                // <--
-                commitments.add( commitment );
+        Commitment commitment, Set<Commitment> commitments, Place locale, List<Flow> allFlows ) {
+
+        if ( !isImplicitlyProhibited( commitment, allFlows )
+             && !commitments .contains( commitment ) ) {
+
+            // TODO - This is where the time goes. How can this be optimized?  -->
+            Flow commitmentSharing = commitment.getSharing();
+            List<Commitment> toRemove = new ArrayList<Commitment>( commitments.size() );
+            for ( Commitment c : commitments ) {
+                Flow flow = c.getSharing();
+                if ( flow.overrides( commitmentSharing, locale ) )
+                    return;
+                else if ( commitmentSharing.overrides( flow, locale ) )
+                    toRemove.add( c );
             }
+
+            commitments.removeAll( toRemove );
+            // <--
+            commitments.add( commitment );
         }
     }
 
@@ -2953,8 +2943,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     public Boolean isOverriding( Part part ) {
-        return !findAllOverriddenParts( part,
-                findSynonymousParts( part ) ).isEmpty();
+        return !findAllOverriddenParts( part, findSynonymousParts( part ) ).isEmpty();
     }
 
     @Override
@@ -3056,5 +3045,65 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return matchingParts;
     }
 
+    public boolean allowsCommitment(
+        Assignment committer, Assignment beneficiary, Place locale, Flow flow ) {
+
+        Restriction restriction = flow.getRestriction();
+        if ( restriction != null ) {
+            Organization committerOrg = committer.getOrganization();
+            Organization beneficiaryOrg = beneficiary.getOrganization();
+            Place committerLocation = committer.getLocation();
+            Place beneficiaryLocation = beneficiary.getLocation();
+            switch ( restriction ) {
+                case SameTopOrganization:
+                    return ModelObject.isNullOrUnknown( committerOrg )
+                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
+                            || committerOrg.getTopOrganization()
+                            .equals( beneficiaryOrg.getTopOrganization() );
+
+                case SameOrganization:
+                    return ModelObject.isNullOrUnknown( committerOrg )
+                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
+                            || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
+                            || beneficiaryOrg.narrowsOrEquals( committerOrg, locale );
+
+                case DifferentOrganizations:
+                    return ModelObject.isNullOrUnknown( committerOrg )
+                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
+                            || ( !committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
+                            && !beneficiaryOrg.narrowsOrEquals( committerOrg, locale ) );
+
+                case DifferentTopOrganizations:
+                    return ModelObject.isNullOrUnknown( committerOrg )
+                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
+                            || !committerOrg.getTopOrganization()
+                            .equals( beneficiaryOrg.getTopOrganization() );
+
+                case SameLocation:
+                    return ModelObject.isNullOrUnknown( committerLocation )
+                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
+                            || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
+                            || beneficiaryLocation.narrowsOrEquals( committerLocation, locale );
+
+                case DifferentLocations:
+                    return ModelObject.isNullOrUnknown( committerLocation )
+                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
+                            || ( !committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
+                            && !beneficiaryLocation.narrowsOrEquals( committerLocation, locale ) );
+
+                case Supervisor:
+                    return ModelObject.isNullOrUnknown( committer.getActor() )
+                            || ModelObject.isNullOrUnknown( beneficiary.getActor() )
+                            || hasSupervisor( committer.getActor(), beneficiary.getActor() );
+                case Self:
+                    return ModelObject.isNullOrUnknown( committer.getActor() )
+                            || ModelObject.isNullOrUnknown( beneficiary.getActor() )
+                            || committer.getActor().equals( beneficiary.getActor() );
+
+            }
+        }
+
+        return true;
+    }
 }
 

@@ -6,6 +6,9 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.query.DefaultQueryService;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +32,10 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        List<Commitment> commitments = getQueryService().findAllCommitments( flow, false, false );
+        QueryService queryService = getQueryService();
+        Assignments assignments = queryService.getAssignments( false );
+        List<Commitment> commitments = queryService.findAllCommitments( flow,
+                                                                        false, assignments );
         if ( commitments.isEmpty() ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, flow );
             Part source = (Part)flow.getSource();

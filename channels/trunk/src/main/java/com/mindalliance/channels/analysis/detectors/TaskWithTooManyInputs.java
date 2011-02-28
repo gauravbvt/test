@@ -10,6 +10,9 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.query.DefaultQueryService;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -86,9 +89,11 @@ public class TaskWithTooManyInputs extends AbstractIssueDetector {
                 }
         );
         Set<ModelEntity> committers = new HashSet<ModelEntity>();
+        QueryService queryService = getQueryService();
+        Assignments a = queryService.getAssignments( false );
         for ( Flow sharingReceive : part.getAllSharingReceives() ) {
-            List<Commitment> commitments = getQueryService().findAllCommitments( sharingReceive, false, false );
-            for ( Commitment commitment : commitments ) {
+            for ( Commitment commitment : queryService.findAllCommitments( sharingReceive,
+                                                                            false, a ) ) {
                 Assignment assignment = commitment.getCommitter();
                 ModelEntity assignee = assignment.getKnownAssignee();
                 if ( !assignees.contains( assignee ) )

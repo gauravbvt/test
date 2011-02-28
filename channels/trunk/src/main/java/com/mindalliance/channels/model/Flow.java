@@ -1189,69 +1189,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return results;
     }
 
-    public boolean allowsCommitment(
-            Assignment committer,
-            Assignment beneficiary,
-            Place locale,
-            QueryService queryService ) {
-
-        if ( restriction != null ) {
-            Organization committerOrg = committer.getOrganization();
-            Organization beneficiaryOrg = beneficiary.getOrganization();
-            Place committerLocation = committer.getLocation();
-            Place beneficiaryLocation = beneficiary.getLocation();
-            switch ( restriction ) {
-                case SameTopOrganization:
-                    return ModelObject.isNullOrUnknown( committerOrg )
-                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
-                            || committerOrg.getTopOrganization()
-                            .equals( beneficiaryOrg.getTopOrganization() );
-
-                case SameOrganization:
-                    return ModelObject.isNullOrUnknown( committerOrg )
-                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
-                            || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
-                            || beneficiaryOrg.narrowsOrEquals( committerOrg, locale );
-
-                case DifferentOrganizations:
-                    return ModelObject.isNullOrUnknown( committerOrg )
-                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
-                            || ( !committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
-                            && !beneficiaryOrg.narrowsOrEquals( committerOrg, locale ) );
-
-                case DifferentTopOrganizations:
-                    return ModelObject.isNullOrUnknown( committerOrg )
-                            || ModelObject.isNullOrUnknown( beneficiaryOrg )
-                            || !committerOrg.getTopOrganization()
-                            .equals( beneficiaryOrg.getTopOrganization() );
-
-                case SameLocation:
-                    return ModelObject.isNullOrUnknown( committerLocation )
-                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
-                            || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
-                            || beneficiaryLocation.narrowsOrEquals( committerLocation, locale );
-
-                case DifferentLocations:
-                    return ModelObject.isNullOrUnknown( committerLocation )
-                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
-                            || ( !committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
-                            && !beneficiaryLocation.narrowsOrEquals( committerLocation, locale ) );
-
-                case Supervisor:
-                    return ModelObject.isNullOrUnknown( committer.getActor() )
-                            || ModelObject.isNullOrUnknown( beneficiary.getActor() )
-                            || queryService.hasSupervisor( committer.getActor(), beneficiary.getActor() );
-                case Self:
-                    return ModelObject.isNullOrUnknown( committer.getActor() )
-                            || ModelObject.isNullOrUnknown( beneficiary.getActor() )
-                            || committer.getActor().equals( beneficiary.getActor() );
-
-            }
-        }
-
-        return true;
-    }
-
     /**
      * Get the nature of the flow.
      *

@@ -5,6 +5,8 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -62,13 +64,17 @@ public class ActorsNetworkGraphBuilder implements GraphBuilder<Actor, EntityRela
         for ( Actor actor : allActors ) {
             digraph.addVertex( actor );
         }
+
         Map<Actor, Map<Actor, List<Flow>>> relFlows = new HashMap<Actor, Map<Actor, List<Flow>>>();
+        Assignments assignments = queryService.getAssignments( false );
         for ( Segment segment : queryService.list( Segment.class ) ) {
             Iterator<Flow> flows = segment.flows();
             while ( flows.hasNext() ) {
                 Flow flow = flows.next();
                 if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
-                    List<Commitment> commitments = queryService.findAllCommitments( flow, false, false );
+                    List<Commitment> commitments = queryService.findAllCommitments( flow,
+                                                                                    false,
+                                                                                    assignments );
                     for ( Commitment commitment : commitments ) {
                         Actor fromActor = commitment.getCommitter().getActor();
                         Actor toActor = commitment.getBeneficiary().getActor();

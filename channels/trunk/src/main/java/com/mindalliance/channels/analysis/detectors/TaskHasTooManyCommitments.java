@@ -10,6 +10,9 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.query.DefaultQueryService;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -89,9 +92,12 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
                 }
         );
         Set<ModelEntity> beneficiaries = new HashSet<ModelEntity>();
+        QueryService queryService = getQueryService();
+        Assignments a = queryService.getAssignments( false );
         for ( Flow sharingSend : part.getAllSharingSends() ) {
-            List<Commitment> commitments = getQueryService().findAllCommitments( sharingSend, false, false );
-            for ( Commitment commitment : commitments ) {
+            for ( Commitment commitment : queryService.findAllCommitments( sharingSend,
+                                                                           false,
+                                                                           a ) ) {
                 Assignment assignment = commitment.getBeneficiary();
                 ModelEntity assignee = assignment.getKnownAssignee();
                 if ( !assignees.contains( assignee ) )

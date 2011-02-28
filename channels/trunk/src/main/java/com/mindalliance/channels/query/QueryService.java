@@ -1035,11 +1035,11 @@ public interface QueryService {
      * Find all commitments implied by a sharing flow.
      *
      * @param flow                   a flow
-     * @param allowCommitmentsToSelf a boolean
-     * @param includeUnknowns        a boolean
+     * @param selfCommits a boolean
+     * @param assignments assignments under consideration
      * @return a list of commitments
      */
-    List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Boolean includeUnknowns );
+    List<Commitment> findAllCommitments( Flow flow, Boolean selfCommits, Assignments assignments );
 
     /**
      * Find all commitments of an actor.
@@ -1394,4 +1394,7 @@ public interface QueryService {
      * @return  a list of parts
      */
     List<Part> findSynonymousParts( Part part );
+
+    boolean allowsCommitment(
+        Assignment committer, Assignment beneficiary, Place locale, Flow flow );
 }
