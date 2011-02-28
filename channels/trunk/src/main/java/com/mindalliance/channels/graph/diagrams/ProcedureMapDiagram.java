@@ -29,12 +29,14 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
      */
     private static final Logger LOG = LoggerFactory.getLogger( ProcedureMapDiagram.class );
     private Segment segment;
+    private final boolean summarizeByOrgType;
     private boolean summarizeByOrg;
     private boolean summarizeByRole;
     private ModelEntity focusEntity;
 
     public ProcedureMapDiagram(
             Segment segment,
+            boolean summarizeByOrgType,
             boolean summarizeByOrg,
             boolean summarizeByRole,
             ModelEntity focusEntity,
@@ -42,6 +44,7 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
             String orientation ) {
         super( diagramSize, orientation);
         this.segment = segment;
+        this.summarizeByOrgType = summarizeByOrgType;
         this.summarizeByOrg = summarizeByOrg;
         this.summarizeByRole = summarizeByRole;
         this.focusEntity = focusEntity;
@@ -57,6 +60,7 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
         String orientation = getOrientation();
         ProceduresGraphBuilder graphBuilder = new ProceduresGraphBuilder(
                 segment,
+                summarizeByOrgType,
                 summarizeByOrg,
                 summarizeByRole,
                 focusEntity

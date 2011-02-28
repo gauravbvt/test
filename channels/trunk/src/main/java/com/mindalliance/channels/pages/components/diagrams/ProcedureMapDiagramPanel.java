@@ -35,6 +35,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
 
 
     private Segment segment;
+    private boolean summarizeByOrgType;
     private boolean summarizeByOrg;
     private boolean summarizeByRole;
     private ModelEntity focusEntity;
@@ -42,12 +43,14 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
     public ProcedureMapDiagramPanel(
             String id,
             Segment segment,
+            boolean summarizeByOrgType,
             boolean summarizeByOrg,
             boolean summarizeByRole,
             ModelEntity focusEntity,
             Settings settings ) {
         super( id, settings );
         this.segment = segment;
+        this.summarizeByOrgType = summarizeByOrgType;
         this.summarizeByOrg = summarizeByOrg;
         this.summarizeByRole = summarizeByRole;
         this.focusEntity = focusEntity;
@@ -63,6 +66,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
     protected Diagram makeDiagram() {
         return getDiagramFactory().newProcedureMapDiagram(
                 segment,
+                summarizeByOrgType,
                 summarizeByOrg,
                 summarizeByRole,
                 focusEntity,
@@ -82,7 +86,9 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
         sb.append( "&" );
         sb.append( ProceduresPage.SUMMARIZE );
         sb.append("=");
-        sb.append( summarizeByOrg
+        sb.append( summarizeByOrgType
+                ? ProceduresPage.SUMMARIZE_BY_ORG_TYPE
+                : summarizeByOrg
                 ? ProceduresPage.SUMMARIZE_BY_ORG
                 : summarizeByRole
                 ? ProceduresPage.SUMMARIZE_BY_ROLE

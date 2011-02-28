@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 public class ProceduresPage extends PngWebPage {
 
     private Segment segment = null;
+    private boolean summarizeByOrgType = false;
     private boolean summarizeByOrg = false;
     private boolean summarizeByRole = false;
     private ModelEntity focusEntity = null;
@@ -38,6 +39,7 @@ public class ProceduresPage extends PngWebPage {
     public static final String SUMMARIZE_BY_ROLE = "role";
     public static final String FOCUS_CLASS = "focusClass";
     public static final String FOCUS_ID = "focusId";
+    public static final String SUMMARIZE_BY_ORG_TYPE = "orgType";
 
     public ProceduresPage( PageParameters parameters ) {
         super( parameters );
@@ -45,7 +47,8 @@ public class ProceduresPage extends PngWebPage {
         segment = PlanPage.findSegment( queryService, parameters );
         if ( parameters.containsKey( SUMMARIZE ) ) {
             String summarizeBy = parameters.getString( SUMMARIZE );
-            if ( summarizeBy.equals( SUMMARIZE_BY_ORG ) ) summarizeByOrg = true;
+            if ( summarizeBy.equals( SUMMARIZE_BY_ORG_TYPE ) ) summarizeByOrgType = true;
+            else if ( summarizeBy.equals( SUMMARIZE_BY_ORG ) ) summarizeByOrg = true;
             else if ( summarizeBy.equals( SUMMARIZE_BY_ROLE ) ) summarizeByRole = true;
         }
         if ( parameters.containsKey( FOCUS_CLASS ) && parameters.containsKey( FOCUS_ID ) ) {
@@ -73,6 +76,7 @@ public class ProceduresPage extends PngWebPage {
     protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException {
         return getDiagramFactory().newProcedureMapDiagram(
                 segment,
+                summarizeByOrgType,
                 summarizeByOrg,
                 summarizeByRole,
                 focusEntity,

@@ -15,8 +15,12 @@
 	        <option>segment B</option>
 	        </select>
 	        &nbsp;|&nbsp;
-			Summarize <input wicket:id="summarizeByOrg" type="checkbox"> by organization
-	        <input wicket:id="summarizeByRole" type="checkbox"> by role
+			Summarize
+            <select wicket:id="summarizeChoice">
+                <option>by type of organization</option>
+                <option>by organization</option>
+                <option>by role</option>
+            </select>
 	        &nbsp;|&nbsp;
 			Focus on <select wicket:id="focusChoice">
 	            <option>organization</option>
