@@ -71,6 +71,7 @@ CONFIGURATION NOTES:
                 <ref bean="conferenceCall"/>
                 <ref bean="email"/>
                 <ref bean="notificationSystem"/>
+                <ref bean="chat"/>
                 <ref bean="im"/>
                 <ref bean="radio"/>
                 <ref bean="television"/>
@@ -192,7 +193,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.AlarmNotANotification"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithoutAssignments"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.OrganizationMissingExpectedCommitment"/>
+               <!-- <bean class="com.mindalliance.channels.analysis.detectors.OrganizationMissingExpectedCommitment"/>-->
                 <bean class="com.mindalliance.channels.analysis.detectors.ReportFlowWithoutEOIs"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorWithoutContactInfo"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.AgentIsTaskBottleneck"/>
@@ -322,6 +323,12 @@ CONFIGURATION NOTES:
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="chat" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Online chat"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Multicast"/>
     </bean>
     <bean id="radio" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Radio"/>

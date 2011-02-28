@@ -32,9 +32,11 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
         final QueryService queryService = getQueryService();
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
-        for ( final Commitment commitment : queryService.findAllCommitmentsOf( org ) ) {
-            if ( queryService.isAgreementRequired( commitment )
-                    && !queryService.isCoveredByAgreement( commitment ) ) {
+        if ( org.isActual() && org.isAgreementsRequired() ) {
+            // todo - optimize this: only find commitments that cross org lines etc.
+            for ( final Commitment commitment : queryService.findAllCommitmentsOf( org ) ) {
+                if ( queryService.isAgreementRequired( commitment )
+                        && !queryService.isCoveredByAgreement( commitment ) ) {
                     DetectedIssue issue = makeIssue( Issue.COMPLETENESS, org );
                     issue.setDescription( commitment.toString()
                             + ", but this is not backed by a sharing agreement." );
@@ -44,6 +46,7 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
                     issue.setSeverity( Level.Low );
                     issues.add( issue );
                 }
+            }
         }
         return issues;
     }

@@ -1165,9 +1165,10 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      * @return a boolean
      */
     public boolean overrides( Part other, Place locale ) {
-        return !equals( other ) && matchesTaskOf( other, locale )
-                && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale )
-                && !resourceSpec().equals( other.resourceSpec() );
+        return !equals( other )
+                && !resourceSpec().equals( other.resourceSpec() )
+                && matchesTaskOf( other, locale )
+                && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale );
     }
 
     /**

@@ -67,13 +67,12 @@ public class ProcedureMapPage extends WebPage implements Updatable {
         AjaxLink showLink = new AjaxLink( "show" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                selector.setGoingForward( );
+                selector.setGoingForward();
                 makeVisible( goBackLink, selector.canGoBack() );
                 target.addComponent( goBackLink );
                 showingMap = !showingMap;
                 if ( showingMap ) {
                     selector.resetSelected();
-                    addSelected();
                 }
                 addReportTitle();
                 target.addComponent( reportTitle );
@@ -81,7 +80,7 @@ public class ProcedureMapPage extends WebPage implements Updatable {
                 target.addComponent( showLabel );
             }
         };
-        makeVisible( showLink, ( !showingMap || selector.hasProcedures() ) );
+        // makeVisible( showLink, ( !showingMap || selector.hasProcedures() ) );
         header.add( showLink );
         showLabel = new Label( "show-what", new PropertyModel<String>( this, "showString" ) );
         showLabel.setOutputMarkupId( true );
@@ -110,6 +109,7 @@ public class ProcedureMapPage extends WebPage implements Updatable {
     }
 
     private void showMapOrReport( AjaxRequestTarget target ) {
+        addSelected();
         makeVisible( selector, showingMap );
         makeVisible( selected, !showingMap );
         target.addComponent( selector );
@@ -124,22 +124,26 @@ public class ProcedureMapPage extends WebPage implements Updatable {
     }
 
     private void addSelected() {
-        if ( selector.getAssignment() != null ) {
-            selected = new AssignmentReportPanel(
-                    "selected", new DefaultReportHelper( selector, this, selector.getAssignment() ) );
-        } else if ( selector.getFlow() != null && selector.getPart() != null /*&& selector.getActor() != null*/ ) {
-            selected = new CommitmentReportPanel(
-                    "selected",
-                    new DefaultReportHelper(
-                            selector,
-                            this,
-                            selector.getFlow(),
-                            selector.getPart()) );
+        if ( !showingMap ) {
+            if ( selector.getAssignment() != null ) {
+                selected = new AssignmentReportPanel(
+                        "selected", new DefaultReportHelper( selector, this, selector.getAssignment() ) );
+            } else if ( selector.getFlow() != null && selector.getPart() != null /*&& selector.getActor() != null*/ ) {
+                selected = new CommitmentReportPanel(
+                        "selected",
+                        new DefaultReportHelper(
+                                selector,
+                                this,
+                                selector.getFlow(),
+                                selector.getPart() ) );
+            } else {
+                selected = new AssignmentsReportPanel(
+                        "selected",
+                        selector,
+                        new DefaultReportHelper( selector, this ) );
+            }
         } else {
-            selected = new AssignmentsReportPanel(
-                    "selected",
-                    selector,
-                    new DefaultReportHelper( selector, this ) );
+            selected = new Label( "selected", "" );
         }
         selected.setOutputMarkupId( true );
         makeVisible( selected, !showingMap );
@@ -171,7 +175,7 @@ public class ProcedureMapPage extends WebPage implements Updatable {
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
             showingMap = !change.isForProperty( "showReport" )
-                    && (change.isForInstanceOf( Segment.class ) || change.isForInstanceOf( Plan.class ) );
+                    && ( change.isForInstanceOf( Segment.class ) || change.isForInstanceOf( Plan.class ) );
             addHeader();
             addSelected();
             addReportTitle();

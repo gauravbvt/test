@@ -90,7 +90,10 @@ public class OverridesPanel  extends FloatingCommandablePanel {
     }
 
     private List<Part> getOverriddenParts() {
-        return getQueryService().findAllOverriddenParts( getPart() );
+        return getQueryService().findAllOverriddenParts(
+                getPart(),
+                getQueryService().findSynonymousParts(
+                        getPart() ) );
     }
 
     private void addOverridingTable() {
@@ -103,7 +106,10 @@ public class OverridesPanel  extends FloatingCommandablePanel {
     }
 
     private List<Part> getOverridingParts() {
-        return getQueryService().findAllOverridingParts( getPart() );
+        return getQueryService().findAllOverridingParts(
+                getPart(),
+                getQueryService().findSynonymousParts(
+                        getPart() ) );
     }
 
     public Part getPart() {

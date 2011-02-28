@@ -29,6 +29,8 @@ import java.util.List;
  */
 public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector {
 
+    // todo - OPTIMIZE before reactivation
+
     private static Object[][] Expectations = {
             {
                     // If agents of an organization are assigned an operations management task,

@@ -50,6 +50,8 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     private Actor selectedActor;
     private Role selectedRole;
     private Organization selectedOrganization;
+    private Assignments allAssignments;
+    private List<Commitment> allCommitments;
 
     @SpringBean
     private AttachmentManager attachmentManager;
@@ -163,6 +165,8 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     public void resetSelected() {
+        allCommitments = null;
+        allAssignments = null;
         assignment = null;
         selectedPart = null;
         selectedFlow = null;
@@ -183,33 +187,38 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     public Assignments getAllAssignments() {
-        Set<Assignment> assignments = new HashSet<Assignment>();
-        for ( Commitment commitment : getCommitments() ) {
-            assignments.add( commitment.getCommitter() );
-            assignments.add( commitment.getBeneficiary() );
+        if ( allAssignments == null ) {
+            Set<Assignment> assignments = new HashSet<Assignment>();
+            for ( Commitment commitment : getCommitments() ) {
+                assignments.add( commitment.getCommitter() );
+                assignments.add( commitment.getBeneficiary() );
+            }
+            Assignments results = new Assignments( getPlan().getLocale() );
+            for ( Assignment assignment : assignments )
+                results.add( assignment );
+            allAssignments = results;
         }
-        Assignments results = new Assignments( getPlan().getLocale() );
-        for ( Assignment assignment : assignments )
-            results.add( assignment );
-        return results;
+        return allAssignments;
     }
 
     @Override
     public List<Commitment> getCommitments() {
-        QueryService queryService = getQueryService();
-        List<Commitment> commitments = new ArrayList<Commitment>();
-        List<Flow> allFlows = queryService.findAllSharingFlows( segment );
-        for ( Flow flow : allFlows ) {
-            commitments.addAll( queryService.findAllCommitments( flow, true ) );
-        }
-        List<Commitment> results = new ArrayList<Commitment>();
-        List<Commitment> notOverridden = queryService.removeOverriddenCommitments( commitments );
-        for ( Commitment commitment : notOverridden ) {
-            if ( focusEntity == null || isFocusedOn( commitment ) ) {
-                results.add( commitment );
+        if ( allCommitments == null ) {
+            QueryService queryService = getQueryService();
+            List<Commitment> commitments = new ArrayList<Commitment>();
+            List<Flow> allFlows = queryService.findAllSharingFlows( segment );
+            for ( Flow flow : allFlows ) {
+                commitments.addAll( queryService.findAllCommitments( flow, true ) );
             }
+            List<Commitment> results = new ArrayList<Commitment>();
+            for ( Commitment commitment : commitments ) {
+                if ( focusEntity == null || isFocusedOn( commitment ) ) {
+                    results.add( commitment );
+                }
+            }
+            allCommitments = results;
         }
-        return results;
+        return allCommitments;
     }
 
     private boolean isFocusedOn( Commitment commitment ) {

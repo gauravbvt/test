@@ -81,8 +81,7 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
             commitments.addAll( queryService.findAllCommitments( flow, true ) );
         }
         List<Commitment> results = new ArrayList<Commitment>();
-        List<Commitment> notOverridden = queryService.removeOverriddenCommitments( commitments );
-        for ( Commitment commitment :  notOverridden ) {
+        for ( Commitment commitment :  commitments ) {
             if ( focusEntity != null ) {
                 if ( isFocusedOn( commitment ) ) {
                     results.add( summarize( commitment ) );

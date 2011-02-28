@@ -40,7 +40,6 @@ import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.model.Tag;
 import com.mindalliance.channels.nlp.Proximity;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -1043,30 +1042,6 @@ public interface QueryService {
     List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Boolean includeUnknowns );
 
     /**
-     * Remove overridden and implicitly prohibited commitments.
-     *
-     * @param commitments a list of commitments
-     * @return a list of commitments
-     */
-    List<Commitment> removeOverriddenAndProhibited( Collection<Commitment> commitments );
-
-    /**
-     * Whether a sharing flow is implicitly prohibited by one it is overriden by.
-     *
-     * @param sharing a flow
-     * @return a boolean
-     */
-    Boolean isImplicitlyProhibited( Flow sharing );
-
-    /**
-     * Filter out overridden commitments.
-     *
-     * @param commitments a list of commitments
-     * @return a list of commitments
-     */
-    List<Commitment> removeOverriddenCommitments( Collection<Commitment> commitments );
-
-    /**
      * Find all commitments of an actor.
      *
      * @param actor an actor
@@ -1351,17 +1326,19 @@ public interface QueryService {
      * Find all parts that override a given part.
      *
      * @param part a part
+     * @param parts a list of parts
      * @return a list of parts
      */
-    List<Part> findAllOverridingParts( Part part );
+    List<Part> findAllOverridingParts( Part part, List<Part> parts );
 
     /**
      * Find all parts that are overridden by a given part.
      *
      * @param part a part
+     * @param parts a list of parts
      * @return a list of parts
      */
-    List<Part> findAllOverriddenParts( Part part );
+    List<Part> findAllOverriddenParts( Part part, List<Part> parts );
 
     /**
      * Whether part is overridden by another.
@@ -1396,22 +1373,6 @@ public interface QueryService {
     Boolean isOverriding( Flow flow );
 
     /**
-     * Find all flows that override a given flow.
-     *
-     * @param flow a flow
-     * @return a list of flows
-     */
-    List<Flow> findAllOverridingFlows( Flow flow );
-
-    /**
-     * Find all flows that are overriden by a given flow.
-     *
-     * @param flow a flow
-     * @return a list of flows
-     */
-    List<Flow> findAllOverriddenFlows( Flow flow );
-
-    /**
      * Find overridden sharing send flows from overridden parts.
      *
      * @param part a part
@@ -1426,4 +1387,11 @@ public interface QueryService {
      * @return list of flows
      */
     List<Flow> findOverriddenSharingReceives( Part part );
+
+    /**
+     * Find all parts matching the task of a part.
+     * @param part a part
+     * @return  a list of parts
+     */
+    List<Part> findSynonymousParts( Part part );
 }

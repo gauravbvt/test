@@ -1,10 +1,11 @@
 package com.mindalliance.channels.analysis;
 
-import com.mindalliance.channels.analysis.Detective;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,10 @@ import java.util.List;
  */
 public class DefaultDetective implements Detective {
 
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( DefaultDetective.class );
     /**
      * Issue detectors registered with the detective.
      */
@@ -114,6 +119,7 @@ public class DefaultDetective implements Detective {
             ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         for ( IssueDetector detector : issueDetectors ) {
+            LOG.debug( "Detecting: " + detector.getKind() );
             List<Issue> detectedIssues = detector.detectIssues( modelObject );
             if ( detectedIssues != null )
                 issues.addAll( detectedIssues );
