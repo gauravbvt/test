@@ -152,7 +152,10 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         if ( getQueryService().isInvolvementExpected( org ) ) {
-            List<Commitment> commitments = getQueryService().findAllCommitmentsOf( org );
+            List<Commitment> commitments = getQueryService().findAllCommitmentsOf(
+                    org,
+                    getQueryService().getAssignments( false ),
+                    getQueryService().findAllFlows() );
             for ( Object[] expectation : Expectations ) {
                 List<Organization.FamilyRelationship> familyRels = new ArrayList<Organization.FamilyRelationship>();
                 List<Flow.Intent> intents = new ArrayList<Flow.Intent>();
@@ -196,9 +199,9 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
                 Flow.Intent intent = commitment.getSharing().getIntent();
                 if ( beneficiaryPartCat != null && beneficiaryPartCat.equals( toCat ) ) {
                     Organization.FamilyRelationship familyRel = getQueryService().findFamilyRelationship(
-                                    beneficiary.getOrganization(),
-                                    fromOrg
-                            );
+                            beneficiary.getOrganization(),
+                            fromOrg
+                    );
                     if ( familyRels.contains( familyRel ) ) {
                         if ( intents.isEmpty() || ( intent != null && intents.contains( intent ) ) )
                             return; // expectation met

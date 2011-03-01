@@ -34,7 +34,11 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
         Organization org = (Organization) modelObject;
         if ( org.isActual() && org.isAgreementsRequired() ) {
             // todo - optimize this: only find commitments that cross org lines etc.
-            for ( final Commitment commitment : queryService.findAllCommitmentsOf( org ) ) {
+            List<Commitment> commitments = queryService.findAllCommitmentsOf(
+                    org,
+                    queryService.getAssignments( false ),
+                    queryService.findAllFlows() );
+            for ( final Commitment commitment : commitments ) {
                 if ( queryService.isAgreementRequired( commitment )
                         && !queryService.isCoveredByAgreement( commitment ) ) {
                     DetectedIssue issue = makeIssue( Issue.COMPLETENESS, org );

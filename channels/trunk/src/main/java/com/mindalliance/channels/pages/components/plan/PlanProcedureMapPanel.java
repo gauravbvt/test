@@ -173,7 +173,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
     private boolean isSummarized() {
-        return summarizeByOrg || summarizeByRole;
+        return summarizeByOrgType || summarizeByOrg || summarizeByRole;
     }
 
     private void addFocusEntityField() {
@@ -353,6 +353,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             setSummarizeByOrgType( true );
         else if ( val.equals( BY_ORG ) )
             setSummarizeByOrg( true );
+        else if ( val.equals( BY_ROLE ) )
+            setSummarizeByRole( true );
         else if ( val.equals( BY_NONE ) ) {
             setSummarizeByRole( false );
             setSummarizeByOrg( false );

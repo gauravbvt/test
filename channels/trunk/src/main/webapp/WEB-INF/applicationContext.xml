@@ -69,6 +69,9 @@ CONFIGURATION NOTES:
                 <ref bean="cell"/>
                 <ref bean="pager"/>
                 <ref bean="conferenceCall"/>
+<!--
+                <ref bean="web"/>
+-->
                 <ref bean="email"/>
                 <ref bean="notificationSystem"/>
                 <ref bean="chat"/>
@@ -306,6 +309,14 @@ CONFIGURATION NOTES:
         <property name="addressPattern" value="[^@\s]+@[^@\s]+\.\w+"/>
         <property name="cast" value="Unicast"/>
     </bean>
+<!--
+    <bean id="web" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Web"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value="(http|ftp|https):.*"/>
+        <property name="cast" value="Unicast"/>
+    </bean>
+-->
     <bean id="notificationSystem" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Notification system"/>
         <property name="kind" value="Type"/>

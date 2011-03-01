@@ -1981,38 +1981,35 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Actor committerActor = committer.getActor();
                 for ( Assignment beneficiary : beneficiaries ) {
                     if ( ( selfCommits || !committerActor.equals( beneficiary.getActor() ) )
-                         && allowsCommitment( committer, beneficiary, locale, flow ) )
+                            && allowsCommitment( committer, beneficiary, locale, flow ) )
 
                         addCommitment( new Commitment( committer, beneficiary, flow ),
-                                      commitments, locale, allFlows );
+                                commitments, locale, allFlows );
                 }
             }
         }
-
         return new ArrayList<Commitment>( commitments );
     }
 
-    @Override
-    public List<Commitment> findAllCommitmentsOf( Actor actor ) {
-        List<Flow> allFlows = findAllFlows();
+    public List<Commitment> findAllCommitmentsOf(
+            Specable specable,
+            Assignments assignments,
+            List<Flow> allFlows ) {
         Place locale = getPlan().getLocale();
         Set<Commitment> commitments = new HashSet<Commitment>();
-        Assignments assignments = getAssignments();
-        for ( Assignment assignment : assignments.with( actor ) ) {
-            Iterator<Flow> flows = assignment.getPart().flows();
-            while ( flows.hasNext() ) {
-                Flow flow = flows.next();
-                if ( flow.isSharing() && flow.getSource().equals( assignment.getPart() ) ) {
-                    for ( Assignment beneficiary : assignments.assignedTo( (Part) flow.getTarget() ) ) {
-                        if ( allowsCommitment( assignment, beneficiary, locale, flow ) ) {
+        for ( Flow flow : allFlows ) {
+            if ( flow.isSharing() ) {
+                Assignments committers = assignments.assignedTo( (Part) flow.getSource() ).with( specable );
+                Assignments beneficiaries = assignments.assignedTo( (Part) flow.getTarget() );
+                for ( Assignment committer : committers ) {
+                    for ( Assignment beneficiary : beneficiaries ) {
+                        if ( !committer.getActor().equals( beneficiary.getActor() )
+                                && allowsCommitment( committer, beneficiary, locale, flow ) ) {
                             Commitment commitment = new Commitment(
-                                    assignment,
+                                    committer,
                                     beneficiary,
                                     flow );
-                            addCommitment( commitment,
-                                    commitments,
-                                    locale,
-                                    allFlows );
+                            addCommitment( commitment, commitments, locale, allFlows );
                         }
                     }
                 }
@@ -2021,11 +2018,39 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Commitment>( commitments );
     }
 
+    public List<Commitment> findAllCommitmentsTo(
+            Specable specable,
+            Assignments assignments,
+            List<Flow> allFlows ) {
+        Place locale = getPlan().getLocale();
+        Set<Commitment> commitments = new HashSet<Commitment>();
+        for ( Flow flow : allFlows ) {
+            if ( flow.isSharing() ) {
+                Assignments committers = assignments.assignedTo( (Part) flow.getSource() );
+                Assignments beneficiaries = assignments.assignedTo( (Part) flow.getTarget() ).with( specable );
+                for ( Assignment committer : committers ) {
+                    for ( Assignment beneficiary : beneficiaries ) {
+                        if ( !committer.getActor().equals( beneficiary.getActor() )
+                                && allowsCommitment( committer, beneficiary, locale, flow ) ) {
+                            Commitment commitment = new Commitment(
+                                    committer,
+                                    beneficiary,
+                                    flow );
+                            addCommitment( commitment, commitments, locale, allFlows );
+                        }
+                    }
+                }
+            }
+        }
+        return new ArrayList<Commitment>( commitments );
+    }
+
+
     private void addCommitment(
-        Commitment commitment, Set<Commitment> commitments, Place locale, List<Flow> allFlows ) {
+            Commitment commitment, Set<Commitment> commitments, Place locale, List<Flow> allFlows ) {
 
         if ( !isImplicitlyProhibited( commitment, allFlows )
-             && !commitments .contains( commitment ) ) {
+                && !commitments.contains( commitment ) ) {
 
             // TODO - This is where the time goes. How can this be optimized?  -->
             Flow commitmentSharing = commitment.getSharing();
@@ -2043,37 +2068,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             commitments.add( commitment );
         }
     }
-
-    @Override
-    public List<Commitment> findAllCommitmentsOf( Organization organization ) {
-        List<Flow> allFlows = findAllFlows();
-        Place locale = getPlan().getLocale();
-        Set<Commitment> commitments = new HashSet<Commitment>();
-        for ( Actor actor : getAssignments().with( organization ).getActualActors() )
-            for ( Commitment commitment : findAllCommitmentsOf( actor ) )
-                if ( commitment.getCommitter().getOrganization().equals( organization ) )
-                    addCommitment( commitment,
-                            commitments,
-                            locale,
-                            allFlows );
-        return new ArrayList<Commitment>( commitments );
-    }
-
-    @Override
-    public List<Commitment> findAllCommitmentsTo( Actor actor ) {
-        List<Flow> allFlows = findAllFlows();
-        Place locale = getPlan().getLocale();
-        Set<Commitment> commitments = new HashSet<Commitment>();
-        for ( Flow flow : findAllRelatedFlows( new ResourceSpec( actor ), false ) ) {
-            for ( Commitment commitment : findAllCommitments( flow ) )
-                addCommitment( commitment,
-                        commitments,
-                        locale,
-                        allFlows );
-        }
-        return new ArrayList<Commitment>( commitments );
-    }
-
 
     private boolean isImplicitlyProhibited( Commitment commitment, List<Flow> allFlows ) {
         boolean prohibited = false;
@@ -2129,10 +2123,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Agreement> findAllImpliedAgreementsOf( Organization organization ) {
+    public List<Agreement> findAllImpliedAgreementsOf(
+            Organization organization,
+            Assignments assignments,
+            List<Flow> allFlows ) {
         List<Agreement> agreements = new ArrayList<Agreement>();
         List<Agreement> encompassed = new ArrayList<Agreement>();
-        for ( final Commitment commitment : findAllCommitmentsOf( organization ) ) {
+        List<Commitment> commitments = findAllCommitmentsOf(
+                organization,
+                assignments,
+                allFlows );
+        for ( final Commitment commitment : commitments ) {
             if ( commitment.isBetweenOrganizations() ) {
                 Agreement agreement = Agreement.from( commitment );
                 encompassed.addAll( (List<Agreement>) CollectionUtils.select(
@@ -2154,14 +2155,21 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public List<Commitment> findAllCommitmentsCoveredBy(
             Agreement agreement,
-            Organization organization ) {
+            Organization organization,
+            Assignments assignments,
+            List<Flow> allFlows ) {
 
-        Set<Commitment> commitments = new HashSet<Commitment>();
-        for ( Actor actor : getAssignments().with( organization ).getActualActors() )
-            for ( Commitment commitment : findAllCommitmentsOf( actor ) )
+        Set<Commitment> results = new HashSet<Commitment>();
+        for ( Actor actor : getAssignments().with( organization ).getActualActors() ) {
+            List<Commitment> commitments = findAllCommitmentsOf(
+                    actor,
+                    assignments,
+                    allFlows );
+            for ( Commitment commitment : commitments )
                 if ( commitment.isBetweenOrganizations() && covers( agreement, commitment ) )
-                    commitments.add( commitment );
-        return new ArrayList<Commitment>( commitments );
+                    results.add( commitment );
+        }
+        return new ArrayList<Commitment>( results );
     }
 
     @Override
@@ -3046,7 +3054,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     public boolean allowsCommitment(
-        Assignment committer, Assignment beneficiary, Place locale, Flow flow ) {
+            Assignment committer, Assignment beneficiary, Place locale, Flow flow ) {
 
         Restriction restriction = flow.getRestriction();
         if ( restriction != null ) {

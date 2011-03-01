@@ -21,6 +21,7 @@ import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
@@ -324,7 +325,11 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * @return a list of assignments
      */
     public List<Commitment> getCommitments() {
-        return getQueryService().findAllCommitmentsOf( getActor() );
+        QueryService queryService = getQueryService();
+        return queryService.findAllCommitmentsOf(
+                getActor(),
+                queryService.getAssignments( false ),
+                queryService.findAllFlows() );
     }
 
     /**

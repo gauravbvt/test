@@ -14,6 +14,7 @@ import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -329,7 +330,12 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      * @return a list of assignments
      */
     public List<Commitment> getCommitments() {
-        return getQueryService().findAllCommitmentsOf( getOrganization() );
+//        return getQueryService().findAllCommitmentsOf( getOrganization() );
+        QueryService queryService = getQueryService();
+        return queryService.findAllCommitmentsOf(
+                getOrganization(),
+                queryService.getAssignments( false ),
+                queryService.findAllFlows() );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -526,6 +532,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
              if ( property.equals( "parent" ) ) {
                  addParentLink( );
                  target.addComponent( parentLink );
+                 super.updateWith(
+                         target,
+                         new Change( Change.Type.Updated, getOrganization(), "types" ),
+                         updated );
              }
          }
         super.updateWith( target, change, updated );

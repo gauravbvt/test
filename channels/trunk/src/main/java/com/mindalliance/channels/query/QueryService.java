@@ -1041,29 +1041,16 @@ public interface QueryService {
      */
     List<Commitment> findAllCommitments( Flow flow, Boolean selfCommits, Assignments assignments );
 
-    /**
-     * Find all commitments of an actor.
-     *
-     * @param actor an actor
-     * @return a list of commitments
-     */
-    List<Commitment> findAllCommitmentsOf( Actor actor );
+    List<Commitment> findAllCommitmentsOf(
+            Specable specable,
+            Assignments assignments,
+            List<Flow> allFlows );
 
-    /**
-     * Find all commitments of an organization.
-     *
-     * @param organization an organization
-     * @return a list of commitments
-     */
-    List<Commitment> findAllCommitmentsOf( Organization organization );
 
-    /**
-     * Find all commitments to an actor.
-     *
-     * @param actor an actor
-     * @return a list of commitments
-     */
-    List<Commitment> findAllCommitmentsTo( Actor actor );
+    List<Commitment> findAllCommitmentsTo(
+            Specable specable,
+            Assignments assignments,
+            List<Flow> allFlows );
 
     /**
      * Find all unconnected need-capability pairs given a part's needs.
@@ -1077,20 +1064,29 @@ public interface QueryService {
      * Find all agreements implied by commitments from an organization.
      *
      * @param organization an organization
+     * @param assignments assignments
+     * @param flows  a list of flows
      * @return a list of agreements
      */
-    List<Agreement> findAllImpliedAgreementsOf( Organization organization );
+    List<Agreement> findAllImpliedAgreementsOf(
+            Organization organization,
+            Assignments assignments,
+            List<Flow>flows );
 
     /**
      * Find all commitments covered by an agreement by an organization.
      *
      * @param agreement    an agreement
      * @param organization an organization
+     * @param assignments  assignments
+     * @param allFLows list of flows
      * @return a list of commitments
      */
     List<Commitment> findAllCommitmentsCoveredBy(
             Agreement agreement,
-            Organization organization );
+            Organization organization,
+            Assignments assignments,
+            List<Flow> allFLows);
 
     /**
      * Find essential flows from a part.
