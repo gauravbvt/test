@@ -40,6 +40,7 @@ public class ProceduresPage extends PngWebPage {
     public static final String FOCUS_CLASS = "focusClass";
     public static final String FOCUS_ID = "focusId";
     public static final String SUMMARIZE_BY_ORG_TYPE = "orgType";
+    public static final String SUMMARIZE_BY_ORG_TYPE_AND_ROLE = "orgTypeRole";
 
     public ProceduresPage( PageParameters parameters ) {
         super( parameters );
@@ -47,7 +48,11 @@ public class ProceduresPage extends PngWebPage {
         segment = PlanPage.findSegment( queryService, parameters );
         if ( parameters.containsKey( SUMMARIZE ) ) {
             String summarizeBy = parameters.getString( SUMMARIZE );
-            if ( summarizeBy.equals( SUMMARIZE_BY_ORG_TYPE ) ) summarizeByOrgType = true;
+            if ( summarizeBy.equals( SUMMARIZE_BY_ORG_TYPE_AND_ROLE ) ) {
+                summarizeByOrgType = true;
+                summarizeByRole = true;
+            }
+            else if ( summarizeBy.equals( SUMMARIZE_BY_ORG_TYPE ) ) summarizeByOrgType = true;
             else if ( summarizeBy.equals( SUMMARIZE_BY_ORG ) ) summarizeByOrg = true;
             else if ( summarizeBy.equals( SUMMARIZE_BY_ROLE ) ) summarizeByRole = true;
         }

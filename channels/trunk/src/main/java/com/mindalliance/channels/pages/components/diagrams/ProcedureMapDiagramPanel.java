@@ -86,7 +86,9 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
         sb.append( "&" );
         sb.append( ProceduresPage.SUMMARIZE );
         sb.append("=");
-        sb.append( summarizeByOrgType
+        sb.append( summarizeByOrgType && summarizeByRole
+                ? ProceduresPage.SUMMARIZE_BY_ORG_TYPE_AND_ROLE
+                : summarizeByOrgType
                 ? ProceduresPage.SUMMARIZE_BY_ORG_TYPE
                 : summarizeByOrg
                 ? ProceduresPage.SUMMARIZE_BY_ORG

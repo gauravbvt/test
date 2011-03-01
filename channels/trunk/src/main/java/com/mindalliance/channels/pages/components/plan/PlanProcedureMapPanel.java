@@ -46,14 +46,15 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
      */
     static private double DPI = 96.0;
     private static final Segment NONE = new Segment();
-    private static final String ORG = "Organization";
-    private static final String ACTOR = "Agent";
+    private static final String ORG = "organization";
+    private static final String ACTOR = "agent";
     private static final String[] FOCUS_KINDS = {ORG, ACTOR};
-    private static final String BY_ORG_TYPE = "by type of organization";
-    private static final String BY_ORG = "by organization";
-    private static final String BY_ROLE = "by role";
+    private static final String BY_ORG_TYPE = "type of organization";
+    private static final String BY_ORG = "organization";
+    private static final String BY_ROLE = "organization and role";
     private static final String BY_NONE = "Don't summarize";
-    private static final String[] SUMMARY_CHOICES = {BY_ORG_TYPE, BY_ORG, BY_ROLE, BY_NONE };
+    private static final String BY_ORG_TYPE_AND_ROLE = "type of organization and role";
+    private static final String[] SUMMARY_CHOICES = {BY_ORG_TYPE, BY_ORG_TYPE_AND_ROLE, BY_ORG, BY_ROLE, BY_NONE };
     private static Collator collator = Collator.getInstance();
     /**
      * DOM identifier for resizeable element.
@@ -217,7 +218,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
               new PropertyModel<String>( this, "summarizeChoice"),
               Arrays.asList( SUMMARY_CHOICES )
       );
-        summarizeChoice.add(new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+        summarizeChoice.add(new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addProcedureMapDiagramPanel();
@@ -339,7 +340,9 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
     public String getSummarizeChoice() {
-        return summarizeByOrgType
+        return summarizeByOrgType && summarizeByRole
+                ? BY_ORG_TYPE_AND_ROLE
+                : summarizeByOrgType
                 ? BY_ORG_TYPE
                 : summarizeByOrg
                 ? BY_ORG
@@ -349,7 +352,9 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
     public void setSummarizeChoice( String val ) {
-        if ( val.equals( BY_ORG_TYPE ) )
+        if ( val.equals( BY_ORG_TYPE_AND_ROLE ) )
+            setSummarizeByOrgTypeAndRole( true );
+        else if ( val.equals( BY_ORG_TYPE ) )
             setSummarizeByOrgType( true );
         else if ( val.equals( BY_ORG ) )
             setSummarizeByOrg( true );
@@ -359,6 +364,17 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             setSummarizeByRole( false );
             setSummarizeByOrg( false );
             setSummarizeByOrgType( false );
+        }
+    }
+
+    private void setSummarizeByOrgTypeAndRole( boolean val ) {
+        if ( val ) {
+            summarizeByOrgType = true;
+            summarizeByRole = true;
+        } else {
+            summarizeByOrgType = false;
+            summarizeByOrg = false;
+            summarizeByRole = false;
         }
     }
 

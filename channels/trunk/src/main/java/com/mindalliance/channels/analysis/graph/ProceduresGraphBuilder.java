@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
@@ -124,20 +125,41 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
         Assignment committer = new Assignment( commitment.getCommitter() );
         Assignment beneficiary = new Assignment( commitment.getBeneficiary() );
         if ( summarizeByOrgType ) {
-            Organization committerOrg = getOrganizationType( committer.getPart() );
-            Organization beneficiaryOrg = getOrganizationType( beneficiary.getPart() );
             if ( !isFocusedOnAgent( committer ) ) {
-                if ( isFocusedOnOrganization( committer ) )
-                    committer.setEmployment( new Employment( committer.getOrganization() ) );
+                Organization org;
+                Role role;
+                org = isFocusedOnOrganization( committer )
+                        ? committer.getOrganization()
+                        : getOrganizationType( committer.getPart() );
+                role = summarizedByRole
+                        ? committer.getRole()
+                        : null;
+                if ( role != null )
+                    committer.setEmployment( new Employment( org, role ) );
                 else
-                    committer.setEmployment( new Employment( committerOrg ) );
+                    committer.setEmployment( new Employment( org ) );
             }
-            if ( !isFocusedOnAgent( beneficiary ) )
+            if ( !isFocusedOnAgent( beneficiary ) ) {
+                Organization org;
+                Role role;
+                org = isFocusedOnOrganization( beneficiary )
+                        ? beneficiary.getOrganization()
+                        : getOrganizationType( beneficiary.getPart() );
+                role = summarizedByRole
+                        ? beneficiary.getRole()
+                        : null;
+                if ( role != null )
+                    beneficiary.setEmployment( new Employment( org, role ) );
+                else
+                    beneficiary.setEmployment( new Employment( org ) );
+            }
+
+ /*           if ( !isFocusedOnAgent( beneficiary ) )
                 if ( isFocusedOnOrganization( beneficiary ) )
                     beneficiary.setEmployment( new Employment( beneficiary.getOrganization() ) );
                 else
                     beneficiary.setEmployment( new Employment( beneficiaryOrg ) );
-        } else if ( summarizedByOrg ) {
+*/        } else if ( summarizedByOrg ) {
             Organization committerOrg = committer.getOrganization();
             Organization beneficiaryOrg = beneficiary.getOrganization();
             if ( !isFocusedOnAgent( committer ) )
