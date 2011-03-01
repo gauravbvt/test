@@ -59,7 +59,7 @@ public final class ChannelsUtils {
     public static Map<String, Object> getFlowAttributes( final Flow flow ) {
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put( "description", flow.getDescription() );
-        attributes.put( "tags", flow.getTags() );
+        attributes.put( "tagsAsString", Tag.tagsToString( flow.getTags() ) );
         attributes.put( "eois", flow.copyEois() );
         attributes.put( "askedFor", flow.isAskedFor() );
         attributes.put( "all", flow.isAll() );
@@ -85,7 +85,7 @@ public final class ChannelsUtils {
         merged.put(
                 "description",
                 desc2.length() > desc1.length() ? desc2 : desc1 );
-        merged.put( "tags", attributes.get( "tags" ) + Tag.SEPARATOR + others.get( "tags" ) );
+        merged.put( "tagsAsString", attributes.get( "tagsAsString" ) + Tag.SEPARATOR + others.get( "tagsAsString" ) );
         merged.put( "eois", aggregateEOIs(
                 (List<ElementOfInformation>) attributes.get( "eois" ),
                 (List<ElementOfInformation>) others.get( "eois" ) ) );
@@ -271,7 +271,7 @@ public final class ChannelsUtils {
         Map<String, Object> state = new HashMap<String, Object>();
         // state.put( "id", flow.getId() );
         state.put( "name", flow.getName() );
-        state.put( "tags", Tag.tagsToString( flow.getTags() ) );
+        state.put( "tagsAsString", Tag.tagsToString( flow.getTags() ) );
         state.put( "isSend", isSend );
         state.put( "segment", part.getSegment().getId() );
         state.put( "part", part.getId() );
@@ -297,7 +297,7 @@ public final class ChannelsUtils {
     public static Map<String, Object> getPartState( final Part part ) {
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "description", part.getDescription() );
-        state.put( "tags", Tag.tagsToString( part.getTags() ) );
+        state.put( "tagsAsString", Tag.tagsToString( part.getTags() ) );
         state.put( "task", part.getTask() );
         state.put( "repeatsEvery", new Delay( part.getRepeatsEvery() ) );
         state.put( "completionTime", new Delay( part.getCompletionTime() ) );

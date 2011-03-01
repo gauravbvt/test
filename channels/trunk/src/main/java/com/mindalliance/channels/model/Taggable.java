@@ -23,7 +23,7 @@ public interface Taggable extends Identifiable {
      *
      * @param s a string
      */
-    void setTags( String s );
+    void setTagsAsString( String s );
 
     /**
      * Add tags from string.
