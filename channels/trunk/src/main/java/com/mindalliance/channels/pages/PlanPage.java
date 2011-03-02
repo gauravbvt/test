@@ -1510,6 +1510,26 @@ public final class PlanPage extends WebPage implements Updatable {
         }
     }
 
+    private void expandFlow( Change change ) {
+        Flow flowToExpand = (Flow)change.getSubject( getQueryService() );
+        // collapse other flows
+        List<Identifiable> toCollapse = new ArrayList<Identifiable>();
+        for ( long id : expansions ) {
+            try {
+                ModelObject expanded = getQueryService().find( ModelObject.class, id );
+                if ( expanded instanceof Flow ) {
+                        toCollapse.add( expanded );
+                }
+            } catch ( NotFoundException e ) {
+                LOG.info( "Failed to find expanded " + id );
+            }
+        }
+        for ( Identifiable identifiable : toCollapse ) {
+            collapse( identifiable );
+        }
+        expand( flowToExpand );
+    }
+
     private void collapsePartObjects() {
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
         for ( long id : expansions ) {
@@ -1553,7 +1573,10 @@ public final class PlanPage extends WebPage implements Updatable {
         } else if ( change.isCollapsed() || change.isRemoved() )
             collapse( change );
         else if ( change.isExpanded() || change.isAdded() ) {
-            expand( change );
+            if ( change.isForInstanceOf( Flow.class ) )
+                expandFlow( change );
+            else
+                expand( change );
             if ( change.getProperty() != null ) {
                 viewAspect( change, change.getProperty() );
             }
@@ -1615,15 +1638,17 @@ public final class PlanPage extends WebPage implements Updatable {
         } else if ( change.isForInstanceOf( Flow.class ) ) {
             Flow changedFlow = (Flow) change.getSubject( queryService );
             if ( change.isUpdated() && change.isForProperty( "other" ) ) {
-                expand( changedFlow );
+                expandFlow( change );
             } else if ( change.isSelected() ) {
+                flowMaximized = false;
                 if ( changedFlow.getSegment() != segment ) {
                     setSegment( changedFlow.getSegment() );
                 }
                 if ( !changedFlow.hasPart( getPart() ) ) {
                     setPart( changedFlow.getLocalPart() );
                 }
-                expand( changedFlow );
+                collapseSegmentObjects();
+                expandFlow( change );
             }
         } else if ( change.isForInstanceOf( UserIssue.class ) && change.isAdded() ) {
             UserIssue userIssue = (UserIssue) change.getSubject( queryService );
@@ -1665,6 +1690,7 @@ public final class PlanPage extends WebPage implements Updatable {
             } else if ( change.isCollapsed() && changes.get( change.getId() ) != null ) {
                 refreshAll( target );
             } else if ( change.isForInstanceOf( Flow.class ) && change.isSelected() ) {
+                updateMaximizedFlow( target, change );
                 refreshSegmentPanel( target, change, updated );
                 segmentPanel.resizePartPanels( target );
             } else if ( change.isCopied() ) {
