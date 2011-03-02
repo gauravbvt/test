@@ -1,9 +1,11 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.User;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +57,15 @@ public class ErrorPage extends WebPage {
                 exception == null
                     ? ""
                     : stackTraceToString( exception ) ) );
-        stackTraceDiv.setVisible( ( User.current().isAdmin() ) );
+        stackTraceDiv.add( new AttributeModifier(
+                "style",
+                true,
+                new Model<String>(
+                        ( User.current().isAdmin() )
+                        ? "padding-top: 20px;display:block;"
+                        : "display:none;"
+                ) )
+         );
     }
 
     @Override
