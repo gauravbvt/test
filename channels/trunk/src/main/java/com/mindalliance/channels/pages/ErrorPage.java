@@ -1,7 +1,9 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.User;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,17 +23,39 @@ public class ErrorPage extends WebPage {
      * The logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( ErrorPage.class );
-    private String stackTrace;
     private Exception exception;
 
     @SpringBean
     private MailSender mailSender;
 
     public ErrorPage() {
+        init();
     }
 
     public ErrorPage( RuntimeException e ) {
         exception = e;
+        init();
+    }
+
+    private void init() {
+        addStacktrace();
+    }
+
+    private static String stackTraceToString( Exception exc ) {
+        StringWriter writer = new StringWriter();
+        exc.printStackTrace( new PrintWriter( writer ) );
+        return writer.toString();
+     }
+
+    private void addStacktrace() {
+        WebMarkupContainer stackTraceDiv = new WebMarkupContainer( "stackTraceContainer" );
+        add( stackTraceDiv );
+        stackTraceDiv.add( new Label(
+                "stackTrace",
+                exception == null
+                    ? ""
+                    : stackTraceToString( exception ) ) );
+        stackTraceDiv.setVisible( ( User.current().isAdmin() ) );
     }
 
     @Override
@@ -49,12 +73,9 @@ public class ErrorPage extends WebPage {
     }
 
     static public void emailException(
-            Exception e,
+            Exception exception,
             MailSender mailSender,
             String supportCommunity ) {
-        StringWriter writer = new StringWriter();
-        e.printStackTrace( new PrintWriter( writer ) );
-        String stackTrace = writer.toString();
         User currentUser = User.current();
         try {
             SimpleMailMessage email = new SimpleMailMessage();
@@ -63,7 +84,7 @@ public class ErrorPage extends WebPage {
             email.setReplyTo( currentUser.getEmail() );
             String subject = "SERVER ERROR from " + currentUser.getFullName();
             email.setSubject( subject );
-            email.setText( stackTrace );
+            email.setText( stackTraceToString( exception ) );
             LOG.info( currentUser.getUsername()
                     + " emailing \"" + subject + "\" to "
                     + supportCommunity );
