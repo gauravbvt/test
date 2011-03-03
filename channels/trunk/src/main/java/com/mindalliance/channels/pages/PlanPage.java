@@ -88,7 +88,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The plan's home page.
+ * The plan editing page.
  * Note: When a user switches plan, this page *must* be reloaded.
  */
 public final class PlanPage extends WebPage implements Updatable {

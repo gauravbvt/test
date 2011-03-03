@@ -392,10 +392,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
             return iconName;
 
         return imageDirPath() + '/' +
-                ( modelObject instanceof Actor ? ( (Actor) modelObject ).isSystem() ? "system"
-                        : "person"
+                ( modelObject instanceof Actor
+                        ? ( (Actor) modelObject ).isSystem() ? "system" : "person"
                         : modelObject instanceof Role ? "role"
                         : modelObject instanceof Organization ? "organization"
+                        : modelObject instanceof Plan ? "plan"
                         : "unknown" );
     }
 

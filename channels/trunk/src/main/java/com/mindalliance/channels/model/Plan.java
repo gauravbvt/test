@@ -657,6 +657,7 @@ public class Plan extends ModelObject {
         List<Attachment.Type> types = super.getAttachmentTypes();
         types.add( Attachment.Type.TAGS );
         types.add( Attachment.Type.InfoStandards );
+        types.add( Attachment.Type.Image );
         return types;
     }
 

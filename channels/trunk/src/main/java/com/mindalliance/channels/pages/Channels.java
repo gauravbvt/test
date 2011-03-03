@@ -158,6 +158,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "essential.png", FailureImpactsPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "dissemination.png", DisseminationPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "procedures.png", ProceduresPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "user", UserPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE );
@@ -193,10 +194,15 @@ public class Channels extends WebApplication
             plan = planManager.getDefaultPlan( user );
             user.setPlan( plan );
         }
+        return plan == null
+                ? NoAccessPage.class
+                : UserPage.class;
+/*
         return user.isAdmin() ? PlanPage.class // was AdminPage.class
                 : plan == null ? NoAccessPage.class
                 : user.isPlanner( plan.getUri() ) ? PlanPage.class
                 : ProceduresReportPage.class;
+*/
     }
 
     public QueryService getQueryService() {
