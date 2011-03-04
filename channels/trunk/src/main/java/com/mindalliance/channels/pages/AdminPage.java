@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.dao.DefinitionManager;
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.dao.UserService;
@@ -12,11 +11,11 @@ import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -50,7 +49,7 @@ import java.util.Map;
  * Default page for administrators.
  * Allows defining users and plans.
  */
-public class AdminPage extends WebPage {
+public class AdminPage extends AbstractChannelsWebPage {
 
     /**
      * Wicket sometimes serializes pages...
@@ -61,18 +60,6 @@ public class AdminPage extends WebPage {
      * Ye olde logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( AdminPage.class );
-
-    /**
-     * Current user.
-     */
-    @SpringBean
-    private User user;
-
-    /**
-     * The plan manager.
-     */
-    @SpringBean
-    private PlanManager planManager;
 
     @SpringBean
     private SurveyService surveyService;
@@ -102,6 +89,15 @@ public class AdminPage extends WebPage {
      * can be called/ created from anywhere.
      */
     public AdminPage() {
+        this( new PageParameters() );
+    }
+
+    public AdminPage( PageParameters parameters ) {
+        super( parameters );
+        init();
+    }
+
+    private void init() {
         setStatelessHint( true );
 
         userList = new ListView<User>( "item",
@@ -131,7 +127,7 @@ public class AdminPage extends WebPage {
                 "Productize the current version?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                planManager.productize( getPlan() );
+                getPlanManager().productize( getPlan() );
             }
 
 
@@ -141,11 +137,10 @@ public class AdminPage extends WebPage {
                 "Delete the selected plan?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                List<Plan> plans = planManager.getPlans();
+                List<Plan> plans = getPlanManager().getPlans();
                 if ( plans.size() > 1 ) {
-                    User user = User.current();
-                    planManager.delete( getPlan() );
-                    user.setPlan( plans.get( 0 ) );
+                    getPlanManager().delete( getPlan() );
+                    setPlan( plans.get( 0 ) );
                     setResponsePage( AdminPage.class );
                 }
             }
@@ -153,7 +148,7 @@ public class AdminPage extends WebPage {
         deleteLink.setEnabled( definitionManager.getSize() > 1 );
 
         add(
-                new Label( "loggedUser", user.getUsername() ),
+                new Label( "loggedUser", getUser().getUsername() ),
                 form.add(
 
                         new FeedbackPanel( "feedback" ),
@@ -245,44 +240,44 @@ public class AdminPage extends WebPage {
 
     public String getPlannerSupportCommunity() {
         String s = getPlan().getPlannerSupportCommunity();
-        return s.isEmpty() ? planManager.getDefaultSupportCommunity() : s;
+        return s.isEmpty() ? getPlanManager().getDefaultSupportCommunity() : s;
     }
 
     public void setPlannerSupportCommunity( String val ) {
-        String defaultCommunity = planManager.getDefaultSupportCommunity();
+        String defaultCommunity = getPlanManager().getDefaultSupportCommunity();
         if ( val != null && !val.isEmpty() && !val.equals( defaultCommunity ) )
             getPlan().setPlannerSupportCommunity( val );
     }
 
     public String getUserSupportCommunity() {
         String s = getPlan().getUserSupportCommunity();
-        return s.isEmpty() ? planManager.getDefaultSupportCommunity() : s;
+        return s.isEmpty() ? getPlanManager().getDefaultSupportCommunity() : s;
     }
 
     public void setUserSupportCommunity( String val ) {
-        String defaultCommunity = planManager.getDefaultSupportCommunity();
+        String defaultCommunity = getPlanManager().getDefaultSupportCommunity();
         if ( val != null && !val.isEmpty() && !val.equals( defaultCommunity ) )
             getPlan().setUserSupportCommunity( val );
     }
 
     public String getSurveyApiKey() {
         String s = getPlan().getSurveyApiKey();
-        return s.isEmpty() ? surveyService.getApiKey() : s;
+        return s.isEmpty() ? surveyService.getApiKey( getPlan() ) : s;
     }
 
     public void setSurveyApiKey( String val ) {
-        String defaultVal = surveyService.getApiKey();
+        String defaultVal = surveyService.getApiKey( getPlan() );
         if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) )
             getPlan().setSurveyApiKey( val );
     }
 
     public String getSurveyUserKey() {
         String s = getPlan().getSurveyUserKey();
-        return s.isEmpty() ? surveyService.getUserKey() : s;
+        return s.isEmpty() ? surveyService.getUserKey( getPlan() ) : s;
     }
 
     public void setSurveyUserKey( String val ) {
-        String defaultVal = surveyService.getUserKey();
+        String defaultVal = surveyService.getUserKey( getPlan() );
         if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) )
             getPlan().setSurveyUserKey( val );
     }
@@ -290,11 +285,11 @@ public class AdminPage extends WebPage {
 
     public String getSurveyTemplate() {
         String s = getPlan().getSurveyTemplate();
-        return s.isEmpty() ? surveyService.getTemplate() : s;
+        return s.isEmpty() ? surveyService.getTemplate( getPlan() ) : s;
     }
 
     public void setSurveyTemplate( String val ) {
-        String defaultVal = surveyService.getTemplate();
+        String defaultVal = surveyService.getTemplate( getPlan() );
         if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) ) {
             getPlan().setSurveyTemplate( val );
         }
@@ -303,11 +298,11 @@ public class AdminPage extends WebPage {
 
     public String getSurveyDefaultEmailAddress() {
         String s = getPlan().getSurveyDefaultEmailAddress();
-        return s.isEmpty() ? surveyService.getDefaultEmailAddress() : s;
+        return s.isEmpty() ? surveyService.getDefaultEmailAddress( getPlan() ) : s;
     }
 
     public void setSurveyDefaultEmailAddress( String val ) {
-        String defaultVal = surveyService.getDefaultEmailAddress();
+        String defaultVal = surveyService.getDefaultEmailAddress( getPlan() );
         if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) ) {
             getPlan().setSurveyDefaultEmailAddress( val );
         }
@@ -315,7 +310,7 @@ public class AdminPage extends WebPage {
 
     private void submit() {
         for ( User u : toDelete ) {
-            planManager.setAuthorities( u, null, null );
+            getPlanManager().setAuthorities( u, null, null );
             userService.deleteUser( u );
         }
         if ( !toDelete.isEmpty() ) {
@@ -326,15 +321,15 @@ public class AdminPage extends WebPage {
         if ( newPlanUri != null ) {
             try {
                 definitionManager.getOrCreate( newPlanUri, "New Plan", newPlanClient );
-                planManager.assignPlans();
+                getPlanManager().assignPlans();
             } catch ( IOException e ) {
                 LOG.error( "Unable to create plan", e );
                 throw new RuntimeException( "Unable to create plan", e );
             }
         }
 
-        planManager.revalidateProducers( getPlan() );
-        planManager.save( getPlan() );
+        getPlanManager().revalidateProducers( getPlan() );
+        getPlanManager().save( getPlan() );
         try {
             userService.save();
         } catch ( IOException e ) {
@@ -343,32 +338,16 @@ public class AdminPage extends WebPage {
         setResponsePage( AdminPage.class );
     }
 
-    /**
-     * Return current plan.
-     *
-     * @return a plan
-     */
-    public Plan getPlan() {
-        return user.getPlan();
-    }
 
     public List<Plan> getDevelopmentPlans() {
         List<Plan> answer = new ArrayList<Plan>();
-        for ( Plan plan : planManager.getPlans() )
+        for ( Plan plan : getPlanManager().getPlans() )
             if ( plan.isDevelopment() )
                 answer.add( plan );
 
         return answer;
     }
 
-    /**
-     * Switch the user's current plan.
-     *
-     * @param plan a plan
-     */
-    public void setPlan( Plan plan ) {
-        user.setPlan( plan );
-    }
 
     public String getPlanClient() {
         return getPlan().getClient();
@@ -507,26 +486,26 @@ public class AdminPage extends WebPage {
             User rowUser = userModel.getObject();
             switch ( object ) {
                 case Admin:
-                    planManager.setAuthorities( rowUser, UserInfo.ROLE_ADMIN, null );
+                    getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_ADMIN, null );
                     break;
                 case Planner:
-                    planManager.setAuthorities( rowUser, UserInfo.ROLE_PLANNER, null );
+                    getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_PLANNER, null );
                     break;
                 case User:
-                    planManager.setAuthorities( rowUser, UserInfo.ROLE_USER, null );
+                    getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_USER, null );
                     break;
                 case LPlanner:
-                    planManager.setAuthorities( rowUser, UserInfo.ROLE_PLANNER, getUri() );
+                    getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_PLANNER, getUri() );
                     break;
                 case LUser:
-                    planManager.setAuthorities( rowUser, UserInfo.ROLE_USER, getUri() );
+                    getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_USER, getUri() );
                     break;
                 case LDisabled:
-                    planManager.setAuthorities( rowUser, null, getUri() );
+                    getPlanManager().setAuthorities( rowUser, null, getUri() );
                     break;
                 case Disabled:
                 default:
-                    planManager.setAuthorities( rowUser, null, null );
+                    getPlanManager().setAuthorities( rowUser, null, null );
                     break;
             }
         }

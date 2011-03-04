@@ -102,7 +102,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
                                             target,
                                             new Change(
                                                 Change.Type.Expanded,
-                                                surveyService.getOrCreateSurvey( getIssue() ) ) );
+                                                surveyService.getOrCreateSurvey( getIssue(), getPlan() ) ) );
                                     } catch ( SurveyException e ) {
                                         LoggerFactory.getLogger( getClass() ).warn(
                                             "Error clicking on survey link", e );

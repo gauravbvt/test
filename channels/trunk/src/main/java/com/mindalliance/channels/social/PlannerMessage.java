@@ -25,16 +25,16 @@ public class PlannerMessage extends PersistentObject {
     private String aboutString = "";
     private boolean emailed = false;
 
-    public PlannerMessage( String text ) {
+    public PlannerMessage( String text, long planId ) {
         super();
         User user = User.current();
         this.text = text;
         fromUsername = user.getUsername();
-        planId = user.getPlan().getId();
+        this.planId = planId;
     }
 
-    public PlannerMessage( String text, ModelObject modelObject ) {
-        this( text );
+    public PlannerMessage( String text, ModelObject modelObject, long planId ) {
+        this( text, planId );
         aboutRef = new ModelObjectRef( modelObject );
     }
 

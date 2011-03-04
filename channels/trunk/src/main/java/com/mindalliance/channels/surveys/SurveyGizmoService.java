@@ -1,6 +1,7 @@
 package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.surveys.Survey.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,30 +69,30 @@ public class SurveyGizmoService extends AbstractSurveyService {
     }
 
     @Override
-    public String getApiKey() {
-        String planValue = getPlan().getSurveyApiKey();
+    public String getApiKey( Plan plan ) {
+        String planValue = plan.getSurveyApiKey();
         return planValue.isEmpty() ? apiKey : planValue;
     }
 
     @Override
-    public String getUserKey() {
-        String planValue = getPlan().getSurveyUserKey();
+    public String getUserKey( Plan plan ) {
+        String planValue = plan.getSurveyUserKey();
         return planValue.isEmpty() ? userKey : planValue;
     }
 
     @Override
-    public String getTemplate() {
-        String planValue = getPlan().getSurveyTemplate();
+    public String getTemplate( Plan plan ) {
+        String planValue = plan.getSurveyTemplate();
         return planValue.isEmpty() ? template : planValue;
     }
 
-    private String getBaseUrl( String command, Map<String, String> query ) {
+    private String getBaseUrl( String command, Map<String, String> query, Plan plan ) {
         StringBuilder sb = new StringBuilder();
         sb.append( SCHEME_DOMAIN );
         sb.append( "?dk=" );
-        sb.append( getApiKey() );
+        sb.append( getApiKey( plan ) );
         sb.append( "&uk=" );
-        sb.append( getUserKey() );
+        sb.append( getUserKey( plan ) );
         sb.append( "&cmd=" );
         sb.append( command );
         if ( query != null ) {
@@ -110,15 +111,15 @@ public class SurveyGizmoService extends AbstractSurveyService {
     }
 
     @Override
-    protected long registerSurvey( Survey survey ) throws SurveyException {
-        String xml = getSurveyXml( survey, findIssue( survey ) );
+    protected long registerSurvey( Survey survey, Plan plan ) throws SurveyException {
+        String xml = getSurveyXml( survey, findIssue( survey ), plan );
         Map<String, String> get = new HashMap<String, String>();
         Map<String, String> post = new HashMap<String, String>();
-        get.put( "template", getTemplate() );
-        post.put( "title", survey.getRegistrationTitle( getPlan().getUri() ) );
+        get.put( "template", getTemplate( plan ) );
+        post.put( "title", survey.getRegistrationTitle(plan.getUri() ) );
         post.put( "surveyxml", xml );
 
-        String response = sendRequest( getBaseUrl( "sgCreateSurvey", get ), post );
+        String response = sendRequest( getBaseUrl( "sgCreateSurvey", get, plan ), post );
         if ( !requestSuccess( response ) )
             throw new SurveyException( "Failed to create survey" );
 
@@ -141,8 +142,8 @@ public class SurveyGizmoService extends AbstractSurveyService {
         return xpathEquals( response, "/apiResults/status/text()", "success" );
     }
 
-    private String getSurveyXml( Survey survey, Issue issue ) throws SurveyException {
-        return resolveTemplate( "survey.vm", getSurveyContext( survey, issue ) );
+    private String getSurveyXml( Survey survey, Issue issue, Plan plan ) throws SurveyException {
+        return resolveTemplate( "survey.vm", getSurveyContext( survey, issue, plan ) );
     }
 
     private String xpathExtract( String xml, String expression ) throws SurveyException {
@@ -209,23 +210,23 @@ public class SurveyGizmoService extends AbstractSurveyService {
     }
 
     @Override
-    protected void doLaunchSurvey( Survey survey ) throws SurveyException {
-        changeSurveyStatus( survey, "Launched" );
+    protected void doLaunchSurvey( Survey survey, Plan plan ) throws SurveyException {
+        changeSurveyStatus( survey, "Launched", plan );
         LOG.info( "Survey " + survey.getId() + " launched" );
     }
 
     @Override
-    protected void doCloseSurvey( Survey survey ) throws SurveyException {
-        changeSurveyStatus( survey, "Closed" );
+    protected void doCloseSurvey( Survey survey, Plan plan ) throws SurveyException {
+        changeSurveyStatus( survey, "Closed", plan );
         LOG.info( "Survey " + survey.getId() + " closed" );
     }
 
-    private void changeSurveyStatus( Survey survey, String status ) throws SurveyException {
+    private void changeSurveyStatus( Survey survey, String status, Plan plan ) throws SurveyException {
         assert survey.getId() >= 0;
         Map<String, String> query = new HashMap<String, String>();
         query.put( "sid", String.valueOf( survey.getId() ) );
         query.put( "status", status );
-        String response = sendRequest( getBaseUrl( "sgSetSurveyStatus", query ), null );
+        String response = sendRequest( getBaseUrl( "sgSetSurveyStatus", query, plan ), null );
         boolean succeeded = requestSuccess( response );
         if ( !succeeded ) {
             LOG.error( "Failed to change survey status to {}", status );
@@ -233,16 +234,16 @@ public class SurveyGizmoService extends AbstractSurveyService {
         }
         survey.setStatus( surveyStatus( status ) );
         survey.resetData();
-        survey.updateSurveyData( this );
+        survey.updateSurveyData( this, plan );
     }
 
     // TODO - cache results?
     @Override
-    public SurveyData getSurveyData( Survey survey ) throws SurveyException {
+    public SurveyData getSurveyData( Survey survey, Plan plan ) throws SurveyException {
         SurveyData data = new SurveyData();
         Map<String, String> get = new HashMap<String, String>();
         get.put( "status", getStatusValue( survey ) );
-        String response = sendRequest( getBaseUrl( "sgGetSurveyList", get ), null );
+        String response = sendRequest( getBaseUrl( "sgGetSurveyList", get, plan ), null );
         String surveyPath = "//survey[id/text()=\"" + survey.getId() + "\"]";
         String surveyNode = xpathExtract( response, surveyPath );
         if ( surveyNode.isEmpty() ) {

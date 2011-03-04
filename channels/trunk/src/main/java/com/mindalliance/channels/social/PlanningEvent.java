@@ -1,6 +1,5 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.odb.PersistentObject;
 
 /**
@@ -15,9 +14,9 @@ public abstract class PlanningEvent extends PersistentObject {
 
     private long planId;
 
-    PlanningEvent() {
+    PlanningEvent( long planId ) {
         super();
-        planId = User.current().getPlan().getId();
+        this.planId = planId;
     }
 
     public long getPlanId() {

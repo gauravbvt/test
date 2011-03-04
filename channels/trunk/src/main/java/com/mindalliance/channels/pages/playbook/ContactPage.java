@@ -6,29 +6,23 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.reports.VCardPanel;
-import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
 
 /**
  * List of contacts for a given flow.
  */
-public class ContactPage extends WebPage {
+public class ContactPage extends AbstractChannelsWebPage {
 
     /** HTTP return code for unknown object. */
     private static final int NOT_FOUND = 404;
-
-    /** The query service. */
-    @SpringBean
-    private QueryService queryService;
 
     public ContactPage( PageParameters parameters ) {
         super( parameters );
@@ -37,7 +31,7 @@ public class ContactPage extends WebPage {
         if ( flow == null )
             throw new AbortWithWebErrorCodeException( NOT_FOUND );
 
-        init( flow, queryService.findAllContacts( contactsSpec( flow ), true ) );
+        init( flow, getQueryService().findAllContacts( contactsSpec( flow ), true ) );
     }
 
     private static ResourceSpec contactsSpec( Flow flow ) {
@@ -72,7 +66,7 @@ public class ContactPage extends WebPage {
         PageParameters parms = getPageParameters();
         if ( parms.containsKey( parm ) )
             try {
-                result = queryService.find( parmClass, Long.valueOf( parms.getString( parm ) ) );
+                result = getQueryService().find( parmClass, Long.valueOf( parms.getString( parm ) ) );
 
             } catch ( NumberFormatException ignored ) {
                 result = null;

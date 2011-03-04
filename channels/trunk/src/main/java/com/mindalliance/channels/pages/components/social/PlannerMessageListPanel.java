@@ -72,8 +72,8 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private Label sentReceivedLabel;
     private Date whenLastRefreshed;
 
-    public PlannerMessageListPanel( String id, Updatable updatable ) {
-        super( id );
+    public PlannerMessageListPanel( String id, Updatable updatable, boolean collapsible ) {
+        super( id, collapsible );
         this.updatable = updatable;
         init();
     }
@@ -351,12 +351,12 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private void sendNewMessage( boolean emailIt ) {
         String text = getNewMessageText();
         if ( !text.isEmpty() ) {
-            PlannerMessage plannerMessage = new PlannerMessage( text );
+            PlannerMessage plannerMessage = new PlannerMessage( text, getPlan().getId()  );
             if ( getNewMessageRecipient() != ALL )
                 plannerMessage.setToUsername( getNewMessageRecipient().getUsername() );
             if ( getNewMessageAbout() != null )
                 plannerMessage.setAbout( getNewMessageAbout() );
-            plannerMessagingService.sendMessage( plannerMessage, emailIt );
+            plannerMessagingService.sendMessage( plannerMessage, emailIt, getPlan()  );
         }
     }
 
@@ -389,12 +389,12 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     }
 
     public void deleteMessage( PlannerMessage message, AjaxRequestTarget target ) {
-        plannerMessagingService.deleteMessage( message );
+        plannerMessagingService.deleteMessage( message, getPlan()  );
         refresh( target, new Change( Change.Type.Communicated ) );
     }
 
     public void emailMessage( PlannerMessage message, AjaxRequestTarget target ) {
-        boolean success = plannerMessagingService.email( message );
+        boolean success = plannerMessagingService.email( message, getPlan()  );
         addPlannerMessages();
         adjustComponents( target );
         update( target, Change.message( success
@@ -406,9 +406,9 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         List<PlannerMessage> plannerMessages = new ArrayList<PlannerMessage>();
         Iterator<PlannerMessage> iterator;
         if ( isShowReceived() ) {
-            iterator = plannerMessagingService.getReceivedMessages();
+            iterator = plannerMessagingService.getReceivedMessages( getPlan() );
         } else {
-            iterator = plannerMessagingService.getSentMessages();
+            iterator = plannerMessagingService.getSentMessages( getPlan() );
         }
         while ( iterator.hasNext() && plannerMessages.size() < numberToShow ) {
             PlannerMessage plannerMessage = iterator.next();
@@ -423,7 +423,8 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        if ( plannerMessagingService.getWhenLastChanged().after( whenLastRefreshed ) ) {
+        Date whenLastChanged =  plannerMessagingService.getWhenLastChanged( getPlan() );
+        if ( whenLastChanged != null && whenLastChanged.after( whenLastRefreshed ) ) {
             addPlannerMessages();
             adjustComponents( target );
             whenLastRefreshed = new Date();

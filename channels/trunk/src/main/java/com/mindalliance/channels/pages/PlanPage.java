@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.GeoLocatable;
@@ -22,7 +21,6 @@ import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.MessagePanel;
-import com.mindalliance.channels.pages.components.SegmentLink;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
@@ -54,7 +52,6 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -91,11 +88,7 @@ import java.util.Set;
  * The plan editing page.
  * Note: When a user switches plan, this page *must* be reloaded.
  */
-public final class PlanPage extends WebPage implements Updatable {
-    /**
-     * Delay between refresh check callbacks.
-     */
-    public static final int REFRESH_DELAY = 10;
+public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * Minimium delay before a change message fades out.
      */
@@ -338,27 +331,19 @@ public final class PlanPage extends WebPage implements Updatable {
     private long message_time = 0;
 
     /**
-     * Query service.
-     */
-    @SpringBean
-    private QueryService queryService;
-
-    /**
      * Survey service.
      */
     @SpringBean
     private SurveyService surveyService;
 
     /**
-     * The plan manager.
-     */
-    @SpringBean
-    private PlanManager planManager;
-    /**
      * The mail sender.
      */
     @SpringBean
     private MailSender mailSender;
+
+    @SpringBean
+    private User user;
 
     static {
         IE7CompatibilityScript =
@@ -385,9 +370,13 @@ public final class PlanPage extends WebPage implements Updatable {
     public PlanPage( PageParameters parameters ) {
         // Call super to remember parameters in links
         super( parameters );
-        Segment sc = findSegment( queryService, parameters );
+        Segment sc = findSegment( getQueryService(), parameters );
         init( sc, findPart( sc, parameters ), findExpansions( parameters ) );
     }
+
+
+    /**
+
 
     /**
      * Utility constructor for tests.
@@ -405,6 +394,7 @@ public final class PlanPage extends WebPage implements Updatable {
      * @param p  a part in the segment
      */
     public PlanPage( Segment sc, Part p ) {
+        super();
         init( sc, p, new HashSet<Long>() );
     }
 
@@ -752,7 +742,7 @@ public final class PlanPage extends WebPage implements Updatable {
         Set<ModelObject> editables = new HashSet<ModelObject>();
         for ( Long id : expansions ) {
             try {
-                editables.add( queryService.find( ModelObject.class, id ) );
+                editables.add( getQueryService().find( ModelObject.class, id ) );
             } catch ( NotFoundException ignored ) {
                 // ignore
             }
@@ -1025,28 +1015,10 @@ public final class PlanPage extends WebPage implements Updatable {
         form.addOrReplace( surveysPanel );
     }
 
-    /**
-     * Return current plan.
-     *
-     * @return a plan
-     */
-    public Plan getPlan() {
-        return getUser().getPlan();
-    }
-
-    /**
-     * Switch the user's current plan.
-     *
-     * @param plan a plan
-     */
-    public void setPlan( Plan plan ) {
-        getUser().setPlan( plan );
-    }
-
     private ModelEntity findExpandedEntity() {
         for ( long id : expansions ) {
             try {
-                ModelObject mo = queryService.find( ModelObject.class, id );
+                ModelObject mo = getQueryService().find( ModelObject.class, id );
                 if ( mo.isEntity() )
                     return ( (ModelEntity) mo );
             } catch ( NotFoundException ignored ) {
@@ -1057,7 +1029,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     public List<Segment> getAllSegments() {
-        List<Segment> allSegments = new ArrayList<Segment>( queryService.list( Segment.class ) );
+        List<Segment> allSegments = new ArrayList<Segment>( getQueryService().list( Segment.class ) );
         Collections.sort( allSegments, new Comparator<Segment>() {
             public int compare( Segment o1, Segment o2 ) {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );
@@ -1110,30 +1082,37 @@ public final class PlanPage extends WebPage implements Updatable {
      *
      * @param segment a segment
      */
+/*
     public void redirectTo( Segment segment ) {
         redirectTo( segment.getDefaultPart() );
     }
+*/
 
     /**
      * Redirect to current plan page.
      */
     public void redirectToPlan() {
-        setResponsePage( new RedirectPage( "plan" ) );
+       String url = redirectUrl( "plan", getPlan() );
+       RedirectPage page =  new RedirectPage( url );
+       setResponsePage( page );
     }
 
     /**
      * redirect to a part.
-     *
+     *                                                              "
      * @param p a part
      */
+/*
     private void redirectTo( Part p ) {
         Set<Long> ids = Collections.emptySet();
-        setResponsePage( new RedirectPage( SegmentLink.linkStringFor( p, ids ) ) );
+        setResponsePage( new RedirectPage( SegmentLink.linkStringFor( p, ids, getPlan() ) ) );
     }
+*/
 
     /**
      * Redirect here.
      */
+/*
     public void redirectHere() {
         long sid = segment.getId();
         long nid = getPart().getId();
@@ -1149,6 +1128,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 nid,
                 exps ) ) );
     }
+*/
 
     /**
      * Return initialized parameters for given segment and part.
@@ -1225,24 +1205,6 @@ public final class PlanPage extends WebPage implements Updatable {
                 }
         }
         return result;
-    }
-
-    /**
-     * Get the channels query service from the application.
-     *
-     * @return the query service
-     */
-    private QueryService getQueryService() {
-        return queryService;
-    }
-
-    private Channels getApp() {
-        return (Channels) getApplication();
-    }
-
-    private Commander getCommander() {
-        // return Channels.instance().getCommander();
-        return getApp().getCommander( getPlan() );
     }
 
     /**
@@ -1343,16 +1305,6 @@ public final class PlanPage extends WebPage implements Updatable {
         }
     }
 
-    /**
-     * Set a component's visibility.
-     *
-     * @param component a component
-     * @param visible   a boolean
-     */
-    private static void makeVisible( Component component, boolean visible ) {
-        component.add( new AttributeModifier( "style", true, new Model<String>(
-                visible ? "" : "display:none" ) ) );
-    }
 
     private void reacquireLocks() {
         // Part is always "expanded"
@@ -1596,7 +1548,7 @@ public final class PlanPage extends WebPage implements Updatable {
             expand( new Change( Change.Type.Expanded, Channels.SOCIAL_ID ) );
         }
         if ( change.isForInstanceOf( Segment.class ) ) {
-            Segment changedSegment = (Segment) change.getSubject( queryService );
+            Segment changedSegment = (Segment) change.getSubject( getQueryService() );
             if ( change.isExists() ) {
                 getCommander().resetUserHistory( getUser().getUsername(), false );
                 if ( change.isAdded() ) {
@@ -1623,7 +1575,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 flowsExplained = change.isExplained();
             }
         } else if ( change.isForInstanceOf( Part.class ) ) {
-            Part changedPart = (Part) change.getSubject( queryService );
+            Part changedPart = (Part) change.getSubject( getQueryService() );
             if ( change.isAdded() || change.isSelected() ) {
                 setPart( changedPart );
                 flowMaximized = false;
@@ -1636,7 +1588,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 expand( getPart() );
             }
         } else if ( change.isForInstanceOf( Flow.class ) ) {
-            Flow changedFlow = (Flow) change.getSubject( queryService );
+            Flow changedFlow = (Flow) change.getSubject( getQueryService() );
             if ( change.isUpdated() && change.isForProperty( "other" ) ) {
                 expandFlow( change );
             } else if ( change.isSelected() ) {
@@ -1651,7 +1603,7 @@ public final class PlanPage extends WebPage implements Updatable {
                 expandFlow( change );
             }
         } else if ( change.isForInstanceOf( UserIssue.class ) && change.isAdded() ) {
-            UserIssue userIssue = (UserIssue) change.getSubject( queryService );
+            UserIssue userIssue = (UserIssue) change.getSubject( getQueryService() );
             ModelObject mo = userIssue.getAbout();
             if ( mo instanceof Segment ) {
                 expand( userIssue );
@@ -1831,7 +1783,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshSegmentPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( queryService );
+        Identifiable identifiable = change.getSubject( getQueryService() );
         if ( identifiable instanceof SegmentObject
                 && ( change.isSelected() || change.isDisplay() || change.isExists() ) ) {
             segmentPanel.doRefresh( target, change );
@@ -1843,7 +1795,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshPlanEditPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( queryService );
+        Identifiable identifiable = change.getSubject( getQueryService() );
         Plan plan = getPlan();
         if ( change.isUnknown() || change.isDisplay() && identifiable instanceof Plan ) {
             addPlanEditPanel();
@@ -1858,7 +1810,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshSegmentEditPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( queryService );
+        Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isUnknown()
                 || ( change.isDisplay() || change.isAdded() ) && identifiable instanceof Segment
                 || change.isSelected() && identifiable instanceof Part ) {
@@ -1892,7 +1844,7 @@ public final class PlanPage extends WebPage implements Updatable {
             AjaxRequestTarget target,
             Change change,
             List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( queryService );
+        Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isUnknown()
                 || identifiable instanceof Part && change.isAspect( "assignments" ) ) {
             addAssignmentsPanel();
@@ -1904,7 +1856,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshCommitmentsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( queryService );
+        Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isUnknown()
                 || identifiable instanceof Flow && change.isAspect( "commitments" ) ) {
             addCommitmentsPanel();
@@ -1916,7 +1868,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshEOIsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( queryService );
+        Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isUnknown() || identifiable instanceof Flow && ( change.isCollapsed()
                 || change.isAspect( "eois" ) ) ) {
             addEOIsPanel();
@@ -1928,7 +1880,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshFailureImpactsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( queryService );
+        Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isUnknown() || identifiable instanceof SegmentObject && change.isAspect(
                 "failure" ) ) {
             addFailureImpactsPanel();
@@ -1940,7 +1892,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshDisseminationPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( queryService );
+        Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isUnknown()
                 || identifiable instanceof SegmentObject
                 && change.isAspect( "dissemination" ) ) {
@@ -1954,7 +1906,7 @@ public final class PlanPage extends WebPage implements Updatable {
     }
 
     private void refreshOverridesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated )  {
-        Identifiable identifiable = change.getSubject( queryService );
+        Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isUnknown()
                 || identifiable instanceof Part
                 && change.isAspect( "overrides" ) ) {
@@ -1967,7 +1919,7 @@ public final class PlanPage extends WebPage implements Updatable {
 
     private void refreshSurveysPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( queryService );
+        Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isUnknown() || change.isDisplay() && identifiable instanceof Survey ) {
             Survey expandedSurvey = (Survey) identifiable;
             Survey viewedSurvey = ( expandedSurvey == null || expandedSurvey.isUnknown() )
@@ -2008,14 +1960,6 @@ public final class PlanPage extends WebPage implements Updatable {
      */
     public List<Plan> getPlannablePlans() {
         return getPlanManager().getPlannablePlans( getUser() );
-    }
-
-    private User getUser() {
-        return User.current();
-    }
-
-    private PlanManager getPlanManager() {
-        return planManager;
     }
 
     private void update( AjaxRequestTarget target, Change change ) {

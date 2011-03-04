@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -34,9 +33,11 @@ public class ODBAccessor {
     private static final Logger LOG = LoggerFactory.getLogger( ODBAccessor.class );
 
     private final ODBTransactionFactory odbTxFactory;
+    private final String planUri;
 
-    public ODBAccessor( ODBTransactionFactory odbTxFactory ) {
+    public ODBAccessor( ODBTransactionFactory odbTxFactory, String planUri ) {
         this.odbTxFactory = odbTxFactory;
+        this.planUri = planUri;
     }
 
     /**
@@ -48,7 +49,7 @@ public class ODBAccessor {
         ODB odb = null;
         try {
             synchronized ( odbTxFactory ) {
-                odb = odbTxFactory.openDatabase();
+                odb = odbTxFactory.openDatabase( planUri );
                 odb.store( po );
             }
         } catch ( IOException e ) {
@@ -84,7 +85,7 @@ public class ODBAccessor {
         synchronized ( odbTxFactory ) {
             ODB odb = null;
             try {
-                odb = odbTxFactory.openDatabase();
+                odb = odbTxFactory.openDatabase( planUri );
 
                 IQuery query = new CriteriaQuery( clazz, criterion );
                 if ( ordering != null ) {
@@ -154,7 +155,7 @@ public class ODBAccessor {
         synchronized ( odbTxFactory ) {
             ODB odb = null;
             try {
-                odb = odbTxFactory.openDatabase();
+                odb = odbTxFactory.openDatabase( planUri );
                 IQuery query = new CriteriaQuery(
                     clazz, Where.equal( "id", id ) );
 
@@ -176,7 +177,7 @@ public class ODBAccessor {
         synchronized ( odbTxFactory ) {
             ODB odb = null;
             try {
-                odb = odbTxFactory.openDatabase();
+                odb = odbTxFactory.openDatabase( planUri );
                 IQuery query = new CriteriaQuery(
                     clazz, Where.equal( "id", id ) );
                 Objects<T> objects = odb.getObjects( query );

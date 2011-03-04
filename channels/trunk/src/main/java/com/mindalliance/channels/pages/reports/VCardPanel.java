@@ -8,11 +8,10 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -26,14 +25,10 @@ import java.util.Set;
 /**
  * A cutesy card for an actor, role or company.
  */
-public class VCardPanel extends Panel {
+public class VCardPanel extends AbstractUpdatablePanel {
 
     /** The subject of the card. */
     private final ResourceSpec spec;
-
-    /** The query service for resolving the subject. */
-    @SpringBean
-    private QueryService queryService;
 
     @SpringBean
     private ImagingService imagingService;
@@ -117,7 +112,7 @@ public class VCardPanel extends Panel {
             } else
                 title = "";
         } else {
-            String t = queryService.getTitle( actor );
+            String t = getQueryService().getTitle( actor );
             if ( t.isEmpty() )
                 title = "";
             else

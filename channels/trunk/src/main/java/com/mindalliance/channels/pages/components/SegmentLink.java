@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -22,16 +23,16 @@ public class SegmentLink extends ExternalLink {
     /** Initial buffer size for building links. */
     private static final int BUFFER_SIZE = 128;
 
-    public SegmentLink( String id, Segment segment ) {
-        this( id, new PropertyModel<Node>( segment, "defaultPart" ) );                   // NON-NLS
+    public SegmentLink( String id, Segment segment, Plan plan ) {
+        this( id, new PropertyModel<Node>( segment, "defaultPart" ), plan );                   // NON-NLS
     }
 
-    public SegmentLink( String id, IModel<Node> node ) {
-        super( id, linkFor( node ) );
+    public SegmentLink( String id, IModel<Node> node, Plan plan ) {
+        super( id, linkFor( node, plan ) );
     }
 
-    public SegmentLink( String id, IModel<Node> node, ModelObject expanded ) {
-        super( id, linkFor( node, expanded.getId() ) );
+    public SegmentLink( String id, IModel<Node> node, ModelObject expanded, Plan plan ) {
+        super( id, linkFor( node, expanded.getId(), plan ) );
     }
 
     /**
@@ -39,8 +40,8 @@ public class SegmentLink extends ExternalLink {
      * @param node the node
      * @return a relative url
      */
-    public static IModel<String> linkFor( IModel<Node> node ) {
-        return linkFor( node, new HashSet<Long>() );
+    public static IModel<String> linkFor( IModel<Node> node, Plan plan) {
+        return linkFor( node, new HashSet<Long>(), plan );
     }
 
     /**
@@ -49,10 +50,10 @@ public class SegmentLink extends ExternalLink {
      * @param expansion the section to expand
      * @return a relative url
      */
-    public static IModel<String> linkFor( IModel<Node> node, long expansion ) {
+    public static IModel<String> linkFor( IModel<Node> node, long expansion, Plan plan ) {
         Set<Long> set = new HashSet<Long>();
         set.add( expansion );
-        return linkFor( node, set );
+        return linkFor( node, set, plan );
     }
 
     /**
@@ -62,12 +63,12 @@ public class SegmentLink extends ExternalLink {
      * @return a relative url
      */
     public static IModel<String> linkFor(
-            final IModel<Node> nodeModel, final Set<Long> expansions ) {
+            final IModel<Node> nodeModel, final Set<Long> expansions, final Plan plan ) {
 
         return new AbstractReadOnlyModel<String>() {
             @Override
             public String getObject() {
-                return linkStringFor( nodeModel.getObject(), expansions );
+                return linkStringFor( nodeModel.getObject(), expansions, plan );
             }
         };
     }
@@ -78,7 +79,7 @@ public class SegmentLink extends ExternalLink {
      * @param expansions what to expand in the target
      * @return a relative url
      */
-    public static String linkStringFor( Node node, Set<Long> expansions ) {
+    public static String linkStringFor( Node node, Set<Long> expansions, Plan plan ) {
         String exs = expandString( expansions );
         Node n = node;
         if ( n.isConnector() ) {
@@ -93,10 +94,14 @@ public class SegmentLink extends ExternalLink {
             }
             exs = expandString( f.getId() );
         }
-        return MessageFormat.format( "?segment={0,number,0}&node={1,number,0}{2}",       // NON-NLS
+        return MessageFormat.format( "?plan={0}&v={1,number,0}&segment={2,number,0}&node={3,number,0}{4}",
+                                     plan,
+                                     plan.getVersion(),
                                      n.getSegment().getId(),
-                                     n.getId(), exs );
+                                     n.getId(),
+                                     exs );
     }
+
 
     private static String expandString( long id ) {
         Set<Long> ids = new HashSet<Long>();

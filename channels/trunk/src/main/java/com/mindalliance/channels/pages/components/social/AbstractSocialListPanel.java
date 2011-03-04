@@ -15,8 +15,11 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
  * Time: 5:00:18 PM
  */
 public class AbstractSocialListPanel  extends AbstractUpdatablePanel {
-    public AbstractSocialListPanel( String id ) {
+    private final boolean collapsible;
+
+    public AbstractSocialListPanel( String id, boolean collapsible ) {
         super( id );
+        this.collapsible = collapsible;
     }
 
     protected void init() {
@@ -32,6 +35,7 @@ public class AbstractSocialListPanel  extends AbstractUpdatablePanel {
             }
         };
         add( hideSocialLink );
+        hideSocialLink.setVisible( collapsible );
     }
 
 

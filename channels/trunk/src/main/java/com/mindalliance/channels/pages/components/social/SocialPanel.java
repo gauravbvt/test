@@ -44,14 +44,21 @@ public class SocialPanel extends AbstractUpdatablePanel {
 
     private CommandEventListPanel commandEventListPanel;
 
-    private PlannerPresenceListPanel plannerPresenceListPanel;
+    private UserPresenceListPanel plannerPresenceListPanel;
     /**
      * When last refreshed.
      */
     private Date whenLastRefreshed = new Date();
+    private boolean collapsible;
+
 
     public SocialPanel( String id ) {
+        this( id, true );
+    }
+
+    public SocialPanel( String id, boolean collapsible ) {
         super( id );
+        this.collapsible = collapsible;
         init();
     }
 
@@ -69,19 +76,19 @@ public class SocialPanel extends AbstractUpdatablePanel {
         List<ITab> tabs = new ArrayList<ITab>();
         tabs.add( new AbstractTab( new Model<String>( "Presence" ) ) {
             public Panel getPanel( String id ) {
-                plannerPresenceListPanel = new PlannerPresenceListPanel( id, SocialPanel.this );
+                plannerPresenceListPanel = new UserPresenceListPanel( id, SocialPanel.this, collapsible );
                 return plannerPresenceListPanel;
             }
         } );
         tabs.add( new AbstractTab( new Model<String>( "Activities" ) ) {
             public Panel getPanel( String id ) {
-                commandEventListPanel = new CommandEventListPanel( id, SocialPanel.this );
+                commandEventListPanel = new CommandEventListPanel( id, SocialPanel.this, collapsible );
                 return commandEventListPanel;
             }
         } );
         tabs.add( new AbstractTab( new Model<String>( "Messages" ) ) {
             public Panel getPanel( String id ) {
-                plannerMessageListPanel = new PlannerMessageListPanel( id, SocialPanel.this );
+                plannerMessageListPanel = new PlannerMessageListPanel( id, SocialPanel.this, collapsible );
                 return plannerMessageListPanel;
             }
         } );
@@ -98,7 +105,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( plannerMessageListPanel != null && tabbedPanel.getSelectedTab() == 2 ) {
             plannerMessageListPanel.refresh( target, change );
         }
-        Date whenLastReceived = plannerMessagingService.getWhenLastReceived();
+        Date whenLastReceived = plannerMessagingService.getWhenLastReceived( getPlan() );
         if ( whenLastReceived != null && whenLastReceived.after( whenLastRefreshed ) ) {
             update( target, Change.message( "New message" ) );
         }
@@ -133,4 +140,9 @@ public class SocialPanel extends AbstractUpdatablePanel {
         plannerMessageListPanel.newMessage( sendTo == null ? "" : sendTo, about, target );
         target.addComponent( tabbedPanel );
     }
+
+    public boolean isCollapsible() {
+        return collapsible;
+    }
+
 }

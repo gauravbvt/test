@@ -2,12 +2,10 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  * Part summary panel.
@@ -17,10 +15,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  * Date: Jun 16, 2010
  * Time: 7:19:59 PM
  */
-public class PartSummaryPanel extends Panel {
-
-    @SpringBean
-    private QueryService queryService;
+public class PartSummaryPanel extends AbstractUpdatablePanel {
 
     private IModel<Part> partModel;
 
@@ -49,7 +44,7 @@ public class PartSummaryPanel extends Panel {
         if ( part.getActor() != null ) {
             sb.append( part.getActor().getName() );
             if ( part.getActor().isType() ) {
-                Actor impliedActor = part.getKnownActualActor( queryService );
+                Actor impliedActor = part.getKnownActualActor( getQueryService() );
                 if ( impliedActor != null ) {
                     sb.append( " " );
                     sb.append( impliedActor.getName() );
@@ -59,14 +54,14 @@ public class PartSummaryPanel extends Panel {
         if ( part.getRole() != null ) {
             if ( !sb.toString().isEmpty() ) sb.append( ' ' );
             if ( part.getActor() == null ) {
-                Actor impliedActor = part.getKnownActualActor( queryService );
+                Actor impliedActor = part.getKnownActualActor( getQueryService() );
                 if ( impliedActor != null ) {
                     sb.append( impliedActor.getName() );
                 } else {
                     sb.append( "Any " );
                 }
             }
-            if ( part.getKnownActualActor( queryService ) != null ) {
+            if ( part.getKnownActualActor( getQueryService() ) != null ) {
                 if ( part.getActor() != null ) {
                     sb.append( " as " );
                 } else {

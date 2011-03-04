@@ -28,7 +28,7 @@ import java.util.List;
  * Date: Jul 5, 2010
  * Time: 1:29:02 PM
  */
-public class PlannerPresenceListPanel extends AbstractSocialListPanel {
+public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     @SpringBean
     UserService userService;
@@ -42,8 +42,8 @@ public class PlannerPresenceListPanel extends AbstractSocialListPanel {
     private AjaxFallbackLink showHideLink;
     private Label showHideLabel;
 
-    public PlannerPresenceListPanel( String id, Updatable updatable ) {
-        super( id );
+    public UserPresenceListPanel( String id, Updatable updatable, boolean collapsible ) {
+        super( id, collapsible );
         this.updatable = updatable;
         init();
     }
@@ -82,7 +82,7 @@ public class PlannerPresenceListPanel extends AbstractSocialListPanel {
     private void addPresences() {
         ListView<User> presenceList = new ListView<User>(
                 "presences",
-                getPlanners() ) {
+                getUsersPresent() ) {
             protected void populateItem( ListItem<User> item ) {
                 User planner = item.getModelObject();
                 PlannerPresencePanel presencePanel = new PlannerPresencePanel(
@@ -96,24 +96,24 @@ public class PlannerPresenceListPanel extends AbstractSocialListPanel {
         presencesContainer.addOrReplace( presenceList );
     }
 
-    public List<User> getPlanners() {
-        List<User> planners = new ArrayList<User>();
-        for ( User user : userService.getPlanners( getPlan().getUri() ) ) {
+    public List<User> getUsersPresent() {
+        List<User> usersPresent = new ArrayList<User>();
+        for ( User user : userService.getUsers( getPlan().getUri() ) ) {
             if ( !showHereOnly || isHere( user.getUsername() ) ) {
-                planners.add( user );
+                usersPresent.add( user );
             }
         }
         final Collator collator = Collator.getInstance();
-        Collections.sort( planners, new Comparator<User>() {
+        Collections.sort( usersPresent, new Comparator<User>() {
             public int compare( User user1, User user2 ) {
                 return collator.compare( user1.getNormalizedFullName(), user2.getNormalizedFullName() );
             }
         } );
-        return planners;
+        return usersPresent;
     }
 
     private boolean isHere( String username ) {
-        PresenceEvent presenceEvent = planningEventService.findLatestPresence( username );
+        PresenceEvent presenceEvent = planningEventService.findLatestPresence( username, getPlan()  );
         return presenceEvent != null && presenceEvent.isLogin();
     }
 

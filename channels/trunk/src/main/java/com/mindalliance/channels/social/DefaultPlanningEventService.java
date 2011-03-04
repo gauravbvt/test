@@ -2,7 +2,7 @@ package com.mindalliance.channels.social;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.odb.ODBAccessor;
 import com.mindalliance.channels.odb.ODBTransactionFactory;
 import org.neodatis.odb.core.query.criteria.Where;
@@ -25,13 +25,21 @@ public class DefaultPlanningEventService implements PlanningEventService {
     private ODBTransactionFactory databaseFactory;
 
     private Map<String, PresenceEvent> latestPresences = null;
-    private Date whenLastChanged;
-    private Date startupDate;
+    private Map<String, Date> whenLastChanged;
+    private Map<String, Date> startupDate;
 
-    public DefaultPlanningEventService() {
-        startupDate = new Date();
-        whenLastChanged = new Date();
+    public DefaultPlanningEventService( ) {
+        startupDate = new HashMap<String, Date>();
+        whenLastChanged = new HashMap<String, Date>();
         resetLatestPresences();
+    }
+
+    public Map<String, PresenceEvent> getLatestPresences() {
+        return latestPresences;
+    }
+
+    public void setLatestPresences( Map<String, PresenceEvent> latestPresences ) {
+        this.latestPresences = latestPresences;
     }
 
     private void resetLatestPresences() {
@@ -42,62 +50,65 @@ public class DefaultPlanningEventService implements PlanningEventService {
         this.databaseFactory = databaseFactory;
     }
 
-    public void commandDone( Command command, Change change ) {
-        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Done, command, change );
-        addPlanningEvent( commandEvent );
+    public void commandDone( Command command, Change change, Plan plan ) {
+        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Done, command, change, plan.getId() );
+        addPlanningEvent( commandEvent, plan );
     }
 
-    public void commandUndone( Command command ) {
-        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Undone, command );
-        addPlanningEvent( commandEvent );
+    public void commandUndone( Command command, Plan plan ) {
+        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Undone, command, plan.getId() );
+        addPlanningEvent( commandEvent, plan );
     }
 
-    public void commandRedone( Command command ) {
-        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Redone, command );
-        addPlanningEvent( commandEvent );
+    public void commandRedone( Command command, Plan plan ) {
+        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Redone, command, plan.getId() );
+        addPlanningEvent( commandEvent, plan );
     }
 
-    public void loggedIn( String username ) {
-        addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Login, username ) );
+    public void loggedIn( String username, Plan plan ) {
+        addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Login, username, plan.getId() ), plan );
     }
 
-    public void loggedOut( String username ) {
-        if ( !isLoggedOut( username ) )
-            addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Logout, username ) );
+    public void loggedOut( String username, Plan plan ) {
+        if ( !isLoggedOut( username, plan ) )
+            addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Logout, username, plan.getId() ), plan );
     }
 
-    private boolean isLoggedOut( String username ) {
-        PresenceEvent presenceEvent = findLatestPresence( username );
+    private boolean isLoggedOut( String username, Plan plan ) {
+        PresenceEvent presenceEvent = findLatestPresence( username, plan );
         return presenceEvent != null && presenceEvent.isLogout();
     }
 
-    private void addPlanningEvent( PlanningEvent planningEvent ) {
+    private void addPlanningEvent( PlanningEvent planningEvent, Plan plan ) {
+        markStarted( plan );
         if ( planningEvent.isPresenceEvent() ) {
             resetLatestPresences();
         }
-        getOdb().store( planningEvent );
-        whenLastChanged = new Date();
+        getOdb( plan ).store( planningEvent );
+        whenLastChanged.put( plan.getUri(), new Date() );
     }
 
-    public Iterator<CommandEvent> getCommandEvents() {
-        return getOdb().iterate(
+    public Iterator<CommandEvent> getCommandEvents( Plan plan ) {
+        markStarted( plan );
+        return getOdb( plan ).iterate(
                 CommandEvent.class,
-                Where.equal( "planId", getPlanId() ),
+                Where.equal( "planId", plan.getId() ),
                 ODBAccessor.Ordering.Descendant,
                 "date" );
     }
 
-    public PresenceEvent findLatestPresence( String username ) {
+    public PresenceEvent findLatestPresence( String username, Plan plan ) {
+        markStarted( plan );
         PresenceEvent latestPresence;
         if ( latestPresences.containsKey( username ) ) {
             latestPresence = latestPresences.get( username );
         } else {
-            latestPresence = getOdb().first(
+            latestPresence = getOdb( plan ).first(
                     PresenceEvent.class,
                     Where.and()
                             .add( Where.equal( "username", username ) )
-                            .add( Where.equal( "planId", getPlanId() ) )
-                            .add( Where.ge( "date", startupDate )),
+                            .add( Where.equal( "planId", plan.getId() ) )
+                            .add( Where.ge( "date", getStartupDate( plan.getUri() ) )),
                     ODBAccessor.Ordering.Descendant,
                     "date" );
             latestPresences.put( username, latestPresence );
@@ -105,16 +116,24 @@ public class DefaultPlanningEventService implements PlanningEventService {
         return latestPresence;
     }
 
-    private ODBAccessor getOdb() {
-        return databaseFactory.getODBAccessor();
+    private Date getStartupDate( String uri ) {
+        Date startup = startupDate.get( uri );
+        if ( startup == null ) {
+            startupDate.put( uri, new Date() );
+        }
+        return startupDate.get( uri );
+    }
+
+    private ODBAccessor getOdb( Plan plan ) {
+        return databaseFactory.getODBAccessor( plan.getUri() );
     }
 
 
-    private long getPlanId() {
-        return User.current().getPlan().getId();
+    public Date getWhenLastChanged( Plan plan ) {
+        return whenLastChanged.get( plan.getUri() );
     }
 
-    public Date getWhenLastChanged() {
-        return whenLastChanged;
+    private void markStarted( Plan plan ) {
+        getStartupDate( plan.getUri() );
     }
 }

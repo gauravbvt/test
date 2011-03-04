@@ -1,22 +1,18 @@
 package com.mindalliance.channels.pages.components.support;
 
-import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.AjaxIndicatorAwareContainer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -36,17 +32,12 @@ import java.util.Date;
  * Date: 3/2/11
  * Time: 1:07 PM
  */
-public class UserFeedbackPanel extends Panel {
+public class UserFeedbackPanel extends AbstractUpdatablePanel {
 
     /**
      * The logger.
      */
     private final Logger LOG = LoggerFactory.getLogger( UserFeedbackPanel.class );
-    /**
-     * Plan manager.
-     */
-    @SpringBean
-    private PlanManager planManager;
 
     @SpringBean
     private MailSender mailSender;
@@ -203,7 +194,7 @@ public class UserFeedbackPanel extends Panel {
 
     private boolean sendFeedback() {
         User currentUser = User.current();
-        Plan plan = currentUser.getPlan();
+        Plan plan = getPlan();
         String toAddress = plan.getPlannerSupportCommunityUri( getApp().getSupportCommunityUri() );
         try {
             SimpleMailMessage email = new SimpleMailMessage();
@@ -270,17 +261,6 @@ public class UserFeedbackPanel extends Panel {
         suggestion = false;
         asap = false;
         content = "";
-    }
-
-    /**
-     * Set a component's visibility.
-     *
-     * @param component a component
-     * @param visible   a boolean
-     */
-    private static void makeVisible( Component component, boolean visible ) {
-        component.add( new AttributeModifier( "style", true, new Model<String>(
-                visible ? "" : "display:none" ) ) );
     }
 
     private Channels getApp() {

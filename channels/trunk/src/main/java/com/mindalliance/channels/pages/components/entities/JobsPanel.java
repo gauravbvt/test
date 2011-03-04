@@ -18,7 +18,6 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.query.Play;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
@@ -45,7 +44,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -66,8 +64,6 @@ import java.util.Set;
  */
 public class JobsPanel extends AbstractCommandablePanel implements NameRangeable {
 
-    @SpringBean
-    private QueryService queryService;
     /**
      * Maximum number of jobs to show at a time.
      */
@@ -209,7 +205,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                         } else {
                             return org.getLabel()
                                     + " (edited by "
-                                    + queryService.findUserFullName( JobsPanel.this.getLockOwner( org ) ) + ")";
+                                    + getQueryService().findUserFullName( JobsPanel.this.getLockOwner( org ) ) + ")";
                         }
                     }
 

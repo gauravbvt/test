@@ -306,7 +306,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     private String titleForPlan() {
-        return "All procedures"
+        return "All procedures in " + getPlan().getName()
                 + ( focusEntity != null
                 ? ( " for " + ( (ModelEntity) focusEntity ).getName() )
                 : "" )

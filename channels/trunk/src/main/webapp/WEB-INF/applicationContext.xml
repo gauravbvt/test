@@ -233,7 +233,7 @@ CONFIGURATION NOTES:
           scope="prototype" autowire="no">
         <property name="analyst" ref="analyst"/>
         <property name="planManager" ref="planManager"/>
-        <property name="queryService" ref="queryService"/>
+        <property name="attachmentManager" ref="attachmentManager"/>
         <property name="importExportFactory" ref="importExportFactory"/>
         <property name="timeout" value="300"/>
         <property name="presenceListeners">

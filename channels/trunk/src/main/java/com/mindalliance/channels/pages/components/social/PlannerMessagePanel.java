@@ -43,7 +43,7 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
     }
 
     public String getUserFullName() {
-        return getInvolvement( showReceived ) + super.getUserFullName();
+        return getInvolvement( showReceived ) + super.getUserFullNameAndRole();
     }
 
 

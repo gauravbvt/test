@@ -81,7 +81,8 @@ public class SegmentShowMenuPanel extends MenuPanel {
         BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
                 "link",
                 new Model<String>( "Tasks with known locations in plan segment " + getSegment().getName() ),
-                geoLocatables );
+                geoLocatables,
+                getQueryService() );
         if ( geoLocatables.isEmpty() ) {
             geomapLink.setEnabled( false );
         }

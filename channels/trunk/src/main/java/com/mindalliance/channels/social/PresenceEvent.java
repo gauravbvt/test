@@ -18,8 +18,8 @@ public class PresenceEvent extends PlanningEvent {
     private String username;
     private Type type;
 
-    public PresenceEvent( Type type, String username ) {
-        super();
+    public PresenceEvent( Type type, String username, long planId ) {
+        super( planId );
         this.username = username;
         this.type = type;
     }

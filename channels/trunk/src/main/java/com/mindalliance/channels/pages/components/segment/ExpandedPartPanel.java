@@ -22,7 +22,6 @@ import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
-import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -40,7 +39,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -55,9 +53,6 @@ import java.util.Set;
  * A view on a Part.
  */
 public class ExpandedPartPanel extends AbstractCommandablePanel {
-
-    @SpringBean
-    private QueryService queryService;
 
     /**
      * The task property.
@@ -250,7 +245,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     private String getCssClasses() {
-        String priority = getPart().getPriorityCssClass( queryService );
+        String priority = getPart().getPriorityCssClass( getQueryService() );
         return "summary " + priority;
     }
 

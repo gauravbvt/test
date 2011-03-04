@@ -23,17 +23,18 @@ public class CommandEvent extends PlanningEvent {
     private Change change;
     private Type type;
 
-    public CommandEvent() {
+    public CommandEvent( long planId ) {
+        super( planId );
     }
 
-    public CommandEvent( Type type, Command command ) {
-        this();
+    public CommandEvent( Type type, Command command, long planId ) {
+        this( planId );
         this.type = type;
         this.command = command;
     }
 
-    public CommandEvent( Type type, Command command, Change change ) {
-        this( type, command );
+    public CommandEvent( Type type, Command command, Change change, long planId ) {
+        this( type, command, planId );
         this.change = change;
     }
 

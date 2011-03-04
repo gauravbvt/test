@@ -47,28 +47,52 @@
 <form wicket:id="big-form" class="stretch" action="#">
     <div class="pageHeader">
         <h1>Mind-Alliance Channels</h1>
+        <span wicket:id="spinner" id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
         <div id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Logout</a></div>
         <div id=welcome>Welcome <span wicket:id="userName">user name</span>!</div>
+        <div class="change-message" wicket:id="message-container"><span wicket:id="message">[message panel]</span></div>
         <span wicket:id="feedback">[feedback panel]</span>
     </div>
     <div class="planHeader">
         <div wicket:id="switch-plan">
-            <select wicket:id="plan-sel" name="plan">
-                <option>Some plan</option>
-            </select>
+            Select a plan: <select wicket:id="plan-sel" name="plan">
+            <option>Some plan</option>
+        </select>
         </div>
         <div class="planTitle">
             <img wicket:id="planImage" src="#"/>
-            <span wicket:id="planName">Plan name</span> for <span wicket:id="planClient">Planclient</span>
+            <span wicket:id="planName">Plan name</span> for <span wicket:id="planClient">Plan client</span>
         </div>
     </div>
     <div class="aboutPlan">
-<!--
-        <span wicket:id="metrics">[metrics panel]</span>
--->
-        <a wicket:id="gotoModel" href="#">Information sharing model</a>
-        <a wicket:id="gotoMapped" href="#">All procedures</a>
-        <a wicket:id="gotoReport" href="#">My procedures</a>
+        <!--
+                <span wicket:id="metrics">[metrics panel]</span>
+        -->
+        <div wicket:id="referencesContainer" class="references">
+            <h2> Plan documents </h2>
+            <ul>
+                <li wicket:id="references">
+                    <a wicket:id="attachment" href="#">reference</a>
+                </li>
+            </ul>
+        </div>
+        <div wicket:id="admin" class="goto">
+            <a wicket:id="gotoAdmin" href="#">Channels administration</a>
+            <span class="about">Where an administrator can manage users and plans.</span>
+        </div>
+        <div wicket:id="model" class="goto">
+            <a wicket:id="gotoModel" href="#">Information sharing model</a>
+            <span class="about">The information sharing best practices captured using Channels, analyzed automatically for issues,
+                and used to generate personalized, planned procedures on demand.</span>
+        </div>
+        <div wicket:id="mapped" class="goto">
+            <a wicket:id="gotoMapped" href="#">All procedures</a>
+            <span class="about">A visual tool for exploring the planned procedures of the organizations and their members who participate in the plan.</span>
+        </div>
+        <div wicket:id="report" class="goto">
+            <a wicket:id="gotoReport" href="#">My procedures</a>
+            <span class="about">Your information sharing procedures according to the plan.</span>
+        </div>
     </div>
     <span wicket:id="social">[social panel]</span>
 </form>

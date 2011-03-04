@@ -3,19 +3,17 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ import java.util.List;
  * Date: 2/14/11
  * Time: 9:51 AM
  */
-public class ProcedureMapPage extends WebPage implements Updatable {
+public class ProcedureMapPage extends AbstractChannelsWebPage {
 
     private ProcedureMapSelectorPanel selector;
     private WebMarkupContainer header;
@@ -182,31 +180,6 @@ public class ProcedureMapPage extends WebPage implements Updatable {
             target.addComponent( header );
             showMapOrReport( target );
         }
-    }
-
-    @Override
-    public void update( AjaxRequestTarget target, Object object, String action ) {
-        // Do nothing
-    }
-
-    @Override
-    public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated, String aspect ) {
-        // Do nothing
-    }
-
-    @Override
-    public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        // Do nothing
-    }
-
-    @Override
-    public void refresh( AjaxRequestTarget target, Change change ) {
-        // Do nothing
-    }
-
-    private static void makeVisible( Component component, boolean visible ) {
-        component.add( new AttributeModifier( "style", true, new Model<String>(
-                visible ? "" : "display:none" ) ) );
     }
 
 }

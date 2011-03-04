@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.attachments.FileBasedManager;
-import com.mindalliance.channels.dao.User;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -31,7 +30,7 @@ public class UploadPage extends AbstractImageFilePage {
     }
 
     protected File getFile( String fileName ) {
-        return new File( attachmentManager.getUploadDirectory( User.current().getPlan() ), fileName );
+        return new File( attachmentManager.getUploadDirectory( getPlan() ), fileName );
     }
 
 }

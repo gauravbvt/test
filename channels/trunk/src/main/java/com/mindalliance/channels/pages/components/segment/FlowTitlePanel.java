@@ -3,13 +3,11 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.MessageFormat;
 
@@ -21,10 +19,7 @@ import java.text.MessageFormat;
  * Date: Jun 16, 2010
  * Time: 5:18:21 PM
  */
-public class FlowTitlePanel extends Panel {
-
-    @SpringBean
-    private QueryService queryService;
+public class FlowTitlePanel extends AbstractUpdatablePanel {
 
     private Flow flow;
     private boolean isSend;
@@ -195,7 +190,4 @@ public class FlowTitlePanel extends Panel {
         addOrReplace( overridesImage );
     }
 
-    public QueryService getQueryService() {
-        return queryService;
-    }
-}
+ }

@@ -5,7 +5,6 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
-import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -13,7 +12,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Set;
 
@@ -26,9 +24,6 @@ import java.util.Set;
  * Time: 7:38:19 PM
  */
 public class CollapsedPartPanel extends AbstractUpdatablePanel {
-
-    @SpringBean
-    private QueryService queryService;
 
     /**
      * Summary label.
@@ -69,7 +64,7 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
     }
 
     private String getCssClasses() {
-        String priority = getPart().getPriorityCssClass( queryService );
+        String priority = getPart().getPriorityCssClass( getQueryService() );
         return "summary " + priority;
     }
 

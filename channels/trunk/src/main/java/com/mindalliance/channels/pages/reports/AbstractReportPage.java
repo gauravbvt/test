@@ -2,10 +2,7 @@
 // All rights reserved.
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
@@ -17,6 +14,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
@@ -24,7 +22,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -45,7 +42,7 @@ import java.util.Set;
 /**
  * ...
  */
-public class AbstractReportPage extends WebPage implements ReportHelper {
+public class AbstractReportPage extends AbstractChannelsWebPage implements ReportHelper {
 
     public static final String FLOW_PARM = "flow";
 
@@ -58,20 +55,9 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
     private Flow flow;
 
 
-    @SpringBean
-    private User user;
-
-    @SpringBean
-    private PlanManager planManager;
-
-    @SpringBean
-    private AttachmentManager attachmentManager;
 
     @SpringBean
     private ImagingService imagingService;
-
-    @SpringBean
-    private QueryService queryService;
 
     public AbstractReportPage( PageParameters parameters ) {
         super( parameters );
@@ -91,13 +77,6 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         } );
     }
 
-    public AttachmentManager getAttachmentManager() {
-        return attachmentManager;
-    }
-
-    public PlanManager getPlanManager() {
-        return planManager;
-    }
 
     public ImagingService getImagingService() {
         return imagingService;
@@ -140,10 +119,6 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         return commitments;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     //--------------------------------
     public Assignment getAssignment() {
         if ( assignment == null )
@@ -182,7 +157,7 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         if ( service == null )
             try {
                 PageParameters parameters = getPageParameters();
-                service = getService( parameters.getString( SelectorPanel.PLAN_PARM, user.getPlanUri() ),
+                service = getService( parameters.getString( SelectorPanel.PLAN_PARM, getUser().getPlanUri() ),
                         parameters.getInt( SelectorPanel.VERSION_PARM, 0 ) );
 
             } catch ( StringValueConversionException ignored ) {
@@ -199,23 +174,23 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         if ( uri == null )
             throw new NotFoundException();
 
-        else if ( user.isPlanner( uri ) ) {
-            int number = planManager.getDefinitionManager().get( uri )
+        else if ( getUser().isPlanner( uri ) ) {
+            int number = getPlanManager().getDefinitionManager().get( uri )
                     .getDevelopmentVersion().getNumber();
 
             development = version == 0 || version == number;
 
-        } else if ( user.isParticipant( uri ) )
+        } else if ( getUser().isParticipant( uri ) )
             development = false;
 
         else
             throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
 
-        PlanDao planDao = planManager.getDao( uri, development );
+        PlanDao planDao = getPlanManager().getDao( uri, development );
         if ( planDao == null )
             throw new NotFoundException();
 
-        return new PlanService( planManager, attachmentManager, planDao.getPlan() );
+        return new PlanService( getPlanManager(), getAttachmentManager(), planDao.getPlan() );
     }
 
     private Specable getActor( long actorId ) throws NotFoundException {
@@ -233,6 +208,7 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
 
     public String getType() {
         Part part = getAssignment().getPart();
+        QueryService queryService = getQueryService();
         return Assignments.isImmediate( part, queryService ) ? "Immediate Tasks"
                 : Assignments.isOptional( part, queryService ) ? "Optional Task"
                 : Assignments.isNotification( part, queryService ) ? "Information Received"
@@ -242,6 +218,7 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
 
     public String getTypePrefix() {
         Part part = getAssignment().getPart();
+        QueryService queryService = getQueryService();
         return Assignments.isImmediate( part, queryService ) ? "a"
                 : Assignments.isOptional( part, queryService ) ? "d"
                 : Assignments.isNotification( part, queryService ) ? "b"

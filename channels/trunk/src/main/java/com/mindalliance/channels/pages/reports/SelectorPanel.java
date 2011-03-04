@@ -19,6 +19,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
@@ -31,7 +32,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
@@ -46,7 +46,7 @@ import java.util.List;
 /**
  * The report fine-tuning gizmo.
  */
-public class SelectorPanel extends Panel implements AssignmentsSelector {
+public class SelectorPanel extends AbstractUpdatablePanel implements AssignmentsSelector {
 
     public static final String ACTOR_PARM = "agent";
     public static final String ORGANIZATION_PARM = "org";

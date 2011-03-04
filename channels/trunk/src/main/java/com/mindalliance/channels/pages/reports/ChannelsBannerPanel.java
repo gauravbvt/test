@@ -3,15 +3,13 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +26,7 @@ import java.util.Set;
  * Date: Feb 6, 2009
  * Time: 10:55:29 AM
  */
-public class ChannelsBannerPanel extends Panel {
+public class ChannelsBannerPanel extends AbstractUpdatablePanel {
 
     /**
      * Class logger.
@@ -48,9 +46,6 @@ public class ChannelsBannerPanel extends Panel {
      * Broadcast channels to include.
      */
     private final Collection<Channel> broadcasts;
-
-    @SpringBean
-    private QueryService queryService;
 
     public ChannelsBannerPanel(
             String id, ResourceSpec spec, Set<TransmissionMedium> unicasts, Collection<Channel> broadcasts ) {
@@ -100,7 +95,7 @@ public class ChannelsBannerPanel extends Panel {
 
     private List<Channel> getChannels() {
         List<Channel> result = new ArrayList<Channel>();
-        List<Channel> manualChannels = queryService.findAllChannelsFor( spec );
+        List<Channel> manualChannels = getQueryService().findAllChannelsFor( spec );
 
         if ( unicasts == null )
             result.addAll( manualChannels );

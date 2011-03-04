@@ -18,6 +18,11 @@ import java.util.List;
  */
 public class User implements UserDetails {
 
+    public static final String ADMIN = "Admin";
+    public static final String PLANNER = "Planner";
+    public static final String PARTICIPANT = "Participant";
+    public static final String UNAUTHORIZED = "Unauthorized";
+
     private static final User ANONYMOUS = new User();
 
     private static final long serialVersionUID = -5817912937367287500L;
@@ -261,10 +266,10 @@ public class User implements UserDetails {
      * @return a String
      */
     public String getRole( String planUri ) {
-        return userInfo.isAdmin() ? "Admin"
-                : userInfo.isPlanner( planUri ) ? "Planner"
-                : userInfo.isUser( planUri ) ? "Participant"
-                : "Unauthorized";
+        return userInfo.isAdmin() ? ADMIN
+                : userInfo.isPlanner( planUri ) ? PLANNER
+                : userInfo.isUser( planUri ) ? PARTICIPANT
+                : UNAUTHORIZED;
     }
 
     /**

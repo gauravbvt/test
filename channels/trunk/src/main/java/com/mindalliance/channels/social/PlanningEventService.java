@@ -2,6 +2,7 @@ package com.mindalliance.channels.social;
 
 import com.mindalliance.channels.command.CommandListener;
 import com.mindalliance.channels.command.PresenceListener;
+import com.mindalliance.channels.model.Plan;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -16,10 +17,10 @@ import java.util.Iterator;
  */
 public interface PlanningEventService extends CommandListener, PresenceListener {
 
-    Date getWhenLastChanged();
+    Date getWhenLastChanged( Plan plan );
 
-    Iterator<CommandEvent> getCommandEvents();
+    Iterator<CommandEvent> getCommandEvents( Plan plan );
 
-    PresenceEvent findLatestPresence( String username );
+    PresenceEvent findLatestPresence( String username, Plan plan );
 
 }

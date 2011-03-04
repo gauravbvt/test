@@ -14,8 +14,10 @@ import org.springframework.mail.SimpleMailMessage;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Default implementation of the planner messaging service.
@@ -37,16 +39,16 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
     private MailSender mailSender;
     private UserService userService;
     private ODBTransactionFactory databaseFactory;
-    private Date whenLastChanged;
+    private Map<String,Date> whenLastChanged;
     private static final int SUMMARY_MAX = 25;
 
     public DefaultPlannerMessagingService() {
-        whenLastChanged = new Date();
+        whenLastChanged = new HashMap<String,Date>();
     }
 
-    public PlannerMessage broadcastMessage( String text ) {
-        PlannerMessage message = new PlannerMessage( text );
-        addSentMessage( message );
+    public PlannerMessage broadcastMessage( String text, Plan plan ) {
+        PlannerMessage message = new PlannerMessage( text, plan.getId() );
+        addSentMessage( message, plan );
         return message;
     }
 
@@ -54,26 +56,30 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         this.databaseFactory = databaseFactory;
     }
 
-    private void addSentMessage( PlannerMessage message ) {
-        getOdb().store( message );
-        whenLastChanged = new Date();
+    private void addSentMessage( PlannerMessage message, Plan plan ) {
+        getOdb( plan ).store( message );
+        changed( plan );
     }
 
-    public void sendMessage( PlannerMessage message, boolean emailIt ) {
-        addSentMessage( message );
+    private void changed( Plan plan ) {
+        whenLastChanged.put( plan.getUri(), new Date() );
+    }
+
+    public void sendMessage( PlannerMessage message, boolean emailIt, Plan plan ) {
+        addSentMessage( message, plan );
         if ( emailIt ) {
-            email( message );
+            email( message, plan );
         }
     }
 
-    public boolean email( PlannerMessage message ) {
+    public boolean email( PlannerMessage message, Plan plan ) {
         List<User> toPlanners = new ArrayList<User>();
         String username = message.getToUsername();
         String text = "";
         User currentUser = User.current();
         String summary = StringUtils.abbreviate( message.getText(), SUMMARY_MAX );
         if ( username == null ) {
-            toPlanners = userService.getPlanners( getPlan().getUri() );
+            toPlanners = userService.getPlanners( plan.getUri() );
         } else {
             toPlanners.add( userService.getUserNamed( username ) );
         }
@@ -82,7 +88,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                 SimpleMailMessage email = new SimpleMailMessage();
                 email.setTo( toPlanner.getEmail() );
                 email.setSubject( "["
-                        + getPlan().getName()
+                        + plan.getName()
                         + "] "
                         + summary );
                 email.setFrom( currentUser.getEmail() );
@@ -99,7 +105,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                         + " emailed message to "
                         + toPlanner.getUsername() );
             }
-            getOdb().update( message.getClass(), message.getId(), "emailed", true );
+            getOdb( plan ).update( message.getClass(), message.getId(), "emailed", true );
             return true;
         } catch ( Exception e ) {
             LOG.warn( currentUser.getUsername()
@@ -109,24 +115,20 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         }
     }
 
-    private Plan getPlan() {
-        return User.current().getPlan();
-    }
-
     protected User getUser( String username ) {
         return userService.getUserNamed( username );
     }
 
-    public void deleteMessage( PlannerMessage message ) {
-        getOdb().delete( PlannerMessage.class, message.getId() );
-        whenLastChanged = new Date();
+    public void deleteMessage( PlannerMessage message, Plan plan ) {
+        getOdb( plan ).delete( PlannerMessage.class, message.getId() );
+        changed( plan );
     }
 
-    public Iterator<PlannerMessage> getReceivedMessages() {
-        return getOdb().iterate(
+    public Iterator<PlannerMessage> getReceivedMessages( Plan plan ) {
+        return getOdb( plan ).iterate(
                 PlannerMessage.class,
                 Where.and()
-                        .add( Where.equal( "planId", getPlanId() ) )
+                        .add( Where.equal( "planId", plan.getId() ) )
                         .add(
                         Where.or()
                                 .add( Where.equal( "toUsername", getUsername() ) )
@@ -139,32 +141,28 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         );
     }
 
-    private ODBAccessor getOdb() {
-        return databaseFactory.getODBAccessor();
+    private ODBAccessor getOdb( Plan plan ) {
+        return databaseFactory.getODBAccessor( plan.getUri() );
     }
 
 
-    private long getPlanId() {
-        return User.current().getPlan().getId();
-    }
-
-    public Iterator<PlannerMessage> getSentMessages() {
-        return getOdb().iterate(
+    public Iterator<PlannerMessage> getSentMessages( Plan plan ) {
+        return getOdb( plan ).iterate(
                 PlannerMessage.class,
                 Where.and()
-                        .add( Where.equal( "planId", getPlanId() ) )
+                        .add( Where.equal( "planId", plan.getId() ) )
                         .add( Where.equal( "fromUsername", getUsername() ) ),
                 ODBAccessor.Ordering.Descendant,
                 "date"
         );
     }
 
-    public Date getWhenLastChanged() {
-        return whenLastChanged;
+    public Date getWhenLastChanged( Plan plan ) {
+        return whenLastChanged.get( plan.getUri() );
     }
 
-    public Date getWhenLastReceived() {
-        Iterator<PlannerMessage> received = getReceivedMessages();
+    public Date getWhenLastReceived( Plan plan ) {
+        Iterator<PlannerMessage> received = getReceivedMessages( plan );
         if ( received.hasNext() ) {
             return received.next().getDate();
         } else {

@@ -1,7 +1,6 @@
 package com.mindalliance.channels.odb;
 
 import com.mindalliance.channels.dao.PlanDefinition;
-import com.mindalliance.channels.dao.User;
 import org.neodatis.odb.ODB;
 import org.neodatis.odb.ODBFactory;
 import org.springframework.core.io.Resource;
@@ -26,19 +25,15 @@ public class DefaultODBTransactionFactory implements ODBTransactionFactory {
     }
 
     @Override
-    public ODB openDatabase() throws IOException {
-        File planDir = new File( odbDir.getFile(), PlanDefinition.sanitize( getPlanUri() ) );
+    public ODB openDatabase( String planUri ) throws IOException {
+        File planDir = new File( odbDir.getFile(), PlanDefinition.sanitize( planUri ) );
         File path = new File( planDir, fileName );
         return  ODBFactory.open( path.getAbsolutePath() );
     }
 
     @Override
-    public ODBAccessor getODBAccessor() {
-        return new ODBAccessor( this );
-    }
-
-    private String getPlanUri() {
-        return User.current().getPlan().getUri();
+    public ODBAccessor getODBAccessor( String planUri ) {
+        return new ODBAccessor( this, planUri );
     }
 
     public void setOdbDir( Resource odbDir ) {

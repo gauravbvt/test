@@ -1,5 +1,7 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.model.Plan;
+
 /**
  * A listener to command execution.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -15,18 +17,18 @@ public interface CommandListener {
      * @param command a Command
      * @param change a Change
      */
-    void commandDone( Command command, Change change );
+    void commandDone( Command command, Change change, Plan plan );
 
     /**
      * The execution of a command was undone.
      * @param command   a Command
      */
-    void commandUndone( Command command );
+    void commandUndone( Command command, Plan plan );
 
     /**
      * The execution of a command was redone.
      * @param command   a Command
      */
-    void commandRedone( Command command );
+    void commandRedone( Command command, Plan plan );
 
 }
