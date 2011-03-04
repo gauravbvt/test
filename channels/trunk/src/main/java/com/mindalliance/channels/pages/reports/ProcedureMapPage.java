@@ -8,11 +8,13 @@ import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -51,6 +53,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
 
     private void init() {
         add( new Label( "pageTitle" ) );
+        addChannelsLogo();
         addSelector();
         addHeader();
         addSelected();
@@ -58,6 +61,18 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
         add( new Label( "client", selector.getPlan().getClient() ) );
     }
 
+    private void addChannelsLogo() {
+          WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome");
+          channels_logo.add( new AjaxEventBehavior( "onclick") {
+              @Override
+              protected void onEvent( AjaxRequestTarget target ) {
+                  String homeUrl =  AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
+                  RedirectPage page =  new RedirectPage( homeUrl );
+                  setResponsePage( page );
+              }
+          });
+          add( channels_logo );
+      }
     private void addHeader() {
         header = new WebMarkupContainer( "header" );
         header.setOutputMarkupId( true );

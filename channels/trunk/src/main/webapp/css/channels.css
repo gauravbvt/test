@@ -36,6 +36,11 @@ div.header .help-icon {
     height: 100%;
 }
 
+.logo {
+    padding: 10px 0 0 5px;
+    cursor: pointer;
+}
+
 #contents {
     position: absolute;
     top: 5em;
@@ -162,7 +167,9 @@ div.section-title {
 
 div.header {
     height: 5em;
-    padding: 10px 0 0 60px;
+    padding: 14px 0 0 0;
+    display: inline;
+    position: absolute;
 }
 
 div.section, div.form {
@@ -670,7 +677,7 @@ html {
 }
 
 div.header {
-    background: transparent url( '../images/logo.png' ) no-repeat 5px 5px;
+   /* background: transparent url( '../images/logo.png' ) no-repeat 5px 5px;*/
 }
 
 #footer {

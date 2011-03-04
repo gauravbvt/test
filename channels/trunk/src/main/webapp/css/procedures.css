@@ -29,7 +29,7 @@ body {
 
 div#container {
 	width:1000px;
-	margin:0px auto;
+	margin:0 auto;
 	text-align:left;
 	padding:0;
 	border:1px solid #cccccc;
@@ -37,24 +37,29 @@ div#container {
 }
 
 
+.logo {
+    float: left;
+    cursor: pointer;
+    padding-left: 3px;
+}
+
 /* ----- Plan Navigation Bar ----- */
 
-div#nav {
+#nav {
 	background:#D8D8D8;
 	border-bottom:1px solid #CCCCCC;
-	float:left;
 	font-size:11px;
 	height:22px;
 	padding:3px 5px 0 5px;
 	width:990px;
 }
 
-div#nav ul {
+#nav ul {
 	list-style:none;
 	display:inline;
 }
 
-div#nav ul li {
+#nav ul li {
 	border-right:1px solid #999999;
 	display:inline;
 	list-style:none;
@@ -62,14 +67,14 @@ div#nav ul li {
 	padding:0 5px 0 0;
 }
 
-div#nav ul li select {
+#nav ul li select {
 	font-size:11px;
 	background:none repeat scroll 0 0 #f6f6f6;
 	border:1px solid #999999;
 	font-family:Arial, Helvetica, sans-serif;
 }
 
-div#nav ul li#apply input {
+#nav ul li#apply input {
 	font-size:10px;
 	background:#cccccc;
 	color:#000;
@@ -84,10 +89,11 @@ div#nav ul li#apply input {
 
 .selector {
 	width:1000px;
-	height:60px;
+	height:50px;
 	background:url('../images/header.png') no-repeat #c3d9ff;
 	border-bottom:1px solid #cccccc;
 	float:left;
+    position: absolute;
 }
 
 .selector img {
@@ -100,7 +106,7 @@ div#nav ul li#apply input {
 	width:640px;
 	font-size:large;
 	font-weight:bold;
-	padding:20px 0 0 60px;
+	padding:13px 0 0 8px;
 }
 
 .selector > ul {
@@ -227,10 +233,10 @@ div.zoom div.filters {
 
 div#breadcrumbs {
 	width:970px;
-	height:20px;
+	height:6px;
 	border-bottom:1px solid #e1e1e1;
 	float:left;
-	padding:25px 0 15px 15px;
+	padding:60px 0 15px 15px;
 	font-size:10px;
 	font-weight:bold;
 }

@@ -145,7 +145,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     }
 
     private void redirectHere() {
-        String url = redirectUrl( "user", getPlan() );
+        String url = redirectUrl( "home", getPlan() );
         RedirectPage page =  new RedirectPage( url );
         setResponsePage( page );
     }

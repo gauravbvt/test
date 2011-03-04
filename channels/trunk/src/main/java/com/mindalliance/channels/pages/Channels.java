@@ -160,7 +160,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "essential.png", FailureImpactsPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "dissemination.png", DisseminationPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "procedures.png", ProceduresPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "user", UserPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "home", UserPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE );

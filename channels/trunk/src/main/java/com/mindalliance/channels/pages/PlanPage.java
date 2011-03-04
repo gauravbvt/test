@@ -317,6 +317,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * Flow legend panel.
      */
     private Component flowLegendPanel;
+
     /**
      * Cumulated change to an expanded identifiable.
      */
@@ -424,6 +425,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
         addForm();
+        addChannelsLogo();
         addSpinner();
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
         addHeader();
@@ -466,6 +468,19 @@ public final class PlanPage extends AbstractChannelsWebPage {
         };
         form.setMultiPart( true );
         add( form );
+    }
+
+    private void addChannelsLogo() {
+        WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome" );
+        channels_logo.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                String homeUrl = AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
+                RedirectPage page = new RedirectPage( homeUrl );
+                setResponsePage( page );
+            }
+        } );
+        form.add( channels_logo );
     }
 
     private void addSpinner() {

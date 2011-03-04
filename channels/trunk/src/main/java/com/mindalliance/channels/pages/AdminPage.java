@@ -6,16 +6,16 @@ import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.pages.reports.ProceduresReportPage;
 import com.mindalliance.channels.surveys.SurveyService;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -25,9 +25,9 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -99,7 +99,7 @@ public class AdminPage extends AbstractChannelsWebPage {
 
     private void init() {
         setStatelessHint( true );
-
+        addChannelsLogo();
         userList = new ListView<User>( "item",
                 new PropertyModel<List<User>>( userService, "users" ) ) {
             private static final long serialVersionUID = 2266583072592123487L;
@@ -201,8 +201,6 @@ public class AdminPage extends AbstractChannelsWebPage {
                                     }
                                 } ),
 
-                        new BookmarkablePageLink<PlanPage>( "plan", PlanPage.class ),
-
                         userList.setReuseItems( true ),
 
                         new TextField<String>( "new", new Model<String>( null ) ) {
@@ -230,13 +228,23 @@ public class AdminPage extends AbstractChannelsWebPage {
                                         }
                                     }
                                 } )
-                                .add( new ValidationStyler() ),
-
-                        new BookmarkablePageLink<ProceduresReportPage>( "report", ProceduresReportPage.class )
-                                .add( new AttributeModifier( "target",
-                                        true, new Model<String>( "_blank" ) ) )
+                                .add( new ValidationStyler() )
                 ) );
     }
+
+    private void addChannelsLogo() {
+        WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome");
+        channels_logo.add( new AjaxEventBehavior( "onclick") {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                String homeUrl =  AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
+                RedirectPage page =  new RedirectPage( homeUrl );
+                setResponsePage( page );
+            }
+        });
+        add( channels_logo );
+    }
+
 
     public String getPlannerSupportCommunity() {
         String s = getPlan().getPlannerSupportCommunity();

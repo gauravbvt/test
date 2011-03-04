@@ -7,7 +7,6 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
-import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
@@ -82,11 +81,13 @@ public class PlanShowMenuPanel extends MenuPanel {
                             "Mapped procedures",
                             newTargetedLink( "_blank", ProcedureMapPage.class, null ) ) );
 
+/*
             if ( User.current().isAdmin() )
                 menuItems.add(
                         newLink(
                                 "Admin page",
                                 newTargetedLink( "link", AdminPage.class, null ) ) );
+*/
             menuItems.addAll(
                     Arrays.asList(
                             newLink( "All segments", plan, PlanEditPanel.MAP ),

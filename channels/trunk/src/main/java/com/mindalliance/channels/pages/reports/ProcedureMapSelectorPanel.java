@@ -79,6 +79,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         add( procedureMapPanel );
     }
 
+
     @Override
     public void changed( Change change ) {
         if ( change.isSelected() ) {
