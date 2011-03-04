@@ -5,6 +5,7 @@ import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.diagrams.DiagramAjaxBehavior;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
@@ -132,7 +133,9 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                String url = makeDiagramUrl() + makeSeed();
+                String url = makeDiagramUrl()
+                        + makeSeed()
+                        + AbstractChannelsWebPage.queryParameters( getPlan() );
                 tag.put( "src", url );
                 if ( isWithImageMap() ) {
                     // TODO may not be unique in the page but should be

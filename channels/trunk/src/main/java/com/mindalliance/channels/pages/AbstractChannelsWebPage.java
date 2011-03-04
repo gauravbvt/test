@@ -257,15 +257,19 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     }
 
     public static String redirectUrl( String path, Plan p ) {
-        String encoded = path;
+        return path + "?" + queryParameters( p );
+    }
+
+    public static String queryParameters( Plan p ) {
+        String query = "";
         try {
-            encoded = MessageFormat.format( path + "?plan={0}&v={1,number,0}",
+            query = MessageFormat.format( "&plan={0}&v={1,number,0}",
                             URLEncoder.encode( p.getUri(), "UTF-8"),
                             p.getVersion() );
         } catch ( UnsupportedEncodingException e ) {
             LOG.error( "Failed to encode plan uri", e);
         }
-        return encoded;
+        return query;
     }
 
     protected Channels getApp() {
@@ -318,4 +322,5 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     public void refresh( AjaxRequestTarget target, Change change ) {
         // do nothing
     }
+
 }
