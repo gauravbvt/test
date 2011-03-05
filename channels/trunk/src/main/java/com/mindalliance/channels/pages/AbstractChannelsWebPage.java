@@ -6,7 +6,6 @@ import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
-import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
@@ -190,6 +189,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
             LOG.warn( "PANIC: selecting first plan");
             plan = plans.get( 0 );
         }
+        if ( !getPlans().contains( plan ) )
+            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
         getQueryService();
     }
 
@@ -225,15 +226,11 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
             String uri = p.getUri();
             if ( getUser().isPlanner( uri ) )
                 result.add( p );
-
             else if ( getUser().isParticipant( uri ) ) {
-                Participation participation =
-                        getQueryService( p ).findParticipation( getUser().getUsername() );
-                if ( participation != null && participation.getActor() != null )
+                if ( p.isProduction() )
                     result.add( p );
             }
         }
-
         return result;
     }
 

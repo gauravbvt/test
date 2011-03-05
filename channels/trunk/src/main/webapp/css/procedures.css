@@ -32,7 +32,7 @@ div#container {
 	margin:0 auto;
 	text-align:left;
 	padding:0;
-	border:1px solid #cccccc;
+	/*border:1px solid #cccccc;*/
 	background-color:#f6f6f6;
 }
 
@@ -42,6 +42,13 @@ div#container {
     cursor: pointer;
     padding-left: 3px;
 }
+
+.mapped .logo {
+    float: left;
+    cursor: pointer;
+    padding-left: 3px;
+}
+
 
 /* ----- Plan Navigation Bar ----- */
 
@@ -146,8 +153,9 @@ div#container {
 div.procedureMapContainer {
 	border: 1px solid #999999;
 	float: left;
-	margin: 10px;
-    width: 978px;
+    width: 1000px;
+    position: absolute;
+    padding-top:50px;
 }
 
 div.procedureMapContainer div.filters {
@@ -157,7 +165,7 @@ div.procedureMapContainer div.filters {
 	color:#666666;
 	font-size:11px;
 	font-weight:bold;
-	width:968px;
+	width:990px;
 }
 
 div.procedureMapContainer div.filters select {
@@ -174,7 +182,7 @@ div.procedureMapContainer div.filters input.filter-small {
 
 div.procedureMap {
     overflow: scroll;
-	width:978px;
+	width:1000px;
 	background:url('../images/map-loading.png') 270px 0 no-repeat #ffffff;
 	min-height:400px;
 }
@@ -201,7 +209,7 @@ div.zoom {
 div.procedureMapContainer div.zoom {
 	margin-bottom:0;
 	border-top:1px solid #999999;
-	width:968px;
+	width:990px;
 }
 
 div.zoom span {

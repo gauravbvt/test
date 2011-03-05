@@ -61,19 +61,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
         add( new Label( "client", selector.getPlan().getClient() ) );
     }
 
-    private void addChannelsLogo() {
-          WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome");
-          channels_logo.add( new AjaxEventBehavior( "onclick") {
-              @Override
-              protected void onEvent( AjaxRequestTarget target ) {
-                  String homeUrl =  AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
-                  RedirectPage page =  new RedirectPage( homeUrl );
-                  setResponsePage( page );
-              }
-          });
-          add( channels_logo );
-      }
-    private void addHeader() {
+   private void addHeader() {
         header = new WebMarkupContainer( "header" );
         header.setOutputMarkupId( true );
         addReportTitle();
@@ -114,6 +102,19 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
         header.add( goBackLink );
         addOrReplace( header );
     }
+
+    private void addChannelsLogo() {
+          WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome");
+          channels_logo.add( new AjaxEventBehavior( "onclick") {
+              @Override
+              protected void onEvent( AjaxRequestTarget target ) {
+                  String homeUrl =  AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
+                  RedirectPage page =  new RedirectPage( homeUrl );
+                  setResponsePage( page );
+              }
+          });
+          add( channels_logo );
+      }
 
     private void addReportTitle() {
         reportTitle = new Label( "reportTitle" );

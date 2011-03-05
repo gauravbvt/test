@@ -19,6 +19,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
@@ -40,7 +41,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -73,10 +73,6 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
      */
     private Organization organization = ALL_ORGS;
 
-    /**
-     * The selected plan.
-     */
-    private Plan plan;
 
     /**
      * True when parameter combination would produce a not-empty report.
@@ -105,9 +101,12 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     private transient QueryService queryService;
 
     private transient Assignments assignments;
+    private final AbstractChannelsWebPage page;
 
-    public SelectorPanel( String id, PageParameters parameters ) {
+    public SelectorPanel( String id, AbstractChannelsWebPage page) {
         super( id );
+        this.page = page;
+        setActorFromUser();
         setDefaultModel( new CompoundPropertyModel<Object>( this ) {
             @Override
             public void detach() {
@@ -116,8 +115,6 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
                 queryService = null;
             }
         } );
-
-        setParameters( parameters );
 
         Form<?> form = new Form( "form" ) {
             @Override
@@ -169,6 +166,16 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         add( form );
     }
 
+    private void setActorFromUser() {
+        User user = getUser();
+        if ( !user.isPlanner( getPlan().getUri() ) ) {
+            Participation participation = getQueryService( ).findParticipation( user.getUsername() );
+            if ( participation != null ) {
+                actor = participation.getActor();
+            }
+        }
+    }
+
     MarkupContainer newPlanSelector() {
         return new WebMarkupContainer( "switch-plan" )
             .add( new DropDownChoice<Plan>(
@@ -180,17 +187,6 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
 
     public PlanManager getPlanManager() {
         return planManager;
-    }
-
-    public final QueryService getQueryService() {
-        if ( queryService == null )
-            queryService = getQueryService( plan );
-
-        return queryService;
-    }
-
-    private PlanService getQueryService( Plan plan ) {
-        return new PlanService( planManager, attachmentManager, plan );
     }
 
     /**
@@ -246,12 +242,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
      */
     public PageParameters getParameters() {
         PageParameters result = new PageParameters();
-
-        if ( getPlans().size() > 1 )
-            result.put( PLAN_PARM, plan.getUri() );
-        if ( isPlanner() && plan.isProduction() )
-            result.put( VERSION_PARM, Integer.toString( plan.getVersion() ) );
-
+        page.getParameters();
         if ( isActorSelected() && getActorChoices().size() > 1 )
             result.put( ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
         if ( isOrgSelected() && getOrganizationChoices().size() > 1 )
@@ -265,19 +256,16 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     //---------------------------------
     /**
      * Set segment and actor fields given parameters.
-     *
-     * @param parameters   the parameters
+     * @return  page parameters
      */
-    private void setParameters( PageParameters parameters ) {
+    private PageParameters setParameters(  ) {       // todo
         setValid( true );
-
-        if ( setPlan( parameters ) ) {
+            PageParameters parameters = page.getParameters();
             setActor( parameters );
             setOrganization( parameters );
-
             if ( isPlanner() )
                 setShowingIssues( parameters.getAsBoolean( ISSUES_PARM, false ) );
-        }
+        return parameters;
     }
 
     private void setOrganization( PageParameters parameters ) {
@@ -351,46 +339,9 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
 
     }
 
-    /**
-     * Set plan from uri parameters.
-     * @param parameters the parameters
-     * @return false if plan was not set
-     */
-    private boolean setPlan( PageParameters parameters ) {
-        String planUri = parameters.getString( PLAN_PARM, user.getPlanUri() );
-
-        int planVersion = parameters.getInt( VERSION_PARM, 0 );
-
-        List<Plan> plans = getPlans();
-        if ( plans.isEmpty() )
-            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
-
-        for ( Iterator<Plan> it = plans.iterator(); it.hasNext() && plan == null; ) {
-            Plan p = it.next();
-            if ( planUri.equals( p.getUri() ) ) {
-                if ( user.isPlanner( p.getUri() ) ) {
-                    if ( planVersion == p.getVersion() || p.isDevelopment() )
-                        plan = p;
-                } else if ( p.isProduction() )
-                    plan = p;
-            }
-        }
-
-        if ( plan == null ) {
-            plan = plans.get( 0 );
-            if ( getPlans().size() > 1 )
-                setValid( false );
-        }
-
-        if ( !isPlanner() && planVersion != 0 )
-            setValid( false );
-
-        getQueryService();
-        return true;
-    }
 
     public boolean isPlanner() {
-        return user.isPlanner( plan.getUri() );
+        return user.isPlanner( getPlan().getUri() );
     }
 
     /**
@@ -399,21 +350,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
      * @return a list of plans
      */
     public final List<Plan> getPlans() {
-        List<Plan> result = new ArrayList<Plan>();
-        for ( Plan p : planManager.getReadablePlans( user ) ) {
-            String uri = p.getUri();
-            if ( user.isPlanner( uri ) )
-                result.add( p );
-
-            else if ( user.isParticipant( uri ) ) {
-                Participation participation =
-                        getQueryService( p ).findParticipation( user.getUsername() );
-                if ( participation != null && participation.getActor() != null )
-                    result.add( p );
-            }
-        }
-
-        return result;
+        return page.getPlans();
     }
 
     //---------------------------------
@@ -469,7 +406,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
      * @return a plan
      */
     public final Plan getPlan() {
-        return plan;
+        return page.getPlan();
     }
 
     /**
@@ -478,8 +415,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
      * @param plan a plan
      */
     public final void setPlan( Plan plan ) {
-        this.plan = plan;
-        queryService = null;
+        page.setPlan( plan );
         assignments = null;
     }
 

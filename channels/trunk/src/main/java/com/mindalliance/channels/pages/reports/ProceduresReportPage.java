@@ -43,7 +43,7 @@ public class ProceduresReportPage extends AbstractReportPage {
         super( parameters );
         setDefaultModel( new CompoundPropertyModel<Object>( this ) );
         addChannelsLogo();
-        selector = new SelectorPanel( "selector", parameters );
+        selector = new SelectorPanel( "selector",this );
         if ( !selector.isValid() ) {
             if ( selector.getPlans().isEmpty() )
                 throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );

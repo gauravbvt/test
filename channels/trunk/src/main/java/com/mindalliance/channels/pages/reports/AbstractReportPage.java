@@ -2,7 +2,6 @@
 // All rights reserved.
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
@@ -154,43 +153,7 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
     }
 
     public PlanService getPlanService() {
-        if ( service == null )
-            try {
-                PageParameters parameters = getPageParameters();
-                service = getService( parameters.getString( SelectorPanel.PLAN_PARM, getUser().getPlanUri() ),
-                        parameters.getInt( SelectorPanel.VERSION_PARM, 0 ) );
-
-            } catch ( StringValueConversionException ignored ) {
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
-
-            } catch ( NotFoundException ignored ) {
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
-            }
-        return service;
-    }
-
-    private PlanService getService( String uri, int version ) throws NotFoundException {
-        boolean development;
-        if ( uri == null )
-            throw new NotFoundException();
-
-        else if ( getUser().isPlanner( uri ) ) {
-            int number = getPlanManager().getDefinitionManager().get( uri )
-                    .getDevelopmentVersion().getNumber();
-
-            development = version == 0 || version == number;
-
-        } else if ( getUser().isParticipant( uri ) )
-            development = false;
-
-        else
-            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
-
-        PlanDao planDao = getPlanManager().getDao( uri, development );
-        if ( planDao == null )
-            throw new NotFoundException();
-
-        return new PlanService( getPlanManager(), getAttachmentManager(), planDao.getPlan() );
+        return (PlanService)getQueryService();
     }
 
     private Specable getActor( long actorId ) throws NotFoundException {

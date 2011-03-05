@@ -70,7 +70,7 @@ public class AcmeTest extends WalkthroughTest {
         assertEquals( 2,  issueMap.get( "UnconfirmedJob" ).size() );
      }
 
-    @Override
+   @Override
     @Test
     public void testPlan() {
         super.testPlan();
