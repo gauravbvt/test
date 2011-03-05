@@ -36,6 +36,7 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
     }
 
     public void render(
+            String ticket,
             String outputFormat,
             OutputStream outputStream,
             Analyst analyst,
@@ -67,6 +68,7 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
         graphRenderer.render( graph,
                 dotExporter,
                 outputFormat,
+                ticket,
                 outputStream
         );
     }

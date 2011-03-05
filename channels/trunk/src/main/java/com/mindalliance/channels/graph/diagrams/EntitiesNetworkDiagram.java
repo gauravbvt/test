@@ -44,7 +44,8 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
         this.selectedEntityRel = selectedEntityRel;
     }
 
-    public void render( String outputFormat,
+    public void render( String ticket,
+                        String outputFormat,
                         OutputStream outputStream,
                         Analyst analyst,
                         DiagramFactory diagramFactory ) {
@@ -78,6 +79,7 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
         graphRenderer.render( graph,
                 dotExporter,
                 outputFormat,
+                ticket,
                 outputStream
         );
     }

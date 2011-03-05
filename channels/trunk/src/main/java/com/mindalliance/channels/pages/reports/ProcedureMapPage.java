@@ -6,6 +6,8 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -16,6 +18,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
@@ -31,6 +34,12 @@ import java.util.List;
  * Time: 9:51 AM
  */
 public class ProcedureMapPage extends AbstractChannelsWebPage {
+
+    private WebMarkupContainer indicatorAware;
+    /**
+     * Ajax activity spinner.
+     */
+    private WebMarkupContainer spinner;
 
     private ProcedureMapSelectorPanel selector;
     private WebMarkupContainer header;
@@ -53,13 +62,30 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
 
     private void init() {
         add( new Label( "pageTitle" ) );
+        addIndicatorAware();
         addChannelsLogo();
         addSelector();
         addHeader();
+        addSpinner();
         addSelected();
-        add( new Label( "year", "" + Calendar.getInstance().get( Calendar.YEAR ) ) );
-        add( new Label( "client", selector.getPlan().getClient() ) );
+        indicatorAware.add( new Label( "year", "" + Calendar.getInstance().get( Calendar.YEAR ) ) );
+        indicatorAware.add( new Label( "client", selector.getPlan().getClient() ) );
     }
+
+    private void addIndicatorAware() {
+        indicatorAware = new IndicatorAwareWebContainer( "indicatorAware", "spinner" );
+        add( indicatorAware );
+    }
+
+    private void addSpinner() {
+        spinner = new WebMarkupContainer( "spinner" );
+        spinner.setOutputMarkupId( true );
+        spinner.add( new AttributeModifier( "id", true, new Model<String>( "spinner" ) ) );
+        spinner.add( new AttributeModifier( "style", true, new Model<String>( "display:none" ) ) );
+        addOrReplace( spinner );
+    }
+
+
 
    private void addHeader() {
         header = new WebMarkupContainer( "header" );
@@ -100,7 +126,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
         };
         makeVisible( goBackLink, selector.canGoBack() );
         header.add( goBackLink );
-        addOrReplace( header );
+        indicatorAware.addOrReplace( header );
     }
 
     private void addChannelsLogo() {
@@ -113,7 +139,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
                   setResponsePage( page );
               }
           });
-          add( channels_logo );
+          indicatorAware.add( channels_logo );
       }
 
     private void addReportTitle() {
@@ -134,7 +160,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
         selector = new ProcedureMapSelectorPanel( "selector" );
         selector.setOutputMarkupId( true );
         makeVisible( selector, showingMap );
-        addOrReplace( selector );
+        indicatorAware.addOrReplace( selector );
     }
 
     private void addSelected() {
@@ -161,7 +187,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
         }
         selected.setOutputMarkupId( true );
         makeVisible( selected, !showingMap );
-        addOrReplace( selected );
+        indicatorAware.addOrReplace( selected );
     }
 
     public String getShowString() {

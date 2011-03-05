@@ -31,25 +31,30 @@ public interface  Diagram<V,E> extends Serializable {
     /**
      * Render the diagram on output stream in given format.
      *
+     *
+     * @param ticket a per-format use once ticket
      * @param outputFormat the name of the format
      * @param outputStream the output stream
      * @param analyst an analyst
      * @param diagramFactory   a diagram factory
      * @throws DiagramException raised if diagram generation fails
      */
-    void render( 
+    void render(
+            String ticket,
             String outputFormat,
             OutputStream outputStream,
             Analyst analyst,
-            DiagramFactory<V,E> diagramFactory );
+            DiagramFactory<V, E> diagramFactory );
 
     /**
      * Produce image map
      *
+     *
+     * @param ticket  a per-format use-once ticket
      * @param analyst an analyst
      * @param diagramFactory  a diagram factory
      * @return a String
      * @throws DiagramException if fails
      */
-    String makeImageMap( Analyst analyst, DiagramFactory<V,E> diagramFactory );
+    String makeImageMap( String ticket, Analyst analyst, DiagramFactory<V, E> diagramFactory );
 }

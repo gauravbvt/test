@@ -11,7 +11,9 @@
 </head>
 
 <body class="mapped">
+<span wicket:id="spinner" id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
 <div id="container">
+    <span wicket:id="indicatorAware">
     <img class="logo" wicket:id="channelsHome" src="images/logo_home.png" alt="Home" title="Home" style="border:0"/>
     <div wicket:id="header" class="selector">
         <h1 wicket:id="reportTitle">Report Title</h1>
@@ -34,6 +36,7 @@
     <p id="notice">
         Confidential. Copyright &copy; <span wicket:id="year">2011</span> <span
             wicket:id="client">Mind-Alliance Systems LLC</span>.</p>
+    </span>
 </div>
 </body>
 </html>

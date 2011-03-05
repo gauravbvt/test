@@ -73,11 +73,11 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
     /**
      * {@inheritDoc}
      */
-    public String makeImageMap( Analyst analyst, DiagramFactory diagramFactory ) {
+    public String makeImageMap( String ticket, Analyst analyst, DiagramFactory diagramFactory ) {
         if ( imageMap == null ) {
             LOG.debug( "Making image map for " + this.getClass().getSimpleName() );
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            render( DiagramFactory.IMAGE_MAP,  baos, analyst, diagramFactory );
+            render( ticket, DiagramFactory.IMAGE_MAP,  baos, analyst, diagramFactory );
             // System.out.println( "*** Image map generated at " + System.currentTimeMillis() );
              imageMap = baos.toString();
              // System.out.println( imageMap );

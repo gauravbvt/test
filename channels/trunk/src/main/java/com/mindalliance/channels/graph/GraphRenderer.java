@@ -35,15 +35,17 @@ public interface GraphRenderer<V, E> {
     void resetHighlight();
 
     /**
+     *
      * @param graph                -- a Graph
-     * @param format               -- an output format (png, svg, imap etc.)
-     * @param output               -- the rendered graph
      * @param dotExporter         -- a DOT generator
-     * @throws DiagramException -- if generation fails
+     * @param format               -- an output format (png, svg, imap etc.)
+     * @param ticket               -- a globally unique, use-once string
+     *@param output               -- the rendered graph  @throws DiagramException -- if generation fails
      */
     void render( Graph<V, E> graph,
-                 StyledDOTExporter<V,E> dotExporter,
+                 StyledDOTExporter<V, E> dotExporter,
                  String format,
+                 String ticket,
                  OutputStream output ) throws DiagramException;
 
     /**

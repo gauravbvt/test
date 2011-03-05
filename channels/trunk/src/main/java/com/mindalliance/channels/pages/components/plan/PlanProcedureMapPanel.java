@@ -85,6 +85,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     private DropDownChoice<String> focusKindChoice;
     private AutoCompleteTextField<String> focusField;
 
+    private static final String PROMPT = "Enter a name and press return";
+
     private Label sizingLabel;
 
     private Component procedureMapDiagramPanel;
@@ -122,7 +124,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                         if ( seg.getName().isEmpty() ) {
                             return "the entire plan";
                         } else {
-                            return "segment \"" + seg.getName() + "\"";
+                            return seg.getName();
                         }
                     }
                 }
@@ -181,7 +183,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         final List<String> choices = getFocusChoices();
         focusField = new AutoCompleteTextField<String>(
                 "focus",
-                new PropertyModel<String>( this, "focus" ) ) {
+                new PropertyModel<String>( this, "focusName" ) ) {
             @Override
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();
@@ -234,7 +236,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             procedureMapDiagramPanel.add( new AttributeModifier(
                     "style",
                     true,
-                    new Model<String>( "background:url('../images/map-loading.png') 270px 0 no-repeat #ffffff;" ) ) );
+                    new Model<String>( "background:url('../images/map-background.png') 270px 0 no-repeat #ffffff;" ) ) );
         } else {
             Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(
                     DOM_IDENTIFIER, null, null, true, true )
@@ -256,12 +258,13 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                     getFocusEntity() );
             graphBuilder.setQueryService( getQueryService() );
             boolean noProcedures = !graphBuilder.hasCommitments();
-            if ( noProcedures ) {
-                procedureMapDiagramPanel.add( new AttributeModifier(
+            procedureMapDiagramPanel.add( new AttributeModifier(
                         "style",
                         true,
-                        new Model<String>( "background:url('../images/no-procedures.png') 270px 0 no-repeat #ffffff;" ) ) );
-            }
+                        new Model<String>(
+                                noProcedures
+                                ? "background:url('../images/no-procedures.png') 270px 0 no-repeat #ffffff;"
+                                : "background:url('../images/map-background.png') 270px 0 no-repeat #ffffff;") ) );
         }
         procedureMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( procedureMapDiagramPanel );
@@ -335,8 +338,23 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         focus = "";
     }
 
+
     public String getFocus() {
         return focus;
+    }
+
+    public void setFocus ( String s ) {
+        if ( s != null && !s.isEmpty() )
+            focus = s;
+    }
+
+    public String getFocusName() {
+        return focus == null || focus.isEmpty() ? PROMPT : focus;
+    }
+
+    public void setFocusName( String s ) {
+        if ( s != null && !s.isEmpty() && !s.equals( PROMPT ) )
+            focus = s;
     }
 
     public String getSummarizeChoice() {

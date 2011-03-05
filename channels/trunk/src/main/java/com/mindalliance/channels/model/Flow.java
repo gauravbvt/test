@@ -1391,7 +1391,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         DifferentTopOrganizations,
         DifferentLocations,
         Supervisor,
-        Self;
+        Self,
+        Other;
 
         public String toString() {
             switch ( this ) {
@@ -1411,6 +1412,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     return "a supervisor";
                 case Self:
                     return "self";
+                case Other:
+                    return "someone else";
                 default:
                     return name();
             }
@@ -1421,7 +1424,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
 
         public String getLabel( boolean isSend ) {
-            if ( this == Supervisor || this == Self ) {
+            if ( this == Supervisor || this == Self || this == Other) {
                 return ( isSend ? "to " : "from " ) + toString();
             } else {
                 return "in " + toString();

@@ -91,6 +91,10 @@ public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
             sb.append( "&orientation=" );
             sb.append( orientation );
         }
+        sb.append( "&");
+        sb.append( TICKET_PARM );
+        sb.append( '=' );
+        sb.append( getTicket() );
         return sb.toString();
     }
 

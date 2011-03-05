@@ -131,7 +131,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             sb.append( "&hidingNoop=" );
             sb.append( hidingNoop );
         }
-
+        sb.append( "&");
+        sb.append( TICKET_PARM );
+        sb.append( '=' );
+        sb.append( getTicket() );
         return sb.toString();
     }
 

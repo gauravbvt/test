@@ -3116,6 +3116,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     return ModelObject.isNullOrUnknown( committer.getActor() )
                             || ModelObject.isNullOrUnknown( beneficiary.getActor() )
                             || committer.getActor().equals( beneficiary.getActor() );
+                case Other:
+                    return ModelObject.isNullOrUnknown( committer.getActor() )
+                            || ModelObject.isNullOrUnknown( beneficiary.getActor() )
+                            || !committer.getActor().equals( beneficiary.getActor() );
 
             }
         }

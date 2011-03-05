@@ -42,10 +42,10 @@ public class FailureImpactsDiagram extends AbstractDiagram<Node, Flow> {
      */
     @SuppressWarnings( "unchecked" )
     public void render(
-            String outputFormat,
+            String ticket, String outputFormat,
             OutputStream outputStream,
             Analyst analyst,
-            DiagramFactory diagramFactory) {
+            DiagramFactory diagramFactory ) {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         FailureImpactsGraphBuilder graphBuilder = new FailureImpactsGraphBuilder( segmentObject, assumeFails );
@@ -73,6 +73,7 @@ public class FailureImpactsDiagram extends AbstractDiagram<Node, Flow> {
         graphRenderer.render( graph,
                 dotExporter,
                 outputFormat,
+                ticket,
                 outputStream
         );
 

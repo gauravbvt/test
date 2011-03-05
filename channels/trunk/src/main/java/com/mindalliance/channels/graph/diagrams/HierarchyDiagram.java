@@ -30,10 +30,10 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
     }
 
     public void render(
-            String outputFormat,
+            String ticket, String outputFormat,
             OutputStream outputStream,
             Analyst analyst,
-            DiagramFactory diagramFactory) {
+            DiagramFactory diagramFactory ) {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder<Hierarchical, HierarchyRelationship> hierarchyGraphBuilder =
@@ -58,6 +58,7 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
         graphRenderer.render( graph,
                 dotExporter,
                 outputFormat,
+                ticket,
                 outputStream
         );
     }

@@ -183,7 +183,7 @@ div.procedureMapContainer div.filters input.filter-small {
 div.procedureMap {
     overflow: scroll;
 	width:1000px;
-	background:url('../images/map-loading.png') 270px 0 no-repeat #ffffff;
+	background:url('../images/map-background.png') 270px 0 no-repeat #ffffff;
 	min-height:400px;
 }
 

@@ -70,7 +70,6 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     @SpringBean
     private SemanticMatcher semanticMatcher;
 
-
     private PlanProcedureMapPanel procedureMapPanel;
 
     private List<Change> history = new ArrayList<Change>();

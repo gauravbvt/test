@@ -52,7 +52,7 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
 
     @Override
     public void render(
-            String outputFormat,
+            String ticket, String outputFormat,
             OutputStream outputStream,
             Analyst analyst,
             DiagramFactory diagramFactory ) {
@@ -84,6 +84,7 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
         graphRenderer.render( graph,
                 dotExporter,
                 outputFormat,
+                ticket,
                 outputStream
         );
     }

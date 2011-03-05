@@ -6,6 +6,7 @@ import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.MarkupStream;
@@ -31,6 +32,8 @@ public abstract class PngWebPage extends AbstractChannelsWebPage {
 
     private PageParameters parameters;
 
+    private String ticket;
+
     @SpringBean
     private Analyst analyst;
 
@@ -40,6 +43,7 @@ public abstract class PngWebPage extends AbstractChannelsWebPage {
     public PngWebPage( PageParameters parameters ) {
         super( parameters );
         this.parameters = parameters;
+        ticket = parameters.getString( AbstractDiagramPanel.TICKET_PARM );
     }
 
     /**
@@ -112,7 +116,7 @@ public abstract class PngWebPage extends AbstractChannelsWebPage {
             if ( resp instanceof WebResponse )
                 setHeaders( (WebResponse) resp );
             LOG.debug( "Rendering PNG" );
-            diagram.render( DiagramFactory.PNG, getResponse().getOutputStream(), analyst, diagramFactory );
+            diagram.render( ticket, DiagramFactory.PNG, getResponse().getOutputStream(), analyst, diagramFactory );
         } catch ( DiagramException e ) {
             LOG.error( "Error while generating diagram", e );
             // Don't do anything else --> empty png
