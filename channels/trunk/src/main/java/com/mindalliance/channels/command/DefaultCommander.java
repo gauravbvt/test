@@ -521,8 +521,10 @@ public class DefaultCommander implements Commander {
                 lockManager.release( userName );
             }
 
-        for ( String userName : deads )
+        for ( String userName : deads ) {
             userLives.remove( userName );
+            loggedOut( userName );
+        }
     }
 
     @Override

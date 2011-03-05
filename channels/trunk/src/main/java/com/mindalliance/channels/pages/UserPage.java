@@ -216,6 +216,11 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         planSelectorDiv.setVisible( getPlans().size() > 1 );
     }
 
+    public void setPlan( Plan plan ) {
+        getCommander().loggedOut( getUser().getUsername() );
+        super.setPlan( plan );
+    }
+
     private void addPlanImage() {
         WebMarkupContainer image = new WebMarkupContainer( "planImage" );
         image.add( new AttributeModifier( "src", true, new Model<String>( getPlanImagePath() ) ) );
