@@ -100,9 +100,15 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     //=============================================
 
-    public DefaultQueryService( PlanManager planManager, AttachmentManager attachmentManager ) {
+    public DefaultQueryService(
+            PlanManager planManager,
+            AttachmentManager attachmentManager,
+            SemanticMatcher semanticMatcher,
+            UserService userService ) {
         this.planManager = planManager;
         this.attachmentManager = attachmentManager;
+        this.semanticMatcher = semanticMatcher;
+        this.userService = userService;
     }
 
     /**
@@ -1745,6 +1751,9 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     public String findUserFullName( String userName ) {
+        if ( userService == null ) {
+            System.out.println( "OOPS!");
+        }
         User user = userService.getUserNamed( userName );
         if ( user != null ) {
             return user.getFullName();

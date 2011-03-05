@@ -12,6 +12,7 @@ import com.mindalliance.channels.dao.JournalCommand;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Delay;
@@ -26,6 +27,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
@@ -92,15 +94,14 @@ public class DefaultCommander implements Commander {
 
     private ImportExportFactory importExportFactory;
 
+    private UserService userService;
+
+    private SemanticMatcher semanticMatcher;
+
     /**
      * Record of when users were most recently active.
      */
     private Map<String, Long> whenLastActive = Collections.synchronizedMap( new HashMap<String, Long>() );
-
-    /**
-     * Times after which users are considered "dead", unless incremented by "keepAlive" signals.
-     */
-    private Map<String, Long> userLives = Collections.synchronizedMap( new HashMap<String, Long>() );
 
     /**
      * Users who timed out but have yet to be refreshed.
@@ -160,6 +161,22 @@ public class DefaultCommander implements Commander {
         return analyst;
     }
 
+    public SemanticMatcher getSemanticMatcher() {
+        return semanticMatcher;
+    }
+
+    public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
+        this.semanticMatcher = semanticMatcher;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
+    }
+
     @Override
     public Map<String, Object> getCopy() {
         return copy.get( User.current().getUsername() );
@@ -208,7 +225,12 @@ public class DefaultCommander implements Commander {
       }
 
     private PlanService getQueryService( Plan plan ) {
-        return new PlanService( getPlanManager(), attachmentManager, plan );
+        return new PlanService(
+                getPlanManager(),
+                attachmentManager,
+                semanticMatcher,
+                userService,
+                plan );
     }
 
 
@@ -501,43 +523,35 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public synchronized void keepAlive( String userName, int refreshDelay ) {
-        if ( !userLives.containsKey( userName ) ) {
-            LOG.info( "{} is planning", userName );
+    public synchronized void keepAlive( String username, int refreshDelay ) {
+        for ( PresenceListener presenceListener : presenceListeners ) {
+            presenceListener.keepAlive( username, getPlan(), refreshDelay );
         }
-        userLives.put( userName, System.currentTimeMillis() + refreshDelay * 2 * 1000 );
     }
 
     @Override
     public synchronized void processDeaths() {
-        List<String> deads = new ArrayList<String>();
-
-        long now = System.currentTimeMillis();
-        for ( String userName : userLives.keySet() )
-            if ( now > userLives.get( userName ) ) {
-                loggedOut( userName );
-                deads.add( userName );
-                LOG.info( "{} is done planning", userName );
-                lockManager.release( userName );
-            }
-
+        Set<String> deads = new HashSet<String>();
+        for ( PresenceListener presenceListener : presenceListeners ) {
+            deads.addAll( presenceListener.processDeaths( getPlan() ) );
+        }
         for ( String userName : deads ) {
-            userLives.remove( userName );
-            loggedOut( userName );
+            LOG.info( "{} is done planning", userName );
+            lockManager.release( userName );
         }
     }
 
     @Override
-    public synchronized void loggedOut( String username ) {
+    public synchronized void absent( String username ) {
         for ( PresenceListener presenceListener : presenceListeners ) {
-            presenceListener.loggedOut( username, getPlan()  );
+            presenceListener.absent( username, getPlan() );
         }
     }
 
     @Override
-    public synchronized void loggedIn( String username ) {
+    public synchronized void present( String username ) {
         for ( PresenceListener presenceListener : presenceListeners ) {
-            presenceListener.loggedIn( username, getPlan()  );
+            presenceListener.present( username, getPlan() );
         }
     }
 

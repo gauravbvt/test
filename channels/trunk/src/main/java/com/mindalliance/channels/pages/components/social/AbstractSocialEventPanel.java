@@ -77,7 +77,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         if ( index == 0 )
             cssClasses += " first";
         PresenceEvent presenceEvent = getLatestPresenceEvent();
-        cssClasses += presenceEvent != null && presenceEvent.isLogin()
+        cssClasses += presenceEvent != null && presenceEvent.isEntering()
                 ? " joining"
                 : " leaving";
         return cssClasses;
@@ -232,7 +232,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     public boolean isPresent() {
         PresenceEvent presenceEvent = getLatestPresenceEvent();
-        return presenceEvent != null && presenceEvent.isLogin();
+        return presenceEvent != null && presenceEvent.isEntering();
     }
 
     protected PresenceEvent getLatestPresenceEvent() {

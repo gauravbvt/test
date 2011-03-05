@@ -369,18 +369,18 @@ public interface Commander {
     void initPartFrom( Part part, Map<String, Object> state );
 
     /**
-     * User logged out.
+     * User left a plan.
      *
      * @param username a string
      */
-    void loggedOut( String username );
+    void absent( String username );
 
     /**
-     * User logged in.
+     * User joined a plan.
      *
      * @param username a string
      */
-    void loggedIn( String username );
+    void present( String username );
 
     /**
      * Make the appropriate command to remove a flow.

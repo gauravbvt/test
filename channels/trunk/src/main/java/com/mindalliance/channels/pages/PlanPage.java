@@ -412,7 +412,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         user.setClientInfo( clientInfo );
         */
         final Commander commander = getCommander();
-        commander.loggedIn( getUser().getUsername() );
+        commander.present( getUser().getUsername() );
         commander.releaseAllLocks( getUser().getUsername() );
         setSegment( sc );
         setPart( p );

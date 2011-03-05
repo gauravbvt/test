@@ -23,4 +23,5 @@ public interface PlanningEventService extends CommandListener, PresenceListener 
 
     PresenceEvent findLatestPresence( String username, Plan plan );
 
+    boolean isPresent( String username, Plan plan );
 }

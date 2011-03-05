@@ -5,7 +5,6 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.PlanningEventService;
-import com.mindalliance.channels.social.PresenceEvent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -113,8 +112,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
     }
 
     private boolean isHere( String username ) {
-        PresenceEvent presenceEvent = planningEventService.findLatestPresence( username, getPlan()  );
-        return presenceEvent != null && presenceEvent.isLogin();
+        return planningEventService.isPresent( username, getPlan() );
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {

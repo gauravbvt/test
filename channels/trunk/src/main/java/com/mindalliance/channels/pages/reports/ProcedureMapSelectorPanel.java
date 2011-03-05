@@ -4,6 +4,7 @@ import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
@@ -18,6 +19,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanProcedureMapPanel;
@@ -62,10 +64,16 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     @SpringBean
     private PlanManager planManager;
 
+    @SpringBean
+    private UserService userService;
+
+    @SpringBean
+    private SemanticMatcher semanticMatcher;
+
+
     private PlanProcedureMapPanel procedureMapPanel;
 
     private List<Change> history = new ArrayList<Change>();
-    ;
 
     private boolean goingBack = false;
 
@@ -423,7 +431,12 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     @Override
     public PlanService getPlanService() {
-        return new PlanService( planManager, attachmentManager, getPlan() );
+        return new PlanService(
+                getPlanManager(),
+                attachmentManager,
+                semanticMatcher,
+                userService,
+                getPlan() );
     }
 
     @Override

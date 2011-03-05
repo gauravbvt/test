@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.plan.menus;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.commands.AddPart;
 import com.mindalliance.channels.command.commands.AddSegment;
@@ -23,9 +22,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.Arrays;
 
 /**
  * Segment menu.
@@ -73,7 +72,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                     new ConfirmedAjaxFallbackLink( "link", "Log out?" ) {
                         @Override
                         public void onClick( AjaxRequestTarget target ) {
-                            getCommander().loggedOut( User.current().getUsername() );
+                            getCommander().absent( User.current().getUsername() );
                             getRequestCycle().setRequestTarget(
                                 new RedirectRequestTarget( "/logout" ) );
                         }

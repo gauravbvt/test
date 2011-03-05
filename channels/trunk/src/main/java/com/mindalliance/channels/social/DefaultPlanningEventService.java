@@ -7,9 +7,12 @@ import com.mindalliance.channels.odb.ODBAccessor;
 import com.mindalliance.channels.odb.ODBTransactionFactory;
 import org.neodatis.odb.core.query.criteria.Where;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,26 +27,24 @@ public class DefaultPlanningEventService implements PlanningEventService {
 
     private ODBTransactionFactory databaseFactory;
 
-    private Map<String, PresenceEvent> latestPresences = null;
+    private Map<String, Map<String, PresenceEvent>> latestPresences;
     private Map<String, Date> whenLastChanged;
-    private Map<String, Date> startupDate;
+    private Date startupDate;
+    /**
+     * Times after which users are considered "dead", unless incremented by "keepAlive" signals.
+     */
+    private Map<String,Map<String, Long>> userLives;
 
-    public DefaultPlanningEventService( ) {
-        startupDate = new HashMap<String, Date>();
+
+    public DefaultPlanningEventService() {
+        userLives = Collections.synchronizedMap( new HashMap<String, Map<String,Long>>() );
+        startupDate = new Date();
         whenLastChanged = new HashMap<String, Date>();
-        resetLatestPresences();
+        latestPresences = new HashMap<String, Map<String, PresenceEvent>>();
     }
 
-    public Map<String, PresenceEvent> getLatestPresences() {
-        return latestPresences;
-    }
-
-    public void setLatestPresences( Map<String, PresenceEvent> latestPresences ) {
-        this.latestPresences = latestPresences;
-    }
-
-    private void resetLatestPresences() {
-        latestPresences = new HashMap<String, PresenceEvent>();
+    private void resetLatestPresences( Plan plan ) {
+        latestPresences.put( plan.getUri(), new HashMap<String, PresenceEvent>() );
     }
 
     public void setDatabaseFactory( ODBTransactionFactory databaseFactory ) {
@@ -65,31 +66,74 @@ public class DefaultPlanningEventService implements PlanningEventService {
         addPlanningEvent( commandEvent, plan );
     }
 
-    public void loggedIn( String username, Plan plan ) {
+    public void present( String username, Plan plan ) {
+        resetLatestPresences( plan );
         addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Login, username, plan.getId() ), plan );
     }
 
-    public void loggedOut( String username, Plan plan ) {
-        if ( !isLoggedOut( username, plan ) )
-            addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Logout, username, plan.getId() ), plan );
+    public void absent( String username, Plan plan ) {
+        resetLatestPresences( plan );
+        addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Logout, username, plan.getId() ), plan );
     }
 
-    private boolean isLoggedOut( String username, Plan plan ) {
+    @Override
+    public void keepAlive( String username, Plan plan, int refreshDelay ) {
+        Map<String, Long> lives = getUserLives( plan );
+        lives.put( username, System.currentTimeMillis() + refreshDelay * 2 * 1000 );
+        if ( isAbsent( username, plan ) )
+            present( username, plan );
+    }
+
+    @Override
+    public List<String> processDeaths( Plan plan ) {
+        Map<String, Long> lives = getUserLives( plan );
+        long now = System.currentTimeMillis();
+        List<String> deads = new ArrayList<String>();
+        for ( String userName : lives.keySet() )
+            if ( now > lives.get( userName ) ) {
+                deads.add( userName );
+            }
+        for ( String userName : deads ) {
+            lives.remove( userName );
+            absent( userName, plan );
+        }
+        return deads;
+    }
+
+    private Map<String, Long> getUserLives( Plan plan ) {
+        Map<String, Long> planLives = userLives.get( plan.getUri() );
+        if ( planLives == null ) {
+            planLives = new HashMap<String, Long>();
+            userLives.put( plan.getUri(), planLives );
+        }
+        return planLives;
+    }
+
+    @Override
+    public boolean isPresent( String username, Plan plan ) {
+        if ( !isAlive( username, plan ) )
+            absent( username, plan );
         PresenceEvent presenceEvent = findLatestPresence( username, plan );
-        return presenceEvent != null && presenceEvent.isLogout();
+        return presenceEvent != null && !presenceEvent.isLeaving();
+    }
+
+    private boolean isAlive( String username, Plan plan ) {
+        Map<String, Long> lives = getUserLives( plan );
+        return lives.containsKey( username )
+                && System.currentTimeMillis() <= lives.get( username );
+    }
+
+    private boolean isAbsent( String username, Plan plan ) {
+        PresenceEvent presenceEvent = findLatestPresence( username, plan );
+        return presenceEvent != null && presenceEvent.isLeaving();
     }
 
     private void addPlanningEvent( PlanningEvent planningEvent, Plan plan ) {
-        markStarted( plan );
-        if ( planningEvent.isPresenceEvent() ) {
-            resetLatestPresences();
-        }
         getOdb( plan ).store( planningEvent );
         whenLastChanged.put( plan.getUri(), new Date() );
     }
 
     public Iterator<CommandEvent> getCommandEvents( Plan plan ) {
-        markStarted( plan );
         return getOdb( plan ).iterate(
                 CommandEvent.class,
                 Where.equal( "planId", plan.getId() ),
@@ -98,31 +142,44 @@ public class DefaultPlanningEventService implements PlanningEventService {
     }
 
     public PresenceEvent findLatestPresence( String username, Plan plan ) {
-        markStarted( plan );
         PresenceEvent latestPresence;
-        if ( latestPresences.containsKey( username ) ) {
-            latestPresence = latestPresences.get( username );
+        if ( isLatestPresenceCached( plan, username ) ) {
+            latestPresence = getLatestCachedPresence( plan, username );
         } else {
             latestPresence = getOdb( plan ).first(
                     PresenceEvent.class,
                     Where.and()
                             .add( Where.equal( "username", username ) )
                             .add( Where.equal( "planId", plan.getId() ) )
-                            .add( Where.ge( "date", getStartupDate( plan.getUri() ) )),
+                            .add( Where.ge( "date", startupDate ) ),
                     ODBAccessor.Ordering.Descendant,
                     "date" );
-            latestPresences.put( username, latestPresence );
+            cacheLatestPresence( plan, username, latestPresence );
         }
         return latestPresence;
     }
 
-    private Date getStartupDate( String uri ) {
-        Date startup = startupDate.get( uri );
-        if ( startup == null ) {
-            startupDate.put( uri, new Date() );
-        }
-        return startupDate.get( uri );
+    private boolean isLatestPresenceCached( Plan plan, String username ) {
+        return getLatestPresenceCache( plan ).get( username ) != null;
     }
+
+    private void cacheLatestPresence( Plan plan, String username, PresenceEvent latestPresence ) {
+        getLatestPresenceCache( plan ).put( username, latestPresence );
+    }
+
+    private PresenceEvent getLatestCachedPresence( Plan plan, String username ) {
+        return getLatestPresenceCache( plan ).get( username );
+    }
+
+    private Map<String, PresenceEvent> getLatestPresenceCache( Plan plan ) {
+        Map<String, PresenceEvent> cache = latestPresences.get( plan.getUri() );
+        if ( cache == null ) {
+            cache = new HashMap<String, PresenceEvent>();
+            latestPresences.put( plan.getUri(), cache );
+        }
+        return cache;
+    }
+
 
     private ODBAccessor getOdb( Plan plan ) {
         return databaseFactory.getODBAccessor( plan.getUri() );
@@ -133,7 +190,4 @@ public class DefaultPlanningEventService implements PlanningEventService {
         return whenLastChanged.get( plan.getUri() );
     }
 
-    private void markStarted( Plan plan ) {
-        getStartupDate( plan.getUri() );
-    }
 }

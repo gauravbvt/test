@@ -303,7 +303,7 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetSources3() throws NotFoundException {
         Plan plan = planManager.findDevelopmentPlan( "mindalliance.com/channels/plans/acme" );
-        PlanService service = new PlanService( planManager, null, plan );
+        PlanService service = new PlanService( planManager, null, null, null, plan );
 
         List<Part> parts = (List<Part>) CollectionUtils.select( queryService.findAllParts(), new Predicate() {
             public boolean evaluate( Object object ) {

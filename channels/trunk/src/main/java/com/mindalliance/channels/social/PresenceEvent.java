@@ -42,11 +42,11 @@ public class PresenceEvent extends PlanningEvent {
                 + " " + super.toString();
     }
 
-    public boolean isLogin() {
+    public boolean isEntering() {
         return type == Type.Login;
     }
 
-    public boolean isLogout() {
+    public boolean isLeaving() {
         return type == Type.Logout;
     }
 

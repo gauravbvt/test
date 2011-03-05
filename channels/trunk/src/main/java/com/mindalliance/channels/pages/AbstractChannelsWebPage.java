@@ -5,8 +5,10 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
@@ -66,6 +68,13 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     @SpringBean
     ImagingService imagingService;
 
+    @SpringBean
+    private UserService userService;
+
+    @SpringBean
+    private SemanticMatcher semanticMatcher;
+
+
     private Plan plan;
 
     transient private QueryService queryService;
@@ -110,6 +119,21 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         this.imagingService = imagingService;
     }
 
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
+    }
+
+    public SemanticMatcher getSemanticMatcher() {
+        return semanticMatcher;
+    }
+
+    public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
+        this.semanticMatcher = semanticMatcher;
+    }
 
     static public void addPlanParameters( BookmarkablePageLink link, Plan plan ) {
         try {
@@ -212,7 +236,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     }
 
     private PlanService getQueryService( Plan plan ) {
-        return new PlanService( getPlanManager(), getAttachmentManager(), plan );
+        return new PlanService(
+                getPlanManager(),
+                getAttachmentManager(),
+                getSemanticMatcher(),
+                getUserService(),
+                plan );
     }
 
     /**

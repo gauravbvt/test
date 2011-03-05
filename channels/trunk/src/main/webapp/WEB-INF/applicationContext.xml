@@ -90,6 +90,8 @@ CONFIGURATION NOTES:
     <bean id="queryService" class="com.mindalliance.channels.query.DefaultQueryService">
         <constructor-arg ref="planManager"/>
         <constructor-arg ref="attachmentManager"/>
+        <constructor-arg ref="semanticMatcher"/>
+        <constructor-arg ref="userService"/>
     </bean>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
@@ -234,6 +236,8 @@ CONFIGURATION NOTES:
         <property name="analyst" ref="analyst"/>
         <property name="planManager" ref="planManager"/>
         <property name="attachmentManager" ref="attachmentManager"/>
+        <property name="userService" ref="userService"/>
+        <property name="semanticMatcher" ref="semanticMatcher"/>
         <property name="importExportFactory" ref="importExportFactory"/>
         <property name="timeout" value="300"/>
         <property name="presenceListeners">

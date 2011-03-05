@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.reports;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Commitment;
@@ -19,6 +20,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.query.Assignments;
@@ -54,13 +56,15 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     public static final String VERSION_PARM = "v";
     private static final String ISSUES_PARM = "issues";
 
-    /** Display string for "All" choices in drop-down. */
+    /**
+     * Display string for "All" choices in drop-down.
+     */
     private static final String ALL = "all";
 
     /**
      * Default value for "All segments" selection.
      */
-    private static final Actor   ALL_ACTORS = new Actor( "Anyone" );
+    private static final Actor ALL_ACTORS = new Actor( "Anyone" );
     private static final Organization ALL_ORGS = new Organization( "any organization" );
 
     /**
@@ -97,13 +101,19 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     @SpringBean
     private ImagingService imagingService;
 
+    @SpringBean
+    private UserService userService;
+
+    @SpringBean
+    private SemanticMatcher semanticMatcher;
+
 
     private transient QueryService queryService;
 
     private transient Assignments assignments;
     private final AbstractChannelsWebPage page;
 
-    public SelectorPanel( String id, AbstractChannelsWebPage page) {
+    public SelectorPanel( String id, AbstractChannelsWebPage page ) {
         super( id );
         this.page = page;
         setActorFromUser();
@@ -125,42 +135,42 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         };
 
         form.add(
-            newPlanSelector().setVisible( getPlans().size() > 1 ),
+                newPlanSelector().setVisible( getPlans().size() > 1 ),
 
-            new WebMarkupContainer( "org-select" )
-                .add( new DropDownChoice<Organization>( "organization",
-                    getOrganizationChoices(),
-                    new IChoiceRenderer<Organization>() {
-                        public Object getDisplayValue( Organization object ) {
-                            return object.equals( ALL_ORGS ) ? "All" : object.getName();
-                        }
+                new WebMarkupContainer( "org-select" )
+                        .add( new DropDownChoice<Organization>( "organization",
+                                getOrganizationChoices(),
+                                new IChoiceRenderer<Organization>() {
+                                    public Object getDisplayValue( Organization object ) {
+                                        return object.equals( ALL_ORGS ) ? "All" : object.getName();
+                                    }
 
-                        public String getIdValue( Organization object, int index ) {
-                            return object.equals( ALL_ORGS ) ?
-                                        ALL : Long.toString( object.getId() );
-                        }
-                    } ).add( newOnChange( "onchange" ) ) )
+                                    public String getIdValue( Organization object, int index ) {
+                                        return object.equals( ALL_ORGS ) ?
+                                                ALL : Long.toString( object.getId() );
+                                    }
+                                } ).add( newOnChange( "onchange" ) ) )
                 ,//.setVisible( getOrganizationChoices().size() > 1 ),
 
-            new WebMarkupContainer( "actor-select" )
-                .add( new DropDownChoice<Specable>( "actor",
-                     getActorChoices(),
-                     new IChoiceRenderer<Specable>() {
-                         public Object getDisplayValue( Specable object ) {
-                             return object.equals( ALL_ACTORS ) ? "All"
-                                                                : Assignments.stringify( object );
-                         }
+                new WebMarkupContainer( "actor-select" )
+                        .add( new DropDownChoice<Specable>( "actor",
+                                getActorChoices(),
+                                new IChoiceRenderer<Specable>() {
+                                    public Object getDisplayValue( Specable object ) {
+                                        return object.equals( ALL_ACTORS ) ? "All"
+                                                : Assignments.stringify( object );
+                                    }
 
-                         public String getIdValue( Specable object, int index ) {
-                             return object.equals( ALL_ACTORS ) ?
-                                        ALL : Long.toString( ( (ModelObject) object ).getId() );
-                         }
-                     } ).add( newOnChange( "onchange" ) ) )
+                                    public String getIdValue( Specable object, int index ) {
+                                        return object.equals( ALL_ACTORS ) ?
+                                                ALL : Long.toString( ( (ModelObject) object ).getId() );
+                                    }
+                                } ).add( newOnChange( "onchange" ) ) )
                 //.setVisible( getActorChoices().size() > 1 ),
 
-       /*    , new WebMarkupContainer( "optionals" )
-                .add( new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) )
-                .setVisible( isPlanner() )*/
+                /*    , new WebMarkupContainer( "optionals" )
+              .add( new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) )
+              .setVisible( isPlanner() )*/
         );
 
         add( form );
@@ -169,7 +179,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     private void setActorFromUser() {
         User user = getUser();
         if ( !user.isPlanner( getPlan().getUri() ) ) {
-            Participation participation = getQueryService( ).findParticipation( user.getUsername() );
+            Participation participation = getQueryService().findParticipation( user.getUsername() );
             if ( participation != null ) {
                 actor = participation.getActor();
             }
@@ -178,11 +188,11 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
 
     MarkupContainer newPlanSelector() {
         return new WebMarkupContainer( "switch-plan" )
-            .add( new DropDownChoice<Plan>(
+                .add( new DropDownChoice<Plan>(
                         "plan-sel",
-                         new PropertyModel<Plan>( this, "plan" ),
-                         new PropertyModel<List<? extends Plan>>( this, "plans" ) )
-                    .add( newOnChange( "onchange" ) ) );
+                        new PropertyModel<Plan>( this, "plan" ),
+                        new PropertyModel<List<? extends Plan>>( this, "plans" ) )
+                        .add( newOnChange( "onchange" ) ) );
     }
 
     public PlanManager getPlanManager() {
@@ -191,25 +201,27 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
 
     /**
      * Get currently selected assignments.
+     *
      * @return an assignment wrapper
      */
     public Assignments getAssignments() {
         Assignments as = getAllAssignments();
         return isActorSelected() && isOrgSelected() ? as.notFrom( actor ).withAll( actor, organization )
-             : isActorSelected()                    ? as.notFrom( actor ).with( actor )
-             : isOrgSelected()                      ? as.with( organization )
-                                                    : as;
+                : isActorSelected() ? as.notFrom( actor ).with( actor )
+                : isOrgSelected() ? as.with( organization )
+                : as;
 
     }
 
     /**
      * Get a description of the current selection.
+     *
      * @return a spec
      */
     public ResourceSpec getSelection() {
         return new ResourceSpec(
                 actor instanceof Actor ? (Actor) actor : null,
-                actor instanceof Role ? (Role) actor  : null,
+                actor instanceof Role ? (Role) actor : null,
                 actor instanceof Actor && ( (ModelEntity) actor ).isActual() ? null : organization,
                 null );
 
@@ -254,17 +266,19 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     }
 
     //---------------------------------
+
     /**
      * Set segment and actor fields given parameters.
-     * @return  page parameters
+     *
+     * @return page parameters
      */
-    private PageParameters setParameters(  ) {       // todo
+    private PageParameters setParameters() {       // todo
         setValid( true );
-            PageParameters parameters = page.getParameters();
-            setActor( parameters );
-            setOrganization( parameters );
-            if ( isPlanner() )
-                setShowingIssues( parameters.getAsBoolean( ISSUES_PARM, false ) );
+        PageParameters parameters = page.getParameters();
+        setActor( parameters );
+        setOrganization( parameters );
+        if ( isPlanner() )
+            setShowingIssues( parameters.getAsBoolean( ISSUES_PARM, false ) );
         return parameters;
     }
 
@@ -281,7 +295,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
             try {
                 Organization org = queryService.find( Organization.class, Long.parseLong( orgId ) );
                 if ( isActorSelected() && as.withAll( actor, org ).isEmpty()
-                     || !isActorSelected() && as.with( org ).isEmpty() )
+                        || !isActorSelected() && as.with( org ).isEmpty() )
                     setValid( false );
                 else
                     setOrganization( org );
@@ -311,9 +325,8 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
 //                if ( actors.size()== 2 )
 //                    a = actors.get( 0 );
 //                else
-                    return;
-            }
-            else
+                return;
+            } else
                 try {
                     a = queryService.find( Actor.class, Long.parseLong( actorId ) );
 
@@ -356,8 +369,8 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     //---------------------------------
     private List<Specable> getActorChoices() {
         List<Specable> result = new ArrayList<Specable>();
-        for (Specable specable : getAllActors( getAllAssignments() ) ) {
-            if ( specable instanceof Actor)
+        for ( Specable specable : getAllActors( getAllAssignments() ) ) {
+            if ( specable instanceof Actor )
                 result.add( specable );
         }
         if ( result.size() > 1 )
@@ -372,13 +385,13 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
      */
     public List<? extends Specable> getActors() {
         return isActorSelected() || !isPlanner() ?
-                                Collections.singletonList( actor )
-                              : getAllActors( getAllAssignments() );
+                Collections.singletonList( actor )
+                : getAllActors( getAllAssignments() );
     }
 
     private List<Specable> getAllActors( Assignments as ) {
         return isOrgSelected() ? as.with( organization ).getActors()
-                               : as.getActors();
+                : as.getActors();
     }
 
     //---------------------------------
@@ -391,15 +404,16 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
 
     public final List<Organization> getOrganizations() {
         return isOrgSelected() ? Collections.singletonList( organization )
-                               : getAllOrganizations( getAllAssignments() );
+                : getAllOrganizations( getAllAssignments() );
     }
 
     private List<Organization> getAllOrganizations( Assignments as ) {
         return isActorSelected() ? as.with( actor ).getOrganizations()
-                                 : as.getOrganizations();
+                : as.getOrganizations();
     }
 
     //---------------------------------
+
     /**
      * Return current plan.
      *
@@ -465,7 +479,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         this.organization = organization;
 
         if ( isActorSelected() && isOrgSelected()
-             && getAllAssignments().withAll( organization, actor ).isEmpty() )
+                && getAllAssignments().withAll( organization, actor ).isEmpty() )
             setActor( ALL_ACTORS );
     }
 
@@ -508,6 +522,11 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
 
     @Override
     public PlanService getPlanService() {
-         return new PlanService( planManager, attachmentManager, getPlan() );
-     }
+        return new PlanService(
+                getPlanManager(),
+                attachmentManager,
+                semanticMatcher,
+                userService,
+                getPlan() );
+    }
 }

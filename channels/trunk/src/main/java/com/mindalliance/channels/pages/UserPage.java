@@ -88,7 +88,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     }
 
     private void init() {
-        getCommander().loggedIn( getUser().getUsername() );
+        getCommander().present( getUser().getUsername() );
         addPageTitle();
         addForm();
         addSpinner();
@@ -217,7 +217,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     }
 
     public void setPlan( Plan plan ) {
-        getCommander().loggedOut( getUser().getUsername() );
+        getCommander().absent( getUser().getUsername() );
         super.setPlan( plan );
     }
 

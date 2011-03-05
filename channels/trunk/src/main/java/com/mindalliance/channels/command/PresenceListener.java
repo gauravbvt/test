@@ -2,6 +2,8 @@ package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.model.Plan;
 
+import java.util.List;
+
 /**
  * Presence listener.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -12,6 +14,8 @@ import com.mindalliance.channels.model.Plan;
  */
 public interface PresenceListener {
 
-    void loggedIn( String username, Plan plan );
-    void loggedOut( String username, Plan plan );
+    void present( String username, Plan plan );
+    void absent( String username, Plan plan );
+    void keepAlive( String username, Plan plan, int refreshDelay );
+    List<String> processDeaths( Plan plan );
 }
