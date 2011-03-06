@@ -343,7 +343,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     }
 
     private String getPlanImagePath() {
-        String path = getPlan().getImageUrl();
+        String path = imagingService.getSquareIconUrl( getPlan() );
         if ( path == null ) {
             path = "images/plan.png";
         }
