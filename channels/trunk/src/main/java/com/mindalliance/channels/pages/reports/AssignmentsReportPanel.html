@@ -19,12 +19,12 @@
             <p class="description" wicket:id="description">(Description)</p>
 
             <div class="phase" wicket:id="phases">
-                <h4><a wicket:id="pName">Phase - <span wicket:id="name">Phase Title</span></a></h4>
+                <h4><a wicket:id="pName">During phase - <span wicket:id="name">Phase Title</span></a></h4>
 
                 <p class="description" wicket:id="description">(Description)</p>
 
                 <div class="immediates" wicket:id="immediates">
-                    <h5><a wicket:id="anchor">Immediate Tasks</a></h5>
+                    <h5><a wicket:id="anchor">Required, unprompted tasks</a></h5>
                     <ul>
                         <li wicket:id="tasks">
                             <span class="by" wicket:id="to">(To actor, planner mode with org selected)</span>
@@ -38,11 +38,11 @@
                 </div>
 
                 <div class="notified" wicket:id="notified">
-                    <h5><a wicket:id="anchor">Information Received</a></h5>
+                    <h5><a wicket:id="anchor">Tasks prompted by notifications</a></h5>
                     <ul>
                         <li wicket:id="tasks">
                             <span class="by" wicket:id="to">(To actor, planner mode with org selected)</span>
-                            <span class="from">From <abbr wicket:id="source">Someone</abbr></span> -
+                            <span class="from">When <abbr wicket:id="source">Someone</abbr>&nbsp;notifies of</span> -
                             <a wicket:id="task"><span wicket:id="name">(Task name)</span></a>
                             <ul wicket:id="subtasks">
                                 <li wicket:id="tasks"><a wicket:id="task"><span wicket:id="name">(Task name)</span></a>
@@ -53,11 +53,11 @@
                 </div>
 
                 <div class="requested" wicket:id="requested">
-                    <h5><a wicket:id="anchor">Information Requested</a></h5>
+                    <h5><a wicket:id="anchor">Tasks prompted by information requests</a></h5>
                     <ul>
                         <li wicket:id="tasks">
                             <span class="by" wicket:id="to">(To actor, planner mode with org selected)</span>
-                            <span class="from">By <abbr wicket:id="source">Someone</abbr></span> -
+                            <span class="from">When <abbr wicket:id="source">Someone</abbr>&nbsp;requests</span> -
                             <a wicket:id="task"><span wicket:id="name">(Task name)</span></a>
                             <ul wicket:id="subtasks">
                                 <li wicket:id="tasks"><a wicket:id="task"><span wicket:id="name">(Task name)</span></a>
@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="optionals" wicket:id="optionals">
-                    <h5><a wicket:id="anchor">Optional Tasks</a></h5>
+                    <h5><a wicket:id="anchor">Optional, unprompted tasks</a></h5>
                     <ul>
                         <li wicket:id="tasks">
                             <span class="by" wicket:id="to">(To actor, planner mode with org selected)</span>

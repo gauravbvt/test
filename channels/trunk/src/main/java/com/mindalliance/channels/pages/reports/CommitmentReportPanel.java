@@ -329,7 +329,7 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
 
     public String getCommonContact() {
         Part otherPart = getOtherPart();
-        return ( isSending() ? "To " : "From " )
+        return ( isSending() ? "Sent to " : "Received from " )
                 + reportHelper.getPlanService().getAssignments().assignedTo( otherPart
         ).getCommonSpec( otherPart ).getReportSource();
     }

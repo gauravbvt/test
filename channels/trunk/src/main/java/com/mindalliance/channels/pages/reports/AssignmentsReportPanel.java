@@ -63,9 +63,9 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                 Event event = item.getModelObject();
                 item.add(
                         new WebMarkupContainer( "evName" )
-                            .add( new Label( "name" ) )
-                            .add( new AttributeModifier( "name", true,
-                                    new Model<String>( String.valueOf( event.getId() ) ) ) ),
+                                .add( new Label( "name" ) )
+                                .add( new AttributeModifier( "name", true,
+                                        new Model<String>( String.valueOf( event.getId() ) ) ) ),
                         new Label( "description" ),
                         newPhaseList( selector.getAssignments().with( event ) )
                 );
@@ -73,7 +73,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
         } );
     }
 
-     private ListView<Phase> newPhaseList( final Assignments eventAssignments ) {
+    private ListView<Phase> newPhaseList( final Assignments eventAssignments ) {
         return new ListView<Phase>( "phases", eventAssignments.getPhases() ) {
             @Override
             protected IModel<Phase> getListItemModel(
@@ -89,16 +89,16 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                 Phase phase = item.getModelObject();
                 item.add(
                         new WebMarkupContainer( "pName" )
-                            .add( new Label( "name" ) )
-                            .add( new AttributeModifier( "name", true,
-                                    new Model<String>( String.valueOf( phase.getId() ) ) ) ),
+                                .add( new Label( "name" ) )
+                                .add( new AttributeModifier( "name", true,
+                                        new Model<String>( String.valueOf( phase.getId() ) ) ) ),
                         new Label( "description" ),
                         newTaskList( "immediates",
-                                     "a" + phase.getId(),
-                                     phaseAssignments.getImmediates( getQueryService() ) ),
+                                "a" + phase.getId(),
+                                phaseAssignments.getImmediates( getQueryService() ) ),
                         newIncomingList( "notified",
-                                         "b" + phase.getId(),
-                                         reportHelper.getNotifications( phaseAssignments, getQueryService() ) ),
+                                "b" + phase.getId(),
+                                reportHelper.getNotifications( phaseAssignments, getQueryService() ) ),
                         newIncomingList(
                                 "requested",
                                 "c" + phase.getId(),
@@ -106,7 +106,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         newTaskList(
                                 "optionals",
                                 "d" + phase.getId(),
-                                phaseAssignments.getOptionals(  getQueryService() ) )
+                                phaseAssignments.getOptionals( getQueryService() ) )
                 );
             }
         };
@@ -140,7 +140,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                     }
                 } )
                 .add( new WebMarkupContainer( "anchor" )
-                    .add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) ) )
+                        .add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) ) )
                 .setVisible( !assignments.isEmpty() );
     }
 
@@ -168,9 +168,9 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                     }
                 } )
                 .add( new WebMarkupContainer( "anchor" ).add( new AttributeModifier( "name",
-                                                                                     true,
-                                                                                     new Model<String>(
-                                                                                         anchor ) ) ) )
+                        true,
+                        new Model<String>(
+                                anchor ) ) ) )
                 .setVisible( !assignments.isEmpty() );
     }
 
@@ -232,12 +232,12 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
 
     private List<Assignment> getSubtasks( Assignment parent ) {
         return toSortedTaskList( selector.getAllAssignments().from( parent ).with( parent
-                                                                                       .getActor() ) );
+                .getActor() ) );
 
     }
 
     private static String getToLabel( Assignment assignment ) {
-        return "By "
+        return "Done by "
                 + assignment.getSpecableActor()
                 + organizationToLabel( assignment )
                 + " - ";

@@ -333,6 +333,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     /**
      * Find assignments that are started with the segments.
+     * @param queryService a query service
      *
      * @return a list of assignments
      */
@@ -353,6 +354,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     /**
      * Find assignments associated with task with no specific start time (bug in the model).
      *
+     * @param queryService a query service
      * @return a list of assignments
      */
     public Assignments getOptionals( QueryService queryService) {
@@ -371,6 +373,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     /**
      * Find assignments triggered by an incoming notification.
+     * @param queryService a query service
      *
      * @return a list of assignments
      */
