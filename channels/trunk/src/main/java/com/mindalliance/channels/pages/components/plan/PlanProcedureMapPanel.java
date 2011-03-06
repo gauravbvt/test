@@ -200,6 +200,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addProcedureMapDiagramPanel();
                 target.addComponent( procedureMapDiagramPanel );
+                makeVisible( sizingLabel, isFocusSelected() );
+                target.addComponent( sizingLabel );
                 Change change = isPlanSelected()
                         ? new Change( Change.Type.Selected, getPlan() )
                         : new Change( Change.Type.Selected, segment );
@@ -208,6 +210,10 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             }
         } );
         addOrReplace( focusField );
+    }
+
+    private boolean isFocusSelected() {
+        return focus != null && !focus.isEmpty();
     }
 
     private List<String> getFocusKindChoices() {
@@ -318,6 +324,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                 target.addComponent( sizingLabel );
             }
         } );
+        makeVisible( sizingLabel, isFocusSelected() );
         addOrReplace( sizingLabel );
     }
 
@@ -435,7 +442,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private ModelEntity getFocusEntity() {
         ModelEntity focusEntity = null;
-        if ( focusKind != null && focus != null && !focus.isEmpty() ) {
+        if ( focusKind != null && isFocusSelected() ) {
             if ( focusKind.equals( ORG ) ) {
                 focusEntity = getQueryService().findActualEntity( Organization.class, focus );
             } else if ( focusKind.equals( ACTOR ) ) {

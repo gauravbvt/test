@@ -86,6 +86,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         add( procedureMapPanel );
     }
 
+
     @Override
     public void changed( Change change ) {
         if ( change.isSelected() ) {
@@ -321,13 +322,16 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     private String titleForSegment( Segment seg ) {
-        return "Procedures in \""
+        if ( focusEntity != null ) {
+           return ( (ModelEntity) focusEntity ).getName()
+                   + " in \""
+                   +  seg.getName()
+                   + "\"";
+        } else {
+           return "Procedures in \""
                 + seg.getName()
-                + "\""
-                + ( focusEntity != null
-                ? ( " for " + ( (ModelEntity) focusEntity ).getName() )
-                : "" )
-                ;
+                + "\"";
+        }
     }
 
     private String titleForTask( Assignment assign ) {

@@ -642,11 +642,11 @@ span.note {
 	font-size:10px;
 }
 
-div.picture {
+div.picture, div.procedureMap {
     background: white;
 }
 
-div.picture img {
+div.picture img , div.procedureMap img {
     border: none;
 }
 
@@ -1001,7 +1001,7 @@ div.aspect h3 {
 	padding:5px 0;
 }
 
-div.aspect div.picture {
+div.aspect div.picture, div.aspect div.procedureMap {
 	overflow:auto;
 }
 
@@ -1179,7 +1179,7 @@ td.late span {
 
 /* ----- Floating Panels - Flowmaps ----- */
 
-.aspect div.picture {
+.aspect div.picture, .aspect div.procedureMap {
 	background:#ffffff;
 	border-top:5px solid #E8E8E8;
 	border-right:5px solid #E8E8E8;

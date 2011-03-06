@@ -42,6 +42,8 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      */
     public static String[] FORMATS = {DiagramFactory.IMAGE_MAP, DiagramFactory.PNG};
 
+    private static final String TEMP = "temp";
+
     /**
      * The path to the dot executable
      */
@@ -50,7 +52,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * Drawing algorithm (neato, dot...)
      */
-    private String algo = "neato";
+    private String algo = "dot";
 
     /**
      * Maximum time allocated to graphviz process before it is interrupted and forcibly terminated.
@@ -169,7 +171,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         BufferedInputStream in = null;
         File file = null;
         try {
-            file = new File( name + "." + format );
+            file = makeFile( name, format );
             if ( file.exists() ) {
                 if ( file.length() > Integer.MAX_VALUE ) {
                     throw new DiagramException( "Diagram is too large" );
@@ -208,6 +210,17 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                 LOG.error( "Failed to finalize loading diagram from file", e );
             }
         }
+    }
+
+    private File makeFile( String name, String format ) {
+        String fileSep = System.getProperty( "file.separator" );
+        File tempDir = new File( TEMP );
+        if ( !tempDir.isDirectory() ) {
+            boolean success = tempDir.mkdir();
+            if ( !success )
+                throw new DiagramException( "Failed to create temp directory " + TEMP );
+        }
+        return new File( TEMP + fileSep + name  + "." + format );
     }
 
     /**
@@ -287,11 +300,14 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     }
 
     private String getFormatAndOutputParameters( String name ) {
+        String fileSep = System.getProperty( "file.separator" );
         StringBuilder sb = new StringBuilder();
             for ( String format : Arrays.asList( FORMATS ) ) {
                 sb.append( " -T" );
                 sb.append( format );
                 sb.append( " -o");
+                sb.append( TEMP );
+                sb.append( fileSep );
                 sb.append( name );
                 sb.append( "." );
                 sb.append( format );

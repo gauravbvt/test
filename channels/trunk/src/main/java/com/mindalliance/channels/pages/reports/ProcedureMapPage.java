@@ -63,7 +63,6 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
     private void init() {
         add( new Label( "pageTitle" ) );
         addIndicatorAware();
-        addChannelsLogo();
         addSelector();
         addHeader();
         addSpinner();
@@ -126,6 +125,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
         };
         makeVisible( goBackLink, selector.canGoBack() );
         header.add( goBackLink );
+        addChannelsLogo();
         indicatorAware.addOrReplace( header );
     }
 
@@ -139,8 +139,9 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
                   setResponsePage( page );
               }
           });
-          indicatorAware.add( channels_logo );
+          header.add( channels_logo );
       }
+
 
     private void addReportTitle() {
         reportTitle = new Label( "reportTitle" );
