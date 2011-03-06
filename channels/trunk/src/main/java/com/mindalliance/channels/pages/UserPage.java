@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
@@ -11,6 +12,7 @@ import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.ProcedureMapPage;
 import com.mindalliance.channels.pages.reports.ProceduresReportPage;
+import com.mindalliance.channels.pages.reports.SelectorPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -315,16 +317,23 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         // Goto personal procedures
         WebMarkupContainer gotoReportContainer = new WebMarkupContainer( "report" );
         form.add( gotoReportContainer );
+        Participation participation = getQueryService().findParticipation( getUser().getUsername() );
+        PageParameters params = new PageParameters();
+        Actor actor = participation != null && participation.getActor() != null
+                        ? participation.getActor()
+                        : null;
+        if ( actor != null ) {
+            params.put( SelectorPanel.ACTOR_PARM, actor.getId() );
+        }
         BookmarkablePageLink<ProceduresReportPage> gotoReport = newTargetedLink(
                 "gotoReport",
                 "",
                 ProceduresReportPage.class,
+                params,
                 null,
                 getPlan()
         );
-        Participation participation = getQueryService().findParticipation( getUser().getUsername() );
-        gotoReportContainer.setVisible(
-                participation != null && participation.getActor() != null );
+        gotoReportContainer.setVisible(  actor != null );
         gotoReportContainer.add( gotoReport );
     }
 

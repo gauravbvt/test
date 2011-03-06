@@ -87,7 +87,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                  protected void onUpdate( AjaxRequestTarget target ) {
                      update( target, new Change( Change.Type.Updated, plan) );
                  }
-             },
+             }.setEnabled( isLockedByUser( plan ) ),
              new PhaseListPanel( "phases" ),
 
              new ModelObjectLink( "locale-link",

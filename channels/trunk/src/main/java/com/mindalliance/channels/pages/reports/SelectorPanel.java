@@ -39,6 +39,8 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -50,6 +52,10 @@ import java.util.List;
  */
 public class SelectorPanel extends AbstractUpdatablePanel implements AssignmentsSelector {
 
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( SelectorPanel.class );
     public static final String ACTOR_PARM = "agent";
     public static final String ORGANIZATION_PARM = "org";
     public static final String PLAN_PARM = "plan";
@@ -116,7 +122,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     public SelectorPanel( String id, AbstractChannelsWebPage page ) {
         super( id );
         this.page = page;
-        setActorFromUser();
+        setReportedOnActor();
         setDefaultModel( new CompoundPropertyModel<Object>( this ) {
             @Override
             public void detach() {
@@ -176,12 +182,39 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         add( form );
     }
 
-    private void setActorFromUser() {
+    private void setReportedOnActor( ) {
+        Actor paramActor = null;
+        Actor participationActor = null;
         User user = getUser();
-        if ( !user.isPlanner( getPlan().getUri() ) ) {
-            Participation participation = getQueryService().findParticipation( user.getUsername() );
-            if ( participation != null ) {
-                actor = participation.getActor();
+        Participation participation = getQueryService().findParticipation( user.getUsername() );
+        if ( participation != null ) {
+            participationActor = participation.getActor();
+        }
+        PageParameters pageParameters = page.getPageParameters();
+        long actorId = pageParameters.containsKey( SelectorPanel.ACTOR_PARM )
+            ? pageParameters.getLong( SelectorPanel.ACTOR_PARM )
+            : -1;
+        if ( actorId > 0 ) {
+            try {
+                paramActor =  getQueryService().find( Actor.class, actorId );
+            } catch ( Exception e ) {
+                LOG.warn( "Actor not found from parameter " + actorId );
+            }
+        }
+        if ( paramActor != null ) {
+            if ( user.isPlanner( getPlan().getUri() )
+                    || participationActor != null && participationActor.equals( paramActor ) ) {
+                actor = paramActor;
+            }
+        }
+
+        if ( actor.equals( ALL_ACTORS ) ) {
+            if ( !user.isPlanner( getPlan().getUri() ) )  {
+                if ( participationActor != null ) {
+                    actor = participationActor;
+                } else {
+                    throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
+                }
             }
         }
     }

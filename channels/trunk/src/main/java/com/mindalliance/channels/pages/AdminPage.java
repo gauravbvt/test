@@ -128,6 +128,7 @@ public class AdminPage extends AbstractChannelsWebPage {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 getPlanManager().productize( getPlan() );
+                setResponsePage( AdminPage.class );
             }
 
 

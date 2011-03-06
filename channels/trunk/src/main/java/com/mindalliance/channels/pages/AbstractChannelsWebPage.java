@@ -282,6 +282,26 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         return link;
     }
 
+    static public <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
+            String id,
+            String target,
+            Class<T> pageClass,
+            PageParameters parameters,
+            PopupSettings popupSettings,
+            Plan plan ) {
+         BookmarkablePageLink<T> link = newTargetedLink(
+                 id,
+                 target,
+                 pageClass,
+                 popupSettings,
+                 plan
+         );
+        for ( String name : parameters.keySet() ) {
+            link.setParameter( name, "" + parameters.get( name ) );
+        }
+        return link;
+    }
+
     public static String redirectUrl( String path, Plan p ) {
         return path + "?" + queryParameters( p );
     }
