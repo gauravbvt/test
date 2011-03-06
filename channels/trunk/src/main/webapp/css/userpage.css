@@ -1,0 +1,723 @@
+/**
+ * Channels User Page - Styling
+ * Copyright (C) 2011 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: romit
+ * Date: Mar 06, 2011
+ * Time: 12:26:42 PM
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #333333;
+    text-decoration: none;
+	outline:none;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+div#userHomeContainer {
+    width: 1000px;
+    margin: 0 auto;
+    text-align: left;
+    padding: 0;
+    background-color: #f6f6f6;
+}
+
+div.pageHeader {
+	width: 1000px;
+	height: 60px;
+	background: url('../images/header.png') no-repeat #c3d9ff;
+	border-bottom: 1px solid #cccccc;
+	float:left;
+	border-left:1px solid #cccccc;
+	border-right:1px solid #cccccc;
+}
+
+div.pageHeader div.logotext {
+    background: url("../images/logo.png") no-repeat scroll 10px 5px transparent;
+    padding: 6px 0 0 65px;
+	height: 54px;
+	float:left;
+}
+
+div.pageHeader h1 {
+	font-size:24px;
+}
+
+div.pageHeader h2 {
+    font-size: 10px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+div.pageHeader span#spinner {
+	float:left;
+	margin:0 0 0 271px;
+	background:#fff1a8;
+	font-weight:bold;
+	padding:3px 4px;
+}
+
+div.pageHeader span#spinner img {
+	float:left;
+}
+
+div.pageHeader span#spinner span {
+	float:left;
+	padding:0 0 0 3px;
+}
+
+div.pageHeader div#logout {
+	float:right;
+	padding:21px 15px 0 0;
+}
+
+div.pageHeader div#logout a,
+div.pageHeader span.feedback-container a {
+    background: url('../images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px;
+    margin-left: 5px;
+    text-transform: capitalize;
+    outline: none;
+}
+
+div.pageHeader div#logout a:hover,
+div.pageHeader span.feedback-container a:hover {
+    color: #333333;
+}
+
+div.pageHeader div.change-message {
+	float:right;
+}
+
+div.pageHeader span.feedback-container {
+	float:right;
+	padding:21px 5px 0 0;
+}
+
+div.feedback-form-cont {
+	display:block;
+	background: #dddddd;
+	font-size:11px;
+    border: 1px solid #a7a9ac;
+	padding:5px;
+	position:relative;
+	margin:3px 0 0 5px;
+}
+
+div.feedback-options {
+	padding:0 0 5px 0;
+}
+
+div.feedback-urgency {
+	padding:5px 0 5px 0;
+}
+
+div.feedback-form-cont textarea {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	padding:5px;
+}
+
+div.cancelSend input {
+	font-size:10px;
+	padding:2px;
+	background:#cccccc;
+	border:1px solid #666666;
+}
+
+div.cancelSend input:hover {
+	font-size:10px;
+	padding:2px;
+	background:#f6f6f6;
+	border:1px solid #999999;
+	color:#333333;
+}
+
+div.userHomeColCont {
+	float:left;
+	width:1000px;
+	background:#f6f6f6;
+	border-left:1px solid #cccccc;
+	border-right:1px solid #cccccc;
+	border-bottom:1px solid #cccccc;
+}
+
+div.userHomeLeftCol {
+	float:left;
+	width:669px;
+	padding:15px;
+}
+
+div.planHeader  {
+	float:left;
+	border-bottom:3px solid #666666;
+	width:669px;
+	padding:0 0 5px 0;
+	margin:0 0 5px 0;
+}
+
+div.planHeader div#welcome {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:18px;
+	font-weight:bold;
+	float:left;
+	width:400px;
+}
+
+div.planHeader div.switch-plan {
+	float:right;
+	font-size:12px;
+	width:250px;
+}
+
+div.planHeader div.switch-plan select {
+	float:right;
+	font-size:12px;
+}
+
+div.aboutPlan {
+	float:left;
+	width:669px;
+}
+
+div.aboutPlan img {
+	float:left;
+}
+
+div.aboutPlan div.planTitle {
+    float: left;
+    font-size: 13px;
+    line-height: 130%;
+    padding: 8px;
+
+}
+
+div.aboutPlan div.planTitle span.planName {
+	font-weight:bold;
+}
+
+div.aboutPlan div.references {
+	float: left;
+	width: 669px;
+}
+
+div.aboutPlan h2 {
+	font-weight: bold;
+	font-size: 14px;
+	border-bottom: 1px solid #666666;
+	padding: 3px 0px;
+	margin: 5px 0px;
+}
+
+div.aboutPlan ul {
+	margin:10px 20px;
+	padding:0;
+}
+
+div.aboutPlan ul li {
+	padding:0 0 3px 0;
+}
+
+div.aboutPlan div.goto {
+	float:left;
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	background: url('../images/actor.user.png') no-repeat 10px 12px #e8e8e8;
+	width:617px;
+	padding:5px 5px 5px 52px;
+	margin:10px 0 0 0;
+}
+
+div.aboutPlan div.goto a {
+	float:left;
+	font-weight:bold;
+	text-transform:uppercase;
+}
+
+div.aboutPlan div.goto span {
+	float:left;
+}
+
+div.userHomeRightCol {
+	float:right;
+	width:299px;
+	padding:10px 0 0 0;
+}
+
+
+/* ----- Dropdown Menu - Default ----- */
+
+ul.menu, span.menubar {
+    font-weight: normal;
+    list-style: none;
+    margin: 0 0 0 5px;
+    padding: 0;
+    display: inline;
+    white-space: nowrap;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+ul.menu li {
+    display: inline;
+}
+
+.menubar .dropmenu {
+    width: auto;
+    cursor: pointer;
+    padding: 1px 16px 1px 5px;
+    position: relative;
+	border:1px solid transparent;
+    background: url( '../images/bullet-arrow-bottom.png' ) no-repeat scroll 90% 56%;
+	color:#333333;
+	font-size:8pt;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5em;
+}
+
+.menubar .dropmenu:hover {
+    background: url( '../images/bullet-arrow-bottom-high.png' ) no-repeat scroll 90% 56% #e6e6e6;
+	border:1px solid #C7C8CA;
+	color:#000000;
+}
+
+.menubar .dropmenu ul {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #e6e6e6;
+    color: #000000;
+    list-style: none;
+    margin: 0 2px 0 0;
+    padding: 0;
+    z-index: 100000;
+	border:1px solid #C7C8CA;
+	top:1.5em;
+}
+
+.menubar .dropmenu ul li {
+    display: block;
+    padding: 2px 4px;
+    z-index: 100000;
+	border-bottom:1px solid #D1D3D4;
+}
+
+.menubar .dropmenu li span.disabled {
+    font-style: oblique;
+    color: #808080;
+}
+
+.menubar .dropmenu:hover ul {
+    display: block;
+}
+
+.menubar .dropmenu ul li:hover {
+    background-color: #ccccff;
+}
+
+
+
+/* ---- Social ----- */
+
+div#userHomeContainer #social {
+    width: 300px;
+ 	background:#c3d9ff;
+	border-left:1px solid #6c7b7b;
+	float:right;
+	overflow:hidden;
+}
+
+div#userHomeContainer #social div.tabpanel {
+	float:right;
+	background:#f6f6f6;
+}
+
+
+/* ----- Social - Tabbed Panels ----- */
+
+div#userHomeContainer #social div.tab-row {
+    float: left;
+	background: url( '../images/tab-social-bg-home.png' ) repeat-x #c3d9ff;
+    line-height: normal;
+	width:300px;
+}
+
+div#userHomeContainer #social div.tab-row ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+div#userHomeContainer #social div.tab-row li {
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+div#userHomeContainer #social div.tab-row a {
+    display: block;
+    background: #e7f0ff;
+	height:20px;
+    padding: 4px 10px 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #666666;
+    white-space: nowrap;
+	border-top:1px solid #6c7b7b;
+	border-right:1px solid #6c7b7b;
+	border-bottom:1px solid #6c7b7b;
+}
+
+div#userHomeContainer #social div.tab-row a:hover {
+    color: #333333;
+}
+
+div#userHomeContainer #social div.tab-row li.selected { background:none; }
+
+div#userHomeContainer #social div.tab-row li.selected a {
+    display: block;
+    background: #f6f6f6;
+	height: 20px;
+    padding: 4px 10px 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #000000;
+    white-space: nowrap;
+	border-bottom:1px solid #f6f6f6;
+}
+
+
+/* ----- Social - Global ----- */
+
+div#userHomeContainer #social div.tab-panel {
+	background:#F6F6F6;
+	float:right;
+	width:100%;
+}
+
+div#userHomeContainer #social div.social-controls {
+	float:right;
+	width:100%;
+	border-bottom:1px solid #999999;
+}
+
+div#userHomeContainer #social div.social-controls a img {
+	border:none;
+	padding-top:3px;
+}
+
+div#userHomeContainer #social div.social-controls div.text-controls {
+	height:20px;
+	float:right;
+	padding:0 10px 0 0;
+}
+
+div#userHomeContainer #social div.social-controls div.text-controls a {
+	font-size:10px;
+	font-weight:bold;
+	color:#666666;
+	padding-left:10px;
+}
+
+div#userHomeContainer #social div.social-controls div.text-controls a:hover {
+	color:#333333;
+}
+
+div#userHomeContainer #social div.social-list {
+	width:100%;
+	overflow-y:auto;
+	float:right;
+}
+
+div#userHomeContainer #social div.social-list.messages {
+	width:100%;
+	overflow-y:auto;
+	float:right;
+}
+
+div#userHomeContainer #social div.social-list > span > div {
+	width:100%;
+	float:left;
+}
+
+div#userHomeContainer #social div.social-list div.even {
+	background:#e8e8e8;
+}
+
+div#userHomeContainer #social div.social-list > span > div > div {
+	border-bottom:1px solid #bcbec0;
+	padding:0 5px 0 0;
+}
+
+div#userHomeContainer #social table {
+	width:100%;
+	display:table;
+	line-height:100%;
+	border:none;
+}
+
+div#userHomeContainer #social table td.photo-cont {
+	width:50px;
+}
+
+div#userHomeContainer #social table td table {
+	width:100%;
+}
+
+div#userHomeContainer #social table td,
+div#userHomeContainer #social table td table td {
+	vertical-align:top;
+}
+
+div#userHomeContainer #social div.social-list img.photo {
+	background:#E8E8E8;
+	border:1px solid #999999;
+	padding:2px;
+	margin:9px;
+	width:32px;
+	height:32px;
+	float:left;
+}
+
+div#userHomeContainer #social div.social-list div.even img.photo {
+	background:#dadada;
+}
+
+div#userHomeContainer #social div.social-list div.joining span.name,
+div#userHomeContainer #social div.social-list div.leaving span.name {
+	font-size:9px;
+	font-weight:bold;
+	color:#333333;
+	padding:0;
+	text-transform:capitalize;
+	float:left;
+	display:block;
+}
+
+div#userHomeContainer #social div.social-list div.even img.present,
+div#userHomeContainer #social div.social-list div.odd img.present {
+	display:block;
+	float:left;
+	background:none;
+}
+
+div#userHomeContainer #social div.social-list span.menubar {
+    float: right;
+	padding:6px 0 0 0;
+    position: relative;
+}
+
+div#userHomeContainer #social div.social-list td.jobtitle span.titles {
+	display:block;
+	font-size:10px;
+	font-weight:bold;
+	color:#666666;
+	float:left;
+}
+
+div#userHomeContainer #social div.social-list td.info-container {
+	font-size:11px;
+	line-height:140%;
+	color:#333333;
+}
+
+div#userHomeContainer #social div.social-list td.info-container a {
+	font-size:11px;
+	line-height:140%;
+	color:#333333;
+}
+
+div#userHomeContainer #social div.social-list td.info-container a:hover {
+	font-size:11px;
+	line-height:140%;
+	color:#666666;
+}
+
+div#userHomeContainer #social div.social-list div.time {
+	font-size:10px;
+	font-weight:bold;
+	color:#959595;
+}
+
+div#userHomeContainer #social div.social-list span.time {
+	color:#666666;
+}
+
+div#userHomeContainer #social div.social-list div.show-more-less {
+	border-bottom:1px solid #BCBEC0;
+	float:left;
+	text-align:center;
+	width:100%;
+}
+
+div#userHomeContainer #social div.social-list div.show-more-less a {
+	color:#666666;
+	font-size:11px;
+	font-weight:bold;
+	padding:5px;
+	text-transform:lowercase;
+}
+
+div#userHomeContainer #social div.social-list div.show-more-less a:hover {
+	color:#333333;
+}
+
+div#userHomeContainer #social div.no-commands,
+div#userHomeContainer #social div.no-messages {
+	float:right;
+	width:100%;
+	text-align:center;
+	border-bottom:1px solid #BCBEC0;
+	background:#e8e8e8;
+}
+
+div#userHomeContainer #social div.no-commands span,
+div#userHomeContainer #social div.no-messages span {
+	color:#666666;
+	font-size:11px;
+	font-weight:bold;
+	padding:5px;
+	text-transform:lowercase;
+}
+
+
+/* ----- Social - Presence ----- */
+
+div#userHomeContainer #social div.social-list.presence > span > div > div {
+	padding:0 5px 0 0;
+}
+
+div#userHomeContainer #social div.social-list.presence div.joining img.present {padding:15px 0 0 5px;}
+
+div#userHomeContainer #social div.social-list.presence div.joining div.time {line-height:100%;}
+
+div#userHomeContainer #social div.social-list.presence div.employed.joining span.name {padding:7px 0 0 0;}
+
+div#userHomeContainer #social div.social-list.presence div.employed.joining img.present {padding:9px 0 0 5px;}
+
+div#userHomeContainer #social div.social-list.presence div.employed.joining span.menubar {padding:3px 0 0 0;}
+
+div#userHomeContainer #social div.social-list.presence div.employed.joining div.time {line-height:100%;}
+
+div#userHomeContainer #social div.social-list.presence div.employed.leaving span.name {padding:12px 0 2px 0;}
+
+div#userHomeContainer #social div.social-list.presence div.employed.leaving span.menubar {padding:3px 0 0 0;}
+
+
+
+div#userHomeContainer #social div.social-list.presence div.joining span.name {
+	padding:13px 0 0 0;
+}
+
+div#userHomeContainer #social div.social-list.presence div.leaving span.name {
+	padding:20px 0 0 0;
+}
+
+div#userHomeContainer #social div.social-list.presence img.present {
+	padding:14px 0 0 5px;
+}
+
+/* ----- Social - Activities ----- */
+
+div#userHomeContainer #social div.social-list.commands div span.name {
+	padding:11px 0 0 0;
+}
+
+div#userHomeContainer #social div.social-list.commands img.present {
+	padding:13px 0 0 5px;
+}
+
+div#userHomeContainer #social div.social-list.commands td.jobtitle span.titles {
+	padding:1px 0 2px 0;
+}
+
+div#userHomeContainer #social div.social-list.commands td.info-container {
+	padding:0 0 8px 1px;
+}
+
+/* ----- Social - Messages ----- */
+
+div#userHomeContainer #social div.social-list.messages div span.name {
+	padding:9px 0 2px 0;
+}
+
+div#userHomeContainer #social div.social-list.messages img.present {
+	padding:11px 0 0 5px;
+}
+
+div#userHomeContainer #social div.social-list.messages td.jobtitle span.titles {
+	padding:0 0 4px 0;
+}
+
+div#userHomeContainer #social div.social-list.messages td.info-container {
+	padding:3px 0 8px 0;
+	border-top:1px solid #bcbec0;
+}
+
+/* ----- Social - New Message ----- */
+
+div#userHomeContainer #social div.new-message {
+	background:#E8E8E8;
+	border-top:1px solid #999999;
+	bottom:0;
+	float:left;
+	font-size:11px;
+	padding:5px 0 10px 10px;
+	position:absolute;
+}
+
+div#userHomeContainer #social div.new-message > div {
+	padding:5px 0;
+}
+
+div#userHomeContainer #social div.new-message > div > span {
+	font-weight:bold;
+}
+
+div#userHomeContainer #social div.new-message > div > select {
+	background:#F6F6F6;
+	border:1px solid #666666;
+	margin-left:5px;
+	font-size:11px;
+}
+
+div#userHomeContainer #social div.new-message textarea {
+	background:#F6F6F6;
+	border:1px solid #999999;
+	margin:2px 0 5px 0;
+	overflow-x:hidden;
+	font-size:11px;
+}
+
+div#userHomeContainer #social div.new-message input {
+	background:#d9d9d9;
+	border:1px solid #666666;
+	color:#000000;
+	font-size:11px;
+}
+
+div#userHomeContainer #social div.new-message input:hover {
+	background:#f6f6f6;
+	border:1px solid #999999;
+	color:#333333;
+	font-size:11px;
+}
+
