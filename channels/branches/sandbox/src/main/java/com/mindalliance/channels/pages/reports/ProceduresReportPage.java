@@ -76,7 +76,7 @@ public class ProceduresReportPage extends AbstractReportPage {
                         .setVisible( !selector.isPlanner() && selector.getPlans().size() > 1 ),
                 selector.setVisible( selector.isPlanner() ),
                 new AssignmentsReportPanel( "assignments", (AssignmentsSelector) selector, ProceduresReportPage.this ),
-                new Label( "year", "" + Calendar.getInstance().get( Calendar.YEAR ) ),
+                /*new Label( "year", "" + Calendar.getInstance().get( Calendar.YEAR ) ),*/
                 new Label( "client", selector.getPlan().getClient() )
         );
     }

@@ -67,7 +67,9 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
         addHeader();
         addSpinner();
         addSelected();
+/*
         indicatorAware.add( new Label( "year", "" + Calendar.getInstance().get( Calendar.YEAR ) ) );
+*/
         indicatorAware.add( new Label( "client", selector.getPlan().getClient() ) );
     }
 
