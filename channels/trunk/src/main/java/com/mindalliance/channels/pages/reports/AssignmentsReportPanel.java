@@ -172,7 +172,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
         final WebMarkupContainer anchorContainer = new WebMarkupContainer( "anchor" );
         anchorContainer.setOutputMarkupId( true );
         anchorContainer.add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) );
-        markExpansionState( anchorContainer, tasks.isVisible() );
+        markAnchorExpansionState( anchorContainer, tasks.isVisible() );
         final Component component = new WebMarkupContainer( id )
                 .add( tasks )
                 .add( anchorContainer )
@@ -183,7 +183,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 tasks.setVisible( !tasks.isVisible() );
-                markExpansionState( anchorContainer, tasks.isVisible() );
+                markAnchorExpansionState( anchorContainer, tasks.isVisible() );
                 target.addComponent( component );
             }
         } );
@@ -237,7 +237,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
         final WebMarkupContainer anchorContainer = new WebMarkupContainer( "anchor" );
         anchorContainer.setOutputMarkupId( true );
         anchorContainer.add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) );
-        markExpansionState( anchorContainer, tasks.isVisible() );
+        markAnchorExpansionState( anchorContainer, tasks.isVisible() );
         final Component component = new WebMarkupContainer( id )
                 .add( tasks )
                 .add( anchorContainer )
@@ -248,7 +248,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 tasks.setVisible( !tasks.isVisible() );
-                markExpansionState( anchorContainer, tasks.isVisible() );
+                markAnchorExpansionState( anchorContainer, tasks.isVisible() );
                 target.addComponent( component );
             }
         } );
@@ -256,11 +256,11 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
         return component;
     }
 
-    private void markExpansionState( Component comp, boolean expanded ) {
+    private void markAnchorExpansionState( Component comp, boolean expanded ) {
         comp.add( new AttributeModifier(
                 "class",
                 true,
-                new Model<String>( expanded ? "expanded" : "collapsed" ) ) );
+                new Model<String>( expanded ? "anchor-expanded" : "anchor-collapsed" ) ) );
     }
 
     private List<Assignment> toSortedFlowList( Assignments assignments ) {
