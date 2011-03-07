@@ -300,9 +300,9 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
             parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getActor() ).getId() ) );
         else if ( !specable.getRole().isUnknown() )
             parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getRole() ).getId() ) );
-
-        if ( !specable.getOrganization().isUnknown() )
-            parms.put( SelectorPanel.ORGANIZATION_PARM, Long.toString( ( specable.getOrganization() ).getId() ) );
+        Organization org = specable.getOrganization();
+        if ( org != null && !org.isUnknown() )
+            parms.put( SelectorPanel.ORGANIZATION_PARM, Long.toString( ( org ).getId() ) );
         parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
         parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
         parms.put( AbstractReportPage.TASK_PARM, Long.toString( part.getId() ) );
