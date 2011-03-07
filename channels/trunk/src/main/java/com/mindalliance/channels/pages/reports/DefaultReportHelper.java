@@ -138,7 +138,8 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
     }
 
     @Override
-    public Component newFlowLink( Part part, final Specable actor ) {
+    public Component newFlowLink( Part part, Specable spec ) {
+        final Actor actor = spec.getActor();
         final Assignment assign = (Assignment) CollectionUtils.find(
                 selector.getAllAssignments().assignedTo( part ).getAssignments(),
                 new Predicate() {
