@@ -18,6 +18,16 @@ a {
     text-decoration: none;
 }
 
+.expanded:after {
+    padding-left: 3px;
+    content: url('../images/expanded.png')
+}
+
+.collapsed:after {
+    padding-left: 3px;
+    content: url('../images/collapsed.png')
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
@@ -145,7 +155,7 @@ div#container {
 .spinner {
     position: absolute;
     top: 22px;
-    padding-left: 800px;
+    padding-left: 770px;
     z-index: 1;
 }
 

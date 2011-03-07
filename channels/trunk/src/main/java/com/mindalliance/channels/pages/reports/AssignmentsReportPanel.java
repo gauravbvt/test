@@ -13,7 +13,6 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.query.Assignments;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.Request;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -24,10 +23,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -73,9 +69,9 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         new WebMarkupContainer( "evName" )
                                 .add( new Label( "name" ) )
                                 .add( new AttributeModifier( "name", true, new Model<String>( String
-                                                                                                  .valueOf(
-                                                                                                      event
-                                                                                                          .getId() ) ) ) ),
+                                        .valueOf(
+                                                event
+                                                        .getId() ) ) ) ),
                         new Label( "description" ),
                         newPhaseList( selector.getAssignments().with( event ) )
                 );
@@ -101,13 +97,13 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         new WebMarkupContainer( "pName" )
                                 .add( new Label( "name" ) )
                                 .add( new AttributeModifier( "name", true, new Model<String>( String
-                                                                                                  .valueOf(
-                                                                                                      phase
-                                                                                                          .getId() ) ) ) ),
+                                        .valueOf(
+                                                phase
+                                                        .getId() ) ) ) ),
                         new Label( "description" ),
                         newTaskList( "immediates",
-                                     "a" + phase.getId(),
-                                     phaseAssignments.getImmediates( getQueryService() ) ),
+                                "a" + phase.getId(),
+                                phaseAssignments.getImmediates( getQueryService() ) ),
                         newIncomingList( "notified",
                                 "b" + phase.getId(),
                                 reportHelper.getNotifications( phaseAssignments, getQueryService() ) ),
@@ -146,20 +142,20 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                 List<Assignment> subtasks = getSubtasks( assignment );
                 final Component subtaskList = newSubtaskList( subtasks ).setOutputMarkupId( true );
                 item.add( reportHelper.newTaskLink( assignment.getPart(), assignment.getEmployment() ), new Label( "to",
-                                                                                              getToLabel(
-                                                                                                  assignment ) )
-                    .setVisible( !selector.isActorSelected() ), subtaskList );
+                        getToLabel(
+                                assignment ) )
+                        .setVisible( !selector.isActorSelected() ), subtaskList );
                 item.setOutputMarkupId( true );
                 if ( !subtasks.isEmpty() ) {
                     item.add( new AttributeModifier( "class",
-                                                     true,
-                                                     new AbstractReadOnlyModel<Object>() {
-                                                         @Override
-                                                         public Object getObject() {
-                                                             return subtaskList.isVisible() ? ""
-                                                                                            : "collapsed";
-                                                         }
-                                                     } ) );
+                            true,
+                            new AbstractReadOnlyModel<Object>() {
+                                @Override
+                                public Object getObject() {
+                                    return subtaskList.isVisible() ? ""
+                                            : "collapsed";
+                                }
+                            } ) );
                     item.add( new AjaxEventBehavior( "onclick" ) {
                         @Override
                         protected void onEvent( AjaxRequestTarget target ) {
@@ -170,20 +166,24 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                 }
             }
         }
-         .setVisible( false )
-         .setOutputMarkupId( true );
+                .setVisible( false )
+                .setOutputMarkupId( true );
 
+        final WebMarkupContainer anchorContainer = new WebMarkupContainer( "anchor" );
+        anchorContainer.setOutputMarkupId( true );
+        anchorContainer.add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) );
+        markExpansionState( anchorContainer, tasks.isVisible() );
         final Component component = new WebMarkupContainer( id )
-            .add( tasks )
-            .add( new WebMarkupContainer( "anchor" )
-                      .add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) ) )
-            .setVisible( !assignments.isEmpty() )
-            .setOutputMarkupId( true );
+                .add( tasks )
+                .add( anchorContainer )
+                .setVisible( !assignments.isEmpty() )
+                .setOutputMarkupId( true );
 
         component.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 tasks.setVisible( !tasks.isVisible() );
+                markExpansionState( anchorContainer, tasks.isVisible() );
                 target.addComponent( component );
             }
         } );
@@ -204,25 +204,25 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                 List<Assignment> subtasks = getSubtasks( assignment );
                 final Component subtaskList = newSubtaskList( subtasks ).setOutputMarkupId( true );
                 item.add( reportHelper.newFlowLink( part, assignment.getEmployment() ), new Label( "to", getToLabel(
-                    assignment ) ).setVisible( !selector.isActorSelected() ), new Label( "source",
-                                                                                         prefix
-                                                                                             .getReportSource() )
-                    .add( new AttributeModifier( "title", true, new Model<String>( getSourcesList(
-                        sources,
-                        prefix ) ) ) ),
+                        assignment ) ).setVisible( !selector.isActorSelected() ), new Label( "source",
+                        prefix
+                                .getReportSource() )
+                        .add( new AttributeModifier( "title", true, new Model<String>( getSourcesList(
+                                sources,
+                                prefix ) ) ) ),
 
-                          subtaskList );
+                        subtaskList );
                 item.setOutputMarkupId( true );
                 if ( !subtasks.isEmpty() ) {
                     item.add( new AttributeModifier( "class",
-                                                     true,
-                                                     new AbstractReadOnlyModel<Object>() {
-                                                         @Override
-                                                         public Object getObject() {
-                                                             return subtaskList.isVisible() ? ""
-                                                                                            : "collapsed";
-                                                         }
-                                                     } ) );
+                            true,
+                            new AbstractReadOnlyModel<Object>() {
+                                @Override
+                                public Object getObject() {
+                                    return subtaskList.isVisible() ? ""
+                                            : "collapsed";
+                                }
+                            } ) );
                     item.add( new AjaxEventBehavior( "onclick" ) {
                         @Override
                         protected void onEvent( AjaxRequestTarget target ) {
@@ -233,24 +233,34 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                 }
             }
         }
-            .setVisible( false );
-
+                .setVisible( false );
+        final WebMarkupContainer anchorContainer = new WebMarkupContainer( "anchor" );
+        anchorContainer.setOutputMarkupId( true );
+        anchorContainer.add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) );
+        markExpansionState( anchorContainer, tasks.isVisible() );
         final Component component = new WebMarkupContainer( id )
-            .add( tasks )
-            .add( new WebMarkupContainer( "anchor" )
-                      .add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) ) )
-            .setVisible( !assignments.isEmpty() )
-            .setOutputMarkupId( true );
+                .add( tasks )
+                .add( anchorContainer )
+                .setVisible( !assignments.isEmpty() )
+                .setOutputMarkupId( true );
 
         component.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 tasks.setVisible( !tasks.isVisible() );
+                markExpansionState( anchorContainer, tasks.isVisible() );
                 target.addComponent( component );
             }
         } );
 
         return component;
+    }
+
+    private void markExpansionState( Component comp, boolean expanded ) {
+        comp.add( new AttributeModifier(
+                "class",
+                true,
+                new Model<String>( expanded ? "expanded" : "collapsed" ) ) );
     }
 
     private List<Assignment> toSortedFlowList( Assignments assignments ) {
