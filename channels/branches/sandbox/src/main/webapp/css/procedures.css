@@ -18,21 +18,21 @@ a {
     text-decoration: none;
 }
 
-.expanded:after {
+.anchor-expanded:after {
     padding-left: 3px;
-    content: url('../images/expanded.png')
+    content: url('../images/arrow-down-report.png')
 }
 
-.collapsed:after {
+.anchor-collapsed:after {
     padding-left: 3px;
-    content: url('../images/collapsed.png')
+    content: url('../images/arrow-right-report.png')
 }
 
-.expanded {
+.anchor-expanded {
     cursor: pointer;
 }
 
-.collapsed {
+.anchor-collapsed {
     cursor: pointer;
 }
 
