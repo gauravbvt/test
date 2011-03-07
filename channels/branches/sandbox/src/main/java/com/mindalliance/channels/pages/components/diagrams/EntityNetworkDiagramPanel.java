@@ -106,6 +106,10 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
             sb.append( "&orientation=" );
             sb.append( orientation );
         }
+        sb.append( "&");
+        sb.append( TICKET_PARM );
+        sb.append( '=' );
+        sb.append( getTicket() );
         return sb.toString();
     }
 
@@ -114,7 +118,7 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
      */
     protected String makeSeed() {
         // Force regeneration
-        return "&_modified=" + System.currentTimeMillis();
+        return getPlan().isDevelopment() ? "&_modified=" + System.currentTimeMillis() : "";
     }
 
     protected void onClick( AjaxRequestTarget target ) {

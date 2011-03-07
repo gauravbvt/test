@@ -52,8 +52,6 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
 
     private IModel<Survey> surveyModel;
     @SpringBean
-    private QueryService queryService;
-    @SpringBean
     private SurveyService surveyService;
     /**
      * Maximum number of rows of contacts to show at a time.
@@ -142,7 +140,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
         );
         try {
             if ( getSurvey().isLaunched() ) {
-                surveyService.inviteContacts( getSurvey(), usernames );
+                surveyService.inviteContacts( getSurvey(), usernames, getPlan() );
             }
         } catch ( SurveyException e ) {
             e.printStackTrace();
@@ -187,6 +185,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
     @SuppressWarnings( "unchecked" )
     private List<ContactDescriptor> getContactDescriptors() {
         List<ContactDescriptor> contactDescriptors = new ArrayList<ContactDescriptor>();
+        QueryService queryService = getQueryService();
         for ( Contact contact : getAllContacts() ) {
             String username = contact.getUsername();
             Actor actor = queryService.findOrCreate( Participation.class, username ).getActor();
@@ -214,6 +213,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
     private List<Contact> getAllContacts() {
         List<Contact> contacts = new ArrayList<Contact>();
         contacts.addAll( getSurvey().getContacts() );
+        QueryService queryService = getQueryService();
         if ( !getSurvey().isClosed() ) {
             List<String> surveyed = (List<String>) CollectionUtils.collect(
                     contacts,
@@ -337,7 +337,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
 
         public String getFullName() {
             if ( fullName == null )
-                fullName = queryService.findUserNormalizedFullName( getUsername() );
+                fullName = getQueryService().findUserNormalizedFullName( getUsername() );
             return fullName;
         }
 
@@ -347,7 +347,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
 
         public String getUserRole() {
             if ( userRole == null ) {
-                if ( queryService.findAllPlanners().contains( getUsername() ) ) {
+                if ( getQueryService().findAllPlanners().contains( getUsername() ) ) {
                     userRole = "planner";
                 } else {
                     userRole = "responder";

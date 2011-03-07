@@ -21,6 +21,7 @@ import com.mindalliance.channels.pages.png.PlanMapPage;
 import com.mindalliance.channels.pages.png.ProceduresPage;
 import com.mindalliance.channels.pages.reports.AssignmentReportPage;
 import com.mindalliance.channels.pages.reports.CommitmentReportPage;
+import com.mindalliance.channels.pages.reports.ProcedureMapPage;
 import com.mindalliance.channels.pages.reports.ProceduresReportPage;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.Page;
@@ -135,6 +136,7 @@ public class Channels extends WebApplication
         getMarkupSettings().setStripWicketTags( true );
 
         mount( new QueryStringUrlCodingStrategy( "procedures", ProceduresReportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "mapped", ProcedureMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "task", AssignmentReportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "flow", CommitmentReportPage.class ) );
 
@@ -158,6 +160,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "essential.png", FailureImpactsPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "dissemination.png", DisseminationPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "procedures.png", ProceduresPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "home", UserPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE );
@@ -193,10 +196,15 @@ public class Channels extends WebApplication
             plan = planManager.getDefaultPlan( user );
             user.setPlan( plan );
         }
+        return plan == null
+                ? NoAccessPage.class
+                : UserPage.class;
+/*
         return user.isAdmin() ? PlanPage.class // was AdminPage.class
                 : plan == null ? NoAccessPage.class
                 : user.isPlanner( plan.getUri() ) ? PlanPage.class
                 : ProceduresReportPage.class;
+*/
     }
 
     public QueryService getQueryService() {

@@ -6,7 +6,7 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.pages.AdminPage;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
@@ -16,7 +16,6 @@ import com.mindalliance.channels.pages.reports.ProcedureMapPage;
 import com.mindalliance.channels.pages.reports.ProceduresReportPage;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -77,16 +76,18 @@ public class PlanShowMenuPanel extends MenuPanel {
                     newLink(
                             "Procedures report",
                             newTargetedLink( "_blank", ProceduresReportPage.class, null ) ) );
-          menuItems.add(
+            menuItems.add(
                     newLink(
                             "Mapped procedures",
                             newTargetedLink( "_blank", ProcedureMapPage.class, null ) ) );
 
-             if ( User.current().isAdmin() )
+/*
+            if ( User.current().isAdmin() )
                 menuItems.add(
                         newLink(
                                 "Admin page",
-                                new BookmarkablePageLink<AdminPage>( "link", AdminPage.class ) ) );
+                                newTargetedLink( "link", AdminPage.class, null ) ) );
+*/
             menuItems.addAll(
                     Arrays.asList(
                             newLink( "All segments", plan, PlanEditPanel.MAP ),
@@ -120,15 +121,9 @@ public class PlanShowMenuPanel extends MenuPanel {
                 link );
     }
 
-    private static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
+    private <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
             String target, Class<T> pageClass, PopupSettings popupSettings ) {
-
-        BookmarkablePageLink<T> link = new BookmarkablePageLink<T>( "link", pageClass );
-        link.add( new AttributeModifier( "target", true, new Model<String>( target ) ) );
-        if ( popupSettings != null )
-            link.setPopupSettings( popupSettings );
-
-        return link;
+        return AbstractChannelsWebPage.newTargetedLink( "link", target, pageClass, popupSettings, getPlan() );
     }
 
     private LinkMenuItem collapsible( final long id,

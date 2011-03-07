@@ -54,7 +54,7 @@ public class DisseminationDiagramPanel extends AbstractDiagramPanel {
             Subject subject,
             boolean showTargets,
             Settings settings ) {
-        super( id, settings );
+        super( id,settings );
         this.segmentObjectModel = segmentObjectModel;
         this.subject = subject;
         this.showTargets = showTargets;
@@ -126,6 +126,10 @@ public class DisseminationDiagramPanel extends AbstractDiagramPanel {
         } catch ( UnsupportedEncodingException e ) {
             // never happens
         }
+        sb.append( "&");
+        sb.append( TICKET_PARM );
+        sb.append( '=' );
+        sb.append( getTicket() );
         return sb.toString();
     }
 

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
@@ -374,7 +373,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         List<Segment> segments = new ArrayList<Segment>();
         Segment segment = getSegment();
         if ( segment == null ) {
-            segments.addAll( User.current().getPlan().getSegments() );
+            segments.addAll( getQueryService().getPlan().getSegments() );
         } else {
             segments.add( segment );
         }

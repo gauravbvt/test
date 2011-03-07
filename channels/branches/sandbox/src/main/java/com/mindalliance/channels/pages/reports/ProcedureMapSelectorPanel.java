@@ -4,6 +4,7 @@ import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
@@ -18,6 +19,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.nlp.SemanticMatcher;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanProcedureMapPanel;
@@ -50,6 +52,8 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     private Actor selectedActor;
     private Role selectedRole;
     private Organization selectedOrganization;
+    private Assignments allAssignments;
+    private List<Commitment> allCommitments;
 
     @SpringBean
     private AttachmentManager attachmentManager;
@@ -60,10 +64,15 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     @SpringBean
     private PlanManager planManager;
 
+    @SpringBean
+    private UserService userService;
+
+    @SpringBean
+    private SemanticMatcher semanticMatcher;
+
     private PlanProcedureMapPanel procedureMapPanel;
 
     private List<Change> history = new ArrayList<Change>();
-    ;
 
     private boolean goingBack = false;
 
@@ -76,6 +85,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         procedureMapPanel = new PlanProcedureMapPanel( "procedure-map" );
         add( procedureMapPanel );
     }
+
 
     @Override
     public void changed( Change change ) {
@@ -163,6 +173,8 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     public void resetSelected() {
+        allCommitments = null;
+        allAssignments = null;
         assignment = null;
         selectedPart = null;
         selectedFlow = null;
@@ -183,33 +195,38 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     public Assignments getAllAssignments() {
-        Set<Assignment> assignments = new HashSet<Assignment>();
-        for ( Commitment commitment : getCommitments() ) {
-            assignments.add( commitment.getCommitter() );
-            assignments.add( commitment.getBeneficiary() );
+        if ( allAssignments == null ) {
+            Set<Assignment> assignments = new HashSet<Assignment>();
+            for ( Commitment commitment : getCommitments() ) {
+                assignments.add( commitment.getCommitter() );
+                assignments.add( commitment.getBeneficiary() );
+            }
+            Assignments results = new Assignments( getPlan().getLocale() );
+            for ( Assignment assignment : assignments )
+                results.add( assignment );
+            allAssignments = results;
         }
-        Assignments results = new Assignments( getPlan().getLocale() );
-        for ( Assignment assignment : assignments )
-            results.add( assignment );
-        return results;
+        return allAssignments;
     }
 
     @Override
     public List<Commitment> getCommitments() {
-        QueryService queryService = getQueryService();
-        List<Commitment> commitments = new ArrayList<Commitment>();
-        List<Flow> allFlows = queryService.findAllSharingFlows( segment );
-        for ( Flow flow : allFlows ) {
-            commitments.addAll( queryService.findAllCommitments( flow, true ) );
-        }
-        List<Commitment> results = new ArrayList<Commitment>();
-        List<Commitment> notOverridden = queryService.removeOverriddenCommitments( commitments );
-        for ( Commitment commitment : notOverridden ) {
-            if ( focusEntity == null || isFocusedOn( commitment ) ) {
-                results.add( commitment );
+        if ( allCommitments == null ) {
+            QueryService queryService = getQueryService();
+            List<Commitment> commitments = new ArrayList<Commitment>();
+            List<Flow> allFlows = queryService.findAllSharingFlows( segment );
+            for ( Flow flow : allFlows ) {
+                commitments.addAll( queryService.findAllCommitments( flow, true ) );
             }
+            List<Commitment> results = new ArrayList<Commitment>();
+            for ( Commitment commitment : commitments ) {
+                if ( focusEntity == null || isFocusedOn( commitment ) ) {
+                    results.add( commitment );
+                }
+            }
+            allCommitments = results;
         }
-        return results;
+        return allCommitments;
     }
 
     private boolean isFocusedOn( Commitment commitment ) {
@@ -297,7 +314,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     private String titleForPlan() {
-        return "All procedures"
+        return "All procedures in " + getPlan().getName()
                 + ( focusEntity != null
                 ? ( " for " + ( (ModelEntity) focusEntity ).getName() )
                 : "" )
@@ -305,13 +322,16 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     private String titleForSegment( Segment seg ) {
-        return "Procedures in \""
+        if ( focusEntity != null ) {
+           return ( (ModelEntity) focusEntity ).getName()
+                   + " in \""
+                   +  seg.getName()
+                   + "\"";
+        } else {
+           return "Procedures in \""
                 + seg.getName()
-                + "\""
-                + ( focusEntity != null
-                ? ( " for " + ( (ModelEntity) focusEntity ).getName() )
-                : "" )
-                ;
+                + "\"";
+        }
     }
 
     private String titleForTask( Assignment assign ) {
@@ -414,7 +434,12 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     @Override
     public PlanService getPlanService() {
-        return new PlanService( planManager, attachmentManager, getPlan() );
+        return new PlanService(
+                getPlanManager(),
+                attachmentManager,
+                semanticMatcher,
+                userService,
+                getPlan() );
     }
 
     @Override

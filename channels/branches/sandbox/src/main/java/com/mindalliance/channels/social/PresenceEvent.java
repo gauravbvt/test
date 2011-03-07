@@ -18,8 +18,8 @@ public class PresenceEvent extends PlanningEvent {
     private String username;
     private Type type;
 
-    public PresenceEvent( Type type, String username ) {
-        super();
+    public PresenceEvent( Type type, String username, long planId ) {
+        super( planId );
         this.username = username;
         this.type = type;
     }
@@ -42,11 +42,11 @@ public class PresenceEvent extends PlanningEvent {
                 + " " + super.toString();
     }
 
-    public boolean isLogin() {
+    public boolean isEntering() {
         return type == Type.Login;
     }
 
-    public boolean isLogout() {
+    public boolean isLeaving() {
         return type == Type.Logout;
     }
 

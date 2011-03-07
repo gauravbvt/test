@@ -2,20 +2,19 @@
 // All rights reserved.
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
+import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
@@ -23,7 +22,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -44,7 +42,7 @@ import java.util.Set;
 /**
  * ...
  */
-public class AbstractReportPage extends WebPage implements ReportHelper {
+public class AbstractReportPage extends AbstractChannelsWebPage implements ReportHelper {
 
     public static final String FLOW_PARM = "flow";
 
@@ -57,20 +55,9 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
     private Flow flow;
 
 
-    @SpringBean
-    private User user;
-
-    @SpringBean
-    private PlanManager planManager;
-
-    @SpringBean
-    private AttachmentManager attachmentManager;
 
     @SpringBean
     private ImagingService imagingService;
-
-    @SpringBean
-    private QueryService queryService;
 
     public AbstractReportPage( PageParameters parameters ) {
         super( parameters );
@@ -90,13 +77,6 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         } );
     }
 
-    public AttachmentManager getAttachmentManager() {
-        return attachmentManager;
-    }
-
-    public PlanManager getPlanManager() {
-        return planManager;
-    }
 
     public ImagingService getImagingService() {
         return imagingService;
@@ -122,8 +102,21 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         return assignments.getRequests();
     }
 
-    public User getUser() {
-        return user;
+    @Override
+    public Assignments getAssignments() {
+        return getPlanService().getAssignments();
+    }
+
+    @Override
+    public List<Commitment> getCommitments( Flow flow ) {
+        List<Commitment> commitments = new ArrayList<Commitment>();
+        Assignments assignments = getAssignments();
+        for ( Assignment committer : assignments.with( flow.getSource() ) ) {
+            for ( Assignment beneficiary : assignments.with( flow.getTarget() ) ) {
+                commitments.add( new Commitment( committer, beneficiary, flow ) );
+            }
+        }
+        return commitments;
     }
 
     //--------------------------------
@@ -131,8 +124,10 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         if ( assignment == null )
             try {
                 PageParameters parameters = getPageParameters();
-                assignment = getAssignment( parameters.getLong( SelectorPanel.ACTOR_PARM, 0 ),
-                                            parameters.getLong( TASK_PARM, 0 ) );
+                assignment = getAssignment(
+                    parameters.getLong( SelectorPanel.ACTOR_PARM, 0 ),
+                    parameters.getLong( SelectorPanel.ORGANIZATION_PARM, 0 ),
+                    parameters.getLong( TASK_PARM, 0 ) );
 
             } catch ( StringValueConversionException ignored ) {
                 throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
@@ -144,60 +139,25 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         return assignment;
     }
 
-    private Assignment getAssignment( long actorId, long taskId ) throws NotFoundException {
+    private Assignment getAssignment( long actorId, long orgId, long taskId ) throws NotFoundException {
         Part task = getPlanService().find( Part.class, taskId );
         Specable actor = getActor( actorId );
 
-        Assignments assignments = getPlanService().getAssignments()
-                                    .assignedTo( task ).with( actor );
+        Assignments assignments = orgId == 0 ?
+            getPlanService().getAssignments().assignedTo( task ).with( actor )
+            : getPlanService().getAssignments().assignedTo( task ).with( actor ).with( getOrg( orgId ) );
         if ( assignments.isEmpty() )
             throw new NotFoundException();
 
         else if ( assignments.size() != 1 )
             LoggerFactory.getLogger( AssignmentReportPage.class ).warn(
-                        "More than one assignment for task {} and actor {}", taskId, actorId );
+                    "More than one assignment for task {} and actor {}", taskId, actorId );
 
         return assignments.getAssignments().iterator().next();
     }
 
     public PlanService getPlanService() {
-        if ( service == null )
-            try {
-                PageParameters parameters = getPageParameters();
-                service = getService( parameters.getString( SelectorPanel.PLAN_PARM, user.getPlanUri() ),
-                                      parameters.getInt( SelectorPanel.VERSION_PARM, 0 ) );
-
-            } catch ( StringValueConversionException ignored ) {
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
-
-            } catch ( NotFoundException ignored ) {
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
-            }
-        return service;
-    }
-
-    private PlanService getService( String uri, int version ) throws NotFoundException {
-        boolean development;
-        if ( uri == null )
-            throw new NotFoundException();
-
-        else if ( user.isPlanner( uri ) ) {
-            int number = planManager.getDefinitionManager().get( uri )
-                            .getDevelopmentVersion().getNumber();
-
-            development = version == 0 || version == number;
-
-        } else if ( user.isParticipant( uri ) )
-            development = false;
-
-        else
-            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
-
-        PlanDao planDao = planManager.getDao( uri, development );
-        if ( planDao == null )
-            throw new NotFoundException();
-
-        return new PlanService( planManager, attachmentManager, planDao.getPlan() );
+        return (PlanService)getQueryService();
     }
 
     private Specable getActor( long actorId ) throws NotFoundException {
@@ -209,26 +169,32 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         }
     }
 
+    private Specable getOrg( long orgId ) throws NotFoundException {
+        return getPlanService().find( Organization.class, orgId );
+    }
+
     public Specable getActor() {
         return getAssignment().getSpecableActor();
     }
 
     public String getType() {
         Part part = getAssignment().getPart();
-        return Assignments.isImmediate( part, queryService )    ? "Immediate Tasks"
-             : Assignments.isOptional( part, queryService )     ? "Optional Task"
-             : Assignments.isNotification( part, queryService  ) ? "Information Received"
-             : Assignments.isRequest( part )      ? "Information Requested"
-                                                  : "Other";
+        QueryService queryService = getQueryService();
+        return Assignments.isImmediate( part, queryService ) ? "Immediate Tasks"
+                : Assignments.isOptional( part, queryService ) ? "Optional Task"
+                : Assignments.isNotification( part, queryService ) ? "Information Received"
+                : Assignments.isRequest( part ) ? "Information Requested"
+                : "Other";
     }
 
     public String getTypePrefix() {
         Part part = getAssignment().getPart();
-        return Assignments.isImmediate( part, queryService )    ? "a"
-             : Assignments.isOptional( part, queryService  )     ? "d"
-             : Assignments.isNotification( part, queryService  ) ? "b"
-             : Assignments.isRequest( part )      ? "c"
-                                                  : "e";
+        QueryService queryService = getQueryService();
+        return Assignments.isImmediate( part, queryService ) ? "a"
+                : Assignments.isOptional( part, queryService ) ? "d"
+                : Assignments.isNotification( part, queryService ) ? "b"
+                : Assignments.isRequest( part ) ? "c"
+                : "e";
     }
 
     public PageParameters getTopParameters() {
@@ -257,42 +223,49 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
     }
 
     public Component newFlowLink( Flow flow ) {
-         PageParameters parms = getTopParameters();
-         parms.put( SelectorPanel.ACTOR_PARM,
-                    Long.toString( ( (Identifiable) getActor() ) .getId() ) );
-         parms.put( TASK_PARM, Long.toString( getPart().getId() ) );
-         String delay;
-         if ( flow == null )
-             delay = "";
-         else {
-             parms.put( FLOW_PARM, Long.toString( flow.getId() ) );
-             delay = flow.getMaxDelay().toString();
-         }
+        PageParameters parms = getTopParameters();
+        parms.put( SelectorPanel.ACTOR_PARM,
+                Long.toString( ( (Identifiable) getActor() ).getId() ) );
+        parms.put( TASK_PARM, Long.toString( getPart().getId() ) );
+        String delay;
+        if ( flow == null )
+            delay = "";
+        else {
+            parms.put( FLOW_PARM, Long.toString( flow.getId() ) );
+            delay = flow.getMaxDelay().toString();
+        }
 
-         Component result =
-                 new BookmarkablePageLink<CommitmentReportPage>( "flow", CommitmentReportPage.class, parms )
-                         .add( new Label( "delay", delay ) );
+        Component result =
+                new BookmarkablePageLink<CommitmentReportPage>( "flow", CommitmentReportPage.class, parms )
+                        .add( new Label( "delay", delay ) );
 
-         if ( flow != null )
-             result.add( newCssClass( getPlanService().computeSharingPriority( flow )
-                                             .toString().toLowerCase() ));
+        if ( flow != null )
+            result.add( newCssClass( getPlanService().computeSharingPriority( flow )
+                    .toString().toLowerCase() ) );
 
-         return result.setVisible( flow != null );
-     }
+        return result.setVisible( flow != null );
+    }
 
-    public Component newFlowLink( Part part, Specable actor ) {
-         Plan plan = getPlanService().getPlan();
+    public Component newFlowLink( Part part, Specable specable ) {
+        Plan plan = getPlanService().getPlan();
 
-         PageParameters parms = new PageParameters();
-         parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
-         parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
-         parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
-         parms.put( "task", Long.toString( part.getId() ) );
+        PageParameters parms = new PageParameters();
+        if ( !specable.getActor().isUnknown() )
+            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getActor() ).getId() ) );
+        else if ( !specable.getRole().isUnknown() )
+            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getRole() ).getId() ) );
 
-         return new BookmarkablePageLink<AssignmentReportPage>(
-                 "task", AssignmentReportPage.class, parms )
-                 .add( new Label( "name", getFlowString( part ) ) );
-     }
+        if ( !specable.getOrganization().isUnknown() )
+            parms.put( SelectorPanel.ORGANIZATION_PARM, Long.toString( ( specable.getOrganization() ).getId() ) );
+
+        parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
+        parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
+        parms.put( "task", Long.toString( part.getId() ) );
+
+        return new BookmarkablePageLink<AssignmentReportPage>(
+                "task", AssignmentReportPage.class, parms )
+                .add( new Label( "name", getFlowString( part ) ) );
+    }
 
     public String getFlowString( Part part ) {
         StringBuilder result = new StringBuilder();
@@ -319,11 +292,17 @@ public class AbstractReportPage extends WebPage implements ReportHelper {
         return result.toString();
     }
 
-    public  MarkupContainer newTaskLink( Part part, Specable actor ) {
+    public MarkupContainer newTaskLink( Part part, Specable specable ) {
         Plan plan = getPlanService().getPlan();
 
         PageParameters parms = new PageParameters();
-        parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
+        if ( !specable.getActor().isUnknown() )
+            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getActor() ).getId() ) );
+        else if ( !specable.getRole().isUnknown() )
+            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getRole() ).getId() ) );
+        Organization org = specable.getOrganization();
+        if ( org != null && !org.isUnknown() )
+            parms.put( SelectorPanel.ORGANIZATION_PARM, Long.toString( ( org ).getId() ) );
         parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
         parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
         parms.put( AbstractReportPage.TASK_PARM, Long.toString( part.getId() ) );

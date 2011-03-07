@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
@@ -10,34 +9,26 @@ import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.reports.VCardPanel;
-import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * Contact information for one actor spec.
  */
-public class VCardPage extends WebPage {
+public class VCardPage extends AbstractChannelsWebPage {
 
     /**
      * URL adjustment for image attachments.
      */
     private static final String PREFIX = "../../";
-
-    /**
-     * The query service.
-     */
-    @SpringBean
-    private QueryService queryService;
 
     /**
      * The target actor for this card.
@@ -59,12 +50,12 @@ public class VCardPage extends WebPage {
             throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
 
         ResourceSpec actorSpec = getActorSpec( flow.getContactedPart() );
-        init( actorSpec.getOrganization(), actorSpec.getJob( User.current().getPlan().getLocale() ) );
+        init( actorSpec.getOrganization(), actorSpec.getJob( getPlan().getLocale() ) );
     }
 
     private ResourceSpec getActorSpec( Part part ) {
         ResourceSpec partSpec = part.resourceSpec();
-        for ( ResourceSpec spec : queryService.findAllResourcesNarrowingOrEqualTo( partSpec ) )
+        for ( ResourceSpec spec : getQueryService().findAllResourcesNarrowingOrEqualTo( partSpec ) )
             if ( actor.equals( spec.getActor() ) )
                 return spec;
 
@@ -102,7 +93,7 @@ public class VCardPage extends WebPage {
         PageParameters parms = getPageParameters();
         if ( parms.containsKey( parm ) )
             try {
-                result = queryService.find( parmClass, Long.valueOf( parms.getString( parm ) ) );
+                result = getQueryService().find( parmClass, Long.valueOf( parms.getString( parm ) ) );
 
             } catch ( NumberFormatException ignored ) {
                 result = null;

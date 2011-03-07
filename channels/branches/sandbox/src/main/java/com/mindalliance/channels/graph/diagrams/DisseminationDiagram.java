@@ -1,12 +1,15 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.model.Dissemination;
 import com.mindalliance.channels.analysis.graph.DisseminationGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphRenderer;
-import com.mindalliance.channels.model.*;
+import com.mindalliance.channels.model.Dissemination;
+import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.model.Subject;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -43,6 +46,7 @@ public class DisseminationDiagram extends AbstractDiagram<Node, Dissemination> {
     @SuppressWarnings( "unchecked" )
     public void render(
             String outputFormat,
+            String ticket,
             OutputStream outputStream,
             Analyst analyst,
             DiagramFactory diagramFactory ) {
@@ -74,6 +78,7 @@ public class DisseminationDiagram extends AbstractDiagram<Node, Dissemination> {
         DisseminationDOTExporter dotExporter = new DisseminationDOTExporter( metaProvider );
         graphRenderer.render( graph,
                 dotExporter,
+                ticket,
                 outputFormat,
                 outputStream
         );

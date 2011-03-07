@@ -76,7 +76,7 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
 
     /** {@inheritDoc} */
     public void render(
-            String outputFormat,
+            String ticket, String outputFormat,
             OutputStream outputStream,
             Analyst analyst,
             DiagramFactory diagramFactory ) {
@@ -86,6 +86,7 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
         renderer.render(
                 createGraph( diagramFactory.getQueryService(), analyst ),
                 createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst ), outputFormat,
+                ticket,
                 outputStream );
     }
 

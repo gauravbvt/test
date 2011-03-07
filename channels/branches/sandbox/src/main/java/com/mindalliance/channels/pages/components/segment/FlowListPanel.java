@@ -91,7 +91,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     private void addFlowsDiv() {
         flowsDiv = new WebMarkupContainer( "flows-div" );
         flowsDiv.setOutputMarkupId( true );
-        add( flowsDiv );
+        addOrReplace( flowsDiv );
         flowsDiv.add( createFlowPanels( sends ) );
     }
 
@@ -145,6 +145,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
         while ( iterator.hasNext() ) flows.add( iterator.next() );
         Collections.sort( flows, new Comparator<Flow>() {
             public int compare( Flow flow, Flow other ) {
+//                if ( expansions.contains( flow.getId() ) ) return -1;
                 if ( flow.isSharing() && !other.isSharing() ) return -1;
                 if ( other.isSharing() && !flow.isSharing() ) return 1;
                 int comparison = 0;
@@ -191,7 +192,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
 
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         target.appendJavascript( PlanPage.IE7CompatibilityScript );
-        super.updateWith( target, change, updated );
+         super.updateWith( target, change, updated );
     }
 
 

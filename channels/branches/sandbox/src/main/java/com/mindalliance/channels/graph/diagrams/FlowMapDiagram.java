@@ -74,7 +74,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
      */
     @SuppressWarnings( "unchecked" )
     public void render(
-            String outputFormat,
+            String ticket, String outputFormat,
             OutputStream outputStream,
             Analyst analyst,
             DiagramFactory diagramFactory ) {
@@ -107,6 +107,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
         graphRenderer.render( graph,
                 dotExporter,
                 outputFormat,
+                ticket,
                 outputStream
         );
 

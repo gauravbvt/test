@@ -15,14 +15,18 @@
 	        <option>segment B</option>
 	        </select>
 	        &nbsp;|&nbsp;
-			Summarize <input wicket:id="summarizeByOrg" type="checkbox"> by organization
-	        <input wicket:id="summarizeByRole" type="checkbox"> by role
+			by
+            <select wicket:id="summarizeChoice">
+                <option>type of organization</option>
+                <option>organization</option>
+                <option>role</option>
+            </select>
 	        &nbsp;|&nbsp;
-			Focus on <select wicket:id="focusChoice">
+			focusing on <select wicket:id="focusChoice">
 	            <option>organization</option>
 	            <option>agent</option>
 	        </select>
-	        <input wicket:id="focus" type="text" class="filter-small">
+	        <input wicket:id="focus" type="text" class="filter-small" title="Entering a space opens a list of choices">
 	    </div>
 	    <div class="procedureMap" wicket:id="procedure-map">
 	        [procedure map diagram panel]

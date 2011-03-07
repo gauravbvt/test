@@ -2,10 +2,12 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.*;
-import com.mindalliance.channels.model.GeoLocation;
 import com.mindalliance.channels.geo.GeoService;
+import com.mindalliance.channels.model.GeoLocatable;
+import com.mindalliance.channels.model.GeoLocation;
+import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -176,7 +178,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
     private List<String> findWithinCandidates() {
         final Place place = getPlace();
         if ( place.isActual() ) {
-            final Place locale = User.current().getPlan().getLocale();
+            final Place locale = getPlan().getLocale();
             List<Place> allCandidatePlaces = (List<Place>) CollectionUtils.select(
                     getQueryService().listActualEntities( Place.class ),
                     new Predicate() {
@@ -598,7 +600,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
                     "mapLink",
                     new Model<String>( geoLocation.toString() ),
-                    geoLocation );
+                    geoLocation,
+                    getQueryService() );
             add( geomapLink );
         }
 

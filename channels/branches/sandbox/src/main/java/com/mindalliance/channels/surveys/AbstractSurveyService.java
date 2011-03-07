@@ -127,8 +127,8 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @Override
-    public String getDefaultEmailAddress() {
-        String planValue = getPlan().getSurveyDefaultEmailAddress();
+    public String getDefaultEmailAddress( Plan plan ) {
+        String planValue = plan.getSurveyDefaultEmailAddress();
         return planValue.isEmpty() ? defaultEmailAddress : planValue;
     }
 
@@ -153,7 +153,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
                 public void aboutToProductize( Plan devPlan ) {
                     for ( Survey survey : getSurveys( devPlan ) )
                         try {
-                            closeSurvey( survey );
+                            closeSurvey( survey, devPlan );
                         } catch ( SurveyException e ) {
                             LOG.error( "Unable to close survey", e );
                         }
@@ -177,7 +177,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
                 public void aboutToUnload( Plan plan ) {
                     for ( Survey survey : getSurveys( plan ) )
                         try {
-                            closeSurvey( survey );
+                            closeSurvey( survey, plan );
                         } catch ( SurveyException e ) {
                             LOG.error( "Unable to close survey", e );
                         }
@@ -342,12 +342,12 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @Override
-    public Survey getOrCreateSurvey( Issue issue ) throws SurveyException {
+    public Survey getOrCreateSurvey( Issue issue, Plan plan ) throws SurveyException {
         Survey survey = findOpenSurvey( issue );
         if ( survey == null ) {
             survey = new Survey( issue );
             survey.setCreationDate( new Date() );
-            long id = registerSurvey( survey );
+            long id = registerSurvey( survey, plan );
             survey.setId( id );
             survey.setStatus( Survey.Status.In_design );
             survey.setIssuer( getIssuerName( survey ) );
@@ -355,11 +355,11 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
             addSurvey( User.plan(), survey );
             save();
         }
-        survey.updateSurveyData( this );
+        survey.updateSurveyData( this, plan );
         return survey;
     }
 
-    protected Map<String, Object> getSurveyContext( Survey survey, Issue issue ) {
+    protected Map<String, Object> getSurveyContext( Survey survey, Issue issue, Plan plan ) {
         Map<String, Object> context = new HashMap<String, Object>();
         context.put( "about", getAboutText( issue ) );
         context.put( "segment", getSegmentText( issue ) );
@@ -368,7 +368,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         context.put( "issue", getIssueDescriptionText( issue ) );
         context.put( "options", getRemediationOptions( issue ) );
         context.put( "issuer", getIssuerName( survey ) );
-        context.put( "email", getIssuerEmail( survey ) );
+        context.put( "email", getIssuerEmail( survey, plan ) );
         context.put( "survey", survey.getTitle() );
         return context;
     }
@@ -414,9 +414,9 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @Override
-    public void inviteContacts( Survey survey, List<String> usernames ) throws SurveyException {
+    public void inviteContacts( Survey survey, List<String> usernames, Plan plan ) throws SurveyException {
         if ( survey.isLaunched() ) {
-            inviteNewContacts( survey );
+            inviteNewContacts( survey, plan );
         }
         save();
     }
@@ -441,18 +441,18 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     protected abstract void unregisterSurvey( Survey survey ) throws SurveyException;
 
     @Override
-    public void launchSurvey( Survey survey ) throws SurveyException {
+    public void launchSurvey( Survey survey, Plan plan ) throws SurveyException {
         if ( !survey.isRegistered() )
             throw new SurveyException( "Survey not registered." );
         if ( survey.isClosed() || survey.isLaunched() )
             throw new SurveyException( "Survey already launched." );
         try {
-            doLaunchSurvey( survey );
+            doLaunchSurvey( survey, plan );
             survey.setStatus( Survey.Status.Launched );
             survey.setLaunchDate( new Date() );
             survey.resetData();
             // Invite to-be-contacted users
-            inviteNewContacts( survey );
+            inviteNewContacts( survey, plan );
         } finally {
             // save no matter what - launch may succeed while invitations fail
             save();
@@ -460,11 +460,11 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @Override
-    public void closeSurvey( Survey survey ) throws SurveyException {
+    public void closeSurvey( Survey survey, Plan plan ) throws SurveyException {
         if ( survey.isLaunched() ) {
             if ( survey.isClosed() )
                 throw new SurveyException( "Survey already closed." );
-            doCloseSurvey( survey );
+            doCloseSurvey( survey, plan );
             survey.setStatus( Survey.Status.Closed );
             survey.setClosedDate( new Date() );
             save();
@@ -540,24 +540,24 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         return sb.toString();
     }
 
-    protected String getIssuerEmail( Survey survey ) {
+    protected String getIssuerEmail( Survey survey, Plan plan ) {
         User user = getUser( survey.getUserName() );
         if ( user == null )
-            return getDefaultEmailAddress();
+            return getDefaultEmailAddress( plan );
         else
             return user.getEmail();
     }
 
-    protected void inviteNewContacts( Survey survey ) throws SurveyException {
+    protected void inviteNewContacts( Survey survey, Plan plan ) throws SurveyException {
         for ( Contact contact : survey.getContacts() ) {
             if ( contact.isToBeContacted() ) {
-                emailInvitationTo( contact, survey );
+                emailInvitationTo( contact, survey, plan );
                 contact.setContacted();
             }
         }
     }
 
-    private void emailInvitationTo( Contact contact, Survey survey ) throws SurveyException {
+    private void emailInvitationTo( Contact contact, Survey survey, Plan plan ) throws SurveyException {
         User user = getUser( contact.getUsername() );
         if ( user == null )
             throw new SurveyException( "Unknown contact " + contact.getUsername() );
@@ -568,7 +568,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         if ( issue == null )
             throw new SurveyException( "Unknown issue" );
         try {
-            Map<String, Object> context = getInvitationContext( user, issuer, survey, issue );
+            Map<String, Object> context = getInvitationContext( user, issuer, survey, issue, plan );
             SimpleMailMessage email = new SimpleMailMessage();
             email.setTo( user.getEmail() );
             email.setSubject( "Survey: " + survey.getPlanText() );
@@ -585,8 +585,8 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     private Map<String, Object> getInvitationContext(
-        User user, User issuer, Survey survey, Issue issue ) {
-        survey.updateSurveyData( this );
+        User user, User issuer, Survey survey, Issue issue, Plan plan ) {
+        survey.updateSurveyData( this, plan );
         Map<String, Object> context = new HashMap<String, Object>();
         context.put( "user", user );
         context.put( "issuer", issuer );
@@ -635,14 +635,10 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         return "survey service";
     }
 
-    protected Plan getPlan() {
-        return User.current().getPlan();
-    }
+    abstract protected long registerSurvey( Survey survey, Plan plan ) throws SurveyException;
 
-    abstract protected long registerSurvey( Survey survey ) throws SurveyException;
+    abstract protected void doLaunchSurvey( Survey survey, Plan plan ) throws SurveyException;
 
-    abstract protected void doLaunchSurvey( Survey survey ) throws SurveyException;
-
-    abstract protected void doCloseSurvey( Survey survey ) throws SurveyException;
+    abstract protected void doCloseSurvey( Survey survey, Plan plan ) throws SurveyException;
 }
 

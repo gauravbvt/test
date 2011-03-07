@@ -5,6 +5,8 @@ import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.query.DefaultQueryService;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -89,7 +91,10 @@ public class SharingCommitmentsPanel extends FloatingCommandablePanel {
 
     public List<Commitment> getCommitments() {
         // exclude commitments to self and to or by unknown actors.
-        return getQueryService().findAllCommitments( getFlow(), false, false );
+        QueryService queryService = getQueryService();
+        return queryService.findAllCommitments( getFlow(),
+                                                false,
+                                                queryService.getAssignments( false ) );
     }
 
 

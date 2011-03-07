@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     @SpringBean
+    // Default query service set automatically.
     private QueryService queryService;
 
     /**
@@ -89,11 +90,37 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     /**
-     * Get the query service.
+     * Get the query service from further up updatable parent.
      *
      * @return a query service
      */
-    protected QueryService getQueryService() {
+    public QueryService getQueryService() {
+        // Take the root updatable ancestor's query service
+        Updatable rootUpdatable = findRootUpdatable();
+        return rootUpdatable != null
+            ? rootUpdatable.getOwnQueryService()
+            : queryService;
+    }
+
+    private Updatable findRootUpdatable() {
+        Updatable rootUpdatable = this;
+        Updatable parent = null;
+        boolean found = false;
+        do {
+            parent = findUpdatableParent();
+            if ( rootUpdatable == parent )
+                found = true;
+            else if ( parent != null )
+                rootUpdatable = parent;
+        } while ( parent != null && !found );
+        return rootUpdatable;
+    }
+
+    public void setQueryService( QueryService queryService ) {
+        this.queryService = queryService;
+    }
+
+    public QueryService getOwnQueryService() {
         return queryService;
     }
 
@@ -130,7 +157,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return the plan manager
      */
     protected PlanManager getPlanManager() {
-        return queryService.getPlanManager();
+        return getQueryService().getPlanManager();
     }
 
     /**
@@ -177,7 +204,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * {@inheritDoc}
      */
     public void changed( Change change ) {
-        Updatable updatableParent = findParent( Updatable.class );
+        Updatable updatableParent = findUpdatableParent();
         if ( updatableParent != null )
             updatableParent.changed( change );
     }
@@ -186,11 +213,15 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Updatable updatableParent = findParent( Updatable.class );
+        Updatable updatableParent = findUpdatableParent();
         if ( updatableParent != null ) {
             updated.add( this );
             updatableParent.updateWith( target, change, updated );
         }
+    }
+
+    protected Updatable findUpdatableParent() {
+        return findParent( Updatable.class );
     }
 
     /**
@@ -268,7 +299,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     protected List<String> getUniqueNameChoices( ModelEntity entity ) {
         List<String> choices = new ArrayList<String>();
-        for ( String taken : queryService.findAllEntityNames( entity.getClass() ) ) {
+        for ( String taken : getQueryService().findAllEntityNames( entity.getClass() ) ) {
             if ( taken.equals( entity.getName() ) )
                 choices.add( taken );
             else {
@@ -278,8 +309,8 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                     String group = matcher.group( 0 );
                     int index = Integer.valueOf( group.substring( 1, group.length() - 2 ) );
                     choices.add(
-                        taken.substring( 0, taken.lastIndexOf( '(' ) - 1 )
-                        + '(' + ( index + 1 ) + ')'
+                            taken.substring( 0, taken.lastIndexOf( '(' ) - 1 )
+                                    + '(' + ( index + 1 ) + ')'
                     );
                 } else
                     choices.add( taken + "(2)" );
@@ -307,16 +338,16 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
         if ( summary.isEmpty() )
             component.add(
-                new AttributeModifier(
-                    "class", true,
-                    new Model<String>( hasIssues ? "waived" : "no-error" ) ),
-                new AttributeModifier(
-                    "title", true,
-                     new Model<String>( hasIssues ? "All issues waived" : "" ) ) );
+                    new AttributeModifier(
+                            "class", true,
+                            new Model<String>( hasIssues ? "waived" : "no-error" ) ),
+                    new AttributeModifier(
+                            "title", true,
+                            new Model<String>( hasIssues ? "All issues waived" : "" ) ) );
         else
             component.add(
-                new AttributeModifier( "class", true, new Model<String>( "error" ) ),
-                new AttributeModifier( "title", true, new Model<String>( summary ) ) );
+                    new AttributeModifier( "class", true, new Model<String>( "error" ) ),
+                    new AttributeModifier( "title", true, new Model<String>( summary ) ) );
     }
 
     /**
@@ -325,7 +356,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a plan
      */
     public Plan getPlan() {
-        return User.plan();
+        return getQueryService().getPlan();
     }
 
     /**
@@ -349,11 +380,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     /**
-      * Whether or not the id is expanded.
-      *
-      * @param id an long
-      * @return a boolean
-      */
+     * Whether or not the id is expanded.
+     *
+     * @param id an long
+     * @return a boolean
+     */
     protected boolean isExpanded( long id ) {
         return getExpansions().contains( id );
     }
@@ -361,14 +392,14 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * Return an actionalble label declaring that another user is editing.
      *
-     * @param id       a string
+     * @param id           a string
      * @param identifiable an identifiable
-     * @param username a string
+     * @param username     a string
      * @return a label
      */
     protected Label editedByLabel( String id, final Identifiable identifiable, final String username ) {
         Label label = new Label(
-                id, "(Edited by " + queryService.findUserFullName( username ) + ")" );
+                id, "(Edited by " + getQueryService().findUserFullName( username ) + ")" );
         label.add(
                 new AttributeModifier( "class", true, new Model<String>( "disabled pointer" ) ) );
         label.add(
@@ -389,7 +420,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     protected Label timeOutLabel( String id ) {
         Label label = new Label(
-                id, new Model<String>( getPlan().isDevelopment() ? "Timed out" : "") );
+                id, new Model<String>( getPlan().isDevelopment() ? "Timed out" : "" ) );
         label.add( new AttributeModifier( "class", true, new Model<String>( "disabled timed-out" ) ) );
         return label;
     }

@@ -175,6 +175,10 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             sb.append( "&orientation=" );
             sb.append( orientation );
         }
+        sb.append( "&");
+        sb.append( TICKET_PARM );
+        sb.append( '=' );
+        sb.append( getTicket() );
         return sb.toString();
     }
 
@@ -257,7 +261,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected String makeSeed() {
         // Force regeneration
-        return "&_modified=" + System.currentTimeMillis();
+        return getPlan().isDevelopment() ? "&_modified=" + System.currentTimeMillis() : "";
     }
 
 }

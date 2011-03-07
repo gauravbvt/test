@@ -5,6 +5,7 @@ import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -609,8 +610,18 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         return getActor() == null ? getKnownActualActor( queryService ) : getActor();
     }
 
+    @SuppressWarnings( "unchecked" )
     public Actor getKnownActualActor( QueryService queryService ) {
-        List<Actor> knownActors = queryService.findAllActualActors( spec );
+        List<Actor> knownActors = (List<Actor>)CollectionUtils.collect(
+                queryService.findAllAssignments( this, false ),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        Assignment assignment = (Assignment)input;
+                        return assignment.getActor();
+                    }
+                }
+        );
         return knownActors.size() == 1 ? knownActors.get( 0 ) : null;
     }
 
@@ -1154,9 +1165,10 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      * @return a boolean
      */
     public boolean overrides( Part other, Place locale ) {
-        return !equals( other ) && matchesTaskOf( other, locale )
-                && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale )
-                && !resourceSpec().equals( other.resourceSpec() );
+        return !equals( other )
+                && !resourceSpec().equals( other.resourceSpec() )
+                && matchesTaskOf( other, locale )
+                && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale );
     }
 
     /**

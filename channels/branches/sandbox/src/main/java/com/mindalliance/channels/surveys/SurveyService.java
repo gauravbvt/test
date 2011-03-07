@@ -1,6 +1,7 @@
 package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Plan;
 
 import java.util.List;
 
@@ -18,10 +19,11 @@ public interface SurveyService {
      * Create a new survey in current plan on an issue, or get current, not closed one.
      *
      * @param issue an issue
+     * @param plan a plan
      * @return a survey
      * @throws SurveyException if fails
      */
-    Survey getOrCreateSurvey( Issue issue ) throws SurveyException;
+    Survey getOrCreateSurvey( Issue issue, Plan plan ) throws SurveyException;
 
     /**
      * Whether one or more surveys, created, launched or closed, is already associated with an issue.
@@ -36,9 +38,10 @@ public interface SurveyService {
      *
      * @param survey    a survey
      * @param usernames a list of user names
+     * @param plan a plan
      * @throws SurveyException if fails
      */
-    void inviteContacts( Survey survey, List<String> usernames ) throws SurveyException;
+    void inviteContacts( Survey survey, List<String> usernames, Plan plan ) throws SurveyException;
 
     /**
      * Whether the survey can still be associated with an existing issue.
@@ -68,29 +71,32 @@ public interface SurveyService {
      * Launch the survey.
      *
      * @param survey a survey
+     * @param plan a plan
      * @throws SurveyException
      *          if fails
      */
-    void launchSurvey( Survey survey ) throws SurveyException;
+    void launchSurvey( Survey survey, Plan plan ) throws SurveyException;
 
     /**
      * Close the survey.
      *
      * @param survey a survey
+     * @param plan a plan
      * @throws SurveyException
      *          if fails
      */
-    void closeSurvey( Survey survey ) throws SurveyException;
+    void closeSurvey( Survey survey, Plan plan ) throws SurveyException;
 
     /**
      * Get summary and access data about a survey.
      *
      * @param survey a survey
+     * @param plan a plan
      * @return survey data
      * @throws SurveyException
      *          if fails
      */
-    SurveyData getSurveyData( Survey survey ) throws SurveyException;
+    SurveyData getSurveyData( Survey survey, Plan plan ) throws SurveyException;
 
     /**
      * Return all known surveys for the current plan.
@@ -101,25 +107,29 @@ public interface SurveyService {
 
     /**
      * Get service API key.
+     * @param plan a plan
      * @return a string
      */
-    String getApiKey();
+    String getApiKey( Plan plan );
 
     /**
      * Get service user key.
+     * @param plan a plan
      * @return a string
      */
-    String getUserKey();
+    String getUserKey( Plan plan );
 
     /**
      * Get service template key.
+     * @param plan a plan
      * @return a string
      */
-    String getTemplate();
+    String getTemplate( Plan plan );
 
     /**
      * Get service email address.
+     * @param plan a plan
      * @return a string
      */
-    String getDefaultEmailAddress();
+    String getDefaultEmailAddress( Plan plan );
 }

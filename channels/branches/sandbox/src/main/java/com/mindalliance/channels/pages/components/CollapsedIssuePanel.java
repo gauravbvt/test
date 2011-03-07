@@ -65,7 +65,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         AjaxFallbackLink surveyLink = new AjaxFallbackLink( "surveyLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 try {
-                    Survey survey = surveyService.getOrCreateSurvey( issue );
+                    Survey survey = surveyService.getOrCreateSurvey( issue, getPlan() );
                     update( target, new Change( Change.Type.Expanded, survey ) );
                 } catch ( SurveyException e ) {
                     e.printStackTrace();

@@ -9,7 +9,6 @@ import com.mindalliance.channels.odb.PersistentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.menus.SocialItemMenuPanel;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.social.PlanningEventService;
 import com.mindalliance.channels.social.PresenceEvent;
 import org.apache.wicket.AttributeModifier;
@@ -32,9 +31,6 @@ import java.util.Set;
  * Time: 12:42:23 PM
  */
 public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
-
-    @SpringBean
-    private QueryService queryService;
 
     @SpringBean
     private PlanningEventService planningEventService;
@@ -81,7 +77,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         if ( index == 0 )
             cssClasses += " first";
         PresenceEvent presenceEvent = getLatestPresenceEvent();
-        cssClasses += presenceEvent != null && presenceEvent.isLogin()
+        cssClasses += presenceEvent != null && presenceEvent.isEntering()
                 ? " joining"
                 : " leaving";
         return cssClasses;
@@ -124,7 +120,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     private void addName( WebMarkupContainer socialItemContainer ) {
-        nameLabel = new Label( "name", new PropertyModel<String>( this, "userFullName" ) );
+        nameLabel = new Label( "name", new PropertyModel<String>( this, "userFullNameAndRole" ) );
         socialItemContainer.add( nameLabel );
     }
 
@@ -141,11 +137,22 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         socialItemContainer.add( icon );
     }
 
-    public String getUserFullName() {
+    public String getUserFullNameAndRole() {
         if ( getUsername() == null )
-            return "all planners";
-        else
-            return queryService.findUserFullName( getUsername() );
+            return "all users";
+        else {
+            String userName = getUsername();
+            String name = getQueryService().findUserFullName( userName );
+            String userRole = getQueryService().findUserRole( userName );
+            return name
+                    + (
+                    userRole.equals( User.PLANNER)
+                    ? " (planner)"
+                    : userRole.equals( User.ADMIN )
+                    ? " (admin)"
+                    : ""
+            );
+        }
     }
 
     public String getJobTitles() {
@@ -154,7 +161,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         if ( participation != null ) {
             Actor actor = participation.getActor();
             if ( actor != null ) {
-                Iterator<Employment> employments = queryService.findAllEmploymentsForActor( actor ).iterator();
+                Iterator<Employment> employments = getQueryService().findAllEmploymentsForActor( actor ).iterator();
                 StringBuilder sb = new StringBuilder();
                 Set<String> titleSet = new HashSet<String>();
                 while ( employments.hasNext() ) {
@@ -212,11 +219,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     public Participation getParticipation() {
-        return queryService.findParticipation( getUsername() );
-    }
-
-    public QueryService getQueryService() {
-        return queryService;
+        return getQueryService().findParticipation( getUsername() );
     }
 
     public PlanningEventService getPlanningEventService() {
@@ -229,12 +232,12 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     public boolean isPresent() {
         PresenceEvent presenceEvent = getLatestPresenceEvent();
-        return presenceEvent != null && presenceEvent.isLogin();
+        return presenceEvent != null && presenceEvent.isEntering();
     }
 
     protected PresenceEvent getLatestPresenceEvent() {
         if ( latestPresenceEvent == null ) {
-            latestPresenceEvent = getPlanningEventService().findLatestPresence( getUsername() );
+            latestPresenceEvent = getPlanningEventService().findLatestPresence( getUsername(), getPlan()  );
         }
         return latestPresenceEvent;
     }

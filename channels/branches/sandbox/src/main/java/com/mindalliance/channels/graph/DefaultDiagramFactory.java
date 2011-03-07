@@ -229,6 +229,7 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     @Override
     public ProcedureMapDiagram newProcedureMapDiagram(
             Segment segment,
+            boolean summarizeByOrgType,
             boolean summarizeByOrg,
             boolean summarizeByRole,
             ModelEntity focusEntity,
@@ -237,6 +238,7 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
         LOG.debug( "Making procedure map diagram" );
         return new ProcedureMapDiagram(
                 segment,
+                summarizeByOrgType,
                 summarizeByOrg,
                 summarizeByRole,
                 focusEntity,

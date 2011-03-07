@@ -8,86 +8,111 @@
  */
 
 * {
-	margin:0;
-	padding:0;
+    margin: 0;
+    padding: 0;
 }
 
 a {
-	color:#333333; 
-	border-bottom:1px dotted #666666; 
-	text-decoration:none;
+    color: #333333;
+    border-bottom: 1px dotted #666666;
+    text-decoration: none;
 }
 
+.expanded:after {
+    padding-left: 3px;
+    content: url('../images/expanded.png')
+}
+
+.collapsed:after {
+    padding-left: 3px;
+    content: url('../images/collapsed.png')
+}
+
+.expanded {
+    cursor: pointer;
+}
+
+.collapsed {
+    cursor: pointer;
+}
+
+
 body {
-	font-family:Arial, Helvetica, sans-serif;
-	font-size:12px;
-	color:#333333;
-	margin:0;
-	padding:0;
-	text-align:center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
 }
 
 div#container {
-	width:1000px;
-	margin:0px auto;
-	text-align:left;
-	padding:0;
-	border:1px solid #cccccc;
-	background-color:#f6f6f6;
+    width: 1000px;
+    margin: 0 auto;
+    text-align: left;
+    padding: 0; /*border:1px solid #cccccc;*/
+    background-color: #f6f6f6;
 }
 
+.logo {
+    float: left;
+    cursor: pointer;
+    padding-left: 3px;
+}
 
 /* ----- Plan Navigation Bar ----- */
 
-div#nav {
-	background:#D8D8D8;
-	border-bottom:1px solid #CCCCCC;
-	float:left;
-	font-size:11px;
-	height:22px;
-	padding:3px 5px 0 5px;
-	width:990px;
+#nav {
+    background: #D8D8D8;
+    border-bottom: 1px solid #CCCCCC;
+    font-size: 11px;
+    height: 22px;
+    padding: 3px 5px 0 5px;
+    width: 990px;
 }
 
-div#nav ul {
-	list-style:none;
-	display:inline;
+#nav ul {
+    list-style: none;
+    display: inline;
 }
 
-div#nav ul li {
-	border-right:1px solid #999999;
-	display:inline;
-	list-style:none;
-	margin:0 5px 0 0;
-	padding:0 5px 0 0;
+#nav ul li {
+    border-right: 1px solid #999999;
+    display: inline;
+    list-style: none;
+    margin: 0 5px 0 0;
+    padding: 0 5px 0 0;
 }
 
-div#nav ul li select {
-	font-size:11px;
-	background:none repeat scroll 0 0 #f6f6f6;
-	border:1px solid #999999;
-	font-family:Arial, Helvetica, sans-serif;
+#nav ul li select {
+    font-size: 11px;
+    background: none repeat scroll 0 0 #f6f6f6;
+    border: 1px solid #999999;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-div#nav ul li#apply input {
-	font-size:10px;
-	background:#cccccc;
-	color:#000;
-	border:1px solid #666;
-	margin:0;
-	padding:0;
-	font-family:Arial, Helvetica, sans-serif;
+#nav ul li#apply input {
+    font-size: 10px;
+    background: #cccccc;
+    color: #000;
+    border: 1px solid #666;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
-
 
 /* ----- Header ----- */
 
+.mapped .selector {
+    border: 1px solid #999999;
+}
+
 .selector {
-	width:1000px;
-	height:60px;
-	background:url('../images/header.png') no-repeat #c3d9ff;
-	border-bottom:1px solid #cccccc;
-	float:left;
+    width: 1000px;
+    height: 50px;
+    background: url('../images/header.png') no-repeat #c3d9ff;
+    border-bottom: 1px solid #cccccc;
+    position: absolute;
 }
 
 .selector img {
@@ -95,126 +120,132 @@ div#nav ul li#apply input {
 }
 
 .selector h1 {
-	display:block;
-	float:left;
-	width:640px;
-	font-size:large;
-	font-weight:bold;
-	padding:20px 0 0 60px;
+    display: block;
+    float: left;
+    width: 640px;
+    font-size: large;
+    font-weight: bold;
+    padding: 13px 0 0 8px;
 }
 
 .selector > ul {
-	float:right;
-	list-style:none;
-	margin:20px 20px 0 0;
-	padding:0;
-	display:inline;
+    float: right;
+    list-style: none;
+    margin: 20px 20px 0 0;
+    padding: 0;
+    display: inline;
 }
 
 .selector > ul li {
-	list-style:none;
-	margin:0;
-	padding:0;
-	display:inline;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
 }
 
 .selector > ul li a {
-	background:url('../images/signout-bg.png') repeat-x;
-	border:1px solid #a7a9ac;
-	color:#727272;
-	font-size:10px;
-	font-weight:bold;
-	padding:4px;
-	margin-left:5px;
-	text-transform:capitalize;
-	outline:none;
+    background: url('../images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px;
+    margin-left: 5px;
+    text-transform: capitalize;
+    outline: none;
 }
 
 .selector > ul li a:hover {
-	color:#333333;
+    color: #333333;
 }
-
 
 /* --------- Map ----------*/
 
+.spinner {
+    position: absolute;
+    top: 22px;
+    padding-left: 770px;
+    z-index: 1;
+}
+
 div.procedureMapContainer {
-	border: 1px solid #999999;
-	float: left;
-	margin: 10px;
-    width: 978px;
+    border: 1px solid #999999;
+    padding-top: 50px;
+    padding-left: 0;
+    width: 987px;
 }
 
 div.procedureMapContainer div.filters {
     padding: 5px 0 7px 10px;
     background: #E8E8E8;
     border-bottom: 1px solid #999999;
-	color:#666666;
-	font-size:11px;
-	font-weight:bold;
-	width:968px;
+    color: #666666;
+    font-size: 11px;
+    font-weight: bold;
+    width: 990px;
 }
 
 div.procedureMapContainer div.filters select {
-	font-size: 11px;
-	text-transform: none;
-	width: 150px;
+    font-size: 11px;
+    text-transform: none;
+    width: 160px;
 }
 
 div.procedureMapContainer div.filters input.filter-small {
-	font-size: 11px;
-	text-transform: none;
-	width: 220px;
+    font-size: 11px;
+    text-transform: none;
+    width: 220px;
 }
 
 div.procedureMap {
     overflow: scroll;
-	width:978px;
-	background:url('../images/map-loading.png') 270px 0 no-repeat #ffffff;
-	min-height:400px;
+    width: 1000px;
+    background: url('../images/map-background.png') 270px 0 no-repeat #ffffff;
+    min-height: 400px;
 }
 
 div.procedureMap img {
-	border:none;
+    border: none;
 }
 
 div.zoom {
-	background:#E8E8E8;
-	cursor:auto;
-	height:23px;
-	line-height:22px;
-	padding:0 5px;
-	text-align:right;
-	text-transform:uppercase;
-	left:0;
-	top:0;
-	z-index:1;
-	position:relative;
-	margin-bottom:10px;
+    background: #E8E8E8;
+    cursor: auto;
+    height: 23px;
+    line-height: 22px;
+    padding: 0 5px;
+    text-align: right;
+    text-transform: uppercase;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    position: relative;
+    margin-bottom: 10px;
 }
 
 div.procedureMapContainer div.zoom {
-	margin-bottom:0;
-	border-top:1px solid #999999;
-	width:968px;
+    margin-bottom: 0;
+    border-top: 1px solid #999999;
+    width: 990px;
 }
 
 div.zoom span {
-	padding:0 5px;
-	cursor:pointer;
-	color:#666666;
-	font-size:10px;
-	font-weight:bold;
+    padding: 0 5px;
+    cursor: pointer;
+    color: #666666;
+    font-size: 10px;
+    font-weight: bold;
 }
 
 div.zoom span:hover {
-	color:#333333;
+    color: #333333;
 }
 
 div.zoom div.filters {
-	float:left;
-	border:none;
-	text-transform:none;
-	padding:0;
+    float: left;
+    border: none;
+    text-transform: none;
+    padding: 0;
 }
 
 .noProcedures {
@@ -226,131 +257,127 @@ div.zoom div.filters {
 /* ----- Breadcrumbs ----- */
 
 div#breadcrumbs {
-	width:970px;
-	height:20px;
-	border-bottom:1px solid #e1e1e1;
-	float:left;
-	padding:25px 0 15px 15px;
-	font-size:10px;
-	font-weight:bold;
+    width: 970px;
+    height: 6px;
+    border-bottom: 1px solid #e1e1e1;
+    float: left;
+    padding: 60px 0 15px 15px;
+    font-size: 10px;
+    font-weight: bold;
 }
 
 div#breadcrumbs ul {
-	list-style:none;
-	display:inline;
-	margin:0;
-	padding:4px 0 4px 4px;
-	background:#ededed;
+    list-style: none;
+    display: inline;
+    margin: 0;
+    padding: 4px 0 4px 4px;
+    background: #ededed;
 }
 
 div#breadcrumbs ul li {
-	display:inline;
-	padding:4px 12px 4px 4px;
-	background:url('../images/breadcrumb-arrow.png') right no-repeat #ededed;
-	cursor:pointer;
+    display: inline;
+    padding: 4px 12px 4px 4px;
+    background: url('../images/breadcrumb-arrow.png') right no-repeat #ededed;
+    cursor: pointer;
 }
 
 div#breadcrumbs ul li.last {
-	background:url('../images/breadcrumb-arrow-last.png') right no-repeat #ededed;
+    background: url('../images/breadcrumb-arrow-last.png') right no-repeat #ededed;
 }
 
 div#breadcrumbs a {
-	border:none;
+    border: none;
 }
 
 div#breadcrumbs a:hover {
-	color:#666666;
+    color: #666666;
 }
-
 
 /* ----- Report Content - Container ----- */
 
-div#contents {
-	padding:13px 13px 23px 13px;
-	float:left;
-	width:974px;
+div#contents, .procedureMapContainer {
+    padding: 13px 13px 23px 13px;
+    float: left;
+    width: 974px;
 }
-
 
 /* ----- Plan - Task - Flow Title ----- */
 
 div#plan,
 div#task,
 div#flow {
-	float:left;
-	margin:0 0 10px 0;
-	width:974px;
+    float: left;
+    margin: 0 0 10px 0;
+    width: 974px;
 }
 
 div#plan h2,
 div#task h2,
 div#flow h2 {
-	font-size:18px;
-	font-weight:bold;
-	border-bottom:2px solid #999999;
-	padding:0 0 4px 0;
-	margin:0 0 5px 0;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 2px solid #999999;
+    padding: 0 0 4px 0;
+    margin: 0 0 5px 0;
 }
 
 div#plan p.description,
 div#task p.description,
 div#flow p.description {
-	line-height:18px;
-	clear:both;
+    line-height: 18px;
+    clear: both;
 }
-
 
 /* ----- Plan - Event ----- */
 
 div.event {
-	clear:both;
+    clear: both;
 }
-	
+
 div.event h3 {
-	width:943px;
-	float:left;
-	border-top:1px solid #999999;
-	border-bottom:1px solid #999999;
-	height:22px;
-	background:url('../images/event.png') 10px 6px no-repeat #e8e8e8;
-	font-weight:bold;
-	font-size:14px;
-	padding:6px 0 0 31px;
-	margin:10px 0 5px 0;
+    width: 943px;
+    float: left;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+    height: 22px;
+    background: url('../images/event.png') 10px 6px no-repeat #e8e8e8;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 0 0 31px;
+    margin: 10px 0 5px 0;
 }
 
 div.event p.description {
-	padding-left:10px;
-	line-height:18px;
-	clear:both;
+    padding-left: 10px;
+    line-height: 18px;
+    clear: both;
 }
-
 
 /* ----- Plan - Event - Phase ----- */
 
 div.phase {
-	width:954px;
-	float:left;
-	padding:0 0 0 20px;
+    width: 954px;
+    float: left;
+    padding: 0 0 0 20px;
 }
 
 div.phase h4 {
-	width:923px;
-	float:left;
-	border-top:1px solid #999999;
-	border-bottom:1px solid #999999;
-	height:22px;
-	background:url('../images/phase.png') 10px 6px no-repeat #e8e8e8;
-	font-weight:bold;
-	font-size:14px;
-	padding:6px 0 0 31px;
-	margin:10px 0 5px 0;
+    width: 923px;
+    float: left;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+    height: 22px;
+    background: url('../images/phase.png') 10px 6px no-repeat #e8e8e8;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 0 0 31px;
+    margin: 10px 0 5px 0;
 }
 
 div.phase p.description {
-	padding-left:10px;
-	line-height:18px;
-	clear:both;
+    padding-left: 10px;
+    line-height: 18px;
+    clear: both;
 }
 
 /* ----- Plan - Event - Phase - Immediates, Notified, Requested, Optionals ----- */
@@ -359,115 +386,121 @@ div.immediates,
 div.notified,
 div.requested,
 div.optionals {
-	width:934px;
-	float:left;
-	padding:0 0 0 20px;
+    width: 934px;
+    float: left;
+    padding: 0 0 0 20px;
 }
 
 div.immediates h5,
 div.notified h5,
 div.requested h5,
 div.optionals h5 {
-	width:903px;
-	float:left;
-	border-top:1px solid #999999;
-	border-bottom:1px solid #999999;
-	height:22px;
-	font-weight:bold;
-	font-size:14px;
-	padding:6px 0 0 31px;
-	margin:10px 0 0 0;
+    width: 903px;
+    float: left;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+    height: 22px;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 0 0 31px;
+    margin: 10px 0 0 0;
 }
 
 div.immediates h5 {
-	background:url('../images/immediates.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/immediates.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div.notified h5 {
-	background:url('../images/notified.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/notified.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div.requested h5 {
-	background:url('../images/requested.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/requested.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div.optionals h5 {
-	background:url('../images/optionals.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/optionals.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div.immediates ul,
 div.notified ul,
 div.requested ul,
 div.optionals ul {
-	list-style:none;
-	margin:0;
-	padding:0;
-	display:block;
-	float:left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    float: left;
 }
 
 div.immediates ul li,
 div.notified ul li,
 div.requested ul li,
 div.optionals ul li {
-	margin:0;
-	padding:0;
-	height:21px;
-	border-bottom:1px solid #999999;
-	width:903px;
-	display:block;
-	background:url('../images/arrow-right-report.png') 10px 6px no-repeat;
-	padding:6px 0 0 31px;
-	clear:both;
+    margin: 0;
+    padding: 0;
+    height: 21px;
+    border-bottom: 1px solid #999999;
+    width: 903px;
+    display: block;
+    background: url('../images/arrow-down-report.png') 10px 6px no-repeat;
+    padding: 6px 0 0 31px;
+    clear: both;
+}
+
+div.immediates ul li.collapsed,
+div.notified ul li.collapsed,
+div.requested ul li.collapsed,
+div.optionals ul li.collapsed {
+    background: url('../images/arrow-right-report.png') 10px 6px no-repeat;
 }
 
 div.notified ul li ul,
 div.immediates ul li ul,
 div.requested ul li ul,
 div.optionals ul li ul {
-	list-style:none;
-	margin:0 0 0 -15px;
-	padding:7px 0 0 0;
-	display:block;
-	float:left;
+    list-style: none;
+    margin: 0 0 0 -15px;
+    padding: 7px 0 0 0;
+    display: block;
+    float: left;
 }
 
 div.notified ul li ul li,
 div.immediates ul li ul li,
 div.requested ul li ul li,
 div.optionals ul li ul li {
-	margin:0;
-	padding:0;
-	height:21px;
-	border-bottom:1px solid #999999;
-	width:887px;
-	display:block;
-	background:url('../images/arrow-right-report.png') 10px 6px no-repeat;
-	padding:6px 0 0 31px;
+    margin: 0;
+    padding: 0;
+    height: 21px;
+    border-bottom: 1px solid #999999;
+    width: 887px;
+    display: block;
+    background: url('../images/arrow-right-report.png') 10px 6px no-repeat;
+    padding: 6px 0 0 31px;
 }
 
 div.notified ul li span.by,
 div.immediates ul li span.by,
 div.requested ul li span.by,
 div.optionals ul li span.by {
-	font-style:italic;
-	color:#000000;
+    font-style: italic;
+    color: #000000;
 }
 
 div.notified ul li span.from,
 div.immediates ul li span.from,
 div.requested ul li span.from,
 div.optionals ul li span.from {
-	font-weight:bold;
+    font-weight: bold;
 }
 
 div.notified ul li span.from abbr,
 div.immediates ul li span.from abbr,
 div.requested ul li span.from abbr,
 div.optionals ul li span.from abbr {
-	border:none;
+    border: none;
 }
-
 
 /* ----- Task - Instructions, Sends, Receives  ----- */
 
@@ -475,34 +508,33 @@ div#instructions,
 div#sends,
 div#receives,
 div#eois {
-	float:left;
+    float: left;
 }
 
 div#instructions h3,
 div#sends h3,
 div#receives h3,
 div#eois h3 {
-	width:943px;
-	float:left;
-	border-top:1px solid #999999;
-	border-bottom:1px solid #999999;
-	height:22px;
-	font-weight:bold;
-	font-size:14px;
-	padding:6px 0 0 31px;
-	margin:10px 0 5px 0;
+    width: 943px;
+    float: left;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+    height: 22px;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 0 0 31px;
+    margin: 10px 0 5px 0;
 }
 
 div#eois h3 {
-	margin-bottom:0;
+    margin-bottom: 0;
 }
 
 div#instructions p {
-	padding-left:10px;
-	line-height:18px;
-	clear:both;
+    padding-left: 10px;
+    line-height: 18px;
+    clear: both;
 }
-
 
 /* ----- Task - Role, Location, Timing, Repeat, Documentation, Policies, Risks, Gains  ----- */
 
@@ -515,10 +547,10 @@ div#documentation,
 div#policies,
 div#risks,
 div#gains {
-	float:left;
-	width:479px;
+    float: left;
+    width: 479px;
 }
-	
+
 div#role h3,
 div#location h3,
 div#timing h3,
@@ -528,15 +560,15 @@ div#documentation h3,
 div#policies h3,
 div#risks h3,
 div#gains h3 {
-	width:448px;
-	float:left;
-	border-top:1px solid #999999;
-	border-bottom:1px solid #999999;
-	height:22px;
-	font-weight:bold;
-	font-size:14px;
-	padding:6px 0 0 31px;
-	margin:10px 0 5px 0;
+    width: 448px;
+    float: left;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+    height: 22px;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 0 0 31px;
+    margin: 10px 0 5px 0;
 }
 
 div#role p,
@@ -546,78 +578,77 @@ div#agreement p,
 div#repeat p,
 div#documentation p,
 div#policies p {
-	padding-left:10px;
-	line-height:18px;
-	clear:both;
+    padding-left: 10px;
+    line-height: 18px;
+    clear: both;
 }
 
 div#role,
 div#timing,
 div#documentation,
 div#risks {
-	margin-right:16px;
+    margin-right: 16px;
 }
 
 div#flow div#policies {
-	margin-right:16px;
+    margin-right: 16px;
 }
 
 div#flow div#documentation {
-	margin:0;
+    margin: 0;
 }
 
 div#instructions h3 {
-	background:url('../images/instructions.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/instructions.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#eois h3 {
-	background:url('../images/phase.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/phase.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#role h3 {
-	background:url('../images/role-report.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/role-report.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#location h3 {
-	background:url('../images/location.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/location.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#timing h3 {
-	background:url('../images/timing.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/timing.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#agreement h3 {
-	background:url('../images/agreement.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/agreement.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#repeat h3 {
-	background:url('../images/repeat.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/repeat.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#documentation h3 {
-	background:url('../images/documentation.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/documentation.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#policies h3 {
-	background:url('../images/policies.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/policies.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#sends h3 {
-	background:url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#receives h3 {
-	background:url('../images/receives.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/receives.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#risks h3 {
-	background:url('../images/risks.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/risks.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div#gains h3 {
-	background:url('../images/gains.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/gains.png') 10px 6px no-repeat #e8e8e8;
 }
-
 
 /* ----- Task - Unordered Lists - Documentation, Policies, Risks, Gains  ----- */
 
@@ -625,298 +656,301 @@ div#documentation ul,
 div#policies ul,
 div#risks ul,
 div#gains ul {
-	list-style:none;
-	margin:0;
-	padding:0;
-	display:block;
-	float:left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    float: left;
 }
 
 div#documentation ul li,
 div#policies ul li,
 div#risks ul li,
 div#gains ul li {
-	margin:0;
-	padding:0;
-	display:block;
-	background:url('../images/bullet-black-report.png') 10px 3px no-repeat;
-	padding:3px 0 0 31px;
-	clear:both;
+    margin: 0;
+    padding: 0;
+    display: block;
+    background: url('../images/bullet-black-report.png') 10px 3px no-repeat;
+    padding: 3px 0 0 31px;
+    clear: both;
 }
 
-
 /* ----- Task - Unordered Lists - Risks, Gains  ----- */
-
-
-
 
 /* ----- Task - Sends, Receives - Table  ----- */
 
 div#sends table,
 div#receives table {
-	border-collapse:collapse;
-	border-top:1px solid #999999;
-	border-right:none;
-	border-bottom:1px solid #999999;
-	border-left:none;
-	width:976px;
-	background:#e8e8e8;
-	margin:5px 0;
+    border-collapse: collapse;
+    border-top: 1px solid #999999;
+    border-right: none;
+    border-bottom: 1px solid #999999;
+    border-left: none;
+    width: 976px;
+    background: #e8e8e8;
+    margin: 5px 0;
 }
 
 div#sends table thead,
 div#receives table thead {
-	border-bottom:1px solid #999999;
-	background:#d8d8d8;
+    border-bottom: 1px solid #999999;
+    background: #d8d8d8;
 }
 
 div#sends table thead tr th,
 div#receives table thead tr th {
-	line-height:18px;
+    line-height: 18px;
 }
 
 div#sends table tbody tr.odd,
 div#receives table tbody tr.odd {
-	background:#dadada;
+    background: #dadada;
 }
 
 div#sends table thead tr th,
 div#sends table tbody tr td,
 div#receives table thead tr th,
 div#receives table tbody tr td {
-	padding:7px;
-	border-right:2px solid #f5f5f5;
-	text-align:center;
+    padding: 7px;
+    border-right: 2px solid #f5f5f5;
+    text-align: center;
 }
 
 div#sends table thead tr th.first,
 div#sends table tbody tr td.first,
 div#receives table thead tr th.first,
 div#receives table tbody tr td.first {
-	text-align:left;
+    text-align: left;
 }
-
 
 /* ----- Task - Sends, Receives - Table - Cell Styling  ----- */
 
 div#sends table tbody tr td a,
 div#receives table tbody tr td a {
-	padding:0 10px 1px 0;
-	border:none;
+    padding: 0 10px 1px 0;
+    border: none;
 }
 
 div#sends table tbody tr td a.low,
 div#receives table tbody tr td a.low {
-	background:url('../images/bullet-blue.png') right no-repeat;
+    background: url('../images/bullet-blue.png') right no-repeat;
 }
 
 div#sends table tbody tr td a.medium,
 div#receives table tbody tr td a.medium {
-	background:url('../images/bullet-yellow.png') right no-repeat;
+    background: url('../images/bullet-yellow.png') right no-repeat;
 }
 
 div#sends table tbody tr td a.high,
 div#receives table tbody tr td a.high {
-	background:url('../images/bullet-orange.png') right no-repeat;
+    background: url('../images/bullet-orange.png') right no-repeat;
 }
 
 div#sends table tbody tr td a.highest,
 div#receives table tbody tr td a.highest {
-	background:url('../images/bullet-red.png') right no-repeat;
+    background: url('../images/bullet-red.png') right no-repeat;
 }
 
 div#sends table tbody tr td a:hover,
 div#receives table tbody tr td a:hover {
-	border-bottom:1px dotted #666666; 
+    border-bottom: 1px dotted #666666;
 }
-
-
 
 /* ----- Flow - Unordered Lists - Elements  ----- */
 
 div#eois ul {
-	list-style:none;
-	margin:0;
-	padding:0;
-	display:block;
-	float:left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    float: left;
 }
 
 div#eois ul li {
-	margin:0;
-	padding:0;
-	height:21px;
-	border-bottom:1px solid #999999;
-	width:943px;
-	display:block;
-	background:url('../images/arrow-right-report.png') 10px 6px no-repeat;
-	padding:6px 0 0 31px;
-	clear:both;
+    margin: 0;
+    padding: 0;
+    height: 21px;
+    border-bottom: 1px solid #999999;
+    width: 943px;
+    display: block;
+    background: url('../images/arrow-right-report.png') 10px 6px no-repeat;
+    padding: 6px 0 0 31px;
+    clear: both;
 }
 
 div#eois ul li ul {
-	list-style:none;
-	margin:0 0 0 -15px;
-	padding:7px 0 0 0;
-	display:block;
-	float:left;
+    list-style: none;
+    margin: 0 0 0 -15px;
+    padding: 7px 0 0 0;
+    display: block;
+    float: left;
 }
 
 div#eois ul li ul li {
-	margin:0;
-	padding:0;
-	height:21px;
-	border-bottom:1px solid #999999;
-	width:927px;
-	display:block;
-	background:url('../images/arrow-right-report.png') 10px 6px no-repeat;
-	padding:6px 0 0 31px;
+    margin: 0;
+    padding: 0;
+    height: 21px;
+    border-bottom: 1px solid #999999;
+    width: 927px;
+    display: block;
+    background: url('../images/arrow-right-report.png') 10px 6px no-repeat;
+    padding: 6px 0 0 31px;
 }
 
 div#eois ul li span.label,
 div#eois ul li ul li em {
-	font-weight:bold;
-	font-style:normal;
+    font-weight: bold;
+    font-style: normal;
 }
 
 div#eois ul li span.classifications {
-	float: right;
-	font-size: 11px;
-	font-weight: bold;
-	padding: 0;
-	margin-top:-1px;
+    float: right;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 0;
+    margin-top: -1px;
 }
 
 div#eois ul li span.classifications span.classification {
-	float: right;
-	background:url('../images/classification.png') no-repeat left;
-	display:block;
+    float: right;
+    background: url('../images/classification.png') no-repeat left;
+    display: block;
     height: 15px;
     padding: 2px 10px 0 17px;
 }
 
-
 /* ----- Flow - Instructions, Sends, Receives  ----- */
 
 div#contacts {
-	float:left;
+    float: left;
 }
 
 div#contacts h3 {
-	width:943px;
-	float:left;
-	border-top:1px solid #999999;
-	border-bottom:1px solid #999999;
-	height:22px;
-	font-weight:bold;
-	font-size:14px;
-	padding:6px 0 0 31px;
-	margin:10px 0 5px 0;
+    width: 943px;
+    float: left;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+    height: 22px;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 0 0 31px;
+    margin: 10px 0 5px 0;
 }
 
 .sending {
-    background:url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/sends.png') 10px 6px no-repeat #e8e8e8;
 }
 
 .receiving {
-    background:url('../images/receives.png') 10px 6px no-repeat #e8e8e8;
+    background: url('../images/receives.png') 10px 6px no-repeat #e8e8e8;
 }
 
 div.vcard {
-	width:954px;
-	float:left;
-	padding:0 0 0 20px;
+    width: 954px;
+    float: left;
+    padding: 0 0 0 20px;
 }
 
 div.vcard h4 {
-	width:923px;
-	float:left;
-	border-top:1px solid #999999;
-	border-bottom:1px solid #999999;
-	height:22px;
-	background:url('../images/contact.vcard.png') 10px 6px no-repeat #e8e8e8;
-	font-weight:bold;
-	font-size:14px;
-	padding:6px 0 0 31px;
-	margin:10px 0 5px 0;
+    width: 923px;
+    float: left;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+    height: 22px;
+    background: url('../images/contact.vcard.png') 10px 6px no-repeat #e8e8e8;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 0 0 31px;
+    margin: 10px 0 5px 0;
 }
 
 div.vcard div.photo-cont {
-	float:left;
-	height:84px;
-	background:#e8e8e8;
-	border-top:1px solid #999999;
-	border-right:none;
-	border-bottom:1px solid #999999;
-	border-left:none;
-	width:86px;
-	margin:5px 0;
+    float: left;
+    height: 84px;
+    background: #e8e8e8;
+    border-top: 1px solid #999999;
+    border-right: none;
+    border-bottom: 1px solid #999999;
+    border-left: none;
+    width: 86px;
+    margin: 5px 0;
 }
 
 div.vcard div.photo-cont img {
-    background:#FFFFFF;
-    border:1px solid #999999;
-    height:48px;
-    margin:17px 0 0 18px;
-    width:48px;
+    background: #FFFFFF;
+    border: 1px solid #999999;
+    height: 48px;
+    margin: 17px 0 0 18px;
+    width: 48px;
 }
 
 div.vcard table {
-	border-collapse:collapse;
-	border-top:1px solid #999999;
-	border-right:none;
-	border-bottom:1px solid #999999;
-	border-left:none;
-	width:860px;
-	background:#e8e8e8;
-	margin:5px 0;
-	float:right;
+    border-collapse: collapse;
+    border-top: 1px solid #999999;
+    border-right: none;
+    border-bottom: 1px solid #999999;
+    border-left: none;
+    width: 860px;
+    background: #e8e8e8;
+    margin: 5px 0;
+    float: right;
 }
 
 div.vcard table tr th {
-	padding:7px;
-	border-right:2px solid #f6f6f6;
-	border-left:3px solid #f6f6f6;
-	text-align:right;
-	width:150px;
+    padding: 7px;
+    border-right: 2px solid #f6f6f6;
+    border-left: 3px solid #f6f6f6;
+    text-align: right;
+    width: 150px;
 }
 
 div.vcard table tr td {
-	padding:7px;
-	border-right:2px solid #f6f6f6;
-	width:280px;
-	text-align:left;
+    padding: 7px;
+    border-right: 2px solid #f6f6f6;
+    width: 280px;
+    text-align: left;
 }
 
 div.vcard table tr.header {
-	border-bottom:1px solid #999999;
-	border-top:10px solid #f6f6f6;
-	background:#d8d8d8;
-	text-align:left;
+    border-bottom: 1px solid #999999;
+    border-top: 10px solid #f6f6f6;
+    background: #d8d8d8;
+    text-align: left;
 }
 
 div.vcard table tr.header th {
-	text-align:left;
+    text-align: left;
 }
 
 div.vcard table tr.odd {
-	background:#dadada;
+    background: #dadada;
 }
-
 
 /* ----- Notice ----- */
 
 p#notice {
-	font-size:11px;
-	clear:both;
-	padding:10px 10px 0 10px;
-	width:980px;
-	height:25px;
-	border-top:1px solid #e1e1e1;
-	text-align:right;
-	color:#666666;
+    font-size: 11px;
+    clear: both;
+    padding: 10px 10px 0 10px;
+    width: 980px;
+    height: 25px;
+    border-top: 1px solid #e1e1e1;
+    text-align: right;
+    color: #666666;
 }
 
+p#mapped-notice {
+    position: relative;
+    bottom: 20px;
+    font-size: 11px;
+    padding: 10px 10px 0 10px;
+    width: 980px;
+    height: 25px;
+    border-top: 1px solid #e1e1e1;
+    text-align: right;
+    color: #666666;
+
+}
 
 /* ----- Autocomplete ----- */
 

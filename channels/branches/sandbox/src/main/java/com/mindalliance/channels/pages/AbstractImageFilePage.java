@@ -1,5 +1,7 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
@@ -85,6 +87,10 @@ public abstract class AbstractImageFilePage extends Page {
                     logger.warn( "Unable to close downloaded file", e );
                 }
         }
+    }
+
+    protected Plan getPlan() {
+        return User.current().getPlan();
     }
 
 }

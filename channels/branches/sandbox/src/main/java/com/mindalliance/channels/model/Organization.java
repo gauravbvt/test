@@ -88,6 +88,7 @@ public class Organization extends AbstractUnicastChannelable
         return super.narrowsOrEquals( other, locale );
     }
 
+
     @Override
     public List<ModelEntity> getImplicitTypes() {
         Set<ModelEntity> implicitTypes = new HashSet<ModelEntity>();

@@ -138,7 +138,8 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
     }
 
     @Override
-    public Component newFlowLink( Part part, final Specable actor ) {
+    public Component newFlowLink( Part part, Specable spec ) {
+        final Actor actor = spec.getActor();
         final Assignment assign = (Assignment) CollectionUtils.find(
                 selector.getAllAssignments().assignedTo( part ).getAssignments(),
                 new Predicate() {
@@ -185,7 +186,8 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
 
 
     @Override
-    public MarkupContainer newTaskLink( Part part, final Specable actor ) {
+    public MarkupContainer newTaskLink( Part part, Specable spec ) {
+        final Actor actor = spec.getActor();
         final Assignment assign = (Assignment) CollectionUtils.find(
                 getPlanService().findAllAssignments( part, true ),
                 new Predicate() {
@@ -262,6 +264,25 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
                 result.add( assignment );
         }
         return result;
+    }
+
+    @Override
+    public Assignments getAssignments() {
+        return selector.getAssignments();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Commitment> getCommitments( final Flow flow ) {
+        return (List<Commitment>) CollectionUtils.select(
+                selector.getCommitments(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Commitment)object).getSharing().equals( flow );
+                    }
+                }
+        );
     }
 
     private void update( AjaxRequestTarget target, Change change ) {

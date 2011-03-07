@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +31,13 @@ public class UselessActor extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Actor actor = (Actor) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        Assignments assignments = getQueryService().getAssignments().with( actor );
+        QueryService queryService = getQueryService();
+        Assignments assignments = queryService.getAssignments().with( actor );
         if ( assignments.isEmpty() ) {
-            List<Commitment> commitments = getQueryService().findAllCommitmentsTo( actor );
+            List<Commitment> commitments = queryService.findAllCommitmentsTo(
+                    actor,
+                    queryService.getAssignments( false ),
+                    queryService.findAllFlows() );
             if ( commitments.isEmpty() ) {
                 Issue issue = makeIssue( Issue.COMPLETENESS, actor );
                 issue.setDescription( actor.getName()

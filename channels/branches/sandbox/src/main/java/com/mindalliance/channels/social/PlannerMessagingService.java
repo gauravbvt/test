@@ -1,5 +1,7 @@
 package com.mindalliance.channels.social;
 
+import com.mindalliance.channels.model.Plan;
+
 import java.util.Date;
 import java.util.Iterator;
 
@@ -13,18 +15,18 @@ import java.util.Iterator;
  */
 public interface PlannerMessagingService {
 
-    void sendMessage( PlannerMessage message, boolean emailIt );
+    void sendMessage( PlannerMessage message, boolean emailIt, Plan plan );
 
-    void deleteMessage( PlannerMessage message );
+    void deleteMessage( PlannerMessage message, Plan plan );
 
-    Iterator<PlannerMessage> getReceivedMessages( );
+    Iterator<PlannerMessage> getReceivedMessages( Plan plan );
 
-    Iterator<PlannerMessage> getSentMessages();
+    Iterator<PlannerMessage> getSentMessages( Plan plan);
 
-    Date getWhenLastChanged();
+    Date getWhenLastChanged( Plan plan);
 
-    Date getWhenLastReceived();
+    Date getWhenLastReceived( Plan plan);
 
-    boolean email( PlannerMessage message );
+    boolean email( PlannerMessage message, Plan plan );
 
 }

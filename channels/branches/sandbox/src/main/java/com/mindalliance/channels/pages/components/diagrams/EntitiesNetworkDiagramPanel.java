@@ -80,6 +80,11 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
         sb.append( segment == null ? "NONE" : segment.getId() );
         sb.append( "&connection=" );
         sb.append( selectedEntityRel == null ? "NONE" : selectedEntityRel.getId() );
+        sb.append( "&");
+        sb.append( TICKET_PARM );
+        sb.append( '=' );
+        sb.append( getTicket() );
+
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
             sb.append( "&size=" );

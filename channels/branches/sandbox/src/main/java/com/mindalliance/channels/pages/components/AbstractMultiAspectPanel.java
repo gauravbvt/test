@@ -10,7 +10,6 @@ import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -20,7 +19,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.HashSet;
 import java.util.List;
@@ -35,9 +33,6 @@ import java.util.Set;
  * Time: 7:56:27 PM
  */
 public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel implements Releaseable {
-
-    @SpringBean
-    private QueryService queryService;
 
     /**
      * Pad top on move.

@@ -18,7 +18,6 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.query.Play;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.ChannelsUtils;
 import com.mindalliance.channels.util.NameRange;
 import com.mindalliance.channels.util.SortableBeanProvider;
@@ -45,7 +44,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -66,8 +64,6 @@ import java.util.Set;
  */
 public class JobsPanel extends AbstractCommandablePanel implements NameRangeable {
 
-    @SpringBean
-    private QueryService queryService;
     /**
      * Maximum number of jobs to show at a time.
      */
@@ -114,9 +110,13 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
      */
     private Organization transferFrom;
     /**
-     * Jobs tranfer panel.
+     * Jobs transfer panel.
      */
     private Component jobTransferPanel;
+    /**
+     * Whether copying the jobs.
+     */
+     private boolean copying = false;
     /**
      * Do transfer button.
      */
@@ -205,7 +205,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                         } else {
                             return org.getLabel()
                                     + " (edited by "
-                                    + queryService.findUserFullName( JobsPanel.this.getLockOwner( org ) ) + ")";
+                                    + getQueryService().findUserFullName( JobsPanel.this.getLockOwner( org ) ) + ")";
                         }
                     }
 
@@ -222,6 +222,19 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         } );
         jobTransferDiv.add( transferFromChoice );
         addJobTransferPanel( jobTransferDiv );
+        // take copies option
+        CheckBox copyingCheckBox = new CheckBox(
+                "copying",
+                new PropertyModel<Boolean>( this, "copying" )
+                );
+        copyingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        });
+        jobTransferDiv.add( copyingCheckBox );
+        // do transfer button
         doTransfer = new AjaxFallbackLink<String>(
                 "doTransfer",
                 new PropertyModel<String>( this, "transferButtonLabel" ) ) {
@@ -242,6 +255,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         doTransfer.setOutputMarkupId( true );
         makeVisible( doTransfer, isTransferring() );
         jobTransferDiv.add( doTransfer );
+
         WebMarkupContainer transferContainer = new WebMarkupContainer( "transferContainer" );
         transferContainer.setOutputMarkupId( true );
         transferContainer.setVisible( getPlan().isDevelopment() );
@@ -268,9 +282,18 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             doCommand( new TransferJobs(
                     getTransferFrom(),
                     getOrganization(),
-                    transferredJobs ) );
+                    transferredJobs,
+                    copying ) );
             return true;
         }
+    }
+
+    public boolean isCopying() {
+        return copying;
+    }
+
+    public void setCopying( boolean copying ) {
+        this.copying = copying;
     }
 
     private void addJobTransferPanel( WebMarkupContainer transferringDiv ) {
@@ -293,6 +316,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
     public void setTransferring( boolean transferring ) {
         this.transferring = transferring;
+        copying = false;
     }
 
     public Organization getTransferFrom() {

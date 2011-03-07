@@ -9,7 +9,6 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -24,7 +23,6 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -44,9 +42,6 @@ import java.util.Set;
  * Time: 4:46:15 PM
  */
 public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Updatable {
-
-    @SpringBean
-    private QueryService queryService;
 
     /**
      * Segment model.
@@ -158,7 +153,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel implements Upd
     }
 
     private List<Segment> getCandidateDestinationSegments() {
-        List<Segment> otherSegments = new ArrayList<Segment>( queryService.list( Segment.class ) );
+        List<Segment> otherSegments = new ArrayList<Segment>( getQueryService().list( Segment.class ) );
         otherSegments.remove( getSegment() );
         final Collator collator = Collator.getInstance();
         Collections.sort(

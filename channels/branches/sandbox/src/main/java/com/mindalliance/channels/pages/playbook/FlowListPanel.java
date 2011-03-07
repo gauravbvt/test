@@ -1,18 +1,16 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,11 +20,8 @@ import java.util.Map;
 /**
  * A cutesy list of flows.
  */
-class FlowListPanel extends Panel {
+class FlowListPanel extends AbstractUpdatablePanel {
 
-    /** The query service, for spec-actor resolution. */
-    @SpringBean
-    private QueryService queryService;
 
     /** True if the flows in this panel are incoming. */
     private boolean incoming;
@@ -95,7 +90,7 @@ class FlowListPanel extends Panel {
     private List<FlowCell> getFlowCells(
             SynonymFlowSet set, Collection<ResourceSpec> actorSpecs, Specable exception ) {
         List<FlowCell> flowCells = new ArrayList<FlowCell>();
-        Map<ResourceSpec,Flow> map = set.getProjection( queryService, exception );
+        Map<ResourceSpec,Flow> map = set.getProjection( getQueryService(), exception );
         for ( Specable actorSpec : actorSpecs )
             flowCells.add( new FlowCell( actorSpec.getActor(), map.get( actorSpec ), incoming ) );
         return flowCells;

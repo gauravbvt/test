@@ -2,19 +2,22 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -39,8 +42,8 @@ public class ProceduresReportPage extends AbstractReportPage {
     public ProceduresReportPage( PageParameters parameters ) {
         super( parameters );
         setDefaultModel( new CompoundPropertyModel<Object>( this ) );
-
-        selector = new SelectorPanel( "selector", parameters );
+        addChannelsLogo();
+        selector = new SelectorPanel( "selector",this );
         if ( !selector.isValid() ) {
             if ( selector.getPlans().isEmpty() )
                 throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
@@ -77,6 +80,20 @@ public class ProceduresReportPage extends AbstractReportPage {
                 new Label( "client", selector.getPlan().getClient() )
         );
     }
+
+    private void addChannelsLogo() {
+        WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome");
+        channels_logo.add( new AjaxEventBehavior( "onclick") {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                String homeUrl =  AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
+                RedirectPage page =  new RedirectPage( homeUrl );
+                setResponsePage( page );
+            }
+        });
+        add( channels_logo );
+    }
+
 
     /**
      * Set the headers of the Page being served.

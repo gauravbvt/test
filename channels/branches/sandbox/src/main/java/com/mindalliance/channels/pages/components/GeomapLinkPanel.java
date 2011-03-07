@@ -5,7 +5,6 @@ import com.mindalliance.channels.pages.GeoMapPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
  * Date: Jun 22, 2009
  * Time: 10:22:09 AM
  */
-public class GeomapLinkPanel extends Panel {
+public class GeomapLinkPanel extends AbstractUpdatablePanel {
 
     private List<? extends GeoLocatable> geoLocatables;
     private IModel<String> titleModel;
@@ -38,7 +37,7 @@ public class GeomapLinkPanel extends Panel {
 
     private void init() {
         add(
-            GeoMapPage.makeLink( "mapLink", titleModel, geoLocatables )
+            GeoMapPage.makeLink( "mapLink", titleModel, geoLocatables, getQueryService() )
                 .add( new AttributeModifier( "title", true, hintModel ) )
                 .setVisible(
                     CollectionUtils.exists(

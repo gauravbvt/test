@@ -9,6 +9,8 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -28,49 +30,43 @@ import java.util.Set;
  */
 public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetector {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( flow.isSharing() ) {
-            final QueryService queryService = getQueryService();
+            QueryService queryService = getQueryService();
             Set<Channelable> contactedEntities = new HashSet<Channelable>();
-            for ( final Commitment commitment : queryService.findAllCommitments( flow, false, false ) ) {
+            Assignments assignments = queryService.getAssignments( false );
+            for ( Commitment commitment : queryService.findAllCommitments( flow,
+                                                                           false, assignments ) )
                 contactedEntities.add( contactedEntity( commitment ) );
-            }
+
             final Place locale = getPlan().getLocale();
             for ( Channelable contacted : contactedEntities ) {
                 for ( final Channel flowChannel : flow.getEffectiveChannels() ) {
                     if ( flowChannel.isUnicast() && !flowChannel.isDirect() ) {
                         boolean hasValidChannel = CollectionUtils.exists(
-                                contacted.getEffectiveChannels(),
-                                new Predicate() {
-                                    public boolean evaluate( Object object ) {
-                                        Channel channel = (Channel) object;
-                                        return channel.isValid()
-                                                && channel.getMedium().narrowsOrEquals( flowChannel.getMedium(),
-                                                                                        locale );
-                                    }
-                                } );
+                            contacted.getEffectiveChannels(),
+                            new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                  Channel channel = (Channel) object;
+                                  return channel.isValid()
+                                         && channel.getMedium()
+                                            .narrowsOrEquals( flowChannel.getMedium(), locale );
+                              }
+                          } );
                         if ( !hasValidChannel ) {
                             Issue issue = makeIssue( Issue.COMPLETENESS, flow );
-                            issue.setDescription( "There is no valid channel for contacting "
-                                    + contacted.getName()
-                                    + " via "
-                                    + flowChannel.getMedium()
-                            );
-                            issue.setRemediation( "Make sure that "
-                                    + contacted.getName()
-                                    + " can be contacted via "
-                                    + flowChannel.getMedium()
-                                    + " with a correct address if one is required"
-                                    + "\nor remove "
-                                    + flowChannel.getMedium()
-                                    + " from the flow"
-                            );
+                            issue.setDescription(
+                                "There is no valid channel for contacting " + contacted.getName()
+                                + " via " + flowChannel.getMedium() );
+                            issue.setRemediation(
+                                "Make sure that " + contacted.getName() + " can be contacted via "
+                                + flowChannel.getMedium()
+                                + " with a correct address if one is required" + "\nor remove "
+                                + flowChannel.getMedium() + " from the flow" );
                             issue.setSeverity( getTaskFailureSeverity( (Part) flow.getTarget() ) );
                             issues.add( issue );
                         }

@@ -4,12 +4,12 @@ import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * Date: Apr 7, 2009
  * Time: 10:13:12 AM
  */
-public abstract class PngWebPage extends WebPage {
+public abstract class PngWebPage extends AbstractChannelsWebPage {
 
     /**
      * The log.
@@ -31,6 +31,8 @@ public abstract class PngWebPage extends WebPage {
     private static final Logger LOG = LoggerFactory.getLogger( PngWebPage.class );
 
     private PageParameters parameters;
+
+    private String ticket;
 
     @SpringBean
     private Analyst analyst;
@@ -41,15 +43,7 @@ public abstract class PngWebPage extends WebPage {
     public PngWebPage( PageParameters parameters ) {
         super( parameters );
         this.parameters = parameters;
-    }
-
-    /**
-     * Get query service.
-     *
-     * @return a query service
-     */
-    protected QueryService getQueryService() {
-        return getChannels().getQueryService();
+        ticket = parameters.getString( AbstractDiagramPanel.TICKET_PARM );
     }
 
     /**
@@ -122,7 +116,7 @@ public abstract class PngWebPage extends WebPage {
             if ( resp instanceof WebResponse )
                 setHeaders( (WebResponse) resp );
             LOG.debug( "Rendering PNG" );
-            diagram.render( DiagramFactory.PNG, getResponse().getOutputStream(), analyst, diagramFactory );
+            diagram.render( ticket, DiagramFactory.PNG, getResponse().getOutputStream(), analyst, diagramFactory );
         } catch ( DiagramException e ) {
             LOG.error( "Error while generating diagram", e );
             // Don't do anything else --> empty png

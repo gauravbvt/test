@@ -10,12 +10,11 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Participation;
-import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ import java.util.Set;
 /**
  * A generic playbook page.
  */
-public abstract class PlaybookPage extends WebPage {
+public abstract class PlaybookPage extends AbstractChannelsWebPage {
 
     /** The name of the agent id parameter. */
     public static final String ACTOR_PARM = "0";
@@ -44,9 +43,6 @@ public abstract class PlaybookPage extends WebPage {
     @SpringBean
     private User user;
 
-    /** Data access. */
-    @SpringBean
-    private QueryService queryService;
 
     /** The actor of this page. */
     private final Actor actor;
@@ -87,22 +83,10 @@ public abstract class PlaybookPage extends WebPage {
     private Actor getActualActor() {
         Actor actualActor = getParm( ACTOR_PARM, Actor.class );
         if ( actualActor == null ) {
-            Participation participation = queryService.findOrCreate( Participation.class, user.getUsername() );
+            Participation participation = getQueryService().findOrCreate( Participation.class, user.getUsername() );
             actualActor = participation.getActor();
         }
         return actualActor;
-    }
-
-    final Plan getPlan() {
-        return getQueryService().getPlan();
-    }
-
-    final QueryService getQueryService() {
-        return queryService;
-    }
-
-    final User getUser() {
-        return user;
     }
 
     private <T extends ModelObject> T getParm( String parm, Class<T> parmClass ) {
@@ -110,7 +94,7 @@ public abstract class PlaybookPage extends WebPage {
         PageParameters parms = getPageParameters();
         if ( parms.containsKey( parm ) )
             try {
-                result = queryService.find( parmClass, Long.valueOf( parms.getString( parm ) ) );
+                result = getQueryService().find( parmClass, Long.valueOf( parms.getString( parm ) ) );
 
             } catch ( NumberFormatException ignored ) {
                 result = null;

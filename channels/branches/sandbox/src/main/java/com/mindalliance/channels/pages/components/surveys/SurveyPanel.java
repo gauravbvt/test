@@ -55,7 +55,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
 
     private void init() {
         survey.resetData();
-        known = survey.updateSurveyData( surveyService );
+        known = survey.updateSurveyData( surveyService, getPlan() );
         addHeaderLabels();
         addFooterLabels();
         addContactsPanel();
@@ -111,7 +111,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
     }
 
     private void addStats() {
-        survey.updateSurveyData( surveyService );
+        survey.updateSurveyData( surveyService, getPlan() );
         surveyDataContainer.add( new Label(
                 "toBeContacted",
                 new Model<String>(
@@ -135,7 +135,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
     }
 
     private void addLinks() {
-        survey.updateSurveyData( surveyService );
+        survey.updateSurveyData( surveyService, getPlan() );
         ExternalLink previewLink = new ExternalLink(
                 "preview",
                 known ? survey.getSurveyData().getPreviewLink() : "#" );
@@ -156,7 +156,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
                     if ( surveyContactsPanel instanceof SurveyContactsPanel ) {
                         ( (SurveyContactsPanel) surveyContactsPanel ).updateContacts( target );
                     }
-                    surveyService.launchSurvey( survey );
+                    surveyService.launchSurvey( survey, getPlan() );
                 } catch ( SurveyException e ) {
                     LOG.warn("Failed lo launch survey", e);
                     target.prependJavascript( "alert(\"Oops! Failed to launch survey.\")" );
@@ -174,7 +174,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
                 "Close the survey?" ) {
             public void onClick( AjaxRequestTarget target ) {
                 try {
-                    surveyService.closeSurvey( survey );
+                    surveyService.closeSurvey( survey, getPlan() );
                 } catch ( SurveyException e ) {
                     target.prependJavascript( "alert(\"Oops! Failed to close survey.\")" );
                 }

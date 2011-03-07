@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.segment.CommitmentsTablePanel;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -73,22 +74,30 @@ public class AgreementsPanel extends AbstractCommandablePanel {
      * @return a list of agreement wrappers
      */
     public List<AgreementWrapper> getAgreements() {
+        QueryService queryService = getQueryService();
         List<AgreementWrapper> wrappers = new ArrayList<AgreementWrapper>();
         for ( Agreement agreement : getOrganization().getAgreements() ) {
             wrappers.add( new AgreementWrapper( agreement, getOrganization(), true ) );
         }
-        for ( Agreement agreement : getQueryService().findAllImpliedAgreementsOf( getOrganization() ) ) {
+        for ( Agreement agreement : getQueryService().findAllImpliedAgreementsOf(
+                getOrganization(),
+                queryService.getAssignments( false ),
+                queryService.findAllFlows() ) ) {
             AgreementWrapper wrapper = new AgreementWrapper( agreement, getOrganization(), false );
             if ( !wrappers.contains( wrapper ) ) wrappers.add( wrapper );
         }
-        for ( Organization org : getQueryService().listActualEntities( Organization.class ) ) {
+        for ( Organization org : queryService.listActualEntities( Organization.class ) ) {
             if ( !org.equals( getOrganization() ) ) {
                 for ( Agreement agreement : org.getAgreements() ) {
                     if ( agreement.getBeneficiary().equals( getOrganization() ) ) {
                         wrappers.add( new AgreementWrapper( agreement, org, true ) );
                     }
                 }
-                for (Agreement agreement : getQueryService().findAllImpliedAgreementsOf( org ) ) {
+                for ( Agreement agreement : queryService.findAllImpliedAgreementsOf(
+                        org,
+                        queryService.getAssignments( false ),
+                        queryService.findAllFlows()
+                ) ) {
                     if ( agreement.getBeneficiary().equals( getOrganization() ) ) {
                         wrappers.add( new AgreementWrapper( agreement, org, false ) );
                     }
@@ -180,10 +189,15 @@ public class AgreementsPanel extends AbstractCommandablePanel {
     public List<Commitment> getCommitments() {
         if ( selectedAgreement == null )
             return new ArrayList<Commitment>();
-        else
-            return getQueryService().findAllCommitmentsCoveredBy(
+        else {
+            QueryService queryService = getQueryService();
+            return queryService.findAllCommitmentsCoveredBy(
                     selectedAgreement.getAgreement(),
-                    selectedAgreement.getOrganization() );
+                    selectedAgreement.getOrganization(),
+                    queryService.getAssignments( false ),
+                    queryService.findAllFlows()
+                    );
+        }
     }
 
     public Organization getOrganization() {
@@ -198,10 +212,10 @@ public class AgreementsPanel extends AbstractCommandablePanel {
             AgreementWrapper wrapper = (AgreementWrapper) object;
             if ( action.equals( "select" ) ) {
                 if ( selectedAgreement == null || !selectedAgreement.equals( object ) ) {
-                     selectedAgreement = (AgreementWrapper) object;
-                     addCommitmentsContainer();
-                     target.addComponent( commitmentsContainer );
-                 }
+                    selectedAgreement = (AgreementWrapper) object;
+                    addCommitmentsContainer();
+                    target.addComponent( commitmentsContainer );
+                }
             } else if ( action.equals( "confirmed" ) ) {
                 addAgreementsTable();
                 target.addComponent( agreementsTable );

@@ -48,7 +48,7 @@ public class TestAssignments extends AbstractChannelsTest {
 
     @Test
     public void testSize() {
-        assertEquals( 58, assignments.size() );
+        assertEquals( 57, assignments.size() );
     }
 
     private QueryService getQueryService() {
@@ -67,13 +67,13 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetActors() {
         List<Specable> actors = assignments.getActors();
-        assertEquals( 28, actors.size() );
+        assertEquals( 27, actors.size() );
     }
 
     @Test
     public void testGetActualActors() {
         List<Actor> actualActors = assignments.getActualActors();
-        assertEquals( 17, actualActors.size() );
+        assertEquals( 16, actualActors.size() );
         assertSame( Actor.UNKNOWN, actualActors.get( 0 ) );
         assertEquals( "A bus driver", actualActors.get( 1 ).getName() );
         assertEquals( "Claire Waters", actualActors.get( actualActors.size() - 1 ).getName() );
@@ -102,7 +102,7 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetLocations() {
         List<Place> places = assignments.getLocations();
-        assertEquals( 4, places.size() );
+        assertEquals( 3, places.size() );
     }
 
     @Test
@@ -114,14 +114,14 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetRoles() {
         List<Role> roles = assignments.getRoles();
-        assertEquals( 14, roles.size() );
+        assertEquals( 13, roles.size() );
     }
 
     @Test
     public void testWithSegment() {
         List<Segment> segments = assignments.getSegments();
         Assignments a = assignments.with( segments.get( 0 ), segments.get( 1 ) );
-        assertEquals( 44, a.size() );
+        assertEquals( 43, a.size() );
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -303,7 +303,7 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetSources3() throws NotFoundException {
         Plan plan = planManager.findDevelopmentPlan( "mindalliance.com/channels/plans/acme" );
-        PlanService service = new PlanService( planManager, null, plan );
+        PlanService service = new PlanService( planManager, null, null, null, plan );
 
         List<Part> parts = (List<Part>) CollectionUtils.select( queryService.findAllParts(), new Predicate() {
             public boolean evaluate( Object object ) {

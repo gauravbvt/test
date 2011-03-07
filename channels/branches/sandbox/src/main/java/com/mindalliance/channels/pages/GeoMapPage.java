@@ -1,15 +1,14 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.model.GeoLocatable;
 import com.mindalliance.channels.model.GeoLocation;
-import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
@@ -41,7 +40,7 @@ import java.util.Set;
  * Date: Jun 18, 2009
  * Time: 12:47:45 PM
  */
-public class GeoMapPage extends WebPage {
+public class GeoMapPage extends AbstractChannelsWebPage {
 
     private static final String MARKER_PARAM = "m";
 
@@ -50,10 +49,6 @@ public class GeoMapPage extends WebPage {
     private static final int MAX_QUERY_SIZE = 2000;
 
     private static final String TITLE_PARAM = "t";
-
-    /** The query service. */
-    @SpringBean
-    private QueryService queryService;
 
     /** The geo service */
     @SpringBean
@@ -110,33 +105,47 @@ public class GeoMapPage extends WebPage {
     }
 
     public static BookmarkablePageLink<GeoMapPage> makeLink(
-        String id, IModel<String> titleModel, GeoLocatable geo, QueryService queryService ) {
+        String id,
+        IModel<String> titleModel,
+        GeoLocatable geo,
+        QueryService queryService ) {
         List<GeoLocatable> geos = new ArrayList<GeoLocatable>();
         geos.addAll( geo.getImpliedGeoLocatables( queryService ) );
-        return makeLink( id, titleModel, geos );
+        return makeLink( id, titleModel, geos, queryService );
     }
 
     public static BookmarkablePageLink<GeoMapPage> makeLink(
-        String id, IModel<String> titleModel, List<? extends GeoLocatable> geos ) {
+        String id,
+        IModel<String> titleModel,
+        List<? extends GeoLocatable> geos,
+        QueryService queryService) {
         PageParameters params = makeGeoMapParameters( titleModel, geos );
-        return makeLink( id, params );
+        BookmarkablePageLink<GeoMapPage> link = makeLink( id, params );
+        addPlanParameters( link, queryService.getPlan() );
+        return link;
     }
 
     public static BookmarkablePageLink<GeoMapPage> makeLink(
-        String id, IModel<String> titleModel, GeoLocation geoLocation ) {
-        PageParameters params = makeGeoMapParameters( titleModel, geoLocation );
-        return makeLink( id, params );
+        String id,
+        IModel<String> titleModel,
+        GeoLocation geoLocation,
+        QueryService queryService ) {
+        PageParameters params = makeGeoMapParameters(
+                titleModel,
+                geoLocation );
+        BookmarkablePageLink<GeoMapPage> link = makeLink( id, params );
+        addPlanParameters( link, queryService.getPlan() );
+        return link;
     }
 
-    public static BookmarkablePageLink<GeoMapPage> makeLink( String id, PageParameters params ) {
-        BookmarkablePageLink<GeoMapPage> geomapLink = new BookmarkablePageLink<GeoMapPage>(
-            id, GeoMapPage.class, params );
+    private static BookmarkablePageLink<GeoMapPage> makeLink( String id, PageParameters params ) {
         PopupSettings popupSettings = new PopupSettings( PopupSettings.LOCATION_BAR );
         popupSettings.setHeight( 450 );
         popupSettings.setWidth( 620 );
         popupSettings.setTop( 100 );
         popupSettings.setLeft( 100 );
-        geomapLink.setPopupSettings( popupSettings );
+        BookmarkablePageLink<GeoMapPage> geomapLink = new BookmarkablePageLink<GeoMapPage>(
+            id, GeoMapPage.class, params );
         geomapLink.add(
             new AttributeModifier(
                 "target", true, new Model<String>( "geomap" ) ) );

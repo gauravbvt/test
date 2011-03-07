@@ -162,7 +162,10 @@ public class Delay implements Comparable, Serializable {
     }
 
     private int translateAmount( String s ) {
-        return Math.max( 0, Arrays.asList( numbers ).indexOf( s.trim().toLowerCase() ) );
+        if ( s== null || s.isEmpty() )
+            return 0;
+        else
+            return Math.max( 0, Arrays.asList( numbers ).indexOf( s.trim().toLowerCase() ) );
     }
 
 

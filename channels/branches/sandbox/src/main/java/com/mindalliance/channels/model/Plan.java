@@ -48,20 +48,12 @@ public class Plan extends ModelObject {
      * Timing of the default phase.
      */
     public static final Phase.Timing DEFAULT_PHASE_TIMING = Phase.Timing.Concurrent;
-
-    public InfoStandard getInfoStandard( final String name ) {
-        final Matcher matcher = Matcher.getInstance();
-        return (InfoStandard) CollectionUtils.find( getTags(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Tag tag = (Tag) object;
-                        return tag.isInfoStandard() && matcher.same( tag.getName(), name );
-                    }
-                } );
-    }
-
     /**
+     * Whether the plan is meant as a template.
+     */
+    private boolean template = false;
+
+   /**
      * The status of a (version of) plan.
      */
     public enum Status implements Serializable {
@@ -346,6 +338,27 @@ public class Plan extends ModelObject {
     public void removeProducer( String username ) {
         producers.remove( username );
     }
+
+    public InfoStandard getInfoStandard( final String name ) {
+        final Matcher matcher = Matcher.getInstance();
+        return (InfoStandard) CollectionUtils.find( getTags(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Tag tag = (Tag) object;
+                        return tag.isInfoStandard() && matcher.same( tag.getName(), name );
+                    }
+                } );
+    }
+
+    public boolean isTemplate() {
+        return template;
+    }
+
+    public void setTemplate( boolean template ) {
+        this.template = template;
+    }
+
 
     /**
      * Add event.
@@ -644,6 +657,7 @@ public class Plan extends ModelObject {
         List<Attachment.Type> types = super.getAttachmentTypes();
         types.add( Attachment.Type.TAGS );
         types.add( Attachment.Type.InfoStandards );
+        types.add( Attachment.Type.Image );
         return types;
     }
 

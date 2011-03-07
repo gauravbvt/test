@@ -102,7 +102,9 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "surveyDefaultEmailAddress" );
         writer.setValue( plan.getSurveyDefaultEmailAddress() );
         writer.endNode();
-
+        writer.startNode( "template" );
+        writer.setValue( Boolean.toString( plan.isTemplate() ) );
+        writer.endNode();
         // Producers - planners who voted to put this version into production
         for ( String producer : plan.getProducers() ) {
             writer.startNode( "producer" );
@@ -188,6 +190,8 @@ public class PlanConverter extends AbstractChannelsConverter {
                 LOG.info( "Plan last saved with last id " + reader.getValue() );
             } else if ( nodeName.equals( "name" ) ) {
                 plan.setName( reader.getValue() );
+            } else if ( nodeName.equals( "template" ) ) {
+                plan.setTemplate( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "whenVersioned" ) ) {
                 try {
                     Date whenVersion = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).parse( reader.getValue() );

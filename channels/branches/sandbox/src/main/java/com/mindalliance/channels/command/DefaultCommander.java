@@ -1,6 +1,7 @@
 package com.mindalliance.channels.command;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.commands.DisconnectFlow;
 import com.mindalliance.channels.command.commands.RemoveCapability;
 import com.mindalliance.channels.command.commands.RemoveNeed;
@@ -11,6 +12,7 @@ import com.mindalliance.channels.dao.JournalCommand;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Delay;
@@ -25,6 +27,8 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.nlp.SemanticMatcher;
+import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +69,10 @@ public class DefaultCommander implements Commander {
     private History history = new History();
 
     /**
-     * Query service.
+     * Attachment manager
      */
+    private AttachmentManager attachmentManager;
+
     private QueryService queryService;
 
     /**
@@ -88,15 +94,14 @@ public class DefaultCommander implements Commander {
 
     private ImportExportFactory importExportFactory;
 
+    private UserService userService;
+
+    private SemanticMatcher semanticMatcher;
+
     /**
      * Record of when users were most recently active.
      */
     private Map<String, Long> whenLastActive = Collections.synchronizedMap( new HashMap<String, Long>() );
-
-    /**
-     * Times after which users are considered "dead", unless incremented by "keepAlive" signals.
-     */
-    private Map<String, Long> userLives = Collections.synchronizedMap( new HashMap<String, Long>() );
 
     /**
      * Users who timed out but have yet to be refreshed.
@@ -156,6 +161,22 @@ public class DefaultCommander implements Commander {
         return analyst;
     }
 
+    public SemanticMatcher getSemanticMatcher() {
+        return semanticMatcher;
+    }
+
+    public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
+        this.semanticMatcher = semanticMatcher;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
+    }
+
     @Override
     public Map<String, Object> getCopy() {
         return copy.get( User.current().getUsername() );
@@ -189,6 +210,32 @@ public class DefaultCommander implements Commander {
         this.lockManager = lockManager;
     }
 
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
+    }
+
+    public final QueryService getQueryService() {
+          if ( queryService == null )
+              queryService = getQueryService( User.current().getPlan() );   // TODO - don't use User.current()
+          return queryService;
+      }
+
+    private PlanService getQueryService( Plan plan ) {
+        return new PlanService(
+                getPlanManager(),
+                attachmentManager,
+                semanticMatcher,
+                userService,
+                plan );
+    }
+
+
+
+/*
     public void setQueryService( QueryService queryService ) {
         this.queryService = queryService;
     }
@@ -197,6 +244,7 @@ public class DefaultCommander implements Commander {
     public QueryService getQueryService() {
         return queryService;
     }
+*/
 
     public int getTimeout() {
         return timeout;
@@ -219,7 +267,7 @@ public class DefaultCommander implements Commander {
     @Override
     public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException {
         try {
-            return queryService.find( clazz, id );
+            return getQueryService().find( clazz, id );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
@@ -334,7 +382,7 @@ public class DefaultCommander implements Commander {
                 afterExecution( command, change );
                 if ( !isReplaying() && command.isTop() ) {
                     for ( CommandListener commandListener : commandListeners ) {
-                        commandListener.commandDone( command, change );
+                        commandListener.commandDone( command, change, getPlan()  );
                     }
                 }
             }
@@ -365,7 +413,7 @@ public class DefaultCommander implements Commander {
             history.recordUndone( memento, undoCommand );
             afterExecution( undoCommand, change );
             for ( CommandListener commandListener : commandListeners ) {
-                commandListener.commandUndone( undoCommand );
+                commandListener.commandUndone( undoCommand, getPlan()  );
             }
             return change;
         } catch ( CommandException e ) {
@@ -389,7 +437,7 @@ public class DefaultCommander implements Commander {
             history.recordRedone( memento, redoCommand );
             afterExecution( redoCommand, change );
             for ( CommandListener commandListener : commandListeners ) {
-                commandListener.commandRedone( redoCommand );
+                commandListener.commandRedone( redoCommand, getPlan()  );
             }
             return change;
         } catch ( CommandException e ) {
@@ -475,41 +523,35 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public synchronized void keepAlive( String userName, int refreshDelay ) {
-        if ( !userLives.containsKey( userName ) ) {
-            LOG.info( "{} is planning", userName );
+    public synchronized void keepAlive( String username, int refreshDelay ) {
+        for ( PresenceListener presenceListener : presenceListeners ) {
+            presenceListener.keepAlive( username, getPlan(), refreshDelay );
         }
-        userLives.put( userName, System.currentTimeMillis() + refreshDelay * 2 * 1000 );
     }
 
     @Override
     public synchronized void processDeaths() {
-        List<String> deads = new ArrayList<String>();
-
-        long now = System.currentTimeMillis();
-        for ( String userName : userLives.keySet() )
-            if ( now > userLives.get( userName ) ) {
-                loggedOut( userName );
-                deads.add( userName );
-                LOG.info( "{} is done planning", userName );
-                lockManager.release( userName );
-            }
-
-        for ( String userName : deads )
-            userLives.remove( userName );
-    }
-
-    @Override
-    public synchronized void loggedOut( String username ) {
+        Set<String> deads = new HashSet<String>();
         for ( PresenceListener presenceListener : presenceListeners ) {
-            presenceListener.loggedOut( username );
+            deads.addAll( presenceListener.processDeaths( getPlan() ) );
+        }
+        for ( String userName : deads ) {
+            LOG.info( "{} is done planning", userName );
+            lockManager.release( userName );
         }
     }
 
     @Override
-    public synchronized void loggedIn( String username ) {
+    public synchronized void absent( String username ) {
         for ( PresenceListener presenceListener : presenceListeners ) {
-            presenceListener.loggedIn( username );
+            presenceListener.absent( username, getPlan() );
+        }
+    }
+
+    @Override
+    public synchronized void present( String username ) {
+        for ( PresenceListener presenceListener : presenceListeners ) {
+            presenceListener.present( username, getPlan() );
         }
     }
 
@@ -618,7 +660,7 @@ public class DefaultCommander implements Commander {
     @Override
     public void initialize() {
         replayJournal();
-        queryService.getAttachmentManager().removeUnattached( planDao );
+        attachmentManager.removeUnattached( planDao );
         analyst.onStart( planDao.getPlan() );
     }
 
@@ -678,30 +720,30 @@ public class DefaultCommander implements Commander {
         }
 //        part.setGoals( new ArrayList<Goal>( (List<Goal>) state.get( "goals" ) ) );
         if ( state.get( "initiatedEvent" ) != null )
-            part.setInitiatedEvent( queryService.findOrCreateType(
+            part.setInitiatedEvent( getQueryService().findOrCreateType(
                     Event.class,
                     (String) state.get( "initiatedEvent" ) ) );
         else
             part.setInitiatedEvent( null );
         if ( state.get( "actor" ) != null )
-            part.setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) );
+            part.setActor( getQueryService().retrieveEntity( Actor.class, state, "actor" ) );
         else
             part.setActor( null );
         if ( state.get( "role" ) != null )
-            part.setRole( queryService.retrieveEntity( Role.class, state, "role" ) );
+            part.setRole( getQueryService().retrieveEntity( Role.class, state, "role" ) );
         else
             part.setRole( null );
         if ( state.get( "organization" ) != null )
-            part.setOrganization( queryService.retrieveEntity(
+            part.setOrganization( getQueryService().retrieveEntity(
                     Organization.class, state, "organization" ) );
         else
             part.setOrganization( null );
         if ( state.get( "jurisdiction" ) != null )
-            part.setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
+            part.setJurisdiction( getQueryService().retrieveEntity( Place.class, state, "jurisdiction" ) );
         else
             part.setJurisdiction( null );
         if ( state.get( "location" ) != null )
-            part.setLocation( queryService.retrieveEntity( Place.class, state, "location" ) );
+            part.setLocation( getQueryService().retrieveEntity( Place.class, state, "location" ) );
         else
             part.setLocation( null );
     }

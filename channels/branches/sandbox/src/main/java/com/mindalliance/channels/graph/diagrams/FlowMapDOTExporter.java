@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Segment;
 import org.jgrapht.Graph;
 
@@ -141,7 +142,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = "Segment starts";
+        Segment segment = getSegment();
+        String label = segment.getEventPhase().toString() + " starts";
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );
@@ -195,7 +197,12 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = "Segment ends";
+        Segment segment = getSegment();
+        String label = segment.getEventPhase().toString();
+        Phase phase = segment.getPhase();
+        label += phase.isPreEvent()
+                    ? " succeeds"
+                    : " ends";
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.analysis.detectors;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Commitment;
@@ -8,6 +7,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -36,11 +36,14 @@ public class AgreementWithoutCommitment extends AbstractIssueDetector {
         final QueryService queryService = getQueryService();
         for ( final Agreement agreement : organization.getAgreements() ) {
             boolean exists = CollectionUtils.exists(
-                    queryService.findAllCommitmentsOf( organization ),
+                    queryService.findAllCommitmentsOf(
+                            organization,
+                            queryService.getAssignments( false ),
+                            queryService.findAllFlows() ),
                     new Predicate() {
                         public boolean evaluate( Object object ) {
                             return queryService.covers( agreement,
-                                                     ( (Commitment) object ) );
+                                    ( (Commitment) object ) );
                         }
                     }
             );

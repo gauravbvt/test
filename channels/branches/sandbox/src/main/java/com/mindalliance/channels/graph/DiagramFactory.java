@@ -214,6 +214,7 @@ public interface DiagramFactory<Vertex, Edge> {
      * Instantiates a procedure map diagram.
      *
      * @param segment         segment as scope, or null for all plan
+     * @param summarizeByOrgType a boolean
      * @param summarizeByOrg  a boolean
      * @param summarizeByRole a boolean
      * @param focusEntity     an organization or agent
@@ -223,6 +224,7 @@ public interface DiagramFactory<Vertex, Edge> {
      */
     ProcedureMapDiagram newProcedureMapDiagram(
             Segment segment,
+            boolean summarizeByOrgType,
             boolean summarizeByOrg,
             boolean summarizeByRole,
             ModelEntity focusEntity,

@@ -144,6 +144,15 @@ public class Attachment implements Serializable, Comparable<Attachment> {
     }
 
     /**
+     * Represents a reference document.
+     *
+     * @return a boolean
+     */
+    public boolean isReference() {
+        return type == Type.Reference;
+    }
+
+    /**
      * Represents an image.
      *
      * @return a boolean

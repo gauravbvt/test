@@ -251,7 +251,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     try {
-                        Survey survey = surveyService.getOrCreateSurvey( issue );
+                        Survey survey = surveyService.getOrCreateSurvey( issue, getPlan() );
                         update( target, new Change( Change.Type.Expanded, survey ) );
                     } catch ( SurveyException e ) {
                         LOG.error( "Fail to get or create survey on " + issue.getDetectorLabel() );

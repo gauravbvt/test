@@ -5,6 +5,7 @@ import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.diagrams.DiagramAjaxBehavior;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,11 +44,14 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
 
     private static String[] STANDARD_ARGS = { "graph", "vertex", "edge", "width", "height" };
 
+    public static final String TICKET_PARM = "ticket";
+
     /**
      * The flow diagram.
      */
     private Diagram diagram;
 
+    private final String ticket;
     /**
      * Diagram generation settings.
      */
@@ -66,7 +71,16 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
 
     protected AbstractDiagramPanel( String id, Settings settings ) {
         super( id );
+        this.ticket = makeTicket();
         this.settings = settings;
+    }
+
+    private static String makeTicket() {
+        return UUID.randomUUID().toString();
+    }
+
+    public String getTicket() {
+        return ticket;
     }
 
     public Diagram getDiagram() {
@@ -91,7 +105,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     protected void init() {
         diagram = makeDiagram();
         if ( isWithImageMap() ) {
-            imageMapHolder = createMapHolder( analyst, diagramFactory );
+            imageMapHolder = createMapHolder( ticket, analyst, diagramFactory );
             if ( imageMapHolder.toString().isEmpty() )
                 LOG.warn( "Empty image map" );
             if ( isUsingAjax() )
@@ -132,7 +146,9 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                String url = makeDiagramUrl() + makeSeed();
+                String url = makeDiagramUrl()
+                        + makeSeed()
+                        + AbstractChannelsWebPage.queryParameters( getPlan() );
                 tag.put( "src", url );
                 if ( isWithImageMap() ) {
                     // TODO may not be unique in the page but should be
@@ -218,9 +234,9 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         return scroll;
     }
 
-    private StringBuilder createMapHolder( Analyst analyst, DiagramFactory diagramFactory ) {
+    private StringBuilder createMapHolder( String ticket, Analyst analyst, DiagramFactory diagramFactory ) {
         StringBuilder builder = new StringBuilder();
-        String imageMap = diagram.makeImageMap( analyst, diagramFactory );
+        String imageMap = diagram.makeImageMap( ticket, analyst, diagramFactory );
         // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
         imageMap = imageMap.replace( "id=\"G\"", "" );
         imageMap = imageMap.replace( "name=\"G\"", "name=\"" + getContainerId() + "\"" );
@@ -235,7 +251,9 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      */
     protected String makeSeed() {
         // LOG.info("***Seed = " + getCommander().getLastModified() );
-        return "&_modified=" + getCommander().getLastModified();
+        return getPlan().isDevelopment()
+                ? "&_modified=" + getCommander().getLastModified()
+                : "";
     }
 
     /**

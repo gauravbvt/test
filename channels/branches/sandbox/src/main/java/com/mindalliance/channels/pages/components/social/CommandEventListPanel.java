@@ -47,8 +47,8 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
     private Updatable updatable;
     private Date whenLastRefreshed;
 
-    public CommandEventListPanel( String id, Updatable updatable ) {
-        super( id );
+    public CommandEventListPanel( String id, Updatable updatable, boolean collapsible ) {
+        super( id, collapsible );
         this.updatable = updatable;
         init();
     }
@@ -152,7 +152,7 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
     public List<CommandEvent> getCommandEvents() {
         List<CommandEvent> commandEvents = new ArrayList<CommandEvent>();
         PeekAheadIterator<CommandEvent> iterator = new PeekAheadIterator<CommandEvent>(
-                planningEventService.getCommandEvents() );
+                planningEventService.getCommandEvents( getPlan() ) );
         while ( iterator.hasNext() && commandEvents.size() < numberToShow ) {
             CommandEvent commandEvent = iterator.next();
             if ( commandEvent != null ) {
@@ -177,7 +177,8 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        if ( planningEventService.getWhenLastChanged().after( whenLastRefreshed ) ) {
+        Date whenLastChanged = planningEventService.getWhenLastChanged( getPlan() );
+        if ( whenLastChanged != null && whenLastChanged.after( whenLastRefreshed ) ) {
             addCommandEvents();
             adjustComponents( target );
             whenLastRefreshed = new Date();

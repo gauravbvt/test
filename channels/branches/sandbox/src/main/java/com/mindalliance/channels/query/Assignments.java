@@ -49,6 +49,11 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         this.locale = locale;
     }
 
+    @Override
+    public String toString() {
+        return "Assignments(" + size() + ')';
+    }
+
     public Place getLocale() {
         return locale;
     }
@@ -333,6 +338,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     /**
      * Find assignments that are started with the segments.
+     * @param queryService a query service
      *
      * @return a list of assignments
      */
@@ -353,6 +359,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     /**
      * Find assignments associated with task with no specific start time (bug in the model).
      *
+     * @param queryService a query service
      * @return a list of assignments
      */
     public Assignments getOptionals( QueryService queryService) {
@@ -371,6 +378,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     /**
      * Find assignments triggered by an incoming notification.
+     * @param queryService a query service
      *
      * @return a list of assignments
      */
@@ -548,7 +556,6 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         List<Assignment> result = new ArrayList<Assignment>();
         for ( Segment s : getSegments() )
             result.addAll( segmentMap.get( s ) );
-
         return result;
     }
 

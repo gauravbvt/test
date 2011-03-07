@@ -14,8 +14,8 @@ import java.io.IOException;
  */
 public interface ODBTransactionFactory {
 
-    ODB openDatabase() throws IOException;
+    ODB openDatabase( String planUri ) throws IOException;
 
-    ODBAccessor getODBAccessor();
+    ODBAccessor getODBAccessor( String planUri );
 
 }

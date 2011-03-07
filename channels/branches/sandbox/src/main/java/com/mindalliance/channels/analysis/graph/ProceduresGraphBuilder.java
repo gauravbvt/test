@@ -8,6 +8,8 @@ import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
@@ -27,6 +29,7 @@ import java.util.List;
 public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitment> {
 
     private Segment segment;
+    private final boolean summarizeByOrgType;
     private boolean summarizedByOrg;
     private boolean summarizedByRole;
     private ModelEntity focusEntity;
@@ -34,10 +37,12 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
 
     public ProceduresGraphBuilder(
             Segment segment,
+            boolean summarizeByOrgType,
             boolean summarizedByOrg,
             boolean summarizedByRole,
             ModelEntity focusEntity ) {
         this.segment = segment;
+        this.summarizeByOrgType = summarizeByOrgType;
         this.summarizedByOrg = summarizedByOrg;
         this.summarizedByRole = summarizedByRole;
         this.focusEntity = focusEntity;
@@ -81,8 +86,7 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
             commitments.addAll( queryService.findAllCommitments( flow, true ) );
         }
         List<Commitment> results = new ArrayList<Commitment>();
-        List<Commitment> notOverridden = queryService.removeOverriddenCommitments( commitments );
-        for ( Commitment commitment :  notOverridden ) {
+        for ( Commitment commitment : commitments ) {
             if ( focusEntity != null ) {
                 if ( isFocusedOn( commitment ) ) {
                     results.add( summarize( commitment ) );
@@ -120,7 +124,42 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
     private Commitment summarize( Commitment commitment ) {
         Assignment committer = new Assignment( commitment.getCommitter() );
         Assignment beneficiary = new Assignment( commitment.getBeneficiary() );
-        if ( summarizedByOrg ) {
+        if ( summarizeByOrgType ) {
+            if ( !isFocusedOnAgent( committer ) ) {
+                Organization org;
+                Role role;
+                org = isFocusedOnOrganization( committer )
+                        ? committer.getOrganization()
+                        : getOrganizationType( committer.getPart() );
+                role = summarizedByRole
+                        ? committer.getRole()
+                        : null;
+                if ( role != null )
+                    committer.setEmployment( new Employment( org, role ) );
+                else
+                    committer.setEmployment( new Employment( org ) );
+            }
+            if ( !isFocusedOnAgent( beneficiary ) ) {
+                Organization org;
+                Role role;
+                org = isFocusedOnOrganization( beneficiary )
+                        ? beneficiary.getOrganization()
+                        : getOrganizationType( beneficiary.getPart() );
+                role = summarizedByRole
+                        ? beneficiary.getRole()
+                        : null;
+                if ( role != null )
+                    beneficiary.setEmployment( new Employment( org, role ) );
+                else
+                    beneficiary.setEmployment( new Employment( org ) );
+            }
+
+ /*           if ( !isFocusedOnAgent( beneficiary ) )
+                if ( isFocusedOnOrganization( beneficiary ) )
+                    beneficiary.setEmployment( new Employment( beneficiary.getOrganization() ) );
+                else
+                    beneficiary.setEmployment( new Employment( beneficiaryOrg ) );
+*/        } else if ( summarizedByOrg ) {
             Organization committerOrg = committer.getOrganization();
             Organization beneficiaryOrg = beneficiary.getOrganization();
             if ( !isFocusedOnAgent( committer ) )
@@ -134,6 +173,24 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
                 beneficiary.setEmployment( new Employment( beneficiary.getOrganization(), beneficiary.getRole() ) );
         }
         return new Commitment( committer, beneficiary, commitment.getSharing() );
+    }
+
+    private Organization getOrganizationType( Part part ) {
+        Organization org = part.getOrganization();
+        if ( org == null || org.isUnknown() )
+            return Organization.getUniversalTypeFor( Organization.class );
+        else if ( org.isType() )
+            return org;
+        else {
+            // choose one
+            List<ModelEntity> types = org.getAllTypes();
+            if ( types.isEmpty() ) {
+                return Organization.getUniversalTypeFor( Organization.class );
+            } else {
+                // get last one for now -- todo: something samrter?
+                return (Organization) types.get( types.size() - 1 );
+            }
+        }
     }
 
 

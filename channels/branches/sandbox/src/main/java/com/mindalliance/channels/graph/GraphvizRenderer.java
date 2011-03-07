@@ -6,10 +6,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
@@ -34,7 +37,12 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      */
     private static final Logger LOG = LoggerFactory.getLogger( GraphvizRenderer.class );
 
-    private static int MAXBYTES = 1024;
+    /**
+     * The formats to generate.
+     */
+    public static String[] FORMATS = {DiagramFactory.IMAGE_MAP, DiagramFactory.PNG};
+
+    private static final String TEMP = "temp";
 
     /**
      * The path to the dot executable
@@ -44,12 +52,12 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * Drawing algorithm (neato, dot...)
      */
-    private String algo = "neato";
+    private String algo = "dot";
 
     /**
      * Maximum time allocated to graphviz process before it is interrupted and forcibly terminated.
      */
-    private long timeout = 30000L;
+    private long timeout = 60000L;
     /**
      * The vertices to highlight
      */
@@ -110,29 +118,35 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     }
 
     /**
-     * @param graph       -- a Graph
-     * @param dotExporter - a StyledDOTExporter
-     * @param format      -- an output format (png, svg, imap etc.)
-     * @param output      the rendered graph
-     * @throws DiagramException -- if generation fails
+     * {@inheritDoc}}
      */
+    @Override
     public void render( Graph<V, E> graph,
                         StyledDOTExporter<V, E> dotExporter,
                         String format,
+                        String ticket,
                         OutputStream output ) throws DiagramException {
+        assert( ticket != null );
         dotExporter.setHighlightedVertices( highlightedVertices );
         dotExporter.setHighlightedEdges( highlightedEdges );
-        String dot = getDOT( graph, dotExporter );
         // System.out.println( dot );
         boolean success = false;
         int attempts = 0;
+        String name = sanitize( ticket );
         while ( !success && attempts < MAX_ATTEMPTS ) {
             ByteArrayOutputStream baos = null;
             try {
                 baos = new ByteArrayOutputStream() ;
-                doRender( dot, format, baos );
-                baos.writeTo( output );
-                success = true;
+                // try to get it from file
+                success = loadFromFile( name, format, baos );
+                // if not there, generate it to file and load from it
+                if ( !success ) {
+                    String dot = getDOT( graph, dotExporter );
+                    baos = new ByteArrayOutputStream() ;
+                    doRender( dot, name, format, baos );
+                    success = loadFromFile( name, format, baos );
+                }
+                if ( success ) baos.writeTo( output );
             } catch ( IOException e ) {
                 attempts++;
             } catch ( InterruptedException e ) {
@@ -153,22 +167,82 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         }
     }
 
+    private boolean loadFromFile( String name, String format, ByteArrayOutputStream baos ) {
+        BufferedInputStream in = null;
+        File file = null;
+        try {
+            file = makeFile( name, format );
+            if ( file.exists() ) {
+                if ( file.length() > Integer.MAX_VALUE ) {
+                    throw new DiagramException( "Diagram is too large" );
+                }
+                LOG.debug( "Reading " + format + " from " + file.getAbsolutePath() );
+                in =  new BufferedInputStream( new FileInputStream( file ) ) ;
+                int available;
+                while( ( available = in.available() ) > 0 ) {
+                    byte[] bytes = new byte[available];
+                    int n = in.read( bytes );
+                    assert n == available;
+                    if ( n > 0 ) baos.write( bytes, 0, n );
+                }
+                return true;
+
+            } else {
+                return false;
+            }
+        } catch( IOException e) {
+            return false;
+        }
+        finally {
+            try {
+                baos.flush();
+                baos.close();
+                if ( in != null ) in.close();
+                if ( file != null && file.exists() ) {
+                    boolean deleted = file.delete();
+                    if ( !deleted ) {
+                        LOG.warn( "Failed to delete diagram file" + file.getAbsolutePath() );
+                    } else {
+                        LOG.debug( "Deleted diagram file" + file.getAbsolutePath() );
+                    }
+                }
+            } catch ( IOException e ) {
+                LOG.error( "Failed to finalize loading diagram from file", e );
+            }
+        }
+    }
+
+    private File makeFile( String name, String format ) {
+        String fileSep = System.getProperty( "file.separator" );
+        File tempDir = new File( TEMP );
+        if ( !tempDir.isDirectory() ) {
+            boolean success = tempDir.mkdir();
+            if ( !success )
+                throw new DiagramException( "Failed to create temp directory " + TEMP );
+        }
+        return new File( TEMP + fileSep + name  + "." + format );
+    }
+
     /**
      * Renders a graph specified in DOT in a given format.
      *
      * @param dot    Graph description in DOT language
+     * @param name a file name without extension
      * @param format a Grpahviz output format ("png", "svg", "imap" etc.)
      * @param output the rendered graph
      * @throws IOException          if generation fails
      * @throws InterruptedException if generation fails
      */
-    private void doRender( String dot, String format,
+    private void doRender( String dot,
+                           String name,
+                           String format,
                            OutputStream output ) throws IOException, InterruptedException {
+        assert Arrays.asList( FORMATS ).contains( format );
         String command = getDotPath()
                 + System.getProperty( "file.separator" )
                 + algo
                 + " -Gcharset=latin1"
-                + " -T" + format;
+                + getFormatAndOutputParameters( name );
         Process p = null;
         int exitValue;
         Timer timer = new Timer();
@@ -188,10 +262,11 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
             // wait for process to complete
             // transfer from process input stream to output stream
-            BufferedInputStream in = new BufferedInputStream( p.getInputStream(), MAXBYTES );
+            int maxbytes = 1024;
+            BufferedInputStream in = new BufferedInputStream( p.getInputStream(), maxbytes );
             int count;
             do {
-                byte[] bytes = new byte[MAXBYTES];
+                byte[] bytes = new byte[maxbytes];
                 count = in.read( bytes );
                 if ( count > 0 )
                     output.write( bytes, 0, count );
@@ -216,12 +291,32 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             throw e;
         } catch ( InterruptedException e ) {
             p.destroy();
-            LOG.error( "Diagram generation interrupted", e );
+            LOG.error( "Diagram generation interrupted" );
             throw e;
         } finally {
             // Stop the timer
             timer.cancel();
         }
+    }
+
+    private String getFormatAndOutputParameters( String name ) {
+        String fileSep = System.getProperty( "file.separator" );
+        StringBuilder sb = new StringBuilder();
+            for ( String format : Arrays.asList( FORMATS ) ) {
+                sb.append( " -T" );
+                sb.append( format );
+                sb.append( " -o");
+                sb.append( TEMP );
+                sb.append( fileSep );
+                sb.append( name );
+                sb.append( "." );
+                sb.append( format );
+            }
+        return sb.toString();
+    }
+
+    private String sanitize( String ticket ) {
+        return ticket.replaceAll( "\\W", "_" );
     }
 
     /**
