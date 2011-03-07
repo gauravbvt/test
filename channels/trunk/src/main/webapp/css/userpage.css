@@ -35,6 +35,8 @@ div#userHomeContainer {
     background-color: #f6f6f6;
 }
 
+/* ----- Header ----- */
+
 div.pageHeader {
 	width: 1000px;
 	height: 60px;
@@ -44,6 +46,9 @@ div.pageHeader {
 	border-left:1px solid #cccccc;
 	border-right:1px solid #cccccc;
 }
+
+
+/* ----- Header - Logo and Text ----- */
 
 div.pageHeader div.logotext {
     background: url("../images/logo.png") no-repeat scroll 10px 5px transparent;
@@ -62,6 +67,9 @@ div.pageHeader h2 {
     font-weight: bold;
 }
 
+
+/* ----- Header - Spinner ----- */
+
 div.pageHeader span#spinner {
 	float:left;
 	margin:0 0 0 271px;
@@ -78,6 +86,9 @@ div.pageHeader span#spinner span {
 	float:left;
 	padding:0 0 0 3px;
 }
+
+
+/* ----- Header - Signout ----- */
 
 div.pageHeader div#logout {
 	float:right;
@@ -105,6 +116,9 @@ div.pageHeader span.feedback-container a:hover {
 div.pageHeader div.change-message {
 	float:right;
 }
+
+
+/* ----- Header - Feedback ----- */
 
 div.pageHeader span.feedback-container {
 	float:right;
@@ -150,6 +164,9 @@ div.cancelSend input:hover {
 	color:#333333;
 }
 
+
+/* ----- Layout - Structure ----- */
+
 div.userHomeColCont {
 	float:left;
 	width:1000px;
@@ -157,20 +174,30 @@ div.userHomeColCont {
 	border-left:1px solid #cccccc;
 	border-right:1px solid #cccccc;
 	border-bottom:1px solid #cccccc;
+	padding:10px 0 0 0;
 }
 
 div.userHomeLeftCol {
 	float:left;
 	width:669px;
-	padding:15px;
+	padding:10px 15px 15px;
+	border-right:1px solid #6C7B7B;
 }
+
+div.userHomeRightCol {
+	float:right;
+	width:299px;
+}
+
+
+/* ----- Layout - Plan Header ----- */
 
 div.planHeader  {
 	float:left;
-	border-bottom:3px solid #666666;
+	border-bottom:3px solid #999999;
 	width:669px;
 	padding:0 0 5px 0;
-	margin:0 0 5px 0;
+	margin:0 0 10px 0;
 }
 
 div.planHeader div#welcome {
@@ -192,6 +219,9 @@ div.planHeader div.switch-plan select {
 	font-size:12px;
 }
 
+
+/* ----- Layout - About Plan ----- */
+
 div.aboutPlan {
 	float:left;
 	width:669px;
@@ -204,14 +234,17 @@ div.aboutPlan img {
 div.aboutPlan div.planTitle {
     float: left;
     font-size: 13px;
-    line-height: 130%;
-    padding: 8px;
-
+    line-height: 18px;
+    padding: 5px 10px;
 }
 
 div.aboutPlan div.planTitle span.planName {
 	font-weight:bold;
+	font-size:14px;
 }
+
+
+/* ----- Layout - Plan References ----- */
 
 div.aboutPlan div.references {
 	float: left;
@@ -232,33 +265,74 @@ div.aboutPlan ul {
 }
 
 div.aboutPlan ul li {
-	padding:0 0 3px 0;
+	padding:0 0 4px 0;
 }
+
+div.aboutPlan ul li a {
+	border-bottom: 1px dotted #333333;
+    font-weight: bold;
+	color:#333333;
+}
+
+div.aboutPlan ul li a:hover {
+	border-bottom: 1px dotted #000000;
+    font-weight: bold;
+	color:#000000;
+}
+
+
+/* ----- Layout - Links ----- */
 
 div.aboutPlan div.goto {
 	float:left;
 	border-top:1px solid #999999;
 	border-bottom:1px solid #999999;
-	background: url('../images/actor.user.png') no-repeat 10px 12px #e8e8e8;
-	width:617px;
-	padding:5px 5px 5px 52px;
+	width:591px;
+	padding:5px 10px 5px 68px;
 	margin:10px 0 0 0;
+	height:58px;
+	line-height:16px;
+}
+
+div.aboutPlan div.goto.admin {
+	background: url('../images/admin.png') no-repeat 10px 10px #e8e8e8;
+}
+
+div.aboutPlan div.goto.model {
+	background: url('../images/modeling.png') no-repeat 10px 10px #e8e8e8;
+}
+
+div.aboutPlan div.goto.mapped {
+	background: url('../images/all_procedures.png') no-repeat 10px 10px #e8e8e8;
+}
+
+div.aboutPlan div.goto.report {
+	background: url('../images/my_procedures.png') no-repeat 10px 10px #e8e8e8;
 }
 
 div.aboutPlan div.goto a {
 	float:left;
 	font-weight:bold;
 	text-transform:uppercase;
+	border-bottom:1px dotted #666666;
+	padding:3px 10px 0 0;
+	background: url('../images/bullet-arrow-right.png') no-repeat right;
+}
+
+div.aboutPlan div.goto a:hover {
+	float:left;
+	font-weight:bold;
+	text-transform:uppercase;
+	border-bottom:1px dotted #333333;
+	color:#000000;
+	padding:3px 10px 0 0;
+	background: url('../images/bullet-arrow-right-high.png') no-repeat right;
 }
 
 div.aboutPlan div.goto span {
 	float:left;
-}
-
-div.userHomeRightCol {
-	float:right;
-	width:299px;
-	padding:10px 0 0 0;
+	padding:2px 0 0 0;
+	font-size:11px;
 }
 
 
@@ -332,7 +406,6 @@ ul.menu li {
 .menubar .dropmenu ul li:hover {
     background-color: #ccccff;
 }
-
 
 
 /* ---- Social ----- */
@@ -443,13 +516,11 @@ div#userHomeContainer #social div.social-controls div.text-controls a:hover {
 
 div#userHomeContainer #social div.social-list {
 	width:100%;
-	overflow-y:auto;
 	float:right;
 }
 
 div#userHomeContainer #social div.social-list.messages {
 	width:100%;
-	overflow-y:auto;
 	float:right;
 }
 
@@ -677,11 +748,12 @@ div#userHomeContainer #social div.social-list.messages td.info-container {
 div#userHomeContainer #social div.new-message {
 	background:#E8E8E8;
 	border-top:1px solid #999999;
-	bottom:0;
+	border-bottom:1px solid #999999;
 	float:left;
 	font-size:11px;
 	padding:5px 0 10px 10px;
-	position:absolute;
+	width:290px;
+	margin:10px 0 0 0;
 }
 
 div#userHomeContainer #social div.new-message > div {
@@ -705,6 +777,7 @@ div#userHomeContainer #social div.new-message textarea {
 	margin:2px 0 5px 0;
 	overflow-x:hidden;
 	font-size:11px;
+	width:277px;
 }
 
 div#userHomeContainer #social div.new-message input {
@@ -720,4 +793,3 @@ div#userHomeContainer #social div.new-message input:hover {
 	color:#333333;
 	font-size:11px;
 }
-
