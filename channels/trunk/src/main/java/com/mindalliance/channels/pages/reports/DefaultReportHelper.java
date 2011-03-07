@@ -185,7 +185,8 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
 
 
     @Override
-    public MarkupContainer newTaskLink( Part part, final Specable actor ) {
+    public MarkupContainer newTaskLink( Part part, Specable spec ) {
+        final Actor actor = spec.getActor();
         final Assignment assign = (Assignment) CollectionUtils.find(
                 getPlanService().findAllAssignments( part, true ),
                 new Predicate() {
