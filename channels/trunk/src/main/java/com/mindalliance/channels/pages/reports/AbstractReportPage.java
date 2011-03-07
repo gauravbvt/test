@@ -9,6 +9,7 @@ import com.mindalliance.channels.model.Commitment;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Role;
@@ -123,8 +124,10 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
         if ( assignment == null )
             try {
                 PageParameters parameters = getPageParameters();
-                assignment = getAssignment( parameters.getLong( SelectorPanel.ACTOR_PARM, 0 ),
-                        parameters.getLong( TASK_PARM, 0 ) );
+                assignment = getAssignment(
+                    parameters.getLong( SelectorPanel.ACTOR_PARM, 0 ),
+                    parameters.getLong( SelectorPanel.ORGANIZATION_PARM, 0 ),
+                    parameters.getLong( TASK_PARM, 0 ) );
 
             } catch ( StringValueConversionException ignored ) {
                 throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
@@ -136,12 +139,13 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
         return assignment;
     }
 
-    private Assignment getAssignment( long actorId, long taskId ) throws NotFoundException {
+    private Assignment getAssignment( long actorId, long orgId, long taskId ) throws NotFoundException {
         Part task = getPlanService().find( Part.class, taskId );
         Specable actor = getActor( actorId );
 
-        Assignments assignments = getPlanService().getAssignments()
-                .assignedTo( task ).with( actor );
+        Assignments assignments = orgId == 0 ?
+            getPlanService().getAssignments().assignedTo( task ).with( actor )
+            : getPlanService().getAssignments().assignedTo( task ).with( actor ).with( getOrg( orgId ) );
         if ( assignments.isEmpty() )
             throw new NotFoundException();
 
@@ -163,6 +167,10 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
         } catch ( NotFoundException ignored ) {
             return getPlanService().find( Role.class, actorId );
         }
+    }
+
+    private Specable getOrg( long orgId ) throws NotFoundException {
+        return getPlanService().find( Organization.class, orgId );
     }
 
     public Specable getActor() {
@@ -238,11 +246,18 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
         return result.setVisible( flow != null );
     }
 
-    public Component newFlowLink( Part part, Specable actor ) {
+    public Component newFlowLink( Part part, Specable specable ) {
         Plan plan = getPlanService().getPlan();
 
         PageParameters parms = new PageParameters();
-        parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
+        if ( !specable.getActor().isUnknown() )
+            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getActor() ).getId() ) );
+        else if ( !specable.getRole().isUnknown() )
+            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getRole() ).getId() ) );
+
+        if ( !specable.getOrganization().isUnknown() )
+            parms.put( SelectorPanel.ORGANIZATION_PARM, Long.toString( ( specable.getOrganization() ).getId() ) );
+
         parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
         parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
         parms.put( "task", Long.toString( part.getId() ) );
@@ -277,11 +292,17 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
         return result.toString();
     }
 
-    public MarkupContainer newTaskLink( Part part, Specable actor ) {
+    public MarkupContainer newTaskLink( Part part, Specable specable ) {
         Plan plan = getPlanService().getPlan();
 
         PageParameters parms = new PageParameters();
-        parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
+        if ( !specable.getActor().isUnknown() )
+            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getActor() ).getId() ) );
+        else if ( !specable.getRole().isUnknown() )
+            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getRole() ).getId() ) );
+
+        if ( !specable.getOrganization().isUnknown() )
+            parms.put( SelectorPanel.ORGANIZATION_PARM, Long.toString( ( specable.getOrganization() ).getId() ) );
         parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
         parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
         parms.put( AbstractReportPage.TASK_PARM, Long.toString( part.getId() ) );

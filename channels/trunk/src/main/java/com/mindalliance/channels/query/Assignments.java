@@ -49,6 +49,11 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         this.locale = locale;
     }
 
+    @Override
+    public String toString() {
+        return "Assignments(" + size() + ')';
+    }
+
     public Place getLocale() {
         return locale;
     }
@@ -551,7 +556,6 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         List<Assignment> result = new ArrayList<Assignment>();
         for ( Segment s : getSegments() )
             result.addAll( segmentMap.get( s ) );
-
         return result;
     }
 

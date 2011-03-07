@@ -424,9 +424,16 @@ div.optionals ul li {
     border-bottom: 1px solid #999999;
     width: 903px;
     display: block;
-    background: url('../images/arrow-right-report.png') 10px 6px no-repeat;
+    background: url('../images/arrow-down-report.png') 10px 6px no-repeat;
     padding: 6px 0 0 31px;
     clear: both;
+}
+
+div.immediates ul li.collapsed,
+div.notified ul li.collapsed,
+div.requested ul li.collapsed,
+div.optionals ul li.collapsed {
+    background: url('../images/arrow-right-report.png') 10px 6px no-repeat;
 }
 
 div.notified ul li ul,

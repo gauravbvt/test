@@ -8,18 +8,26 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.query.Assignments;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.Request;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -64,8 +72,10 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                 item.add(
                         new WebMarkupContainer( "evName" )
                                 .add( new Label( "name" ) )
-                                .add( new AttributeModifier( "name", true,
-                                        new Model<String>( String.valueOf( event.getId() ) ) ) ),
+                                .add( new AttributeModifier( "name", true, new Model<String>( String
+                                                                                                  .valueOf(
+                                                                                                      event
+                                                                                                          .getId() ) ) ) ),
                         new Label( "description" ),
                         newPhaseList( selector.getAssignments().with( event ) )
                 );
@@ -90,12 +100,14 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                 item.add(
                         new WebMarkupContainer( "pName" )
                                 .add( new Label( "name" ) )
-                                .add( new AttributeModifier( "name", true,
-                                        new Model<String>( String.valueOf( phase.getId() ) ) ) ),
+                                .add( new AttributeModifier( "name", true, new Model<String>( String
+                                                                                                  .valueOf(
+                                                                                                      phase
+                                                                                                          .getId() ) ) ) ),
                         new Label( "description" ),
                         newTaskList( "immediates",
-                                "a" + phase.getId(),
-                                phaseAssignments.getImmediates( getQueryService() ) ),
+                                     "a" + phase.getId(),
+                                     phaseAssignments.getImmediates( getQueryService() ) ),
                         newIncomingList( "notified",
                                 "b" + phase.getId(),
                                 reportHelper.getNotifications( phaseAssignments, getQueryService() ) ),
@@ -124,54 +136,121 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
             }
         } );
 
-        return new WebMarkupContainer( id )
-                .add( new ListView<Assignment>( "tasks", a ) {
-                    @Override
-                    protected void populateItem( ListItem<Assignment> item ) {
-                        Assignment assignment = item.getModelObject();
-                        Actor actor = assignment.getActor();
-                        if ( actor == null || actor.isUnknown() ) actor = (Actor) selector.getActor();
-                        item.add(
-                                reportHelper.newTaskLink( assignment.getPart(), actor ),
-                                new Label( "to", getToLabel( assignment ) )
-                                        .setVisible( !selector.isActorSelected() ),
-                                newSubtaskList( getSubtasks( assignment ) )
-                        );
-                    }
-                } )
-                .add( new WebMarkupContainer( "anchor" )
-                        .add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) ) )
-                .setVisible( !assignments.isEmpty() );
+        final Component tasks = new ListView<Assignment>( "tasks", a ) {
+            @Override
+            protected void populateItem( final ListItem<Assignment> item ) {
+                Assignment assignment = item.getModelObject();
+                Actor actor = assignment.getActor();
+                if ( actor == null || actor.isUnknown() )
+                    actor = (Actor) selector.getActor();
+                List<Assignment> subtasks = getSubtasks( assignment );
+                final Component subtaskList = newSubtaskList( subtasks ).setOutputMarkupId( true );
+                item.add( reportHelper.newTaskLink( assignment.getPart(), assignment.getEmployment() ), new Label( "to",
+                                                                                              getToLabel(
+                                                                                                  assignment ) )
+                    .setVisible( !selector.isActorSelected() ), subtaskList );
+                item.setOutputMarkupId( true );
+                if ( !subtasks.isEmpty() ) {
+                    item.add( new AttributeModifier( "class",
+                                                     true,
+                                                     new AbstractReadOnlyModel<Object>() {
+                                                         @Override
+                                                         public Object getObject() {
+                                                             return subtaskList.isVisible() ? ""
+                                                                                            : "collapsed";
+                                                         }
+                                                     } ) );
+                    item.add( new AjaxEventBehavior( "onclick" ) {
+                        @Override
+                        protected void onEvent( AjaxRequestTarget target ) {
+                            subtaskList.setVisible( !subtaskList.isVisible() );
+                            target.addComponent( item );
+                        }
+                    } );
+                }
+            }
+        }
+         .setVisible( false )
+         .setOutputMarkupId( true );
+
+        final Component component = new WebMarkupContainer( id )
+            .add( tasks )
+            .add( new WebMarkupContainer( "anchor" )
+                      .add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) ) )
+            .setVisible( !assignments.isEmpty() )
+            .setOutputMarkupId( true );
+
+        component.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                tasks.setVisible( !tasks.isVisible() );
+                target.addComponent( component );
+            }
+        } );
+
+        return component;
     }
 
     private Component newIncomingList( String id, String anchor, final Assignments assignments ) {
-        return new WebMarkupContainer( id )
-                .add( new ListView<Assignment>( "tasks", toSortedFlowList( assignments ) ) {
-                    @Override
-                    protected void populateItem( ListItem<Assignment> item ) {
-                        Assignment assignment = item.getModelObject();
-                        Part part = assignment.getPart();
-                        Actor actor = assignment.getActor();
-                        Assignments sources = selector.getSources( part );
+        final Component tasks = new ListView<Assignment>( "tasks", toSortedFlowList( assignments ) ) {
+            @Override
+            protected void populateItem( final ListItem<Assignment> item ) {
+                Assignment assignment = item.getModelObject();
+                Part part = assignment.getPart();
+                Actor actor = assignment.getActor();
+                Assignments sources = selector.getSources( part );
 
-                        ResourceSpec prefix = sources.getCommonSpec( null );
-                        item.add(
-                                reportHelper.newFlowLink( part, actor ),
-                                new Label( "to", getToLabel( assignment ) )
-                                        .setVisible( !selector.isActorSelected() ),
-                                new Label( "source", prefix.getReportSource() )
-                                        .add( new AttributeModifier( "title", true,
-                                                new Model<String>( getSourcesList( sources, prefix ) ) ) ),
+                ResourceSpec prefix = sources.getCommonSpec( null );
+                List<Assignment> subtasks = getSubtasks( assignment );
+                final Component subtaskList = newSubtaskList( subtasks ).setOutputMarkupId( true );
+                item.add( reportHelper.newFlowLink( part, assignment.getEmployment() ), new Label( "to", getToLabel(
+                    assignment ) ).setVisible( !selector.isActorSelected() ), new Label( "source",
+                                                                                         prefix
+                                                                                             .getReportSource() )
+                    .add( new AttributeModifier( "title", true, new Model<String>( getSourcesList(
+                        sources,
+                        prefix ) ) ) ),
 
-                                newSubtaskList( getSubtasks( assignment ) )
-                        );
-                    }
-                } )
-                .add( new WebMarkupContainer( "anchor" ).add( new AttributeModifier( "name",
-                        true,
-                        new Model<String>(
-                                anchor ) ) ) )
-                .setVisible( !assignments.isEmpty() );
+                          subtaskList );
+                item.setOutputMarkupId( true );
+                if ( !subtasks.isEmpty() ) {
+                    item.add( new AttributeModifier( "class",
+                                                     true,
+                                                     new AbstractReadOnlyModel<Object>() {
+                                                         @Override
+                                                         public Object getObject() {
+                                                             return subtaskList.isVisible() ? ""
+                                                                                            : "collapsed";
+                                                         }
+                                                     } ) );
+                    item.add( new AjaxEventBehavior( "onclick" ) {
+                        @Override
+                        protected void onEvent( AjaxRequestTarget target ) {
+                            subtaskList.setVisible( !subtaskList.isVisible() );
+                            target.addComponent( item );
+                        }
+                    } );
+                }
+            }
+        }
+            .setVisible( false );
+
+        final Component component = new WebMarkupContainer( id )
+            .add( tasks )
+            .add( new WebMarkupContainer( "anchor" )
+                      .add( new AttributeModifier( "name", true, new Model<String>( anchor ) ) ) )
+            .setVisible( !assignments.isEmpty() )
+            .setOutputMarkupId( true );
+
+        component.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                tasks.setVisible( !tasks.isVisible() );
+                target.addComponent( component );
+            }
+        } );
+
+        return component;
     }
 
     private List<Assignment> toSortedFlowList( Assignments assignments ) {
@@ -227,12 +306,15 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         item.add( reportHelper.newTaskLink( a.getPart(), a.getActor() ) );
                     }
                 } )
-                .setVisible( !subtasks.isEmpty() );
+                .setVisible( false );
     }
 
     private List<Assignment> getSubtasks( Assignment parent ) {
-        return toSortedTaskList( selector.getAllAssignments().from( parent ).with( parent
-                .getActor() ) );
+        Assignments all = selector.getAllAssignments();
+        Assignments from = all.from( parent );
+        Specable specable = parent.getEmployment();
+        Assignments with = from.with( specable );
+        return toSortedTaskList( with );
 
     }
 
