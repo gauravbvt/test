@@ -13,11 +13,13 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.Model;
@@ -84,6 +86,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private DropDownChoice<String> focusKindChoice;
     private AutoCompleteTextField<String> focusField;
+    private Button displayButton;
 
     private static final String PROMPT = "Enter a name and press return";
 
@@ -109,6 +112,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         addSummarizeChoice();
         addFocusChoice();
         addFocusEntityField();
+        addDisplayButton();
         addProcedureMapDiagramPanel();
         addMapSizing();
     }
@@ -170,6 +174,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addFocusEntityField();
                 target.addComponent( focusField );
+                displayButton.setEnabled( isFocusSelected() );
+                target.addComponent( displayButton );
             }
         } );
         addOrReplace( focusKindChoice );
@@ -198,8 +204,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         focusField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                addProcedureMapDiagramPanel();
-                target.addComponent( procedureMapDiagramPanel );
+                displayButton.setEnabled( isFocusSelected() );
+                target.addComponent( displayButton );
                 makeVisible( sizingLabel, isFocusSelected() );
                 target.addComponent( sizingLabel );
                 Change change = isPlanSelected()
@@ -234,6 +240,21 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             }
         });
         add( summarizeChoice );
+    }
+
+    private void addDisplayButton() {
+        displayButton = new Button( "displayButton" );
+        displayButton.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                addProcedureMapDiagramPanel();
+                target.addComponent( procedureMapDiagramPanel );
+            }
+        });
+        displayButton.setOutputMarkupId( true );
+        displayButton.setEnabled( isFocusSelected() );
+        add( displayButton );
+
     }
 
     private void addProcedureMapDiagramPanel() {

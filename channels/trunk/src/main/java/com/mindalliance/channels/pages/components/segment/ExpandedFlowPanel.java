@@ -186,6 +186,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private CheckBox prohibitedCheckBox;
 
     /**
+     * Prohibited checkbox container.
+     */
+    private WebMarkupContainer referencesEventPhaseContainer;
+    /**
+     * If prohibited.
+     */
+    private CheckBox referencesEventPhaseCheckBox;
+
+    /**
      * Flow is to be restricted.
      */
     private boolean restricted;
@@ -208,6 +217,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addIntentField();
         addLabeled( "name-label", nameField );
         addEOIs();
+        addReferencesEventPhaseField();
         addAskedForRadios();
         addSignificanceToTarget();
         addOtherField();
@@ -397,6 +407,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         prohibitedCheckBox.setEnabled( lockedByUser && f.canSetProhibited() );
         makeVisible( operationalContainer, f.canGetOperational() );
         operationalCheckBox.setEnabled( lockedByUser && f.canSetOperational() );
+        makeVisible( referencesEventPhaseContainer, f.canGetReferencesEventPhase() );
+        referencesEventPhaseCheckBox.setEnabled( lockedByUser && f.canSetReferencesEventPhase() );
     }
 
     private boolean canSetIfTaskFails() {
@@ -611,7 +623,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         operationalContainer.add( operationalCheckBox );
-     }
+    }
 
     private void addProhibitedField() {
         prohibitedContainer = new WebMarkupContainer( "prohibitedContainer" );
@@ -630,9 +642,31 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         prohibitedContainer.add( prohibitedCheckBox );
-     }
+    }
 
+    private void addReferencesEventPhaseField() {
+        referencesEventPhaseContainer = new WebMarkupContainer( "referencesEventPhaseContainer" );
+        referencesEventPhaseContainer.setOutputMarkupId( true );
+        add( referencesEventPhaseContainer );
+        referencesEventPhaseCheckBox = new CheckBox(
+                "referencesEventPhase",
+                new PropertyModel<Boolean>( this, "referencesEventPhase" )
+        );
+        referencesEventPhaseCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getFlow(), "referencesEventPhase" ) );
+            }
+        } );
+        referencesEventPhaseContainer.add( new Label( "eventPhaseTitle", getEventPhaseTitle() ) );
+        referencesEventPhaseContainer.add( referencesEventPhaseCheckBox );
+    }
 
+    private String getEventPhaseTitle() {
+        return getFlow().getSegment().getPhaseEventTitle();
+    }
 
     private void addFlowDescription() {
         flowDescription = new TextArea<String>( "description",
@@ -1402,19 +1436,34 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     /**
-      * Get whether flow is prohibited.
-      *
-      * @return a boolean
-      */
-     public boolean isProhibited() {
-         return getFlow().isProhibited();
-     }
+     * Get whether flow is prohibited.
+     *
+     * @return a boolean
+     */
+    public boolean isProhibited() {
+        return getFlow().isProhibited();
+    }
 
-     public void setProhibited( boolean val ) {
-         if ( val != getFlow().isProhibited() ) {
-             doCommand( new UpdateSegmentObject( getFlow(), "prohibited", val ) );
-         }
-     }
+    public void setProhibited( boolean val ) {
+        if ( val != getFlow().isProhibited() ) {
+            doCommand( new UpdateSegmentObject( getFlow(), "prohibited", val ) );
+        }
+    }
+
+    /**
+     * Get whether flow is prohibited.
+     *
+     * @return a boolean
+     */
+    public boolean isReferencesEventPhase() {
+        return getFlow().isReferencesEventPhase();
+    }
+
+    public void setReferencesEventPhase( boolean val ) {
+        if ( val != getFlow().isReferencesEventPhase() ) {
+            doCommand( new UpdateSegmentObject( getFlow(), "referencesEventPhase", val ) );
+        }
+    }
 
 
     /**

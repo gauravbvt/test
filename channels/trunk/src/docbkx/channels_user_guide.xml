@@ -7313,6 +7313,24 @@
                 
                 <entry><para>Yes</para></entry>
               </row>
+              
+              <row>
+                <entry><para>Ambiguous information sharing</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Require that the information sharing reference the event context</para>
+                  </listitem>
+                  <listitem>
+                    <para>Rename the the sharing flow</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable>

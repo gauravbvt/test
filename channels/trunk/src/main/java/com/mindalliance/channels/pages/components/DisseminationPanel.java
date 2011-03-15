@@ -526,7 +526,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                     EMPTY ) );
             columns.add( makeLinkColumn( "Role", "assignment.role", "assignment.role.name", EMPTY ) );
             columns.add( makeLinkColumn( "Jurisdiction", "assignment.jurisdiction", "assignment.jurisdiction.name", EMPTY ) );
-            columns.add( makeLinkColumn( "Organization", "assignment.organization", "assignment.organization.name", EMPTY ) );
+            columns.add( makeLinkColumn( "Actual organization", "assignment.organization", "assignment.organization.name", EMPTY ) );
             columns.add( makeLinkColumn( "Task", "assignment.part", "assignment.part.task", EMPTY ) );
             columns.add( makeColumn( "Subject", "dissemination.subject", EMPTY ) );
             columns.add( makeColumn( "Transformation", "dissemination.transformationType.label", EMPTY ) );

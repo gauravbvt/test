@@ -79,6 +79,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Whether the flow is prohibited.
      */
     private boolean prohibited = false;
+    /**
+     * Whether the flow clarifies the event phase in which it happens.
+     */
+    private boolean referencesEventPhase = true;
 
     protected Flow() {
     }
@@ -284,6 +288,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.prohibited = prohibited;
     }
 
+    public boolean isReferencesEventPhase() {
+        return referencesEventPhase;
+    }
+
+    public void setReferencesEventPhase( boolean referencesEventPhase ) {
+        this.referencesEventPhase = referencesEventPhase;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -309,6 +321,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public boolean canSetProhibited() {
         return canGetProhibited();
+    }
+
+    public boolean canGetReferencesEventPhase() {
+        return isSharing();
+    }
+
+    public boolean canSetReferencesEventPhase() {
+        return canGetReferencesEventPhase();
     }
 
     public boolean isOperationalizable() {

@@ -18,7 +18,7 @@
     <span class="menubar">
          <span wicket:id="flowActionsMenu">[flow action menu]</span>
     </span>
-    
+
     <span wicket:id="title" class="pointer">[flow title panel]</span>
 
     <div class="flow-details">
@@ -50,6 +50,10 @@
                     <ul>
                         <li wicket:id="eois"><span wicket:id="summary">eoi</span></li>
                     </ul>
+                    <span wicket:id="referencesEventPhaseContainer">
+                        <input wicket:id="referencesEventPhase" type="checkbox"/> references
+                        &quot;<span wicket:id="eventPhaseTitle">event phase</span>&quot;
+                    </span>
                 </td>
             </tr>
 
@@ -85,7 +89,7 @@
                 <th align="right"><span wicket:id="channel-title">Channels:</span></th>
                 <td><span wicket:id="channels">[channels panel]</span></td>
             </tr>
-                                         
+
             <tr wicket:id="max-delay-row">
                 <th align="right"><label>Within:</label></th>
                 <td>

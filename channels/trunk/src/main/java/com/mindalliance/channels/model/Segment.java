@@ -737,6 +737,11 @@ public class Segment extends ModelObject {
         );
     }
 
+    public boolean sameAs( Segment other ) {
+        return getEventPhase().equals( other.getEventPhase() ) &&
+                CollectionUtils.isEqualCollection( getContext(), other.getContext() );
+    }
+
 
     //=================================================
     /**

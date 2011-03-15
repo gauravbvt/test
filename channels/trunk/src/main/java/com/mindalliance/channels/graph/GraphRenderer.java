@@ -10,6 +10,7 @@ import java.io.OutputStream;
  * User: jf
  * Date: Nov 21, 2008
  * Time: 1:05:18 PM
+ *
  * @param <V> a vertex class
  * @param <E> an edge class
  */
@@ -35,12 +36,11 @@ public interface GraphRenderer<V, E> {
     void resetHighlight();
 
     /**
-     *
-     * @param graph                -- a Graph
-     * @param dotExporter         -- a DOT generator
-     * @param format               -- an output format (png, svg, imap etc.)
-     * @param ticket               -- a globally unique, use-once string
-     *@param output               -- the rendered graph  @throws DiagramException -- if generation fails
+     * @param graph       -- a Graph
+     * @param dotExporter -- a DOT generator
+     * @param format      -- an output format (png, svg, imap etc.)
+     * @param ticket      -- a globally unique, use-once string
+     * @param output      -- the rendered graph  @throws DiagramException -- if generation fails
      */
     void render( Graph<V, E> graph,
                  StyledDOTExporter<V, E> dotExporter,
@@ -50,8 +50,16 @@ public interface GraphRenderer<V, E> {
 
     /**
      * Set highlights to given edge and vertex.
+     *
      * @param vertex a vertex. Clear if null
-     * @param edge an edge. Clear if null
+     * @param edge   an edge. Clear if null
      */
     void highlight( V vertex, E edge );
+
+    /**
+     * Set layout algorithm.
+     *
+     * @param algo a string
+     */
+    void setAlgo( String algo );
 }

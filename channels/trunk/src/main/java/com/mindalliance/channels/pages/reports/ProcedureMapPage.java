@@ -22,7 +22,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -67,7 +66,9 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
         addHeader();
         addSpinner();
         addSelected();
+/*
         indicatorAware.add( new Label( "year", "" + Calendar.getInstance().get( Calendar.YEAR ) ) );
+*/
         indicatorAware.add( new Label( "client", selector.getPlan().getClient() ) );
     }
 

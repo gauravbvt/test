@@ -1932,6 +1932,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                             }
                         }
                     }
+                    if ( result.isEmpty() ) {
+                        Assignment assignment = new Assignment(
+                                new Employment( Actor.UNKNOWN,
+                                        Organization.UNKNOWN,
+                                        new Job( Actor.UNKNOWN,
+                                                part.getRoleOrUnknown(),
+                                                part.getJurisdiction() ) ),
+                                part );
+                        if ( !isProhibited( assignment, parts ) )
+                            result.add( assignment );
+                    }
                 }
             }
         }
