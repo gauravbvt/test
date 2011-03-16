@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
+
 /**
  * Entity network meta provider.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -103,6 +104,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "rankdir", getGraphOrientation() ) );
+            list.add( new DOTAttribute( "overlap", "false" ) );
             if ( getGraphSize() != null ) {
                 list.add( new DOTAttribute( "size", getGraphSizeString() ) );
                 list.add( new DOTAttribute( "ratio", "compress" ) );
@@ -127,10 +129,12 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             }
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
-                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
-                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+            if ( !getPlan().isTemplate() ) {
+                if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+                    list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
+                    list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
+                            Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+                }
             }
             return list;
         }
@@ -148,11 +152,13 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             if ( highlighted ) {
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
             }
-            // Issue coloring
-            if ( edge.hasIssues( getAnalyst() ) ) {
-                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( edge.getIssuesSummary( getAnalyst() ) ) ) );
+            if ( !getPlan().isTemplate() ) {
+                // Issue coloring
+                if ( edge.hasIssues( getAnalyst() ) ) {
+                    list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
+                    list.add( new DOTAttribute( "color", COLOR_ERROR ) );
+                    list.add( new DOTAttribute( "tooltip", sanitize( edge.getIssuesSummary( getAnalyst() ) ) ) );
+                }
             }
             return list;
         }

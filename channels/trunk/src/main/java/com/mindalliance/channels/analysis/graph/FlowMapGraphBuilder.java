@@ -3,6 +3,7 @@ package com.mindalliance.channels.analysis.graph;
 import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.graph.diagrams.DirectedMultiGraphWithProperties;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.EventTiming;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.InternalFlow;
@@ -83,6 +84,12 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
         }
         for ( Part terminator : queryService.findExternalTerminators( segment ) ) {
             graph.addVertex( terminator );
+        }
+
+        for ( EventTiming eventTiming : segment.getContext() ) {
+            for ( Part part : queryService.findAllInitiators( eventTiming ) ) {
+                graph.addVertex( part );
+            }
         }
 
         // add parts/connectors as nodes and flows as edges

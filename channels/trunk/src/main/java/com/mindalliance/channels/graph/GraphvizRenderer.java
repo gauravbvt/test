@@ -117,6 +117,14 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         highlightedEdges = new HashSet<E>();
     }
 
+    public GraphRenderer<V,E> cloneSelf() {
+        GraphvizRenderer<V,E> gr = new GraphvizRenderer<V,E>();
+        gr.setAlgo( algo );
+        gr.setDotPath( getDotPath() );
+        gr.setTimeout( timeout );
+        return gr;
+    }
+
     /**
      * {@inheritDoc}}
      */

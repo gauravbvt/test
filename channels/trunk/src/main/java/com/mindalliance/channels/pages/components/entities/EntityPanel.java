@@ -78,6 +78,12 @@ public class EntityPanel extends AbstractMultiAspectPanel {
         }
     }
 
+    @Override
+    protected void close( AjaxRequestTarget target ) {
+        super.close( target );
+        getCommander().cleanup( getEntity().getClass(), getEntity().getName() );
+    }
+
     /**
      * {@inheritDoc}
      */

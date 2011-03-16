@@ -17,6 +17,7 @@ import com.mindalliance.channels.model.Dissemination;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.EventTiming;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Flow.Restriction;
@@ -3136,6 +3137,31 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
 
         return true;
+    }
+
+    @Override
+    public List<Part> findAllInitiators( EventTiming eventTiming ) {
+        List<Part> initiators = new ArrayList<Part>(  );
+        Event event = eventTiming.getEvent();
+        boolean concurrent = eventTiming.getTiming() == Phase.Timing.Concurrent;
+        Place locale = getPlan().getLocale();
+        for ( Part part : findAllParts() ) {
+            if ( concurrent ) {
+                Event initiatedEvent = part.getInitiatedEvent();
+                if ( initiatedEvent != null && event.narrowsOrEquals( initiatedEvent, locale ) ) {
+                    initiators.add( part );
+                }
+            } else {
+                // post-event
+                Segment segment = part.getSegment();
+                if ( part.isTerminatesEventPhase()
+                        && event.narrowsOrEquals( segment.getEvent(), locale )
+                        && segment.getPhase().isConcurrent() ) {
+                    initiators.add( part );
+                }
+            }
+        }
+        return initiators;
     }
 }
 

@@ -62,4 +62,11 @@ public interface GraphRenderer<V, E> {
      * @param algo a string
      */
     void setAlgo( String algo );
+
+    /**
+     * Produce a new, identical instance.
+     *
+     * @return a graph renderer
+     */
+    GraphRenderer<V, E> cloneSelf();
 }

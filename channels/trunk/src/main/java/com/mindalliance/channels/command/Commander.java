@@ -114,7 +114,6 @@ public interface Commander {
      */
 
     <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException;
-
 /**
  * Resolves an id.
  *
@@ -226,6 +225,11 @@ public interface Commander {
      * @param refreshDelay a number of seconds between pings
      */
     void keepAlive( String userName, int refreshDelay );
+
+    /**
+     * Mark current user as active.
+     */
+    void updateUserActive();
 
     /**
      * Remove locks from any user who is no longer live.

@@ -269,16 +269,16 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     /**
      * Set the model object's description.
      *
-     * @param desc a string
+     * @param val a string
      */
-    public void setDescription( String desc ) {
-        if ( desc != null )
-            doCommand(
-                    new UpdatePlanObject(
-                            getEntity(),
-                            "description",
-                            desc,
-                            UpdateObject.Action.Set ) );
+    public void setDescription( String val ) {
+        String desc = val == null ? "" : val;
+        doCommand(
+                new UpdatePlanObject(
+                        getEntity(),
+                        "description",
+                        desc,
+                        UpdateObject.Action.Set ) );
     }
 
     /**
