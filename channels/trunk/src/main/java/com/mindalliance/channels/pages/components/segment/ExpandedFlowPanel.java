@@ -411,6 +411,22 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         referencesEventPhaseCheckBox.setEnabled( lockedByUser && f.canSetReferencesEventPhase() );
     }
 
+    /**
+     * Show/hide/enable/disable parts of the panel given the state of the flow.
+     *
+     * @param f the flow
+     */
+    private void adjustFieldsOnUpdate( Flow f, AjaxRequestTarget target ) {
+        triggersSourceContainer.setVisible(
+                ( !isSend() || f.isAskedFor() ) && f.canGetTriggersSource() );
+        target.addComponent( triggersSourceContainer );
+        flowDescription.setEnabled( ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() )
+                && isLockedByUser( getFlow() ) );
+        target.addComponent( flowDescription );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
+        target.addComponent( issuesPanel );
+    }
+
     private boolean canSetIfTaskFails() {
         Flow f = getFlow();
         return isLockedByUser( f )
@@ -555,6 +571,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
         significanceToSourceRow.add( sourceTaskReference );
         triggersSourceContainer = new WebMarkupContainer( "triggers-source-container" );
+        triggersSourceContainer.setOutputMarkupId( true );
         significanceToSourceRow.add( triggersSourceContainer );
         triggersSourceCheckBox = new CheckBox(
                 "triggers-source",
@@ -1484,8 +1501,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } else {
             if ( change.isUpdated() ) {
-                if ( getFlow() != null ) adjustFields( getFlow() );
-                target.addComponent( this );
+                Flow flow = getFlow();
+
+                if ( flow != null )
+                    adjustFieldsOnUpdate( flow, target );
+//                target.addComponent( this );
             }
             super.updateWith( target, change, updated );
         }

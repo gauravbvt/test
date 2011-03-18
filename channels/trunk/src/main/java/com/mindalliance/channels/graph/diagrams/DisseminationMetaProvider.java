@@ -190,7 +190,8 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             }
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
-            if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( !getPlan().isTemplate()
+                    && getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
@@ -262,7 +263,8 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
             // Issue coloring
-            if ( getAnalyst().hasUnwaivedIssues( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( !getPlan().isTemplate()
+                    && getAnalyst().hasUnwaivedIssues( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( flow,

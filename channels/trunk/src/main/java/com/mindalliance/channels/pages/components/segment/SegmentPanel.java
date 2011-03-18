@@ -516,7 +516,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 stopUpdates = change.isExpanded();
             }
             refreshMenus( target );
-            if ( !stopUpdates ) super.updateWith( target, change, updated );
+            if ( !stopUpdates )
+                super.updateWith( target, change, updated );
         } else {
             super.updateWith( target, change, updated );
         }

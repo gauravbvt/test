@@ -56,7 +56,12 @@ public class FlowListPanel extends AbstractCommandablePanel {
     private WebMarkupContainer flowsDiv;
 
     /**
-     * Expansions
+     * List of flow panels.
+     */
+    List<AbstractFlowPanel> flowPanels;
+
+    /**
+     * Expansions.
      */
     private Set<Long> expansions;
 
@@ -92,11 +97,13 @@ public class FlowListPanel extends AbstractCommandablePanel {
         flowsDiv = new WebMarkupContainer( "flows-div" );
         flowsDiv.setOutputMarkupId( true );
         addOrReplace( flowsDiv );
-        flowsDiv.add( createFlowPanels( sends ) );
+        ListView<Flow> flowPanels = createFlowPanels( sends );
+        flowsDiv.add( flowPanels );
     }
 
     private ListView<Flow> createFlowPanels( final boolean areSends ) {
         // final Set<Long> expansions = ( (ChannelsPage) getPage() ).findExpansions();
+        flowPanels = new ArrayList<AbstractFlowPanel>(  );
         return new ListView<Flow>( "flows", new PropertyModel<List<Flow>>( this, "flows" ) ) {
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
@@ -121,6 +128,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
                         "class",
                         true,
                         new Model<String>( getCssClasses( item ) ) ) );
+                flowPanels.add( flowPanel );
                 item.add( flowPanel );
             }
         };
@@ -192,7 +200,10 @@ public class FlowListPanel extends AbstractCommandablePanel {
 
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         target.appendJavascript( PlanPage.IE7CompatibilityScript );
-         super.updateWith( target, change, updated );
+        if ( change.isDisplay() || change.isUndoing() ) {
+            target.addComponent( flowsDiv );
+        }
+        super.updateWith( target, change, updated );
     }
 
 
@@ -212,6 +223,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
      * @param target ajax request target
      */
     public void refreshMenus( AjaxRequestTarget target ) {
-        target.addComponent( flowsDiv );
+        for ( AbstractFlowPanel flowPanel : flowPanels ) {
+           flowPanel.refreshMenu( target );
+        }
     }
 }
