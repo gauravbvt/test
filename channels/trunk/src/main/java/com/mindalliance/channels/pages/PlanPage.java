@@ -501,6 +501,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             hideNoop = props != null && props.contains( "hideNoop" );
             maximizedFlowPanel = new MaximizedFlowPanel(
                     "maximized-flow",
+                    new PropertyModel<Segment>( this, "segment" ),
                     new PropertyModel<Part>( this, "part" ),
                     showGoals,
                     showConnectors,
@@ -1669,6 +1670,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             } else if ( change.isCommunicated() ) {
                 segmentPanel.newMessage( target, change );
                 segmentPanel.refreshSocialPanel( target, change );
+            } else if ( change.isUnexplained() || change.isExplained() ) {
+                updateFlowLegend( target );
             } else {
                 refresh( target, change, updated );
             }
