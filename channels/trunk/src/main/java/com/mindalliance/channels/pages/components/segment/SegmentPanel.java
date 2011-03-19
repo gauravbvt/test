@@ -443,23 +443,22 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     }
 
     private void addMaximizeControl() {
-         // Maximize
-         WebMarkupContainer fullscreen = new WebMarkupContainer( "maximized" );
-         fullscreen.add( new AjaxEventBehavior( "onclick" ) {
-             @Override
-             protected void onEvent( AjaxRequestTarget target ) {
-                 String props = isShowingGoals() ? "showGoals" : "";
-                 props += isShowingConnectors() ? " showConnectors" : "";
-                 props += isHidingNoop() ? " hideNoop" : "";
-                 maximized = ! maximized;
-                 addFlowMapViewingControls();
-                 target.addComponent( getControlsContainer() );
-                 update( target, new Change( Change.Type.Maximized, getSegment(), props ) );
-             }
-         } );
-         getControlsContainer().add( fullscreen );
-     }
-
+        // Maximize
+        WebMarkupContainer fullscreen = new WebMarkupContainer( "maximized" );
+        fullscreen.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                String props = isShowingGoals() ? "showGoals" : "";
+                props += isShowingConnectors() ? " showConnectors" : "";
+                props += isHidingNoop() ? " hideNoop" : "";
+                maximized = !maximized;
+                addFlowMapViewingControls();
+                target.addComponent( getControlsContainer() );
+                update( target, new Change( Change.Type.Maximized, getSegment(), props ) );
+            }
+        } );
+        getControlsContainer().add( fullscreen );
+    }
 
 
     private void addMinimizeFlowMapControl() {
@@ -656,9 +655,11 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      */
     public void updateFlowMapOnMinimize( AjaxRequestTarget target, Change change ) {
         String property = change.getProperty();
-        setShowingGoals( property.contains( "showGoals" ) );
-        setShowingConnectors( property.contains( "showConnectors" ) );
-        setHidingNoop( property.contains( "hideNoop") );
+        if ( property != null ) {
+            setShowingGoals( property.contains( "showGoals" ) );
+            setShowingConnectors( property.contains( "showConnectors" ) );
+            setHidingNoop( property.contains( "hideNoop" ) );
+        }
         addFlowDiagram();
         target.addComponent( flowMapDiagramPanel );
         addFlowMapViewingControls();
