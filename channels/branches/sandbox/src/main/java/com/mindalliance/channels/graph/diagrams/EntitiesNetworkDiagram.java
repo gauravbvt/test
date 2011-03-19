@@ -60,7 +60,8 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
         Graph<ModelEntity, EntityRelationship> graph =
                 entitiesNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer =
-                diagramFactory.getGraphRenderer();
+                diagramFactory.getGraphRenderer().cloneSelf();
+        graphRenderer.setAlgo( "neato" );
         graphRenderer.resetHighlight();
         if ( selectedEntityRel != null ) {
             graphRenderer.highlightEdge( selectedEntityRel );

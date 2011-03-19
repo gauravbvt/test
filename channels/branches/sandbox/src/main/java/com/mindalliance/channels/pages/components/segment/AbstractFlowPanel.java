@@ -6,6 +6,7 @@ import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.segment.menus.FlowActionsMenuPanel;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -166,6 +167,10 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
         }
 
     }
-    
 
+
+    public void refreshMenu( AjaxRequestTarget target ) {
+        addFlowActionMenu();
+        target.addComponent( flowActionMenu );
+    }
 }

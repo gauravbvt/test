@@ -186,6 +186,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private CheckBox prohibitedCheckBox;
 
     /**
+     * Prohibited checkbox container.
+     */
+    private WebMarkupContainer referencesEventPhaseContainer;
+    /**
+     * If prohibited.
+     */
+    private CheckBox referencesEventPhaseCheckBox;
+
+    /**
      * Flow is to be restricted.
      */
     private boolean restricted;
@@ -208,6 +217,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addIntentField();
         addLabeled( "name-label", nameField );
         addEOIs();
+        addReferencesEventPhaseField();
         addAskedForRadios();
         addSignificanceToTarget();
         addOtherField();
@@ -397,6 +407,24 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         prohibitedCheckBox.setEnabled( lockedByUser && f.canSetProhibited() );
         makeVisible( operationalContainer, f.canGetOperational() );
         operationalCheckBox.setEnabled( lockedByUser && f.canSetOperational() );
+        makeVisible( referencesEventPhaseContainer, f.canGetReferencesEventPhase() );
+        referencesEventPhaseCheckBox.setEnabled( lockedByUser && f.canSetReferencesEventPhase() );
+    }
+
+    /**
+     * Show/hide/enable/disable parts of the panel given the state of the flow.
+     *
+     * @param f the flow
+     */
+    private void adjustFieldsOnUpdate( Flow f, AjaxRequestTarget target ) {
+        triggersSourceContainer.setVisible(
+                ( !isSend() || f.isAskedFor() ) && f.canGetTriggersSource() );
+        target.addComponent( triggersSourceContainer );
+        flowDescription.setEnabled( ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() )
+                && isLockedByUser( getFlow() ) );
+        target.addComponent( flowDescription );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
+        target.addComponent( issuesPanel );
     }
 
     private boolean canSetIfTaskFails() {
@@ -543,6 +571,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
         significanceToSourceRow.add( sourceTaskReference );
         triggersSourceContainer = new WebMarkupContainer( "triggers-source-container" );
+        triggersSourceContainer.setOutputMarkupId( true );
         significanceToSourceRow.add( triggersSourceContainer );
         triggersSourceCheckBox = new CheckBox(
                 "triggers-source",
@@ -611,7 +640,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         operationalContainer.add( operationalCheckBox );
-     }
+    }
 
     private void addProhibitedField() {
         prohibitedContainer = new WebMarkupContainer( "prohibitedContainer" );
@@ -630,9 +659,31 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         prohibitedContainer.add( prohibitedCheckBox );
-     }
+    }
 
+    private void addReferencesEventPhaseField() {
+        referencesEventPhaseContainer = new WebMarkupContainer( "referencesEventPhaseContainer" );
+        referencesEventPhaseContainer.setOutputMarkupId( true );
+        add( referencesEventPhaseContainer );
+        referencesEventPhaseCheckBox = new CheckBox(
+                "referencesEventPhase",
+                new PropertyModel<Boolean>( this, "referencesEventPhase" )
+        );
+        referencesEventPhaseCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getFlow(), "referencesEventPhase" ) );
+            }
+        } );
+        referencesEventPhaseContainer.add( new Label( "eventPhaseTitle", getEventPhaseTitle() ) );
+        referencesEventPhaseContainer.add( referencesEventPhaseCheckBox );
+    }
 
+    private String getEventPhaseTitle() {
+        return getFlow().getSegment().getPhaseEventTitle();
+    }
 
     private void addFlowDescription() {
         flowDescription = new TextArea<String>( "description",
@@ -1402,19 +1453,34 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     /**
-      * Get whether flow is prohibited.
-      *
-      * @return a boolean
-      */
-     public boolean isProhibited() {
-         return getFlow().isProhibited();
-     }
+     * Get whether flow is prohibited.
+     *
+     * @return a boolean
+     */
+    public boolean isProhibited() {
+        return getFlow().isProhibited();
+    }
 
-     public void setProhibited( boolean val ) {
-         if ( val != getFlow().isProhibited() ) {
-             doCommand( new UpdateSegmentObject( getFlow(), "prohibited", val ) );
-         }
-     }
+    public void setProhibited( boolean val ) {
+        if ( val != getFlow().isProhibited() ) {
+            doCommand( new UpdateSegmentObject( getFlow(), "prohibited", val ) );
+        }
+    }
+
+    /**
+     * Get whether flow is prohibited.
+     *
+     * @return a boolean
+     */
+    public boolean isReferencesEventPhase() {
+        return getFlow().isReferencesEventPhase();
+    }
+
+    public void setReferencesEventPhase( boolean val ) {
+        if ( val != getFlow().isReferencesEventPhase() ) {
+            doCommand( new UpdateSegmentObject( getFlow(), "referencesEventPhase", val ) );
+        }
+    }
 
 
     /**
@@ -1435,8 +1501,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } else {
             if ( change.isUpdated() ) {
-                if ( getFlow() != null ) adjustFields( getFlow() );
-                target.addComponent( this );
+                Flow flow = getFlow();
+
+                if ( flow != null )
+                    adjustFieldsOnUpdate( flow, target );
+//                target.addComponent( this );
             }
             super.updateWith( target, change, updated );
         }

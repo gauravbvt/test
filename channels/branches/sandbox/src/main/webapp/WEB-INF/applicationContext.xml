@@ -218,6 +218,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.RedundantSegmentContext"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.SegmentContextNeverCaused"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowEOIsNotStandardCompliant"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.AmbiguousSharingFlow"/>
             </list>
         </property>
     </bean>

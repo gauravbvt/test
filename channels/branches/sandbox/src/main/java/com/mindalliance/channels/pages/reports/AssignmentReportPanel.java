@@ -15,6 +15,8 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.query.Assignments;
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -251,7 +253,7 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
     public FlowTable getSends() {
         if ( sends == null ) {
             Part part = reportHelper.getPart();
-            sends = new FlowTable( part, removeProhibited( part.sends() ) );
+            sends = new FlowTable( part, removeProhibited( removeUnfocused( part.sends() ) ));
         }
         return sends;
     }
@@ -259,9 +261,21 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
     public FlowTable getReceives() {
         if ( receives == null ) {
             Part part = reportHelper.getPart();
-            receives = new FlowTable( part, removeProhibited( part.receives() ) );
+            receives = new FlowTable( part, removeProhibited( removeUnfocused( part.receives() ) ) );
         }
         return receives;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private Iterator<Flow> removeUnfocused( Iterator<Flow> flows ) {
+        return (Iterator<Flow>) IteratorUtils.filteredIterator(
+                flows,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !reportHelper.getCommitments((Flow)object).isEmpty();
+                    }
+                });
     }
 
     private Iterator<Flow> removeProhibited( Iterator<Flow> flows ) {

@@ -139,4 +139,8 @@ public class EventTiming implements Serializable {
                 && Level.isSubsumedBy( eventLevel, other.getEventLevel() )
                 && event.narrowsOrEquals( other.getEvent(), locale );
     }
+
+    public boolean isConcurrent() {
+        return timing == Phase.Timing.Concurrent;
+    }
 }

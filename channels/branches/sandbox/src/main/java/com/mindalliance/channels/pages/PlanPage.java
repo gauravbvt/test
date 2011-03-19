@@ -501,6 +501,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             hideNoop = props != null && props.contains( "hideNoop" );
             maximizedFlowPanel = new MaximizedFlowPanel(
                     "maximized-flow",
+                    new PropertyModel<Segment>( this, "segment" ),
                     new PropertyModel<Part>( this, "part" ),
                     showGoals,
                     showConnectors,
@@ -1658,6 +1659,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 refreshAll( target );
             } else if ( change.isForInstanceOf( Flow.class ) && change.isSelected() ) {
                 updateMaximizedFlow( target, change );
+                refreshHeadersMenusAndNavigation( target, change, updated );
                 refreshSegmentPanel( target, change, updated );
                 segmentPanel.resizePartPanels( target );
             } else if ( change.isCopied() ) {
@@ -1668,6 +1670,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             } else if ( change.isCommunicated() ) {
                 segmentPanel.newMessage( target, change );
                 segmentPanel.refreshSocialPanel( target, change );
+            } else if ( change.isUnexplained() || change.isExplained() ) {
+                updateFlowLegend( target );
             } else {
                 refresh( target, change, updated );
             }
@@ -1702,12 +1706,16 @@ public final class PlanPage extends AbstractChannelsWebPage {
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         updateMaximizedFlow( target, change );
         updateFlowLegend( target );
-        updateHeaders( target );
-        refreshPlanMenus( target );
-        updateNavigation( target );
+        refreshHeadersMenusAndNavigation( target, change, updated );
         updateRefresh( target );
         updateSelectors( target, change );
         refreshChildren( target, change, updated );
+    }
+
+    private void refreshHeadersMenusAndNavigation( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        updateHeaders( target );
+        refreshPlanMenus( target );
+        updateNavigation( target );
     }
 
     /**

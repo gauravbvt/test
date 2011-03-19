@@ -64,6 +64,7 @@ public abstract class UpdateObject extends AbstractCommand {
         if ( identifiable instanceof ModelObject )
             needLockOn( identifiable );
         set( "action", action.toString() );
+        set( "class", identifiable.getClass().getCanonicalName() );
         set( "object", identifiable.getId() );
         set( "property", property );
         set( "value", value );
@@ -155,11 +156,13 @@ public abstract class UpdateObject extends AbstractCommand {
                 throw new IllegalArgumentException( "Unknown action " + action() );
         }
         if ( identifiable instanceof ModelObject ) {
-            queryService.update( (ModelObject) identifiable );
-            describeTarget( (ModelObject) identifiable );            
+            ModelObject mo = (ModelObject)identifiable;
+            queryService.update( mo );
+            describeTarget( mo );
         } else {
             setTargetDescription( identifiable.toString() );
         }
+        commander.updateUserActive();
         return new Change( Change.Type.Updated, identifiable, (String) get( "property" ) );
     }
 

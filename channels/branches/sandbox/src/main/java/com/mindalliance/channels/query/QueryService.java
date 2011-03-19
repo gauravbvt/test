@@ -15,6 +15,7 @@ import com.mindalliance.channels.model.Dissemination;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.EventTiming;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Hierarchical;
@@ -1034,7 +1035,7 @@ public interface QueryService {
     /**
      * Find all commitments implied by a sharing flow.
      *
-     * @param flow                   a flow
+     * @param flow        a flow
      * @param selfCommits a boolean
      * @param assignments assignments under consideration
      * @return a list of commitments
@@ -1064,14 +1065,14 @@ public interface QueryService {
      * Find all agreements implied by commitments from an organization.
      *
      * @param organization an organization
-     * @param assignments assignments
-     * @param flows  a list of flows
+     * @param assignments  assignments
+     * @param flows        a list of flows
      * @return a list of agreements
      */
     List<Agreement> findAllImpliedAgreementsOf(
             Organization organization,
             Assignments assignments,
-            List<Flow>flows );
+            List<Flow> flows );
 
     /**
      * Find all commitments covered by an agreement by an organization.
@@ -1079,14 +1080,14 @@ public interface QueryService {
      * @param agreement    an agreement
      * @param organization an organization
      * @param assignments  assignments
-     * @param allFLows list of flows
+     * @param allFLows     list of flows
      * @return a list of commitments
      */
     List<Commitment> findAllCommitmentsCoveredBy(
             Agreement agreement,
             Organization organization,
             Assignments assignments,
-            List<Flow> allFLows);
+            List<Flow> allFLows );
 
     /**
      * Find essential flows from a part.
@@ -1142,6 +1143,7 @@ public interface QueryService {
 
     /**
      * Whether a commitment is covered by an agreement.
+     *
      * @param commitment a sharing commitment
      * @return a boolean
      */
@@ -1149,6 +1151,7 @@ public interface QueryService {
 
     /**
      * Whether a commitment requires an agreement.
+     *
      * @param commitment a sharing commitment
      * @return a boolean
      */
@@ -1321,7 +1324,7 @@ public interface QueryService {
     /**
      * Find all parts that override a given part.
      *
-     * @param part a part
+     * @param part  a part
      * @param parts a list of parts
      * @return a list of parts
      */
@@ -1330,7 +1333,7 @@ public interface QueryService {
     /**
      * Find all parts that are overridden by a given part.
      *
-     * @param part a part
+     * @param part  a part
      * @param parts a list of parts
      * @return a list of parts
      */
@@ -1386,11 +1389,20 @@ public interface QueryService {
 
     /**
      * Find all parts matching the task of a part.
+     *
      * @param part a part
-     * @return  a list of parts
+     * @return a list of parts
      */
     List<Part> findSynonymousParts( Part part );
 
     boolean allowsCommitment(
-        Assignment committer, Assignment beneficiary, Place locale, Flow flow );
+            Assignment committer, Assignment beneficiary, Place locale, Flow flow );
+
+    /**
+     * Find all parts that initiate an event timing.
+     *
+     * @param eventTiming an event timing (event + co- or post-event timing + level)
+     * @return a list of parts
+     */
+    List<Part> findAllInitiators( EventTiming eventTiming );
 }

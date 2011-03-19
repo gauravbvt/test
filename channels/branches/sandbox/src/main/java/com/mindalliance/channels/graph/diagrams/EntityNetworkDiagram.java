@@ -48,7 +48,8 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
         Graph<ModelEntity, EntityRelationship> graph =
                 entityNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer =
-                diagramFactory.getGraphRenderer();
+                diagramFactory.getGraphRenderer().cloneSelf();
+        graphRenderer.setAlgo( "neato" );
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( entity );
         if ( selectedEntityRel != null ) {

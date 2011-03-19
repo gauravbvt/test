@@ -1,7 +1,7 @@
 package com.mindalliance.channels.command.commands;
 
-import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.CommandException;
+import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
 
@@ -37,8 +37,16 @@ public class UpdatePlanObject extends UpdateObject {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings( "unchecked" )
     protected Identifiable getIdentifiable( Commander commander ) throws CommandException {
-        return commander.resolve( ModelObject.class, (Long) get( "object" ) );
+        String className = (String)get( "class" );
+        Class<? extends ModelObject> clazz = null;
+        try {
+            clazz = (Class<? extends ModelObject>)getClass().getClassLoader().loadClass( className );
+        } catch ( ClassNotFoundException e ) {
+            throw new CommandException( "Invalid class name", e );
+        }
+        return commander.resolve( clazz, (Long) get( "object" ) );
     }
 
     /**

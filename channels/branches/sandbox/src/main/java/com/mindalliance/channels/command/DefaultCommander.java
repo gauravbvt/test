@@ -20,6 +20,7 @@ import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
@@ -219,10 +220,10 @@ public class DefaultCommander implements Commander {
     }
 
     public final QueryService getQueryService() {
-          if ( queryService == null )
-              queryService = getQueryService( User.current().getPlan() );   // TODO - don't use User.current()
-          return queryService;
-      }
+        if ( queryService == null )
+            queryService = getQueryService( User.current().getPlan() );   // TODO - don't use User.current()
+        return queryService;
+    }
 
     private PlanService getQueryService( Plan plan ) {
         return new PlanService(
@@ -232,7 +233,6 @@ public class DefaultCommander implements Commander {
                 userService,
                 plan );
     }
-
 
 
 /*
@@ -265,13 +265,25 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException {
         try {
             return getQueryService().find( clazz, id );
         } catch ( NotFoundException e ) {
-            throw new CommandException( "You need to refresh.", e );
+            // If replaying a journal, recreate an entity if not found
+            if ( isReplaying() && ModelEntity.class.isAssignableFrom( clazz ) ) {
+                LOG.warn( "Recreating not found entity " + clazz.getSimpleName() + "[" + id + "] on journal replay" );
+                try {
+                    return (T)getQueryService().safeFindOrCreate( (Class<? extends ModelEntity>)clazz, "unknown", id );
+                } catch (Exception exc) {
+                    throw new CommandException( "Failed to create missing entity while replaying journal", e );
+                }
+            } else {
+                throw new CommandException( "You need to refresh.", e );
+            }
         }
     }
+
 
     @Override
     public synchronized void resetUserHistory( String userName, boolean all ) {
@@ -382,7 +394,7 @@ public class DefaultCommander implements Commander {
                 afterExecution( command, change );
                 if ( !isReplaying() && command.isTop() ) {
                     for ( CommandListener commandListener : commandListeners ) {
-                        commandListener.commandDone( command, change, getPlan()  );
+                        commandListener.commandDone( command, change, getPlan() );
                     }
                 }
             }
@@ -413,7 +425,7 @@ public class DefaultCommander implements Commander {
             history.recordUndone( memento, undoCommand );
             afterExecution( undoCommand, change );
             for ( CommandListener commandListener : commandListeners ) {
-                commandListener.commandUndone( undoCommand, getPlan()  );
+                commandListener.commandUndone( undoCommand, getPlan() );
             }
             return change;
         } catch ( CommandException e ) {
@@ -437,7 +449,7 @@ public class DefaultCommander implements Commander {
             history.recordRedone( memento, redoCommand );
             afterExecution( redoCommand, change );
             for ( CommandListener commandListener : commandListeners ) {
-                commandListener.commandRedone( redoCommand, getPlan()  );
+                commandListener.commandRedone( redoCommand, getPlan() );
             }
             return change;
         } catch ( CommandException e ) {
@@ -527,6 +539,11 @@ public class DefaultCommander implements Commander {
         for ( PresenceListener presenceListener : presenceListeners ) {
             presenceListener.keepAlive( username, getPlan(), refreshDelay );
         }
+    }
+
+    @Override
+    public void updateUserActive() {
+        updateUserActive( User.current().getUsername() );
     }
 
     @Override
@@ -754,8 +771,8 @@ public class DefaultCommander implements Commander {
             return new DisconnectFlow( flow );
         } else if ( flow.isNeed() ) {
             return new RemoveNeed( flow );
-        } else if ( flow.isCapability()) {
+        } else if ( flow.isCapability() ) {
             return new RemoveCapability( flow );
-        } else throw new RuntimeException( "Can't remove unknown kind of flow");
+        } else throw new RuntimeException( "Can't remove unknown kind of flow" );
     }
 }

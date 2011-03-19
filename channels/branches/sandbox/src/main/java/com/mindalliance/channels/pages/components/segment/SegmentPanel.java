@@ -13,10 +13,7 @@ import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.MediaReferencesPanel;
-import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
-import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.segment.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.segment.menus.PartShowMenuPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
@@ -25,12 +22,9 @@ import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -48,7 +42,13 @@ import java.util.Set;
  * Date: Mar 14, 2009
  * Time: 8:52:20 AM
  */
-public class SegmentPanel extends AbstractCommandablePanel {
+public class SegmentPanel extends AbstractFlowMapContainingPanel {
+
+    /**
+     * Flow map panel DOM id.
+     */
+    static protected final String FLOWMAP_DOM_ID = "#graph";
+
     /**
      * CSS id.
      */
@@ -57,29 +57,11 @@ public class SegmentPanel extends AbstractCommandablePanel {
      * CSS id.
      */
     private static final String SOCIAL_PANEL_ID = "#social";
-    /**
-     * Flow map panel DOM id.
-     */
-    static private final String FLOWMAP_DOM_ID = "#graph";
 
     /**
      * Part panel DOM id.
      */
     static private final String PART_DOM_ID = "#part";
-    /**
-     * Expected screen resolution.
-     */
-    static private double DPI = 96.0;
-
-    /**
-     * Flow diagram panel.
-     */
-    private FlowMapDiagramPanel flowMapDiagramPanel;
-
-    /**
-     * Segment model.
-     */
-    private IModel<Segment> segmentModel;
 
     /**
      * Selected part model.
@@ -117,28 +99,6 @@ public class SegmentPanel extends AbstractCommandablePanel {
     private SocialPanel socialPanel;
 
     /**
-     * Width, height dimension contraints on the flow diagram.
-     * In inches.
-     * None if any is 0.
-     */
-    private double[] flowDiagramDim = new double[2];
-    /**
-     * Whether the flow map was resized to fit.
-     */
-    private boolean resizedToFit = false;
-    /**
-     * Whether to show goals in flow map.
-     */
-    private boolean showingGoals = false;
-    /**
-     * Whether to show non-operational tasks and flows in flow map.
-     */
-    private boolean hidingNoop = false;
-    /**
-     * Whether to show connectors in flow map.
-     */
-    private boolean showingConnectors = false;
-    /**
      * Part panel css identifier.
      */
     private static final String PART_PANEL_ID = ".part-header";
@@ -163,21 +123,27 @@ public class SegmentPanel extends AbstractCommandablePanel {
      * Task title container.
      */
     private WebMarkupContainer taskTitleContainer;
+    private boolean minimized = false;
+    private boolean maximized = false;
 
     public SegmentPanel(
             String id,
             IModel<Segment> segmentModel,
             IModel<Part> partModel,
             Set<Long> expansions ) {
-        super( id, segmentModel, expansions );
-        this.segmentModel = segmentModel;
+        super( id, segmentModel, partModel, expansions );
         this.partModel = partModel;
         init();
     }
 
+    @Override
+    protected String getFlowMapDomId() {
+        return FLOWMAP_DOM_ID;
+    }
+
     private void init() {
         setOutputMarkupId( true );
-        addFlowViewControls();
+        addFlowMapViewingControls();
         addFlowDiagram();
         addPartMenuBar();
         addPartTitleContainer();
@@ -330,122 +296,15 @@ public class SegmentPanel extends AbstractCommandablePanel {
         addOrReplace( partActionsMenu );
     }
 
-    private void addFlowViewControls() {
-        WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
-        reduceToFit.add( new AbstractDefaultAjaxBehavior() {
-            @Override
-            protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-                String domIdentifier = FLOWMAP_DOM_ID;
-                String script = "wicketAjaxGet('"
-                        + getCallbackUrl( true )
-                        + "&width='+$('" + domIdentifier + "').width()+'"
-                        + "&height='+$('" + domIdentifier + "').height()";
-                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
-                        .replaceAll( "&amp;", "&" );
-                tag.put( "onclick", onclick );
-            }
-
-            @Override
-            protected void respond( AjaxRequestTarget target ) {
-                RequestCycle requestCycle = RequestCycle.get();
-                String swidth = requestCycle.getRequest().getParameter( "width" );
-                String sheight = requestCycle.getRequest().getParameter( "height" );
-                if ( !resizedToFit ) {
-                    flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
-                    flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
-                } else {
-                    flowDiagramDim = new double[2];
-                }
-                resizedToFit = !resizedToFit;
-                addFlowDiagram();
-                target.addComponent( flowMapDiagramPanel );
-            }
-        } );
-        add( reduceToFit );
-        // Maximize
-        WebMarkupContainer fullscreen = new WebMarkupContainer( "maximized" );
-        fullscreen.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                String props = showingGoals ? "showGoals" : "";
-                props += showingConnectors ? " showConnectors" : "";
-                props += hidingNoop ? " hideNoop" : "";
-                update( target, new Change( Change.Type.Maximized, getSegment(), props ) );
-            }
-        } );
-        add( fullscreen );
-        // Show/hide goals
-        WebMarkupContainer showGoals = new WebMarkupContainer( "showGoals" );
-        showGoals.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                showingGoals = !showingGoals;
-                addFlowDiagram();
-                target.addComponent( flowMapDiagramPanel );
-            }
-        } );
-        add( showGoals );
-        // Show/hide connectors
-        WebMarkupContainer showConnectors = new WebMarkupContainer( "showConnectors" );
-        showConnectors.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                showingConnectors = !showingConnectors;
-                addFlowDiagram();
-                target.addComponent( flowMapDiagramPanel );
-            }
-        } );
-        add( showConnectors );
-        // Show/hide non-operational
-        WebMarkupContainer hideNoop = new WebMarkupContainer( "hideNoop" );
-        hideNoop.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                hidingNoop = !hidingNoop;
-                addFlowDiagram();
-                target.addComponent( flowMapDiagramPanel );
-            }
-        } );
-        add( hideNoop );
-        // Show legend
-        WebMarkupContainer legend = new WebMarkupContainer( "legend" );
-        legend.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Explained, getSegment(), "legend" ) );
-            }
-        } );
-        add( legend );
-        // Maximize
-        WebMarkupContainer shrinkExpand = new WebMarkupContainer( "minimized" );
-        final String script = "if (! __channels_flowmap_minimized__) "
-                + " {__graph_bottom = \"90%\"; __part_top = \"10%\"; }"
-                + " else {__graph_bottom = \"49.5%\"; __part_top = \"50.5%\";}"
-                + " $(\"" + FLOWMAP_DOM_ID + "\").css(\"bottom\",__graph_bottom); "
-                + " $(\"" + PART_DOM_ID + "\").css(\"top\",__part_top);"
-                + " __channels_flowmap_minimized__ = !__channels_flowmap_minimized__;";
-        shrinkExpand.add( new AttributeModifier( "onClick", true, new Model<String>( script ) ) );
-        add( shrinkExpand );
-    }
-
-    private void addFlowDiagram() {
-        double[] dim = flowDiagramDim[0] <= 0.0 || flowDiagramDim[1] <= 0.0 ? null : flowDiagramDim;
-        Settings settings = new Settings( FLOWMAP_DOM_ID, null, dim, true, true );
-
-        flowMapDiagramPanel =
-                new FlowMapDiagramPanel( "flow-map", segmentModel, partModel, settings, showingGoals, showingConnectors, hidingNoop );
-        flowMapDiagramPanel.setOutputMarkupId( true );
-        addOrReplace( flowMapDiagramPanel );
+    protected void addFlowMapViewingControls() {
+        super.addFlowMapViewingControls();
+        addMaximizeControl();
+        addMinimizeFlowMapControl();
     }
 
 
     public Part getPart() {
         return partModel.getObject();
-    }
-
-    public Segment getSegment() {
-        return segmentModel.getObject();
     }
 
     public String getPartDescription() {
@@ -516,7 +375,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
                 stopUpdates = change.isExpanded();
             }
             refreshMenus( target );
-            if ( !stopUpdates ) super.updateWith( target, change, updated );
+            if ( !stopUpdates )
+                super.updateWith( target, change, updated );
         } else {
             super.updateWith( target, change, updated );
         }
@@ -562,8 +422,8 @@ public class SegmentPanel extends AbstractCommandablePanel {
             if ( change.isMinimized() || change.isModified() || change.isSelected() ) {
                 String props = change.getProperty();
                 if ( props != null ) {
-                    showingGoals = props.contains( "showGoals" );
-                    showingConnectors = props.contains( "showConnectors" );
+                    setShowingGoals( props.contains( "showGoals" ) );
+                    setShowingConnectors( props.contains( "showConnectors" ) );
                 }
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
@@ -578,7 +438,64 @@ public class SegmentPanel extends AbstractCommandablePanel {
             resizePartPanels( target );
             adjustComponents();
         }
+        addFlowMapViewingControls();
+        target.addComponent( getControlsContainer() );
     }
+
+    private void addMaximizeControl() {
+        // Maximize
+        WebMarkupContainer fullscreen = new WebMarkupContainer( "maximized" );
+        fullscreen.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                String props = isShowingGoals() ? "showGoals" : "";
+                props += isShowingConnectors() ? " showConnectors" : "";
+                props += isHidingNoop() ? " hideNoop" : "";
+                maximized = !maximized;
+                addFlowMapViewingControls();
+                target.addComponent( getControlsContainer() );
+                update( target, new Change( Change.Type.Maximized, getSegment(), props ) );
+            }
+        } );
+        getControlsContainer().add( fullscreen );
+    }
+
+
+    private void addMinimizeFlowMapControl() {
+        WebMarkupContainer shrinkExpand = new WebMarkupContainer( "minimized" );
+        final String script = "if (! __channels_flowmap_minimized__) "
+                + " {__graph_bottom = \"90%\"; __part_top = \"10%\"; }"
+                + " else {__graph_bottom = \"49.5%\"; __part_top = \"50.5%\";}"
+                + " $(\"" + FLOWMAP_DOM_ID + "\").css(\"bottom\",__graph_bottom); "
+                + " $(\"" + PART_DOM_ID + "\").css(\"top\",__part_top);"
+                + " __channels_flowmap_minimized__ = !__channels_flowmap_minimized__;";
+        shrinkExpand.add( new AttributeModifier( "onMouseUp", true, new Model<String>( script ) ) );
+        shrinkExpand.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                minimized = !minimized;
+                addFlowMapViewingControls();
+                target.addComponent( getControlsContainer() );
+            }
+        } );
+        getControlsContainer().add( shrinkExpand );
+        // icon
+        WebMarkupContainer icon = new WebMarkupContainer( "split_icon" );
+        icon.add( new AttributeModifier(
+                "src",
+                true,
+                new Model<String>( minimized
+                        ? "images/split_on.png"
+                        : "images/split.png" ) ) );
+        icon.add( new AttributeModifier(
+                "title",
+                true,
+                new Model<String>( minimized
+                        ? "Shrink back forms"
+                        : "Stretch up forms" ) ) );
+        shrinkExpand.add( icon );
+    }
+
 
     public void resizeSocialPanel( AjaxRequestTarget target, Change change ) {
         if ( change.isUnknown()
@@ -737,9 +654,16 @@ public class SegmentPanel extends AbstractCommandablePanel {
      * @param change a change
      */
     public void updateFlowMapOnMinimize( AjaxRequestTarget target, Change change ) {
-        showingGoals = change.isForProperty( "showGoals" );
+        String property = change.getProperty();
+        if ( property != null ) {
+            setShowingGoals( property.contains( "showGoals" ) );
+            setShowingConnectors( property.contains( "showConnectors" ) );
+            setHidingNoop( property.contains( "hideNoop" ) );
+        }
         addFlowDiagram();
         target.addComponent( flowMapDiagramPanel );
+        addFlowMapViewingControls();
+        target.addComponent( getControlsContainer() );
     }
 
     /**
