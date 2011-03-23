@@ -167,9 +167,40 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
         try {
             return getDao().find( clazz, id );
-        } catch ( NotFoundException ignored ) {
-            return findUnknown( clazz, id );
+        } catch ( NotFoundException exc ) {
+            try {
+                return findUnknown( clazz, id );
+            } catch ( NotFoundException e ) {
+                return findUniversal( clazz, id );
+            }
         }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private <T extends ModelObject> T findUniversal( Class<T> clazz, long id ) throws NotFoundException {
+        if ( clazz.isAssignableFrom( Actor.class )
+                && ModelEntity.getUniversalTypeFor( Actor.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( Actor.class );
+        else if ( clazz.isAssignableFrom( Event.class )
+                && ModelEntity.getUniversalTypeFor( Event.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( Event.class );
+        else if ( clazz.isAssignableFrom( Organization.class )
+                && ModelEntity.getUniversalTypeFor( Organization.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( Organization.class );
+        else if ( clazz.isAssignableFrom( Place.class )
+                && ModelEntity.getUniversalTypeFor( Place.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( Place.class );
+        else if ( clazz.isAssignableFrom( Role.class )
+                && ModelEntity.getUniversalTypeFor( Role.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( Role.class );
+        else if ( clazz.isAssignableFrom( TransmissionMedium.class )
+                && ModelEntity.getUniversalTypeFor( TransmissionMedium.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( TransmissionMedium.class );
+        else if ( clazz.isAssignableFrom( Participation.class )
+                && ModelEntity.getUniversalTypeFor( Participation.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( Participation.class );
+        else
+            throw new NotFoundException();
     }
 
     @SuppressWarnings( "unchecked" )
@@ -192,6 +223,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         else
             throw new NotFoundException();
     }
+
 
     @Override
     public <T extends ModelObject> List<T> list( Class<T> clazz ) {
@@ -1568,7 +1600,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Set<Hierarchical> roots = new HashSet<Hierarchical>();
         if ( !visited.contains( hierarchical ) ) {
             visited.add( hierarchical );
-            List<Hierarchical> superiors = hierarchical.getSuperiors();
+            List<? extends Hierarchical> superiors = hierarchical.getSuperiors();
             if ( superiors.isEmpty() ) {
                 roots.add( hierarchical );
             } else {
@@ -1601,7 +1633,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             return false;
 
         visited.add( hierarchical );
-        List<Hierarchical> superiors = hierarchical.getSuperiors();
+        List<? extends Hierarchical> superiors = hierarchical.getSuperiors();
         Object superior = CollectionUtils.find( superiors, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
@@ -1753,7 +1785,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public String findUserFullName( String userName ) {
         if ( userService == null ) {
-            System.out.println( "OOPS!");
+            System.out.println( "OOPS!" );
         }
         User user = userService.getUserNamed( userName );
         if ( user != null ) {
@@ -2544,10 +2576,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             return Organization.FamilyRelationship.Child;
         if ( ModelObject.areIdentical( fromOrg.getParent(), toOrg.getParent() ) )
             return Organization.FamilyRelationship.Sibling;
-        List<Hierarchical> toOrgSuperiors = toOrg.getSuperiors();
+        List<? extends Hierarchical> toOrgSuperiors = toOrg.getSuperiors();
         if ( toOrgSuperiors.contains( fromOrg ) )
             return Organization.FamilyRelationship.Ancestor;
-        List<Hierarchical> fromOrgSuperiors = fromOrg.getSuperiors();
+        List<? extends Hierarchical> fromOrgSuperiors = fromOrg.getSuperiors();
         if ( fromOrgSuperiors.contains( toOrg ) )
             return Organization.FamilyRelationship.Descendant;
         if ( !CollectionUtils.intersection( fromOrgSuperiors, toOrgSuperiors ).isEmpty() )
@@ -3141,7 +3173,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     public List<Part> findAllInitiators( EventTiming eventTiming ) {
-        List<Part> initiators = new ArrayList<Part>(  );
+        List<Part> initiators = new ArrayList<Part>();
         Event event = eventTiming.getEvent();
         boolean concurrent = eventTiming.getTiming() == Phase.Timing.Concurrent;
         Place locale = getPlan().getLocale();

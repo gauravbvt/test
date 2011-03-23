@@ -315,10 +315,14 @@ public class Organization extends AbstractUnicastChannelable
     }
 
     @Override
-    public List<Hierarchical> getSuperiors() {
-        List<Hierarchical> superiors = new ArrayList<Hierarchical>();
-        if ( parent != null ) superiors.add( parent );
-        return superiors;
+    public List<? extends Hierarchical> getSuperiors() {
+        if ( isType() ) {
+            return super.getSuperiors();
+        } else {
+            List<Hierarchical> superiors = new ArrayList<Hierarchical>();
+            if ( parent != null ) superiors.add( parent );
+            return superiors;
+        }
     }
 
     @Override

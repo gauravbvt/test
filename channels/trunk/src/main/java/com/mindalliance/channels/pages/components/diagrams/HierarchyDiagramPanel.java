@@ -29,14 +29,25 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
      * Hierarchical object model.
      */
     private IModel<Hierarchical> hierarchicalModel;
+    private final String algo;
 
     public HierarchyDiagramPanel(
             String id,
             IModel<Hierarchical> hierarchicalModel,
             double[] diagramSize,
             String domIdentifier ) {
+         this( id, hierarchicalModel, diagramSize, domIdentifier, "dot" );
+    }
+
+    public HierarchyDiagramPanel(
+            String id,
+            IModel<Hierarchical> hierarchicalModel,
+            double[] diagramSize,
+            String domIdentifier,
+            String algo) {
         super( id, new Settings( domIdentifier, null, diagramSize, true, true ) );
         this.hierarchicalModel = hierarchicalModel;
+        this.algo = algo;
         init();
     }
 
@@ -50,7 +61,8 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
         return getDiagramFactory().newHierarchyDiagram(
                 hierarchicalModel.getObject(),
                 getDiagramSize(),
-                getOrientation() );
+                getOrientation(),
+                algo );
     }
 
     @Override
@@ -58,6 +70,8 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
         StringBuilder sb = new StringBuilder();
         sb.append( "/hierarchy.png?entity=" );
         sb.append( getHierarchical().getId() );
+        sb.append( "&algo=");
+        sb.append( algo );
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
             sb.append( "&size=" );
@@ -108,7 +122,7 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
                     Long.valueOf( vertexId ) );
             if ( hierarchical != getHierarchical() ) {
                 // String js = scroll( domIdentifier, scrollTop, scrollLeft );
-                Change change = new Change( Change.Type.Expanded, hierarchical );
+                Change change = new Change( Change.Type.Selected, hierarchical );
                 // change.setScript( js );
                 update( target, change );
             }

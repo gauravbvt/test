@@ -43,7 +43,7 @@ import java.util.Set;
  * Date: Mar 31, 2009
  * Time: 1:18:49 PM
  */
-public class PlanMapPanel extends AbstractUpdatablePanel {
+public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
 
     /**
      * Expected screen resolution.
@@ -99,7 +99,7 @@ public class PlanMapPanel extends AbstractUpdatablePanel {
      */
     private Label sizingLabel;
 
-    public PlanMapPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+    public PlanSegmentsMapPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
     }

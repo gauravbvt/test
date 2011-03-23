@@ -23,10 +23,20 @@ import java.io.OutputStream;
 public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRelationship> {
 
     private Hierarchical hierarchical;
+    private final String algo;
 
     public HierarchyDiagram( Hierarchical hierarchical, double[] diagramSize, String orientation ) {
+        this( hierarchical, diagramSize, orientation, "dot" );
+    }
+
+    public HierarchyDiagram(
+            Hierarchical hierarchical,
+            double[] diagramSize,
+            String orientation,
+            String algo ) {
         super( diagramSize, orientation );
         this.hierarchical = hierarchical;
+        this.algo = algo;
     }
 
     public void render(
@@ -41,7 +51,8 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
         Graph<Hierarchical, HierarchyRelationship> graph =
                 hierarchyGraphBuilder.buildDirectedGraph();
         GraphRenderer<Hierarchical, HierarchyRelationship> graphRenderer =
-                diagramFactory.getGraphRenderer();
+                diagramFactory.getGraphRenderer().cloneSelf();
+        graphRenderer.setAlgo( algo );
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( hierarchical );
         HierarchyMetaProvider metaProvider = new HierarchyMetaProvider(

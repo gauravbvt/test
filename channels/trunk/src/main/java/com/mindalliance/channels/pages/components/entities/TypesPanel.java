@@ -7,11 +7,13 @@ import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
+import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -64,7 +66,18 @@ public class TypesPanel extends AbstractCommandablePanel {
         WebMarkupContainer typesDiv = new WebMarkupContainer( "typesDiv" );
         typesDiv.setOutputMarkupId( true );
         add( typesDiv );
+        addTypologiesLink( typesDiv );
         typesDiv.add( makeTypesTable() );
+    }
+
+    private void addTypologiesLink( WebMarkupContainer typesDiv ) {
+        AjaxFallbackLink classificationsLink = new AjaxFallbackLink( "typologies" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TYPOLOGIES ) );
+            }
+        };
+        classificationsLink.add( new AttributeModifier( "class", true, new Model<String>( "window" ) ) );
+        typesDiv.add( classificationsLink );
     }
 
     private ListView<TypeWrapper> makeTypesTable() {

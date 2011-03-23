@@ -642,11 +642,11 @@ span.note {
 	font-size:10px;
 }
 
-div.picture, div.procedureMap {
+div.picture, div.procedureMap, div.typology {
     background: white;
 }
 
-div.picture img , div.procedureMap img {
+div.picture img , div.procedureMap img, div.typology img {
     border: none;
 }
 
@@ -1179,7 +1179,7 @@ td.late span {
 
 /* ----- Floating Panels - Flowmaps ----- */
 
-.aspect div.picture, .aspect div.procedureMap {
+.aspect div.picture, .aspect div.procedureMap, .aspect div.typology {
 	background:#ffffff;
 	border-top:5px solid #E8E8E8;
 	border-right:5px solid #E8E8E8;
@@ -1319,6 +1319,12 @@ td.late span {
 	padding-right:6px;
 	position:relative;
 	text-transform:uppercase;
+	z-index:2;
+}
+
+.aspect h3 > span.link {
+	background:#F6F6F6;
+	display:inline;
 	z-index:2;
 }
 

@@ -15,7 +15,7 @@ import java.util.Set;
  * Date: Oct 7, 2009
  * Time: 1:05:30 PM
  */
-public abstract class ModelEntity extends ModelObject {
+public abstract class ModelEntity extends ModelObject implements Hierarchical {
     /**
      * Actual or Type.
      */
@@ -138,7 +138,7 @@ public abstract class ModelEntity extends ModelObject {
      *
      * @param entity      an entity
      * @param otherEntity an entity
-     * @param locale the default location
+     * @param locale      the default location
      * @return an entity or null
      */
     public static <T extends ModelEntity> T narrowest( T entity, T otherEntity, Place locale ) {
@@ -327,12 +327,13 @@ public abstract class ModelEntity extends ModelObject {
     public boolean isEquivalentToOrIsA( ModelEntity entity, Class<? extends ModelEntity> aClass ) {
 
         return entity == null ? isUnknown() && getClass().equals( aClass )
-                              : equals( entity ) || isType() && entity.hasType( this );
+                : equals( entity ) || isType() && entity.hasType( this );
     }
 
     /**
-     *   Get the list of implicit types.
-     * @return  a list of model entities
+     * Get the list of implicit types.
+     *
+     * @return a list of model entities
      */
     public List<ModelEntity> getImplicitTypes() {
         return new ArrayList<ModelEntity>();
@@ -348,14 +349,14 @@ public abstract class ModelEntity extends ModelObject {
      */
     public static boolean implies( ModelEntity entity, ModelEntity other, Place locale ) {
         return other == null
-            || entity != null && entity.narrowsOrEquals( other, locale );
+                || entity != null && entity.narrowsOrEquals( other, locale );
     }
 
     /**
      * Whether an entity is the same as the other,
      * or has all the types (transitively) of the other, type entity.
      *
-     * @param other a model entity
+     * @param other  a model entity
      * @param locale the default location
      * @return a boolean
      */
@@ -371,13 +372,14 @@ public abstract class ModelEntity extends ModelObject {
 
         // Can't compare rotten apples with rotten oranges
         return getClass().isAssignableFrom( other.getClass() )
-            && !isInvalid( locale )
+                && !isInvalid( locale )
 
-            && hasType( other );
+                && hasType( other );
     }
 
     /**
      * Whether the model object is consistent in its definition.
+     *
      * @param locale default location
      * @return a boolean
      */
@@ -398,8 +400,8 @@ public abstract class ModelEntity extends ModelObject {
      */
     public boolean validates( ModelEntity entity, Place locale ) {
         return isType()
-            && entity != null && !entity.isUnknown()
-            && getClass().isAssignableFrom( entity.getClass() );
+                && entity != null && !entity.isUnknown()
+                && getClass().isAssignableFrom( entity.getClass() );
     }
 
     /**
@@ -525,5 +527,18 @@ public abstract class ModelEntity extends ModelObject {
         return getTypeName();
     }
 
+    // Hierarchical
 
+
+    @Override
+    public List<? extends Hierarchical> getSuperiors() {
+        List<ModelEntity> superiors = new ArrayList<ModelEntity>();
+        if ( isType() ) {
+            superiors.addAll( getTypes() );
+            if ( !isUniversal() && superiors.isEmpty() ) {
+                superiors.add( ModelEntity.getUniversalTypeFor( getClass() ) );
+            }
+        }
+        return superiors;
+    }
 }
