@@ -14,8 +14,7 @@ import java.util.List;
  */
 public interface PresenceListener {
 
-    void present( String username, Plan plan );
-    void absent( String username, Plan plan );
+    void inactive( String username, Plan plan );
     void keepAlive( String username, Plan plan, int refreshDelay );
-    List<String> processDeaths( Plan plan );
+    List<String> giveMeYourDead( Plan plan );
 }

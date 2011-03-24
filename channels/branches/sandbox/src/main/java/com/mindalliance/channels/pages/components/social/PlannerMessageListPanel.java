@@ -351,7 +351,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private void sendNewMessage( boolean emailIt ) {
         String text = getNewMessageText();
         if ( !text.isEmpty() ) {
-            PlannerMessage plannerMessage = new PlannerMessage( text, getPlan().getId()  );
+            PlannerMessage plannerMessage = new PlannerMessage( text, getPlan().getUri()  );
             if ( getNewMessageRecipient() != ALL )
                 plannerMessage.setToUsername( getNewMessageRecipient().getUsername() );
             if ( getNewMessageAbout() != null )

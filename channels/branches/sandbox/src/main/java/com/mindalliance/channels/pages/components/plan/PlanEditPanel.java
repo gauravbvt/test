@@ -86,6 +86,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * Procedures diagrammed.
      */
     public static final String PROCEDURES = "Procedure Map";
+    /**
+     * All types
+     */
+    public static final String TYPOLOGIES = "All types";
 
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -187,7 +191,9 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanVersionsPanel();
         } else if ( aspect.equals( TAGS ) ) {
             return getPlanTagsPanel();
-        } else if ( aspect.equals( PROCEDURES ) ) {
+        }  else if ( aspect.equals( TYPOLOGIES ) ) {
+            return getPlanTypologiesPanel();
+        }else if ( aspect.equals( PROCEDURES ) ) {
             return getPlanProcedureMapPanel();
         } else {
             // Should never happen
@@ -200,7 +206,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     }
 
     private Component getPlanMapPanel() {
-        return new PlanMapPanel( "aspect", getModel(), getExpansions() );
+        return new PlanSegmentsMapPanel( "aspect", getModel(), getExpansions() );
     }
 
     private Component getPlanParticipationsPanel() {
@@ -245,6 +251,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
 
     private Component getPlanTagsPanel() {
         return new PlanTagsPanel( "aspect" );
+    }
+
+    private Component getPlanTypologiesPanel() {
+        return new PlanTypologiesPanel( "aspect" );
     }
 
     private Component getPlanProcedureMapPanel() {

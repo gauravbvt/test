@@ -133,12 +133,14 @@ public interface DiagramFactory<Vertex, Edge> {
     /**
      * Instantiates a hierarchy diagram.
      *
+     *
      * @param hierarchical a hierarchical object
      * @param diagramSize  width and height as array of doubles
      * @param orientation  a string
+     * @param algo a string - the layout algorithm to use
      * @return a hierarchy diagram
      */
-    Diagram newHierarchyDiagram( Hierarchical hierarchical, double[] diagramSize, String orientation );
+    Diagram newHierarchyDiagram( Hierarchical hierarchical, double[] diagramSize, String orientation, String algo );
 
     /**
      * Instantiates an essential flow map diagram.

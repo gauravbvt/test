@@ -6,9 +6,9 @@ import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Hierarchical;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.imaging.ImagingService;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
@@ -109,6 +109,9 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             if ( getGraphSize() != null ) {
                 list.add( new DOTAttribute( "size", getGraphSizeString() ) );
                 list.add( new DOTAttribute( "ratio", "compress" ) );
+                list.add( new DOTAttribute( "overlap", "false" ) );
+                // list.add( new DOTAttribute( "mode", "hier" ) );
+                // list.add( new DOTAttribute( "sep", "+100,100" ) );
             }
             return list;
         }
@@ -142,7 +145,8 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
         public List<DOTAttribute> getEdgeAttributes( HierarchyRelationship edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "none" ) );
-            //  list.add( new DOTAttribute( "arrowsize", "0.75" ) );
+            list.add( new DOTAttribute( "arrowtail", "open" ) );
+            list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );

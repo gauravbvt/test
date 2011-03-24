@@ -16,5 +16,5 @@ public interface Hierarchical extends Identifiable {
      *
      * @return a list of hierarchical model objects
      */
-    List<Hierarchical> getSuperiors();
+    List<? extends Hierarchical> getSuperiors();
 }

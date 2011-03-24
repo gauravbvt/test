@@ -41,6 +41,7 @@ public class PlanEditShowMenuPanel extends MenuPanel {
                     newItem( "All issues", PlanEditPanel.ISSUES ),
                     newItem( "Bibliography", PlanEditPanel.BIBLIOGRAPHY ),
                     newItem( "Index", PlanEditPanel.INDEX ),
+                    newItem( "All types", PlanEditPanel.TYPOLOGIES ),
                     newItem( "All tags", PlanEditPanel.TAGS ),
                     newItem( "Evaluation", PlanEditPanel.EVAL ),
                     newItem( "Participations", PlanEditPanel.PARTICIPATIONS ),

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.analysis.graph;
 
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.analysis.GraphBuilder;
 import com.mindalliance.channels.model.Hierarchical;
+import com.mindalliance.channels.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -10,6 +10,7 @@ import org.jgrapht.graph.DirectedMultigraph;
 import java.util.List;
 
 /**
+ * Hierarchy graph builder.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -27,7 +28,9 @@ public class HierarchyGraphBuilder implements GraphBuilder<Hierarchical, Hierarc
      */
     private Hierarchical hierarchical;
 
-    public HierarchyGraphBuilder( Hierarchical hierarchical, QueryService queryService ) {
+    public HierarchyGraphBuilder(
+            Hierarchical hierarchical,
+            QueryService queryService ) {
         this.hierarchical = hierarchical;
         this.queryService = queryService;
     }

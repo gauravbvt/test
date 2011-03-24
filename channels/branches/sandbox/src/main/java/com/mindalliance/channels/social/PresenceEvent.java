@@ -11,14 +11,14 @@ package com.mindalliance.channels.social;
 public class PresenceEvent extends PlanningEvent {
 
     public enum Type {
-        Login,
-        Logout
+        Active,
+        Inactive
     }
 
     private String username;
     private Type type;
 
-    public PresenceEvent( Type type, String username, long planId ) {
+    public PresenceEvent( Type type, String username, String planId ) {
         super( planId );
         this.username = username;
         this.type = type;
@@ -38,16 +38,16 @@ public class PresenceEvent extends PlanningEvent {
 
     public String toString() {
         return username
-                + ( type == Type.Login ? " logged in" : " logged out" )
+                + ( type == Type.Active ? " logged in" : " logged out" )
                 + " " + super.toString();
     }
 
     public boolean isEntering() {
-        return type == Type.Login;
+        return type == Type.Active;
     }
 
     public boolean isLeaving() {
-        return type == Type.Logout;
+        return type == Type.Inactive;
     }
 
 

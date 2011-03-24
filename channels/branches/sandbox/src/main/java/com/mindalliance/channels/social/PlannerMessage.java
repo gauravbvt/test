@@ -16,7 +16,7 @@ import com.mindalliance.channels.query.QueryService;
  */
 public class PlannerMessage extends PersistentObject {
 
-    private long planId;
+    private String planId;
     private String fromUsername;
     // broadcast if null
     private String toUsername;
@@ -25,24 +25,24 @@ public class PlannerMessage extends PersistentObject {
     private String aboutString = "";
     private boolean emailed = false;
 
-    public PlannerMessage( String text, long planId ) {
+    public PlannerMessage( String text, String planUri ) {
         super();
         User user = User.current();
         this.text = text;
         fromUsername = user.getUsername();
-        this.planId = planId;
+        planId = planUri;
     }
 
-    public PlannerMessage( String text, ModelObject modelObject, long planId ) {
-        this( text, planId );
+    public PlannerMessage( String text, ModelObject modelObject, String planUri ) {
+        this( text, planUri );
         aboutRef = new ModelObjectRef( modelObject );
     }
 
-    public long getPlanId() {
+    public String getPlanId() {
         return planId;
     }
 
-    public void setPlanId( long planId ) {
+    public void setPlanId( String planId ) {
         this.planId = planId;
     }
 

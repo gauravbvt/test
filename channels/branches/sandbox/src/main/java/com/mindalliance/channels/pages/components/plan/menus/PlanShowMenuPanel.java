@@ -92,6 +92,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                     Arrays.asList(
                             newLink( "All segments", plan, PlanEditPanel.MAP ),
                             newLink( "All issues", plan, PlanEditPanel.ISSUES ),
+                            newLink( "All types", plan, PlanEditPanel.TYPOLOGIES ),
                             newLink( "Index", plan, PlanEditPanel.INDEX ),
                             newLink(
                                     "Help", newTargetedLink(

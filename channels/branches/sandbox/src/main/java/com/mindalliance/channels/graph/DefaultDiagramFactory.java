@@ -171,9 +171,10 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     public Diagram newHierarchyDiagram(
             Hierarchical hierarchical,
             double[] diagramSize,
-            String orientation ) {
+            String orientation,
+            String algo ) {
         LOG.debug( "Making hierarchy diagram on " + hierarchical.getName() );
-        return new HierarchyDiagram( hierarchical, diagramSize, orientation );
+        return new HierarchyDiagram( hierarchical, diagramSize, orientation, algo );
     }
 
     /**
