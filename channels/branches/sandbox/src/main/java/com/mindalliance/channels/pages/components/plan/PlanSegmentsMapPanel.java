@@ -45,7 +45,6 @@ import java.util.Set;
  */
 public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
 
-
     /**
      * Expected screen resolution.
      */
