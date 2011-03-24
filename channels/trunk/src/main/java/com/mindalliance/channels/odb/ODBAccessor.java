@@ -44,6 +44,18 @@ public class ODBAccessor {
         this.planUri = planUri;
     }
 
+    public static void init( ODBTransactionFactory factory, String uri ) {
+        ODB odb = null;
+        try {
+            odb = factory.openDatabase( uri );
+        } catch ( IOException e ) {
+            LOG.warn( "Unable to open db", e );
+        } finally {
+            if ( odb != null && !odb.isClosed() )
+                odb.close();
+        }
+    }
+
     /**
      * Store a persistent object.
      *

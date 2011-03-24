@@ -4,6 +4,8 @@ import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.odb.ODBAccessor;
+import com.mindalliance.channels.odb.ODBTransactionFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -37,7 +39,10 @@ public class PlanManager {
 
     /** Plan persistence manager. */
     private final DefinitionManager definitionManager;
-
+    /**
+     * Persistent object database factory.
+     */
+    private ODBTransactionFactory databaseFactory;
     /**
      * All the plans, indexed by version uri (uri:version).
      */
@@ -114,6 +119,14 @@ public class PlanManager {
 
     public void setUserService( UserService userService ) {
         this.userService = userService;
+    }
+
+    public ODBTransactionFactory getDatabaseFactory() {
+        return databaseFactory;
+    }
+
+    public void setDatabaseFactory( ODBTransactionFactory databaseFactory ) {
+        this.databaseFactory = databaseFactory;
     }
 
     public AttachmentManager getAttachmentManager() {
@@ -207,7 +220,12 @@ public class PlanManager {
         } catch ( IOException e ) {
             LOG.error( "Unable to load plan " + version, e );
         }
+        createPersistentObjectDB( dao.getPlan() );
         return dao;
+    }
+
+    private void createPersistentObjectDB( Plan plan ) {
+        ODBAccessor.init( databaseFactory, plan.getUri() );
     }
 
     public DefinitionManager getDefinitionManager() {
