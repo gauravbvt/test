@@ -380,13 +380,6 @@ public interface Commander {
     void absent( String username );
 
     /**
-     * User joined a plan.
-     *
-     * @param username a string
-     */
-    void present( String username );
-
-    /**
      * Make the appropriate command to remove a flow.
      * @param flow a flow
      * @return a boolean

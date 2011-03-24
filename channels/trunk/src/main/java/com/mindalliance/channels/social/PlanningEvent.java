@@ -12,14 +12,14 @@ import com.mindalliance.channels.odb.PersistentObject;
  */
 public abstract class PlanningEvent extends PersistentObject {
 
-    private long planId;
+    private String planId;
 
-    PlanningEvent( long planId ) {
+    PlanningEvent( String planId ) {
         super();
         this.planId = planId;
     }
 
-    public long getPlanId() {
+    public String getPlanId() {
         return planId;
     }
 

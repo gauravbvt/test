@@ -19,7 +19,7 @@ import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.model.UserIssue;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
-import com.mindalliance.channels.pages.components.IndicatorAwareForm;
+import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
 import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
@@ -54,6 +54,7 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
@@ -200,7 +201,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * The big form -- used for attachments and segment imports only.
      */
-    private IndicatorAwareForm form;
+    private Form form;
     /**
      * Ajax activity spinner.
      */
@@ -412,7 +413,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         user.setClientInfo( clientInfo );
         */
         final Commander commander = getCommander();
-        commander.present( getUser().getUsername() );
+        commander.keepAlive( User.current().getUsername(), REFRESH_DELAY );
         commander.releaseAllLocks( getUser().getUsername() );
         setSegment( sc );
         setPart( p );
@@ -424,7 +425,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
         expanded.add( Channels.SOCIAL_ID );
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
-        addForm();
+        WebMarkupContainer body = new IndicatorAwareWebContainer("indicator", "spinner");
+        add( body );
+        addModalDialog( body );
+        addForm( body );
         addChannelsLogo();
         addSpinner();
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
@@ -438,7 +442,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addPlanMenubar();
         addSegmentSelector();
         addPlanSwitcher();
-        addModalDialog();
         addSegmentPanel();
         addEntityPanel();
         addAssignmentsPanel();
@@ -458,8 +461,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         rememberState();
     }
 
-    private void addForm() {
-        form = new IndicatorAwareForm( "big-form" ) {
+    private void addForm( WebMarkupContainer body ) {
+        form = new Form( "big-form" )  {
             @Override
             protected void onSubmit() {
                 // Do nothing - everything is done via Ajax, even file uploads
@@ -467,7 +470,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         };
         form.setMultiPart( true );
-        add( form );
+        body.add( form );
     }
 
     private void addChannelsLogo() {
@@ -843,7 +846,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         switchPlanContainer.add( planDropDownChoice );
     }
 
-    private void addModalDialog() {
+    private void addModalDialog( WebMarkupContainer body ) {
         dialogWindow = new ModalWindow( "dialog" );
         dialogWindow.setResizable( false );
         dialogWindow.setContent( new DialogPanel( dialogWindow.getContentId(), new Model<String>(
@@ -864,7 +867,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         dialogWindow.setHeightUnit( "px" );
         dialogWindow.setInitialHeight( 100 );
         dialogWindow.setInitialWidth( 400 );
-        add( dialogWindow );
+        body.add( dialogWindow );
     }
 
     private void addEntityPanel() {

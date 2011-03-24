@@ -128,8 +128,6 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
         neatoCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                addTypologySizing();
-                target.addComponent( sizingLabel );
                 addTypologyDiagram();
                 target.addComponent( typologyDiagramPanel );
                 target.addComponent( dotCheckBox );
@@ -140,8 +138,6 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
         dotCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                addTypologySizing();
-                target.addComponent( sizingLabel );
                 addTypologyDiagram();
                 target.addComponent( typologyDiagramPanel );
                 target.addComponent( neatoCheckBox );
@@ -196,7 +192,6 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
                 target.addComponent( sizingLabel );
             }
         } );
-        makeVisible( sizingLabel, isDot() );
         addOrReplace( sizingLabel );
     }
 

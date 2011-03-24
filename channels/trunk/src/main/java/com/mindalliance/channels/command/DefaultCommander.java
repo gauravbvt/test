@@ -550,7 +550,7 @@ public class DefaultCommander implements Commander {
     public synchronized void processDeaths() {
         Set<String> deads = new HashSet<String>();
         for ( PresenceListener presenceListener : presenceListeners ) {
-            deads.addAll( presenceListener.processDeaths( getPlan() ) );
+            deads.addAll( presenceListener.giveMeYourDead( getPlan() ) );
         }
         for ( String userName : deads ) {
             LOG.info( "{} is done planning", userName );
@@ -561,17 +561,9 @@ public class DefaultCommander implements Commander {
     @Override
     public synchronized void absent( String username ) {
         for ( PresenceListener presenceListener : presenceListeners ) {
-            presenceListener.absent( username, getPlan() );
+            presenceListener.inactive( username, getPlan() );
         }
     }
-
-    @Override
-    public synchronized void present( String username ) {
-        for ( PresenceListener presenceListener : presenceListeners ) {
-            presenceListener.present( username, getPlan() );
-        }
-    }
-
 
     @Override
     public synchronized void processTimeOuts() {

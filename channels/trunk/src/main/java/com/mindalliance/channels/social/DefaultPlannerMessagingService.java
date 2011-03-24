@@ -47,7 +47,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
     }
 
     public PlannerMessage broadcastMessage( String text, Plan plan ) {
-        PlannerMessage message = new PlannerMessage( text, plan.getId() );
+        PlannerMessage message = new PlannerMessage( text, plan.getUri() );
         addSentMessage( message, plan );
         return message;
     }
@@ -128,7 +128,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         return getOdb( plan ).iterate(
                 PlannerMessage.class,
                 Where.and()
-                        .add( Where.equal( "planId", plan.getId() ) )
+                        .add( Where.equal( "planId", plan.getUri() ) )
                         .add(
                         Where.or()
                                 .add( Where.equal( "toUsername", getUsername() ) )
@@ -150,7 +150,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         return getOdb( plan ).iterate(
                 PlannerMessage.class,
                 Where.and()
-                        .add( Where.equal( "planId", plan.getId() ) )
+                        .add( Where.equal( "planId", plan.getUri() ) )
                         .add( Where.equal( "fromUsername", getUsername() ) ),
                 ODBAccessor.Ordering.Descendant,
                 "date"

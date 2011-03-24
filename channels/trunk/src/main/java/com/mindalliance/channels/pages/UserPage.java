@@ -90,7 +90,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     }
 
     private void init() {
-        getCommander().present( getUser().getUsername() );
+        getCommander().keepAlive( User.current().getUsername(), REFRESH_DELAY );
         addPageTitle();
         addForm();
         addSpinner();

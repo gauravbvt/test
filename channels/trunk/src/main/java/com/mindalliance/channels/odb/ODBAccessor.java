@@ -4,6 +4,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.neodatis.odb.ODB;
 import org.neodatis.odb.Objects;
 import org.neodatis.odb.core.query.IQuery;
+import org.neodatis.odb.core.query.criteria.ComposedExpression;
 import org.neodatis.odb.core.query.criteria.ICriterion;
 import org.neodatis.odb.core.query.criteria.Where;
 import org.neodatis.odb.impl.core.query.criteria.CriteriaQuery;
@@ -24,12 +25,15 @@ import java.util.Iterator;
  */
 public class ODBAccessor {
 
+
     public enum Ordering {
         Ascendant,
         Descendant
     }
 
-    /** Logger. */
+    /**
+     * Logger.
+     */
     private static final Logger LOG = LoggerFactory.getLogger( ODBAccessor.class );
 
     private final ODBTransactionFactory odbTxFactory;
@@ -63,7 +67,7 @@ public class ODBAccessor {
     /**
      * Iterate over the results of a query.
      *
-     * @param clazz a class of persistent objects
+     * @param clazz     a class of persistent objects
      * @param criterion a criterion
      * @return an iterator on persistent objects
      */
@@ -74,14 +78,14 @@ public class ODBAccessor {
     /**
      * Iterate over the results of a query.
      *
-     * @param clazz a class of persistent objects
-     * @param criterion a criterion
-     * @param ordering an ordering
+     * @param clazz           a class of persistent objects
+     * @param criterion       a criterion
+     * @param ordering        an ordering
      * @param orderedProperty a string
      * @return an iterator on persistent objects
      */
     public <T extends PersistentObject> Iterator<T> iterate(
-        Class<T> clazz, ICriterion criterion, Ordering ordering, String orderedProperty ) {
+            Class<T> clazz, ICriterion criterion, Ordering ordering, String orderedProperty ) {
         synchronized ( odbTxFactory ) {
             ODB odb = null;
             try {
@@ -110,7 +114,7 @@ public class ODBAccessor {
     /**
      * Find the first answer to a query
      *
-     * @param clazz a class of persistent objects
+     * @param clazz     a class of persistent objects
      * @param criterion a criterion
      * @return a persistent object or null
      */
@@ -122,7 +126,7 @@ public class ODBAccessor {
      * Retrieve persistent object given its unique id.
      *
      * @param clazz a class of persistent objects
-     * @param id a string
+     * @param id    a string
      * @return a persistent object or null
      */
     public <T extends PersistentObject> T fromId( Class<T> clazz, String id ) {
@@ -132,14 +136,14 @@ public class ODBAccessor {
     /**
      * Find the first answer to a query
      *
-     * @param clazz a class of persistent objects
-     * @param criterion a criterion
-     * @param ordering an ordering
+     * @param clazz           a class of persistent objects
+     * @param criterion       a criterion
+     * @param ordering        an ordering
      * @param orderedProperty a string
      * @return a persistent object or null
      */
     public <T extends PersistentObject> T first(
-        Class<T> clazz, ICriterion criterion, Ordering ordering, String orderedProperty ) {
+            Class<T> clazz, ICriterion criterion, Ordering ordering, String orderedProperty ) {
 
         Iterator<T> answers = iterate( clazz, criterion, ordering, orderedProperty );
         return answers.hasNext() ? answers.next() : null;
@@ -149,7 +153,7 @@ public class ODBAccessor {
      * Delete an object from the database.
      *
      * @param clazz a class of persistent objects
-     * @param id a string
+     * @param id    a string
      */
     public <T extends PersistentObject> void delete( Class<T> clazz, String id ) {
         synchronized ( odbTxFactory ) {
@@ -157,7 +161,7 @@ public class ODBAccessor {
             try {
                 odb = odbTxFactory.openDatabase( planUri );
                 IQuery query = new CriteriaQuery(
-                    clazz, Where.equal( "id", id ) );
+                        clazz, Where.equal( "id", id ) );
 
                 Objects<T> objects = odb.getObjects( query );
                 Iterator<T> answers = objects.iterator();
@@ -173,13 +177,33 @@ public class ODBAccessor {
         }
     }
 
+    public <T extends PersistentObject> void deleteAll( Class<T> poClass, ComposedExpression ce ) {
+        synchronized ( odbTxFactory ) {
+            ODB odb = null;
+            try {
+                odb = odbTxFactory.openDatabase( planUri );
+                IQuery query = new CriteriaQuery( poClass, ce );
+                Objects<T> objects = odb.getObjects( query );
+                for ( T object : objects ) {
+                    odb.delete( object );
+                }
+            } catch ( IOException e ) {
+                  LOG.warn( "Unable to delete object", e );
+              } finally {
+                  if ( odb != null && !odb.isClosed() )
+                      odb.close();
+              }
+        }
+     }
+
+
     public <T extends PersistentObject> void update( Class<T> clazz, String id, String property, Object value ) {
         synchronized ( odbTxFactory ) {
             ODB odb = null;
             try {
                 odb = odbTxFactory.openDatabase( planUri );
                 IQuery query = new CriteriaQuery(
-                    clazz, Where.equal( "id", id ) );
+                        clazz, Where.equal( "id", id ) );
                 Objects<T> objects = odb.getObjects( query );
                 Iterator<T> answers = objects.iterator();
                 if ( answers.hasNext() ) {
