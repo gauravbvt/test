@@ -359,6 +359,16 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                     receivesFlowPanel.refresh( target );
                     sendsFlowPanel.refresh( target );
                 }
+                if ( change.isSelected() || change.isUndoing() || change.isUnknown() ) {
+                    addReceivesFlowPanel();
+                    addSendsFlowPanel();
+                    target.addComponent( receivesFlowPanel );
+                    target.addComponent( sendsFlowPanel );
+                }
+            }
+            if ( change.isForInstanceOf( Flow.class ) && change.isSelected() ) {
+                receivesFlowPanel.refresh( target );
+                sendsFlowPanel.refresh( target );
             }
             if ( identifiable instanceof Issue || identifiable instanceof SegmentObject ) {
                 if ( !( change.isUpdated() && isExpanded( identifiable ) ) && !( change.isDisplay() ) ) {
@@ -424,6 +434,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 if ( props != null ) {
                     setShowingGoals( props.contains( "showGoals" ) );
                     setShowingConnectors( props.contains( "showConnectors" ) );
+                    // TODO - what about operationals?
                 }
                 addFlowDiagram();
                 target.addComponent( flowMapDiagramPanel );
