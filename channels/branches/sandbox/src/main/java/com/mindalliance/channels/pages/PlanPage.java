@@ -174,11 +174,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private DropDownChoice<Segment> segmentDropDownChoice;
 
     /**
-     * Container of plan switcher.
-     */
-    private WebMarkupContainer switchPlanContainer;
-
-    /**
      * Segments action menu.
      */
     private MenuPanel planActionsMenu;
@@ -378,9 +373,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
 
     /**
-
-
-    /**
+     * /**
      * Utility constructor for tests.
      *
      * @param segment a segment
@@ -425,23 +418,24 @@ public final class PlanPage extends AbstractChannelsWebPage {
         expanded.add( Channels.SOCIAL_ID );
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
-        WebMarkupContainer body = new IndicatorAwareWebContainer("indicator", "spinner");
+        WebMarkupContainer body = new IndicatorAwareWebContainer( "indicator", "spinner" );
         add( body );
         addModalDialog( body );
         addForm( body );
+        form.add( new Label( "planName",
+                new Model<String>( "Plan: " + getPlan().getVersionedName() ) ) );
         addChannelsLogo();
         addSpinner();
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
         addHeader();
         addFooter();
-        addRefresh();
+        addRefreshNow();
         addHelp();
         addChangeMessagePanel();
         addGoBackAndForward();
         commander.resynced();
         addPlanMenubar();
         addSegmentSelector();
-        addPlanSwitcher();
         addSegmentPanel();
         addEntityPanel();
         addAssignmentsPanel();
@@ -449,7 +443,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addEOIsPanel();
         addFailureImpactsPanel();
         addDisseminationPanel( null, false );
-        addOverridesPanel( );
+        addOverridesPanel();
         addSegmentEditPanel();
         addPlanEditPanel();
         addSurveysPanel( Survey.UNKNOWN );
@@ -462,7 +456,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addForm( WebMarkupContainer body ) {
-        form = new Form( "big-form" )  {
+        form = new Form( "big-form" ) {
             @Override
             protected void onSubmit() {
                 // Do nothing - everything is done via Ajax, even file uploads
@@ -619,7 +613,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         return panel;
     }
 
-    private void addRefresh() {
+    private void addRefreshNow() {
         refreshNeededComponent = new AjaxFallbackLink( "refresh-needed" ) {
             public void onClick( AjaxRequestTarget target ) {
                 getCommander().clearTimeOut();
@@ -649,7 +643,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         } );
         form.add( refreshNeededComponent );
-        updateRefreshNotice();
+        updateRefreshNowNotice();
     }
 
     private void addHelp() {
@@ -710,7 +704,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             if ( getPlan().isDevelopment() ) refreshAll( target );
             getCommander().clearTimeOut();
         } else {
-            updateRefreshNotice();
+            updateRefreshNowNotice();
             if ( getPlan().isDevelopment() ) {
                 target.addComponent( refreshNeededComponent );
                 fadeOutMessagePanel( target );
@@ -731,8 +725,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
         target.addComponent( messageContainer );
     }
 
-    private void updateRefreshNotice() {
+    private void updateRefreshNowNotice() {
         String reasonsToRefresh = getReasonsToRefresh();
+        if ( !reasonsToRefresh.isEmpty() ) {
+            LOG.debug( "Refresh now requested" );
+        }
         makeVisible( refreshNeededComponent, !reasonsToRefresh.isEmpty() );
         refreshNeededComponent.add( new AttributeModifier( "title", true, new Model<String>(
                 "Refresh:" + reasonsToRefresh ) ) );
@@ -824,26 +821,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
         } );
         segmentDropDownChoice.setOutputMarkupId( true );
         selectSegmentContainer.add( segmentDropDownChoice );
-    }
-
-    private void addPlanSwitcher() {
-        switchPlanContainer = new WebMarkupContainer( "switch-plan" );
-        switchPlanContainer.setOutputMarkupId( true );
-        form.add( switchPlanContainer );
-        DropDownChoice<Plan> planDropDownChoice = new DropDownChoice<Plan>( "plan-sel",
-                new PropertyModel<Plan>(
-                        this,
-                        "plan" ),
-                new PropertyModel<List<? extends Plan>>(
-                        this,
-                        "plannablePlans" ) );
-        planDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Selected, getPlan() ) );
-            }
-        } );
-        switchPlanContainer.add( planDropDownChoice );
     }
 
     private void addModalDialog( WebMarkupContainer body ) {
@@ -961,7 +938,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.addOrReplace( disseminationPanel );
     }
 
-    private void addOverridesPanel(  ) {
+    private void addOverridesPanel() {
         Part viewed = (Part) getModelObjectViewed( ModelObject.class, "overrides" );
         if ( viewed == null ) {
             overridesPanel = new Label( "overrides", "" );
@@ -1111,9 +1088,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * Redirect to current plan page.
      */
     public void redirectToPlan() {
-       String url = redirectUrl( "plan", getPlan() );
-       RedirectPage page =  new RedirectPage( url );
-       setResponsePage( page );
+        String url = redirectUrl( "plan", getPlan() );
+        RedirectPage page = new RedirectPage( url );
+        setResponsePage( page );
     }
 
     /**
@@ -1482,14 +1459,14 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void expandFlow( Change change ) {
-        Flow flowToExpand = (Flow)change.getSubject( getQueryService() );
+        Flow flowToExpand = (Flow) change.getSubject( getQueryService() );
         // collapse other flows
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
         for ( long id : expansions ) {
             try {
                 ModelObject expanded = getQueryService().find( ModelObject.class, id );
                 if ( expanded instanceof Flow ) {
-                        toCollapse.add( expanded );
+                    toCollapse.add( expanded );
                 }
             } catch ( NotFoundException e ) {
                 LOG.info( "Failed to find expanded " + id );
@@ -1612,11 +1589,14 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 expandFlow( change );
             } else if ( change.isSelected() ) {
                 flowMaximized = false;
+                change.setType( Change.Type.Expanded );
                 if ( changedFlow.getSegment() != segment ) {
                     setSegment( changedFlow.getSegment() );
+                    change.setType( Change.Type.Recomposed );
                 }
                 if ( !changedFlow.hasPart( getPart() ) ) {
                     setPart( changedFlow.getLocalPart() );
+                    change.setType( Change.Type.Recomposed );
                 }
                 collapseSegmentObjects();
                 expandFlow( change );
@@ -1660,11 +1640,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 }
             } else if ( change.isCollapsed() && changes.get( change.getId() ) != null ) {
                 refreshAll( target );
-            } else if ( change.isForInstanceOf( Flow.class ) && change.isSelected() ) {
+            } else if ( change.isForInstanceOf( Flow.class ) && change.isExpanded() ) {
                 updateMaximizedFlow( target, change );
                 refreshHeadersMenusAndNavigation( target, change, updated );
-                refreshSegmentPanel( target, change, updated );
-                segmentPanel.resizePartPanels( target );
+                // refreshSegmentPanel( target, change, updated );
             } else if ( change.isCopied() ) {
                 refreshAllMenus( target );
             } else if ( change.isRefreshNeeded() ) {
@@ -1745,7 +1724,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void updateRefresh( AjaxRequestTarget target ) {
-        updateRefreshNotice();
+        updateRefreshNowNotice();
         target.addComponent( refreshNeededComponent );
     }
 
@@ -1766,7 +1745,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void updateSelectorsVisibility() {
         makeVisible( selectSegmentContainer, getAllSegments().size() > 1 );
-        makeVisible( switchPlanContainer, getPlannablePlans().size() > 1 );
     }
 
     private void updateSelectors( AjaxRequestTarget target, Change change ) {
@@ -1776,7 +1754,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         updateSelectorsVisibility();
         target.addComponent( selectSegmentContainer );
-        target.addComponent( switchPlanContainer );
     }
 
     private void refreshChildren(
@@ -1809,8 +1786,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void refreshSegmentPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( identifiable instanceof SegmentObject
+        if ( change.isForInstanceOf( SegmentObject.class )
                 && ( change.isSelected() || change.isDisplay() || change.isExists() ) ) {
             segmentPanel.doRefresh( target, change );
             // target.addComponent( segmentPanel );
@@ -1931,7 +1907,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
     }
 
-    private void refreshOverridesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated )  {
+    private void refreshOverridesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isUnknown()
                 || identifiable instanceof Part

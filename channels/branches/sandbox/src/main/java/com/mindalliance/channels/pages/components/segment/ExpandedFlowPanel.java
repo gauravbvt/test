@@ -452,8 +452,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssuesAnnotation( nameField, getFlow(), "name" );
                 target.addComponent( nameField );
-                addOtherField();
-                target.addComponent( otherLink );
+                addOtherChoice();
                 target.addComponent( otherChoice );
                 update( target, new Change( Change.Type.Updated, getFlow(), "name" ) );
             }
@@ -802,13 +801,20 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addOtherField() {
+         addOtherLink();
+        addOtherChoice();
+    }
+
+    private void addOtherLink() {
         otherLink = new ModelObjectLink( "other-link",
                 new PropertyModel<Part>( this, "otherPart" ),
                 new Model<String>( isSend() ? "To" : "From" ) );
         otherLink.setOutputMarkupId( true );
         otherLink.add( new AttributeModifier( "class", true, new Model<String>( "part-link" ) ) );
         addOrReplace( otherLink );
+    }
 
+    private void addOtherChoice() {
         otherChoice = new OtherNodeSelectorPanel(
                 "other",
                 new PropertyModel<Node>( this, "node" ),

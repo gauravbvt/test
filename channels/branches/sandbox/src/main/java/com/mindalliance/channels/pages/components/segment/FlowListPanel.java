@@ -200,7 +200,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
 
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         target.appendJavascript( PlanPage.IE7CompatibilityScript );
-        if ( change.isDisplay() || change.isUndoing() ) {
+        if ( change.isDisplay() || change.isAdded() ) {
             target.addComponent( flowsDiv );
         }
         super.updateWith( target, change, updated );
