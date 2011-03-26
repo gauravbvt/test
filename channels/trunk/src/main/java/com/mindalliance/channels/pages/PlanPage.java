@@ -429,7 +429,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
         addHeader();
         addFooter();
-        addRefresh();
+        addRefreshNow();
         addHelp();
         addChangeMessagePanel();
         addGoBackAndForward();
@@ -613,7 +613,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         return panel;
     }
 
-    private void addRefresh() {
+    private void addRefreshNow() {
         refreshNeededComponent = new AjaxFallbackLink( "refresh-needed" ) {
             public void onClick( AjaxRequestTarget target ) {
                 getCommander().clearTimeOut();
@@ -643,7 +643,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         } );
         form.add( refreshNeededComponent );
-        updateRefreshNotice();
+        updateRefreshNowNotice();
     }
 
     private void addHelp() {
@@ -704,7 +704,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             if ( getPlan().isDevelopment() ) refreshAll( target );
             getCommander().clearTimeOut();
         } else {
-            updateRefreshNotice();
+            updateRefreshNowNotice();
             if ( getPlan().isDevelopment() ) {
                 target.addComponent( refreshNeededComponent );
                 fadeOutMessagePanel( target );
@@ -725,8 +725,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
         target.addComponent( messageContainer );
     }
 
-    private void updateRefreshNotice() {
+    private void updateRefreshNowNotice() {
         String reasonsToRefresh = getReasonsToRefresh();
+        if ( !reasonsToRefresh.isEmpty() ) {
+            LOG.debug( "Refresh now requested" );
+        }
         makeVisible( refreshNeededComponent, !reasonsToRefresh.isEmpty() );
         refreshNeededComponent.add( new AttributeModifier( "title", true, new Model<String>(
                 "Refresh:" + reasonsToRefresh ) ) );
@@ -1586,11 +1589,14 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 expandFlow( change );
             } else if ( change.isSelected() ) {
                 flowMaximized = false;
+                change.setType( Change.Type.Expanded );
                 if ( changedFlow.getSegment() != segment ) {
                     setSegment( changedFlow.getSegment() );
+                    change.setType( Change.Type.Recomposed );
                 }
                 if ( !changedFlow.hasPart( getPart() ) ) {
                     setPart( changedFlow.getLocalPart() );
+                    change.setType( Change.Type.Recomposed );
                 }
                 collapseSegmentObjects();
                 expandFlow( change );
@@ -1634,11 +1640,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 }
             } else if ( change.isCollapsed() && changes.get( change.getId() ) != null ) {
                 refreshAll( target );
-            } else if ( change.isForInstanceOf( Flow.class ) && change.isSelected() ) {
+            } else if ( change.isForInstanceOf( Flow.class ) && change.isExpanded() ) {
                 updateMaximizedFlow( target, change );
                 refreshHeadersMenusAndNavigation( target, change, updated );
-                refreshSegmentPanel( target, change, updated );
-                segmentPanel.resizePartPanels( target );
+                // refreshSegmentPanel( target, change, updated );
             } else if ( change.isCopied() ) {
                 refreshAllMenus( target );
             } else if ( change.isRefreshNeeded() ) {
@@ -1719,7 +1724,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void updateRefresh( AjaxRequestTarget target ) {
-        updateRefreshNotice();
+        updateRefreshNowNotice();
         target.addComponent( refreshNeededComponent );
     }
 
@@ -1781,8 +1786,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void refreshSegmentPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( identifiable instanceof SegmentObject
+        if ( change.isForInstanceOf( SegmentObject.class )
                 && ( change.isSelected() || change.isDisplay() || change.isExists() ) ) {
             segmentPanel.doRefresh( target, change );
             // target.addComponent( segmentPanel );
