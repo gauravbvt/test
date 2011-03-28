@@ -17,6 +17,7 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
@@ -746,9 +747,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
             // Find expansions that were locked and are not unlocked
             for ( ModelObject mo : getEditableModelObjects( expansions ) ) {
-                if ( getCommander().isUnlocked( mo ) ) {
-                    reasons += " -- " + mo.getName() + " can now be edited.";
-                }
+                String aspect = getAspectShown( mo );
+                if ( aspect == null || aspectRequiresLock( mo, aspect ) )
+                    if ( getCommander().isUnlocked( mo ) ) {
+                        reasons += " -- " + mo.getName() + " can now be edited.";
+                    }
             }
         }
         return reasons;
@@ -1308,7 +1311,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
         for ( Long id : expansions ) {
             try {
                 ModelObject expanded = getQueryService().find( ModelObject.class, id );
-                getCommander().requestLockOn( expanded );
+                String aspect = getAspectShown( expanded );
+                if ( aspect != null )
+                    tryAcquiringLockForAspect( new Change( Change.Type.NeedsRefresh, expanded ), aspect );
+                else
+                    tryAcquiringLock( new Change( Change.Type.NeedsRefresh, expanded ) );
+                // getCommander().requestLockOn( expanded );
             } catch ( NotFoundException e ) {
                 LOG.info( "Expanded model object not found at: " + id );
             }
@@ -1320,11 +1328,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void expand( Change change ) {
-        // Never lock a segment or plan, or anything in a production plan
-        if ( getPlan().isDevelopment() && change.isForInstanceOf( ModelObject.class )
-                && getCommander().isLockable( change.getClassName() ) ) {
-            getCommander().requestLockOn( change.getId() );
-        }
+        tryAcquiringLock( change );
         if ( change.isForInstanceOf( ModelEntity.class ) ) {
             // ModelObject entity = (ModelObject) identifiable;
             ModelObject previous = findExpandedEntity();
@@ -1335,6 +1339,14 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         }
         expansions.add( change.getId() );
+    }
+
+    private void tryAcquiringLock( Change change ) {
+        // Never lock anything in a production plan
+        if ( getPlan().isDevelopment() && change.isForInstanceOf( ModelObject.class )
+                && getCommander().isLockable( change.getClassName() ) ) {
+            getCommander().requestLockOn( change.getId() );
+        }
     }
 
     private void expandOtherSegmentIfNeeded( Segment toExpand ) {
@@ -1365,7 +1377,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void collapse( Change change ) {
-        getCommander().releaseAnyLockOn( change.getId() );
+        tryReleasingLock( change );
         expansions.remove( change.getId() );
         // Close aspects of collapsed object
         if ( change.isForInstanceOf( Flow.class ) ) {
@@ -1374,14 +1386,24 @@ public final class PlanPage extends AbstractChannelsWebPage {
             closeAspect( change, null );
     }
 
+    private void tryReleasingLock( Change change ) {
+        getCommander().releaseAnyLockOn( change.getId() );
+    }
+
+    private void tryAcquiringLockForAspect( Change change, String aspect ) {
+        if ( aspectRequiresLock( change, aspect ) ) {
+            tryAcquiringLock( change );
+        }
+    }
+
     private void viewAspect( Identifiable identifiable, String aspect ) {
         viewAspect( new Change( Change.Type.None, identifiable ), aspect );
     }
 
     private void viewAspect( Change change, String aspect ) {
-        if ( aspect == null || aspect.isEmpty() ) {
-            aspects.remove( change.getId() );
-        } else {
+        aspects.remove( change.getId() );
+        tryReleasingLock( change );
+        if ( aspect != null && !aspect.isEmpty() ) {
             updateAspects( change, aspect );
         }
     }
@@ -1393,6 +1415,29 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( !aspectsShown.contains( aspect ) )
             aspectsShown.add( aspect );
         aspects.put( change.getId(), aspectsShown );
+        tryAcquiringLockForAspect( change, aspect );
+    }
+
+    private boolean aspectRequiresLock( Change change, String aspect ) {
+        return aspectRequiresLock( change.getSubject( getQueryService() ), aspect );
+    }
+
+    // TODO - consolidate test in the *EditPanels
+    private boolean aspectRequiresLock( Identifiable identifiable, String aspect ) {
+        if ( aspect == null ) {
+            return false;
+        } else if ( aspect.equals( AbstractMultiAspectPanel.DETAILS ) ) {
+            return true;
+        } else if ( identifiable instanceof Plan ) {
+            return aspect.equals( PlanEditPanel.EVENTS )
+                    || aspect.equals( PlanEditPanel.ORGANIZATIONS )
+                    || aspect.equals( PlanEditPanel.CLASSIFICATIONS )
+                    || aspect.equals( PlanEditPanel.PARTICIPATIONS )
+                    || aspect.equals( PlanEditPanel.VERSIONS );
+        } else if ( identifiable instanceof Segment ) {
+            return aspect.equals( SegmentEditPanel.GOALS )
+                    || aspect.equals( SegmentEditPanel.MOVER );
+        } else return false;
     }
 
     private void closeAspect( Identifiable identifiable, String aspect ) {
@@ -1408,6 +1453,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 aspectsShown.remove( aspect );
             }
         }
+        tryReleasingLock( change );
     }
 
     private <T extends ModelObject> T getModelObjectViewed( Class<T> clazz, String aspect ) {
@@ -1688,10 +1734,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         updateMaximizedFlow( target, change );
         updateFlowLegend( target );
-        refreshHeadersMenusAndNavigation( target, change, updated );
         updateRefresh( target );
         updateSelectors( target, change );
         refreshChildren( target, change, updated );
+        refreshHeadersMenusAndNavigation( target, change, updated );
     }
 
     private void refreshHeadersMenusAndNavigation( AjaxRequestTarget target, Change change, List<Updatable> updated ) {

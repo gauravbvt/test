@@ -181,9 +181,6 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         banner.setOutputMarkupId( true );
         banner.add( headerTitle );
 
-        addShowMenu();
-        addActionsMenu();
-        addDoneButton();
 
         String css = getCssClass();
         moContainer.add( new AttributeModifier( "class", true, new Model<String>( css ) ) );
@@ -191,6 +188,9 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
 
         if ( aspectShown == null ) aspectShown = getDefaultAspect();
         showAspect( aspectShown );
+        addShowMenu();
+        addActionsMenu();
+        addDoneButton();
         adjustComponents();
     }
 
@@ -251,19 +251,25 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
 
     private Component makeActionMenuOrLabel( String menuId ) {
         Component menu;
-        LockManager lockManager = getLockManager();
-        if ( lockManager.isLockedByUser( User.current().getUsername(), getObject().getId() ) ) {
-            menu = makeActionMenu( menuId );
-        } else if ( getCommander().isTimedOut() || getLockOwner( getObject() ) == null ) {
-            menu = timeOutLabel( menuId ) ;
-        } else if ( getObject().isImmutable() ) {
-            menu = new Label(
-                    menuId, new Model<String>( "Immutable" ) );
+        if ( !isAspectShownActionable() ) {
+            menu = new Label( menuId, "" );
         } else {
-            menu = editedByLabel( menuId, getObject(), lockManager.getLockUser( getObject().getId() ) );
+            LockManager lockManager = getLockManager();
+            if ( lockManager.isLockedByUser( User.current().getUsername(), getObject().getId() ) ) {
+                menu = makeActionMenu( menuId );
+            } else if ( getCommander().isTimedOut() || getLockOwner( getObject() ) == null ) {
+                menu = timeOutLabel( menuId );
+            } else if ( getObject().isImmutable() ) {
+                menu = new Label(
+                        menuId, new Model<String>( "Immutable" ) );
+            } else {
+                menu = editedByLabel( menuId, getObject(), lockManager.getLockUser( getObject().getId() ) );
+            }
         }
         return menu;
     }
+
+    protected abstract boolean isAspectShownActionable();
 
     /**
      * Make action menu.

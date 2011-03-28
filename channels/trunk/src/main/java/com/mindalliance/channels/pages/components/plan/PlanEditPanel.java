@@ -15,6 +15,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -91,6 +92,12 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      */
     public static final String TYPOLOGIES = "All types";
 
+    /**
+     * Actionable aspects.
+     */
+    private static final String[] ACTIONABLE_ASPECTS = {DETAILS, CLASSIFICATIONS, EVENTS, ORGANIZATIONS, PARTICIPATIONS};
+
+
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
     }
@@ -140,6 +147,11 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
                 new PropertyModel<ModelObject>( this, "object" ) );
         showMenu.setPlanEditPanel( this );
         return showMenu;
+    }
+
+    @Override
+    protected boolean isAspectShownActionable() {
+        return Arrays.asList( ACTIONABLE_ASPECTS ).contains( getAspectShown() );
     }
 
     /**
