@@ -412,6 +412,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      */
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         resizeSocialPanel( target, change );
+        refreshMenus( target );
         Identifiable identifiable = change.getSubject( getQueryService() );
         if ( identifiable instanceof Issue
                 && change.isExists()
@@ -429,7 +430,6 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             }
             addFlowMapViewingControls();
             addFlowDiagram();
-            // addPartAndFlows();
             target.appendJavascript( PlanPage.IE7CompatibilityScript );
             resizePartPanels( target );
             target.addComponent( getControlsContainer() );
