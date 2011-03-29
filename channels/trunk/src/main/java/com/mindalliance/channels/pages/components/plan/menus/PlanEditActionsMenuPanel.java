@@ -22,7 +22,9 @@ import java.util.List;
  */
 public class PlanEditActionsMenuPanel extends ActionMenuPanel {
 
-    public PlanEditActionsMenuPanel( String id, IModel<? extends Identifiable> model ) {
+    public PlanEditActionsMenuPanel(
+            String id,
+            IModel<? extends Identifiable> model ) {
         super( id, model, null );
     }
 
@@ -32,18 +34,20 @@ public class PlanEditActionsMenuPanel extends ActionMenuPanel {
     @Override
     protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
-        commandWrappers.add( new CommandWrapper( new PasteAttachment( getPlan() ) ) {
-            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                update( target, change );
-            }
-        } );
-        commandWrappers.add( new CommandWrapper( new AddUserIssue( getPlan() ) ) {
-            public void onExecuted(
-                    AjaxRequestTarget target,
-                    Change change ) {
-                update( target, change );
-            }
-        } );
+        if ( isLockable( ) ) {
+            commandWrappers.add( new CommandWrapper( new PasteAttachment( getPlan() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new AddUserIssue( getPlan() ) ) {
+                public void onExecuted(
+                        AjaxRequestTarget target,
+                        Change change ) {
+                    update( target, change );
+                }
+            } );
+        }
         return commandWrappers;
     }
 

@@ -150,7 +150,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     }
 
     @Override
-    protected boolean isAspectShownActionable() {
+    protected boolean isAspectShownEditable() {
         return Arrays.asList( ACTIONABLE_ASPECTS ).contains( getAspectShown() );
     }
 
@@ -169,7 +169,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     protected MenuPanel makeActionMenu( String menuId ) {
         return new PlanEditActionsMenuPanel(
                 menuId,
-                new PropertyModel<ModelObject>( this, "object" ) );
+                new PropertyModel<ModelObject>( this, "object" ));
     }
 
     /**

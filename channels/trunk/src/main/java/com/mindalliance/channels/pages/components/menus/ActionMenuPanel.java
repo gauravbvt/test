@@ -1,14 +1,13 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.model.Identifiable;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.Arrays;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -48,5 +47,11 @@ public abstract class ActionMenuPanel extends MenuPanel {
      */
     protected abstract List<CommandWrapper> getCommandWrappers();
 
+    protected boolean isLockable( ) {
+        return getLockManager().isLockableByUser( getIdentifiable() );
+    }
 
+    protected Identifiable getIdentifiable() {
+        return getModel().getObject();
+    }
 }

@@ -251,8 +251,8 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
 
     private Component makeActionMenuOrLabel( String menuId ) {
         Component menu;
-        if ( !isAspectShownActionable() ) {
-            menu = new Label( menuId, "" );
+        if ( !isAspectShownEditable() ) {
+            menu = makeActionMenu( menuId );
         } else {
             LockManager lockManager = getLockManager();
             if ( lockManager.isLockedByUser( User.current().getUsername(), getObject().getId() ) ) {
@@ -269,7 +269,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         return menu;
     }
 
-    protected abstract boolean isAspectShownActionable();
+    protected abstract boolean isAspectShownEditable();
 
     /**
      * Make action menu.

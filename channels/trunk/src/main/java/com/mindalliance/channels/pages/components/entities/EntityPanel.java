@@ -110,7 +110,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     }
 
     @Override
-    protected boolean isAspectShownActionable() {
+    protected boolean isAspectShownEditable() {
         return getAspectShown().equals( AbstractMultiAspectPanel.DETAILS );
     }
 

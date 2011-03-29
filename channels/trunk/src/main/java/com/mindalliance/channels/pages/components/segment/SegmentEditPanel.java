@@ -76,7 +76,7 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
     }
 
     @Override
-    protected boolean isAspectShownActionable() {
+    protected boolean isAspectShownEditable() {
         return Arrays.asList( ACTIONABLE_ASPECTS ).contains( getAspectShown() );
     }
 
