@@ -12,6 +12,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -36,6 +37,10 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
      * Task mover aspect.
      */
     public static final String MOVER = "task mover";
+    /**
+     * Actionable aspects.
+     */
+    private static final String[] ACTIONABLE_ASPECTS = {DETAILS, GOALS, MOVER};
 
     public SegmentEditPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -70,6 +75,11 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
         return showMenu;
     }
 
+    @Override
+    protected boolean isAspectShownEditable() {
+        return Arrays.asList( ACTIONABLE_ASPECTS ).contains( getAspectShown() );
+    }
+
     protected MenuPanel makeActionMenu( String menuId ) {
         return new SegmentActionsMenuPanel(
                 menuId,
@@ -85,7 +95,7 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
             return getSegmentGoalsPanel();
         } else if ( aspect.equals( ORGANIZATIONS ) ) {
             return getSegmentOrganizationsPanel();
-        }  else if ( aspect.equals( MOVER ) ) {
+        } else if ( aspect.equals( MOVER ) ) {
             return getSegmentTaskMoverPanel();
         } else {
             // Should never happen
@@ -99,22 +109,22 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
 
     private Component getSegmentGoalsPanel() {
         return new GoalListPanel(
-                "aspect", 
-                new PropertyModel<Segment>(this, "segment"),
+                "aspect",
+                new PropertyModel<Segment>( this, "segment" ),
                 getExpansions() );
     }
 
     private Component getSegmentOrganizationsPanel() {
         return new SegmentOrganizationsPanel(
                 "aspect",
-                new PropertyModel<Segment>(this, "segment"),
+                new PropertyModel<Segment>( this, "segment" ),
                 getExpansions() );
     }
 
     private Component getSegmentTaskMoverPanel() {
         return new SegmentPartMoverPanel(
                 "aspect",
-                new PropertyModel<Segment>(this, "segment"),
+                new PropertyModel<Segment>( this, "segment" ),
                 getExpansions() );
     }
 

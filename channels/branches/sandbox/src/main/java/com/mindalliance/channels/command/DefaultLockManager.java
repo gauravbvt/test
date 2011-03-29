@@ -1,7 +1,9 @@
 package com.mindalliance.channels.command;
 
-import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,8 +87,7 @@ public class DefaultLockManager implements LockManager {
                         Lock lock = lock( username, id );
                         if ( lock != null )
                             grabbedLocks.add( id );
-                    }
-                    catch ( LockingException e ) {
+                    } catch ( LockingException e ) {
                         sb.append( e.getMessage() );
                         sb.append( System.getProperty( "line.separator" ) );
                     }
@@ -175,6 +176,14 @@ public class DefaultLockManager implements LockManager {
 
         return lock;
     }
+
+    @Override
+    public boolean isLockableByUser( Identifiable identifiable ) {
+        List<Long> ids = new ArrayList<Long>();
+        ids.add( identifiable.getId() );
+        return isLockableByUser( User.current().getUsername(), ids );
+    }
+
 
     @Override
     public boolean isLockableByUser( String userName, Collection<Long> ids ) {

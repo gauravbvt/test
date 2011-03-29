@@ -1,5 +1,7 @@
 package com.mindalliance.channels.command;
 
+import com.mindalliance.channels.model.Identifiable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -116,4 +118,11 @@ public interface LockManager {
      * @throws LockingException when object is locked by another user
      */
     boolean release( String userName, long id ) throws LockingException;
+
+    /**
+     * Whether identifiable could be locked by current user.
+     * @param identifiable an identifiable
+     * @return a boolean
+     */
+    boolean isLockableByUser( Identifiable identifiable );
 }

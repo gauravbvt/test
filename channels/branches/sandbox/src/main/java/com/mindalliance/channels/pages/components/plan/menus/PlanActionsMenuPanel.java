@@ -49,8 +49,8 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         synchronized ( getCommander() ) {
             List<Component> menuItems = super.getMenuItems();
 
-            // Import
-            if ( getPlan().isDevelopment() )
+            // Move parts across segments
+            if ( getLockManager().isLockableByUser( getSegment() ) )
                 menuItems.add(
                     new LinkMenuItem(
                         "menuItem",

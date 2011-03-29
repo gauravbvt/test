@@ -32,18 +32,20 @@ public class EntityActionsMenuPanel extends ActionMenuPanel {
      */
     protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
-        commandWrappers.add( new CommandWrapper( new PasteAttachment( getEntity() ) ) {
-             public void onExecuted( AjaxRequestTarget target, Change change ) {
-                 update( target, change );
-             }
-         } );        
-        commandWrappers.add( new CommandWrapper( new AddUserIssue( getEntity() ) ) {
-            public void onExecuted(
-                    AjaxRequestTarget target,
-                    Change change ) {
-                update( target, change );
-            }
-        } );
+        if ( isLockable() ) {
+            commandWrappers.add( new CommandWrapper( new PasteAttachment( getEntity() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new AddUserIssue( getEntity() ) ) {
+                public void onExecuted(
+                        AjaxRequestTarget target,
+                        Change change ) {
+                    update( target, change );
+                }
+            } );
+        }
         return commandWrappers;
     }
 
