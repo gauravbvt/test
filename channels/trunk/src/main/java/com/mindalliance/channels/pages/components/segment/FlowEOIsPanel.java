@@ -455,7 +455,36 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
             addGuessedFromSourceReceives( ( (Part) source ), newEois );
             addGuessedFromInfoStandards( newEois );
         }
+        Node target = getFlow().getTarget();
+        if ( target.isPart() ) {
+            addGuessedFromNeeds( (Part) target, newEois );
+        }
         return newEois;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private void addGuessedFromNeeds( Part target, List<ElementOfInformation> newEois ) {
+        Flow flow = getFlow();
+        Matcher matcher = Matcher.getInstance();
+        List<String> contents = (List<String>) CollectionUtils.collect(
+                flow.getEois(),
+                TransformerUtils.invokerTransformer( "getContent" ) );
+        contents.addAll( (List<String>) CollectionUtils.collect(
+                newEois,
+                TransformerUtils.invokerTransformer( "getContent" ) ) );
+        Iterator<Flow> needs = target.getNeeds().iterator();
+        while ( needs.hasNext() ) {
+            Flow need = needs.next();
+            if ( !need.equals( flow ) && matcher.same( flow.getName(), need.getName() ) ) {
+                for ( ElementOfInformation needEoi : need.getEois() ) {
+                    if ( !matcher.contains( contents, needEoi.getContent() ) ) {
+                        // Use the first one as-is. Will improve later. Maybe.
+                        newEois.add( new ElementOfInformation( needEoi ) );
+                        contents.add( needEoi.getContent() );
+                    }
+                }
+            }
+        }
     }
 
     @SuppressWarnings( "unchecked" )
@@ -730,7 +759,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
             String content = val == null ? "" : val.trim();
             if ( !content.isEmpty() ) {
                 if ( !markedForCreation ) {
-                    if ( !getFlow().hasEoiNamed( content ) ) {
+                    if ( !getFlow().hasEoiNamedExactly( content ) ) {
                         doCommand( UpdateObject.makeCommand(
                                 getFlow(),
                                 "eois[" + index + "].content",

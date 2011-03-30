@@ -98,15 +98,18 @@ public class TransformationPanel extends AbstractCommandablePanel {
         final SubjectWrapper wrapper = item.getModelObject();
         Part source =  (Part)getFlow().getSource();
         final List<Subject> inputSubjects = source.getAllSubjects( false );
+        List<Subject> subjectChoices = new ArrayList<Subject>( inputSubjects );
         if ( getTransformation().getType() == Transformation.Type.Renaming ) {
-            inputSubjects.remove( new Subject(
+            subjectChoices.remove( new Subject(
                     getFlow().getName(),
                     getElementOfInformation().getContent() ) );
+        } else if ( getTransformation().getType() == Transformation.Type.Aggregation ) {
+            subjectChoices.removeAll( getTransformation().getSubjects() );
         }
         DropDownChoice<Subject> subjectText = new DropDownChoice<Subject>(
                 "newSubject",
                 new PropertyModel<Subject>( wrapper, "subject" ),
-                inputSubjects,
+                subjectChoices,
                 new IChoiceRenderer<Subject>() {
                     public Object getDisplayValue( Subject subject ) {
                         return subject.getLabel( MAX_INFO_LENGTH );
