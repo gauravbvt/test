@@ -30,17 +30,19 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
         Part part = (Part) modelObject;
         List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
         if ( assignments.size() == 1 ) {
-            Level importance = this.getTaskFailureSeverity( part );
-            if ( importance.compareTo( Level.Low ) >= 1 ) {
-                Issue issue = makeIssue( Issue.ROBUSTNESS, part );
-                issue.setDescription( "Task \""
-                        + part.getTitle()
-                        + "\" is important and yet is assigned to only one agent." );
-                issue.setSeverity( importance );
-                issue.setRemediation( "Profile agents so that more than one match the task specifications"
-                        + "\nor modify the task specifications so that it matches more than one agent."
-                );
-                issues.add( issue );
+            if ( !assignments.get( 0 ).getActor().isArchetype() ) {
+                Level importance = this.getTaskFailureSeverity( part );
+                if ( importance.compareTo( Level.Low ) >= 1 ) {
+                    Issue issue = makeIssue( Issue.ROBUSTNESS, part );
+                    issue.setDescription( "Task \""
+                            + part.getTitle()
+                            + "\" is important and yet is assigned to only one agent." );
+                    issue.setSeverity( importance );
+                    issue.setRemediation( "Profile agents so that more than one match the task specifications"
+                            + "\nor modify the task specifications so that it matches more than one agent."
+                    );
+                    issues.add( issue );
+                }
             }
         }
         return issues;

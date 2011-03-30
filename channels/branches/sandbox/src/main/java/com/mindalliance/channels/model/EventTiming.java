@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import org.apache.commons.lang.StringUtils;
+import com.mindalliance.channels.util.ChannelsUtils;
 
 import java.io.Serializable;
 
@@ -68,7 +68,7 @@ public class EventTiming implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( timing == Phase.Timing.Concurrent ? "during " : "after " );
-        sb.append( getEvent() == null ? "?" : StringUtils.uncapitalize( getEvent().getName() ) );
+        sb.append( getEvent() == null ? "?" : ChannelsUtils.smartUncapitalize( getEvent().getName() ) );
         sb.append( eventLevelLabel() );
         return sb.toString();
     }

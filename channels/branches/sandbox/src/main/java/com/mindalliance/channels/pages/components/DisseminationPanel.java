@@ -559,7 +559,9 @@ public class DisseminationPanel extends FloatingCommandablePanel {
             for ( Dissemination dissemination : disseminations ) {
                 Part part = dissemination.getPart( showTargets );
                 // Include assignments to unknown actors
-                List<Assignment> assignments = queryService.findAllAssignments( part, true );
+                List<Assignment> assignments = queryService.findAllAssignments( part, false );
+                if ( assignments.isEmpty() )
+                    assignments = queryService.findAllAssignments( part, true );
                 for ( Assignment assignment : assignments ) {
                     DisseminationAssignment disseminationAssignment = new DisseminationAssignment(
                             assignment,

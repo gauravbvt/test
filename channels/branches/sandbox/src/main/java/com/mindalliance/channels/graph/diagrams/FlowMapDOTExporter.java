@@ -17,7 +17,6 @@ import org.jgrapht.Graph;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -61,8 +60,6 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     Set<Part> eventStarters = new HashSet<Part>();
 
     Map<EventTiming, Set<Part>> contextInitiators = new HashMap<EventTiming, Set<Part>>();
-
-    List<Flow> impliedFlows = new ArrayList<Flow>();
 
     public FlowMapDOTExporter( MetaProvider<Node, Flow> metaProvider ) {
         super( metaProvider );
@@ -159,7 +156,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         Segment segment = getSegment();
-        String label = segment.getEventPhase().toString() + " starts";
+        String label = segment.getEventPhase().toString()/* + " starts"*/;
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );

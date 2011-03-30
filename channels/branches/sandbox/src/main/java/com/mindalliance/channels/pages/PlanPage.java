@@ -27,6 +27,7 @@ import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanActionsMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanShowMenuPanel;
+import com.mindalliance.channels.pages.components.segment.ExpandedFlowPanel;
 import com.mindalliance.channels.pages.components.segment.FailureImpactsPanel;
 import com.mindalliance.channels.pages.components.segment.FlowEOIsPanel;
 import com.mindalliance.channels.pages.components.segment.MaximizedFlowPanel;
@@ -630,8 +631,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
             protected void onTimer( AjaxRequestTarget target ) {
                 try {
                     doTimedUpdate( target );
+                    makeVisible( spinner, false );
+/*
                     addSpinner();
                     target.addComponent( spinner );
+*/
                 } catch ( Exception e ) {
                     LOG.error( "Failed to do timed update", e );
                     ErrorPage.emailException(
@@ -1381,7 +1385,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         expansions.remove( change.getId() );
         // Close aspects of collapsed object
         if ( change.isForInstanceOf( Flow.class ) ) {
-            closeAspect( change, "eois" );
+            closeAspect( change, ExpandedFlowPanel.EOIS );
         } else if ( !( change.isForInstanceOf( Part.class ) ) )
             closeAspect( change, null );
     }
@@ -1437,8 +1441,16 @@ public final class PlanPage extends AbstractChannelsWebPage {
         } else if ( identifiable instanceof Segment ) {
             return aspect.equals( SegmentEditPanel.GOALS )
                     || aspect.equals( SegmentEditPanel.MOVER );
-        } else return false;
+        } else if ( identifiable instanceof Flow )
+            return aspect.equals( ExpandedFlowPanel.EOIS );
+        else return false;
     }
+
+    private boolean closingAspectReleasesLock( Change change, String aspect ) {
+         return !( change.isForInstanceOf( Flow.class ) && aspect.equals( ExpandedFlowPanel.EOIS ) );
+    }
+
+
 
     private void closeAspect( Identifiable identifiable, String aspect ) {
         closeAspect( new Change( Change.Type.None, identifiable ), aspect );
@@ -1453,7 +1465,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 aspectsShown.remove( aspect );
             }
         }
-        tryReleasingLock( change );
+        if ( closingAspectReleasesLock( change, aspect ) )
+            tryReleasingLock( change );
     }
 
     private <T extends ModelObject> T getModelObjectViewed( Class<T> clazz, String aspect ) {

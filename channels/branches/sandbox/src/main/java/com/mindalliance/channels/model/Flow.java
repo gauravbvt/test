@@ -1276,6 +1276,17 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             return false;
     }
 
+    public boolean hasEoiNamedExactly( final String content ) {
+        return CollectionUtils.exists(
+                getEois(),
+                new Predicate() {
+                    public boolean evaluate( Object object ) {
+                        return ( (ElementOfInformation) object ).getContent().equals( content );
+                    }
+                }
+        );
+    }
+
 
     /**
      * The significance of a flow.

@@ -198,6 +198,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Flow is to be restricted.
      */
     private boolean restricted;
+    /**
+     * EOIS aspect.
+     */
+    public static final String EOIS = "eois";
 
     protected ExpandedFlowPanel(
             String id,
@@ -334,7 +338,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addEOIs() {
         AjaxFallbackLink editEOIsLink = new AjaxFallbackLink( "editEOIs" ) {
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, getFlow(), "eois" ) );
+                update( target, new Change( Change.Type.AspectViewed, getFlow(), EOIS ) );
             }
         };
         editEOIsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );

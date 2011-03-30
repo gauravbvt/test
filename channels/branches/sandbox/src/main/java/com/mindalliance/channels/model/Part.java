@@ -674,7 +674,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
             label += getActor().getName();
             if ( getActor().isType() ) {
                 Actor impliedActor = getKnownActualActor( queryService );
-                if ( impliedActor != null ) {
+                if ( impliedActor != null && !impliedActor.isArchetype() ) {
                     label += " (" + impliedActor.getName() + ")";
                 }
             }
@@ -683,7 +683,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
             if ( !label.isEmpty() ) label += sep;
             if ( getActor() == null ) {
                 Actor impliedActor = getKnownActualActor( queryService );
-                if ( impliedActor != null ) {
+                if ( impliedActor != null && !impliedActor.isArchetype() ) {
                     label += impliedActor.getName();
                     label += " ";
                 }
