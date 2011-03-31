@@ -42,39 +42,43 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
         if ( !eoiClassifications.isEmpty() ) {
             for ( Channel channel : flow.getEffectiveChannels() ) {
                 TransmissionMedium medium = channel.getMedium();
-                // under-secured immediate medium
-                List<Classification> mediumClassifications = medium.getEffectiveSecurity();
-                if ( !Classification.encompass(
-                        mediumClassifications,
-                        eoiClassifications ) ) {
-                    Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
-                    issue.setDescription( "Classified information would be communicated "
-                            + "over unsecured or insufficiently secured channel \""
-                            + channel + "\"." );
-                    issue.setRemediation( "Remove \"" + channel + "\" as an alternative"
-                            + "\nor change the security profile of medium \"" + channel.getMedium().getName() + "\""
-                            + "\nor change the secrecy classification of the problematic elements of information"
-                            + "\nor remove the classified elements(s) of information that exceed the channel's security" );
-                    issue.setSeverity( Level.Medium );
-                    issues.add( issue );
+                if ( !medium.isDirect() ) {
+                    // under-secured immediate medium
+                    List<Classification> mediumClassifications = medium.getEffectiveSecurity();
+                    if ( !Classification.encompass(
+                            mediumClassifications,
+                            eoiClassifications ) ) {
+                        Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                        issue.setDescription( "Classified information would be communicated "
+                                + "over unsecured or insufficiently secured channel \""
+                                + channel + "\"." );
+                        issue.setRemediation( "Remove \"" + channel + "\" as an alternative"
+                                + "\nor change the security profile of medium \"" + channel.getMedium().getName() + "\""
+                                + "\nor change the secrecy classification of the problematic elements of information"
+                                + "\nor remove the classified elements(s) of information that exceed the channel's security" );
+                        issue.setSeverity( Level.Medium );
+                        issues.add( issue );
+                    }
                 }
                 // under-secured delegated medium
                 List<TransmissionMedium> delegates = medium.getEffectiveDelegates( getQueryService().getPlan().getLocale() );
                 for ( TransmissionMedium delegate : delegates ) {
-                    List<Classification> delegateClassifications = medium.getEffectiveSecurity();
-                    if ( !Classification.encompass(
-                            delegateClassifications,
-                            eoiClassifications ) ) {
-                        Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
-                        issue.setDescription( "Classified information could be communicated "
-                                + "over unsecured or insufficiently secured delegated channel \""
-                                + delegate + "\"" );
-                        issue.setRemediation( "Remove \"" + channel + "\" as an alternative"
-                                + "\nor change the security profile of delegated medium \"" + delegate.getName() + "\""
-                                + "\nor change the secrecy classification of the problematic elements of information"
-                                + "\nor remove the classified elements(s) of information that exceed the delegated medium's security" );
-                        issue.setSeverity( Level.Medium );
-                        issues.add( issue );
+                    if ( !medium.isDirect() ) {
+                        List<Classification> delegateClassifications = medium.getEffectiveSecurity();
+                        if ( !Classification.encompass(
+                                delegateClassifications,
+                                eoiClassifications ) ) {
+                            Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                            issue.setDescription( "Classified information could be communicated "
+                                    + "over unsecured or insufficiently secured delegated channel \""
+                                    + delegate + "\"" );
+                            issue.setRemediation( "Remove \"" + channel + "\" as an alternative"
+                                    + "\nor change the security profile of delegated medium \"" + delegate.getName() + "\""
+                                    + "\nor change the secrecy classification of the problematic elements of information"
+                                    + "\nor remove the classified elements(s) of information that exceed the delegated medium's security" );
+                            issue.setSeverity( Level.Medium );
+                            issues.add( issue );
+                        }
                     }
                 }
             }

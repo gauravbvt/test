@@ -1447,9 +1447,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private boolean closingAspectReleasesLock( Change change, String aspect ) {
-         return !( change.isForInstanceOf( Flow.class ) && aspect.equals( ExpandedFlowPanel.EOIS ) );
+        return !( change.isForInstanceOf( Flow.class ) && aspect.equals( ExpandedFlowPanel.EOIS ) );
     }
-
 
 
     private void closeAspect( Identifiable identifiable, String aspect ) {
@@ -1772,9 +1771,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void updateMaximizedFlow( AjaxRequestTarget target, Change change ) {
-        addMaximizedFlowPanel( change );
-        if ( !flowMaximized ) segmentPanel.updateFlowMapOnMinimize( target, change );
-        target.addComponent( maximizedFlowPanel );
+        if ( change.isMaximized() || change.isMinimized() || change.isSelected() || change.isExpanded() || change.isRecomposed() ) {
+            addMaximizedFlowPanel( change );
+            if ( !flowMaximized ) segmentPanel.updateFlowMapOnMinimize( target, change );
+            target.addComponent( maximizedFlowPanel );
+        }
     }
 
     private void updateFlowLegend( AjaxRequestTarget target ) {

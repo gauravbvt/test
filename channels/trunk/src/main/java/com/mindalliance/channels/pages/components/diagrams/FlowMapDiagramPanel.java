@@ -183,6 +183,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             if ( part != null ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );
                 Change change = new Change( Change.Type.Selected, part );
+                String props = isShowingGoals() ? "showGoals" : "";
+                props += isShowingConnectors() ? " showConnectors" : "";
+                props += isHidingNoop() ? " hideNoop" : "";
+                change.setProperty( props );
                 change.setScript( js );
                 this.update( target, change );
 
@@ -211,6 +215,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             Flow flow = getQueryService().find( Flow.class, id );
             String js = scroll( domIdentifier, scrollTop, scrollLeft );
             Change change = new Change( Change.Type.Selected, flow );
+            String props = isShowingGoals() ? "showGoals" : "";
+            props += isShowingConnectors() ? " showConnectors" : "";
+            props += isHidingNoop() ? " hideNoop" : "";
+            change.setProperty( props );
             change.setScript( js );
             update( target, change );
         } catch ( NotFoundException e ) {
@@ -227,6 +235,18 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             return null;
         else
             return partModel.getObject();
+    }
+
+    public boolean isShowingGoals() {
+        return showingGoals;
+    }
+
+    public boolean isShowingConnectors() {
+        return showingConnectors;
+    }
+
+    public boolean isHidingNoop() {
+        return hidingNoop;
     }
 }
 
