@@ -1,7 +1,10 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.dao.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,11 @@ import java.util.List;
  * Time: 1:31:11 PM
  */
 public class Classification implements Identifiable, Comparable {
+
+    /** Logger. */
+    private static final Logger LOG = LoggerFactory.getLogger( Classification.class );
+
+
     /**
      * Classification system.
      * Set once.
@@ -76,7 +84,17 @@ public class Classification implements Identifiable, Comparable {
      * {@inheritDoc}
      */
     public String toString() {
-        return system + "/" + name + "(" + level + ")";
+        return system + "/" + name;
+    }
+
+    private int getEffectiveLevel() {
+        Classification referenceClassification = User.current().getPlan().getClassification( system, name );
+        if ( referenceClassification == null ) {
+            LOG.warn( "Can't reference classification " + this );
+            return Integer.MIN_VALUE;
+        } else {
+            return referenceClassification.getLevel();
+        }
     }
 
     /**
@@ -105,14 +123,14 @@ public class Classification implements Identifiable, Comparable {
     }
 
     /**
-     * Whether a classifcation is higher than or equal to another.
+     * Whether a classification is higher than or equal to another.
      *
      * @param other a classification
      * @return a boolean
      */
     public boolean encompasses( Classification other ) {
         return system.equals( other.getSystem() )
-                && level <= other.getLevel();
+                && getEffectiveLevel() <= other.getEffectiveLevel();
     }
 
     /**
@@ -123,7 +141,7 @@ public class Classification implements Identifiable, Comparable {
      */
     public boolean isHigherThan( Classification other ) {
         return system.equals( other.getSystem() )
-                && level < other.getLevel();
+                && getEffectiveLevel() < other.getEffectiveLevel();
     }
 
     /**

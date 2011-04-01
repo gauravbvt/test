@@ -199,15 +199,15 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * @return a boolean
      */
     public boolean isClearedFor( Flow flow ) {
-        // No eoi in the flow has classification that exceeds the actor's clearance.
+        // No eoi in the flow has classification that is not encompassed by the actor's clearance.
         return !CollectionUtils.exists(
                 flow.getEois(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         ElementOfInformation eoi = (ElementOfInformation) obj;
-                        return Classification.encompass(
-                                eoi.getClassifications(),
-                                getClearances()
+                        return !Classification.encompass(
+                                getClearances(),
+                                eoi.getClassifications()
                         );
                     }
                 }
