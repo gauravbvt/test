@@ -1242,12 +1242,13 @@ public interface QueryService {
 
     /**
      * Find the EOIs that appear (or seem to) in two flows.
+     * If need has no EOI (meaning "any"), take the capability's eois.
      *
-     * @param flow      a flow
-     * @param otherFlow another flow
+     * @param capability      a flow
+     * @param need another flow
      * @return a list of EOIs
      */
-    List<ElementOfInformation> findCommonEOIs( Flow flow, Flow otherFlow );
+    List<ElementOfInformation> findCommonEOIs( Flow capability, Flow need );
 
     /**
      * Find all dissemination from or to a part or flow.
@@ -1405,4 +1406,11 @@ public interface QueryService {
      * @return a list of parts
      */
     List<Part> findAllInitiators( EventTiming eventTiming );
+
+    /**
+     * Find all capabilities matching a given name.
+     * @param name a string
+     * @return a list of flows
+     */
+    List<Flow> findAllCapabilitiesNamed( String name );
 }

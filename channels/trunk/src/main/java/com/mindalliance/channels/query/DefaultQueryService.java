@@ -3195,5 +3195,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return initiators;
     }
+
+    @Override
+    public List<Flow> findAllCapabilitiesNamed( String name ) {
+        List<Flow> capabilities = new ArrayList<Flow>();
+        Matcher matcher = Matcher.getInstance();
+        for ( Flow flow : findAllFlows() ) {
+            if ( flow.isCapability() && matcher.same( flow.getName(), name ) ) {
+                capabilities.add( flow );
+            }
+        }
+        return capabilities;
+    }
 }
 
