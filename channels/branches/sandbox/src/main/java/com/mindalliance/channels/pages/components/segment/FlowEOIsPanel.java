@@ -458,8 +458,32 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         Node target = getFlow().getTarget();
         if ( target.isPart() ) {
             addGuessedFromNeeds( (Part) target, newEois );
+            addGuessedFromCapabilities( newEois );
         }
         return newEois;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private void addGuessedFromCapabilities( List<ElementOfInformation> newEois ) {
+        Flow flow = getFlow();
+        Matcher matcher = Matcher.getInstance();
+        List<String> contents = (List<String>) CollectionUtils.collect(
+                flow.getEois(),
+                TransformerUtils.invokerTransformer( "getContent" ) );
+        contents.addAll( (List<String>) CollectionUtils.collect(
+                newEois,
+                TransformerUtils.invokerTransformer( "getContent" ) ) );
+        Iterator<Flow> capabilities = getQueryService().findAllCapabilitiesNamed( flow.getName() ).iterator();
+        while ( capabilities.hasNext() ) {
+            Flow capability = capabilities.next();
+            for ( ElementOfInformation capabilityEoi : capability.getEois() ) {
+                if ( !matcher.contains( contents, capabilityEoi.getContent() ) ) {
+                    // Use the first one as-is. Will improve later. Maybe.
+                    newEois.add( new ElementOfInformation( capabilityEoi ) );
+                    contents.add( capabilityEoi.getContent() );
+                }
+            }
+        }
     }
 
     @SuppressWarnings( "unchecked" )
@@ -495,13 +519,13 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 flow.getEois(),
                 TransformerUtils.invokerTransformer( "getContent" ) );
         for ( InfoStandard infoStandard : flow.getInfoStandards( getPlan() ) ) {
-             for ( String eoiName : infoStandard.getEoiNames() ) {
-                 if (!matcher.contains( contents, eoiName ) ) {
-                     ElementOfInformation eoi = new ElementOfInformation( eoiName );
-                     eoi.setDescription( infoStandard.getEoiDescription( eoiName ) );
-                     newEois.add( eoi );
-                 }
-             }
+            for ( String eoiName : infoStandard.getEoiNames() ) {
+                if ( !matcher.contains( contents, eoiName ) ) {
+                    ElementOfInformation eoi = new ElementOfInformation( eoiName );
+                    eoi.setDescription( infoStandard.getEoiDescription( eoiName ) );
+                    newEois.add( eoi );
+                }
+            }
         }
     }
 
