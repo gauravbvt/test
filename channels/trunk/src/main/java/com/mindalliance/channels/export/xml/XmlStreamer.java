@@ -415,16 +415,20 @@ public class XmlStreamer implements ImportExportFactory {
             planDao.disconnect( localInnerFlow );
         }
 
-        private void copy( Flow inner, Flow external ) {
+        private void copy( Flow inner, ExternalFlow external ) {
             external.setChannels( inner.getChannels() );
             external.setMaxDelay( inner.getMaxDelay() );
             external.setSignificanceToSource( inner.getSignificanceToSource() );
             external.setSignificanceToTarget( inner.getSignificanceToTarget() );
             external.setAll( inner.isAll() );
-            external.setAskedFor( inner.isAskedFor() );
-            external.setEois( inner.copyEois() );
+            // external.setAskedFor( inner.isAskedFor() );
+            // external.setEois( inner.copyEois() );
             external.setWaivedIssueDetections( inner.getWaivedIssueDetections() );
             external.setAttachments( inner.getAttachments() );
+            external.setIntent( inner.getIntent() );
+            external.setReferencesEventPhase( inner.isReferencesEventPhase() );
+            external.setOperational( inner.isOperational() );
+            external.setIfTaskFails( inner.isIfTaskFails() );
         }
 
         @SuppressWarnings( "unchecked" )
