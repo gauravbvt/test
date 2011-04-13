@@ -23,6 +23,7 @@ import com.mindalliance.channels.pages.reports.AssignmentReportPage;
 import com.mindalliance.channels.pages.reports.CommitmentReportPage;
 import com.mindalliance.channels.pages.reports.ProcedureMapPage;
 import com.mindalliance.channels.pages.reports.ProceduresReportPage;
+import com.mindalliance.channels.pages.responders.ResponderPage;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
@@ -136,6 +137,7 @@ public class Channels extends WebApplication
         getMarkupSettings().setStripWicketTags( true );
 
         mount( new QueryStringUrlCodingStrategy( "procedures", ProceduresReportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "responders", ResponderPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "mapped", ProcedureMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "task", AssignmentReportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "flow", CommitmentReportPage.class ) );

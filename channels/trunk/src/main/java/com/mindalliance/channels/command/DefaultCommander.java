@@ -227,9 +227,7 @@ public class DefaultCommander implements Commander {
 
     private PlanService getQueryService( Plan plan ) {
         return new PlanService(
-                getPlanManager(),
-                attachmentManager,
-                semanticMatcher,
+                getPlanManager(), semanticMatcher,
                 userService,
                 plan );
     }

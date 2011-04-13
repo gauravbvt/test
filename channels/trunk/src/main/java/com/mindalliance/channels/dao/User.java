@@ -2,6 +2,7 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -30,7 +31,7 @@ public class User implements UserDetails {
     /**
      * Raw information from the property file.
      */
-    private final UserInfo userInfo;
+    private UserInfo userInfo;
 
     /**
      * True if user is anonymous.
@@ -71,6 +72,11 @@ public class User implements UserDetails {
 
     public UserInfo getUserInfo() {
         return userInfo;
+    }
+
+//    @Secured( "ROLE_ADMIN" )
+    public void setUserInfo( UserInfo userInfo ) {
+        this.userInfo = userInfo;
     }
 
     public String getEmail() {
@@ -193,22 +199,16 @@ public class User implements UserDetails {
         return isPlanner( getPlan().getUri() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return getUsername();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals( Object obj ) {
         if ( this == obj )
             return true;
-        if ( obj == null || getClass() != obj.getClass() )
+        if ( obj == null || !getClass().isAssignableFrom( obj.getClass() ) )
             return false;
 
         User user = (User) obj;
@@ -216,9 +216,6 @@ public class User implements UserDetails {
                 && getUsername().equals( user.getUsername() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         int result = getUsername().hashCode();

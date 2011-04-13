@@ -1,6 +1,7 @@
 package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.dao.PlanDefinition.Version;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
@@ -335,6 +336,24 @@ public class PlanManager {
                 return ( (Plan) object ).getUri().equals( uri );
             }
         } );
+    }
+
+    /**
+     * Get a specific plan
+     * @param uri the plan uri
+     * @param version the version
+     * @return the plan or null if not found
+     */
+    public Plan getPlan( String uri, int version ) {
+
+        PlanDefinition definition = definitionManager.get( uri );
+        if ( definition != null ) {
+            Version v = definition.get( version );
+            if ( v != null )
+                return getDao( uri, v.isDevelopment() ).getPlan();
+        }
+
+        return null;
     }
 
     /**

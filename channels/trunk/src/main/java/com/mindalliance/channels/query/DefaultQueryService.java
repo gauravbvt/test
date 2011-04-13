@@ -1936,6 +1936,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
 
             if ( includeUnknowns
+                    && result.isEmpty()
                     && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() ) {
                 Organization partOrg = part.getOrganizationOrUnknown();
                 if ( partOrg.isUnknown() ) {
@@ -1968,7 +1969,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     if ( result.isEmpty() ) {
                         Assignment assignment = new Assignment(
                                 new Employment( Actor.UNKNOWN,
-                                        Organization.UNKNOWN,
+                                        partOrg,
                                         new Job( Actor.UNKNOWN,
                                                 part.getRoleOrUnknown(),
                                                 part.getJurisdiction() ) ),

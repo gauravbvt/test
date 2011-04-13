@@ -556,9 +556,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     @Override
     public PlanService getPlanService() {
         return new PlanService(
-                getPlanManager(),
-                attachmentManager,
-                semanticMatcher,
+                getPlanManager(), semanticMatcher,
                 userService,
                 getPlan() );
     }

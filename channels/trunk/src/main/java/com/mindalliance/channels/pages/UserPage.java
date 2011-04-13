@@ -11,8 +11,8 @@ import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.ProcedureMapPage;
-import com.mindalliance.channels.pages.reports.ProceduresReportPage;
-import com.mindalliance.channels.pages.reports.SelectorPanel;
+import com.mindalliance.channels.pages.responders.ResponderPage;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -23,7 +23,6 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -104,7 +103,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         addPlanClient();
         // addPlanMetrics();
         addReferences();
-        addGotoLinks();
+        addGotoLinks( getPlan(), getUser() );
         addSocial();
     }
 
@@ -277,64 +276,45 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         );
     }
 
-    private void addGotoLinks() {
-        // Goto admin
-        WebMarkupContainer gotoAdminContainer = new WebMarkupContainer( "admin" );
-        form.add( gotoAdminContainer );
-        BookmarkablePageLink<AdminPage> gotoAdmin = newTargetedLink(
-                "gotoAdmin",
-                "",
-                AdminPage.class,
-                null,
-                getPlan()
-        );
-        gotoAdminContainer.setVisible( getUser().isAdmin() );
-        gotoAdminContainer.add( gotoAdmin );
-        // Goto model
-        WebMarkupContainer gotoModelContainer = new WebMarkupContainer( "model" );
-        form.add( gotoModelContainer );
-        BookmarkablePageLink<PlanPage> gotoPlan = newTargetedLink(
-                "gotoModel",
-                "",
-                PlanPage.class,
-                null,
-                getPlan()
-        );
-        gotoModelContainer.setVisible( getPlan().isTemplate() || getUser().isPlanner( getPlan().getUri() ) );
-        gotoModelContainer.add( gotoPlan );
-        // Goto mapped procedures
-        WebMarkupContainer gotoMappedContainer = new WebMarkupContainer( "mapped" );
-        form.add( gotoMappedContainer );
-        BookmarkablePageLink<ProcedureMapPage> gotoMapped = newTargetedLink(
-                "gotoMapped",
-                "",
-                ProcedureMapPage.class,
-                null,
-                getPlan()
-        );
-        gotoMappedContainer.add( gotoMapped );
-        gotoMappedContainer.setVisible( getPlan().isTemplate() || getUser().isPlanner( getPlan().getUri() ) );
-        // Goto personal procedures
-        WebMarkupContainer gotoReportContainer = new WebMarkupContainer( "report" );
-        form.add( gotoReportContainer );
-        Participation participation = getQueryService().findParticipation( getUser().getUsername() );
-        PageParameters params = new PageParameters();
-        Actor actor = participation != null && participation.getActor() != null
+    private void addGotoLinks( Plan plan, User user ) {
+
+        Actor actor = findActor( getQueryService(), user.getUsername() );
+        String uri = plan.getUri();
+        boolean planner = user.isPlanner( uri );
+
+        form.add(
+            // Goto admin
+            new WebMarkupContainer( "admin" )
+                .add( newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan ) )
+                .setVisible( user.isAdmin() ),
+
+            // Goto model
+            new WebMarkupContainer( "model" )
+                .add( newTargetedLink( "gotoModel", "", PlanPage.class, null, plan ) )
+                .setVisible( planner || plan.isTemplate() ),
+
+            // Goto mapped procedures
+            new WebMarkupContainer( "mapped" )
+                .add( newTargetedLink( "gotoMapped", "", ProcedureMapPage.class, null, plan ) ).
+                setVisible( planner || plan.isTemplate() ),
+
+            // Goto personal procedures
+            new WebMarkupContainer( "report" )
+                .add( newTargetedLink(
+                            "gotoReport",
+                            "",
+                            ResponderPage.class,
+                            ResponderPage.createParameters( actor, uri, plan.getVersion() ),
+                            null,
+                            plan ) )
+                .setVisible( planner || actor != null ) );
+    }
+
+    private static Actor findActor( QueryService queryService, String userName ) {
+        Participation participation = queryService.findParticipation( userName );
+        return participation != null && participation.getActor() != null
                         ? participation.getActor()
                         : null;
-        if ( actor != null ) {
-            params.put( SelectorPanel.ACTOR_PARM, actor.getId() );
-        }
-        BookmarkablePageLink<ProceduresReportPage> gotoReport = newTargetedLink(
-                "gotoReport",
-                "",
-                ProceduresReportPage.class,
-                params,
-                null,
-                getPlan()
-        );
-        gotoReportContainer.setVisible(  actor != null );
-        gotoReportContainer.add( gotoReport );
     }
 
     private void addSocial() {

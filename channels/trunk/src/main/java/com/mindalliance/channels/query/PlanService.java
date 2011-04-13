@@ -3,7 +3,6 @@
 
 package com.mindalliance.channels.query;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Plan;
@@ -17,22 +16,16 @@ public class PlanService extends DefaultQueryService {
     private Plan plan;
 
     public PlanService(
-            PlanManager planManager,
-            AttachmentManager attachmentManager,
-            SemanticMatcher semanticMatcher,
-            UserService userService,
-            Plan plan ) {
+        PlanManager planManager, SemanticMatcher semanticMatcher,
+        UserService userService, Plan plan ) {
         super(
                 planManager,
-                attachmentManager,
+                planManager.getAttachmentManager(),
                 semanticMatcher,
                 userService );
         this.plan = plan;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Plan getPlan() {
         return plan;

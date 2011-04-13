@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Responder Pages</title>
+    <link rel="stylesheet" href="../css/playbook.css" type="text/css" title="Playbook">
+    <link rel="stylesheet" href="../css/iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
+</head>
+<body>
+<div id="top">
+    <div id="header">
+        <div>
+            <div id="nav">
+                <ul>
+                    <li><a href="logout">Logout <span wicket:id="userName">user</span></a></li>
+                </ul>
+                <hr>
+            </div>
+            <h1>Responder list for <span wicket:id="planName">plan</span></h1>
+        </div>
+    </div>
+    <div id="contents">
+        <div>
+            <p>As a planner, you get access to all the responder pages.</p>
+            <p></p>
+        </div>
+        <div wicket:id="activeDiv">
+            <h2>Active Users</h2>
+            <p>Users that can log in to view their responder report:</p>
+            <ul>
+                <li wicket:id="activeResponders">
+                    <a wicket:id="responder"><span wicket:id="responderName">a responder</span></a>
+                    as <span wicket:id="profile">agent</span> (user name: <a wicket:id="userName">user name</a>)
+                    <span class="menu" wicket:id="detachItem">&mdash; <a wicket:id="removeLink" href="#">Remove</a></span>
+                </li>
+            </ul>
+        </div>
+
+        <div wicket:id="agentsDiv">
+            <h2>Agents</h2>
+            <p>Persons defined in the plan that can be assigned to users:</p>
+            <ul>
+                <li wicket:id="agents"><a wicket:id="responder"><span wicket:id="responderName">a responder</span></a>
+                    <span wicket:id="many"> (many)</span>
+                    <span wicket:id="assignItem" class="menu">&mdash; <a wicket:id="assignLink" href="#">Assign</a></span>
+                    <ul wicket:id="popup" class="popup">
+                        <li wicket:id="addUser"><a wicket:id="addLink" href="#"><span wicket:id="userLink">A user</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div id="plannersDiv" wicket:id="plannersDiv">
+            <p>Other planners for this plan:</p>
+            <ul>
+                <li wicket:id="otherPlanners"><a wicket:id="planner">other planner</a></li>
+            </ul>
+        </div>
+
+        <div id="otherPlans" wicket:id="plansDiv">
+            <p>Other plans that you can plan:</p>
+            <ul>
+                <li wicket:id="otherPlans"><a wicket:id="responderList"><span wicket:id="otherPlanName">other plan</span></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

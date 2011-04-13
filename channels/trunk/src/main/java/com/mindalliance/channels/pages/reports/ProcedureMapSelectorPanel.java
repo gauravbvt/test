@@ -435,9 +435,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     @Override
     public PlanService getPlanService() {
         return new PlanService(
-                getPlanManager(),
-                attachmentManager,
-                semanticMatcher,
+                getPlanManager(), semanticMatcher,
                 userService,
                 getPlan() );
     }
