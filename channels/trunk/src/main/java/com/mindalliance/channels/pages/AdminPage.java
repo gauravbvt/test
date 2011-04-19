@@ -166,6 +166,10 @@ public class AdminPage extends AbstractChannelsWebPage {
                                 new PropertyModel<String>( this, "plannerSupportCommunity" ) ),
                         new TextField<String>( "userSupportCommunity",
                                 new PropertyModel<String>( this, "userSupportCommunity" ) ),
+                        new TextField<String>( "communityCalendarHost",
+                                new PropertyModel<String>( this, "communityCalendarHost" ) ),
+                        new TextField<String>( "communityCalendar",
+                                new PropertyModel<String>( this, "communityCalendar" ) ),
 
                         new TextField<String>( "newPlanUri",
                                 new PropertyModel<String>( this, "newPlanUri" ) )
@@ -268,6 +272,29 @@ public class AdminPage extends AbstractChannelsWebPage {
         if ( val != null && !val.isEmpty() && !val.equals( defaultCommunity ) )
             getPlan().setUserSupportCommunity( val );
     }
+
+    public String getCommunityCalendarHost() {
+        String s = getPlan().getCommunityCalendarHost();
+        return s.isEmpty() ? getPlanManager().getDefaultCommunityCalendarHost() : s;
+    }
+
+    public void setCommunityCalendarHost( String val ) {
+        String defaultCalendarHost = getPlanManager().getDefaultCommunityCalendarHost();
+        if ( val != null && !val.isEmpty() && !val.equals( defaultCalendarHost ) )
+            getPlan().setCommunityCalendarHost( val );
+    }
+
+    public String getCommunityCalendar() {
+        String s = getPlan().getCommunityCalendar();
+        return s.isEmpty() ? getPlanManager().getDefaultCommunityCalendar() : s;
+    }
+
+    public void setCommunityCalendar( String val ) {
+        String defaultCalendar = getPlanManager().getDefaultCommunityCalendar();
+        if ( val != null && !val.isEmpty() && !val.equals( defaultCalendar ) )
+            getPlan().setCommunityCalendar( val );
+    }
+
 
     public String getSurveyApiKey() {
         String s = getPlan().getSurveyApiKey();

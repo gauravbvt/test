@@ -53,7 +53,7 @@ public class Plan extends ModelObject {
      */
     private boolean template = false;
 
-   /**
+    /**
      * The status of a (version of) plan.
      */
     public enum Status implements Serializable {
@@ -135,6 +135,10 @@ public class Plan extends ModelObject {
 
     private String surveyDefaultEmailAddress = "";
 
+    private String communityCalendar;
+
+    private String communityCalendarHost;
+
 
     //-----------------------------
     public Plan() {
@@ -197,6 +201,22 @@ public class Plan extends ModelObject {
         this.plannerSupportCommunity = plannerSupportCommunity;
     }
 
+    public String getCommunityCalendar() {
+        return communityCalendar == null ? "" : communityCalendar;
+    }
+
+    public void setCommunityCalendar( String communityCalendar ) {
+        this.communityCalendar = communityCalendar;
+    }
+
+    public String getCommunityCalendarHost() {
+        return communityCalendarHost == null ? "" : communityCalendarHost;
+    }
+
+    public void setCommunityCalendarHost( String communityCalendarHost ) {
+        this.communityCalendarHost = communityCalendarHost;
+    }
+
     public String getPlannerSupportCommunityUri( String defaultName ) {
         String name = getPlannerSupportCommunity();
         return name.isEmpty()
@@ -219,6 +239,22 @@ public class Plan extends ModelObject {
                 ? defaultName
                 : name;
     }
+
+    public String getCommunityCalendar( String defaultCalendar ) {
+        String name = getCommunityCalendar();
+        return name.isEmpty()
+                ? defaultCalendar
+                : name;
+    }
+
+
+    public String getCommunityCalendarHost( String defaultCalendarHost ) {
+        String name = getCommunityCalendarHost();
+        return name.isEmpty()
+                ? defaultCalendarHost
+                : name;
+    }
+
 
     public String getSurveyApiKey() {
         return surveyApiKey == null ? "" : surveyApiKey;

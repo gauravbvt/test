@@ -77,6 +77,14 @@ public class PlanManager {
      * Name of the default support community.
      */
     private String defaultSupportCommunity;
+    /**
+     * URI of the default community calendar host.
+     */
+    private String defaultCommunityCalendarHost;
+    /**
+     * Name of the default community calendar.
+     */
+    private String defaultCommunityCalendar;
 
     //------------------------------------------
     /**
@@ -160,6 +168,22 @@ public class PlanManager {
 
     public void setDefaultSupportCommunity( String defaultSupportCommunity ) {
         this.defaultSupportCommunity = defaultSupportCommunity;
+    }
+
+    public String getDefaultCommunityCalendar() {
+        return defaultCommunityCalendar;
+    }
+
+    public void setDefaultCommunityCalendar( String defaultCommunityCalendar ) {
+        this.defaultCommunityCalendar = defaultCommunityCalendar;
+    }
+
+    public String getDefaultCommunityCalendarHost() {
+        return defaultCommunityCalendarHost;
+    }
+
+    public void setDefaultCommunityCalendarHost( String defaultCommunityCalendarHost ) {
+        this.defaultCommunityCalendarHost = defaultCommunityCalendarHost;
     }
 
     /**
@@ -629,6 +653,7 @@ public class PlanManager {
         user.getUserInfo().setAuthorities( role, uri, getPlans() );
         user.setPlan( uri != null ? getDefaultPlan( user ) : null );
     }
+
 
     //=============================================================
     /**

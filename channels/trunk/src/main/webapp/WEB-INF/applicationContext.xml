@@ -62,6 +62,8 @@ CONFIGURATION NOTES:
         <constructor-arg ref="definitionManager" />
         <property name="importDirectory" value="${channels.home}${file.separator}import"/>
         <property name="databaseFactory" ref="databaseFactory"/>
+        <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/hosted/mind-alliance.com/embed"/>
+        <property name="defaultCommunityCalendar" value="channels@mind-alliance.com"/>
         <property name="builtInMedia">
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>

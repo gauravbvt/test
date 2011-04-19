@@ -99,7 +99,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( showTabs.contains( "Calendar" ) )
             tabs.add( new AbstractTab( new Model<String>( "Calendar" ) ) {
                 public Panel getPanel( String id ) {
-                    calendarPanel = new CalendarPanel( id, SocialPanel.this, collapsible );
+                    calendarPanel = new CalendarPanel( id, collapsible );
                     return calendarPanel;
                 }
             } );
