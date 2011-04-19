@@ -324,7 +324,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     private String getGotoReportDescription( User user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
                 ? "View and print the tasks and related communications (information sharing procedures) " +
-                "that are assigned to all participants in the plan."
+                "that are assigned to the participants in the plan."
                 : "View and print the tasks and related communications (information sharing procedures) " +
                 "that are assigned to you as a participant in the plan.";
     }

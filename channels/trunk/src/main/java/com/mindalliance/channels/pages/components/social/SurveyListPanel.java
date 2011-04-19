@@ -104,6 +104,7 @@ public class SurveyListPanel extends AbstractSocialListPanel {
         showMore = new AjaxFallbackLink( "showMore" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow += MORE;
+                surveyResponses = null;
                 addSurveyReminders();
                 adjustComponents( target );
             }
@@ -117,6 +118,7 @@ public class SurveyListPanel extends AbstractSocialListPanel {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow = A_FEW;
                 showAFew.setEnabled( false );
+                surveyResponses = null;
                 addSurveyReminders();
                 adjustComponents( target );
             }
@@ -169,8 +171,12 @@ public class SurveyListPanel extends AbstractSocialListPanel {
             try {
                 surveyResponses = surveyService.findSurveysResponses(
                         user,
-                        numberToShow,
+                        numberToShow + 1,
                         showCompleted );
+                allShown =  surveyResponses.size() <= numberToShow;
+                if ( surveyResponses.size() >  numberToShow) {
+                    surveyResponses.remove( numberToShow );
+                }
             } catch ( SurveyException e ) {
                 LOG.warn( "Failed to get survey responses", e );
                 surveyResponses = new ArrayList<SurveyResponse>();
