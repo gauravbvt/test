@@ -21,8 +21,10 @@ import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -281,7 +283,15 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         Actor actor = findActor( getQueryService(), user.getUsername() );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
-
+        BookmarkablePageLink<? extends WebPage > gotoReportLink =  newTargetedLink(
+                "gotoReport",
+                "",
+                ResponderPage.class,
+                ResponderPage.createParameters( actor, uri, plan.getVersion() ),
+                null,
+                plan );
+        Label gotoReportLabel = new Label( "proceduresLabel", getGotoReportLabel( user, plan ) );
+        gotoReportLink.add( gotoReportLabel );
         form.add(
             // Goto admin
             new WebMarkupContainer( "admin" )
@@ -300,14 +310,23 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
 
             // Goto personal procedures
             new WebMarkupContainer( "report" )
-                .add( newTargetedLink(
-                            "gotoReport",
-                            "",
-                            ResponderPage.class,
-                            ResponderPage.createParameters( actor, uri, plan.getVersion() ),
-                            null,
-                            plan ) )
+                .add( gotoReportLink )
+                .add ( new Label( "proceduresDescription", getGotoReportDescription( user ,plan ) ) )
                 .setVisible( planner || actor != null ) );
+    }
+
+    private String getGotoReportLabel( User user, Plan plan ) {
+        return user.isPlanner( plan.getUri() )
+                ? "Procedures for all participants"
+                : "My procedures";
+    }
+
+    private String getGotoReportDescription( User user, Plan plan ) {
+        return user.isPlanner( plan.getUri() )
+                ? "View and print the tasks and related communications (information sharing procedures) " +
+                "that are assigned to all participants in the plan."
+                : "View and print the tasks and related communications (information sharing procedures) " +
+                "that are assigned to you as a participant in the plan.";
     }
 
     private static Actor findActor( QueryService queryService, String userName ) {
