@@ -67,7 +67,10 @@ public class PlannerMessage extends PersistentObject {
     }
 
     public boolean isBroadcast() {
-        return toUsername == null;
+        User current = User.current();
+        return toUsername == null && current.isPlanner() // legacy - all planners
+                || toUsername.equals( PlannerMessagingService.PLANNERS ) && current.isPlanner()
+                || toUsername.equals( PlannerMessagingService.USERS );
     }
 
     public void setAbout( ModelObject modelObject ) {
@@ -87,7 +90,7 @@ public class PlannerMessage extends PersistentObject {
     }
 
     public ModelObject getAbout( QueryService queryService ) {
-        return  aboutRef == null ? null : (ModelObject) aboutRef.resolve( queryService );
+        return aboutRef == null ? null : (ModelObject) aboutRef.resolve( queryService );
     }
 
     public String getAboutString() {

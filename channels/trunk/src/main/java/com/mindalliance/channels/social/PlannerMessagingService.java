@@ -15,6 +15,9 @@ import java.util.Iterator;
  */
 public interface PlannerMessagingService {
 
+    public static final String PLANNERS = "__planners__";
+    public static final String USERS = "__users__";
+
     void sendMessage( PlannerMessage message, boolean emailIt, Plan plan );
 
     void deleteMessage( PlannerMessage message, Plan plan );

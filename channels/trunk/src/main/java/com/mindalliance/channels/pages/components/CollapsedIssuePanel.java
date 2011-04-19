@@ -65,7 +65,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         AjaxFallbackLink surveyLink = new AjaxFallbackLink( "surveyLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 try {
-                    Survey survey = surveyService.getOrCreateSurvey( issue, getPlan() );
+                    Survey survey = surveyService.getOrCreateSurvey( Survey.Type.Remediation, issue, getPlan() );
                     update( target, new Change( Change.Type.Expanded, survey ) );
                 } catch ( SurveyException e ) {
                     e.printStackTrace();
@@ -78,7 +78,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         Label surveyActionLabel = new Label(
                 "surveyAction",
                 new Model<String>(
-                        surveyService.isSurveyed( issue )
+                        surveyService.isSurveyed( Survey.Type.Remediation, issue )
                                 ? "View survey"
                                 : "Create survey"
                 ) );

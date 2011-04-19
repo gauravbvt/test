@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.PlannerMessage;
@@ -37,14 +38,12 @@ public class SocialPanel extends AbstractUpdatablePanel {
     public static final String SEND_MESSAGE = "sendMessage";
     public static final String DELETE_MESSAGE = "deleteMessage";
     public static final String EMAIL_MESSAGE = "emailMessage";
-
     private AjaxTabbedPanel tabbedPanel;
-
     private PlannerMessageListPanel plannerMessageListPanel;
-
     private CommandEventListPanel commandEventListPanel;
-
     private UserPresenceListPanel plannerPresenceListPanel;
+    private SurveyListPanel surveyListPanel;
+    private CalendarPanel calendarPanel;
     /**
      * When last refreshed.
      */
@@ -74,22 +73,36 @@ public class SocialPanel extends AbstractUpdatablePanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        tabs.add( new AbstractTab( new Model<String>( "Presence" ) ) {
-            public Panel getPanel( String id ) {
-                plannerPresenceListPanel = new UserPresenceListPanel( id, SocialPanel.this, collapsible );
-                return plannerPresenceListPanel;
-            }
-        } );
-        tabs.add( new AbstractTab( new Model<String>( "Activities" ) ) {
-            public Panel getPanel( String id ) {
-                commandEventListPanel = new CommandEventListPanel( id, SocialPanel.this, collapsible );
-                return commandEventListPanel;
-            }
-        } );
+        if ( User.current().isPlanner() ) {
+            tabs.add( new AbstractTab( new Model<String>( "Presence" ) ) {
+                public Panel getPanel( String id ) {
+                    plannerPresenceListPanel = new UserPresenceListPanel( id, SocialPanel.this, collapsible );
+                    return plannerPresenceListPanel;
+                }
+            } );
+            tabs.add( new AbstractTab( new Model<String>( "Activities" ) ) {
+                public Panel getPanel( String id ) {
+                    commandEventListPanel = new CommandEventListPanel( id, SocialPanel.this, collapsible );
+                    return commandEventListPanel;
+                }
+            } );
+        }
         tabs.add( new AbstractTab( new Model<String>( "Messages" ) ) {
             public Panel getPanel( String id ) {
                 plannerMessageListPanel = new PlannerMessageListPanel( id, SocialPanel.this, collapsible );
                 return plannerMessageListPanel;
+            }
+        } );
+        tabs.add( new AbstractTab( new Model<String>( "Calendar" ) ) {
+            public Panel getPanel( String id ) {
+                calendarPanel = new CalendarPanel( id, SocialPanel.this, collapsible );
+                return calendarPanel;
+            }
+        } );
+        tabs.add( new AbstractTab( new Model<String>( "Surveys" ) ) {
+            public Panel getPanel( String id ) {
+                surveyListPanel = new SurveyListPanel( id, SocialPanel.this, collapsible );
+                return surveyListPanel;
             }
         } );
         return tabs;

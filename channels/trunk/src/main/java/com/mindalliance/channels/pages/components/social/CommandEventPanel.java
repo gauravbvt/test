@@ -20,6 +20,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.Date;
+
 /**
  * Command event panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -139,12 +141,9 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
                 : "redoing";
     }
 
-    public String getTime() {
-        return getCommandEvent().getShortTimeElapsedString();
-    }
-
-    public String getLongTime() {
-        return getCommandEvent().getLongTimeElapsedString();
+    @Override
+    public Date getDate() {
+        return getCommandEvent().getDate();
     }
 
     private CommandEvent getCommandEvent() {

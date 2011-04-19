@@ -2,7 +2,6 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.model.Plan;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -52,6 +51,7 @@ public class User implements UserDetails {
         anonymous = true;
         userInfo = new UserInfo( "(Anonymous)", "bla,Anonymous,bla" );
     }
+
 
     public User( UserInfo userInfo ) {
         this.userInfo = userInfo;

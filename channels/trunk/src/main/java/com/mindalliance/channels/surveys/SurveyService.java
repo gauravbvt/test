@@ -1,7 +1,11 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.social.SurveyResponse;
 
 import java.util.List;
 
@@ -16,29 +20,31 @@ import java.util.List;
 public interface SurveyService {
 
     /**
-     * Create a new survey in current plan on an issue, or get current, not closed one.
+     * Create a new survey of a given type in current plan on an identifiable, or get current, not closed one.
      *
-     * @param issue an issue
-     * @param plan a plan
+     * @param type         a survey type
+     * @param identifiable an identifiable
+     * @param plan         a plan
      * @return a survey
      * @throws SurveyException if fails
      */
-    Survey getOrCreateSurvey( Issue issue, Plan plan ) throws SurveyException;
+    Survey getOrCreateSurvey( Survey.Type type, Identifiable identifiable, Plan plan ) throws SurveyException;
 
     /**
-     * Whether one or more surveys, created, launched or closed, is already associated with an issue.
+     * Whether one or more surveys of a given type, created, launched or closed, is already associated with an identifiable.
      *
-     * @param issue an issue
+     * @param type         a survey type
+     * @param identifiable an identifiable
      * @return a boolean
      */
-    boolean isSurveyed( Issue issue );
+    boolean isSurveyed( Survey.Type type, Identifiable identifiable );
 
     /**
      * Add contacts to a survey.
      *
      * @param survey    a survey
      * @param usernames a list of user names
-     * @param plan a plan
+     * @param plan      a plan
      * @throws SurveyException if fails
      */
     void inviteContacts( Survey survey, List<String> usernames, Plan plan ) throws SurveyException;
@@ -55,9 +61,9 @@ public interface SurveyService {
      * Find current issue the survey is about.
      *
      * @param survey a survey
-     * @return an issue or null
+     * @return an identifiable or null
      */
-    Issue findIssue( Survey survey );
+    Identifiable findIdentifiable( Survey survey );      // todo - needed?
 
     /**
      * Delete not-yet-launched survey.
@@ -71,9 +77,8 @@ public interface SurveyService {
      * Launch the survey.
      *
      * @param survey a survey
-     * @param plan a plan
-     * @throws SurveyException
-     *          if fails
+     * @param plan   a plan
+     * @throws SurveyException if fails
      */
     void launchSurvey( Survey survey, Plan plan ) throws SurveyException;
 
@@ -81,9 +86,8 @@ public interface SurveyService {
      * Close the survey.
      *
      * @param survey a survey
-     * @param plan a plan
-     * @throws SurveyException
-     *          if fails
+     * @param plan   a plan
+     * @throws SurveyException if fails
      */
     void closeSurvey( Survey survey, Plan plan ) throws SurveyException;
 
@@ -91,10 +95,9 @@ public interface SurveyService {
      * Get summary and access data about a survey.
      *
      * @param survey a survey
-     * @param plan a plan
+     * @param plan   a plan
      * @return survey data
-     * @throws SurveyException
-     *          if fails
+     * @throws SurveyException if fails
      */
     SurveyData getSurveyData( Survey survey, Plan plan ) throws SurveyException;
 
@@ -107,6 +110,7 @@ public interface SurveyService {
 
     /**
      * Get service API key.
+     *
      * @param plan a plan
      * @return a string
      */
@@ -114,6 +118,7 @@ public interface SurveyService {
 
     /**
      * Get service user key.
+     *
      * @param plan a plan
      * @return a string
      */
@@ -121,6 +126,7 @@ public interface SurveyService {
 
     /**
      * Get service template key.
+     *
      * @param plan a plan
      * @return a string
      */
@@ -128,8 +134,33 @@ public interface SurveyService {
 
     /**
      * Get service email address.
+     *
      * @param plan a plan
      * @return a string
      */
     String getDefaultEmailAddress( Plan plan );
+
+    /**
+     * Get user service.
+     *
+     * @return a user service
+     */
+    UserService getUserService();
+
+    /**
+     * Get analyst.
+     *
+     * @return an analyst
+     */
+    Analyst getAnalyst();
+
+    /**
+     * Find a user's survey responses, including TBD (non-existent) responses.
+     * @param user  a user
+     * @param maxNumber  an int
+     * @param showCompleted a boolean
+     * @return  a list of survey responses
+     * @throws SurveyException if fails
+     */
+    List<SurveyResponse> findSurveysResponses( User user, int maxNumber, boolean showCompleted ) throws SurveyException;
 }

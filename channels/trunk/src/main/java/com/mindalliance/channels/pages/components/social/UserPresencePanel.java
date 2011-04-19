@@ -8,6 +8,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.Date;
+
 /**
  * Planner presence panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -16,9 +18,9 @@ import org.apache.wicket.model.PropertyModel;
  * Date: Jul 5, 2010
  * Time: 2:28:30 PM
  */
-public class PlannerPresencePanel extends AbstractSocialEventPanel {
+public class UserPresencePanel extends AbstractSocialEventPanel {
 
-    public PlannerPresencePanel(
+    public UserPresencePanel(
             String id,
             String username,
             int index,
@@ -31,14 +33,10 @@ public class PlannerPresencePanel extends AbstractSocialEventPanel {
         addTime( socialItemContainer );
     }
 
-    public String getTime() {
+    @Override
+    public Date getDate() {
         PresenceEvent presenceEvent = getLatestPresenceEvent();
-        return presenceEvent == null ? "" : presenceEvent.getShortTimeElapsedString();
-    }
-
-    public String getLongTime() {
-        PresenceEvent presenceEvent = getLatestPresenceEvent();
-        return presenceEvent == null ? "" : presenceEvent.getLongTimeElapsedString();
+        return presenceEvent.getDate();
     }
 
     private void addTime( WebMarkupContainer socialItemContainer ) {

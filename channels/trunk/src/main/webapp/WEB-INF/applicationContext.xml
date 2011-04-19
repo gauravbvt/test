@@ -121,15 +121,7 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
-        <property name="velocityProperties">
-            <value>
-                resource.loader=file
-                file.resource.loader.class=org.apache.velocity.runtime.resource.loader.FileResourceLoader
-                file.resource.loader.path=${channels.home}/templates
-                file.resource.loader.cache=true
-                file.resource.loader.modificationCheckInterval=2
-            </value>
-        </property>
+       <property name="resourceLoaderPath" value="/WEB-INF/templates"/>
     </bean>
 
     <bean id="detective" class="com.mindalliance.channels.analysis.DefaultDetective">
