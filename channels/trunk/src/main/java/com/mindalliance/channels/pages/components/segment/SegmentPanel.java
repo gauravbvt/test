@@ -335,7 +335,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     }
 
     private void addSocialPanel() {
-        socialPanel = new SocialPanel( "social" );
+        String[] tabsShown = {"Presence", "Activities", "Messages"};
+        socialPanel = new SocialPanel( "social", tabsShown );
         add( socialPanel );
     }
 

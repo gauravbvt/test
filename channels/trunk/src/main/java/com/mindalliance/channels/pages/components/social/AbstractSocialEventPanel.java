@@ -251,6 +251,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     public String getShortTimeElapsedString( Date date ) {
+        if ( date == null ) return "";
         Date end = new Date();
         long diffInSeconds = ( end.getTime() - date.getTime() ) / 1000;
         /* sec */
@@ -292,6 +293,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     public String getLongTimeElapsedString( Date date ) {
+        if ( date == null ) return "";
         Date end = new Date();
         long diffInSeconds = ( end.getTime() - date.getTime() ) / 1000;
         /* sec */

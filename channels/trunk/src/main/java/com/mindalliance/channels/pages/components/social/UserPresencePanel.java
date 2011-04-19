@@ -36,7 +36,7 @@ public class UserPresencePanel extends AbstractSocialEventPanel {
     @Override
     public Date getDate() {
         PresenceEvent presenceEvent = getLatestPresenceEvent();
-        return presenceEvent.getDate();
+        return presenceEvent == null ? null : presenceEvent.getDate();
     }
 
     private void addTime( WebMarkupContainer socialItemContainer ) {

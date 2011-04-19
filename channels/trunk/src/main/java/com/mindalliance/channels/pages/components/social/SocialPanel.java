@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.PlannerMessage;
@@ -16,6 +15,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -49,15 +49,17 @@ public class SocialPanel extends AbstractUpdatablePanel {
      */
     private Date whenLastRefreshed = new Date();
     private boolean collapsible;
+    private final List<String> showTabs;
 
 
-    public SocialPanel( String id ) {
-        this( id, true );
+    public SocialPanel( String id, String[] showTabs ) {
+        this( id, true, showTabs );
     }
 
-    public SocialPanel( String id, boolean collapsible ) {
+    public SocialPanel( String id, boolean collapsible, String[] showTabs ) {
         super( id );
         this.collapsible = collapsible;
+        this.showTabs = Arrays.asList( showTabs );
         init();
     }
 
@@ -73,38 +75,41 @@ public class SocialPanel extends AbstractUpdatablePanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        if ( User.current().isPlanner() ) {
+        if ( showTabs.contains( "Presence" ) )
             tabs.add( new AbstractTab( new Model<String>( "Presence" ) ) {
                 public Panel getPanel( String id ) {
                     plannerPresenceListPanel = new UserPresenceListPanel( id, SocialPanel.this, collapsible );
                     return plannerPresenceListPanel;
                 }
             } );
+        if ( showTabs.contains( "Activities" ) )
             tabs.add( new AbstractTab( new Model<String>( "Activities" ) ) {
                 public Panel getPanel( String id ) {
                     commandEventListPanel = new CommandEventListPanel( id, SocialPanel.this, collapsible );
                     return commandEventListPanel;
                 }
             } );
-        }
-        tabs.add( new AbstractTab( new Model<String>( "Messages" ) ) {
-            public Panel getPanel( String id ) {
-                plannerMessageListPanel = new PlannerMessageListPanel( id, SocialPanel.this, collapsible );
-                return plannerMessageListPanel;
-            }
-        } );
-        tabs.add( new AbstractTab( new Model<String>( "Calendar" ) ) {
-            public Panel getPanel( String id ) {
-                calendarPanel = new CalendarPanel( id, SocialPanel.this, collapsible );
-                return calendarPanel;
-            }
-        } );
-        tabs.add( new AbstractTab( new Model<String>( "Surveys" ) ) {
-            public Panel getPanel( String id ) {
-                surveyListPanel = new SurveyListPanel( id, SocialPanel.this, collapsible );
-                return surveyListPanel;
-            }
-        } );
+        if ( showTabs.contains( "Messages" ) )
+            tabs.add( new AbstractTab( new Model<String>( "Messages" ) ) {
+                public Panel getPanel( String id ) {
+                    plannerMessageListPanel = new PlannerMessageListPanel( id, SocialPanel.this, collapsible );
+                    return plannerMessageListPanel;
+                }
+            } );
+        if ( showTabs.contains( "Calendar" ) )
+            tabs.add( new AbstractTab( new Model<String>( "Calendar" ) ) {
+                public Panel getPanel( String id ) {
+                    calendarPanel = new CalendarPanel( id, SocialPanel.this, collapsible );
+                    return calendarPanel;
+                }
+            } );
+        if ( showTabs.contains( "Surveys" ) )
+            tabs.add( new AbstractTab( new Model<String>( "Surveys" ) ) {
+                public Panel getPanel( String id ) {
+                    surveyListPanel = new SurveyListPanel( id, SocialPanel.this, collapsible );
+                    return surveyListPanel;
+                }
+            } );
         return tabs;
     }
 

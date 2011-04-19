@@ -318,7 +318,8 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     }
 
     private void addSocial() {
-        socialPanel = new SocialPanel( "social", false );
+        String[] tabsShown = {"Calendar", "Surveys", "Messages"};
+        socialPanel = new SocialPanel( "social", false, tabsShown );
         form.add( socialPanel );
     }
 
