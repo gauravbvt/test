@@ -8,6 +8,7 @@ import com.mindalliance.channels.surveys.SurveyException;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -18,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -84,7 +87,7 @@ public class SurveyListPanel extends AbstractSocialListPanel {
         showHideCompletedLink.addOrReplace( showHideCompletedLabel );
     }
 
-    private void addShowHideCompletedLink(  ) {
+    private void addShowHideCompletedLink() {
         showHideCompletedLink = new AjaxFallbackLink( "hideShowCompletedLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 showCompleted = !showCompleted;
@@ -101,7 +104,7 @@ public class SurveyListPanel extends AbstractSocialListPanel {
     }
 
     private void addShowMore() {
-        showMore = new AjaxFallbackLink( "showMore" ) {
+        showMore = new IndicatingAjaxFallbackLink( "showMore" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow += MORE;
                 surveyResponses = null;
@@ -114,7 +117,7 @@ public class SurveyListPanel extends AbstractSocialListPanel {
     }
 
     private void addShowAFew() {
-        showAFew = new AjaxFallbackLink( "showFew" ) {
+        showAFew = new IndicatingAjaxFallbackLink( "showFew" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow = A_FEW;
                 showAFew.setEnabled( false );
@@ -173,10 +176,16 @@ public class SurveyListPanel extends AbstractSocialListPanel {
                         user,
                         numberToShow + 1,
                         showCompleted );
-                allShown =  surveyResponses.size() <= numberToShow;
-                if ( surveyResponses.size() >  numberToShow) {
+                allShown = surveyResponses.size() <= numberToShow;
+                if ( surveyResponses.size() > numberToShow ) {
                     surveyResponses.remove( numberToShow );
                 }
+                Collections.sort( surveyResponses, new Comparator<SurveyResponse>() {
+                    @Override
+                    public int compare( SurveyResponse sr1, SurveyResponse sr2 ) {
+                        return sr2.getSurvey().getLaunchDate().compareTo( sr1.getSurvey().getLaunchDate() );
+                    }
+                } );
             } catch ( SurveyException e ) {
                 LOG.warn( "Failed to get survey responses", e );
                 surveyResponses = new ArrayList<SurveyResponse>();

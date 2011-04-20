@@ -712,8 +712,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             updateRefreshNowNotice();
             if ( getPlan().isDevelopment() ) {
                 target.addComponent( refreshNeededComponent );
-                fadeOutMessagePanel( target );
             }
+            fadeOutMessagePanel( target );
         }
         segmentPanel.updateSocialPanel( target );
     }

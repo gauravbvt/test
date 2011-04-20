@@ -56,6 +56,11 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     private static final Logger LOG = LoggerFactory.getLogger( UserPage.class );
 
     /**
+     * Minimium delay before a change message fades out.
+     */
+    public static final int MESSAGE_FADE_OUT_DELAY = 20;
+
+    /**
      * The mail sender.
      */
     @SpringBean
@@ -178,7 +183,21 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         getCommander().keepAlive( User.current().getUsername(), REFRESH_DELAY );
         getCommander().processDeaths();
         updateSocialPanel( target );
+        fadeOutMessagePanel( target );
     }
+
+    private void fadeOutMessagePanel( AjaxRequestTarget target ) {
+        if ( !getMessage().isEmpty() ) {
+            if ( ( System.currentTimeMillis() - message_time ) > ( MESSAGE_FADE_OUT_DELAY * 1000 ) ) {
+                target.appendJavascript( "$('div.change-message').fadeOut('slow');" );
+                message = null;
+            }
+        } else {
+            makeVisible( messageContainer, false );
+        }
+        target.addComponent( messageContainer );
+    }
+
 
     /**
      * Update social panel.

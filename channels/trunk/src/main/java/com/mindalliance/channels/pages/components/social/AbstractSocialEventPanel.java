@@ -9,6 +9,7 @@ import com.mindalliance.channels.odb.PersistentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.menus.SocialItemMenuPanel;
+import com.mindalliance.channels.social.PlannerMessagingService;
 import com.mindalliance.channels.social.PlanningEventService;
 import com.mindalliance.channels.social.PresenceEvent;
 import org.apache.wicket.AttributeModifier;
@@ -150,16 +151,22 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
             return "all users";
         else {
             String userName = getUsername();
-            String name = getQueryService().findUserFullName( userName );
-            String userRole = getQueryService().findUserRole( userName );
-            return name
-                    + (
-                    userRole.equals( User.PLANNER)
-                    ? " (planner)"
-                    : userRole.equals( User.ADMIN )
-                    ? " (admin)"
-                    : ""
-            );
+            if ( username.equals( PlannerMessagingService.PLANNERS ) ) {
+                return "All planners";
+            } else if ( username.equals( PlannerMessagingService.USERS ) ) {
+                return "Everyone";
+            } else {
+                String name = getQueryService().findUserFullName( userName );
+                String userRole = getQueryService().findUserRole( userName );
+                return name
+                        + (
+                        userRole.equals( User.PLANNER )
+                                ? " (planner)"
+                                : userRole.equals( User.ADMIN )
+                                ? " (admin)"
+                                : ""
+                );
+            }
         }
     }
 
@@ -245,7 +252,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     protected PresenceEvent getLatestPresenceEvent() {
         if ( latestPresenceEvent == null ) {
-            latestPresenceEvent = getPlanningEventService().findLatestPresence( getUsername(), getPlan()  );
+            latestPresenceEvent = getPlanningEventService().findLatestPresence( getUsername(), getPlan() );
         }
         return latestPresenceEvent;
     }
@@ -332,8 +339,6 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         sb.append( " ago" );
         return sb.toString();
     }
-
-
 
 
 }

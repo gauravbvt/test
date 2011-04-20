@@ -7,9 +7,11 @@ import com.mindalliance.channels.social.PlannerMessage;
 import com.mindalliance.channels.social.PlannerMessagingService;
 import com.mindalliance.channels.social.PlanningEventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -68,7 +70,22 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     private void addSocialTabs() {
-        tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() );
+        tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() ) {
+            // Override newLink to supply an IndicatingAjaxLink (wait cursor)
+            @Override
+            protected WebMarkupContainer newLink( String linkId, final int index ) {
+                return new IndicatingAjaxLink( linkId ) {
+
+                    public void onClick( AjaxRequestTarget target ) {
+                        setSelectedTab( index );
+                        if ( target != null ) {
+                            target.addComponent( tabbedPanel );
+                        }
+                        onAjaxUpdate( target );
+                    }
+                };
+            }
+        };
         tabbedPanel.setOutputMarkupId( true );
         add( tabbedPanel );
     }
@@ -103,24 +120,30 @@ public class SocialPanel extends AbstractUpdatablePanel {
                     return calendarPanel;
                 }
             } );
-        if ( showTabs.contains( "Surveys" ) )
-            tabs.add( new AbstractTab( new Model<String>( "Surveys" ) ) {
+        if ( showTabs.contains( "Surveys" ) ) {
+            AbstractTab tab = new AbstractTab( new Model<String>( "Surveys" ) ) {
                 public Panel getPanel( String id ) {
                     surveyListPanel = new SurveyListPanel( id, SocialPanel.this, collapsible );
                     return surveyListPanel;
                 }
-            } );
+            };
+            tabs.add( tab );
+        }
         return tabs;
     }
 
+    private String getSelectedTabTitle() {
+        return tabbedPanel.getTabs().get( tabbedPanel.getSelectedTab() ).getTitle().getObject();
+    }
+
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( plannerPresenceListPanel != null && tabbedPanel.getSelectedTab() == 0 ) {
+        if ( plannerPresenceListPanel != null && getSelectedTabTitle().equals( "Presence" ) ) {
             plannerPresenceListPanel.refresh( target, change );
         }
-        if ( commandEventListPanel != null && tabbedPanel.getSelectedTab() == 1 ) {
+        if ( commandEventListPanel != null && getSelectedTabTitle().equals( "Activities" )  ) {
             commandEventListPanel.refresh( target, change );
         }
-        if ( plannerMessageListPanel != null && tabbedPanel.getSelectedTab() == 2 ) {
+        if ( plannerMessageListPanel != null && getSelectedTabTitle().equals( "Messages" )  ) {
             plannerMessageListPanel.refresh( target, change );
         }
         Date whenLastReceived = plannerMessagingService.getWhenLastReceived( getPlan() );
@@ -134,8 +157,8 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( action.equals( SEND_MESSAGE )
                 || action.equals( DELETE_MESSAGE )
                 || action.equals( EMAIL_MESSAGE ) ) {
-            if ( tabbedPanel.getSelectedTab() != 2 ) {
-                tabbedPanel.setSelectedTab( 2 );
+            if ( !getSelectedTabTitle().equals( "Messages" ) ) {
+                selectTabTitled( "Messages" );
                 target.addComponent( tabbedPanel );
             }
 
@@ -151,10 +174,20 @@ public class SocialPanel extends AbstractUpdatablePanel {
         }
     }
 
+    private void selectTabTitled( String title ) {
+        List<ITab> tabs = tabbedPanel.getTabs();
+        for ( int i = 0; i < tabs.size(); i++) {
+            if ( tabs.get(i).getTitle().getObject().equals( title )) {
+                tabbedPanel.setSelectedTab( i );
+                break;
+            }
+        }
+     }
+
     public void newMessage( AjaxRequestTarget target, Change change ) {
         ModelObject about = (ModelObject) change.getSubject( getQueryService() );
         String sendTo = change.getProperty();
-        tabbedPanel.setSelectedTab( 2 );
+        selectTabTitled( "Messages" );
         plannerMessageListPanel.newMessage( sendTo == null ? "" : sendTo, about, target );
         target.addComponent( tabbedPanel );
     }

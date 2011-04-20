@@ -515,7 +515,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         Collections.sort( surveys, new Comparator<Survey>() {
             @Override
             public int compare( Survey s1, Survey s2 ) {
-                return s1.getLaunchDate().compareTo( s2.getLaunchDate() );
+                return s2.getLaunchDate().compareTo( s1.getLaunchDate() );
             }
         } );
         Iterator<Survey> surveyIterator = surveys.iterator();

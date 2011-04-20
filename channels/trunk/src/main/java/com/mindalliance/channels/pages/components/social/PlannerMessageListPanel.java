@@ -13,6 +13,7 @@ import com.mindalliance.channels.social.PlannerMessagingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -330,16 +331,16 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addSendAndEmail( final WebMarkupContainer newMessageContainer ) {
-        sendAndEmailLink = new AjaxFallbackLink( "sendAndEmail" ) {
+        sendAndEmailLink = new IndicatingAjaxFallbackLink( "sendAndEmail" ) {
             public void onClick( AjaxRequestTarget target ) {
                 if ( !getNewMessageText().isEmpty() ) {
-                    sendNewMessage( true );
+                    boolean success = sendNewMessage( true );
                     resetNewMessage( target );
                     addPlannerMessages();
                     adjustComponents( target );
                     update(
                             target,
-                            Change.message( "Message sent and emailed" ) );
+                            Change.message( success ? "Message sent and emailed" : "Message sent but NOT emailed" ) );
                 } else {
                     update(
                             target,
@@ -359,14 +360,16 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         target.addComponent( newMessageContainer );
     }
 
-    private void sendNewMessage( boolean emailIt ) {
+    private boolean sendNewMessage( boolean emailIt ) {
         String text = getNewMessageText();
         if ( !text.isEmpty() ) {
-            PlannerMessage plannerMessage = new PlannerMessage( text, getPlan().getUri()  );
+            PlannerMessage plannerMessage = new PlannerMessage( text, getPlan().getUri() );
             plannerMessage.setToUsername( getNewMessageRecipient().getUsername() );
             if ( getNewMessageAbout() != null )
                 plannerMessage.setAbout( getNewMessageAbout() );
-            plannerMessagingService.sendMessage( plannerMessage, emailIt, getPlan()  );
+            return plannerMessagingService.sendMessage( plannerMessage, emailIt, getPlan() );
+        } else {
+            return false;
         }
     }
 
@@ -399,12 +402,12 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     }
 
     public void deleteMessage( PlannerMessage message, AjaxRequestTarget target ) {
-        plannerMessagingService.deleteMessage( message, getPlan()  );
+        plannerMessagingService.deleteMessage( message, getPlan() );
         refresh( target, new Change( Change.Type.Communicated ) );
     }
 
     public void emailMessage( PlannerMessage message, AjaxRequestTarget target ) {
-        boolean success = plannerMessagingService.email( message, getPlan()  );
+        boolean success = plannerMessagingService.email( message, getPlan() );
         addPlannerMessages();
         adjustComponents( target );
         update( target, Change.message( success
@@ -433,7 +436,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        Date whenLastChanged =  plannerMessagingService.getWhenLastChanged( getPlan() );
+        Date whenLastChanged = plannerMessagingService.getWhenLastChanged( getPlan() );
         if ( whenLastChanged != null && whenLastChanged.after( whenLastRefreshed ) ) {
             addPlannerMessages();
             adjustComponents( target );

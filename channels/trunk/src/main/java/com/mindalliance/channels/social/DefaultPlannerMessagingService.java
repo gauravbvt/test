@@ -59,11 +59,13 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         whenLastChanged.put( plan.getUri(), new Date() );
     }
 
-    public void sendMessage( PlannerMessage message, boolean emailIt, Plan plan ) {
+    public boolean sendMessage( PlannerMessage message, boolean emailIt, Plan plan ) {
+        boolean success = true;
         addSentMessage( message, plan );
         if ( emailIt ) {
-            email( message, plan );
+            success = email( message, plan );
         }
+        return success;
     }
 
     public boolean email( PlannerMessage message, Plan plan ) {

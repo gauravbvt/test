@@ -9,7 +9,7 @@ import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -150,7 +150,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
     }
 
     private void addLaunchButton() {
-        AjaxFallbackLink launchLink = new AjaxFallbackLink( "launch" ) {
+        IndicatingAjaxFallbackLink launchLink = new IndicatingAjaxFallbackLink( "launch" ) {
             public void onClick( AjaxRequestTarget target ) {
                 try {
                     if ( surveyContactsPanel instanceof SurveyContactsPanel ) {
