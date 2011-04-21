@@ -170,6 +170,8 @@ public class AdminPage extends AbstractChannelsWebPage {
                                 new PropertyModel<String>( this, "communityCalendarHost" ) ),
                         new TextField<String>( "communityCalendar",
                                 new PropertyModel<String>( this, "communityCalendar" ) ),
+                        new TextField<String>( "communityCalendarPrivateTicket",
+                                new PropertyModel<String>( this, "communityCalendarPrivateTicket" ) ),
 
                         new TextField<String>( "newPlanUri",
                                 new PropertyModel<String>( this, "newPlanUri" ) )
@@ -294,6 +296,18 @@ public class AdminPage extends AbstractChannelsWebPage {
         if ( val != null && !val.isEmpty() && !val.equals( defaultCalendar ) )
             getPlan().setCommunityCalendar( val );
     }
+
+    public String getCommunityCalendarPrivateTicket() {
+        String s = getPlan().getCommunityCalendarPrivateTicket();
+        return s.isEmpty() ? getPlanManager().getDefaultCommunityCalendarPrivateTicket() : s;
+    }
+
+    public void setCommunityCalendarPrivateTicket( String val ) {
+        String defaultCalendarPrivateTicket = getPlanManager().getDefaultCommunityCalendarPrivateTicket();
+        if ( val != null && !val.isEmpty() && !val.equals( defaultCalendarPrivateTicket ) )
+            getPlan().setCommunityCalendarPrivateTicket( val );
+    }
+
 
 
     public String getSurveyApiKey() {

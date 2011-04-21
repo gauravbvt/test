@@ -96,6 +96,9 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "communityCalendar" );
         writer.setValue( plan.getCommunityCalendar() );
         writer.endNode();
+        writer.startNode( "communityCalendarPrivateTicket" );
+        writer.setValue( plan.getCommunityCalendarPrivateTicket() );
+        writer.endNode();
         writer.startNode( "surveyApiKey" );
         writer.setValue( plan.getSurveyApiKey() );
         writer.endNode();
@@ -215,7 +218,9 @@ public class PlanConverter extends AbstractChannelsConverter {
                 plan.setCommunityCalendarHost( reader.getValue() );
             } else if ( nodeName.equals( "communityCalendar" ) ) {
                 plan.setCommunityCalendar( reader.getValue() );
-            } else if ( nodeName.equals( "surveyApiKey" ) ) {
+            }  else if ( nodeName.equals( "communityCalendarPrivateTicket" ) ) {
+                plan.setCommunityCalendarPrivateTicket( reader.getValue() );
+            }else if ( nodeName.equals( "surveyApiKey" ) ) {
                 plan.setSurveyApiKey( reader.getValue() );
             } else if ( nodeName.equals( "surveyUserKey" ) ) {
                 plan.setSurveyUserKey( reader.getValue() );

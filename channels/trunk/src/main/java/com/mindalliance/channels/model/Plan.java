@@ -135,9 +135,11 @@ public class Plan extends ModelObject {
 
     private String surveyDefaultEmailAddress = "";
 
-    private String communityCalendar;
+    private String communityCalendar = "";
 
-    private String communityCalendarHost;
+    private String communityCalendarHost = "";
+
+    private String communityCalendarPrivateTicket = "";
 
 
     //-----------------------------
@@ -255,6 +257,20 @@ public class Plan extends ModelObject {
                 : name;
     }
 
+    public String getCommunityCalendarPrivateTicket( String defaultCommunityCalendarPrivateTicket ) {
+        String ticket = getCommunityCalendarPrivateTicket();
+        return ticket.isEmpty()
+                ? defaultCommunityCalendarPrivateTicket
+                : ticket;
+    }
+
+    public String getCommunityCalendarPrivateTicket() {
+        return communityCalendarPrivateTicket == null ? "" : communityCalendarPrivateTicket;
+    }
+
+    public void setCommunityCalendarPrivateTicket( String communityCalendarPrivateTicket ) {
+        this.communityCalendarPrivateTicket = communityCalendarPrivateTicket;
+    }
 
     public String getSurveyApiKey() {
         return surveyApiKey == null ? "" : surveyApiKey;

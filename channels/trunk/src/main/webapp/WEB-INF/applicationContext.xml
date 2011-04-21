@@ -64,6 +64,7 @@ CONFIGURATION NOTES:
         <property name="databaseFactory" ref="databaseFactory"/>
         <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/embed"/>
         <property name="defaultCommunityCalendar" value="channels.mindalliance@gmail.com"/>
+        <property name="defaultCommunityCalendarPrivateTicket" value="2eeb23a44773bca4cf51901c486a2275"/>
         <property name="builtInMedia">
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>

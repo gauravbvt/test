@@ -85,6 +85,10 @@ public class PlanManager {
      * Name of the default community calendar.
      */
     private String defaultCommunityCalendar;
+    /**
+     * Name of the default community calendar private ticket.
+     */
+    private String defaultCommunityCalendarPrivateTicket;
 
     //------------------------------------------
     /**
@@ -184,6 +188,14 @@ public class PlanManager {
 
     public void setDefaultCommunityCalendarHost( String defaultCommunityCalendarHost ) {
         this.defaultCommunityCalendarHost = defaultCommunityCalendarHost;
+    }
+
+    public String getDefaultCommunityCalendarPrivateTicket() {
+        return defaultCommunityCalendarPrivateTicket;
+    }
+
+    public void setDefaultCommunityCalendarPrivateTicket( String defaultCommunityCalendarPrivateTicket ) {
+        this.defaultCommunityCalendarPrivateTicket = defaultCommunityCalendarPrivateTicket;
     }
 
     /**

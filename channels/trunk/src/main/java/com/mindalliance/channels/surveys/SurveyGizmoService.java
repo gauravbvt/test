@@ -268,6 +268,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
         SurveyResponse surveyResponse = new SurveyResponse( survey, SurveyResponse.Status.TBD, user.getEmail() );
         do {
             count = getSurveyResponse( survey, user, start, status, surveyResponse );
+            LOG.info( count + " " + status + " responses retrieved to survey " + survey.getId() );
             start += count;
         } while ( count > 0 && surveyResponse.isTBD() );
         return surveyResponse;

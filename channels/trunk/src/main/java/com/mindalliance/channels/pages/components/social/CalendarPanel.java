@@ -26,7 +26,7 @@ public class CalendarPanel extends AbstractSocialListPanel {
 
     private static final String BG_COLOR = "F6F6F6";
 
-    private static final String SRC = "{0}?showTitle=0&amp;showDate=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA&amp;height=300&amp;wkst=1&amp;bgcolor=%23{2}&amp;src={1}&amp;color=%232952A3&amp;ctz={3}";
+    private static final String SRC = "{0}?showTitle=0&amp;showDate=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA&amp;height=300&amp;wkst=1&amp;bgcolor=%23{2}&amp;src={1}&amp;color=%232952A3&amp;ctz={3}&pvttk={4} ";
 
     public CalendarPanel( String id, boolean collapsible ) {
         super( id, collapsible );
@@ -40,9 +40,15 @@ public class CalendarPanel extends AbstractSocialListPanel {
                 getCalenderHost(),
                 getCalendar(),
                 BG_COLOR,
-                getTimeZone() );
+                getTimeZone(),
+                getCalendarPrivateTicket() );
         calendarFrame.add( new AttributeModifier( "src", true, new Model<String>( src ) ) );
         add( calendarFrame );
+    }
+
+    private String getCalendarPrivateTicket() {
+        return getPlan().getCommunityCalendarPrivateTicket(
+                planManager.getDefaultCommunityCalendarPrivateTicket() );
     }
 
     private String getCalenderHost() {
