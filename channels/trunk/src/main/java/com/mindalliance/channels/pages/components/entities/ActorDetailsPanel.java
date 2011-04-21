@@ -79,9 +79,13 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     @SpringBean
     private PlanManager planManager;
     /**
-     * Checkbox indicating if actor is also a participant.
+     * Checkbox indicating if actor is an archetype.
      */
     private CheckBox isArchetypeCheckBox;
+    /**
+     * Checkbox indicating if actor is a place holder.
+     */
+    private CheckBox isPlaceHolderCheckBox;
     /**
      * Is system checkbox.
      */
@@ -131,6 +135,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
         addArchetypicalCheckBox();
+        addPlaceHolderCheckBox();
         addIsSystem();
         rolesContainer = new WebMarkupContainer( "rolesContainer" );
         moDetailsDiv.add( rolesContainer );
@@ -190,12 +195,35 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 new PropertyModel<Boolean>( this, "archetype" ) );
         isArchetypeCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
+                adjustFields();
+                target.addComponent(  isPlaceHolderCheckBox );
                 update( target, new Change( Change.Type.Updated, getActor(), "archetype" ) );
             }
         } );
+        isArchetypeCheckBox.setOutputMarkupId( true );
+        isArchetypeCheckBox.setEnabled( !isPlaceHolder() );
         archetypeContainer.add( isArchetypeCheckBox );
         archetypeContainer.setVisible( getEntity().isActual() );
         moDetailsDiv.add( archetypeContainer );
+    }
+
+    private void addPlaceHolderCheckBox() {
+        WebMarkupContainer placeHolderContainer = new WebMarkupContainer( "placeHolder" );
+        isPlaceHolderCheckBox = new CheckBox(
+                "isPlaceHolder",
+                new PropertyModel<Boolean>( this, "placeHolder" ) );
+        isPlaceHolderCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                adjustFields();
+                target.addComponent(  isArchetypeCheckBox );
+                update( target, new Change( Change.Type.Updated, getActor(), "archetype" ) );
+            }
+        } );
+        isPlaceHolderCheckBox.setOutputMarkupId( true );
+        isPlaceHolderCheckBox.setEnabled( !isArchetype() );
+        placeHolderContainer.add( isPlaceHolderCheckBox );
+        placeHolderContainer.setVisible( getEntity().isActual() );
+        moDetailsDiv.add( placeHolderContainer );
     }
 
     private void addIsSystem() {
@@ -213,7 +241,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void adjustFields() {
-        isArchetypeCheckBox.setEnabled( isLockedByUser( getActor() ) );
+        isPlaceHolderCheckBox.setEnabled( isLockedByUser( getActor() ) && !isArchetype() );
+        isArchetypeCheckBox.setEnabled( isLockedByUser( getActor() ) && !isPlaceHolder() );
         systemCheckBox.setEnabled( isLockedByUser( getActor() ) );
         rolesContainer.setVisible( getActor().isActual() );
     }
@@ -484,7 +513,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     /**
-     * Whether the actor is also a participant.
+     * Whether the actor is an archetype.
      *
      * @return a boolean
      */
@@ -494,6 +523,19 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
     public void setArchetype( boolean val ) {
         doCommand( new UpdatePlanObject( getActor(), "archetype", val ) );
+    }
+
+    /**
+     * Whether the actor is a place holder.
+     *
+     * @return a boolean
+     */
+    public boolean isPlaceHolder() {
+        return getActor().isPlaceHolder();
+    }
+
+    public void setPlaceHolder( boolean val ) {
+        doCommand( new UpdatePlanObject( getActor(), "placeHolder", val ) );
     }
 
     private Actor getActor() {

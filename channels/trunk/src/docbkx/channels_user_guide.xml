@@ -6136,6 +6136,33 @@
 
                 <entry><para>No</para></entry>
               </row>
+            
+              <row>
+                <entry><para>Agent assigned to user with different name</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Assign a user of the same name to the agent</para>
+                  </listitem>
+                  
+                  <listitem>
+                    <para>or assign no user to the agent</para>
+                  </listitem>
+                  
+                  <listitem>
+                    <para>or make the agent a place holder</para>
+                  </listitem>
+ 
+                <listitem>
+                  <para>or make the agent an archetype</para>
+                </listitem>
+                </itemizedlist></entry>
+ 
+                <entry><para>Yes</para></entry>
+              </row>             
+            
             </tbody>
           </tgroup>
         </informaltable>
@@ -6932,7 +6959,27 @@
                 
                 <entry><para>No</para></entry>
               </row>
-            
+ 
+ 
+              <row>
+                <entry><para>No user participates as placeholder agent</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Assign a user to the agent</para>
+                  </listitem>
+                  
+                  <listitem>
+                    <para>r make the agent not a place holder.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
+              
+ 
             </tbody>
           </tgroup>
         </informaltable>

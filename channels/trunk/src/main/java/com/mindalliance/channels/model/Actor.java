@@ -32,6 +32,10 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      */
     private boolean archetype = false;
     /**
+     * Whether this (actual) agent is a place holder (to be named by assigned participant).
+     */
+    private boolean placeHolder = false;
+    /**
      * The actor's time-based availability.
      * Null means 24/7.
      */
@@ -80,6 +84,16 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
 
     public void setArchetype( boolean archetype ) {
         this.archetype = archetype;
+        if ( archetype ) placeHolder = false;
+    }
+
+    public boolean isPlaceHolder() {
+        return placeHolder;
+    }
+
+    public void setPlaceHolder( boolean placeHolder ) {
+        this.placeHolder = placeHolder;
+        if ( placeHolder ) archetype = false;
     }
 
     public Availability getAvailability() {
@@ -121,7 +135,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     public String getNormalizedName() {
         String name = getName().trim();
         if ( this == UNKNOWN || name.indexOf( ',' ) >= 0 ) return name;
-        else if ( isType() || isArchetype() || isSystem() ) return name;
+        else if ( isType() || isArchetype() || isSystem() || isPlaceHolder() ) return name;
         else {
             int index = name.lastIndexOf( ' ' );
             if ( index >= 0 ) {

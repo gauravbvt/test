@@ -18,9 +18,9 @@ import java.util.List;
  * Date: Oct 1, 2010
  * Time: 2:53:29 PM
  */
-public class AgentIsTaskBottleneck extends AbstractIssueDetector {
+public class ActorIsTaskBottleneck extends AbstractIssueDetector {
 
-    public AgentIsTaskBottleneck() {
+    public ActorIsTaskBottleneck() {
     }
 
     /**

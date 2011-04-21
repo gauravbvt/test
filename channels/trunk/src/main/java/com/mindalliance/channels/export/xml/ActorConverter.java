@@ -61,6 +61,11 @@ public class ActorConverter extends EntityConverter {
             writer.setValue( "true" );
             writer.endNode();
         }
+        if ( actor.isPlaceHolder() ) {
+            writer.startNode( "placeHolder" );
+            writer.setValue( "true" );
+            writer.endNode();
+        }
         if ( actor.getAvailability() != null ) {
             writer.startNode( "availability" );
             context.convertAnother( actor.getAvailability() );
@@ -97,6 +102,9 @@ public class ActorConverter extends EntityConverter {
         } else if ( nodeName.equals( "archetype" ) ) {
             boolean isArchetype = reader.getValue().equals( "true" );
             actor.setArchetype( isArchetype );
+        } else if ( nodeName.equals( "placeHolder" ) ) {
+            boolean val = reader.getValue().equals( "true" );
+            actor.setPlaceHolder( val );
         } else if ( nodeName.equals( "clearance" ) ) {
             Classification clearance = (Classification) context.convertAnother( plan, Classification.class );
             actor.addClearance( clearance );
