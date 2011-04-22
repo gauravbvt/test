@@ -62,7 +62,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private User newMessageRecipient;
     private ModelObject newMessageAbout;
     private String newMessageText = "";
-    private WebMarkupContainer noMessageContainer;
+    private Label aboutMessagesLabel;
     private AjaxFallbackLink showAFew;
     private AjaxFallbackLink showMore;
     private Updatable updatable;
@@ -96,7 +96,8 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         plannerMessagesContainer = new WebMarkupContainer( "plannerMessagesContainer" );
         plannerMessagesContainer.setOutputMarkupId( true );
         add( plannerMessagesContainer );
-        addPlannerMessages();
+        int numberListed = addPlannerMessages();
+        addAboutMessages( numberListed );
         addShowMore();
         addShowAFew();
         addNewMessage();
@@ -146,7 +147,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         sentReceivedLink.addOrReplace( sentReceivedLabel );
     }
 
-    private void addPlannerMessages() {
+    private  int addPlannerMessages() {
         List<PlannerMessage> plannerMessages = getPlannerMessages();
         ListView<PlannerMessage> plannerMessageListView = new ListView<PlannerMessage>(
                 "plannerMessages",
@@ -163,9 +164,20 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
             }
         };
         plannerMessagesContainer.addOrReplace( plannerMessageListView );
-        noMessageContainer = new WebMarkupContainer( "noMessages" );
-        noMessageContainer.setOutputMarkupId( true );
-        addOrReplace( noMessageContainer );
+        return plannerMessages.size();
+    }
+
+    private void addAboutMessages( int numberListed ) {
+        aboutMessagesLabel = new Label( "aboutMessages", getAboutMessage( numberListed ) );
+        aboutMessagesLabel.setOutputMarkupId( true );
+        addOrReplace( aboutMessagesLabel );
+    }
+
+    private String getAboutMessage(int numberListed ) {
+       String message = (numberListed == 0 ? "No" : "Showing") + " messages";
+        message += showReceived ? " received" : " sent";
+        if ( privateOnly ) message += " (excluding broadcasts)";
+        return message;
     }
 
     public boolean isPrivateOnly() {
@@ -378,12 +390,12 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         target.addComponent( plannerMessagesContainer );
         target.addComponent( showAFew );
         target.addComponent( showMore );
-        target.addComponent( noMessageContainer );
+        target.addComponent( aboutMessagesLabel );
     }
 
     private void adjustComponents() {
         List<PlannerMessage> plannerMessages = getPlannerMessages();
-        makeVisible( noMessageContainer, plannerMessages.isEmpty() );
+        addAboutMessages( plannerMessages.size() );
         makeVisible( plannerMessagesContainer, !plannerMessages.isEmpty() );
         makeVisible( showMore, !allShown );
         makeVisible( showAFew, plannerMessages.size() > A_FEW );

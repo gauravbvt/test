@@ -641,7 +641,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     ErrorPage.emailException(
                             new Exception( "Timed update failed", e ),
                             mailSender,
-                            getApp().getPlannerSupportCommunity()
+                            getSupportCommunity()
                     );
                     redirectToPlan();
                 }

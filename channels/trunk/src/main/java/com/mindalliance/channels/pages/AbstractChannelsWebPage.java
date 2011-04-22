@@ -337,6 +337,15 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
                 visible ? "" : "display:none" ) ) );
     }
 
+    protected String getSupportCommunity() {
+        Plan plan = User.current().getPlan();
+        if ( plan != null ) {
+            return  plan.getPlannerSupportCommunity( planManager.getDefaultSupportCommunity() );
+        } else {
+            return planManager.getDefaultSupportCommunity();
+        }
+    }
+
 
     @Override
     public void changed( Change change ) {

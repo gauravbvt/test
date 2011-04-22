@@ -142,7 +142,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
                     ErrorPage.emailException(
                             new Exception( "Timed update failed", e ),
                             mailSender,
-                            getApp().getPlannerSupportCommunity()
+                            getSupportCommunity()
                     );
                     redirectHere();
                 }

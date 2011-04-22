@@ -652,7 +652,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
      * {@inheritDoc}
      */
     protected void close( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, getFlow() );
+        Change change = new Change( Change.Type.AspectClosed, getFlow(), ExpandedFlowPanel.EOIS );
         update( target, change );
     }
 

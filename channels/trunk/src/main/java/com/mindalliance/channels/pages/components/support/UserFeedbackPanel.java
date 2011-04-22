@@ -195,7 +195,9 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     private boolean sendFeedback() {
         User currentUser = User.current();
         Plan plan = getPlan();
-        String toAddress = plan.getPlannerSupportCommunityUri( getApp().getSupportCommunityUri() );
+        String toAddress = currentUser.isPlanner()
+                ? plan.getPlannerSupportCommunity( getPlanManager().getDefaultSupportCommunity() )
+                : plan.getUserSupportCommunity( getPlanManager().getDefaultSupportCommunity() );
         try {
             SimpleMailMessage email = new SimpleMailMessage();
             email.setTo( toAddress );

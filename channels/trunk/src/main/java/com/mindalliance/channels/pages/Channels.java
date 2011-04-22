@@ -111,10 +111,6 @@ public class Channels extends WebApplication
      * Expansion id for social panel.
      */
     public static final long SOCIAL_ID = -1;
-    /**
-     * URI of support community.
-     */
-    private String supportCommunityUri;
 
     /**
      * Default Constructor.
@@ -335,14 +331,6 @@ public class Channels extends WebApplication
         this.planManager = planManager;
     }
 
-    public void setSupportCommunityUri( String supportCommunityUri ) {
-        this.supportCommunityUri = supportCommunityUri;
-    }
-
-    public String getSupportCommunityUri() {
-        return supportCommunityUri;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -364,12 +352,4 @@ public class Channels extends WebApplication
         };
     }
 
-    /**
-     * Get planner support community.
-     * @return a string
-     */
-    public String getPlannerSupportCommunity() {
-        return User.current().getPlan()
-                            .getPlannerSupportCommunityUri( getSupportCommunityUri() );
-    }
 }

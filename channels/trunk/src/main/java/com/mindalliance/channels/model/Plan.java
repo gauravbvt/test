@@ -219,7 +219,7 @@ public class Plan extends ModelObject {
         this.communityCalendarHost = communityCalendarHost;
     }
 
-    public String getPlannerSupportCommunityUri( String defaultName ) {
+    public String getPlannerSupportCommunity( String defaultName ) {
         String name = getPlannerSupportCommunity();
         return name.isEmpty()
                 ? defaultName
@@ -235,7 +235,7 @@ public class Plan extends ModelObject {
         this.userSupportCommunity = supportCommunity;
     }
 
-    public String getUserSupportCommunityUri( String defaultName ) {
+    public String getUserSupportCommunity( String defaultName ) {
         String name = getUserSupportCommunity();
         return name.isEmpty()
                 ? defaultName

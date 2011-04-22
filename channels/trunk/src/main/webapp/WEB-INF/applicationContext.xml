@@ -24,9 +24,7 @@ CONFIGURATION NOTES:
         default-autowire="byName">
 
     <!-- =========================== Main Components -->
-    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels">
-        <property name="supportCommunityUri" value="channels@mind-alliance.com"/>
-    </bean>
+    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels"/>
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
     <bean id="issueScanner" class="com.mindalliance.channels.analysis.IssueScanner"/>
 
@@ -62,6 +60,7 @@ CONFIGURATION NOTES:
         <constructor-arg ref="definitionManager" />
         <property name="importDirectory" value="${channels.home}${file.separator}import"/>
         <property name="databaseFactory" ref="databaseFactory"/>
+        <property name="defaultSupportCommunity" value="channels@mind-alliance.com"/>
         <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/embed"/>
         <property name="defaultCommunityCalendar" value="channels.mindalliance@gmail.com"/>
         <property name="defaultCommunityCalendarPrivateTicket" value="2eeb23a44773bca4cf51901c486a2275"/>
