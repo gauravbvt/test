@@ -351,7 +351,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         if ( !change.isNone() ) {
             Identifiable identifiable = change.getSubject( getQueryService() );
             if ( identifiable == getPart() ) {
-                if ( change.isUpdated() ) {
+                if ( change.isUpdated() || change.isSelected() ) {
                     addPartMediaPanel();
                     addOverridesImage();
                     target.addComponent( partMediaPanel );
@@ -429,6 +429,12 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 sendsFlowPanel.refresh( target );
                 resizePartPanels( target );
             }
+            addPartMediaPanel();
+            addOverridesImage();
+            addPartTitleContainer();
+            target.addComponent( taskTitleContainer );
+            target.addComponent( partMediaPanel );
+            target.addComponent( overridesImage );
             addFlowMapViewingControls();
             addFlowDiagram();
             target.appendJavascript( PlanPage.IE7CompatibilityScript );

@@ -215,6 +215,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         }
         if ( !getPlans().contains( plan ) )
             throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
+        User.current().setPlan( plan );
         getQueryService();
     }
 
