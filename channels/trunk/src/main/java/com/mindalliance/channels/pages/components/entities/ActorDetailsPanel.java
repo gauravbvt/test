@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Available;
@@ -27,6 +28,7 @@ import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -137,21 +139,26 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addArchetypicalCheckBox();
         addPlaceHolderCheckBox();
         addIsSystem();
-        rolesContainer = new WebMarkupContainer( "rolesContainer" );
-        moDetailsDiv.add( rolesContainer );
-        indexedOn = indexingChoices[0];
-        nameRange = new NameRange();
-        filters = new ArrayList<Identifiable>();
         addContactInfo();
         addAvailabilityPanel();
         addClearances();
+        addRoles();
         addRolesMap();
         addIndexedOnChoice();
         addNameRangePanel();
         addActorEmploymentTable();
         addAssignmentsPanel();
         addCommitmentsPanel();
+        addParticipantsTable();
         adjustFields();
+    }
+
+    private void addRoles() {
+        rolesContainer = new WebMarkupContainer( "rolesContainer" );
+        moDetailsDiv.add( rolesContainer );
+        indexedOn = indexingChoices[0];
+        nameRange = new NameRange();
+        filters = new ArrayList<Identifiable>();
     }
 
     private void addContactInfo() {
@@ -196,7 +203,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         isArchetypeCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                target.addComponent(  isPlaceHolderCheckBox );
+                target.addComponent( isPlaceHolderCheckBox );
                 update( target, new Change( Change.Type.Updated, getActor(), "archetype" ) );
             }
         } );
@@ -215,7 +222,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         isPlaceHolderCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                target.addComponent(  isArchetypeCheckBox );
+                target.addComponent( isArchetypeCheckBox );
                 update( target, new Change( Change.Type.Updated, getActor(), "archetype" ) );
             }
         } );
@@ -297,6 +304,24 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         );
         actorEmploymentTable.setOutputMarkupId( true );
         rolesContainer.addOrReplace( actorEmploymentTable );
+    }
+
+    private void addParticipantsTable() {
+        WebMarkupContainer participantsContainer = new WebMarkupContainer( "participantsContainer" );
+        participantsContainer.setVisible( getActor().isActual() );
+        moDetailsDiv.add( participantsContainer );
+        Component participantsTable = getActor().isActual()
+                ? new ParticipantsTable(
+                "participants",
+                new PropertyModel<List<User>>( this, "participants" ),
+                MAX_ROWS )
+                : new Label( "participants", "" );
+        participantsTable.setOutputMarkupId( true );
+        participantsContainer.add( participantsTable );
+    }
+
+    public List<User> getParticipants() {
+        return getQueryService().findUsersParticipatingAs( getActor() );
     }
 
     public String getIndexedOn() {
@@ -784,4 +809,35 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         }
     }
 
+    private class ParticipantsTable  extends AbstractTablePanel {
+
+        private final IModel<List<User>> participants;
+
+        public ParticipantsTable( String id, IModel<List<User>> participants, int maxRows ) {
+            super(id, maxRows);
+            this.participants = participants;
+            init();
+        }
+
+        @SuppressWarnings( "unchecked" )
+        private void init() {
+            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            // columns
+            columns.add( this.makeColumn(
+                    "Name",
+                    "normalizedFullName",
+                    EMPTY ) );
+            columns.add( this.makeColumn(
+                    "Privileges",
+                    "role",
+                    EMPTY ) );
+            // provider and table
+            addOrReplace( new AjaxFallbackDefaultDataTable(
+                    "participants",
+                    columns,
+                    new SortableBeanProvider<User>(
+                            participants.getObject(),
+                            "normalizedFullName" ),
+                    getPageSize() ) );        }
+    }
 }

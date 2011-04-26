@@ -3208,5 +3208,19 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
         return capabilities;
     }
+
+    @Override
+    public List<User> findUsersParticipatingAs( Actor actor ) {
+        List<User> users = new ArrayList<User>();
+        for ( String userName : getUserService().getUsernames( getPlan().getUri() ) ) {
+            Participation participation = findParticipation( userName );
+            if ( participation != null
+                    && participation.getActor() != null
+                    && participation.getActor().equals( actor ) ) {
+                users.add( getUserService().getUserNamed( userName ) );
+            }
+        }
+        return users;
+    }
 }
 

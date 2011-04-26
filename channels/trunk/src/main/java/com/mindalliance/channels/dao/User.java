@@ -270,6 +270,19 @@ public class User implements UserDetails {
     }
 
     /**
+     * Return a string describing the most privileged role of the user.
+     *
+     * @return a String
+     */
+    public String getRole( ) {
+        String planUri = getPlanUri();
+        return userInfo.isAdmin() ? ADMIN
+                : userInfo.isPlanner( planUri ) ? PLANNER
+                : userInfo.isUser( planUri ) ? PARTICIPANT
+                : UNAUTHORIZED;
+    }
+
+    /**
      * Get uri of user's current plan.
      *
      * @return a string or null
