@@ -288,7 +288,12 @@ public class AllResponders extends WebPage {
             if ( !a.isUnknown() && !assigned.contains( a ) )
                 answer.add( a );
 
-        Collections.sort( answer );
+        Collections.sort( answer, new Comparator<Actor>() {
+            @Override
+            public int compare( Actor o1, Actor o2 ) {
+                return o1.getNormalizedName().compareToIgnoreCase( o2.getNormalizedName() );
+            }
+        } );
         return answer;
     }
 

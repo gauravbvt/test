@@ -31,125 +31,151 @@
             <h2>About me</h2>
 
             <ul>
-                <li>Roles, organizations, jurisdictions</li>
-                <li>Contact info</li>
-                <li>Availability</li>
+                <li>{Roles, organizations, jurisdictions}</li>
+                <li>{Contact info}</li>
+                <li>{Availability}</li>
             </ul>
 
-            <p>Report any errors to {planner's coordinate}.</p>
+            <p>Report any errors or suggestions to <span wicket:id="planners"><a wicket:id="planner" href="#">{planner's coordinate}</a><span wicket:id="listSep">.</span></span></p>
 
-            <p>Based on the information above, the {plan name} plan provides procedures for the
-                following events:</p>
-
+            <p>Based on the information above, the <span wicket:id="planName">{plan name}</span> plan provides procedures for the
+                following situations:</p>
             <ul>
-                <li>{Phase name} phase of a/an {event name} ({level} level) (link or page #)</li>
+                <li wicket:id="phaseLinks"><a wicket:id="phaseLink" href="#"><span wicket:id="phaseLinkText">{Phase name} phase of a/an {event name} ({level} level) (link or page #)</span></a></li>
             </ul>
         </div>
 
-        <div class="phase">
-            <h2>{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</h2>
+        <div wicket:id="phases" class="phase">
+            <h2><a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
             <div>
-                <p>{event description}</p>
-                <p>{Phase description}</p>
-                <p>{links to relevant documents}</p>
+                <p wicket:id="eventDesc">{event description}</p>
+                <p wicket:id="phaseDesc">{Phase description}</p>
             </div>
 
-            <div>
+            <div wicket:id="routineDiv">
                 <h3>Routine procedures</h3>
                 <p>The following procedures take place on a ongoing basis:</p>
-
                 <ul>
-                    <li>{task name} (link or page #)</li>
+                    <li wicket:id="routineLinks"><a href="#" wicket:id="routineLink"><span wicket:id="routineName">{task name} (link or page #)</span></a></li>
                 </ul>
             </div>
 
-            <div>
+            <div wicket:id="notDiv">
                 <h3>Notification responses</h3>
                 <p>The following procedures are prompted by incoming notifications:</p>
 
                 <ul>
-                    <li>{flow name}, received from {source, source and source}: {task name} (link or page #)</li>
+                    <li wicket:id="notLinks">
+                        <a href="#" wicket:id="notLink"><span wicket:id="notName">{task name} (link or page #)</span></a>
+                        <span class="flow" wicket:id="flow">
+                            when receiving &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo; from
+                            <span wicket:id="sources">
+                                <span class="source" wicket:id="source">source</span><span wicket:id="sourceSep"></span>
+                            </span><span wicket:id="flowSep">.</span>
+                        </span>
+                    </li>
                 </ul>
             </div>
 
-            <div>
+            <div wicket:id="rfiDiv">
                 <h3>Requests for information</h3>
-                <p>The following procedures are executed upon request by an appropriate source:</p>
+                <p>The following procedures are executed upon request by an appropriate sources:</p>
                 <ul>
-                    <li>{source, source or source} requesting information about {flow name}: {task name} (link or page #)</li>
+                    <li wicket:id="rfiLinks">
+                        <a href="#" wicket:id="rfiLink"><span wicket:id="rfiName">{task name} (link or page #)</span></a>
+                        <span wicket:id="flow">
+                            when
+                            <span wicket:id="sources">
+                                <span class="source" wicket:id="source">source</span><span wicket:id="sourceSep"></span>
+                            </span>
+                            request information about
+                            &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo;.
+                            <span wicket:id="flowSep">.</span>
+                        </span>
+                    </li>
                 </ul>
             </div>
 
-            <div>
+            <div wicket:id="otherDiv">
                 <h3>Other procedures</h3>
                 <p>These procedures may also apply:</p>
                 <ul>
-                    <li>{task name}  (link or page #)</li>
+                    <li wicket:id="otherLinks"><a href="#" wicket:id="otherLink"><span wicket:id="otherName">{task name} (link or page #)</span></a></li>
+                </ul>
+            </div>
+
+            <div wicket:id="documents">
+                <h3>See also:</h3>
+                <ul>
+                    <li wicket:id="document"><a wicket:id="docLink">(Document)</a></li>
                 </ul>
             </div>
         </div>
 
-        <div class="task">
-            <h2>{Task name}</h2>
+        <div wicket:id="tasks" class="task">
+            <h2><a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a></h2>
 
-            <p>Background: {summary of event/phase/location}</p>
+            <p><em>Background:</em> {summary of event/phase/location}</p>
 
             <div>
                 <p>
                     <em>Procedure:</em> {Task instruction}. {location}, {expected duration}
-                    {links to relevent documents and policies}.
                 </p>
-                <!--One of the following 4 div sections:-->
                 <div>
-                    <p>
-                        This is a routine
-                        {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
-                        procedure {, recurrence information}. {It is currently operational.}
-                    </p>
-                </div>
-                <div>
-                    <p>
-                        This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
-                        procedure is performed when receiving {flow name} from {source, source or source}.
-                        {It is currently operational.}
-                        The following information should be included in the communication:
-                    </p>
-                    <ul>
-                        <li>EOI,  {description}, {handling}, {classification}</li>
-                    </ul>
-                </div>
-                <div>
-                    <p>
-                        This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
-                        procedure is performed upon request of {flow name} by {source, source or source}.
-                        {It is currently operational.}
-                    </p>
-                </div>
-                <div>
-                    <p>
-                        This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
-                        procedure is a follow-up task for {task name}.
-                        {It is currently operational.}
-                        You are expected to already know the following information:
-                    </p>
-                    <ul>
-                        <li>EOI,  {description}, {handling}, {classification}</li>
-                    </ul>
+                    <!--One of the following 4 div sections:-->
+                    <div wicket:id="routineTask">
+                        <p>
+                            This is a routine
+                            {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
+                            procedure {, recurrence information}. {It is currently operational.}
+                        </p>
+                    </div>
+                    <div wicket:id="notifTask">
+                        <p>
+                            This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
+                            procedure is performed when receiving {flow name} from {source, source or source}.
+                            {It is currently operational.}
+                            The following information should be included in the communication:
+                        </p>
+                        <ul>
+                            <li>EOI,  {description}, {handling}, {classification}</li>
+                        </ul>
+                    </div>
+                    <div wicket:id="reqTask">
+                        <p>
+                            This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
+                            procedure is performed upon request of {flow name} by {source, source or source}.
+                            {It is currently operational.}
+                        </p>
+                    </div>
+                    <div wicket:id="subTask">
+                        <p>
+                            This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
+                            procedure is a follow-up task for {task name}.
+                            {It is currently operational.}
+                            You are expected to already know the following information:
+                        </p>
+                        <ul>
+                            <li>EOI,  {description}, {handling}, {classification}</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div>
-                    <!-- Optional -->
-                    <em>Note:</em> Even though documented here, this procedure is prohibited by policy
-                    (link).
+                <div wicket:id="prohibited">
+                    <p>
+                        <!-- Optional -->
+                        <em>Note:</em> Even though documented here, this procedure is prohibited by policy
+                        (link).
+                    </p>
                 </div>
 
                 <!-- One of the following 3 sections:-->
-                <div>
+                <div wicket:id="term1">
                     <p>
                         The procedure terminates when {phase name} of {event name} is no longer in effect.
                     </p>
                 </div>
-                <div>
+                <div wicket:id="term2">
                     <p>
                         The procedure terminates when receiving {flow name}
                         from {source, source or source}, including:
@@ -158,7 +184,7 @@
                         <li>EOI,  {description}, {handling}, {classification}</li>
                     </ul>
                 </div>
-                <div>
+                <div wicket:id="term3">
                     <p>
                         The procedure terminates after sending {flow name}
                         to {target, target or target}. The goals are to provide:
@@ -168,7 +194,7 @@
                     </ul>
                 </div>
 
-                <div>
+                <div wicket:id="canStart">
                     <!-- Optional -->
                     <p>
                         This procedure can start the {phase name, phase name and phase name} phase(s)
@@ -176,7 +202,7 @@
                     </p>
                 </div>
 
-                <div>
+                <div wicket:id="canStop">
                     <!-- Optional -->
                     <p>
                         This procedure can terminate/prevent the {phase name} phase of {event name}
@@ -184,25 +210,25 @@
                     </p>
                 </div>
 
-                <div>
+                <div wicket:id="risks">
                     <!-- Zero or more-->
                     <p>
                         This procedure mitigates the {minor|major|severe|extreme}
-                        {material|financial|strategic|operational} risk of {risk type} to {organization}
+                        {material|financial|strategic|operational} risk of <span wicket:id="type">{risk type}</span> to {organization}
                         {at the end of {phase} of {event}}.
                     </p>
                 </div>
 
-                <div>
+                <div wicket:id="gains">
                     <!-- Zero or more -->
                     <p>
                         This procedure may achieve {minor|major|severe|extreme}
-                        {material|financial|strategic|operational} gain of {risk type} to
+                        {material|financial|strategic|operational} gain of <span wicket:id="type">{risk type}</span> to
                         {organization} {at the end of {phase} of {event}}.
                     </p>
                 </div>
 
-                <div>
+                <div wicket:id="conseqs">
                     <!-- Optional -->
                     <p>
                         {Consequences
@@ -213,7 +239,7 @@
                     </p>
                 </div>
 
-                <div>
+                <div wicket:id="superNote">
                     <!--In case of super-event-->
                     <p>
                         <em>Note:</em> This task is different in case of {event name}. See (link or page #)
@@ -221,12 +247,12 @@
                 </div>
             </div>
 
-            <div>
+            <div wicket:id="teamDiv">
                 <!--optional-->
                 <p>
                     This task is performed as part of a team:
                 </p>
-                <table>
+                <table border="1">
                     <!-- one or more of the following 2 rows-->
                     <tr class="contact">
                         <td>{agent name}</td>
@@ -239,13 +265,13 @@
                 </table>
             </div>
 
-            <div>
+            <div wicket:id="criticalDiv">
                 <h3>Critical information</h3>
                 <p>
                     The following table list information critical to this procedure and
                     where to obtain it:
                 </p>
-                <table>
+                <table border="1">
                     <tr>
                         <td class="eoi" colspan="4">
                             EOI,  {description}, {handling}, {classification}
@@ -270,12 +296,12 @@
                 </table>
             </div>
 
-            <div>
+            <div wicket:id="inputDiv">
                 <h3>Other useful information sources</h3>
                 <p>
-                    The following sources may also provide pertinent information:
+                    The following sources may provide pertinent information:
                 </p>
-                <table>
+                <table border="1">
                     <tr>
                         <td class="eoi" colspan="4">
                             EOI,  {description}, {handling}, {classification}
@@ -300,14 +326,14 @@
                 </table>
             </div>
 
-            <div>
+            <div wicket:id="distribDiv">
                 <!-- Optional -->
                 <h3>Distribution list</h3>
                 <p>
                     During or after the execution of this procedure, the following information
                     should be sent:
                 </p>
-                <table>
+                <table border="1">
                     <tr class="contact">
                         <td>{Alert|Issue command|Make announcement|Send report|Provide feedback}{immediately|within …}</td>
                         <td>{agent name}</td>
@@ -338,13 +364,13 @@
                 </table>
             </div>
 
-            <div>
+            <div wicket:id="taskRfiDiv">
                 <!-- Optional -->
                 <h3>Requested information</h3>
                 <p>
                     The following agents may request some information acquired during this procedure:
                 </p>
-                <table>
+                <table border="1">
                     <tr class="contact">
                         <td>Answer {immediately|within …}</td>
                         <td>{agent name}</td>
@@ -369,13 +395,13 @@
                 </table>
             </div>
 
-            <div>
+            <div wicket:id="failDiv">
                 <!-- Optional -->
                 <h3>Failure notifications</h3>
                 <p>
                     This task may fail. Notification should be sent to {one of|all of|} the following:
                 </p>
-                <table>
+                <table border="1">
                     <tr class="contact">
                         <td>{Alert|Issue command|Make announcement|Send report|Provide feedback}{immediately|within …}</td>
                         <td>{agent name}</td>
@@ -405,6 +431,13 @@
                     <!-- repeat for all recipients -->
                 </table>
             </div>
+            <div wicket:id="documents">
+                <h3>See also:</h3>
+                <ul>
+                    <li wicket:id="document"><a wicket:id="docLink">(Document)</a></li>
+                </ul>
+            </div>
+
         </div>
     </div>
 </div>

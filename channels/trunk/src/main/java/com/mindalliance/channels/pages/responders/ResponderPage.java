@@ -3,23 +3,40 @@
 
 package com.mindalliance.channels.pages.responders;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Assignment;
+import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.EventPhase;
+import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RedirectToUrlException;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -27,6 +44,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The responder report.  This page is different for every user.
@@ -83,7 +106,7 @@ public class ResponderPage extends WebPage {
                 setRedirect( false );
                 setResponsePage( AllResponders.class, parameters );
             } else {
-                PlanService service = createPlanService( uri, parameters.getInt( "v" ) );
+                PlanService service = initPlanService( uri, parameters.getInt( "v" ) );
                 init( service, getProfile( service, parameters ) );
             }
 
@@ -97,13 +120,446 @@ public class ResponderPage extends WebPage {
         }
     }
 
-    private void init( PlanService service, ResourceSpec profile ) {
-        add(
-            new Label( "userName", user.getUsername() ),
-            new Label( "personName", profile.displayString( 256 ) ),
-            new Label( "planDescription", service.getPlan().getDescription() )
-        );
+    private PlanService initPlanService( final String uri, final int version )
+        throws NotFoundException {
 
+        if ( planManager.getPlan( uri, version ) == null )
+            throw new NotFoundException();
+
+        setDefaultModel( new LoadableDetachableModel<PlanService>() {
+            @Override
+            protected PlanService load() {
+                return new PlanService( planManager, null, userService,
+                                        planManager.getPlan( uri, version ) );
+            }
+        } );
+
+        return (PlanService) getDefaultModelObject();
+    }
+
+    private PlanService getPlanService() {
+        return (PlanService) getDefaultModelObject();
+    }
+
+    private void init( PlanService service, ResourceSpec profile ) {
+
+        Plan plan = service.getPlan();
+        final Assignments assignments = service.getAssignments( true ).with( profile );
+
+        List<EventPhase> eventPhases = assignments.getEventPhases();
+
+        final List<User> planners = service.getUserService().getPlanners( plan.getUri() );
+        final List<Part> tasks = assignments.getParts();
+
+        add( new Label( "userName", user.getUsername() ), new Label( "personName",
+                                                                     profile.displayString( 256 ) ),
+             new ListView<User>( "planners", planners ) {
+                 @Override
+                 protected void populateItem( ListItem<User> item ) {
+                     User u = item.getModelObject();
+                     item.add(
+                         new ExternalLink( "planner", "mailTo:" + u.getEmail(), u.getFullName() ),
+                         new Label( "listSep",
+                                    item.getIndex() == planners.size() - 1 ?  ". "
+                                  : item.getIndex() == planners.size() - 2 ?  " or " : ", " )
+                            .setRenderBodyOnly( true )
+                         );
+                 }
+             },
+
+             new Label( "planName", plan.getName() ),
+             new Label( "planDescription", plan.getDescription() ),
+
+             new ListView<EventPhase>( "phaseLinks", eventPhases ) {
+                 @Override
+                 protected void populateItem( ListItem<EventPhase> item ) {
+                     item.add(
+                         new WebMarkupContainer( "phaseLink" )
+                            .add( new Label( "phaseLinkText", item.getModelObject().toString() ) )
+                            .add( new AttributeModifier( "href", true,
+                                        new Model<String>( "#ep_" + item.getIndex() ) ) )
+                     );
+                 }
+             },
+
+             new ListView<EventPhase>( "phases", eventPhases ) {
+                 @Override
+                 protected void populateItem( ListItem<EventPhase> item ) {
+                     EventPhase eventPhase = item.getModelObject();
+                     Assignments phaseEventAssignments = assignments.with( eventPhase );
+
+                     item.add(
+                         new WebMarkupContainer( "phaseAnchor" )
+                             .add( new Label( "phaseText", eventPhase.toString() ) )
+                             .add( new AttributeModifier( "name", true, new Model<String>(
+                                 "ep_" + item.getIndex() ) ) ),
+
+                         new Label( "eventDesc", eventPhase.getEvent().getDescription() )
+                             .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
+                         new Label( "phaseDesc", eventPhase.getPhase().getDescription() )
+                             .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ),
+
+                         newRoutineSection( phaseEventAssignments.getImmediates( getPlanService() )
+                                                .getParts(), tasks ),
+
+                         newNotifSection( phaseEventAssignments
+                                              .getNotifications( getPlanService() ), tasks ),
+
+                         newRfiSection( phaseEventAssignments.getRequests(), tasks ),
+
+                         newOtherSection( phaseEventAssignments.getOptionals( getPlanService() )
+                                              .getParts(), tasks ),
+
+                         newDocSection( getAttachments( planManager.getAttachmentManager(),
+                                                        phaseEventAssignments.getSegments() ) )
+
+                     );
+                 }
+             },
+
+             new ListView<Assignment>( "tasks", assignments.getAssignments() ) {
+                 @Override
+                 protected void populateItem( ListItem<Assignment> item ) {
+                     Assignment a = item.getModelObject();
+                     Part part = a.getPart();
+                     PlanService planService = getPlanService();
+                     item.add(
+                         new WebMarkupContainer( "taskAnchor" )
+                               .add( new Label( "taskName", part.getTask() ) )
+                               .add( new AttributeModifier( "name", true,
+                                            new Model<String>( "t_" + item.getIndex() ) ) ),
+                         new WebMarkupContainer( "routineTask" )
+                            .setVisible( Assignments.isImmediate( part, planService ) ),
+                         new WebMarkupContainer( "notifTask" )
+                            .setVisible( Assignments.isNotification( part, planService ) ),
+                         new WebMarkupContainer( "reqTask" )
+                            .setVisible( Assignments.isRequest( part ) ),
+                         new WebMarkupContainer( "subTask" )
+                            .setVisible( Assignments.isOptional( part, planService ) ),
+                         new WebMarkupContainer( "prohibited" )
+                            .setVisible( part.isProhibited() ),
+                         new WebMarkupContainer( "term1" )
+                            .setVisible( part.isStartsWithSegment() ),
+                         new WebMarkupContainer( "term2" )
+                            .setVisible( isTerminated( part, true ) ),
+                         new WebMarkupContainer( "term3" )
+                            .setVisible( isTerminated( part, false ) ),
+                         new WebMarkupContainer( "canStart" )
+                            .setVisible( false ),
+                         new WebMarkupContainer( "canStop" )
+                            .setVisible( false ),
+                         new ListView<Goal>( "risks", getRisks( part ) ) {
+                             @Override
+                             protected void populateItem( ListItem<Goal> item ) {
+                                 item.add(
+                                     new Label( "type", item.getModelObject().getFullTitle() )
+                                 );
+                             }
+                         },
+                         new ListView<Goal>( "gains", getGains( part ) ) {
+                             @Override
+                             protected void populateItem( ListItem<Goal> goalItem ) {
+                                 goalItem.add(
+                                     new Label( "type", goalItem.getModelObject().getFullTitle() )
+                                 );
+                             }
+                         },
+                         new WebMarkupContainer( "conseqs" )
+                            .setVisible( false ),
+                         new WebMarkupContainer( "superNote" )
+                            .setVisible( false ),
+
+                         new WebMarkupContainer( "teamDiv" )
+                            .setVisible( part.isAsTeam() ),
+
+                         new WebMarkupContainer( "criticalDiv" )
+                            .setVisible( !part.getEssentialFlows( false, planService ).isEmpty() ),
+                         new WebMarkupContainer( "inputDiv" )
+                            .setVisible( !getInputDiv( part, planService ).isEmpty() ),
+                         new WebMarkupContainer( "distribDiv" )
+                            .setVisible( !getDistribDiv( part ).isEmpty() ),
+                         new WebMarkupContainer( "taskRfiDiv" )
+                            .setVisible( !getRfiDiv( part ).isEmpty() ),
+                         new WebMarkupContainer( "failDiv" )
+                            .setVisible( !getFailDiv( part ).isEmpty() ),
+
+                         newDocSection( planService.getAttachmentManager().getMediaReferences( part ) )
+
+
+                     );
+                 }
+             }
+
+
+        );
+    }
+
+    private List<Flow> getInputDiv( Part part, PlanService planService ) {
+        Set<Flow> essentials = new HashSet<Flow>(
+            planService.findEssentialFlowsFrom( part, false ) );
+        List<Flow> others = new ArrayList<Flow>();
+        Iterator<Flow> flows = part.flows();
+        while ( flows.hasNext() ) {
+            Flow next = flows.next();
+            if ( !essentials.contains( next ) )
+                others.add( next );
+        }
+
+        return others;
+    }
+
+    private List<Flow> getDistribDiv( Part part ) {
+        List<Flow> result = new ArrayList<Flow>();
+        Iterator<Flow> flows = part.sends();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( !flow.isAskedFor() && !flow.isIfTaskFails() )
+                result.add( flow );
+        }
+
+        return result;
+    }
+
+    private List<Flow> getFailDiv( Part part ) {
+        List<Flow> result = new ArrayList<Flow>();
+        Iterator<Flow> flows = part.sends();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( !flow.isAskedFor() && flow.isIfTaskFails() )
+                result.add( flow );
+        }
+
+        return result;
+    }
+
+    private List<Flow> getRfiDiv( Part part ) {
+        List<Flow> result = new ArrayList<Flow>();
+        Iterator<Flow> flows = part.sends();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( flow.isAskedFor() )
+                result.add( flow );
+        }
+
+        return result;
+    }
+
+    private static List<Goal> getGains( Part part ) {
+        Collection<Goal> inputCollection = part.getGoals();
+        List<Goal> answer = new ArrayList<Goal>( inputCollection.size());
+        for ( Goal item : inputCollection )
+            if ( item.isPositive() )
+                answer.add( item );
+
+        return answer;
+    }
+
+    private static List<Goal> getRisks( Part part ) {
+        Collection<Goal> inputCollection = part.getGoals();
+        List<Goal> answer = new ArrayList<Goal>( inputCollection.size());
+        for ( Goal item : inputCollection )
+            if ( !item.isPositive() )
+                answer.add( item );
+
+        return answer;
+    }
+
+    private static boolean isTerminated( Part part, boolean request ) {
+        boolean terminated = false;
+        if ( request ) {
+            Iterator<Flow> receives = part.receives();
+            while ( !terminated && receives.hasNext() ) {
+                Flow receive = receives.next();
+                terminated = receive.isTerminatingToTarget();
+            }
+        } else {
+            Iterator<Flow> sends = part.sends();
+            while ( !terminated && sends.hasNext() ) {
+                Flow send = sends.next();
+                terminated = send.isTerminatingToSource();
+            }
+        }
+
+        return terminated;
+    }
+
+    private static List<Attachment> getAttachments(
+        AttachmentManager attachmentManager, List<Segment> segments ) {
+
+        List<Attachment> attachments = new ArrayList<Attachment>();
+        for ( Segment segment : segments ) {
+            attachments.addAll( attachmentManager.getMediaReferences( segment ) );
+            attachments.addAll( attachmentManager.getMediaReferences( segment.getEvent() ) );
+            attachments.addAll( attachmentManager.getMediaReferences( segment.getPhase() ) );
+        }
+        return attachments;
+    }
+
+    private Component newNotifSection(
+        final Assignments notifications, final List<Part> tasks ) {
+
+        return new WebMarkupContainer( "notDiv" )
+           .add( new ListView<Assignment>( "notLinks", notifications.getAssignments() ) {
+               @Override
+               protected void populateItem( ListItem<Assignment> item ) {
+                   Assignment a = item.getModelObject();
+                   final Part part = a.getPart();
+                   item.add(
+                       new ListView<Flow>( "flow", getTriggeringFlows( part ) ) {
+                           @Override
+                           protected void populateItem( ListItem<Flow> flowListItem ) {
+                               Flow flow = flowListItem.getModelObject();
+                               flowListItem.add(
+                                   new Label( "flowName", flow.getName() ),
+                                   new ListView<Specable>( "sources", getSources( flow ) ) {
+                                       @Override
+                                       protected void populateItem( ListItem<Specable> specItem ) {
+                                           Specable specable = specItem.getModelObject();
+                                           int size = getViewSize();
+                                           int index = specItem.getIndex();
+                                           specItem.add( new Label( "source", specable.toString() ),
+                                                         new Label( "sourceSep",
+                                                                    index == size - 1 ? "" :
+                                                                    index == size - 2 ? " or "
+                                                                                      : ", " )
+                                                             .setRenderBodyOnly( true )
+                                           ).setRenderBodyOnly( true );
+
+
+                                       }
+                                   }.setRenderBodyOnly( true ),
+                                   new Label( "flowSep",
+                                              flowListItem.getIndex() == getViewSize() - 1 ? ". "
+                                            : flowListItem.getIndex() == getViewSize() - 2 ? " or "
+                                                                                           : ", " )
+                                        .setRenderBodyOnly( true )
+                               );
+                           }
+                       },
+                       new WebMarkupContainer( "notLink" )
+                           .add( new Label( "notName", part.getTask() ) )
+                           .add( new AttributeModifier( "href", true, new Model<String>(
+                               "#t_" + tasks.indexOf( part ) ) ) ) );
+               }
+           } )
+           .setVisible( !notifications.isEmpty() );
+    }
+
+    private Component newRfiSection(
+        final Assignments rfis, final List<Part> tasks ) {
+
+        return new WebMarkupContainer( "rfiDiv" )
+           .add( new ListView<Assignment>( "rfiLinks", rfis.getAssignments() ) {
+               @Override
+               protected void populateItem( ListItem<Assignment> item ) {
+                   Assignment a = item.getModelObject();
+                   final Part part = a.getPart();
+                   item.add(
+                       new ListView<Flow>( "flow", getTriggeringFlows( part ) ) {
+                           @Override
+                           protected void populateItem( ListItem<Flow> flowListItem ) {
+                               Flow flow = flowListItem.getModelObject();
+                               flowListItem.add(
+                                   new Label( "flowName", flow.getName() ),
+                                   new ListView<Specable>( "sources", getSources( flow ) ) {
+                                       @Override
+                                       protected void populateItem( ListItem<Specable> specItem ) {
+                                           Specable specable = specItem.getModelObject();
+                                           specItem.add( new Label( "source", specable.toString() ),
+                                                         new Label( "sourceSep",
+                                                                    specItem.getIndex()
+                                                                    == getViewSize() - 1 ? "" :
+                                                                    specItem.getIndex()
+                                                                    == getViewSize() - 2 ? " or "
+                                                                                  : ", " )
+                                                             .setRenderBodyOnly( true )
+                                           ).setRenderBodyOnly( true );
+
+
+                                       }
+                                   }.setRenderBodyOnly( true ),
+                                   new Label( "flowSep",
+                                              flowListItem.getIndex() == getViewSize() - 1 ? ". "
+                                            : flowListItem.getIndex() == getViewSize() - 2 ? " or "
+                                                                                    : ", " )
+                                        .setRenderBodyOnly( true )
+                               );
+                           }
+                       },
+                       new WebMarkupContainer( "rfiLink" )
+                           .add( new Label( "rfiName", part.getTask() ) )
+                           .add( new AttributeModifier( "href", true, new Model<String>(
+                               "#t_" + tasks.indexOf( part ) ) ) ) );
+               }
+           } )
+           .setVisible( !rfis.isEmpty() );
+    }
+
+    private List<? extends Specable> getSources( Flow flow ) {
+        return getPlanService().getAssignments( true ).with( flow.getSource() ).getActors();
+    }
+
+    private static List<? extends Flow> getTriggeringFlows( Part part ) {
+        List<Flow> result = new ArrayList<Flow>();
+
+        Iterator<Flow> flows = part.flows();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( part.equals( flow.getTarget() )
+                    && flow.isTriggeringToTarget()
+                    && !flow.isAskedFor()
+                    && !flow.isProhibited() )
+                result.add( flow );
+        }
+
+        return result;
+    }
+
+    private static Component newDocSection( final List<Attachment> attachments ) {
+        return new WebMarkupContainer( "documents" )
+           .add( new ListView<Attachment>( "document", attachments ) {
+               @Override
+               protected void populateItem( ListItem<Attachment> item ) {
+                   Attachment attachment = item.getModelObject();
+                   item.add( new ExternalLink( "docLink",
+                                               attachment.getUrl(),
+                                               attachment.getLabel() ) );
+               }
+           } )
+           .setVisible( !attachments.isEmpty() );
+    }
+
+    private Component newRoutineSection( final List<Part> routines, final List<Part> tasks ) {
+        return new WebMarkupContainer( "routineDiv" )
+           .add( new ListView<Part>( "routineLinks", routines ) {
+               @Override
+               protected void populateItem( ListItem<Part> partItem ) {
+                   Part part = partItem.getModelObject();
+                   partItem.add( new WebMarkupContainer( "routineLink" ).add( new Label(
+                       "routineName",
+                       part.getTask() ) ).add( new AttributeModifier( "href",
+                                                                      true,
+                                                                      new Model<String>(
+                                                                          "#t_" + tasks.indexOf(
+                                                                              part ) ) ) ) );
+               }
+           } )
+           .setVisible( !routines.isEmpty() );
+    }
+
+    private Component newOtherSection( final List<Part> routines, final List<Part> tasks ) {
+        return new WebMarkupContainer( "otherDiv" )
+           .add( new ListView<Part>( "otherLinks", routines ) {
+               @Override
+               protected void populateItem( ListItem<Part> item ) {
+                   Part part = item.getModelObject();
+                   item.add( new WebMarkupContainer( "otherLink" )
+                                 .add( new Label( "otherName", part.getTask() ) )
+                                 .add( new AttributeModifier( "href", true, new Model<String>(
+                                     "#t_" + tasks.indexOf( part ) ) ) ) );
+               }
+           } )
+           .setVisible( !routines.isEmpty() );
     }
 
     public static PageParameters createParameters( Specable profile, String uri, int version ) {
@@ -174,10 +630,6 @@ public class ResponderPage extends WebPage {
         }
 
         throw new NotFoundException();
-    }
-
-    private PlanService createPlanService( Plan plan ) throws NotFoundException {
-        return createPlanService( plan.getUri(), plan.getVersion() );
     }
 
     private PlanService createPlanService( String uri, int version ) throws NotFoundException {
