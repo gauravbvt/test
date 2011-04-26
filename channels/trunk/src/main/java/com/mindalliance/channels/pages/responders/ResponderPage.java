@@ -144,31 +144,32 @@ public class ResponderPage extends WebPage {
     private void init( PlanService service, ResourceSpec profile ) {
 
         Plan plan = service.getPlan();
-        final Assignments assignments = service.getAssignments( true ).with( profile );
+        final Assignments myAssignments = service.getAssignments( true ).with( profile );
+        final Assignments directAssignments = myAssignments.notFrom( profile );
 
-        List<EventPhase> eventPhases = assignments.getEventPhases();
+        List<EventPhase> eventPhases = directAssignments.getEventPhases();
 
         final List<User> planners = service.getUserService().getPlanners( plan.getUri() );
-        final List<Part> tasks = assignments.getParts();
 
-        add( new Label( "userName", user.getUsername() ), new Label( "personName",
-                                                                     profile.displayString( 256 ) ),
-             new ListView<User>( "planners", planners ) {
+        add(
+            new Label( "userName", user.getUsername() ),
+            new Label( "personName", profile.displayString( 256 ) ),
+            new ListView<User>( "planners", planners ) {
                  @Override
                  protected void populateItem( ListItem<User> item ) {
                      User u = item.getModelObject();
                      item.add(
                          new ExternalLink( "planner", "mailTo:" + u.getEmail(), u.getFullName() ),
                          new Label( "listSep",
-                                    item.getIndex() == planners.size() - 1 ?  ". "
-                                  : item.getIndex() == planners.size() - 2 ?  " or " : ", " )
+                                    item.getIndex() == getViewSize() - 1 ?  ". "
+                                  : item.getIndex() == getViewSize() - 2 ?  " or " : ", " )
                             .setRenderBodyOnly( true )
                          );
                  }
-             },
+            },
 
-             new Label( "planName", plan.getName() ),
-             new Label( "planDescription", plan.getDescription() ),
+            new Label( "planName", plan.getName() ),
+            new Label( "planDescription", plan.getDescription() ),
 
              new ListView<EventPhase>( "phaseLinks", eventPhases ) {
                  @Override
@@ -186,8 +187,12 @@ public class ResponderPage extends WebPage {
                  @Override
                  protected void populateItem( ListItem<EventPhase> item ) {
                      EventPhase eventPhase = item.getModelObject();
-                     Assignments phaseEventAssignments = assignments.with( eventPhase );
+                     Assignments phaseEventAssignments = myAssignments.with( eventPhase );
 
+                     List<Part> routines = phaseEventAssignments.getImmediates( getPlanService() )
+                                            .getParts();
+                     List<Part> routines1 = phaseEventAssignments.getOptionals( getPlanService() )
+                                          .getParts();
                      item.add(
                          new WebMarkupContainer( "phaseAnchor" )
                              .add( new Label( "phaseText", eventPhase.toString() ) )
@@ -199,16 +204,18 @@ public class ResponderPage extends WebPage {
                          new Label( "phaseDesc", eventPhase.getPhase().getDescription() )
                              .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ),
 
-                         newRoutineSection( phaseEventAssignments.getImmediates( getPlanService() )
-                                                .getParts(), tasks ),
+                         new WebMarkupContainer( "routineDiv" )
+                             .add( newTaskLinks( routines ) )
+                             .setVisible( !routines.isEmpty() ),
 
                          newNotifSection( phaseEventAssignments
-                                              .getNotifications( getPlanService() ), tasks ),
+                                              .getNotifications( getPlanService() ) ),
 
-                         newRfiSection( phaseEventAssignments.getRequests(), tasks ),
+                         newRfiSection( phaseEventAssignments.getRequests() ),
 
-                         newOtherSection( phaseEventAssignments.getOptionals( getPlanService() )
-                                              .getParts(), tasks ),
+                         new WebMarkupContainer( "otherDiv" )
+                             .add( newTaskLinks( routines1 ) )
+                             .setVisible( !routines1.isEmpty() ),
 
                          newDocSection( getAttachments( planManager.getAttachmentManager(),
                                                         phaseEventAssignments.getSegments() ) )
@@ -217,17 +224,18 @@ public class ResponderPage extends WebPage {
                  }
              },
 
-             new ListView<Assignment>( "tasks", assignments.getAssignments() ) {
+             new ListView<Assignment>( "tasks", myAssignments.getAssignments() ) {
                  @Override
                  protected void populateItem( ListItem<Assignment> item ) {
                      Assignment a = item.getModelObject();
                      Part part = a.getPart();
                      PlanService planService = getPlanService();
+                     List<Part> subtasks = myAssignments.from( a ).getParts();
                      item.add(
                          new WebMarkupContainer( "taskAnchor" )
                                .add( new Label( "taskName", part.getTask() ) )
                                .add( new AttributeModifier( "name", true,
-                                            new Model<String>( "t_" + item.getIndex() ) ) ),
+                                            new Model<String>( "t_" + part.getId() ) ) ),
                          new WebMarkupContainer( "routineTask" )
                             .setVisible( Assignments.isImmediate( part, planService ) ),
                          new WebMarkupContainer( "notifTask" )
@@ -280,6 +288,9 @@ public class ResponderPage extends WebPage {
                             .setVisible( !getDistribDiv( part ).isEmpty() ),
                          new WebMarkupContainer( "taskRfiDiv" )
                             .setVisible( !getRfiDiv( part ).isEmpty() ),
+                         new WebMarkupContainer( "subtaskDiv" )
+                            .add( newTaskLinks( subtasks ) )
+                            .setVisible( !subtasks.isEmpty() ),
                          new WebMarkupContainer( "failDiv" )
                             .setVisible( !getFailDiv( part ).isEmpty() ),
 
@@ -395,8 +406,7 @@ public class ResponderPage extends WebPage {
         return attachments;
     }
 
-    private Component newNotifSection(
-        final Assignments notifications, final List<Part> tasks ) {
+    private Component newNotifSection( final Assignments notifications ) {
 
         return new WebMarkupContainer( "notDiv" )
            .add( new ListView<Assignment>( "notLinks", notifications.getAssignments() ) {
@@ -436,17 +446,19 @@ public class ResponderPage extends WebPage {
                                );
                            }
                        },
-                       new WebMarkupContainer( "notLink" )
-                           .add( new Label( "notName", part.getTask() ) )
-                           .add( new AttributeModifier( "href", true, new Model<String>(
-                               "#t_" + tasks.indexOf( part ) ) ) ) );
+                       newTaskLink( part ) );
                }
            } )
            .setVisible( !notifications.isEmpty() );
     }
 
-    private Component newRfiSection(
-        final Assignments rfis, final List<Part> tasks ) {
+    private static Component newTaskLink( Part part ) {
+        return new WebMarkupContainer( "link" )
+            .add( new Label( "linkName", part.getTask() ) )
+            .add( new AttributeModifier( "href", true, new Model<String>( "#t_" + part.getId() ) ) );
+    }
+
+    private Component newRfiSection( final Assignments rfis ) {
 
         return new WebMarkupContainer( "rfiDiv" )
            .add( new ListView<Assignment>( "rfiLinks", rfis.getAssignments() ) {
@@ -486,10 +498,7 @@ public class ResponderPage extends WebPage {
                                );
                            }
                        },
-                       new WebMarkupContainer( "rfiLink" )
-                           .add( new Label( "rfiName", part.getTask() ) )
-                           .add( new AttributeModifier( "href", true, new Model<String>(
-                               "#t_" + tasks.indexOf( part ) ) ) ) );
+                       newTaskLink( part ) );
                }
            } )
            .setVisible( !rfis.isEmpty() );
@@ -529,37 +538,14 @@ public class ResponderPage extends WebPage {
            .setVisible( !attachments.isEmpty() );
     }
 
-    private Component newRoutineSection( final List<Part> routines, final List<Part> tasks ) {
-        return new WebMarkupContainer( "routineDiv" )
-           .add( new ListView<Part>( "routineLinks", routines ) {
-               @Override
-               protected void populateItem( ListItem<Part> partItem ) {
-                   Part part = partItem.getModelObject();
-                   partItem.add( new WebMarkupContainer( "routineLink" ).add( new Label(
-                       "routineName",
-                       part.getTask() ) ).add( new AttributeModifier( "href",
-                                                                      true,
-                                                                      new Model<String>(
-                                                                          "#t_" + tasks.indexOf(
-                                                                              part ) ) ) ) );
-               }
-           } )
-           .setVisible( !routines.isEmpty() );
-    }
+    private static ListView<Part> newTaskLinks( final List<Part> routines ) {
 
-    private Component newOtherSection( final List<Part> routines, final List<Part> tasks ) {
-        return new WebMarkupContainer( "otherDiv" )
-           .add( new ListView<Part>( "otherLinks", routines ) {
-               @Override
-               protected void populateItem( ListItem<Part> item ) {
-                   Part part = item.getModelObject();
-                   item.add( new WebMarkupContainer( "otherLink" )
-                                 .add( new Label( "otherName", part.getTask() ) )
-                                 .add( new AttributeModifier( "href", true, new Model<String>(
-                                     "#t_" + tasks.indexOf( part ) ) ) ) );
-               }
-           } )
-           .setVisible( !routines.isEmpty() );
+        return new ListView<Part>( "links", routines ) {
+            @Override
+            protected void populateItem( ListItem<Part> item ) {
+                item.add( newTaskLink( item.getModelObject() ) );
+            }
+        };
     }
 
     public static PageParameters createParameters( Specable profile, String uri, int version ) {

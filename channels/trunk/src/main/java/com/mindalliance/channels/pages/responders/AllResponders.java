@@ -158,8 +158,8 @@ public class AllResponders extends WebPage {
                         PageParameters parameters =
                             ResponderPage.createParameters( actor, uri, version );
 
-                        final Component popup = new WebMarkupContainer( "popup" )
-                            .add( new ListView<User>( "addUser", unassigned ) {
+                        item.add(
+                            new ListView<User>( "addUser", unassigned ) {
                                 @Override
                                 protected void populateItem( ListItem<User> tListItem ) {
                                     User u = tListItem.getModelObject();
@@ -183,24 +183,12 @@ public class AllResponders extends WebPage {
                                         }
                                     }.add( new Label( "userLink", u.getFullName() ) ) );
                                 }
-                            } )
-                            .setVisible( false ).setOutputMarkupId( true );
+                            },
 
-                        item.add(
                             new BookmarkablePageLink<ResponderPage>(
                                 "responder", ResponderPage.class, parameters )
                                     .add( new Label( "responderName", actor.toString() )
                                               .setRenderBodyOnly( true ) ),
-
-                            new WebMarkupContainer( "assignItem" )
-                                .add( new AjaxFallbackLink<WebMarkupContainer>( "assignLink") {
-                                    @Override
-                                    public void onClick( AjaxRequestTarget target ) {
-                                        popup.setVisible( !popup.isVisible() );
-                                        target.addComponent( item );
-                                    }
-                                } ),
-                            popup,
 
                             new WebMarkupContainer( "many" )
                                             .setVisible( actor.isArchetype() )

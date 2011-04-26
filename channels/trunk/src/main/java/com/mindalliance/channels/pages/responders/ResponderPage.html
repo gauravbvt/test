@@ -56,7 +56,7 @@
                 <h3>Routine procedures</h3>
                 <p>The following procedures take place on a ongoing basis:</p>
                 <ul>
-                    <li wicket:id="routineLinks"><a href="#" wicket:id="routineLink"><span wicket:id="routineName">{task name} (link or page #)</span></a></li>
+                    <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
                 </ul>
             </div>
 
@@ -66,7 +66,7 @@
 
                 <ul>
                     <li wicket:id="notLinks">
-                        <a href="#" wicket:id="notLink"><span wicket:id="notName">{task name} (link or page #)</span></a>
+                        <a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a>
                         <span class="flow" wicket:id="flow">
                             when receiving &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo; from
                             <span wicket:id="sources">
@@ -82,7 +82,7 @@
                 <p>The following procedures are executed upon request by an appropriate sources:</p>
                 <ul>
                     <li wicket:id="rfiLinks">
-                        <a href="#" wicket:id="rfiLink"><span wicket:id="rfiName">{task name} (link or page #)</span></a>
+                        <a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a>
                         <span wicket:id="flow">
                             when
                             <span wicket:id="sources">
@@ -100,7 +100,7 @@
                 <h3>Other procedures</h3>
                 <p>These procedures may also apply:</p>
                 <ul>
-                    <li wicket:id="otherLinks"><a href="#" wicket:id="otherLink"><span wicket:id="otherName">{task name} (link or page #)</span></a></li>
+                    <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
                 </ul>
             </div>
 
@@ -395,11 +395,19 @@
                 </table>
             </div>
 
+            <div wicket:id="subtaskDiv">
+                <h3>Subtasks</h3>
+                <p>The following tasks may become relevant during or as a result of this procedure:</p>
+                <ul>
+                    <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
+                </ul>
+            </div>
+
             <div wicket:id="failDiv">
                 <!-- Optional -->
                 <h3>Failure notifications</h3>
                 <p>
-                    This task may fail. Notification should be sent to {one of|all of|} the following:
+                    This task may fail. Notifications should be sent to {one of|all of|} the following:
                 </p>
                 <table border="1">
                     <tr class="contact">
