@@ -41,25 +41,38 @@
             <input wicket:id="actorsRequired" type="checkbox"/> No roles without agents
         </td>
     </tr>
-     <tr wicket:id="tabContainer">
-        <td colspan="2"><div wicket:id="tabs" class="tabpanel">[tab panel]</div></td>
-    </tr>
-    <tr wicket:id="assignmentsContainer">
+    <tr wicket:id="moreContainer">
         <td colspan="2">
-            <h3>
-				<span>Task assignments</span>
-				<div>&nbsp;</div>
-			</h3>
-            <div wicket:id="assignments">[assignments panel]</div>
+            <a wicket:id="more-link" href="#" title="Show more" class="more"><span wicket:id="moreOrLess">more</span></a>
         </td>
     </tr>
-    <tr wicket:id="commitmentsContainer">
+     <tr>
         <td colspan="2">
-            <h3>
-				<span>Sharing commitments</span>
-				<div>&nbsp;</div>
-			</h3>
-            <span wicket:id="commitments">[commitments panel]</span>
+            <span wicket:id="tabContainer">
+                <div wicket:id="tabs" class="tabpanel">[tab panel]</div>
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <span  wicket:id="assignmentsContainer">
+                <h3>
+                    <span>Task assignments</span>
+                    <div>&nbsp;</div>
+                </h3>
+                <div wicket:id="assignments">[assignments panel]</div>
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <span wicket:id="commitmentsContainer">
+                <h3>
+                    <span>Sharing commitments</span>
+                    <div>&nbsp;</div>
+                </h3>
+                <span wicket:id="commitments">[commitments panel]</span>
+            </span>
         </td>
     </tr>
 </wicket:extend>

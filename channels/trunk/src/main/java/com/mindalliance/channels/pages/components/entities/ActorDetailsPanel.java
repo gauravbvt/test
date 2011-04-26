@@ -28,9 +28,11 @@ import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -127,6 +129,12 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     private WebMarkupContainer rolesContainer;
 
+    private boolean showingMore = false;
+    private WebMarkupContainer assignmentsContainer;
+    private WebMarkupContainer commitmentsContainer;
+    private WebMarkupContainer participantsContainer;
+    private WebMarkupContainer moreContainer;
+
     public ActorDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
     }
@@ -142,6 +150,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addContactInfo();
         addAvailabilityPanel();
         addClearances();
+        addMoreLink();
         addRoles();
         addRolesMap();
         addIndexedOnChoice();
@@ -153,9 +162,45 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         adjustFields();
     }
 
+    private void addMoreLink() {
+        moreContainer = new WebMarkupContainer( "moreContainer" );
+        moreContainer.setOutputMarkupId( true );
+        moreContainer.setVisible( getEntity().isActual() );
+        AjaxFallbackLink<String> moreLink = new AjaxFallbackLink<String>(
+                "more-link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                showingMore = !showingMore;
+                addMoreLink();
+                addRoles();
+                addRolesMap();
+                addIndexedOnChoice();
+                addNameRangePanel();
+                addActorEmploymentTable();
+                addAssignmentsPanel();
+                addCommitmentsPanel();
+                addParticipantsTable();
+                adjustFields();
+                target.addComponent( moreContainer );
+                target.addComponent( rolesContainer );
+                target.addComponent( assignmentsContainer );
+                target.addComponent( commitmentsContainer );
+                target.addComponent( participantsContainer );
+            }
+        };
+        moreLink.add( new AttributeModifier(
+                "class",
+                true,
+                new Model<String>( showingMore ? "less" : "more" ) ) );
+        moreContainer.add( moreLink );
+        moreLink.add( new Label( "moreOrLess", showingMore ? "less" : "more" ) );
+        moDetailsDiv.addOrReplace( moreContainer );
+    }
+
     private void addRoles() {
         rolesContainer = new WebMarkupContainer( "rolesContainer" );
-        moDetailsDiv.add( rolesContainer );
+        rolesContainer.setOutputMarkupId( true );
+        makeVisible( rolesContainer, showingMore );
+        moDetailsDiv.addOrReplace( rolesContainer );
         indexedOn = indexingChoices[0];
         nameRange = new NameRange();
         filters = new ArrayList<Identifiable>();
@@ -171,12 +216,6 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void addAvailabilityPanel() {
-/*
-        moDetailsDiv.add( new Label(
-                "availability",
-                "Under construction" ) );
-
-*/
         moDetailsDiv.add( new AvailabilityPanel(
                 "availability",
                 new Model<Available>( (Actor) getEntity() ) ) );
@@ -307,9 +346,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void addParticipantsTable() {
-        WebMarkupContainer participantsContainer = new WebMarkupContainer( "participantsContainer" );
-        participantsContainer.setVisible( getActor().isActual() );
-        moDetailsDiv.add( participantsContainer );
+        participantsContainer = new WebMarkupContainer( "participantsContainer" );
+        participantsContainer.setOutputMarkupId( true );
+        makeVisible( participantsContainer, showingMore && getActor().isActual() );
+        moDetailsDiv.addOrReplace( participantsContainer );
         Component participantsTable = getActor().isActual()
                 ? new ParticipantsTable(
                 "participants",
@@ -333,9 +373,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void addAssignmentsPanel() {
-        WebMarkupContainer assignmentsContainer = new WebMarkupContainer( "assignmentsContainer" );
-        assignmentsContainer.setVisible( getActor().isActual() );
-        moDetailsDiv.add( assignmentsContainer );
+        assignmentsContainer = new WebMarkupContainer( "assignmentsContainer" );
+        assignmentsContainer.setOutputMarkupId( true );
+        makeVisible( assignmentsContainer, showingMore && getActor().isActual() );
+        moDetailsDiv.addOrReplace( assignmentsContainer );
         if ( getActor().isActual() ) {
             assignmentsContainer.add(
                     new AssignmentsTablePanel(
@@ -354,13 +395,16 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      * @return a list of assignments
      */
     public List<Assignment> getAssignments() {
-        return getQueryService().getAssignments().with( getActor() ).getAssignments();
+        return showingMore ?
+                getQueryService().getAssignments().with( getActor() ).getAssignments()
+                : new ArrayList<Assignment>();
     }
 
     private void addCommitmentsPanel() {
-        WebMarkupContainer commitmentsContainer = new WebMarkupContainer( "commitmentsContainer" );
-        commitmentsContainer.setVisible( getActor().isActual() );
-        moDetailsDiv.add( commitmentsContainer );
+        commitmentsContainer = new WebMarkupContainer( "commitmentsContainer" );
+        commitmentsContainer.setOutputMarkupId( true );
+        makeVisible( commitmentsContainer, showingMore && getActor().isActual() );
+        moDetailsDiv.addOrReplace( commitmentsContainer );
         if ( getActor().isActual() ) {
             commitmentsContainer.add(
                     new CommitmentsTablePanel(
@@ -380,10 +424,12 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     public List<Commitment> getCommitments() {
         QueryService queryService = getQueryService();
-        return queryService.findAllCommitmentsOf(
+        return showingMore
+                ? queryService.findAllCommitmentsOf(
                 getActor(),
                 queryService.getAssignments( false ),
-                queryService.findAllFlows() );
+                queryService.findAllFlows() )
+                : new ArrayList<Commitment>();
     }
 
     /**
@@ -429,47 +475,51 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     @SuppressWarnings( "unchecked" )
     public List<String> getIndexedNames() {
-        List<Employment> employments = getQueryService().findAllEmploymentsForActor( getActor() );
-        if ( indexedOn.equals( ROLES ) ) {
-            return (List<String>) CollectionUtils.collect(
-                    employments,
-                    new Transformer() {
-                        public Object transform( Object obj ) {
-                            return ( (Employment) obj ).getRole().getName();
-                        }
-                    } );
-        } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
-            return (List<String>) CollectionUtils.collect(
-                    CollectionUtils.select(
-                            employments,
-                            new Predicate() {
-                                public boolean evaluate( Object obj ) {
-                                    return ( (Employment) obj ).getOrganization() != null;
-                                }
-                            } ),
-                    new Transformer() {
-                        public Object transform( Object obj ) {
-                            return ( (Employment) obj ).getOrganization().getName();
-                        }
-
-                    } );
-        } else if ( indexedOn.equals( LOCATIONS ) ) {
-            return (List<String>) CollectionUtils.collect(
-                    CollectionUtils.select(
-                            employments,
-                            new Predicate() {
-                                public boolean evaluate( Object obj ) {
-                                    return ( (Employment) obj ).getLocation() != null;
-                                }
-                            } ),
-                    new Transformer() {
-                        public Object transform( Object obj ) {
-                            return ( (Employment) obj ).getLocation().getName();
-                        }
-
-                    } );
+        if ( !showingMore ) {
+            return new ArrayList<String>();
         } else {
-            throw new IllegalStateException( "Can't index on " + indexedOn );
+            List<Employment> employments = getQueryService().findAllEmploymentsForActor( getActor() );
+            if ( indexedOn.equals( ROLES ) ) {
+                return (List<String>) CollectionUtils.collect(
+                        employments,
+                        new Transformer() {
+                            public Object transform( Object obj ) {
+                                return ( (Employment) obj ).getRole().getName();
+                            }
+                        } );
+            } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
+                return (List<String>) CollectionUtils.collect(
+                        CollectionUtils.select(
+                                employments,
+                                new Predicate() {
+                                    public boolean evaluate( Object obj ) {
+                                        return ( (Employment) obj ).getOrganization() != null;
+                                    }
+                                } ),
+                        new Transformer() {
+                            public Object transform( Object obj ) {
+                                return ( (Employment) obj ).getOrganization().getName();
+                            }
+
+                        } );
+            } else if ( indexedOn.equals( LOCATIONS ) ) {
+                return (List<String>) CollectionUtils.collect(
+                        CollectionUtils.select(
+                                employments,
+                                new Predicate() {
+                                    public boolean evaluate( Object obj ) {
+                                        return ( (Employment) obj ).getLocation() != null;
+                                    }
+                                } ),
+                        new Transformer() {
+                            public Object transform( Object obj ) {
+                                return ( (Employment) obj ).getLocation().getName();
+                            }
+
+                        } );
+            } else {
+                throw new IllegalStateException( "Can't index on " + indexedOn );
+            }
         }
     }
 
@@ -480,14 +530,15 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     @SuppressWarnings( "unchecked" )
     public List<Employment> getEmployments() {
-        return (List<Employment>) CollectionUtils.select(
+        return showingMore
+                ? (List<Employment>) CollectionUtils.select(
                 getQueryService().findAllEmploymentsForActor( getActor() ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return !isFilteredOut( (Employment) obj ) && isInNameRange( (Employment) obj );
                     }
-                }
-        );
+                } )
+                : new ArrayList<Employment>();
 
     }
 
@@ -809,12 +860,12 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         }
     }
 
-    private class ParticipantsTable  extends AbstractTablePanel {
+    private class ParticipantsTable extends AbstractTablePanel {
 
         private final IModel<List<User>> participants;
 
         public ParticipantsTable( String id, IModel<List<User>> participants, int maxRows ) {
-            super(id, maxRows);
+            super( id, maxRows );
             this.participants = participants;
             init();
         }
@@ -838,6 +889,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     new SortableBeanProvider<User>(
                             participants.getObject(),
                             "normalizedFullName" ),
-                    getPageSize() ) );        }
+                    getPageSize() ) );
+        }
     }
 }

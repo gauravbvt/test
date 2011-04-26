@@ -723,7 +723,7 @@ th.wicket_orderDown a {
 }
 
 th.wicket_orderUp a {
-    background: transparent url( '../images/navigate_close.png' ) no-repeat 100% 4px;
+    background: transparent url( '../images/bullet-arrow-bottom.png' ) no-repeat 100% 4px;
     padding-right: 12px;
 }
 
@@ -2149,6 +2149,7 @@ body.support iframe {
 /* ----- ALPHA - Links ----- */
 
 a.more,
+a.less,
 a.window {
 	border:1px solid #C7C8CA;
 	color:#666666;
@@ -2161,11 +2162,15 @@ a.more {
 	background: url( '../images/link.more.png' ) no-repeat 2px 3px #DCDDDE;
 }
 
+a.less {
+	background: url( '../images/link.less.png' ) no-repeat 2px 3px #DCDDDE;
+}
+
 a.window {
 	background: url( '../images/link.window.png' ) no-repeat 2px 3px #DCDDDE;
 }
 
-a.more:hover,
+a.more:hover, a.less:hover,
 a.window:hover {
 	border:1px solid #999999;
 	color:#333333;
