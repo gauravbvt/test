@@ -10,10 +10,12 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.query.PlanService;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -22,6 +24,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -146,6 +149,10 @@ public class AllResponders extends WebPage {
                             new Label( "profile", actor.toString() )
                                             .setRenderBodyOnly( true )
                         );
+
+                        if ( item.getIndex() == getViewSize() - 1 )
+                            item.add( new AttributeAppender( "class", true,
+                                                             new Model<String>( "last" ), " " ) );
                     }
                 }
             ).setVisible( !users.isEmpty() ),
@@ -179,7 +186,8 @@ public class AllResponders extends WebPage {
 
                                             getPage().detachModels();
                                             setRedirect( true );
-                                            setResponsePage( ResponderPage.class, getPage().getPageParameters() );
+                                            setResponsePage( ResponderPage.class,
+                                                             getPage().getPageParameters() );
                                         }
                                     }.add( new Label( "userLink", u.getFullName() ) ) );
                                 }
@@ -193,6 +201,11 @@ public class AllResponders extends WebPage {
                             new WebMarkupContainer( "many" )
                                             .setVisible( actor.isArchetype() )
                         ).setOutputMarkupId( true );
+
+                        if ( item.getIndex() == getViewSize() - 1 )
+                            item.add( new AttributeAppender( "class", true,
+                                                             new Model<String>( "last" ), " " ) );
+
                     }
                 }
             ).setVisible( !actors.isEmpty() ),
@@ -210,6 +223,10 @@ public class AllResponders extends WebPage {
                             "responderList", ResponderPage.class, parameters )
                                       .add( new Label( "otherPlanName", p.toString() )
                                                 .setRenderBodyOnly( true ) ) );
+
+                        if ( item.getIndex() == getViewSize() - 1 )
+                            item.add( new AttributeAppender( "class", true,
+                                                             new Model<String>( "last" ), " " ) );
                     }
                 }
             ).setVisible( !otherPlans.isEmpty() ),
@@ -222,6 +239,9 @@ public class AllResponders extends WebPage {
                         item.add(
                             new ExternalLink( "planner", "mailTo:" + user.getEmail(),
                                               user.getFullName() ) );
+                        if ( item.getIndex() == getViewSize() - 1 )
+                            item.add( new AttributeAppender( "class", true,
+                                                             new Model<String>( "last" ), " " ) );
                     }
                 }
             ).setVisible( !otherPlanners.isEmpty() )
