@@ -1,0 +1,169 @@
+/**
+ * Channels Reponder Report - Styling
+ * Copyright (C) 2010 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: romit
+ * Date: Apr 26, 2011
+ * Time: 11:06:39 AM
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #333333;
+    border-bottom: 1px dotted #666666;
+    text-decoration: none;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+div#container {
+    width: 1000px;
+    margin: 0 auto;
+    text-align: left;
+    padding: 0; /*border:1px solid #cccccc;*/
+    background-color: #f6f6f6;
+    border: 1px solid #cccccc;
+}
+
+.logo {
+    float: left;
+    cursor: pointer;
+    padding:7px 0 0 7px;
+}
+
+
+/* ----- Header ----- */
+
+div#header {
+    width: 1000px;
+    height: 60px;
+    background: url('../images/header.png') no-repeat #c3d9ff;
+    border-bottom: 1px solid #cccccc;
+}
+
+.selector img {
+    border: 0;
+}
+
+div#header h1 {
+    display: block;
+    float: left;
+    width: 640px;
+    font-size: medium;
+    font-weight: bold;
+    padding: 18px 0 0 10px;
+	font-size:20px;
+}
+
+div#header > ul {
+    float: right;
+    list-style: none;
+    margin: 20px 20px 0 0;
+    padding: 0;
+    display: inline;
+}
+
+div#header > ul li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+div#header > ul li a {
+    background: url('../images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px;
+    margin-left: 5px;
+    text-transform: capitalize;
+    outline: none;
+}
+
+div#header > ul li a:hover {
+    color: #333333;
+}
+
+
+div#contents {
+	padding:15px;
+	width:970px;
+}
+
+div#note {
+    background: url("../images/gains.png") no-repeat 5px 4px #FEF2B0;
+    border:1px solid #C5B351;
+    color: #000000;
+    font-size: 12px;
+    font-style: italic;
+    margin: 5px 0 15px 0;
+    padding: 5px 5px 5px 25px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+div#contents table {
+	border-collapse:collapse;
+	margin:0 0 20px 0;
+}
+
+div#contents table tr.tablehead {
+	background:url("../images/tablehead-bg.png") no-repeat;
+	height:67px;
+}
+
+div#contents table tr th {
+	padding:0 15px;
+}
+
+div#contents table tr.tablecont {
+	background:url("../images/table-bg.png") no-repeat;
+	height:36px;
+}
+
+div#contents table tr td {
+	padding:10px 15px;
+}
+
+div#contents table p.title {
+	font-size:18px;
+	font-weight:bold;
+}
+
+div#contents table p.desc {
+	font-size:12px;
+	color:#505050;
+	padding:3px 0 0 0;
+}
+
+div#contents table tr td.remove {
+	width:45px;
+	padding:6px 10px 0 20px;
+}
+
+div#contents table tr td.remove a {
+	border:none;
+}
+
+a.responder {
+	font-weight:bold;
+	border:none;
+}
+
+span.profile, span.many {
+	border-bottom:1px dotted #666666;
+}
