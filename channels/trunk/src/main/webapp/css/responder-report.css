@@ -159,9 +159,18 @@ div#contents table tr td.remove a {
 	border:none;
 }
 
-a.responder {
+a.responder,
+a.planner,
+a.responderList {
 	font-weight:bold;
 	border:none;
+}
+
+a.responder:hover,
+a.planner:hover,
+a.responderList:hover {
+	font-weight:bold;
+	border-bottom:1px dotted #666666;
 }
 
 span.profile, span.many {

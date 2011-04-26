@@ -88,17 +88,37 @@
 
 
         <div id="plannersDiv" wicket:id="plannersDiv">
-            <p>Other planners for this plan:</p>
-            <ul>
-                <li wicket:id="otherPlanners"><a wicket:id="planner">other planner</a></li>
-            </ul>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr class="tablehead">
+					<th>
+						<p class="title">Other Planners</p>
+						<p class="desc">Planners who can edit this plan</p>
+					</th>
+				</tr>
+				<tr wicket:id="otherPlanners" class="tablecont">
+					<td>
+	        			<a wicket:id="planner" class="planner">other planner</a>
+					</td>
+				</tr>
+			</table>
         </div>
 
         <div id="otherPlans" wicket:id="plansDiv">
-            <p>Other plans that you can edit:</p>
-            <ul>
-                <li wicket:id="otherPlans"><a wicket:id="responderList"><span wicket:id="otherPlanName">other plan</span></a></li>
-            </ul>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr class="tablehead">
+					<th>
+			            <p class="title">Other Plans</p>
+			            <p class="desc">Plans which you you can edit</p>
+					</th>
+				</tr>
+				<tr wicket:id="otherPlans" class="tablecont">
+					<td>
+	                	<a wicket:id="responderList" class="responderList">
+							<span wicket:id="otherPlanName">other plan</span>
+						</a>
+					</td>
+				</tr>
+			</table>	
         </div>
     </div>
 </div>
