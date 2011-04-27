@@ -187,7 +187,7 @@ public class ResponderPage extends WebPage {
                  @Override
                  protected void populateItem( ListItem<EventPhase> item ) {
                      EventPhase eventPhase = item.getModelObject();
-                     Assignments phaseEventAssignments = myAssignments.with( eventPhase );
+                     Assignments phaseEventAssignments = directAssignments.with( eventPhase );
 
                      List<Part> routines = phaseEventAssignments.getImmediates( getPlanService() )
                                             .getParts();
@@ -280,8 +280,7 @@ public class ResponderPage extends WebPage {
                          new WebMarkupContainer( "teamDiv" )
                             .setVisible( part.isAsTeam() ),
 
-                         new WebMarkupContainer( "criticalDiv" )
-                            .setVisible( !part.getEssentialFlows( false, planService ).isEmpty() ),
+                         newCriticals( part, planService ),
                          new WebMarkupContainer( "inputDiv" )
                             .setVisible( !getInputDiv( part, planService ).isEmpty() ),
                          new WebMarkupContainer( "distribDiv" )
@@ -303,6 +302,16 @@ public class ResponderPage extends WebPage {
 
 
         );
+    }
+
+    private Component newCriticals( Part part, PlanService planService ) {
+        List<Flow> flows = part.getEssentialFlows( false, planService );
+
+        Flow flow = flows.get( 0 );
+        flow.getEois();
+
+        return new WebMarkupContainer( "criticalDiv" )
+           .setVisible( !flows.isEmpty() );
     }
 
     private List<Flow> getInputDiv( Part part, PlanService planService ) {
