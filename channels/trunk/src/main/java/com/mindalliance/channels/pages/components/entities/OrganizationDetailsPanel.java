@@ -255,12 +255,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             public void onClick( AjaxRequestTarget target ) {
                 showingMore = !showingMore;
                 addMoreLink();
-                addTabPanel();
                 addAssignmentsPanel();
                 addCommitmentsPanel();
                 adjustFields();
                 target.addComponent( moreContainer );
-                target.addComponent( tabContainer );
                 target.addComponent( assignmentsContainer );
                 target.addComponent( commitmentsContainer );
             }
@@ -278,7 +276,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     private void addTabPanel() {
         tabContainer = new WebMarkupContainer( "tabContainer" );
         tabContainer.setOutputMarkupId( true );
-        makeVisible( tabContainer, showingMore && getOrganization().isActual() );
+        makeVisible( tabContainer, getOrganization().isActual() );
         moDetailsDiv.addOrReplace( tabContainer );
         tabContainer.add( new AjaxTabbedPanel( "tabs", getTabs() ) );
     }
@@ -292,7 +290,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        if ( showingMore && getOrganization().isActual() ) {
+        if ( getOrganization().isActual() ) {
             tabs.add( new AbstractTab( new Model<String>( "Jobs" ) ) {
                 public Panel getPanel( String id ) {
                     return new JobsPanel(
