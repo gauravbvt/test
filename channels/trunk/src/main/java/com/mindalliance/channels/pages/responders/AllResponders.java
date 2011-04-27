@@ -160,42 +160,44 @@ public class AllResponders extends WebPage {
             new WebMarkupContainer( "agentsDiv" ).add(
                 new ListView<Actor>( "agents", actors ) {
                     @Override
-                    protected void populateItem( final ListItem<Actor> item ) {
+                    protected void populateItem( ListItem<Actor> item ) {
                         final Actor actor = item.getModelObject();
                         PageParameters parameters =
                             ResponderPage.createParameters( actor, uri, version );
 
                         item.add(
-                            new ListView<User>( "addUser", unassigned ) {
-                                @Override
-                                protected void populateItem( ListItem<User> tListItem ) {
-                                    User u = tListItem.getModelObject();
-                                    tListItem.add( new Link<User>( "addLink", tListItem.getModel() ) {
-                                        @Override
-                                        public void onClick() {
-                                            PlanService s = createService( plan );
-                                            String username = getModelObject().getUsername();
-                                            Participation p = s.findParticipation( username );
-                                            if ( p == null ) {
-                                                p = new Participation( username );
-                                                s.add( p );
-                                            }
-                                            p.setActor( actor );
-                                            p.setActual();
-                                            planManager.save( plan );
+                            new WebMarkupContainer( "assign" )
+                                .add( new ListView<User>( "addUser", unassigned ) {
+                                    @Override
+                                    protected void populateItem( ListItem<User> tListItem ) {
+                                        User u = tListItem.getModelObject();
+                                        tListItem.add( new Link<User>( "addLink", tListItem.getModel() ) {
+                                            @Override
+                                            public void onClick() {
+                                                PlanService s = createService( plan );
+                                                String username = getModelObject().getUsername();
+                                                Participation p = s.findParticipation( username );
+                                                if ( p == null ) {
+                                                    p = new Participation( username );
+                                                    s.add( p );
+                                                }
+                                                p.setActor( actor );
+                                                p.setActual();
+                                                planManager.save( plan );
 
-                                            getPage().detachModels();
-                                            setRedirect( true );
-                                            setResponsePage( ResponderPage.class,
-                                                             getPage().getPageParameters() );
-                                        }
-                                    }.add( new Label( "userLink", u.getFullName() ) ) );
-                                }
-                            },
+                                                getPage().detachModels();
+                                                setRedirect( true );
+                                                setResponsePage( ResponderPage.class,
+                                                                 getPage().getPageParameters() );
+                                            }
+                                        }.add( new Label( "userLink", u.getFullName() ) ) );
+                                    }
+                                } )
+                                .setVisible( !unassigned.isEmpty() ),
 
                             new BookmarkablePageLink<ResponderPage>(
                                 "responder", ResponderPage.class, parameters )
-                                    .add( new Label( "responderName", actor.toString() )
+                                    .add( new Label( "responderName", actor.getNormalizedName() )
                                               .setRenderBodyOnly( true ) ),
 
                             new WebMarkupContainer( "many" )
