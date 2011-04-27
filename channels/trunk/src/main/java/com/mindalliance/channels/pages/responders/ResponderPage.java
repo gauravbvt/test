@@ -307,9 +307,6 @@ public class ResponderPage extends WebPage {
     private Component newCriticals( Part part, PlanService planService ) {
         List<Flow> flows = part.getEssentialFlows( false, planService );
 
-        Flow flow = flows.get( 0 );
-        flow.getEois();
-
         return new WebMarkupContainer( "criticalDiv" )
            .setVisible( !flows.isEmpty() );
     }
