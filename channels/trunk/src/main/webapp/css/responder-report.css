@@ -135,6 +135,11 @@ div#contents table tr.tablecont {
 	height:36px;
 }
 
+div#contents table tr.tablecont.last {
+	background:url("../images/tablebot-bg.png") no-repeat;
+	height:36px;
+}
+
 div#contents table tr td {
 	padding:10px 15px;
 }
@@ -171,8 +176,96 @@ a.planner:hover,
 a.responderList:hover {
 	font-weight:bold;
 	border-bottom:1px dotted #666666;
+	color:#000000;
 }
 
 span.profile, span.many {
 	border-bottom:1px dotted #666666;
+}
+
+
+div#contents table tr td.assign {
+    border: 0 none;
+    color: #8E8E8E;
+    margin: 0;
+    padding: 0;
+	width:165px;
+}
+
+td.assign ul {
+    height: 15px;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+td.assign li {
+    float: left;
+    padding: 0;
+	background:#ffffff;
+}
+td.assign li a {
+    border: none;
+    color: #666666;
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 15px;
+    padding: 2px 5px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+	border:1px solid #999999;
+}
+
+td.assign li a:hover {
+    background: #F3F3F3;
+    color: #000000;
+    text-decoration: none;
+	border-bottom:none;
+}
+td.assign li ul {
+    background: #ffffff;
+    display: none;
+    height: auto;
+    position: absolute;
+    width: 150px;
+    z-index: 200;
+    border-bottom: 1px solid #999999;
+}
+td.assign li:hover ul {
+    display: block;
+}
+td.assign li:hover {
+    background: none repeat scroll 0 0 #F3F3F3;
+    color: #000000;
+}
+td.assign li li {
+    display: block;
+    float: none;
+    padding: 0;
+    width: 150px;
+}
+td.assign li ul a {
+    display: block;
+    font-style: normal;
+    padding: 0 5px;
+    text-align: left;
+	width:140px;
+	text-transform:none;
+	border-bottom:none;
+}
+td.assign li ul a:hover {
+    background: #F3F3F3;
+    color: #000000;
+}
+td.assign p {
+    clear: left;
+}
+td.assign #current, td.assign li.active {
+    background: none repeat scroll 0 0 #F3F3F3;
+    color: #FFFFFF;
+}
+td.assign ul li ul li#current {
+    background: none repeat scroll 0 0 #E0E0E0;
+    color: #FFFFFF;
 }
