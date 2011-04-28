@@ -2104,6 +2104,8 @@ div.section-content > div.flow > div > img {
 	border:1px solid #666666;
 	color:#000000;
 	font-size:11px;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 #social div.new-message input:hover {

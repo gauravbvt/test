@@ -1,6 +1,7 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -54,7 +55,7 @@ public class Segment extends ModelObject {
     /**
      * Event phases in context.
      */
-    private List<EventTiming> context = new ArrayList<EventTiming>(  );
+    private List<EventTiming> context = new ArrayList<EventTiming>();
 
     /**
      * Goals (risk mitigations, gains to be made) for the segment.
@@ -523,13 +524,13 @@ public class Segment extends ModelObject {
         StringBuilder sb = new StringBuilder();
         sb.append( eventPhase.toString() );
         if ( !getContext().isEmpty() ) {
-            sb.append(", ");
+            sb.append( ", " );
         }
         Iterator<EventTiming> eventTimings = getContext().iterator();
         while ( eventTimings.hasNext() ) {
             sb.append( eventTimings.next() );
             if ( eventTimings.hasNext() ) {
-                sb.append( " and ");
+                sb.append( " and " );
             }
         }
         return sb.toString();
@@ -589,11 +590,22 @@ public class Segment extends ModelObject {
      */
     public String terminationCause( Part part ) {
         Event initiator = part.getInitiatedEvent();
-        return equals( part.getSegment() ) && part.isTerminatesEventPhase() ?
-                "terminates " + getPhaseEventTitle().toLowerCase()
-                : getEvent().equals( initiator ) && getPhase().isPreEvent() ?
-                "causes event \"" + initiator.getName().toLowerCase() + '\"'
-                : "";
+        if ( equals( part.getSegment() ) && part.isTerminatesEventPhase() ) {
+            return getPhase().isPreEvent()
+                    ? "can prevent " + ChannelsUtils.smartUncapitalize( getEvent().getName() )
+                    : "terminates " + getPhaseEventTitle().toLowerCase();
+        } else if ( getEvent().equals( initiator ) && getPhase().isPreEvent() ) {
+            return "causes event \"" + initiator.getName().toLowerCase() + '\"';
+        } else {
+            return "";
+        }
+/*
+        return equals( part.getSegment() ) && part.isTerminatesEventPhase()
+                ? "terminates " + getPhaseEventTitle().toLowerCase()
+                : getEvent().equals( initiator ) && getPhase().isPreEvent()
+                    ? "causes event \"" + initiator.getName().toLowerCase() + '\"'
+                    : "";
+*/
     }
 
     /**
@@ -721,16 +733,16 @@ public class Segment extends ModelObject {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        final EventTiming otherEventTiming = (EventTiming)object;
+                        final EventTiming otherEventTiming = (EventTiming) object;
                         return !CollectionUtils.exists(
-                            getContext(),
-                            new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                    EventTiming eventTiming = (EventTiming)object;
-                                    return eventTiming.narrowsOrEquals( otherEventTiming, locale );
+                                getContext(),
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        EventTiming eventTiming = (EventTiming) object;
+                                        return eventTiming.narrowsOrEquals( otherEventTiming, locale );
+                                    }
                                 }
-                            }
                         );
                     }
                 }
@@ -744,6 +756,7 @@ public class Segment extends ModelObject {
 
 
     //=================================================
+
     /**
      * An iterator that walks through all flow in the segment.
      * This is done by iterating on all send flows of all nodes,

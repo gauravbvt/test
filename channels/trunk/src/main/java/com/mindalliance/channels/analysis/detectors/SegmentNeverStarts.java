@@ -35,21 +35,33 @@ public class SegmentNeverStarts extends AbstractIssueDetector {
         Event event = segment.getEvent();
         Phase phase = segment.getPhase();
         boolean isIncident = plan.isIncident( event );
-        if ( !( isIncident && phase.isConcurrent()
-                ||
-                ( isIncident || !getQueryService().findCausesOf( event ).isEmpty() )
-                        && event.isSelfTerminating() && phase.isPostEvent() )
-                && !getQueryService().isInitiated( segment ) ) {
+        boolean canStart =  phase.isPreEvent()
+                                || isIncident && phase.isConcurrent()
+                                || getQueryService().isInitiated( segment )
+                                || phase.isPostEvent() && event.isSelfTerminating();
+
+        if ( !canStart ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, segment );
-            issue.setDescription( "The plan segment may never start"
-                    + " because it is not in response to an incident and no other plan segment causes it to start." );
-            issue.setRemediation( "If the segment is for a co-event phase, have the event be an incident"
-                    + "\nor if the segment is for a co-event phase, have a task in another segment cause it"
-                    + "\nor if the segment is for a post-event phase, have the event be self-terminating"
-                    + "\nor if the segment is for a post-event phase, "
-                    + "have at least one task in a co-event segment terminate its segment." );
-            issue.setRemediation( "Make this plan segment in response to an incident\n"
-                    + "or make sure that a task in another plan segment causes this plan segment to start." );
+            String eventName = segment.getEvent().getName();
+            String description = "The plan segment may never start";
+            String remediation = "";
+            if ( !isIncident && phase.isConcurrent() ) {
+                description += " because it is not in response to an incident " +
+                        "and no other segment causes the event \""
+                        + eventName + "\"";
+                remediation = "Make the event \"" + eventName + "\" an incident\n" +
+                        "or have a task in another segment cause the event.";
+            } else if ( phase.isPostEvent() ) {
+                description += " because no task in other segments terminates event \""
+                        + eventName
+                        + "\"";
+                remediation = "Make the event \"" + eventName + "\" self-terminating"
+                                + "\nor have at least one task in another segment terminate it.";
+            }
+            description += ".";
+            issue.setDescription( description );
+            assert !remediation.isEmpty();
+            issue.setRemediation( remediation );
             issue.setSeverity( Level.Medium );
             issues.add( issue );
         }
