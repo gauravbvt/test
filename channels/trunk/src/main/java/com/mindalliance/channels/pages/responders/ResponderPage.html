@@ -115,7 +115,7 @@
         <div wicket:id="tasks" class="task">
             <h2><a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a></h2>
 
-            <p><em>Background:</em> {summary of event/phase/location}</p>
+            <p><em>Background:</em> <span wicket:id="taskSummary">{summary of event/phase/location}</span></p>
 
             <div>
                 <p>
@@ -135,11 +135,28 @@
                             This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
                             procedure is performed when receiving {flow name} from {source, source or source}.
                             {It is currently operational.}
-                            The following information should have been included in the communication:
                         </p>
-                        <ul>
-                            <li>EOI,  {description}, {handling}, {classification}</li>
-                        </ul>
+                        <div wicket:id="eois">
+                            <p>
+                                The following information should have been included in the communication:
+                            </p>
+                            <table class="eois">
+                                <thead>
+                                    <th>Information</th>
+                                    <th>Description</th>
+                                    <th>Handling</th>
+                                    <th>Classification</th>
+                                </thead>
+                                <tbody>
+                                    <tr wicket:id="eoi">
+                                        <td wicket:id="eoi.name">{EOI}</td>
+                                        <td wicket:id="eoi.desc">{description}</td>
+                                        <td wicket:id="eoi.handling">{handling}</td>
+                                        <td wicket:id="eoi.class">{classification}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div wicket:id="reqTask">
                         <p>
@@ -153,11 +170,28 @@
                             This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
                             procedure is a follow-up task for {task name}.
                             {It is currently operational.}
-                            You are expected to already know the following information:
                         </p>
-                        <ul>
-                            <li>EOI,  {description}, {handling}, {classification}</li>
-                        </ul>
+                        <div wicket:id="eois">
+                            <p>
+                                You are expected to already know the following information:
+                            </p>
+                            <table class="eois">
+                                <thead>
+                                    <th>Information</th>
+                                    <th>Description</th>
+                                    <th>Handling</th>
+                                    <th>Classification</th>
+                                </thead>
+                                <tbody>
+                                    <tr wicket:id="eoi">
+                                        <td wicket:id="eoi.name">{EOI}</td>
+                                        <td wicket:id="eoi.desc">{description}</td>
+                                        <td wicket:id="eoi.handling">{handling}</td>
+                                        <td wicket:id="eoi.class">{classification}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -169,29 +203,11 @@
                     </p>
                 </div>
 
-                <!-- One of the following 3 sections:-->
+                <!-- Optional:-->
                 <div wicket:id="term1">
                     <p>
                         The procedure terminates when {phase name} of {event name} is no longer in effect.
                     </p>
-                </div>
-                <div wicket:id="term2">
-                    <p>
-                        The procedure terminates when receiving {flow name}
-                        from {source, source or source}, including:
-                    </p>
-                    <ul>
-                        <li>EOI,  {description}, {handling}, {classification}</li>
-                    </ul>
-                </div>
-                <div wicket:id="term3">
-                    <p>
-                        The procedure terminates after sending {flow name}
-                        to {target, target or target}. The goals are to provide:
-                    </p>
-                    <ul>
-                        <li>EOI,  {description}, {handling}, {classification}</li>
-                    </ul>
                 </div>
 
                 <div wicket:id="canStart">
@@ -289,6 +305,12 @@
                             <p><em>Supervisor:</em> name, role, contact info</p>
                         </td>
                     </tr>
+                    <!-- Optional -->
+                    <tr>
+                        <td class="terminated" colspan="4">
+                            <em>Note:</em> This task is considered done when this information is received.
+                        </td>
+                    </tr>
 
                     <!-- repeat for all eois -->
                 </table>
@@ -319,6 +341,10 @@
                             <p><em>Supervisor:</em> name, role, contact info</p>
                         </td>
                     </tr>
+                    <!-- Optional -->
+                    <td class="terminated" colspan="5">
+                        <em>Note:</em> This task is considered done when this information is received.
+                    </td>
 
                     <!-- repeat for all eois -->
                 </table>
@@ -356,6 +382,12 @@
                         <!-- Optional -->
                         <td class="note" colspan="5">
                             <em>Note:</em> Do not mention context.
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- Optional -->
+                        <td class="terminated" colspan="5">
+                            <em>Note:</em> This task is considered done when this information is sent.
                         </td>
                     </tr>
                     <!-- repeat for all eois -->
