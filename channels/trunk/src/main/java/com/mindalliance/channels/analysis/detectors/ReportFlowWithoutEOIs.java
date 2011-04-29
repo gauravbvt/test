@@ -64,4 +64,9 @@ public class ReportFlowWithoutEOIs extends AbstractIssueDetector {
     protected String getLabel() {
         return "Report flow shares no elements of information";
     }
+
+    @Override
+    public boolean canBeWaived() {
+        return true;
+    }
 }

@@ -75,6 +75,11 @@ public class TransmissionMediumConverter extends EntityConverter {
             writer.setValue( delegatedTo.getName() );
             writer.endNode();
         }
+        if ( medium.getCast() != null ) {
+            writer.startNode( "cast" );
+            writer.setValue( medium.getCast().name() );
+            writer.endNode();
+        }
     }
 
     /**

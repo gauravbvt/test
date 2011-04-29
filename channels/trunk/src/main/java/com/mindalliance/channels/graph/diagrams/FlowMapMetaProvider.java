@@ -224,7 +224,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                         List<Actor> partActors = getAnalyst().getQueryService().findAllActualActors(
                                 ( (Part) vertex ).resourceSpec() );
                         if ( partActors.size() > 1 ) {
-                            tooltip = sanitize( listActors( partActors ) );
+                            tooltip = "Executed by " + sanitize( listActors( partActors ) );
                         }
                     }
                     list.add( new DOTAttribute( "tooltip", tooltip ) );

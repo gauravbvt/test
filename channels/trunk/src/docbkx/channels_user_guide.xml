@@ -1587,9 +1587,9 @@
             </listitem>
 
             <listitem>
-              <para>Categorize the entity with the names of entity types of the same
-              kind (e.g. The actual place “Headquarters” is categorized as a place
-              type “Building”)</para>
+              <para>Categorize the entity with the names of entity types of
+              the same kind (e.g. The actual place “Headquarters” is
+              categorized as a place type “Building”)</para>
             </listitem>
 
             <listitem>
@@ -1970,8 +1970,8 @@
             </listitem>
 
             <listitem>
-              <para>Replace the type of agent by one of the types it is categorized
-              with</para>
+              <para>Replace the type of agent by one of the types it is
+              categorized with</para>
             </listitem>
 
             <listitem>
@@ -2015,8 +2015,8 @@
           <para role="aspect">Outcomes</para>
 
           <para>The meaning of the entity changes. Now, different agents match
-          the specification of tasks that reference the entity. Agents categorized
-          with the entity get re-assigned to different tasks. As a
+          the specification of tasks that reference the entity. Agents
+          categorized with the entity get re-assigned to different tasks. As a
           consequence, sharing commitments also change.</para>
 
           <para role="aspect">Prerequisites</para>
@@ -2844,10 +2844,10 @@
       <para>Recall that the definitions of Plan elements can reference both
       actual entities (ACME Corporation, Peter Sanchez, Morristown NJ) and
       types of entities (a corporation, a certified emergency technician, a
-      city). An entity is categorized by listing the names of entity
-      types. An entity can only be categorized with entity types of its own kind
-      (Warehouse A can be categorized as a building but not as a senior executive).
-      Both actual entities and entity types can be edited.</para>
+      city). An entity is categorized by listing the names of entity types. An
+      entity can only be categorized with entity types of its own kind
+      (Warehouse A can be categorized as a building but not as a senior
+      executive). Both actual entities and entity types can be edited.</para>
 
       <para>An editable profile of an entity , actual or type, can be opened
       from wherever the entity is referenced by name, be it in the
@@ -5816,8 +5816,8 @@
                     </listitem>
 
                     <listitem>
-                      <para>or change definition of categorized entity to remove
-                      conflict.</para>
+                      <para>or change definition of categorized entity to
+                      remove conflict.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -5837,8 +5837,8 @@
                     </listitem>
 
                     <listitem>
-                      <para>or categorize the medium with another that has a set
-                      transmission mode.</para>
+                      <para>or categorize the medium with another that has a
+                      set transmission mode.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -5960,11 +5960,11 @@
                       <para>Change the definition of the containing place so
                       that it is not relative</para>
                     </listitem>
-                </itemizedlist> <para>or if the plan locale is categorized with a
-                place defined relative to another:</para> <itemizedlist>
+                  </itemizedlist> <para>or if the plan locale is categorized
+                with a place defined relative to another:</para> <itemizedlist>
                     <listitem>
-                      <para>Change the categorization of the place type so that it
-                      is not relative</para>
+                      <para>Change the categorization of the place type so
+                      that it is not relative</para>
                     </listitem>
                   </itemizedlist> <para>or, in either case,</para>
                 <itemizedlist>
@@ -6136,33 +6136,33 @@
 
                 <entry><para>No</para></entry>
               </row>
-            
+
               <row>
-                <entry><para>Agent assigned to user with different name</para></entry>
-                
+                <entry><para>Agent assigned to user with different
+                name</para></entry>
+
                 <entry><para>Medium</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Assign a user of the same name to the agent</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>or assign no user to the agent</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>or make the agent a place holder</para>
-                  </listitem>
- 
-                <listitem>
-                  <para>or make the agent an archetype</para>
-                </listitem>
-                </itemizedlist></entry>
- 
+                    <listitem>
+                      <para>Assign a user of the same name to the agent</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or assign no user to the agent</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or make the agent a place holder</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or make the agent an archetype</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>Yes</para></entry>
-              </row>             
-            
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
@@ -6328,7 +6328,7 @@
                     </listitem>
                   </itemizedlist></entry>
 
-                <entry><para>No</para></entry>
+                <entry><para>Yes</para></entry>
               </row>
 
               <row>
@@ -6903,83 +6903,87 @@
 
                 <entry><para>No</para></entry>
               </row>
-              
+
               <row>
                 <entry><para>Redundancy in segment context</para></entry>
-                
+
                 <entry><para>Low</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Remove redundant pre or post-event from the context</para>
-                  </listitem>
-                 </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Remove redundant pre or post-event from the
+                      context</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>No</para></entry>
               </row>
-              
+
               <row>
-                <entry><para>Segment context may never come to be</para></entry>
-                
+                <entry><para>Segment context may never come to
+                be</para></entry>
+
                 <entry><para>Medium</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Make event in context an incident</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>or have a task cause the event</para>
-                  </listitem>
-                  <listitem>
-                    <para>or make event self-terminating (post-event only)</para>
-                  </listitem>
-                  <listitem>
-                    <para>or make a task terminate the event (post-event only)</para>
-                  </listitem>
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Make event in context an incident</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or have a task cause the event</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or make event self-terminating (post-event
+                      only)</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or make a task terminate the event (post-event
+                      only)</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>No</para></entry>
               </row>
-              
+
               <row>
                 <entry><para>Flow not standard compliant</para></entry>
-                
+
                 <entry><para>Low</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Add expected element of information</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>or remove information standard tag.</para>
-                  </listitem>
-            </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Add expected element of information</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or remove information standard tag.</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>No</para></entry>
               </row>
- 
- 
+
               <row>
-                <entry><para>No user participates as placeholder agent</para></entry>
-                
+                <entry><para>No user participates as placeholder
+                agent</para></entry>
+
                 <entry><para>Medium</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Assign a user to the agent</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>r make the agent not a place holder.</para>
-                  </listitem>
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Assign a user to the agent</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>r make the agent not a place holder.</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>Yes</para></entry>
               </row>
-              
- 
             </tbody>
           </tgroup>
         </informaltable>
@@ -7183,7 +7187,8 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Ease the time constraints the information need</para>
+                      <para>Ease the time constraints the information
+                      need</para>
                     </listitem>
 
                     <listitem>
@@ -7207,7 +7212,8 @@
                     </listitem>
 
                     <listitem>
-                      <para>or reduce the time delays of flows disseminating needed elements</para>
+                      <para>or reduce the time delays of flows disseminating
+                      needed elements</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -7332,52 +7338,54 @@
 
                 <entry><para>Yes</para></entry>
               </row>
- 
+
               <row>
                 <entry><para>Important task is not operational</para></entry>
-                
+
                 <entry><para>Depends on impacted tasks</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Make the task operational</para>
-                  </listitem>
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Make the task operational</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>Yes</para></entry>
               </row>
-              
+
               <row>
-                <entry><para>Important sharing flow is not operational</para></entry>
-                
+                <entry><para>Important sharing flow is not
+                operational</para></entry>
+
                 <entry><para>Depends on impacted tasks</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Make the sgaring flow operational</para>
-                  </listitem>
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Make the sgaring flow operational</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>Yes</para></entry>
               </row>
-              
+
               <row>
                 <entry><para>Ambiguous information sharing</para></entry>
-                
+
                 <entry><para>Depends on impacted tasks</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Require that the information sharing reference the event context</para>
-                  </listitem>
-                  <listitem>
-                    <para>Rename the the sharing flow</para>
-                  </listitem>
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Require that the information sharing reference the
+                      event context</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>Rename the the sharing flow</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>Yes</para></entry>
               </row>
-              
             </tbody>
           </tgroup>
         </informaltable>

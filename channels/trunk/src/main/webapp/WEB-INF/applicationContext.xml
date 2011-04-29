@@ -80,6 +80,7 @@ CONFIGURATION NOTES:
                 <ref bean="chat"/>
                 <ref bean="im"/>
                 <ref bean="radio"/>
+                <ref bean="twoWayRadio"/>
                 <ref bean="television"/>
                 <ref bean="courier"/>
                 <ref bean="mail"/>
@@ -348,6 +349,12 @@ CONFIGURATION NOTES:
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Broadcast"/>
+    </bean>
+    <bean id="twoWayRadio" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Two way radio"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Multicast"/>
     </bean>
     <bean id="television" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Television"/>

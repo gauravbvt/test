@@ -676,7 +676,18 @@ public class Segment extends ModelObject {
      * @return a boolean
      */
     public boolean hasTerminatingRisks() {
-        return CollectionUtils.exists(
+        return !getTerminatingRisks().isEmpty();
+    }
+
+
+    /**
+     * Get all risks that terminate with the segment.
+     *
+     * @return a list of goals
+     */
+    @SuppressWarnings( "unchecked" )
+    public List<Goal>  getTerminatingRisks() {
+        return (List<Goal>)CollectionUtils.select(
                 getGoals(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {

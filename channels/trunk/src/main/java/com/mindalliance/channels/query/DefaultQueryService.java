@@ -1733,6 +1733,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             if ( goal.getLevel().getOrdinal() > max.getOrdinal() )
                 max = goal.getLevel();
         }
+        if ( part.isTerminatesEventPhase() ) {
+            for ( Goal goal : part.getSegment().getTerminatingRisks() ) {
+                if ( goal.getLevel().getOrdinal() > max.getOrdinal() )
+                    max = goal.getLevel();
+            }
+        }
         for ( Flow flow : part.requiredSends() ) {
             if ( flow.getTarget().isPart() ) {
                 Part target = (Part) flow.getTarget();
