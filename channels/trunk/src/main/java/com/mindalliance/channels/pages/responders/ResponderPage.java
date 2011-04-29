@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ElementOfInformation;
+import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.EventPhase;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
@@ -51,6 +52,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -334,31 +336,35 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private static Component newSimpleEoiList( final List<EOI> eois ) {
+    private static Component newSimpleEoiList( List<EOI> eois ) {
         return new WebMarkupContainer( "eois" )
-            .add( new ListView<EOI>( "eoi", eois ) {
-                @Override
-                protected void populateItem( ListItem<EOI> item ) {
-                    EOI eoi = item.getModelObject();
-                    item.add( new Label( "eoi.name", eoi.label ),
-                              new Label( "eoi.desc",
-                                         eoi.eoi.getDescription() ),
-                              new Label( "eoi.handling", eoi.eoi.getSpecialHandling() ),
-                              new Label( "eoi.class", getClassificationString( eoi.eoi ) ) );
-                    if ( item.getIndex() == getViewSize() - 1 )
-                        item.add( new AttributeAppender( "class",
-                                                         true,
-                                                         new Model<String>( "last" ),
-                                                         " " ) );
-                }
-            } )
+            .add( newEoiList( eois ) )
             .setVisible( !eois.isEmpty() );
     }
 
+    private static ListView<EOI> newEoiList( final List<EOI> eois ) {
+        return new ListView<EOI>( "eoi", eois ) {
+            @Override
+            protected void populateItem( ListItem<EOI> item ) {
+                EOI eoi = item.getModelObject();
+                item.add( new Label( "eoi.name", eoi.label ),
+                          new Label( "eoi.desc",
+                                     eoi.eoi.getDescription() ),
+                          new Label( "eoi.handling", eoi.eoi.getSpecialHandling() ),
+                          new Label( "eoi.class", getClassificationString( eoi.eoi
+                                                                               .getClassifications() ) ) );
+                if ( item.getIndex() == getViewSize() - 1 )
+                    item.add( new AttributeAppender( "class",
+                                                     true,
+                                                     new Model<String>( "last" ),
+                                                     " " ) );
+            }
+        };
+    }
+
     //-----------------------------------
-    private static String getClassificationString( ElementOfInformation eoi ) {
+    private static String getClassificationString( List<Classification> classifications ) {
         StringWriter w = new StringWriter();
-        List<Classification> classifications = eoi.getClassifications();
         for ( int i = 0; i < classifications.size(); i++ ) {
             Classification classification = classifications.get( i );
             w.append( classification.getName() );
@@ -394,12 +400,91 @@ public class ResponderPage extends WebPage {
         return result;
     }
 
+    private List<EOI> findEois( Flow flow ) {
+        Set<EOI> eois = new HashSet<EOI>();
+        Map<String, EOI> seen = new HashMap<String, EOI>();
+
+        for ( ElementOfInformation e : flow.getEois() ) {
+            EOI eoi = new EOI( e, flow, null );
+            EOI old = seen.get( eoi.label );
+            if ( old == null ) {
+                seen.put( eoi.label, eoi );
+                eois.add( eoi );
+            }
+        }
+
+        List<EOI> result = new ArrayList<EOI>( eois );
+        Collections.sort( result );
+        return result;
+    }
+
     //-----------------------------------
-    private Component newCriticals( Part part, PlanService planService ) {
+    private Component newCriticals( Part part, final PlanService planService ) {
         List<Flow> flows = part.getEssentialFlows( false, planService );
 
         return new WebMarkupContainer( "criticalDiv" )
-           .setVisible( !flows.isEmpty() );
+            .add(
+                new ListView<Flow>( "perFlow", flows ) {
+                    @Override
+                    protected void populateItem( ListItem<Flow> item ) {
+                        Flow flow = item.getModelObject();
+                        List<Employment> sources = getEmployments(
+                            planService.getAssignments().with( flow.getSource() ) );
+
+                        item.add(
+                            new Label( "flowName2", flow.getLabel() ),
+                            new WebMarkupContainer( "eoisRow" )
+                                .add( newEoiList( findEois( flow ) ) )
+                                .setVisible( !flow.getEois().isEmpty() ),
+
+                            new ListView<Employment>( "perFlowContact", sources ) {
+                                @Override
+                                protected void populateItem( ListItem<Employment> sourceItem ) {
+                                    Employment employment = sourceItem.getModelObject();
+                                    Actor actor = employment.getActor();
+                                    sourceItem.add( new Label( "contact.name", actor.getName() ),
+                                                    new Label( "contact.title",
+                                                               employment.getJob().getTitle() ),
+                                                    new Label( "contact.classification",
+                                                               getClassificationString(
+                                                                   actor.getClassifications() ) ),
+                                                    new Label( "contact.organization",
+                                                               employment.getOrganization()
+                                                                   .toString() )
+
+                                    );
+                                }
+                            }
+                                .setVisible( flow.isAskedFor() )
+                                .setRenderBodyOnly( true ),
+
+                            new WebMarkupContainer( "flowEnding" )
+                                .setVisible( flow.isTerminatingToTarget() )
+
+                        );
+                    }
+                }
+                    .setRenderBodyOnly( true )
+
+
+            )
+            .setVisible( !flows.isEmpty() );
+    }
+
+    private static List<Employment> getEmployments( Assignments assignments ) {
+        Set<Employment> employments = new HashSet<Employment>();
+        for ( Assignment assignment : assignments.getAssignments() )
+            employments.add( assignment.getEmployment() );
+
+        List<Employment> result = new ArrayList<Employment>( employments );
+        Collections.sort( result, new Comparator<Employment>() {
+            @Override
+            public int compare( Employment o1, Employment o2 ) {
+                return o1.getActor().getNormalizedName().compareToIgnoreCase(
+                            o2.getActor().getNormalizedName() );
+            }
+        } );
+        return result;
     }
 
     //-----------------------------------

@@ -286,33 +286,52 @@
                     where to obtain it:
                 </p>
                 <table border="1">
-                    <tr>
-                        <td class="eoi" colspan="4">
-                            EOI,  {description}, {handling}, {classification}
-                            {Provided|Available upon request}{immediately|within …}
-                        </td>
-                    </tr>
-                    <!-- one of more of the following 2 rows -->
-                    <tr class="contact">
-                        <td>{agent name}</td>
-                        <td>{title}</td>
-                        <td>{organization}</td>
-                        <td>{classification}</td>
-                    </tr>
-                    <tr>
-                        <td class="infos" colspan="4">
-                            <p>{contact infos}</p>
-                            <p><em>Supervisor:</em> name, role, contact info</p>
-                        </td>
-                    </tr>
-                    <!-- Optional -->
-                    <tr>
-                        <td class="terminated" colspan="4">
-                            <em>Note:</em> This task is considered done when this information is received.
-                        </td>
-                    </tr>
-
-                    <!-- repeat for all eois -->
+                    <span wicket:id="perFlow">
+                        <tr>
+                            <td colspan="4"><span wicket:id="flowName2">{flow name}</span> (<span>{Provided|Available upon request}{immediately|within …})</span></td>
+                        </tr>
+                        <tr wicket:id="eoisRow" >
+                            <td class="eoi" colspan="4">
+                                <table class="eois">
+                                    <thead>
+                                        <th>Information</th>
+                                        <th>Description</th>
+                                        <th>Handling</th>
+                                        <th>Classification</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr wicket:id="eoi">
+                                            <td wicket:id="eoi.name">{EOI}</td>
+                                            <td wicket:id="eoi.desc">{description}</td>
+                                            <td wicket:id="eoi.handling">{handling}</td>
+                                            <td wicket:id="eoi.class">{classification}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <span wicket:id="perFlowContact">
+                            <!-- one of more of the following 2 rows -->
+                            <tr class="contact">
+                                <td wicket:id="contact.name">{agent name}</td>
+                                <td wicket:id="contact.title">{title}</td>
+                                <td wicket:id="contact.organization">{organization}</td>
+                                <td wicket:id="contact.classification">{classification}</td>
+                            </tr>
+                            <tr>
+                                <td class="infos" colspan="4">
+                                    <p>{contact infos}</p>
+                                    <p><em>Supervisor:</em> name, role, contact info</p>
+                                </td>
+                            </tr>
+                        </span>
+                        <!-- Optional -->
+                        <tr wicket:id="flowEnding">
+                            <td class="terminated" colspan="4">
+                                <em>Note:</em> This task is considered done when this information is received.
+                            </td>
+                        </tr>
+                    </span>
                 </table>
             </div>
 
