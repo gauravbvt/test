@@ -47,10 +47,16 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         classificationSystemsContainer = new WebMarkupContainer( "classification-systems-container" );
         classificationSystemsContainer.setOutputMarkupId( true );
-        add( classificationSystemsContainer );
+        addOrReplace( classificationSystemsContainer );
         addClassificationSystemsList();
         addNewClassificationSystem();
         addClassificationSystemPanel( null );

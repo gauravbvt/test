@@ -175,6 +175,12 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     protected void init() {
         addIndexChoice();
         addByNameOrTags();
@@ -188,6 +194,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 "indexed",
                 new PropertyModel<String>( this, "indexedOn" ),
                 getIndexingChoices() );
+        indexedOnChoices.setOutputMarkupId( true );
         indexedOnChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 indices = null;
@@ -204,7 +211,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 target.addComponent( indicesContainer );
             }
         } );
-        add( indexedOnChoices );
+        addOrReplace( indexedOnChoices );
     }
 
     private void addNameRangePanel() {
@@ -224,6 +231,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 "filter",
                 new PropertyModel<String>( this, "filter" )
         );
+        filterField.setOutputMarkupId( true );
         filterField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addNameRangePanel();
@@ -232,11 +240,12 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 target.addComponent( indicesContainer );
             }
         } );
-        add( filterField );
+        addOrReplace( filterField );
     }
 
     private void addByNameOrTags() {
         byNameCheckBox = new CheckBox( "name", new PropertyModel<Boolean>( this, "filteredByName" ) );
+        byNameCheckBox.setOutputMarkupId( true );
         byNameCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -248,8 +257,9 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 target.addComponent( byTagsCheckBox );
             }
         } );
-        add( byNameCheckBox );
+        addOrReplace( byNameCheckBox );
         byTagsCheckBox = new CheckBox( "tags", new PropertyModel<Boolean>( this, "filteredByTags" ) );
+        byTagsCheckBox.setOutputMarkupId( true );
         byTagsCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -261,7 +271,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 target.addComponent( byNameCheckBox );
             }
         } );
-        add( byTagsCheckBox );
+        addOrReplace( byTagsCheckBox );
     }
 
     private void addIndices() {

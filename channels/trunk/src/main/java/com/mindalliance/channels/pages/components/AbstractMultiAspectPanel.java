@@ -304,9 +304,25 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
                 new AttributeModifier( "title", true, new Model<String>( titleString ) ) );   // NON-NLS
     }
 
+    public void showAspect( String aspect, Change change, AjaxRequestTarget target ) {
+        if ( change.isCollapsed() ) {
+            redisplay( target );
+        } else {
+            showAspect( aspect );
+        }
+        target.addComponent( aspectPanel );
+    }
+
+    public void redisplay( AjaxRequestTarget target ) {
+        if ( aspectPanel instanceof AbstractUpdatablePanel ) {
+            ( (AbstractUpdatablePanel)aspectPanel ).redisplay( target );
+        }
+    }
+
+
     private void showAspect( String aspect ) {
-        releaseAspectShown();
-        aspectPanel = makeAspectPanel( aspect == null ? getDefaultAspect() : aspect );
+        String aspectToShow = aspect == null ? getDefaultAspect() : aspect;
+        aspectPanel = makeAspectPanel( aspectToShow );
         aspectPanel.setOutputMarkupId( true );
         moContainer.addOrReplace( aspectPanel );
     }
@@ -445,9 +461,8 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         refreshMenus( target );
         adjustComponents();
         target.addComponent( banner );
-        if ( change.isModified() || change.isSelected() ) {
-            showAspect( aspect );
-            target.addComponent( aspectPanel );
+        if ( change.isDisplay() || change.isModified() || change.isSelected() ) {
+            showAspect( aspect, change, target );
         }
     }
 

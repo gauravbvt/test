@@ -107,6 +107,12 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         addSegmentChoice();
         addSummarizeChoice();
@@ -232,6 +238,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
               new PropertyModel<String>( this, "summarizeChoice"),
               Arrays.asList( SUMMARY_CHOICES )
       );
+        summarizeChoice.setOutputMarkupId( true );
         summarizeChoice.add(new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -239,7 +246,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                 target.addComponent( procedureMapDiagramPanel );
             }
         });
-        add( summarizeChoice );
+        addOrReplace( summarizeChoice );
     }
 
     private void addDisplayButton() {
@@ -253,7 +260,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         });
         displayButton.setOutputMarkupId( true );
         displayButton.setEnabled( isFocusSelected() );
-        add( displayButton );
+        addOrReplace( displayButton );
 
     }
 

@@ -105,7 +105,7 @@ public class Change implements Serializable {
         /**
          * Change failed because refresh needed.
          */
-        NeedsRefresh
+        NeedsRefresh;
 
     }
 

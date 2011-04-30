@@ -74,6 +74,12 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         addIssueTypeChoice();
         addIncluded();
@@ -92,7 +98,8 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                 target.addComponent( issuesTable );
             }
         } );
-        add( issueTypeChoice );
+        issueTypeChoice.setOutputMarkupId( true );
+        addOrReplace( issueTypeChoice );
     }
 
     private List<String> getIssueTypeChoices() {

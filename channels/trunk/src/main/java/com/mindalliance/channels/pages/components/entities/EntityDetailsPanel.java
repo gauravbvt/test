@@ -88,7 +88,8 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     private void init() {
         ModelEntity mo = getEntity();
         moDetailsDiv = new WebMarkupContainer( "mo-details" );
-        add( moDetailsDiv );
+        moDetailsDiv.setOutputMarkupId( true );
+        addOrReplace( moDetailsDiv );
         addImage();
         addNameField();
         addDescriptionField();

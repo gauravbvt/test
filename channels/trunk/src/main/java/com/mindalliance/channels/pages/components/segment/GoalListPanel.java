@@ -92,18 +92,24 @@ public class GoalListPanel extends AbstractCommandablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         goalsContainer = new WebMarkupContainer( "goalsDiv" );
         goalsContainer.setOutputMarkupId( true );
-        add( goalsContainer );
+        addOrReplace( goalsContainer );
         goalsContainer.add( makeAtEnd() );
         goalsContainer.add( makeGoalsTable() );
         moreContainer = new WebMarkupContainer( "moreDiv" );
         moreContainer.setOutputMarkupId( true );
-        add( moreContainer );
+        addOrReplace( moreContainer );
         initLabel();
         addDescriptionField();
-        moreContainer.add( makeTasksTable() );
+        moreContainer.addOrReplace( makeTasksTable() );
         makeVisible( moreContainer, false );
     }
 
@@ -319,20 +325,23 @@ public class GoalListPanel extends AbstractCommandablePanel {
         } );
         descriptionField.setOutputMarkupId( true );
         descriptionField.setEnabled( isLockedByUser( getSegment() ) );
-        moreContainer.add( descriptionField );
+        moreContainer.addOrReplace( descriptionField );
     }
 
     private Component makeTasksTable() {
+        Component tasksTable;
         if ( selectedGoal == null ) {
-            return new Label( "tasks", new Model<String>( "No goal selected" ) );
+            tasksTable = new Label( "tasks", new Model<String>( "No goal selected" ) );
         } else {
-            return new TasksTable(
+            tasksTable = new TasksTable(
                     "tasks",
                     new Model<Segment>( getSegment() ),
                     MAX_TASK_ROWS,
                     selectedGoal.getGoal()
             );
         }
+        tasksTable.setOutputMarkupId( true );
+        return tasksTable;
     }
 
     private List<Level> getCandidateLevels() {

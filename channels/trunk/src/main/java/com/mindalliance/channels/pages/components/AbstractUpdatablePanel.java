@@ -425,4 +425,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return label;
     }
 
+    public void redisplay( AjaxRequestTarget target ) {
+        target.addComponent( this );
+    }
 }
