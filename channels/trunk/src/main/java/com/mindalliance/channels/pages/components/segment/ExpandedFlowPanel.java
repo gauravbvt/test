@@ -199,6 +199,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     private boolean restricted;
     /**
+     * Whether flow was updated.
+     */
+    private boolean flowUpdated = false;
+    /**
      * EOIS aspect.
      */
     public static final String EOIS = "eois";
@@ -1355,15 +1359,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
-    public void changed( Change change ) {
-        // ignore selection of other node - don't propagate selection
-        if ( !( change.isSelected()
-                && change.isForInstanceOf( Node.class )
-                && change.isForProperty( "other" ) ) ) {
-            super.changed( change );
-        }
-    }
-
     /**
      * Get label for flow's intent.
      *
@@ -1492,11 +1487,23 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
+    public void changed( Change change ) {
+        // ignore selection of other node - don't propagate selection
+        if ( !( change.isSelected()
+                && change.isForInstanceOf( Node.class )
+                && change.isForProperty( "other" ) ) ) {
+            if ( change.isUpdated() && change.isForInstanceOf( Flow.class ) ) {
+                flowUpdated = true;
+            }
+            super.changed( change );
+        }
+    }
 
     /**
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        change.addQualifier( "updated", flowUpdated );
         if ( change.isSelected()
                 && change.isForInstanceOf( Node.class )
                 && change.isForProperty( "other" ) ) {

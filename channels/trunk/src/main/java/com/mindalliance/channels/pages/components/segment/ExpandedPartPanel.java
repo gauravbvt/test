@@ -196,6 +196,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Prohibited checkbox.
      */
     private CheckBox prohibitedCheckBox;
+    /**
+     * Whether the part was updated.
+     */
+    private boolean partUpdated = false;
 
     //====================================
     public ExpandedPartPanel( String id, IModel<Part> model, Set<Long> expansions ) {
@@ -1037,6 +1041,13 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         refresh( target );
     }
 
+    public void changed( Change change ) {
+        if ( change.isUpdated() && change.isForInstanceOf( Part.class ) ) {
+            partUpdated = true;
+        }
+        super.changed( change );
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -1066,6 +1077,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 target.addComponent( partIssuesPanel );
             }
         }
+        change.addQualifier( "updated", partUpdated );
         super.updateWith( target, change, updated );
     }
 

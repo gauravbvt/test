@@ -345,9 +345,12 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings( "unchecked" )
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         resizeSocialPanel( target, change );
         boolean stopUpdates = false;
+        boolean partOrFlowUpdated = change.hasQualifier( "updated" )
+                && ( (Boolean) change.getQualifier( "updated" ) ) == true;
         if ( !change.isNone() ) {
             Identifiable identifiable = change.getSubject( getQueryService() );
             if ( identifiable == getPart() ) {
@@ -376,11 +379,11 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             if ( identifiable instanceof SegmentObject
                     && ( change.isExpanded() || change.isCollapsed() ) ) {
                 resizePartPanels( target );
-                if ( change.isCollapsed() ) {
+                if ( change.isCollapsed() && partOrFlowUpdated ) {
                     addFlowDiagram();
                     target.addComponent( flowMapDiagramPanel );
                 }
-                stopUpdates = change.isDisplay();
+                stopUpdates = change.isDisplay() && !partOrFlowUpdated;
             }
             if ( !change.isExists() )
                 refreshMenus( target );
