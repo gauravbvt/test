@@ -126,15 +126,15 @@
                     <div wicket:id="routineTask">
                         <p>
                             This is a routine
-                            {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
-                            procedure {, recurrence information}. {It is currently operational.}
+                            <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
+                            procedure <span wicket:id="taskRecur">{, recurrence information}</span>. <span wicket:id="operational">It is currently operational.</span>
                         </p>
                     </div>
                     <div wicket:id="notifTask">
                         <p>
-                            This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
+                            This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
                             procedure is performed when receiving {flow name} from {source, source or source}.
-                            {It is currently operational.}
+                             <span wicket:id="operational">It is currently operational.</span>
                         </p>
                         <div wicket:id="eois">
                             <p>
@@ -283,46 +283,41 @@
                 <h3>Critical information</h3>
                 <p>
                     The following table list information critical to this procedure and
-                    where to obtain it:
+                    its sources:
                 </p>
                 <table border="1">
                     <span wicket:id="perFlow">
                         <tr>
-                            <td colspan="4"><span wicket:id="flowName2">{flow name}</span> (<span>{Provided|Available upon request}{immediately|within …})</span></td>
+                            <th align="left" colspan="3"><span wicket:id="flowName2">{flow name}</span></th>
+                            <th><span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within …}</span></th>
                         </tr>
-                        <tr wicket:id="eoisRow" >
-                            <td class="eoi" colspan="4">
-                                <table class="eois">
-                                    <thead>
-                                        <th>Information</th>
-                                        <th>Description</th>
-                                        <th>Handling</th>
-                                        <th>Classification</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr wicket:id="eoi">
-                                            <td wicket:id="eoi.name">{EOI}</td>
-                                            <td wicket:id="eoi.desc">{description}</td>
-                                            <td wicket:id="eoi.handling">{handling}</td>
-                                            <td wicket:id="eoi.class">{classification}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
+                        <span wicket:id="eoisRow">
+                            <tr class="eoiHeads">
+                                <th>Information</th>
+                                <th>Description</th>
+                                <th>Handling</th>
+                                <th>Classification</th>
+                            </tr>
+                            <tr class="eoi" wicket:id="eoi">
+                                <td wicket:id="eoi.name">{EOI}</td>
+                                <td wicket:id="eoi.desc">{description}</td>
+                                <td wicket:id="eoi.handling">{handling}</td>
+                                <td wicket:id="eoi.class">{classification}</td>
+                            </tr>
+                        </span>
                         <span wicket:id="perFlowContact">
-                            <!-- one of more of the following 2 rows -->
-                            <tr class="contact">
+                            <!-- zero of more of the following 2 rows -->
+                            <tr wicket:id="contact" valign="top" class="contact">
                                 <td wicket:id="contact.name">{agent name}</td>
-                                <td wicket:id="contact.title">{title}</td>
-                                <td wicket:id="contact.organization">{organization}</td>
+                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td>{contact infos}</td>
                                 <td wicket:id="contact.classification">{classification}</td>
                             </tr>
-                            <tr>
-                                <td class="infos" colspan="4">
-                                    <p>{contact infos}</p>
-                                    <p><em>Supervisor:</em> name, role, contact info</p>
-                                </td>
+                            <tr wicket:id="supervisor" valign="top" class="contact supervisor">
+                                <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
+                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td>{contact infos}</td>
+                                <td wicket:id="contact.classification">{classification}</td>
                             </tr>
                         </span>
                         <!-- Optional -->
@@ -341,31 +336,47 @@
                     The following sources may provide pertinent information:
                 </p>
                 <table border="1">
-                    <tr>
-                        <td class="eoi" colspan="4">
-                            EOI,  {description}, {handling}, {classification}
-                            {Provided|Available upon request}{immediately|within …}
-                        </td>
-                    </tr>
-                    <!-- one of more of the following 2 rows -->
-                    <tr class="contact">
-                        <td>{agent name}</td>
-                        <td>{title}</td>
-                        <td>{organization}</td>
-                        <td>{classification}</td>
-                    </tr>
-                    <tr>
-                        <td class="infos" colspan="4">
-                            <p>{contact infos}</p>
-                            <p><em>Supervisor:</em> name, role, contact info</p>
-                        </td>
-                    </tr>
-                    <!-- Optional -->
-                    <td class="terminated" colspan="5">
-                        <em>Note:</em> This task is considered done when this information is received.
-                    </td>
-
-                    <!-- repeat for all eois -->
+                    <span wicket:id="perFlow">
+                        <tr>
+                            <th align="left" colspan="3"><span wicket:id="flowName2">{flow name}</span></th>
+                            <th>(<span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within …}</span>)</th>
+                        </tr>
+                        <span wicket:id="eoisRow">
+                            <tr class="eoiHeads">
+                                <th>Information</th>
+                                <th>Description</th>
+                                <th>Handling</th>
+                                <th>Classification</th>
+                            </tr>
+                            <tr class="eoi" wicket:id="eoi">
+                                <td wicket:id="eoi.name">{EOI}</td>
+                                <td wicket:id="eoi.desc">{description}</td>
+                                <td wicket:id="eoi.handling">{handling}</td>
+                                <td wicket:id="eoi.class">{classification}</td>
+                            </tr>
+                        </span>
+                        <span wicket:id="perFlowContact">
+                            <!-- zero of more of the following 2 rows -->
+                            <tr wicket:id="contact" valign="top" class="contact">
+                                <td wicket:id="contact.name">{agent name}</td>
+                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td>{contact infos}</td>
+                                <td wicket:id="contact.classification">{classification}</td>
+                            </tr>
+                            <tr wicket:id="supervisor" valign="top" class="contact supervisor">
+                                <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
+                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td>{contact infos}</td>
+                                <td wicket:id="contact.classification">{classification}</td>
+                            </tr>
+                        </span>
+                        <!-- Optional -->
+                        <tr wicket:id="flowEnding">
+                            <td class="terminated" colspan="4">
+                                <em>Note:</em> This task is considered done when this information is received.
+                            </td>
+                        </tr>
+                    </span>
                 </table>
             </div>
 

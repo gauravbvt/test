@@ -30,6 +30,7 @@ import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RedirectToUrlException;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -210,16 +211,38 @@ public class ResponderPage extends WebPage {
                 List<Part> subtasks = myAssignments.from( a ).getParts();
 
                 List<EOI> eois = findStartingEois( part );
+                String category = part.getCategory() == null ? ""
+                                                 : part.getCategory().getLabel().toLowerCase();
                 item.add(
                     new WebMarkupContainer( "taskAnchor" )
-                          .add( new Label( "taskName", part.getTask() ) )
-                          .add( new AttributeModifier( "name", true, new Model<String>(
+                        .add( new Label( "taskName", part.getTask() ) )
+                        .add( new AttributeModifier( "name", true, new Model<String>(
                               "t_" + part.getId() ) ) ),
                     new Label( "taskSummary", getTaskSummary( a ) ),
                     new WebMarkupContainer( "routineTask" )
-                       .setVisible( Assignments.isImmediate( part, planService ) ),
+                        .add(
+                            new Label( "taskType", category )
+                                .setRenderBodyOnly( true ),
+                            new Label( "taskRecur", part.isRepeating() ? part.getRepeatsEvery().toString()
+                                                                       : "" )
+                                .setVisible( part.isRepeating() ),
+                            new WebMarkupContainer( "operational" )
+                                .setRenderBodyOnly( true )
+                                .setVisible( part.isEffectivelyOperational() )
+                        )
+                        .setVisible( Assignments.isImmediate( part, planService ) ),
                     new WebMarkupContainer( "notifTask" )
-                        .add( newSimpleEoiList( eois ) )
+                        .add(
+                            new Label( "taskType", category )
+                                .setRenderBodyOnly( true ),
+                            new Label( "taskRecur", part.isRepeating() ? part.getRepeatsEvery().toString()
+                                                                       : "" )
+                                .setVisible( part.isRepeating() ),
+                            new WebMarkupContainer( "operational" )
+                                .setRenderBodyOnly( true )
+                                .setVisible( part.isEffectivelyOperational() ),
+                            newSimpleEoiList( eois )
+                        )
                         .setVisible( Assignments.isNotification( part, planService ) ),
                     new WebMarkupContainer( "reqTask" )
                        .setVisible( Assignments.isRequest( part ) ),
@@ -259,8 +282,7 @@ public class ResponderPage extends WebPage {
                        .setVisible( part.isAsTeam() ),
 
                     newCriticals( part, planService ),
-                    new WebMarkupContainer( "inputDiv" )
-                       .setVisible( !getInputDiv( part, planService ).isEmpty() ),
+                    newInputs( part, planService ),
                     new WebMarkupContainer( "distribDiv" )
                        .setVisible( !getDistribDiv( part ).isEmpty() ),
                     new WebMarkupContainer( "taskRfiDiv" )
@@ -419,10 +441,19 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private Component newCriticals( Part part, final PlanService planService ) {
-        List<Flow> flows = part.getEssentialFlows( false, planService );
+    private Component newCriticals( Part part, PlanService planService ) {
+        return newIncomingFlows( "criticalDiv",
+                                 part.getEssentialFlows( false, planService ),
+                                 planService );
+    }
 
-        return new WebMarkupContainer( "criticalDiv" )
+    private Component newInputs( Part part, PlanService planService ) {
+        return newIncomingFlows( "inputDiv", getInputDiv( part, planService ), planService );
+    }
+
+    private Component newIncomingFlows(
+        String id, final List<Flow> flows, final PlanService planService ) {
+        return new WebMarkupContainer( id )
             .add(
                 new ListView<Flow>( "perFlow", flows ) {
                     @Override
@@ -433,26 +464,40 @@ public class ResponderPage extends WebPage {
 
                         item.add(
                             new Label( "flowName2", flow.getLabel() ),
+                            new Label( "flowTiming", getTiming( flow ) ),
                             new WebMarkupContainer( "eoisRow" )
                                 .add( newEoiList( findEois( flow ) ) )
+                                .setRenderBodyOnly( true )
                                 .setVisible( !flow.getEois().isEmpty() ),
 
                             new ListView<Employment>( "perFlowContact", sources ) {
                                 @Override
                                 protected void populateItem( ListItem<Employment> sourceItem ) {
                                     Employment employment = sourceItem.getModelObject();
+                                    String title = employment.getJob().getTitle();
                                     Actor actor = employment.getActor();
-                                    sourceItem.add( new Label( "contact.name", actor.getName() ),
-                                                    new Label( "contact.title",
-                                                               employment.getJob().getTitle() ),
-                                                    new Label( "contact.classification",
-                                                               getClassificationString(
-                                                                   actor.getClassifications() ) ),
-                                                    new Label( "contact.organization",
-                                                               employment.getOrganization()
-                                                                   .toString() )
-
-                                    );
+                                    Organization organization = employment.getOrganization();
+                                    MarkupContainer contact = new WebMarkupContainer( "contact" )
+                                        .add( new Label( "contact.name", actor.getName() ),
+                                              new Label( "contact.title",
+                                                         title == null ? "" : ", " + title ),
+                                              new Label( "contact.classification",
+                                                         getClassificationString( actor
+                                                                                      .getClassifications() ) ),
+                                              new Label( "contact.organization",
+                                                         organization.toString() ) );
+                                    Actor sup = employment.getSupervisor();
+                                    Component supervisor = new WebMarkupContainer( "supervisor" )
+                                        .add( new Label( "contact.name", sup == null ? "" : sup.getName() ),
+                                              new Label( "contact.title",
+                                                         title == null ? "" : ", " + title ),
+                                              new Label( "contact.classification",
+                                                         sup == null ? "" : getClassificationString(
+                                                             sup.getClassifications() ) ),
+                                              new Label( "contact.organization",
+                                                         organization.toString() ) )
+                                        .setVisible( sup != null );
+                                    sourceItem.add( contact, supervisor );
                                 }
                             }
                                 .setVisible( flow.isAskedFor() )
@@ -469,6 +514,16 @@ public class ResponderPage extends WebPage {
 
             )
             .setVisible( !flows.isEmpty() );
+    }
+
+    private static String getTiming( Flow flow ) {
+        StringWriter w = new StringWriter();
+        w.append( flow.isAskedFor() ? "Available upon request"
+                                    : "Provided" );
+
+        w.append( flow.getMaxDelay().getSeconds() == 0L ? "" : ", in at most " + flow.getMaxDelay().toString() );
+
+        return w.toString();
     }
 
     private static List<Employment> getEmployments( Assignments assignments ) {
@@ -495,7 +550,7 @@ public class ResponderPage extends WebPage {
         Iterator<Flow> flows = part.flows();
         while ( flows.hasNext() ) {
             Flow next = flows.next();
-            if ( !essentials.contains( next ) )
+            if ( !essentials.contains( next ) && !next.isTriggeringToTarget() )
                 others.add( next );
         }
 
