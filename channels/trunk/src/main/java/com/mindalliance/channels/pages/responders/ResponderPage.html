@@ -5,31 +5,24 @@
       lang="en">
 <head>
     <title>Channels - Responder Report</title>
-    <link rel="stylesheet" href="../css/playbook.css" type="text/css" title="Playbook">
+	<link rel="stylesheet" href="../css/responder-report/responder-page.css" type="text/css" title="Playbook">
     <link rel="stylesheet" href="../css/iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
 </head>
 <body>
-<div id="top">
+<div id="container">
     <div id="header">
-        <div>
-            <div id="nav">
-                <ul>
-                    <li><a href="logout">Logout <span wicket:id="userName">user</span></a></li>
-                </ul>
-                <hr>
-            </div>
-            <h1>Channels Responder Report</h1>
-            <p class="subtitle">Procedures for <span wicket:id="personName">person's name</span></p>
-        </div>
+		<img src="../images/responder-report/channels-logo-small.png" width="19" height="22" alt="Channels Logo" />
+		<h1>Channels - Responder Report</h1>
+		<a href="logout">Logout <span wicket:id="userName">user</span></a>
     </div>
 
     <div id="contents">
-        <div>
-            <p wicket:id="planDescription" class="description">Plan description</p>
+        <div class="title-desc">
+            <h1 class="subtitle">Procedures for <span wicket:id="personName">person's name</span></h1>
+            <h2 wicket:id="planDescription" class="description">Plan description</h2>
         </div>
         <div id="about">
             <h2>About me</h2>
-
             <ul>
                 <li>{Roles, organizations, jurisdictions}</li>
                 <li>{Contact info}</li>

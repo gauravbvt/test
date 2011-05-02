@@ -1,0 +1,160 @@
+/**
+ * Channels Reponder Report - Styling
+ * Copyright (C) 2010 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: romit
+ * Date: Apr 26, 2011
+ * Time: 11:06:39 AM
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #0143b4;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+body {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 13px;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+div#container {
+    width: 1000px;
+    margin: 0 auto;
+    text-align: left;
+    padding: 0;
+    border: 1px solid #999999;
+}
+
+
+/* ----- Header ----- */
+
+div#header {
+    width: 1000px;
+    height: 30px;
+    background: #c3d9ff;
+    border-bottom: 1px solid #999999;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+
+div#header img {
+    float: left;
+	border: 0;
+	padding: 4px 0 0 5px;
+}
+
+div#header h1 {
+    color: #333333;
+    display: block;
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 7px 0 0 7px;
+}
+
+div#header a {
+    background: url('../../images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin: 5px 5px 0 0;
+    text-transform: capitalize;
+    outline: none;
+	float:right;
+}
+
+div#header a:hover {
+    color: #333333;
+}
+
+
+/* ----- Content ----- */
+
+div#contents {
+	padding:30px;
+	width:940px;
+}
+
+p {
+	padding:5px 0 5px 0;
+}
+
+ul {
+	padding:5px 0 5px 25px;
+}
+
+li {
+	padding:0 0 7px 0;
+}
+
+h1.subtitle {
+	font-size: 28px;
+	padding: 30px 0 10px;
+	text-align: center;
+}
+
+h2.description {
+	font-size: 20px;
+	font-weight: normal;
+	line-height: 150%;
+	padding: 0 100px 40px;
+	text-align: center;
+}
+
+div#about h2,
+div.phase h2,
+div.task h2 {
+    background: #CCCCCC;
+    border-bottom: 2px solid #999999;
+    border-top: 2px solid #999999;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0 10px;
+    padding: 5px 0 5px 10px;
+}
+
+div.phase h2 a,
+div.task h2 a {
+	border:none;
+	color:#333333;
+}
+
+div.phase h3,
+div.task h3 {
+	background: #E8E8E8;
+	border-bottom: 1px solid #999999;
+	margin: 10px 0 7px 0;
+	padding: 6px 0 3px 10px;
+	text-transform:uppercase;
+	font-size:13px;
+}
+
+table {
+	border-collapse:collapse;
+	border-color:#999999;
+    margin: 10px 0;
+    width: 100%;
+}
+
+table,
+th,
+td {
+	border:1px solid #999999;
+}
+
+table td,
+table th { 
+	padding:10px; 
+}
