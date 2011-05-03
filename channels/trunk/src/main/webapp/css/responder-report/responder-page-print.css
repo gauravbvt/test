@@ -10,6 +10,7 @@
 
 div#container {
 	border:none;
+	background:#ffffff;
 }
 
 div#header {
@@ -20,7 +21,9 @@ div#header a {
 	display:none;
 }
 
+/*
 div.phase,
 div.task {
 	page-break-after:always;
 }
+*/

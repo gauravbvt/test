@@ -19,7 +19,7 @@ a {
 }
 
 body {
-    font-family: Georgia, "Times New Roman", Times, serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
     color: #333333;
     margin: 0;
@@ -33,6 +33,7 @@ div#container {
     text-align: left;
     padding: 0;
     border: 1px solid #999999;
+	background:#f6f6f6;
 }
 
 
@@ -43,7 +44,6 @@ div#header {
     height: 30px;
     background: #c3d9ff;
     border-bottom: 1px solid #999999;
-	font-family:Arial, Helvetica, sans-serif;
 	font-size:12px;
 }
 
@@ -103,6 +103,7 @@ h1.subtitle {
 	font-size: 28px;
 	padding: 30px 0 10px;
 	text-align: center;
+	font-family:Georgia, "Times New Roman", Times, serif;
 }
 
 h2.description {
@@ -111,6 +112,7 @@ h2.description {
 	line-height: 150%;
 	padding: 0 100px 40px;
 	text-align: center;
+	font-family:Georgia, "Times New Roman", Times, serif;
 }
 
 div#about h2,
@@ -123,50 +125,73 @@ div.task h2 {
     font-weight: bold;
     margin: 20px 0 10px;
     padding: 5px 0 5px 10px;
+	font-family:Georgia, "Times New Roman", Times, serif;
 }
 
 div.phase h2 a,
 div.task h2 a {
 	border:none;
 	color:#333333;
+	font-family:Georgia, "Times New Roman", Times, serif;
 }
 
 div.phase h3,
 div.task h3 {
-	background: #E8E8E8;
-	border-bottom: 1px solid #999999;
-	margin: 10px 0 7px 0;
-	padding: 6px 0 3px 10px;
-	text-transform:uppercase;
-	font-size:13px;
+    background: #E8E8E8;
+    border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
+    font-size: 13px;
+    margin: 15px 0 7px;
+    padding: 4px 0 3px 10px;
+    text-transform: uppercase;
 }
 
 span.flowName {
 	font-style: italic;
 }
 
-span.source{
-	font-weight: bold;
-}
-
+span.plan-name,
+span.source,
 span.title {
 	font-weight:bold;
 }
 
 table {
 	border-collapse:collapse;
-	border-color:#999999;
     margin: 10px;
     width: 920px;
-}
-
-table,
-th,
-td {
-	border:1px solid #999999;
+	border-bottom:1px solid #999999;
 }
 
 table td,
 table th { 
 	padding:10px; 
+}
+
+table tbody tr {
+	border: 1px solid #999999;
+	background:#e8e8e8;
+}
+
+table tr.contactHeads,
+table tr.contact,
+table tr.eoiHeads,
+table tr.eoi {
+	font-size:11px;
+    background: #f6f6f6;
+}
+
+table tr.contactHeads th,
+table tr.contact td,
+table tr.eoiHeads th,
+table tr.eoi td {
+	padding:5px 10px;
+    border: 1px solid #999999;
+}
+
+table tr.contactHeads th:first-child,
+table tr.contact td:first-child,
+table tr.eoiHeads th:first-child,
+table tr.eoi td:first-child {
+	padding:5px 10px 5px 25px;
 }
