@@ -1,0 +1,26 @@
+/**
+ * Channels Reponder Report - Print Styling
+ * Copyright (C) 2010 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: romit
+ * Date: Apr 26, 2011
+ * Time: 11:06:39 AM
+ */
+
+
+div#container {
+	border:none;
+}
+
+div#header {
+	border-top:1px solid #999999;
+}
+
+div#header a {
+	display:none;
+}
+
+div.phase,
+div.task {
+	page-break-after:always;
+}

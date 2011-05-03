@@ -88,11 +88,11 @@ div#contents {
 }
 
 p {
-	padding:5px 0 5px 0;
+	padding:5px 0 5px 10px;
 }
 
 ul {
-	padding:5px 0 5px 25px;
+	padding:5px 0 5px 35px;
 }
 
 li {
@@ -141,11 +141,23 @@ div.task h3 {
 	font-size:13px;
 }
 
+span.flowName {
+	font-style: italic;
+}
+
+span.source{
+	font-weight: bold;
+}
+
+span.title {
+	font-weight:bold;
+}
+
 table {
 	border-collapse:collapse;
 	border-color:#999999;
-    margin: 10px 0;
-    width: 100%;
+    margin: 10px;
+    width: 920px;
 }
 
 table,

@@ -5,8 +5,8 @@
       lang="en">
 <head>
     <title>Channels - Responder Report</title>
-	<link rel="stylesheet" href="../css/responder-report/responder-page.css" type="text/css" title="Playbook">
-    <link rel="stylesheet" href="../css/iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
+	<link rel="stylesheet" href="../css/responder-report/responder-page.css" type="text/css" media="screen, print" />
+	<link rel="stylesheet" href="../css/responder-report/responder-page-print.css" type="text/css" media="print" />
 </head>
 <body>
 <div id="container">
@@ -108,11 +108,14 @@
         <div wicket:id="tasks" class="task">
             <h2><a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a></h2>
 
-            <p><em>Background:</em> <span wicket:id="taskSummary">{summary of event/phase/location}</span></p>
+            <p>
+				<span class="title">Background:</span>
+				<span wicket:id="taskSummary">{summary of event/phase/location}</span>
+			</p>
 
             <div>
                 <p>
-                    <em>Procedure:</em> {Task instruction}. {location}, {expected duration}
+                    <span class="title">Procedure:</span> {Task instruction}. {location}, {expected duration}
                 </p>
                 <div>
                     <!--One of the following 4 div sections:-->
@@ -282,7 +285,7 @@
                     <span wicket:id="perFlow">
                         <tr>
                             <th align="left" colspan="3"><span wicket:id="flowName2">{flow name}</span></th>
-                            <th><span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within …}</span></th>
+                            <th><span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span></th>
                         </tr>
                         <span wicket:id="eoisRow">
                             <tr class="eoiHeads">
@@ -332,7 +335,7 @@
                     <span wicket:id="perFlow">
                         <tr>
                             <th align="left" colspan="3"><span wicket:id="flowName2">{flow name}</span></th>
-                            <th>(<span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within …}</span>)</th>
+                            <th>(<span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span>)</th>
                         </tr>
                         <span wicket:id="eoisRow">
                             <tr class="eoiHeads">
@@ -382,7 +385,7 @@
                 </p>
                 <table border="1">
                     <tr class="contact">
-                        <td>{Alert|Issue command|Make announcement|Send report|Provide feedback}{immediately|within …}</td>
+                        <td>{Alert|Issue command|Make announcement|Send report|Provide feedback}{immediately|within &hellip;}</td>
                         <td>{agent name}</td>
                         <td>{title}</td>
                         <td>{organization}</td>
@@ -425,7 +428,7 @@
                 </p>
                 <table border="1">
                     <tr class="contact">
-                        <td>Answer {immediately|within …}</td>
+                        <td>Answer {immediately|within &hellip;}</td>
                         <td>{agent name}</td>
                         <td>{title}</td>
                         <td>{organization}</td>
@@ -464,7 +467,7 @@
                 </p>
                 <table border="1">
                     <tr class="contact">
-                        <td>{Alert|Issue command|Make announcement|Send report|Provide feedback}{immediately|within …}</td>
+                        <td>{Alert|Issue command|Make announcement|Send report|Provide feedback}{immediately|within &hellip;}</td>
                         <td>{agent name}</td>
                         <td>{title}</td>
                         <td>{organization}</td>
