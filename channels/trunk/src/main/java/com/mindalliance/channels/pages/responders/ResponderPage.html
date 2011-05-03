@@ -285,7 +285,7 @@
                     <span wicket:id="perFlow">
                         <tr>
                             <th align="left" colspan="3"><span wicket:id="flowName2">{flow name}</span></th>
-                            <th><span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span></th>
+                            <th align="right"><span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span></th>
                         </tr>
                         <span wicket:id="eoisRow">
                             <tr class="eoiHeads">
@@ -335,7 +335,7 @@
                     <span wicket:id="perFlow">
                         <tr>
                             <th align="left" colspan="3"><span wicket:id="flowName2">{flow name}</span></th>
-                            <th>(<span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span>)</th>
+                            <th align="right"><span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span></th>
                         </tr>
                         <span wicket:id="eoisRow">
                             <tr class="eoiHeads">
@@ -384,39 +384,58 @@
                     should be sent:
                 </p>
                 <table border="1">
-                    <tr class="contact">
-                        <td>{Alert|Issue command|Make announcement|Send report|Provide feedback}{immediately|within &hellip;}</td>
-                        <td>{agent name}</td>
-                        <td>{title}</td>
-                        <td>{organization}</td>
-                        <td>{classification}</td>
-                    </tr>
-                    <tr>
-                        <td class="infos" colspan="5">
-                            <p>{contact infos}</p>
-                            <p><em>Supervisor:</em> name, role, contact info</p>
-                        </td>
-                    </tr>
-                    <!-- one or more of the following -->
-                    <tr>
-                        <td class="eoi" colspan="5">
-                            EOI,  {description}, {handling}, {classification}
-                        </td>
-                    </tr>
+                    <span wicket:id="perFlow">
+                        <tr>
+                            <th colspan="3" align="left">
+                                <span wicket:id="flowName2">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
+                            </th>
+                            <th align="right">
+                                <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
+                            </th>
+                        </tr>
+                        <span wicket:id="perFlowContact">
+                            <!-- zero of more of the following 2 rows -->
+                            <tr wicket:id="contact" valign="top" class="contact">
+                                <td wicket:id="contact.name">{agent name}</td>
+                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td>{contact infos}</td>
+                                <td wicket:id="contact.classification">{classification}</td>
+                            </tr>
+                            <tr wicket:id="supervisor" valign="top" class="contact supervisor">
+                                <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
+                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td>{contact infos}</td>
+                                <td wicket:id="contact.classification">{classification}</td>
+                            </tr>
+                        </span>
+                        <span wicket:id="eoisRow">
+                            <tr class="eoiHeads">
+                                <th>Information</th>
+                                <th>Description</th>
+                                <th>Handling</th>
+                                <th>Classification</th>
+                            </tr>
+                            <tr class="eoi" wicket:id="eoi">
+                                <td wicket:id="eoi.name">{EOI}</td>
+                                <td wicket:id="eoi.desc">{description}</td>
+                                <td wicket:id="eoi.handling">{handling}</td>
+                                <td wicket:id="eoi.class">{classification}</td>
+                            </tr>
+                        </span>
 
-                    <tr>
+                        <tr wicket:id="noContext">
+                            <!-- Optional -->
+                            <td class="note" colspan="4">
+                                <em>Note:</em> Do not mention context.
+                            </td>
+                        </tr>
                         <!-- Optional -->
-                        <td class="note" colspan="5">
-                            <em>Note:</em> Do not mention context.
-                        </td>
-                    </tr>
-                    <tr>
-                        <!-- Optional -->
-                        <td class="terminated" colspan="5">
-                            <em>Note:</em> This task is considered done when this information is sent.
-                        </td>
-                    </tr>
-                    <!-- repeat for all eois -->
+                        <tr wicket:id="flowEnding">
+                            <td class="terminated" colspan="4">
+                                <em>Note:</em> This task is considered done when this information is sent.
+                            </td>
+                        </tr>
+                    </span>
                 </table>
             </div>
 
@@ -427,27 +446,58 @@
                     The following agents may request some information acquired during this procedure:
                 </p>
                 <table border="1">
-                    <tr class="contact">
-                        <td>Answer {immediately|within &hellip;}</td>
-                        <td>{agent name}</td>
-                        <td>{title}</td>
-                        <td>{organization}</td>
-                        <td>{classification}</td>
-                    </tr>
-                    <!-- one or more of the following -->
-                    <tr>
-                        <td class="eoi" colspan="5">
-                            EOI,  {description}, {handling}, {classification}
-                        </td>
-                    </tr>
+                    <span wicket:id="perFlow">
+                        <tr>
+                            <th colspan="3" align="left">
+                                <span wicket:id="flowName2">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
+                            </th>
+                            <th align="right">
+                                <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
+                            </th>
+                        </tr>
+                        <span wicket:id="perFlowContact">
+                            <!-- zero of more of the following 2 rows -->
+                            <tr wicket:id="contact" valign="top" class="contact">
+                                <td wicket:id="contact.name">{agent name}</td>
+                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td>{contact infos}</td>
+                                <td wicket:id="contact.classification">{classification}</td>
+                            </tr>
+                            <tr wicket:id="supervisor" valign="top" class="contact supervisor">
+                                <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
+                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td>{contact infos}</td>
+                                <td wicket:id="contact.classification">{classification}</td>
+                            </tr>
+                        </span>
+                        <span wicket:id="eoisRow">
+                            <tr class="eoiHeads">
+                                <th>Information</th>
+                                <th>Description</th>
+                                <th>Handling</th>
+                                <th>Classification</th>
+                            </tr>
+                            <tr class="eoi" wicket:id="eoi">
+                                <td wicket:id="eoi.name">{EOI}</td>
+                                <td wicket:id="eoi.desc">{description}</td>
+                                <td wicket:id="eoi.handling">{handling}</td>
+                                <td wicket:id="eoi.class">{classification}</td>
+                            </tr>
+                        </span>
 
-                    <tr>
+                        <tr wicket:id="noContext">
+                            <!-- Optional -->
+                            <td class="note" colspan="4">
+                                <em>Note:</em> Do not mention context.
+                            </td>
+                        </tr>
                         <!-- Optional -->
-                        <td class="note" colspan="5">
-                            <em>Note:</em> Do not mention context.
-                        </td>
-                    </tr>
-                    <!-- repeat for all recipients -->
+                        <tr wicket:id="flowEnding">
+                            <td class="terminated" colspan="4">
+                                <em>Note:</em> This task is considered done when this information is sent.
+                            </td>
+                        </tr>
+                    </span>
                 </table>
             </div>
 

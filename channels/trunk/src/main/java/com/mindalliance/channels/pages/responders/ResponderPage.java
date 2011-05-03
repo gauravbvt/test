@@ -16,6 +16,7 @@ import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.EventPhase;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
+import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -50,6 +51,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -281,12 +283,13 @@ public class ResponderPage extends WebPage {
                     new WebMarkupContainer( "teamDiv" )
                        .setVisible( part.isAsTeam() ),
 
-                    newCriticals( part, planService ),
-                    newInputs( part, planService ),
-                    new WebMarkupContainer( "distribDiv" )
-                       .setVisible( !getDistribDiv( part ).isEmpty() ),
-                    new WebMarkupContainer( "taskRfiDiv" )
-                       .setVisible( !getRfiDiv( part ).isEmpty() ),
+                    newIncomingFlows( "criticalDiv",
+                                      part.getEssentialFlows( false, planService ),
+                                      planService ),
+                    newIncomingFlows( "inputDiv", getInputDiv( part, planService ), planService ),
+                    newDistribFlows( "distribDiv", getDistribDiv( part ), planService ),
+                    newDistribFlows( "taskRfiDiv", getRfiDiv( part ), planService ),
+
                     new WebMarkupContainer( "subtaskDiv" )
                        .add( newTaskLinks( subtasks ) )
                        .setVisible( !subtasks.isEmpty() ),
@@ -297,6 +300,77 @@ public class ResponderPage extends WebPage {
                 );
             }
         };
+    }
+
+    private Component newDistribFlows(
+        String id, final List<Flow> flows, final PlanService planService ) {
+        return new WebMarkupContainer( id )
+            .add(
+                new ListView<Flow>( "perFlow", flows ) {
+                    @Override
+                    protected void populateItem( ListItem<Flow> item ) {
+                        Flow flow = item.getModelObject();
+                        List<Employment> targets = getEmployments(
+                            planService.getAssignments().from( (Specable) flow.getSource() ) );
+
+                        item.add(
+                            new Label( "flowName2", MessageFormat.format( getVerb( flow ),
+                                                                          flow.getLabel() ) ),
+                            new Label( "flowTiming", getTiming( flow ) ),
+                            new WebMarkupContainer( "eoisRow" )
+                                .add( newEoiList( findEois( flow ) ) )
+                                .setRenderBodyOnly( true )
+                                .setVisible( !flow.getEois().isEmpty() ),
+
+                            newContacts( targets, planService )
+                                .setRenderBodyOnly( true ),
+
+                            new WebMarkupContainer( "flowEnding" )
+                                .setVisible( flow.isTerminatingToSource() ),
+
+                            // TODO ask JF about where to get this
+                            new WebMarkupContainer( "noContext" )
+                                .setVisible( false )
+
+                        );
+                    }
+                }
+                    .setRenderBodyOnly( true )
+
+
+            )
+            .setVisible( !flows.isEmpty() );
+    }
+
+    private static String getVerb( Flow flow ) {
+        if ( flow.isAskedFor() )
+            return "Answer about {0}";
+
+        if ( flow.getIntent() == null )
+            return "Send {0}";
+
+        String verb;
+        switch ( flow.getIntent() ) {
+            case Alarm:
+                verb = "Send {0} alert";
+                break;
+            case Announcement:
+                verb = "Make announcement about {0}";
+                break;
+            case Command:
+                verb = "Issue {0} command";
+                break;
+            case Feedback:
+                verb = "Provide feedback about {0}";
+                break;
+            case Report:
+                verb = "Report about {0}";
+                break;
+            default:
+                verb = "Notify of {0}";
+        }
+
+        return verb;
     }
 
     //-----------------------------------
@@ -440,17 +514,6 @@ public class ResponderPage extends WebPage {
         return result;
     }
 
-    //-----------------------------------
-    private Component newCriticals( Part part, PlanService planService ) {
-        return newIncomingFlows( "criticalDiv",
-                                 part.getEssentialFlows( false, planService ),
-                                 planService );
-    }
-
-    private Component newInputs( Part part, PlanService planService ) {
-        return newIncomingFlows( "inputDiv", getInputDiv( part, planService ), planService );
-    }
-
     private Component newIncomingFlows(
         String id, final List<Flow> flows, final PlanService planService ) {
         return new WebMarkupContainer( id )
@@ -470,36 +533,7 @@ public class ResponderPage extends WebPage {
                                 .setRenderBodyOnly( true )
                                 .setVisible( !flow.getEois().isEmpty() ),
 
-                            new ListView<Employment>( "perFlowContact", sources ) {
-                                @Override
-                                protected void populateItem( ListItem<Employment> sourceItem ) {
-                                    Employment employment = sourceItem.getModelObject();
-                                    String title = employment.getJob().getTitle();
-                                    Actor actor = employment.getActor();
-                                    Organization organization = employment.getOrganization();
-                                    MarkupContainer contact = new WebMarkupContainer( "contact" )
-                                        .add( new Label( "contact.name", actor.getName() ),
-                                              new Label( "contact.title",
-                                                         title == null ? "" : ", " + title ),
-                                              new Label( "contact.classification",
-                                                         getClassificationString( actor
-                                                                                      .getClassifications() ) ),
-                                              new Label( "contact.organization",
-                                                         organization.toString() ) );
-                                    Actor sup = employment.getSupervisor();
-                                    Component supervisor = new WebMarkupContainer( "supervisor" )
-                                        .add( new Label( "contact.name", sup == null ? "" : sup.getName() ),
-                                              new Label( "contact.title",
-                                                         title == null ? "" : ", " + title ),
-                                              new Label( "contact.classification",
-                                                         sup == null ? "" : getClassificationString(
-                                                             sup.getClassifications() ) ),
-                                              new Label( "contact.organization",
-                                                         organization.toString() ) )
-                                        .setVisible( sup != null );
-                                    sourceItem.add( contact, supervisor );
-                                }
-                            }
+                            newContacts( sources, planService )
                                 .setVisible( flow.isAskedFor() )
                                 .setRenderBodyOnly( true ),
 
@@ -514,6 +548,42 @@ public class ResponderPage extends WebPage {
 
             )
             .setVisible( !flows.isEmpty() );
+    }
+
+    private static ListView<Employment> newContacts(
+        final List<Employment> sources, final PlanService planService ) {
+
+        return new ListView<Employment>( "perFlowContact", sources ) {
+            @Override
+            protected void populateItem( ListItem<Employment> sourceItem ) {
+                Employment employment = sourceItem.getModelObject();
+                Job job = employment.getJob();
+                Actor actor = employment.getActor();
+                Organization organization = employment.getOrganization();
+                MarkupContainer contact = new WebMarkupContainer( "contact" )
+                    .add( new Label( "contact.name", actor == null ? "" : actor.getName() ),
+                          new Label( "contact.title", job == null ? "" : ", " + job ),
+                          new Label( "contact.classification", actor == null ?
+                                 "" : getClassificationString( actor.getClassifications() ) ),
+                          new Label( "contact.organization", organization.toString() ) );
+
+                Actor sup = employment.getSupervisor();
+                Job supJob = null;
+                if ( sup != null ) {
+                    List<Job> jobs = planService.findAllJobs( organization, sup );
+                    if ( !jobs.isEmpty() )
+                        supJob = jobs.get( 0 );
+                }
+                Component supervisor = new WebMarkupContainer( "supervisor" )
+                    .add( new Label( "contact.name", sup == null ? "" : sup.getName() ),
+                          new Label( "contact.title", supJob == null ? "" : ", " + supJob ),
+                          new Label( "contact.classification", sup == null ?
+                                 "" : getClassificationString( sup.getClassifications() ) ),
+                          new Label( "contact.organization", organization.toString() ) )
+                    .setVisible( sup != null );
+                sourceItem.add( contact, supervisor );
+            }
+        };
     }
 
     private static String getTiming( Flow flow ) {
@@ -894,7 +964,7 @@ public class ResponderPage extends WebPage {
 
         private EOI( ElementOfInformation eoi, Flow flow, EOI parent ) {
             this.eoi = eoi;
-            label = eoi.getLabel() + ( flow == null ? "" : " (from " + flow.getName() + ")" );
+            label = eoi.getLabel() ;//+ ( flow == null ? "" : " (from " + flow.getName() + ")" );
             level = parent == null ? 0 : parent.level + 1;
             this.parent = parent;
         }
