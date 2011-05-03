@@ -115,7 +115,10 @@
 
             <div>
                 <p>
-                    <span class="title">Procedure:</span> {Task instruction}. {location}, {expected duration}
+                    <span class="title">Procedure:</span>
+                    <span wicket:id="instruct">{Task instruction}.</span>
+                    <span wicket:id="taskLoc">{Location}.</span>
+                    <span wicket:id="taskDuration">{Duration}.</span>
                 </p>
                 <div>
                     <!--One of the following 4 div sections:-->
@@ -123,7 +126,7 @@
                         <p>
                             This is a routine
                             <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                            procedure <span wicket:id="taskRecur">{, recurrence information}</span>. <span wicket:id="operational">It is currently operational.</span>
+                            procedure. <span wicket:id="taskRecur">{recurrence information}.</span> <span wicket:id="operational">It is currently operational.</span>
                         </p>
                     </div>
                     <div wicket:id="notifTask">

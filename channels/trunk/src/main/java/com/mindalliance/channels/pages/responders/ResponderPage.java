@@ -220,12 +220,20 @@ public class ResponderPage extends WebPage {
                         .add( new Label( "taskName", part.getTask() ) )
                         .add( new AttributeModifier( "name", true, new Model<String>(
                               "t_" + part.getId() ) ) ),
-                    new Label( "taskSummary", getTaskSummary( a ) ),
+                    new Label( "taskSummary", ensurePeriod( getTaskSummary( a ) ) ),
+                    new Label( "instruct", ensurePeriod( part.getDescription() ) )
+                        .setVisible( !part.getDescription().isEmpty() ),
+                    new Label( "taskLoc", part.getLocation() == null ? ""
+                                        : ensurePeriod( "This task is located in " + part.getLocation() ) )
+                        .setVisible( part.getLocation() != null ),
+                    new Label( "taskDuration", part.getCompletionTime() == null ? ""
+                                        : ensurePeriod( "This task should be completed " + part.getCompletionTime() ) )
+                        .setVisible( part.getCompletionTime() != null ),
                     new WebMarkupContainer( "routineTask" )
                         .add(
                             new Label( "taskType", category )
                                 .setRenderBodyOnly( true ),
-                            new Label( "taskRecur", part.isRepeating() ? part.getRepeatsEvery().toString()
+                            new Label( "taskRecur", part.isRepeating() ? "It is repeated every " + part.getRepeatsEvery() + "."
                                                                        : "" )
                                 .setVisible( part.isRepeating() ),
                             new WebMarkupContainer( "operational" )
@@ -300,6 +308,11 @@ public class ResponderPage extends WebPage {
                 );
             }
         };
+    }
+
+    private static String ensurePeriod( String sentence ) {
+        return sentence.endsWith( "." ) ? sentence
+                                        : sentence + "." ;
     }
 
     private Component newDistribFlows(
@@ -597,11 +610,11 @@ public class ResponderPage extends WebPage {
     }
 
     private static List<Employment> getEmployments( Assignments assignments ) {
-        Set<Employment> employments = new HashSet<Employment>();
+        Map<Actor,Employment> employments = new HashMap<Actor,Employment>();
         for ( Assignment assignment : assignments.getAssignments() )
-            employments.add( assignment.getEmployment() );
+            employments.put( assignment.getActor(), assignment.getEmployment() );
 
-        List<Employment> result = new ArrayList<Employment>( employments );
+        List<Employment> result = new ArrayList<Employment>( employments.values() );
         Collections.sort( result, new Comparator<Employment>() {
             @Override
             public int compare( Employment o1, Employment o2 ) {
