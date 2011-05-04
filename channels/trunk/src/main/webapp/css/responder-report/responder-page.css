@@ -27,6 +27,10 @@ body {
     text-align: center;
 }
 
+div.task {
+    position: relative;
+}
+
 div#container {
     width: 1000px;
     margin: 0 auto;
@@ -160,13 +164,13 @@ span.title {
 table {
 	border-collapse:collapse;
     margin: 10px;
-    width: 920px;
+    width: 100%;
 	border-bottom:1px solid #999999;
 }
 
 table td,
-table th { 
-	padding:10px; 
+table th {
+	padding:10px;
 }
 
 table tbody tr {

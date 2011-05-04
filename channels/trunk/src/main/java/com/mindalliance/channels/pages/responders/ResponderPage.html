@@ -107,157 +107,126 @@
         <div wicket:id="tasks" class="task">
             <h2><a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a></h2>
 
-            <p>
-				<span class="title">Background:&nbsp;&nbsp;</span>
-				<span wicket:id="taskSummary">{summary of event/phase/location}</span>
-			</p>
-
-            <div>
-                <p>
-                    <span class="title">Procedure:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <span wicket:id="instruct">{Task instruction}.</span>
-                    <span wicket:id="taskLoc">{Location}.</span>
-                    <span wicket:id="taskDuration">{Duration}.</span>
-                </p>
-                <div>
-                    <!--One of the following 4 div sections:-->
-                    <div wicket:id="routineTask">
+            <table class="taskHeader">
+                <tr>
+                    <th class="title">Background:</th>
+                    <td><p wicket:id="taskSummary">{summary of event/phase/location}</p></td>
+                </tr>
+                <tr>
+                    <th class="title" valign="top"><p>Procedure:</p></th>
+                    <td>
                         <p>
+                            <span wicket:id="instruct">{Task instruction}.</span>
+                            <span wicket:id="taskLoc">{Location}.</span>
+                            <span wicket:id="taskDuration">{Duration}.</span>
+                            <span wicket:id="canStart">
+                                This procedure can start the {phase name, phase name and phase name} phase(s)
+                                of {event name}.
+                            </span>
+                            <span wicket:id="canStop">
+                                This procedure can terminate/prevent the {phase name} phase of {event name}
+                                optional and start the {phase name, phase name and phase name} phases.
+                            </span>
+                            <span wicket:id="term1">
+                                It terminates when {phase name} of {event name} is no longer in effect.
+                            </span>
+                        </p>
+                        <p wicket:id="superNote">
+                            <em>Note:</em> This task is different in case of {event name}. See (link or page #)
+                        </p>
+                        <p wicket:id="prohibited">
+                            <!-- Optional -->
+                            <em>Note:</em> Even though documented here, this procedure is prohibited by policy
+                            (link).
+                        </p>
+                        <p wicket:id="riskDiv">
+                            <span wicket:id="risks">
+                                This procedure mitigates the <span wicket:id="type">{risk type}</span>
+                                {at the end of {phase} of {event}}.
+                            </span>
+                            <span wicket:id="gains">
+                                This procedure may achieve <span wicket:id="type">{risk type}</span>
+                                {at the end of {phase} of {event}}.
+                            </span>
+                            <span wicket:id="conseqs">
+                                {Consequences
+                                    of task failure
+                                    of not notifying/replying
+                                    = failure to mitigate kinds of risks with max severity
+                                    = failure to capture kinds of opportunities with max value}
+                            </span>
+                        </p>
+                        <p wicket:id="routineTask">
                             This is a routine
                             <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                            procedure. <span wicket:id="taskRecur">{recurrence information}.</span> <span wicket:id="operational">It is currently operational.</span>
+                            procedure.
+                            <span wicket:id="taskRecur">{recurrence information}.</span>
+                            <span wicket:id="operational">It is currently operational.</span>
                         </p>
-                    </div>
-                    <div wicket:id="notifTask">
-                        <p>
-                            This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                            procedure is performed when receiving {flow name} from {source, source or source}.
-                             <span wicket:id="operational">It is currently operational.</span>
-                        </p>
-                        <div wicket:id="eois">
-                            <p>
-                                The following information should have been included in the communication:
-                            </p>
-                            <table class="eois">
-                                <thead>
-                                    <th>Information</th>
-                                    <th>Description</th>
-                                    <th>Handling</th>
-                                    <th>Classification</th>
-                                </thead>
-                                <tbody>
-                                    <tr wicket:id="eoi">
-                                        <td wicket:id="eoi.name">{EOI}</td>
-                                        <td wicket:id="eoi.desc">{description}</td>
-                                        <td wicket:id="eoi.handling">{handling}</td>
-                                        <td wicket:id="eoi.class">{classification}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div wicket:id="reqTask">
-                        <p>
+                        <p wicket:id="reqTask">
                             This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
                             procedure is performed upon request of {flow name} by {source, source or source}.
                             {It is currently operational.}
                         </p>
-                    </div>
-                    <div wicket:id="subTask">
-                        <p>
-                            This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
-                            procedure is a follow-up task for {task name}.
-                            {It is currently operational.}
-                        </p>
-                        <div wicket:id="eois">
+                        <span wicket:id="notifTask">
                             <p>
-                                You are expected to already know the following information:
+                                This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
+                                procedure is performed when receiving {flow name} from {source, source or source}.
+                                <span wicket:id="operational">It is currently operational.</span>
                             </p>
-                            <table class="eois">
-                                <thead>
-                                    <th>Information</th>
-                                    <th>Description</th>
-                                    <th>Handling</th>
-                                    <th>Classification</th>
-                                </thead>
-                                <tbody>
-                                    <tr wicket:id="eoi">
-                                        <td wicket:id="eoi.name">{EOI}</td>
-                                        <td wicket:id="eoi.desc">{description}</td>
-                                        <td wicket:id="eoi.handling">{handling}</td>
-                                        <td wicket:id="eoi.class">{classification}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div wicket:id="prohibited">
-                    <p>
-                        <!-- Optional -->
-                        <em>Note:</em> Even though documented here, this procedure is prohibited by policy
-                        (link).
-                    </p>
-                </div>
-
-                <!-- Optional:-->
-                <div wicket:id="term1">
-                    <p>
-                        The procedure terminates when {phase name} of {event name} is no longer in effect.
-                    </p>
-                </div>
-
-                <div wicket:id="canStart">
-                    <!-- Optional -->
-                    <p>
-                        This procedure can start the {phase name, phase name and phase name} phase(s)
-                        of {event name}.
-                    </p>
-                </div>
-
-                <div wicket:id="canStop">
-                    <!-- Optional -->
-                    <p>
-                        This procedure can terminate/prevent the {phase name} phase of {event name}
-                        optional and start the {phase name, phase name and phase name} phases.
-                    </p>
-                </div>
-
-                <div wicket:id="risks">
-                    <!-- Zero or more-->
-                    <p>
-                        This procedure mitigates the <span wicket:id="type">{risk type}</span>
-                        {at the end of {phase} of {event}}.
-                    </p>
-                </div>
-
-                <div wicket:id="gains">
-                    <!-- Zero or more -->
-                    <p>
-                        This procedure may achieve <span wicket:id="type">{risk type}</span>
-                        {at the end of {phase} of {event}}.
-                    </p>
-                </div>
-
-                <div wicket:id="conseqs">
-                    <!-- Optional -->
-                    <p>
-                        {Consequences
-                            of task failure
-                            of not notifying/replying
-                            = failure to mitigate kinds of risks with max severity
-                            = failure to capture kinds of opportunities with max value}
-                    </p>
-                </div>
-
-                <div wicket:id="superNote">
-                    <!--In case of super-event-->
-                    <p>
-                        <em>Note:</em> This task is different in case of {event name}. See (link or page #)
-                    </p>
-                </div>
-            </div>
+                            <div wicket:id="eois">
+                                <p>
+                                    The following information should have been included in the communication:
+                                </p>
+                                <table class="eois">
+                                    <thead>
+                                        <th>Information</th>
+                                        <th>Description</th>
+                                        <th>Handling</th>
+                                        <th>Classification</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr wicket:id="eoi">
+                                            <td wicket:id="eoi.name">{EOI}</td>
+                                            <td wicket:id="eoi.desc">{description}</td>
+                                            <td wicket:id="eoi.handling">{handling}</td>
+                                            <td wicket:id="eoi.class">{classification}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </span>
+                        <span wicket:id="subTask">
+                            <p>
+                                This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
+                                procedure is a follow-up task for {task name}.
+                                {It is currently operational.}
+                            </p>
+                            <div wicket:id="eois">
+                                <p>
+                                    You are expected to already know the following information:
+                                </p>
+                                <table class="eois">
+                                    <thead>
+                                        <th>Information</th>
+                                        <th>Description</th>
+                                        <th>Handling</th>
+                                        <th>Classification</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr wicket:id="eoi">
+                                            <td wicket:id="eoi.name">{EOI}</td>
+                                            <td wicket:id="eoi.desc">{description}</td>
+                                            <td wicket:id="eoi.handling">{handling}</td>
+                                            <td wicket:id="eoi.class">{classification}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </span>
+                    </td>
+                </tr>
+            </table>
 
             <div wicket:id="teamDiv">
                 <!--optional-->

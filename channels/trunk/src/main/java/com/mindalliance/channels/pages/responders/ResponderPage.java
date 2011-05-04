@@ -215,6 +215,8 @@ public class ResponderPage extends WebPage {
                 List<EOI> eois = findStartingEois( part );
                 String category = part.getCategory() == null ? ""
                                                  : part.getCategory().getLabel().toLowerCase();
+                List<Goal> risks = getRisks( part );
+                List<Goal> gains = getGains( part );
                 item.add(
                     new WebMarkupContainer( "taskAnchor" )
                         .add( new Label( "taskName", part.getTask() ) )
@@ -267,24 +269,25 @@ public class ResponderPage extends WebPage {
                        .setVisible( false ),
                     new WebMarkupContainer( "canStop" )
                        .setVisible( false ),
-                    new ListView<Goal>( "risks", getRisks( part ) ) {
-                        @Override
-                        protected void populateItem( ListItem<Goal> item ) {
-                            item.add(
-                                new Label( "type", item.getModelObject().getFullTitle() )
-                            );
-                        }
-                    },
-                    new ListView<Goal>( "gains", getGains( part ) ) {
-                        @Override
-                        protected void populateItem( ListItem<Goal> goalItem ) {
-                            goalItem.add(
-                                new Label( "type", goalItem.getModelObject().getFullTitle() )
-                            );
-                        }
-                    },
-                    new WebMarkupContainer( "conseqs" )
-                       .setVisible( false ),
+                    new WebMarkupContainer( "riskDiv" )
+                        .add( new ListView<Goal>( "risks", risks ) {
+                                    @Override
+                                    protected void populateItem( ListItem<Goal> item ) {
+                                        item.add( new Label( "type",
+                                                             item.getModelObject().getFullTitle() ) );
+                                    }
+                              },
+                              new ListView<Goal>( "gains", gains ) {
+                                    @Override
+                                    protected void populateItem( ListItem<Goal> goalItem ) {
+                                        goalItem.add( new Label( "type",
+                                                                 goalItem.getModelObject()
+                                                                     .getFullTitle() ) );
+                                    }
+                              },
+                              new WebMarkupContainer( "conseqs" ).setVisible( false )
+                        ).setVisible( !risks.isEmpty() || !gains.isEmpty() ),
+
                     new WebMarkupContainer( "superNote" )
                        .setVisible( false ),
 
@@ -311,7 +314,7 @@ public class ResponderPage extends WebPage {
     }
 
     private static String ensurePeriod( String sentence ) {
-        return sentence.endsWith( "." ) ? sentence
+        return sentence == null || sentence.isEmpty() || sentence.endsWith( "." ) ? sentence
                                         : sentence + "." ;
     }
 
@@ -458,10 +461,10 @@ public class ResponderPage extends WebPage {
                 EOI eoi = item.getModelObject();
                 item.add( new Label( "eoi.name", eoi.label ),
                           new Label( "eoi.desc",
-                                     eoi.eoi.getDescription() ),
-                          new Label( "eoi.handling", eoi.eoi.getSpecialHandling() ),
-                          new Label( "eoi.class", getClassificationString( eoi.eoi
-                                                                               .getClassifications() ) ) );
+                                     notAvailable( ensurePeriod( eoi.eoi.getDescription() ) ) ),
+                          new Label( "eoi.handling", notAvailable( eoi.eoi.getSpecialHandling() ) ),
+                          new Label( "eoi.class",
+                                     getClassificationString( eoi.eoi.getClassifications() ) ) );
                 if ( item.getIndex() == getViewSize() - 1 )
                     item.add( new AttributeAppender( "class",
                                                      true,
@@ -471,8 +474,15 @@ public class ResponderPage extends WebPage {
         };
     }
 
+    private static String notAvailable( String description ) {
+        return description == null || description.isEmpty() ? "N/A" : description ;
+    }
+
     //-----------------------------------
     private static String getClassificationString( List<Classification> classifications ) {
+        if ( classifications.isEmpty() )
+            return "N/A";
+
         StringWriter w = new StringWriter();
         for ( int i = 0; i < classifications.size(); i++ ) {
             Classification classification = classifications.get( i );
@@ -580,12 +590,14 @@ public class ResponderPage extends WebPage {
                         supJob = jobs.get( 0 );
                 }
 
-                sourceItem.add(
-                    newContact( "contact",
-                                employment.getJob(), employment.getActor(), organization ),
-                    newContact( "supervisor", supJob, sup, organization )
-                        .setVisible( sup != null )
-                );
+                sourceItem.add( newContact( "contact",
+                                            employment.getJob(),
+                                            employment.getActor(),
+                                            organization ), newContact( "supervisor",
+                                                                        supJob,
+                                                                        sup,
+                                                                        organization ).setVisible(
+                    sup != null ) );
             }
         };
     }
@@ -594,13 +606,12 @@ public class ResponderPage extends WebPage {
         String id, Job job, Actor actor, Organization organization ) {
 
         return new WebMarkupContainer( id )
-            .add( new Label( "contact.name", actor == null ? "" : actor.getName() ),
-                  new Label( "contact.title", job == null || job.getTitle().isEmpty() ?
-                                              "" : ", " + job.getTitle() ),
-                  new Label( "contact.classification",
-                             actor == null ? ""
-                                           : ResponderPage.getClassificationString(
-                                                actor.getClassifications() ) ),
+            .add( new Label( "contact.name", actor == null ? "" : actor.getName() ), new Label(
+                "contact.title",
+                job == null || job.getTitle().isEmpty() ? "" : ", " + job.getTitle() ), new Label(
+                "contact.classification",
+                actor == null ? "" : ResponderPage.getClassificationString( actor
+                                                                                .getClassifications() ) ),
                   new Label( "contact.organization", organization.toString() ) );
     }
 
