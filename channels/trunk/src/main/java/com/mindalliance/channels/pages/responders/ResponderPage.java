@@ -257,18 +257,19 @@ public class ResponderPage extends WebPage {
                         )
                         .setVisible( Assignments.isNotification( part, planService ) ),
                     new WebMarkupContainer( "reqTask" )
-                       .setVisible( Assignments.isRequest( part ) ),
+                        .setVisible( Assignments.isRequest( part ) ),
                     new WebMarkupContainer( "subTask" )
                         .add( newSimpleEoiList( eois ) )
-                       .setVisible( Assignments.isOptional( part, planService ) ),
+                        .setVisible( Assignments.isOptional( part, planService ) ),
                     new WebMarkupContainer( "prohibited" )
-                       .setVisible( part.isProhibited() ),
+                        .setVisible( part.isProhibited() ),
                     new WebMarkupContainer( "term1" )
-                       .setVisible( part.isStartsWithSegment() ),
+                        .add( new Label( "eventPhase", lcFirst( part.getSegment().getPhaseEventTitle() ) ) )
+                        .setVisible( part.isStartsWithSegment() ),
                     new WebMarkupContainer( "canStart" )
-                       .setVisible( false ),
+                        .setVisible( false ),
                     new WebMarkupContainer( "canStop" )
-                       .setVisible( false ),
+                        .setVisible( false ),
                     new WebMarkupContainer( "riskDiv" )
                         .add( new ListView<Goal>( "risks", risks ) {
                                     @Override
@@ -311,6 +312,14 @@ public class ResponderPage extends WebPage {
                 );
             }
         };
+    }
+
+    private static String lcFirst( String phrase ) {
+        if ( phrase.length() < 2 )
+            return phrase;
+
+        return Character.toLowerCase( phrase.charAt( 0 ) )
+             + phrase.substring( 1 );
     }
 
     private static String ensurePeriod( String sentence ) {
@@ -464,7 +473,7 @@ public class ResponderPage extends WebPage {
                                      notAvailable( ensurePeriod( eoi.eoi.getDescription() ) ) ),
                           new Label( "eoi.handling", notAvailable( eoi.eoi.getSpecialHandling() ) ),
                           new Label( "eoi.class",
-                                     getClassificationString( eoi.eoi.getClassifications() ) ) );
+                                     getClassificationString( eoi.eoi.getClassifications(), " or " ) ) );
                 if ( item.getIndex() == getViewSize() - 1 )
                     item.add( new AttributeAppender( "class",
                                                      true,
@@ -479,7 +488,9 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private static String getClassificationString( List<Classification> classifications ) {
+    private static String getClassificationString(
+        List<Classification> classifications, String lastSep ) {
+
         if ( classifications.isEmpty() )
             return "N/A";
 
@@ -488,10 +499,11 @@ public class ResponderPage extends WebPage {
             Classification classification = classifications.get( i );
             w.append( classification.getName() );
             if ( i == classifications.size() - 2 )
-                w.append( " or " );
+                w.append( lastSep );
             else if ( i != classifications.size() - 1 )
                 w.append( ", " );
         }
+
         return w.toString();
     }
 
@@ -611,7 +623,8 @@ public class ResponderPage extends WebPage {
                 job == null || job.getTitle().isEmpty() ? "" : ", " + job.getTitle() ), new Label(
                 "contact.classification",
                 actor == null ? "" : ResponderPage.getClassificationString( actor
-                                                                                .getClassifications() ) ),
+                                                                                .getClassifications(),
+                                                                            " or " ) ),
                   new Label( "contact.organization", organization.toString() ) );
     }
 

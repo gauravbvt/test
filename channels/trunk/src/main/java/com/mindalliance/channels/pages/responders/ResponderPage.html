@@ -128,7 +128,19 @@
                                 optional and start the {phase name, phase name and phase name} phases.
                             </span>
                             <span wicket:id="term1">
-                                It terminates when {phase name} of {event name} is no longer in effect.
+                                It terminates when <span wicket:id="eventPhase">{phase of event}</span> is no longer appropriate.
+                            </span>
+                            <span wicket:id="routineTask">
+                                This is a routine
+                                <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
+                                procedure.
+                                <span wicket:id="taskRecur">{recurrence information}.</span>
+                                <span wicket:id="operational">It is currently operational.</span>
+                            </span>
+                            <span wicket:id="reqTask">
+                                This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
+                                procedure is performed upon request of {flow name} by {source, source or source}.
+                                {It is currently operational.}
                             </span>
                         </p>
                         <p wicket:id="superNote">
@@ -155,18 +167,6 @@
                                     = failure to mitigate kinds of risks with max severity
                                     = failure to capture kinds of opportunities with max value}
                             </span>
-                        </p>
-                        <p wicket:id="routineTask">
-                            This is a routine
-                            <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                            procedure.
-                            <span wicket:id="taskRecur">{recurrence information}.</span>
-                            <span wicket:id="operational">It is currently operational.</span>
-                        </p>
-                        <p wicket:id="reqTask">
-                            This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
-                            procedure is performed upon request of {flow name} by {source, source or source}.
-                            {It is currently operational.}
                         </p>
                         <span wicket:id="notifTask">
                             <p>
