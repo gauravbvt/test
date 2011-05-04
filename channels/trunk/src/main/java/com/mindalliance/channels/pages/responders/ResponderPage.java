@@ -418,9 +418,9 @@ public class ResponderPage extends WebPage {
                         .add( new AttributeModifier( "name", true, new Model<String>(
                             "ep_" + item.getIndex() ) ) ),
 
-                    new Label( "eventDesc", eventPhase.getEvent().getDescription() )
+                    new Label( "eventDesc", ensurePeriod( eventPhase.getEvent().getDescription() ) )
                         .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
-                    new Label( "phaseDesc", eventPhase.getPhase().getDescription() )
+                    new Label( "phaseDesc", ensurePeriod( eventPhase.getPhase().getDescription() ) )
                         .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ),
 
                     new WebMarkupContainer( "routineDiv" )
@@ -570,15 +570,7 @@ public class ResponderPage extends WebPage {
             @Override
             protected void populateItem( ListItem<Employment> sourceItem ) {
                 Employment employment = sourceItem.getModelObject();
-                Job job = employment.getJob();
-                Actor actor = employment.getActor();
                 Organization organization = employment.getOrganization();
-                MarkupContainer contact = new WebMarkupContainer( "contact" )
-                    .add( new Label( "contact.name", actor == null ? "" : actor.getName() ),
-                          new Label( "contact.title", job == null ? "" : ", " + job ),
-                          new Label( "contact.classification", actor == null ?
-                                 "" : getClassificationString( actor.getClassifications() ) ),
-                          new Label( "contact.organization", organization.toString() ) );
 
                 Actor sup = employment.getSupervisor();
                 Job supJob = null;
@@ -587,16 +579,29 @@ public class ResponderPage extends WebPage {
                     if ( !jobs.isEmpty() )
                         supJob = jobs.get( 0 );
                 }
-                Component supervisor = new WebMarkupContainer( "supervisor" )
-                    .add( new Label( "contact.name", sup == null ? "" : sup.getName() ),
-                          new Label( "contact.title", supJob == null ? "" : ", " + supJob ),
-                          new Label( "contact.classification", sup == null ?
-                                 "" : getClassificationString( sup.getClassifications() ) ),
-                          new Label( "contact.organization", organization.toString() ) )
-                    .setVisible( sup != null );
-                sourceItem.add( contact, supervisor );
+
+                sourceItem.add(
+                    newContact( "contact",
+                                employment.getJob(), employment.getActor(), organization ),
+                    newContact( "supervisor", supJob, sup, organization )
+                        .setVisible( sup != null )
+                );
             }
         };
+    }
+
+    private static MarkupContainer newContact(
+        String id, Job job, Actor actor, Organization organization ) {
+
+        return new WebMarkupContainer( id )
+            .add( new Label( "contact.name", actor == null ? "" : actor.getName() ),
+                  new Label( "contact.title", job == null || job.getTitle().isEmpty() ?
+                                              "" : ", " + job.getTitle() ),
+                  new Label( "contact.classification",
+                             actor == null ? ""
+                                           : ResponderPage.getClassificationString(
+                                                actor.getClassifications() ) ),
+                  new Label( "contact.organization", organization.toString() ) );
     }
 
     private static String getTiming( Flow flow ) {
