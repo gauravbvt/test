@@ -164,7 +164,7 @@ span.title {
 table {
 	border-collapse:collapse;
     margin: 10px;
-    width: 100%;
+    width: 920px;
 	border-bottom:1px solid #999999;
 }
 
@@ -198,7 +198,7 @@ table tr.contactHeads th:first-child,
 table tr.contact td:first-child,
 table tr.eoiHeads th:first-child,
 table tr.eoi td:first-child {
-	padding:5px 10px 5px 25px;
+	padding:5px 10px 5px 20px;
 }
 
 table.eois {
@@ -220,3 +220,14 @@ table.eois th,
 table.eois td {
 	border: 1px solid #999999;
 }
+
+table.taskHeader {
+	border:none;
+}
+
+table.taskHeader tr {
+    background: #F6F6F6;
+    border-left: none;
+    border-right: none;
+}
+
