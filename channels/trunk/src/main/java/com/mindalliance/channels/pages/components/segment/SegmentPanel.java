@@ -418,6 +418,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         resizeSocialPanel( target, change );
         refreshMenus( target );
         Identifiable identifiable = change.getSubject( getQueryService() );
+        boolean stopUpdates = false;
         if ( identifiable instanceof Issue
                 && change.isExists()
                 && ( (Issue) identifiable ).getAbout().getId() == getSegment().getId() ) {
@@ -426,29 +427,39 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             if ( change.isForInstanceOf( Flow.class ) && !change.isRemoved() ) {
                 receivesFlowPanel.refresh( target );
                 sendsFlowPanel.refresh( target );
+                if ( change.isForProperty( "eois" )
+                        && change.hasQualifier( "updated" ) ) {
+                    if ( (Boolean) change.getQualifier( "updated" ) ) {
+                        addFlowDiagram();
+                        target.addComponent( flowMapDiagramPanel );
+                    }
+                    stopUpdates = true;
+                }
             } else {
                 addPartPanel();
                 receivesFlowPanel.refresh( target );
                 sendsFlowPanel.refresh( target );
                 resizePartPanels( target );
             }
-            addPartMediaPanel();
-            addOverridesImage();
-            addPartTitleContainer();
-            target.addComponent( taskTitleContainer );
-            target.addComponent( partMediaPanel );
-            target.addComponent( overridesImage );
-            addFlowMapViewingControls();
-            addFlowDiagram();
-            target.appendJavascript( PlanPage.IE7CompatibilityScript );
-            resizePartPanels( target );
-            target.addComponent( getControlsContainer() );
-            target.addComponent( flowMapDiagramPanel );
-            target.addComponent( taskTitleContainer );
-            target.addComponent( partMediaPanel );
-            target.addComponent( overridesImage );
-            target.addComponent( partActionsMenu );
-            target.addComponent( partShowMenu );
+            if ( !stopUpdates ) {
+                addPartMediaPanel();
+                addOverridesImage();
+                addPartTitleContainer();
+                target.addComponent( taskTitleContainer );
+                target.addComponent( partMediaPanel );
+                target.addComponent( overridesImage );
+                addFlowMapViewingControls();
+                addFlowDiagram();
+                target.appendJavascript( PlanPage.IE7CompatibilityScript );
+                resizePartPanels( target );
+                target.addComponent( getControlsContainer() );
+                target.addComponent( flowMapDiagramPanel );
+                target.addComponent( taskTitleContainer );
+                target.addComponent( partMediaPanel );
+                target.addComponent( overridesImage );
+                target.addComponent( partActionsMenu );
+                target.addComponent( partShowMenu );
+            }
         }
     }
 

@@ -11,7 +11,6 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.query.Assignments;
-import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -83,7 +82,7 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
 
     @SuppressWarnings( "unchecked" )
     private int countDifferentBeneficiaries( Part part, List<Assignment> assignments ) {
-        List<ModelEntity> assignees = (List<ModelEntity>) CollectionUtils.collect(
+        final List<ModelEntity> assignees = (List<ModelEntity>) CollectionUtils.collect(
                 assignments,
                 new Transformer() {
                     public Object transform( Object input ) {
@@ -95,13 +94,26 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
         QueryService queryService = getQueryService();
         Assignments a = queryService.getAssignments( false );
         for ( Flow sharingSend : part.getAllSharingSends() ) {
-            for ( Commitment commitment : queryService.findAllCommitments( sharingSend,
-                                                                           false,
-                                                                           a ) ) {
-                Assignment assignment = commitment.getBeneficiary();
-                ModelEntity assignee = assignment.getKnownAssignee();
-                if ( !assignees.contains( assignee ) )
-                    beneficiaries.add( assignee );
+            List<Commitment> commitments = queryService.findAllCommitments( sharingSend, false, a );
+            if ( sharingSend.isAll() ) {
+                for ( Commitment commitment : commitments ) {
+                    Assignment assignment = commitment.getBeneficiary();
+                    ModelEntity assignee = assignment.getKnownAssignee();
+                    if ( !assignees.contains( assignee ) )
+                        beneficiaries.add( assignee );
+                }
+            } else {
+                Commitment commitment = (Commitment) CollectionUtils.find(
+                        commitments,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return !assignees.contains( ( (Commitment) object ).getBeneficiary().getKnownAssignee() );
+                            }
+                        }
+                );
+                if ( commitment != null )
+                    beneficiaries.add( commitment.getBeneficiary().getKnownAssignee() );
             }
         }
         return beneficiaries.size();

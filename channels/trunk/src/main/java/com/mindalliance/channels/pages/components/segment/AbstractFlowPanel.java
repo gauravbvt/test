@@ -36,6 +36,11 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
     private boolean send;
     private boolean collapsed;
     private int index;
+    /**
+     * Whether flow was updated.
+     */
+    private boolean flowUpdated = false;
+
 
     public AbstractFlowPanel( String id, IModel<Flow> flowModel, boolean isSend, boolean collapsed, int index) {
         this( id, flowModel, isSend, collapsed, null, index);
@@ -57,6 +62,14 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
 
     public Flow getFlow() {
         return flowModel.getObject();
+    }
+
+    public boolean isFlowUpdated() {
+        return flowUpdated;
+    }
+
+    public void setFlowUpdated( boolean flowUpdated ) {
+        this.flowUpdated = flowUpdated;
     }
 
     /**

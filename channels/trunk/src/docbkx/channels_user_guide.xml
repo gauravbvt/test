@@ -5615,17 +5615,6 @@
               </row>
 
               <row>
-                <entry><para>Information capability or need has no element of
-                information</para></entry>
-
-                <entry><para>Low</para></entry>
-
-                <entry><para>Add elements of information.</para></entry>
-
-                <entry><para>Yes</para></entry>
-              </row>
-
-              <row>
                 <entry><para>Agent supervised by someone from another
                 organization</para></entry>
 
@@ -6312,19 +6301,25 @@
               </row>
 
               <row>
-                <entry><para>Report flow shares no elements of
+                <entry><para>Information capability or need has no element of
+                  information</para></entry>
+                
+                <entry><para>Low</para></entry>
+                
+                <entry><para>Add elements of information.</para></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
+              
+              <row>
+                <entry><para>Sharing flow has no elements of
                 information</para></entry>
 
-                <entry><para>Low</para></entry>
+                <entry><para>Medium</para></entry>
 
                 <entry><itemizedlist>
                     <listitem>
                       <para>Specify elements of information</para>
-                    </listitem>
-
-                    <listitem>
-                      <para>or change the intent to something other than
-                      report</para>
                     </listitem>
                   </itemizedlist></entry>
 

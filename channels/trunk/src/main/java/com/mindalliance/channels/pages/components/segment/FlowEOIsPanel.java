@@ -85,6 +85,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
      */
     AjaxFallbackLink linkedClassificationsLink;
     private boolean isSend;
+    /**
+     * Whether the eois are updated.
+     */
+    private boolean eoisUpdated = false;
 
     public FlowEOIsPanel( String id, Model<Flow> flowModel, boolean isSend, Set<Long> expansions ) {
         super( id, flowModel, expansions );
@@ -730,12 +734,20 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         return doCommand( new LinkFlowClassifications( getFlow() ) );
     }
 
+    public void changed( Change change ) {
+        if ( change.isUpdated() && change.isForInstanceOf( Flow.class ) ) {
+            eoisUpdated = true;
+        }
+        super.changed( change );
+    }
+
 
     /**
      * {@inheritDoc}
      */
     protected void close( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.AspectClosed, getFlow(), ExpandedFlowPanel.EOIS );
+        change.addQualifier( "updated", eoisUpdated );
         update( target, change );
     }
 

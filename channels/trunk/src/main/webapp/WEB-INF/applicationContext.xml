@@ -195,7 +195,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithoutAssignments"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>
                <!-- <bean class="com.mindalliance.channels.analysis.detectors.OrganizationMissingExpectedCommitment"/>-->
-                <bean class="com.mindalliance.channels.analysis.detectors.ReportFlowWithoutEOIs"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.EmptySharingFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorWithoutContactInfo"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorIsTaskBottleneck"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.TaskHasTooManyCommitments"/>

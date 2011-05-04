@@ -13,6 +13,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -56,14 +57,10 @@ public class FlowListPanel extends AbstractCommandablePanel {
     private WebMarkupContainer flowsDiv;
 
     /**
-     * List of flow panels.
-     */
-    List<AbstractFlowPanel> flowPanels;
-
-    /**
      * Expansions.
      */
     private Set<Long> expansions;
+    private ListView<Flow> flowPanelsListView;
 
     public FlowListPanel( String id, IModel<Part> model, boolean sends, Set<Long> expansions ) {
         super( id );
@@ -97,13 +94,11 @@ public class FlowListPanel extends AbstractCommandablePanel {
         flowsDiv = new WebMarkupContainer( "flows-div" );
         flowsDiv.setOutputMarkupId( true );
         addOrReplace( flowsDiv );
-        ListView<Flow> flowPanels = createFlowPanels( sends );
-        flowsDiv.add( flowPanels );
+        flowPanelsListView = createFlowPanels( sends );
+        flowsDiv.add( flowPanelsListView );
     }
 
     private ListView<Flow> createFlowPanels( final boolean areSends ) {
-        // final Set<Long> expansions = ( (ChannelsPage) getPage() ).findExpansions();
-        flowPanels = new ArrayList<AbstractFlowPanel>(  );
         return new ListView<Flow>( "flows", new PropertyModel<List<Flow>>( this, "flows" ) ) {
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
@@ -128,7 +123,6 @@ public class FlowListPanel extends AbstractCommandablePanel {
                         "class",
                         true,
                         new Model<String>( getCssClasses( item ) ) ) );
-                flowPanels.add( flowPanel );
                 item.add( flowPanel );
             }
         };
@@ -223,8 +217,25 @@ public class FlowListPanel extends AbstractCommandablePanel {
      * @param target ajax request target
      */
     public void refreshMenus( AjaxRequestTarget target ) {
-        for ( AbstractFlowPanel flowPanel : flowPanels ) {
-           flowPanel.refreshMenu( target );
+        for ( AbstractFlowPanel flowPanel : getFlowPanels() ) {
+            flowPanel.refreshMenu( target );
         }
+    }
+
+    List<AbstractFlowPanel> getFlowPanels() {
+        final List<AbstractFlowPanel> flowPanels = new ArrayList<AbstractFlowPanel>();
+        Iterator<? extends ListItem<Flow>> listItems = flowPanelsListView.iterator();
+        while ( listItems.hasNext() ) {
+            listItems.next().visitChildren( new IVisitor<Component>() {
+                @Override
+                public Object component( Component component ) {
+                    if ( component instanceof AbstractFlowPanel ) {
+                        flowPanels.add( (AbstractFlowPanel) component );
+                    }
+                    return null;
+                }
+            } );
+        }
+        return flowPanels;
     }
 }

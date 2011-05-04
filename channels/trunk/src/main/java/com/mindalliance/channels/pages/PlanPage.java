@@ -1750,7 +1750,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshCommitmentsPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Flow.class) && change.isForProperty( "eois" ) ) {
             refreshEOIsPanel( target, change, updated );
-        } else if ( change.getId() == -1 || change.isForInstanceOf( SegmentObject.class) ) {
+            if ( (Boolean)change.getQualifier( "updated" ) ) {
+               refreshSegmentPanel( target, change, updated );
+            }
+        } else if ( change.getId() == -1 || change.isForInstanceOf( SegmentObject.class ) ) {
             refreshSegmentPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Survey.class) ) {
             refreshSurveysPanel( target, change, updated );

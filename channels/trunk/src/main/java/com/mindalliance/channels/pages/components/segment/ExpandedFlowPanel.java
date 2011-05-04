@@ -199,10 +199,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     private boolean restricted;
     /**
-     * Whether flow was updated.
-     */
-    private boolean flowUpdated = false;
-    /**
      * EOIS aspect.
      */
     public static final String EOIS = "eois";
@@ -734,7 +730,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses() ) ) );
         titlePanel.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Collapsed, getFlow() ) );
+                Change change = new Change( Change.Type.Collapsed, getFlow() );
+                change.addQualifier( "updated", isFlowUpdated() );
+                update( target, change );
             }
         } );
         titlePanel.setOutputMarkupId( true );
@@ -1493,7 +1491,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 && change.isForInstanceOf( Node.class )
                 && change.isForProperty( "other" ) ) ) {
             if ( change.isUpdated() && change.isForInstanceOf( Flow.class ) ) {
-                flowUpdated = true;
+                setFlowUpdated( true );
             }
             super.changed( change );
         }
@@ -1503,7 +1501,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        change.addQualifier( "updated", flowUpdated );
+        change.addQualifier( "updated", isFlowUpdated() );
         if ( change.isSelected()
                 && change.isForInstanceOf( Node.class )
                 && change.isForProperty( "other" ) ) {
@@ -1519,7 +1517,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } else {
             if ( change.isUpdated() ) {
                 Flow flow = getFlow();
-
                 if ( flow != null )
                     adjustFieldsOnUpdate( flow, target );
 //                target.addComponent( this );
