@@ -161,6 +161,12 @@ span.title {
 	font-weight:bold;
 }
 
+span.duration {
+    border-bottom: 1px dotted #000000;
+    font-style: normal;
+    font-weight: bold;
+}
+
 table {
 	border-collapse:collapse;
     margin: 10px;
@@ -228,6 +234,7 @@ table.eois td {
 table.eois.nested {
 	width:100%;
     font-size: 11px;
+	margin:10px 0 10px 5px;
 }
 
 table.eois.nested thead tr {
@@ -236,6 +243,10 @@ table.eois.nested thead tr {
 
 table.eois.nested th {
 	padding: 5px 10px;
+}
+
+table.eois.nested tbody tr td:first-child {
+	padding:5px 10px 5px 10px;
 }
 
 table.taskHeader {
@@ -251,4 +262,15 @@ table.taskHeader tr {
 table.taskHeader p {
 	line-height: 150%;
 	padding:0 5px;
+}
+
+table tr.note {
+	background: #FAF0A8;
+	font-size: 11px;
+	font-style: italic;
+}
+
+table tr.note td {
+	color: #000000;
+	padding: 7px 10px 7px 20px;
 }

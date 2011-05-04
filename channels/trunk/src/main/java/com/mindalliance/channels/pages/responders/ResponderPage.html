@@ -118,7 +118,7 @@
                         <p>
                             <span wicket:id="instruct">{Task instruction}.</span>
                             <span wicket:id="taskLoc">{Location}.</span>
-                            <span wicket:id="taskDuration">This task should be completed <em wicket:id="dur">{duration}</em>.</span>
+                            <span wicket:id="taskDuration">This task should be completed <span class="duration" wicket:id="dur">{duration}</span>.</span>
                             <span wicket:id="canStart">
                                 This procedure can start the {phase name, phase name and phase name} phase(s)
                                 of {event name}.
@@ -291,7 +291,7 @@
                             </tr>
                         </span>
                         <!-- Optional -->
-                        <tr wicket:id="flowEnding">
+                        <tr wicket:id="flowEnding" class="note">
                             <td class="terminated" colspan="4">
                                 <em>Note:</em> This task is considered done when this information is received.
                             </td>
@@ -341,7 +341,7 @@
                             </tr>
                         </span>
                         <!-- Optional -->
-                        <tr wicket:id="flowEnding">
+                        <tr wicket:id="flowEnding" class="note">
                             <td class="terminated" colspan="4">
                                 <em>Note:</em> This task is considered done when this information is received.
                             </td>
@@ -403,14 +403,14 @@
                             </tr>
                         </span>
 
-                        <tr wicket:id="noContext">
+                        <tr wicket:id="noContext" class="note">
                             <!-- Optional -->
                             <td class="note" colspan="4">
                                 <em>Note:</em> Do not mention context.
                             </td>
                         </tr>
                         <!-- Optional -->
-                        <tr wicket:id="flowEnding">
+                        <tr wicket:id="flowEnding" class="note">
                             <td class="terminated" colspan="4">
                                 <em>Note:</em> This task is considered done when this information is sent.
                             </td>
@@ -471,14 +471,14 @@
                             </tr>
                         </span>
 
-                        <tr wicket:id="noContext">
+                        <tr wicket:id="noContext" class="note">
                             <!-- Optional -->
                             <td class="note" colspan="4">
                                 <em>Note:</em> Do not mention context.
                             </td>
                         </tr>
                         <!-- Optional -->
-                        <tr wicket:id="flowEnding">
+                        <tr wicket:id="flowEnding" class="note">
                             <td class="terminated" colspan="4">
                                 <em>Note:</em> This task is considered done when this information is sent.
                             </td>
@@ -522,7 +522,7 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <tr class="note">
                         <!-- Optional -->
                         <td class="note" colspan="5">
                             <em>Note:</em> Do not mention context.
