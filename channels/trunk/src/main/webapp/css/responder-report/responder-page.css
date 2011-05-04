@@ -194,6 +194,10 @@ table tr.eoi td {
     border: 1px solid #999999;
 }
 
+table tr.eoi td {
+	line-height:150%;
+}
+
 table tr.contactHeads th:first-child,
 table tr.contact td:first-child,
 table tr.eoiHeads th:first-child,
@@ -221,6 +225,19 @@ table.eois td {
 	border: 1px solid #999999;
 }
 
+table.eois.nested {
+	width:100%;
+    font-size: 11px;
+}
+
+table.eois.nested thead tr {
+	background:#E8E8E8;
+}
+
+table.eois.nested th {
+	padding: 5px 10px;
+}
+
 table.taskHeader {
 	border:none;
 }
@@ -231,3 +248,7 @@ table.taskHeader tr {
     border-right: none;
 }
 
+table.taskHeader p {
+	line-height: 150%;
+	padding:0 5px;
+}
