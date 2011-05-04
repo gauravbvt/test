@@ -118,7 +118,7 @@
                         <p>
                             <span wicket:id="instruct">{Task instruction}.</span>
                             <span wicket:id="taskLoc">{Location}.</span>
-                            <span wicket:id="taskDuration">{Duration}.</span>
+                            <span wicket:id="taskDuration">This task should be completed <em wicket:id="dur">{duration}</em>.</span>
                             <span wicket:id="canStart">
                                 This procedure can start the {phase name, phase name and phase name} phase(s)
                                 of {event name}.
@@ -138,9 +138,12 @@
                                 <span wicket:id="operational">It is currently operational.</span>
                             </span>
                             <span wicket:id="reqTask">
-                                This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
-                                procedure is performed upon request of {flow name} by {source, source or source}.
-                                {It is currently operational.}
+                                This
+                                <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
+                                procedure is performed upon request of
+                                <span wicket:id="reqFlow">{flow name}</span> by
+                                {source, source or source}.
+                                <span wicket:id="operational">It is currently operational.</span>
                             </span>
                         </p>
                         <p wicket:id="superNote">
@@ -298,7 +301,7 @@
             </div>
 
             <div wicket:id="inputDiv">
-                <h3>Other useful information sources</h3>
+                <h3>Useful information sources</h3>
                 <p>
                     The following sources may provide pertinent information:
                 </p>

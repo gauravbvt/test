@@ -228,8 +228,8 @@ public class ResponderPage extends WebPage {
                     new Label( "taskLoc", part.getLocation() == null ? ""
                                         : ensurePeriod( "This task is located in " + part.getLocation() ) )
                         .setVisible( part.getLocation() != null ),
-                    new Label( "taskDuration", part.getCompletionTime() == null ? ""
-                                        : ensurePeriod( "This task should be completed " + part.getCompletionTime() ) )
+                    new WebMarkupContainer( "taskDuration" )
+                        .add( new Label( "dur", part.getCompletionTime() == null ? "" : part.getCompletionTime().toString() ) )
                         .setVisible( part.getCompletionTime() != null ),
                     new WebMarkupContainer( "routineTask" )
                         .add(
@@ -239,7 +239,6 @@ public class ResponderPage extends WebPage {
                                                                        : "" )
                                 .setVisible( part.isRepeating() ),
                             new WebMarkupContainer( "operational" )
-                                .setRenderBodyOnly( true )
                                 .setVisible( part.isEffectivelyOperational() )
                         )
                         .setVisible( Assignments.isImmediate( part, planService ) ),
@@ -251,12 +250,18 @@ public class ResponderPage extends WebPage {
                                                                        : "" )
                                 .setVisible( part.isRepeating() ),
                             new WebMarkupContainer( "operational" )
-                                .setRenderBodyOnly( true )
                                 .setVisible( part.isEffectivelyOperational() ),
                             newSimpleEoiList( eois )
                         )
                         .setVisible( Assignments.isNotification( part, planService ) ),
                     new WebMarkupContainer( "reqTask" )
+                        .add(
+                            new Label( "taskType", category )
+                                .setRenderBodyOnly( true ),
+                            new Label( "reqFlow", getTriggeringFlowName( part ) ),
+                            new WebMarkupContainer( "operational" )
+                                .setVisible( part.isEffectivelyOperational() )
+                        )
                         .setVisible( Assignments.isRequest( part ) ),
                     new WebMarkupContainer( "subTask" )
                         .add( newSimpleEoiList( eois ) )
@@ -264,7 +269,7 @@ public class ResponderPage extends WebPage {
                     new WebMarkupContainer( "prohibited" )
                         .setVisible( part.isProhibited() ),
                     new WebMarkupContainer( "term1" )
-                        .add( new Label( "eventPhase", lcFirst( part.getSegment().getPhaseEventTitle() ) ) )
+                        .add( new Label( "eventPhase", lcFirst( part.getSegment().getEventPhase().toString() ) ) )
                         .setVisible( part.isStartsWithSegment() ),
                     new WebMarkupContainer( "canStart" )
                         .setVisible( false ),
@@ -312,6 +317,11 @@ public class ResponderPage extends WebPage {
                 );
             }
         };
+    }
+
+    private static String getTriggeringFlowName( Part part ) {
+        List<? extends Flow> triggeringFlows = getTriggeringFlows( part );
+        return triggeringFlows.isEmpty() ? "" : triggeringFlows.get( 0 ).getName();
     }
 
     private static String lcFirst( String phrase ) {
@@ -401,7 +411,7 @@ public class ResponderPage extends WebPage {
     //-----------------------------------
     private static String getTaskSummary( Assignment assignment ) {
         StringWriter w = new StringWriter();
-        w.append( assignment.getPart().getSegment().getEventPhase().toString() );
+        w.append( assignment.getPart().getSegment().getPhaseEventTitle() );
         Place location = assignment.getLocation();
         if ( location != null ) {
             w.append( " in " );
