@@ -22,7 +22,7 @@
             <h2 wicket:id="planDescription" class="description">Plan description</h2>
         </div>
         <div id="about">
-            <h2>About me</h2>
+            <h2><span class="seq">1.</span> About me</h2>
             <ul>
                 <li>{Roles, organizations, jurisdictions}</li>
                 <li>{Contact info}</li>
@@ -38,7 +38,7 @@
         </div>
 
         <div wicket:id="phases" class="phase">
-            <h2><a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
+            <h2><span wicket:id="phaseSeq" class="seq">2.</span> <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
             <div>
                 <p wicket:id="eventDesc">{event description}</p>
                 <p wicket:id="phaseDesc">{Phase description}</p>
@@ -105,7 +105,7 @@
         </div>
 
         <div wicket:id="tasks" class="task">
-            <h2><a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a></h2>
+            <h2><span wicket:id="taskSeq" class="seq">1.1.</span> <a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a></h2>
 
             <table class="taskHeader">
                 <tr>
@@ -275,6 +275,12 @@
                                 <td wicket:id="eoi.class">{classification}</td>
                             </tr>
                         </span>
+                        <tr wicket:id="contactHeads" class="contactHeads">
+                            <th>Name</th>
+                            <th>Organization, Title</th>
+                            <th>Contact Info</th>
+                            <th>Clearance</th>
+                        </tr>
                         <span wicket:id="perFlowContact">
                             <!-- zero of more of the following 2 rows -->
                             <tr wicket:id="contact" valign="top" class="contact">
@@ -339,6 +345,12 @@
                                 <td wicket:id="eoi.class">{classification}</td>
                             </tr>
                         </span>
+                        <tr wicket:id="contactHeads" class="contactHeads">
+                            <th>Name</th>
+                            <th>Organization, Title</th>
+                            <th>Contact Info</th>
+                            <th>Clearance</th>
+                        </tr>
                         <span wicket:id="perFlowContact">
                             <!-- zero of more of the following 2 rows -->
                             <tr wicket:id="contact" valign="top" class="contact">

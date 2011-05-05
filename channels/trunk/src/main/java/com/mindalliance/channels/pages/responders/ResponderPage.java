@@ -51,6 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -199,16 +200,55 @@ public class ResponderPage extends WebPage {
              },
 
              newPhases( directAssignments, eventPhases ),
-             newTasks( myAssignments )
+             newTasks( myAssignments, numberTasks( eventPhases, myAssignments.getAssignments() ) )
         );
     }
 
-    //-----------------------------------
-    private ListView<Assignment> newTasks( final Assignments myAssignments ) {
-        return new ListView<Assignment>( "tasks", myAssignments.getAssignments() ) {
+    private static List<ReportTask> numberTasks(
+        List<EventPhase> eventPhases, List<Assignment> assignments ) {
+
+        List<ReportTask> result = new ArrayList<ReportTask>();
+        Map<EventPhase,Integer> counts = new HashMap<EventPhase, Integer>( eventPhases.size() );
+
+        for ( Assignment assignment : assignments ) {
+            EventPhase eventPhase = assignment.getPart().getSegment().getEventPhase();
+
+            // Phases of subtasks may not appear in index...
+            int phaseSeq = eventPhases.indexOf( eventPhase );
+            if ( phaseSeq == -1 )
+                phaseSeq = eventPhases.size() + 1;
+
+            Integer oldSeq = counts.get( eventPhase );
+            if ( oldSeq == null )
+                oldSeq = 0;
+
+            int taskSeq = oldSeq + 1;
+            counts.put( eventPhase, taskSeq );
+            result.add( new ReportTask( phaseSeq +2, assignment, taskSeq ) );
+        }
+
+        Collections.sort( result, new Comparator<ReportTask>() {
             @Override
-            protected void populateItem( ListItem<Assignment> item ) {
-                Assignment a = item.getModelObject();
+            public int compare( ReportTask o1, ReportTask o2 ) {
+                int i = o1.phaseSeq - o2.phaseSeq;
+                if ( i == 0 )
+                    return o1.taskSeq - o2.taskSeq;
+                else
+                    return i;
+            }
+        } );
+        return result;
+    }
+
+    //-----------------------------------
+    private ListView<ReportTask> newTasks(
+        final Assignments myAssignments, List<ReportTask> tasks ) {
+
+        return new ListView<ReportTask>( "tasks", tasks ) {
+            @Override
+            protected void populateItem( ListItem<ReportTask> item ) {
+                ReportTask t = item.getModelObject();
+                Assignment a = t.assignment;
                 Part part = a.getPart();
                 PlanService planService = getPlanService();
                 List<Part> subtasks = myAssignments.from( a ).getParts();
@@ -223,6 +263,7 @@ public class ResponderPage extends WebPage {
                         .add( new Label( "taskName", part.getTask() ) )
                         .add( new AttributeModifier( "name", true, new Model<String>(
                               "t_" + part.getId() ) ) ),
+                    new Label( "taskSeq", t.phaseSeq + "." + t.taskSeq + "." ),
                     new Label( "taskSummary", ensurePeriod( getTaskSummary( a ) ) ),
                     new Label( "instruct", ensurePeriod( part.getDescription() ) )
                         .setVisible( !part.getDescription().isEmpty() ),
@@ -432,36 +473,39 @@ public class ResponderPage extends WebPage {
                 EventPhase eventPhase = item.getModelObject();
                 Assignments phaseEventAssignments = directAssignments.with( eventPhase );
 
-                List<Part> routines = phaseEventAssignments.getImmediates( getPlanService() )
-                                       .getParts();
-                List<Part> routines1 = phaseEventAssignments.getOptionals( getPlanService() )
-                                     .getParts();
-                item.add(
-                    new WebMarkupContainer( "phaseAnchor" )
-                        .add( new Label( "phaseText", eventPhase.toString() ) )
-                        .add( new AttributeModifier( "name", true, new Model<String>(
-                            "ep_" + item.getIndex() ) ) ),
+                PlanService planService = getPlanService();
+                List<Part> immeds = phaseEventAssignments.getImmediates( planService ).getParts();
+                List<Part> opts = phaseEventAssignments.getOptionals( planService ).getParts();
 
-                    new Label( "eventDesc", ensurePeriod( eventPhase.getEvent().getDescription() ) )
-                        .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
-                    new Label( "phaseDesc", ensurePeriod( eventPhase.getPhase().getDescription() ) )
-                        .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ),
+                item.add( new WebMarkupContainer( "phaseAnchor" ).add( new Label( "phaseText",
+                                                                                  eventPhase
+                                                                                      .toString() ) )
+                              .add( new AttributeModifier( "name", true, new Model<String>(
+                                  "ep_" + item.getIndex() ) ) ),
 
-                    new WebMarkupContainer( "routineDiv" )
-                        .add( newTaskLinks( routines ) )
-                        .setVisible( !routines.isEmpty() ),
+                          new Label( "eventDesc", ensurePeriod( eventPhase.getEvent()
+                                                                    .getDescription() ) )
+                              .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
+                          new Label( "phaseDesc", ensurePeriod( eventPhase.getPhase()
+                                                                    .getDescription() ) )
+                              .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ),
+                          new Label( "phaseSeq", item.getIndex() + 2 + "." ),
 
-                    newNotifSection( phaseEventAssignments
-                                         .getNotifications( getPlanService() ) ),
+                          new WebMarkupContainer( "routineDiv" )
+                              .add( newTaskLinks( immeds ) )
+                              .setVisible( !immeds.isEmpty() ),
 
-                    newRfiSection( phaseEventAssignments.getRequests() ),
+                          newNotifSection( phaseEventAssignments
+                                               .getNotifications( planService ) ),
 
-                    new WebMarkupContainer( "otherDiv" )
-                        .add( newTaskLinks( routines1 ) )
-                        .setVisible( !routines1.isEmpty() ),
+                          newRfiSection( phaseEventAssignments.getRequests() ),
 
-                    newDocSection( getAttachments( planManager.getAttachmentManager(),
-                                                   phaseEventAssignments.getSegments() ) )
+                          new WebMarkupContainer( "otherDiv" )
+                              .add( newTaskLinks( opts ) )
+                              .setVisible( !opts.isEmpty() ),
+
+                          newDocSection( getAttachments( planManager.getAttachmentManager(),
+                                                         phaseEventAssignments.getSegments() ) )
 
                 );
             }
@@ -584,6 +628,8 @@ public class ResponderPage extends WebPage {
                                 .setRenderBodyOnly( true )
                                 .setVisible( !flow.getEois().isEmpty() ),
 
+                            new WebMarkupContainer( "contactHeads" )
+                                .setVisible( flow.isAskedFor() ),
                             newContacts( sources, planService )
                                 .setVisible( flow.isAskedFor() )
                                 .setRenderBodyOnly( true ),
@@ -630,8 +676,11 @@ public class ResponderPage extends WebPage {
                 if ( sourceItem.getIndex() == 0 )
                     contact.add( new AttributeAppender( "class", true, new Model<String>( "first" ), " " ) );
                 if ( sourceItem.getIndex() == getViewSize() - 1 ) {
-                    Component c = supervisor == null ? contact : supervisor;
-                    c.add( new AttributeAppender( "class", true, new Model<String>( "last" ), " " ) );
+                    Component c = sup == null ? contact : supervisor;
+                    c.add( new AttributeAppender( "class",
+                                                  true,
+                                                  new Model<String>( "last" ),
+                                                  " " ) );
                 }
             }
         };
@@ -1080,4 +1129,21 @@ public class ResponderPage extends WebPage {
                                                               : parent.compareTo( o.parent );
         }
     }
+
+    //================================================
+    /**
+     *  Some report-specific extra information for an assignment.
+     */
+    private static class ReportTask implements Serializable {
+        private int phaseSeq;
+        private Assignment assignment;
+        private int taskSeq;
+
+        private ReportTask( int phaseSeq, Assignment assignment, int taskSeq ) {
+            this.phaseSeq = phaseSeq;
+            this.assignment = assignment;
+            this.taskSeq = taskSeq;
+        }
+    }
+
 }
