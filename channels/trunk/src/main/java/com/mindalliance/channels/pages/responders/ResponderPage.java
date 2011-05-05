@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
+import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.EventPhase;
@@ -394,7 +395,7 @@ public class ResponderPage extends WebPage {
                         item.add(
                             new Label( "flowName2", MessageFormat.format( getVerb( flow ),
                                                                           flow.getLabel() ) ),
-                            new Label( "flowTiming", getTiming( flow ) ),
+                            new Label( "flowTiming", getTiming( flow, true ) ),
                             new WebMarkupContainer( "eoisRow" )
                                 .add( newEoiList( findEois( flow ) ) )
                                 .setRenderBodyOnly( true )
@@ -622,7 +623,7 @@ public class ResponderPage extends WebPage {
 
                         item.add(
                             new Label( "flowName2", flow.getLabel() ),
-                            new Label( "flowTiming", getTiming( flow ) ),
+                            new Label( "flowTiming", getTiming( flow, false ) ),
                             new WebMarkupContainer( "eoisRow" )
                                 .add( newEoiList( findEois( flow ) ) )
                                 .setRenderBodyOnly( true )
@@ -715,12 +716,16 @@ public class ResponderPage extends WebPage {
                   new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() ) );
     }
 
-    private static String getTiming( Flow flow ) {
+    private static String getTiming( Flow flow, boolean outgoing ) {
         StringWriter w = new StringWriter();
-        w.append( flow.isAskedFor() ? "Available upon request"
-                                    : "Provided" );
-
-        w.append( flow.getMaxDelay().getSeconds() == 0L ? "" : ", in at most " + flow.getMaxDelay().toString() );
+        Delay maxDelay = flow.getMaxDelay();
+        if ( outgoing )
+            w.append( maxDelay.getSeconds() == 0L ? "Immediately"
+                                                  : "Within " + maxDelay.toString() );
+        else {
+            w.append( flow.isAskedFor() ? "Available upon request" : "Provided" );
+            w.append( maxDelay.getSeconds() == 0L ? "" : " after at most " + maxDelay.toString() );
+        }
 
         return w.toString();
     }
