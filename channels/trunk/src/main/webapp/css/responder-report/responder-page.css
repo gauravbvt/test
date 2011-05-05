@@ -18,6 +18,11 @@ a {
     text-decoration: none;
 }
 
+a:hover {
+    color: #013081;
+    border-bottom: 1px dotted #013081;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
@@ -27,9 +32,8 @@ body {
     text-align: center;
 }
 
-div.task {
-    position: relative;
-}
+
+/* ----- Structure ----- */
 
 div#container {
     width: 1000px;
@@ -40,9 +44,6 @@ div#container {
 	background:#f6f6f6;
 }
 
-
-/* ----- Header ----- */
-
 div#header {
     width: 1000px;
     height: 30px;
@@ -50,6 +51,14 @@ div#header {
     border-bottom: 1px solid #999999;
 	font-size:12px;
 }
+
+div#contents {
+	padding:30px;
+	width:940px;
+}
+
+
+/* ----- Header ----- */
 
 div#header img {
     float: left;
@@ -84,12 +93,7 @@ div#header a:hover {
 }
 
 
-/* ----- Content ----- */
-
-div#contents {
-	padding:30px;
-	width:940px;
-}
+/* ----- Typography ----- */
 
 p {
 	padding:5px 0 5px 10px;
@@ -157,14 +161,13 @@ span.flowName {
 
 span.plan-name,
 span.source,
-span.title {
+span.title,
+span.duration {
 	font-weight:bold;
 }
 
-span.duration {
-    font-style: normal;
-    font-weight: bold;
-}
+
+/* ----- Tables ----- */
 
 table {
 	border-collapse:collapse;
@@ -204,10 +207,10 @@ table tr.eoi td {
 	line-height:150%;
 }
 
-table tr.contactHeads th:first-child,
-table tr.contact td:first-child,
-table tr.eoiHeads th:first-child,
-table tr.eoi td:first-child {
+table tr.contactHeads th.first,
+table tr.contact td.first,
+table tr.eoiHeads th.first,
+table tr.eoi td.first {
 	padding:5px 10px 5px 20px;
 }
 
@@ -280,7 +283,4 @@ table tr.contact ul {
 	list-style: none outside none;
 	margin: 0;
 	padding: 0;
-}
-
-table tr.contact ul li {
 }
