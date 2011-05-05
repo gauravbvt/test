@@ -162,7 +162,6 @@ span.title {
 }
 
 span.duration {
-    border-bottom: 1px dotted #000000;
     font-style: normal;
     font-weight: bold;
 }
@@ -190,6 +189,7 @@ table tr.eoiHeads,
 table tr.eoi {
 	font-size:11px;
     background: #f6f6f6;
+	border-top: none;
 }
 
 table tr.contactHeads th,
@@ -257,11 +257,12 @@ table.taskHeader tr {
     background: #F6F6F6;
     border-left: none;
     border-right: none;
+    border-top: 1px solid #999999;
 }
 
 table.taskHeader p {
 	line-height: 150%;
-	padding:0 5px;
+	padding: 0 5px 5px 0;
 }
 
 table tr.note {
@@ -273,4 +274,13 @@ table tr.note {
 table tr.note td {
 	color: #000000;
 	padding: 7px 10px 7px 20px;
+}
+
+table tr.contact ul {
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+table tr.contact ul li {
 }
