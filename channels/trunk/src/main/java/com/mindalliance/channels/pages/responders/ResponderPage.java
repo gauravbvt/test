@@ -253,6 +253,7 @@ public class ResponderPage extends WebPage {
                 Part part = a.getPart();
                 PlanService planService = getPlanService();
                 List<Part> subtasks = myAssignments.from( a ).getParts();
+                // TODO back link to phase
 
                 List<EOI> eois = findStartingEois( part );
                 String category = part.getCategory() == null ? ""
@@ -323,8 +324,9 @@ public class ResponderPage extends WebPage {
                         .add( new ListView<Goal>( "risks", risks ) {
                                     @Override
                                     protected void populateItem( ListItem<Goal> item ) {
-                                        item.add( new Label( "type",
-                                                             item.getModelObject().getFullTitle() ) );
+                                        item.add(
+                                            new Label( "type",
+                                                       item.getModelObject().getFullTitle() ) );
                                     }
                               },
                               new ListView<Goal>( "gains", gains ) {
@@ -383,6 +385,7 @@ public class ResponderPage extends WebPage {
 
     private Component newDistribFlows(
         String id, final List<Flow> flows, final PlanService planService ) {
+
         return new WebMarkupContainer( id )
             .add(
                 new ListView<Flow>( "perFlow", flows ) {
@@ -396,6 +399,7 @@ public class ResponderPage extends WebPage {
                             new Label( "flowName2", MessageFormat.format( getVerb( flow ),
                                                                           flow.getLabel() ) ),
                             new Label( "flowTiming", getTiming( flow, true ) ),
+                            new Label( "flowCard", flow.isAll() ? "all" : "any" ),
                             new WebMarkupContainer( "eoisRow" )
                                 .add( newEoiList( findEois( flow ) ) )
                                 .setRenderBodyOnly( true )
@@ -484,11 +488,12 @@ public class ResponderPage extends WebPage {
                               .add( new AttributeModifier( "name", true, new Model<String>(
                                   "ep_" + item.getIndex() ) ) ),
 
-                          new Label( "eventDesc", ensurePeriod( eventPhase.getEvent()
-                                                                    .getDescription() ) )
+                          // TODO add back link to top
+                          new Label( "eventDesc", ensurePeriod(
+                                                    eventPhase.getEvent().getDescription() ) )
                               .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
-                          new Label( "phaseDesc", ensurePeriod( eventPhase.getPhase()
-                                                                    .getDescription() ) )
+                          new Label( "phaseDesc", ensurePeriod(
+                                                    eventPhase.getPhase().getDescription() ) )
                               .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ),
                           new Label( "phaseSeq", item.getIndex() + 2 + "." ),
 

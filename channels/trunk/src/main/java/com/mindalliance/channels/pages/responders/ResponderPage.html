@@ -263,28 +263,28 @@
                         </tr>
                         <span wicket:id="eoisRow">
                             <tr class="eoiHeads">
-                                <th>Information</th>
+                                <th class="first">Information</th>
                                 <th>Description</th>
                                 <th>Handling</th>
-                                <th>Classification</th>
+                                <th class="last">Classification</th>
                             </tr>
                             <tr class="eoi" wicket:id="eoi">
-                                <td wicket:id="eoi.name">{EOI}</td>
+                                <td class="first" wicket:id="eoi.name">{EOI}</td>
                                 <td wicket:id="eoi.desc">{description}</td>
                                 <td wicket:id="eoi.handling">{handling}</td>
-                                <td wicket:id="eoi.class">{classification}</td>
+                                <td class="last" wicket:id="eoi.class">{classification}</td>
                             </tr>
                         </span>
                         <tr wicket:id="contactHeads" class="contactHeads">
-                            <th>Name</th>
+                            <th class="first">Name</th>
                             <th>Organization, Title</th>
                             <th>Contact Info</th>
-                            <th>Clearance</th>
+                            <th class="last">Clearance</th>
                         </tr>
                         <span wicket:id="perFlowContact">
                             <!-- zero of more of the following 2 rows -->
                             <tr wicket:id="contact" valign="top" class="contact">
-                                <td wicket:id="contact.name">{agent name}</td>
+                                <td class="first" wicket:id="contact.name">{agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
@@ -294,10 +294,10 @@
                                     </ul>
                                     <span wicket:id="noInfo">N/A</span>
                                 </td>
-                                <td wicket:id="contact.classification">{classification}</td>
+                                <td class="last" wicket:id="contact.classification">{classification}</td>
                             </tr>
                             <tr wicket:id="supervisor" valign="top" class="contact supervisor">
-                                <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
+                                <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
@@ -307,7 +307,7 @@
                                     </ul>
                                     <span wicket:id="noInfo">N/A</span>
                                 </td>
-                                <td wicket:id="contact.classification">{classification}</td>
+                                <td class="last" wicket:id="contact.classification">{classification}</td>
                             </tr>
                         </span>
                         <!-- Optional -->
@@ -333,28 +333,28 @@
                         </tr>
                         <span wicket:id="eoisRow">
                             <tr class="eoiHeads">
-                                <th>Information</th>
+                                <th class="first">Information</th>
                                 <th>Description</th>
                                 <th>Handling</th>
-                                <th>Classification</th>
+                                <th class="last">Classification</th>
                             </tr>
                             <tr class="eoi" wicket:id="eoi">
-                                <td wicket:id="eoi.name">{EOI}</td>
+                                <td class="first" wicket:id="eoi.name">{EOI}</td>
                                 <td wicket:id="eoi.desc">{description}</td>
                                 <td wicket:id="eoi.handling">{handling}</td>
-                                <td wicket:id="eoi.class">{classification}</td>
+                                <td class="last" wicket:id="eoi.class">{classification}</td>
                             </tr>
                         </span>
                         <tr wicket:id="contactHeads" class="contactHeads">
-                            <th>Name</th>
+                            <th class="first">Name</th>
                             <th>Organization, Title</th>
                             <th>Contact Info</th>
-                            <th>Clearance</th>
+                            <th class="last">Clearance</th>
                         </tr>
                         <span wicket:id="perFlowContact">
                             <!-- zero of more of the following 2 rows -->
                             <tr wicket:id="contact" valign="top" class="contact">
-                                <td wicket:id="contact.name">{agent name}</td>
+                                <td class="first" wicket:id="contact.name">{agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
@@ -364,10 +364,10 @@
                                     </ul>
                                     <span wicket:id="noInfo">N/A</span>
                                 </td>
-                                <td wicket:id="contact.classification">{classification}</td>
+                                <td class="last" wicket:id="contact.classification">{classification}</td>
                             </tr>
                             <tr wicket:id="supervisor" valign="top" class="contact supervisor">
-                                <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
+                                <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
@@ -377,7 +377,7 @@
                                     </ul>
                                     <span wicket:id="noInfo">N/A</span>
                                 </td>
-                                <td wicket:id="contact.classification">{classification}</td>
+                                <td class="last" wicket:id="contact.classification">{classification}</td>
                             </tr>
                         </span>
                         <!-- Optional -->
@@ -405,32 +405,33 @@
                             </th>
                             <th colspan="2" align="right">
                                 <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
+                                to <span wicket:id="flowCard" class="cardinality">{any|all}</span>
                             </th>
                         </tr>
                         <span wicket:id="eoisRow">
                             <tr class="eoiHeads">
-                                <th>Information</th>
+                                <th class="first">Information</th>
                                 <th>Description</th>
                                 <th>Handling</th>
-                                <th>Classification</th>
+                                <th class="last">Classification</th>
                             </tr>
                             <tr class="eoi" wicket:id="eoi">
-                                <td wicket:id="eoi.name">{EOI}</td>
+                                <td class="first" wicket:id="eoi.name">{EOI}</td>
                                 <td wicket:id="eoi.desc">{description}</td>
                                 <td wicket:id="eoi.handling">{handling}</td>
-                                <td wicket:id="eoi.class">{classification}</td>
+                                <td class="last" wicket:id="eoi.class">{classification}</td>
                             </tr>
                         </span>
                         <tr class="contactHeads">
-                            <th>Name</th>
+                            <th class="first">Name</th>
                             <th>Organization, Title</th>
                             <th>Contact Info</th>
-                            <th>Clearance</th>
+                            <th class="last">Clearance</th>
                         </tr>
                         <span wicket:id="perFlowContact">
                             <!-- zero of more of the following 2 rows -->
                             <tr wicket:id="contact" valign="top" class="contact">
-                                <td wicket:id="contact.name">{agent name}</td>
+                                <td class="first" wicket:id="contact.name">{agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
@@ -440,10 +441,10 @@
                                     </ul>
                                     <span wicket:id="noInfo">N/A</span>
                                 </td>
-                                <td wicket:id="contact.classification">{classification}</td>
+                                <td class="last" wicket:id="contact.classification">{classification}</td>
                             </tr>
                             <tr wicket:id="supervisor" valign="top" class="contact supervisor">
-                                <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
+                                <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
@@ -453,7 +454,7 @@
                                     </ul>
                                     <span wicket:id="noInfo">N/A</span>
                                 </td>
-                                <td wicket:id="contact.classification">{classification}</td>
+                                <td class="last" wicket:id="contact.classification">{classification}</td>
                             </tr>
                         </span>
 
@@ -491,28 +492,28 @@
                         </tr>
                         <span wicket:id="eoisRow">
                             <tr class="eoiHeads">
-                                <th>Information</th>
+                                <th class="first">Information</th>
                                 <th>Description</th>
                                 <th>Handling</th>
-                                <th>Classification</th>
+                                <th class="last">Classification</th>
                             </tr>
                             <tr class="eoi" wicket:id="eoi">
-                                <td wicket:id="eoi.name">{EOI}</td>
+                                <td class="first" wicket:id="eoi.name">{EOI}</td>
                                 <td wicket:id="eoi.desc">{description}</td>
                                 <td wicket:id="eoi.handling">{handling}</td>
-                                <td wicket:id="eoi.class">{classification}</td>
+                                <td class="last" wicket:id="eoi.class">{classification}</td>
                             </tr>
                         </span>
                         <tr class="contactHeads">
-                            <th>Name</th>
+                            <th class="first">Name</th>
                             <th>Organization, Title</th>
                             <th>Contact Info</th>
-                            <th>Clearance</th>
+                            <th class="last">Clearance</th>
                         </tr>
                         <span wicket:id="perFlowContact">
                             <!-- zero of more of the following 2 rows -->
                             <tr wicket:id="contact" valign="top" class="contact">
-                                <td wicket:id="contact.name">{agent name}</td>
+                                <td class="first" wicket:id="contact.name">{agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
@@ -522,10 +523,10 @@
                                     </ul>
                                     <span wicket:id="noInfo">N/A</span>
                                 </td>
-                                <td wicket:id="contact.classification">{classification}</td>
+                                <td class="last" wicket:id="contact.classification">{classification}</td>
                             </tr>
                             <tr wicket:id="supervisor" valign="top" class="contact supervisor">
-                                <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
+                                <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
@@ -535,7 +536,7 @@
                                     </ul>
                                     <span wicket:id="noInfo">N/A</span>
                                 </td>
-                                <td wicket:id="contact.classification">{classification}</td>
+                                <td class="last" wicket:id="contact.classification">{classification}</td>
                             </tr>
                         </span>
 
