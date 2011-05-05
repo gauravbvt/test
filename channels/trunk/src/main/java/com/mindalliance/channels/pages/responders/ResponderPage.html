@@ -114,7 +114,7 @@
                 </tr>
                 <tr>
                     <th class="title" valign="top"><span>Procedure:</span></th>
-                    <td>
+                    <td class="procedureTd">
                         <p>
                             <span wicket:id="instruct">{Task instruction}.</span>
                             <span wicket:id="taskLoc">{Location}.</span>
@@ -141,7 +141,7 @@
                                 This
                                 <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
                                 procedure is performed upon request of
-                                <span wicket:id="reqFlow">{flow name}</span> by
+                                <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> by
                                 {source, source or source}.
                                 <span wicket:id="operational">It is currently operational.</span>
                             </span>
@@ -156,11 +156,11 @@
                         </p>
                         <p wicket:id="riskDiv">
                             <span wicket:id="risks">
-                                This procedure mitigates the <span wicket:id="type">{risk type}</span>
+                                This procedure mitigates the <span wicket:id="type" class="type">{risk type}</span>
                                 {at the end of {phase} of {event}}.
                             </span>
                             <span wicket:id="gains">
-                                This procedure may achieve <span wicket:id="type">{risk type}</span>
+                                This procedure may achieve <span wicket:id="type" class="type">{risk type}</span>
                                 {at the end of {phase} of {event}}.
                             </span>
                             <span wicket:id="conseqs">
@@ -174,10 +174,10 @@
                         <span wicket:id="notifTask">
                             <p>
                                 This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                procedure is performed when receiving <span wicket:id="reqFlow">{flow name}</span> from {source, source or source}.
+                                procedure is performed when receiving <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> from {source, source or source}.
                                 <span wicket:id="operational">It is currently operational.</span>
                             </p>
-                            <div wicket:id="eois">
+                            <div wicket:id="eois" class="eoiCont">
                                 <p>
                                     The following information should have been included in the communication:
                                 </p>

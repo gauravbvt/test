@@ -57,6 +57,9 @@ div#contents {
 	width:940px;
 }
 
+div.eoiCont {
+	padding:10px 0 0 0;
+}
 
 /* ----- Header ----- */
 
@@ -162,8 +165,11 @@ span.flowName {
 span.plan-name,
 span.source,
 span.title,
-span.duration {
+span.duration,
+span.type,
+span.reqFlow {
 	font-weight:bold;
+    border-bottom: 1px dotted #333333;
 }
 
 
@@ -179,6 +185,10 @@ table {
 table td,
 table th {
 	padding:10px;
+}
+
+table td.procedureTd {
+	padding:10px 0 10px 10px;
 }
 
 table tbody tr {
@@ -237,7 +247,7 @@ table.eois td {
 table.eois.nested {
 	width:100%;
     font-size: 11px;
-	margin:10px 0 10px 5px;
+	margin:10px 0 10px 0;
 }
 
 table.eois.nested thead tr {
@@ -266,6 +276,16 @@ table.taskHeader tr {
 table.taskHeader p {
 	line-height: 150%;
 	padding: 0 5px 5px 0;
+}
+
+table.taskHeader div.eoiCont {
+    border-top: 1px solid #999999;
+    margin: 7px 0 0;
+    padding: 10px 0 0;
+}
+
+table.taskHeader div.eoiCont p {
+	padding:0 5px 0 0;
 }
 
 table tr.note {
