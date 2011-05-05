@@ -10,6 +10,7 @@ import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Employment;
@@ -249,6 +250,7 @@ public class ResponderPage extends WebPage {
                             new Label( "taskRecur", part.isRepeating() ? part.getRepeatsEvery().toString()
                                                                        : "" )
                                 .setVisible( part.isRepeating() ),
+                            new Label( "reqFlow", getTriggeringFlowName( part ) ),
                             new WebMarkupContainer( "operational" )
                                 .setVisible( part.isEffectivelyOperational() ),
                             newSimpleEoiList( eois )
@@ -483,7 +485,12 @@ public class ResponderPage extends WebPage {
                                      notAvailable( ensurePeriod( eoi.eoi.getDescription() ) ) ),
                           new Label( "eoi.handling", notAvailable( eoi.eoi.getSpecialHandling() ) ),
                           new Label( "eoi.class",
-                                     getClassificationString( eoi.eoi.getClassifications(), " or " ) ) );
+                                     getClassificationString( eoi.eoi.getClassifications() ) ) );
+                if ( item.getIndex() == 0 )
+                    item.add( new AttributeAppender( "class",
+                                                     true,
+                                                     new Model<String>( "first" ),
+                                                     " " ) );
                 if ( item.getIndex() == getViewSize() - 1 )
                     item.add( new AttributeAppender( "class",
                                                      true,
@@ -498,8 +505,7 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private static String getClassificationString(
-        List<Classification> classifications, String lastSep ) {
+    private static String getClassificationString( List<Classification> classifications ) {
 
         if ( classifications.isEmpty() )
             return "N/A";
@@ -509,7 +515,7 @@ public class ResponderPage extends WebPage {
             Classification classification = classifications.get( i );
             w.append( classification.getName() );
             if ( i == classifications.size() - 2 )
-                w.append( lastSep );
+                w.append( " or " );
             else if ( i != classifications.size() - 1 )
                 w.append( ", " );
         }
@@ -612,30 +618,52 @@ public class ResponderPage extends WebPage {
                         supJob = jobs.get( 0 );
                 }
 
-                sourceItem.add( newContact( "contact",
-                                            employment.getJob(),
-                                            employment.getActor(),
-                                            organization ), newContact( "supervisor",
-                                                                        supJob,
-                                                                        sup,
-                                                                        organization ).setVisible(
-                    sup != null ) );
+                MarkupContainer contact = newContact( planService,
+                                                      "contact",
+                                                      employment.getJob(),
+                                                      organization );
+                Component supervisor = newContact( planService, "supervisor", supJob, organization )
+                    .setVisible( sup != null );
+
+                sourceItem.add( contact, supervisor );
+
+                if ( sourceItem.getIndex() == 0 )
+                    contact.add( new AttributeAppender( "class", true, new Model<String>( "first" ), " " ) );
+                if ( sourceItem.getIndex() == getViewSize() - 1 ) {
+                    Component c = supervisor == null ? contact : supervisor;
+                    c.add( new AttributeAppender( "class", true, new Model<String>( "last" ), " " ) );
+                }
             }
         };
     }
 
     private static MarkupContainer newContact(
-        String id, Job job, Actor actor, Organization organization ) {
+        PlanService planService, String id, Job job, Organization organization ) {
+        Actor actor = job == null ? null : job.getActor();
+
+        List<Channel> channels = actor == null ? new ArrayList<Channel>()
+                               : planService.findAllChannelsFor( new ResourceSpec( actor, null, organization, null ) );
 
         return new WebMarkupContainer( id )
-            .add( new Label( "contact.name", actor == null ? "" : actor.getName() ), new Label(
-                "contact.title",
-                job == null || job.getTitle().isEmpty() ? "" : ", " + job.getTitle() ), new Label(
-                "contact.classification",
-                actor == null ? "" : ResponderPage.getClassificationString( actor
-                                                                                .getClassifications(),
-                                                                            " or " ) ),
-                  new Label( "contact.organization", organization.toString() ) );
+            .add( new Label( "contact.name", actor == null ? "" : actor.getName() ),
+                  new Label( "contact.title",
+                             job == null || job.getTitle().isEmpty() ? "" : ", " + job.getTitle() ),
+                  new Label( "contact.classification",
+                             actor == null ? "" : ResponderPage.getClassificationString(
+                                                    actor.getClassifications() ) ),
+                  new Label( "contact.organization", organization.toString() ),
+                  new WebMarkupContainer( "contactInfos" )
+                      .add( new ListView<Channel>( "contactInfo", channels ) {
+                          @Override
+                          protected void populateItem( ListItem<Channel> item ) {
+                              Channel channel = item.getModelObject();
+                              item.add(
+                                  new Label( "channelType",
+                                             channel.getMedium().getLabel() + ":" ),
+                                  new Label( "channel", channel.getAddress() ) );
+                          }
+                      } ).setVisible( !channels.isEmpty() ),
+                  new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() ) );
     }
 
     private static String getTiming( Flow flow ) {

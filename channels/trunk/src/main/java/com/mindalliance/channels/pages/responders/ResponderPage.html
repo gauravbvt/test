@@ -174,7 +174,7 @@
                         <span wicket:id="notifTask">
                             <p>
                                 This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                procedure is performed when receiving {flow name} from {source, source or source}.
+                                procedure is performed when receiving <span wicket:id="reqFlow">{flow name}</span> from {source, source or source}.
                                 <span wicket:id="operational">It is currently operational.</span>
                             </p>
                             <div wicket:id="eois">
@@ -280,13 +280,27 @@
                             <tr wicket:id="contact" valign="top" class="contact">
                                 <td wicket:id="contact.name">{agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                <td>{contact infos}</td>
+                                <td><ul wicket:id="contactInfos">
+                                        <li wicket:id="contactInfo">
+                                            <em wicket:id="channelType">{channel type}:</em>
+                                            <span wicket:id="channel">{channel}</span>
+                                        </li>
+                                    </ul>
+                                    <span wicket:id="noInfo">N/A</span>
+                                </td>
                                 <td wicket:id="contact.classification">{classification}</td>
                             </tr>
                             <tr wicket:id="supervisor" valign="top" class="contact supervisor">
                                 <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                <td>{contact infos}</td>
+                                <td><ul wicket:id="contactInfos">
+                                        <li wicket:id="contactInfo">
+                                            <em wicket:id="channelType">{channel type}:</em>
+                                            <span wicket:id="channel">{channel}</span>
+                                        </li>
+                                    </ul>
+                                    <span wicket:id="noInfo">N/A</span>
+                                </td>
                                 <td wicket:id="contact.classification">{classification}</td>
                             </tr>
                         </span>
@@ -330,13 +344,27 @@
                             <tr wicket:id="contact" valign="top" class="contact">
                                 <td wicket:id="contact.name">{agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                <td>{contact infos}</td>
+                                <td><ul wicket:id="contactInfos">
+                                        <li wicket:id="contactInfo">
+                                            <em wicket:id="channelType">{channel type}:</em>
+                                            <span wicket:id="channel">{channel}</span>
+                                        </li>
+                                    </ul>
+                                    <span wicket:id="noInfo">N/A</span>
+                                </td>
                                 <td wicket:id="contact.classification">{classification}</td>
                             </tr>
                             <tr wicket:id="supervisor" valign="top" class="contact supervisor">
                                 <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                <td>{contact infos}</td>
+                                <td><ul wicket:id="contactInfos">
+                                        <li wicket:id="contactInfo">
+                                            <em wicket:id="channelType">{channel type}:</em>
+                                            <span wicket:id="channel">{channel}</span>
+                                        </li>
+                                    </ul>
+                                    <span wicket:id="noInfo">N/A</span>
+                                </td>
                                 <td wicket:id="contact.classification">{classification}</td>
                             </tr>
                         </span>
@@ -392,13 +420,27 @@
                             <tr wicket:id="contact" valign="top" class="contact">
                                 <td wicket:id="contact.name">{agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                <td>{contact infos}</td>
+                                <td><ul wicket:id="contactInfos">
+                                        <li wicket:id="contactInfo">
+                                            <em wicket:id="channelType">{channel type}:</em>
+                                            <span wicket:id="channel">{channel}</span>
+                                        </li>
+                                    </ul>
+                                    <span wicket:id="noInfo">N/A</span>
+                                </td>
                                 <td wicket:id="contact.classification">{classification}</td>
                             </tr>
                             <tr wicket:id="supervisor" valign="top" class="contact supervisor">
                                 <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                <td>{contact infos}</td>
+                                <td><ul wicket:id="contactInfos">
+                                        <li wicket:id="contactInfo">
+                                            <em wicket:id="channelType">{channel type}:</em>
+                                            <span wicket:id="channel">{channel}</span>
+                                        </li>
+                                    </ul>
+                                    <span wicket:id="noInfo">N/A</span>
+                                </td>
                                 <td wicket:id="contact.classification">{classification}</td>
                             </tr>
                         </span>
@@ -460,13 +502,27 @@
                             <tr wicket:id="contact" valign="top" class="contact">
                                 <td wicket:id="contact.name">{agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                <td>{contact infos}</td>
+                                <td><ul wicket:id="contactInfos">
+                                        <li wicket:id="contactInfo">
+                                            <em wicket:id="channelType">{channel type}:</em>
+                                            <span wicket:id="channel">{channel}</span>
+                                        </li>
+                                    </ul>
+                                    <span wicket:id="noInfo">N/A</span>
+                                </td>
                                 <td wicket:id="contact.classification">{classification}</td>
                             </tr>
                             <tr wicket:id="supervisor" valign="top" class="contact supervisor">
                                 <td wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                <td>{contact infos}</td>
+                                <td><ul wicket:id="contactInfos">
+                                        <li wicket:id="contactInfo">
+                                            <em wicket:id="channelType">{channel type}:</em>
+                                            <span wicket:id="channel">{channel}</span>
+                                        </li>
+                                    </ul>
+                                    <span wicket:id="noInfo">N/A</span>
+                                </td>
                                 <td wicket:id="contact.classification">{classification}</td>
                             </tr>
                         </span>
