@@ -186,6 +186,8 @@ public class ResponderPage extends WebPage {
             },
 
             new Label( "planName", plan.getName() ),
+            new Label( "planName2", plan.getName() ),
+            new Label( "planVersion", "v" + plan.getVersion() ),
             new Label( "planDescription", plan.getDescription() ),
 
              new ListView<EventPhase>( "phaseLinks", eventPhases ) {
@@ -265,6 +267,8 @@ public class ResponderPage extends WebPage {
                         .add( new Label( "taskName", part.getTask() ) )
                         .add( new AttributeModifier( "name", true, new Model<String>(
                               "t_" + part.getId() ) ) ),
+                    new WebMarkupContainer( "backTask" )
+                        .add( new AttributeModifier( "href", true, new Model<String>( "#ep_" + ( t.phaseSeq - 2 ) ) ) ),
                     new Label( "taskSeq", t.phaseSeq + "." + t.taskSeq + "." ),
                     new Label( "taskSummary", ensurePeriod( getTaskSummary( a ) ) ),
                     new Label( "instruct", ensurePeriod( part.getDescription() ) )
@@ -379,7 +383,8 @@ public class ResponderPage extends WebPage {
     }
 
     private static String ensurePeriod( String sentence ) {
-        return sentence == null || sentence.isEmpty() || sentence.endsWith( "." ) ? sentence
+        return sentence == null || sentence.isEmpty()
+               || sentence.endsWith( "." ) || sentence.endsWith( ";" ) ? sentence
                                         : sentence + "." ;
     }
 

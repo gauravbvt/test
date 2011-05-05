@@ -12,7 +12,7 @@
 <div id="container">
     <div id="header">
 		<img src="../images/responder-report/channels-logo-small.png" width="19" height="22" alt="Channels Logo" />
-		<h1>Channels - Responder Report</h1>
+		<h1>Channels &ndash; <span wicket:id="planName2">Plan name</span> <span wicket:id="planVersion">v1</span> &ndash; Responder Report</h1>
 		<a href="logout">Logout <span wicket:id="userName">user</span></a>
     </div>
 
@@ -105,7 +105,11 @@
         </div>
 
         <div wicket:id="tasks" class="task">
-            <h2><span wicket:id="taskSeq" class="seq">1.1.</span> <a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a></h2>
+            <h2><a class="back" href="#" wicket:id="backTask">back</a>
+                <span wicket:id="taskSeq" class="seq">1.1.</span>
+                <a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a>
+
+            </h2>
 
             <table class="taskHeader">
                 <tr>
