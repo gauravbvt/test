@@ -393,7 +393,7 @@ public class ResponderPage extends WebPage {
         for ( Flow flow : getTriggeringFlows( part ) ) {
             Node source = flow.getSource();
             if ( source.isPart() )
-                specs.addAll( allAssignments.from( (Specable) source ).getActors() );
+                specs.add( new ResourceSpec( (Specable) source ) );
 
             else {
                 // TODO find sources from connectors
@@ -402,7 +402,7 @@ public class ResponderPage extends WebPage {
                 for ( ExternalFlow externalFlow : externalFlows ) {
                     Node node = externalFlow.getSource();
                     if ( node.isPart() )
-                        specs.addAll( allAssignments.from( (Specable) node ).getActors() );
+                        specs.add( new ResourceSpec( (Specable) node ) );
                 }
             }
 
@@ -416,7 +416,7 @@ public class ResponderPage extends WebPage {
         StringWriter writer = new StringWriter();
         for ( int i = 0, sourcesSize = sources.size(); i < sourcesSize; i++ ) {
             String source = sources.get( i );
-            if ( i == sourcesSize - 1 )
+            if ( i == sourcesSize - 2 )
                 writer.append( " or " );
             else if ( i > 0 )
                 writer.append( ", " );
@@ -624,7 +624,7 @@ public class ResponderPage extends WebPage {
         StringWriter w = new StringWriter();
         for ( int i = 0; i < classifications.size(); i++ ) {
             Classification classification = classifications.get( i );
-            w.append( classification.getName() );
+            w.append( classification.toString() );
             if ( i == classifications.size() - 2 )
                 w.append( " or " );
             else if ( i != classifications.size() - 1 )
@@ -1164,7 +1164,7 @@ public class ResponderPage extends WebPage {
 
         private EOI( ElementOfInformation eoi, Flow flow, EOI parent ) {
             this.eoi = eoi;
-            label = eoi.getLabel() ;//+ ( flow == null ? "" : " (from " + flow.getName() + ")" );
+            label = eoi.getContent() ;//+ ( flow == null ? "" : " (from " + flow.getName() + ")" );
             level = parent == null ? 0 : parent.level + 1;
             this.parent = parent;
         }

@@ -44,23 +44,13 @@
                 <p wicket:id="phaseDesc">{Phase description}</p>
             </div>
 
-            <div wicket:id="routineDiv">
-                <h3>Routine procedures</h3>
-                <p>The following procedures take place on a ongoing basis:</p>
-                <ul>
-                    <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
-                </ul>
-            </div>
-
             <div wicket:id="notDiv">
-                <h3>Notification responses</h3>
-                <p>The following procedures are prompted by incoming notifications:</p>
-
+                <h3>Tasks triggered by notification</h3>
                 <ul>
                     <li wicket:id="notLinks">
                         <a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a>
                         <span class="flow" wicket:id="flow">
-                            when receiving &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo; from
+                            upon receiving &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo; from
                             <span wicket:id="sources">
                                 <span class="source" wicket:id="source">source</span><span wicket:id="sourceSep"></span>
                             </span><span wicket:id="flowSep">.</span>
@@ -69,14 +59,21 @@
                 </ul>
             </div>
 
+            <div wicket:id="routineDiv">
+                <h3>Unprompted tasks</h3>
+                <p>Tasks executed automatically in the context of this situation.</p>
+                <ul>
+                    <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
+                </ul>
+            </div>
+
             <div wicket:id="rfiDiv">
-                <h3>Requests for information</h3>
-                <p>The following procedures are executed upon request by an appropriate sources:</p>
+                <h3>Tasks prompted by a request for information</h3>
                 <ul>
                     <li wicket:id="rfiLinks">
                         <a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a>
                         <span wicket:id="flow">
-                            when
+                            upon
                             <span wicket:id="sources">
                                 <span class="source" wicket:id="source">source</span><span wicket:id="sourceSep"></span>
                             </span>
@@ -89,8 +86,7 @@
             </div>
 
             <div wicket:id="otherDiv">
-                <h3>Other procedures</h3>
-                <p>These procedures may also apply:</p>
+                <h3>Other tasks</h3>
                 <ul>
                     <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
                 </ul>
@@ -107,17 +103,20 @@
         <div wicket:id="tasks" class="task">
             <h2><a class="back" href="#" wicket:id="backTask">back</a>
                 <span wicket:id="taskSeq" class="seq">1.1.</span>
-                <a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a>
-
+                Task: <a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a>
             </h2>
 
             <table class="taskHeader">
                 <tr>
-                    <th class="title"><span>Background:</span></th>
+                    <th class="title"><span>Situation:</span></th>
                     <td><span wicket:id="taskSummary">{summary of event/phase/location}</span></td>
                 </tr>
                 <tr>
-                    <th class="title" valign="top"><span>Procedure:</span></th>
+                    <th class="title"><span>Prompted By:</span></th>
+                    <td>...</td>
+                </tr>
+                <tr>
+                    <th class="title" valign="top"><span>Details:</span></th>
                     <td class="procedureTd">
                         <p>
                             <span wicket:id="instruct">{Task instruction}.</span>
@@ -137,14 +136,14 @@
                             <span wicket:id="routineTask">
                                 This is a routine
                                 <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                procedure.
+                                tasks.
                                 <span wicket:id="taskRecur">{recurrence information}.</span>
                                 <span wicket:id="operational">It is currently operational.</span>
                             </span>
                             <span wicket:id="reqTask">
                                 This
                                 <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                procedure is performed upon request of
+                                tasks is performed upon request of
                                 <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> by
                                 <span wicket:id="reqFlowSrc">{source, source or source}</span>.
                                 <span wicket:id="operational">It is currently operational.</span>
@@ -160,12 +159,10 @@
                         </p>
                         <p wicket:id="riskDiv">
                             <span wicket:id="risks">
-                                This procedure mitigates the <span wicket:id="type" class="type">{risk type}</span>
-                                {at the end of {phase} of {event}}.
+                                This task addresses <span wicket:id="type" class="type">{risk type}</span>.
                             </span>
                             <span wicket:id="gains">
-                                This procedure may achieve <span wicket:id="type" class="type">{risk type}</span>
-                                {at the end of {phase} of {event}}.
+                                This task may achieve <span wicket:id="type" class="type">{risk type}</span>.
                             </span>
                             <span wicket:id="conseqs">
                                 {Consequences
