@@ -21,6 +21,10 @@ div#header a {
 	display:none;
 }
 
+div.task h2 a.back {
+	display:none;
+}
+
 table > tbody > tr {
 	border-top: 2px solid #999999;
 }
