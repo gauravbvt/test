@@ -167,7 +167,7 @@ public class ResponderPage extends WebPage {
         Assignments myAssignments = service.getAssignments( true ).with( profile );
         Assignments directAssignments = myAssignments.notFrom( profile );
 
-        List<EventPhase> eventPhases = directAssignments.getEventPhases();
+        List<Segment> segments = directAssignments.getSegments();
 
         final List<User> planners = service.getUserService().getPlanners( plan.getUri() );
 
@@ -181,7 +181,7 @@ public class ResponderPage extends WebPage {
                  protected void populateItem( ListItem<User> item ) {
                      User u = item.getModelObject();
                      item.add(
-                         new ExternalLink( "planner", "mailTo:" + u.getEmail(), u.getFullName() ),
+                         new ExternalLink( "planner", "mailTo:" + u.getEmail(), u.getFullName() + " <" + u.getEmail() + ">" ),
                          new Label( "listSep",
                                     item.getIndex() == getViewSize() - 1 ?  ". "
                                   : item.getIndex() == getViewSize() - 2 ?  " or " : ", " )
@@ -195,44 +195,46 @@ public class ResponderPage extends WebPage {
             new Label( "planVersion", "v" + plan.getVersion() ),
             new Label( "planDescription", plan.getDescription() ),
 
-             new ListView<EventPhase>( "phaseLinks", eventPhases ) {
+             new ListView<Segment>( "phaseLinks", segments ) {
                  @Override
-                 protected void populateItem( ListItem<EventPhase> item ) {
-                     item.add(
-                         new WebMarkupContainer( "phaseLink" )
-                            .add( new Label( "phaseLinkText", item.getModelObject().toString() ) )
-                            .add( new AttributeModifier( "href", true,
-                                        new Model<String>( "#ep_" + item.getIndex() ) ) )
-                     );
+                 protected void populateItem( ListItem<Segment> item ) {
+                     Segment segment = item.getModelObject();
+                     item.add( new WebMarkupContainer( "phaseLink" )
+                                   .add( new Label( "phaseLinkText", fullTitle( segment ) ) )
+                                   .add( new AttributeModifier( "href", true, new Model<String>(
+                                       "#ep_" + item.getIndex() ) ) ) );
                  }
              },
 
-             newPhases( directAssignments, eventPhases ),
-             newTasks( myAssignments, numberTasks( eventPhases, myAssignments.getAssignments() ) )
+             newPhases( directAssignments, myAssignments, segments )
         );
     }
 
+    private static String fullTitle( Segment segment ) {
+        return segment.getName() + " (" + lcFirst( segment.getPhaseEventTitle() ) + ")";
+    }
+
     private static List<ReportTask> numberTasks(
-        List<EventPhase> eventPhases, List<Assignment> assignments ) {
+        List<Segment> segments, List<Assignment> assignments ) {
 
         List<ReportTask> result = new ArrayList<ReportTask>();
-        Map<EventPhase,Integer> counts = new HashMap<EventPhase, Integer>( eventPhases.size() );
+        Map<Segment,Integer> counts = new HashMap<Segment, Integer>( segments.size() );
 
         for ( Assignment assignment : assignments ) {
-            EventPhase eventPhase = assignment.getPart().getSegment().getEventPhase();
+            Segment segment = assignment.getPart().getSegment();
 
             // Phases of subtasks may not appear in index...
-            int phaseSeq = eventPhases.indexOf( eventPhase );
+            int phaseSeq = segments.indexOf( segment );
             if ( phaseSeq == -1 )
-                phaseSeq = eventPhases.size() + 1;
+                phaseSeq = segments.size() + 1;
 
-            Integer oldSeq = counts.get( eventPhase );
+            Integer oldSeq = counts.get( segment );
             if ( oldSeq == null )
                 oldSeq = 0;
 
             int taskSeq = oldSeq + 1;
-            counts.put( eventPhase, taskSeq );
-            result.add( new ReportTask( phaseSeq +2, assignment, taskSeq ) );
+            counts.put( segment, taskSeq );
+            result.add( new ReportTask( phaseSeq + 2, assignment, taskSeq ) );
         }
 
         Collections.sort( result, new Comparator<ReportTask>() {
@@ -521,7 +523,7 @@ public class ResponderPage extends WebPage {
     //-----------------------------------
     private static String getTaskSummary( Assignment assignment ) {
         StringWriter w = new StringWriter();
-        w.append( assignment.getPart().getSegment().getPhaseEventTitle() );
+        w.append( fullTitle( assignment.getPart().getSegment() ) );
         Place location = assignment.getLocation();
         if ( location != null ) {
             w.append( " in " );
@@ -532,47 +534,51 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private ListView<EventPhase> newPhases(
-        final Assignments directAssignments, final List<EventPhase> eventPhases ) {
-        return new ListView<EventPhase>( "phases", eventPhases ) {
+    private ListView<Segment> newPhases(
+        final Assignments directAssignments, final Assignments myAssignments, final List<Segment> segments ) {
+        return new ListView<Segment>( "phases", segments ) {
             @Override
-            protected void populateItem( ListItem<EventPhase> item ) {
-                EventPhase eventPhase = item.getModelObject();
-                Assignments phaseEventAssignments = directAssignments.with( eventPhase );
+            protected void populateItem( ListItem<Segment> item ) {
+                Segment segment = item.getModelObject();
+                EventPhase eventPhase = segment.getEventPhase();
+                Assignments segmentAssignments = directAssignments.with( segment );
+                Assignments mySegmentAssignments = myAssignments.with( segment );
 
                 PlanService planService = getPlanService();
-                List<Part> immeds = phaseEventAssignments.getImmediates( planService ).getParts();
-                List<Part> opts = phaseEventAssignments.getOptionals( planService ).getParts();
+                List<Part> immeds = segmentAssignments.getImmediates( planService ).getParts();
+                List<Part> opts = segmentAssignments.getOptionals( planService ).getParts();
 
                 item.add( new WebMarkupContainer( "phaseAnchor" ).add( new Label( "phaseText",
-                                                                         eventPhase.toString() ) )
+                                                                                  fullTitle( segment ) ) )
                               .add( new AttributeModifier( "name", true, new Model<String>(
                                   "ep_" + item.getIndex() ) ) ),
 
                           // TODO add back link to top
-                          new Label( "eventDesc", ensurePeriod(
-                                                    eventPhase.getEvent().getDescription() ) )
-                              .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
-                          new Label( "phaseDesc", ensurePeriod(
-                                                    eventPhase.getPhase().getDescription() ) )
-                              .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ),
-                          new Label( "phaseSeq", item.getIndex() + 2 + "." ),
+                          new Label( "segDesc", ensurePeriod( segment.getDescription() ) )
+                              .setVisible( !segment.getDescription().isEmpty() ), new Label(
+                    "eventDesc",
+                    ensurePeriod( eventPhase.getEvent().getDescription() ) ).setVisible( !eventPhase
+                    .getEvent().getDescription().isEmpty() ), new Label( "phaseDesc", ensurePeriod(
+                    "This happens in the event of " + lcFirst( eventPhase.getPhase()
+                                                                   .getDescription() ) ) )
+                    .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ), new Label(
+                        "phaseSeq",
+                        item.getIndex() + 2 + "." ),
 
-                          new WebMarkupContainer( "routineDiv" )
-                              .add( newTaskLinks( immeds ) )
+                          new WebMarkupContainer( "routineDiv" ).add( newTaskLinks( immeds ) )
                               .setVisible( !immeds.isEmpty() ),
 
-                          newNotifSection( phaseEventAssignments
-                                               .getNotifications( planService ) ),
+                          newNotifSection( segmentAssignments.getNotifications( planService ) ),
 
-                          newRfiSection( phaseEventAssignments.getRequests() ),
+                          newRfiSection( segmentAssignments.getRequests() ),
 
-                          new WebMarkupContainer( "otherDiv" )
-                              .add( newTaskLinks( opts ) )
+                          new WebMarkupContainer( "otherDiv" ).add( newTaskLinks( opts ) )
                               .setVisible( !opts.isEmpty() ),
 
                           newDocSection( getAttachments( planManager.getAttachmentManager(),
-                                                         phaseEventAssignments.getSegments() ) )
+                                                         segmentAssignments.getSegments() ) ),
+                          newTasks( mySegmentAssignments,
+                                    numberTasks( segments, mySegmentAssignments.getAssignments() ) )
 
                 );
             }
@@ -805,8 +811,7 @@ public class ResponderPage extends WebPage {
         Collections.sort( result, new Comparator<Employment>() {
             @Override
             public int compare( Employment o1, Employment o2 ) {
-                return o1.toString().compareToIgnoreCase(
-                            o2.toString() );
+                return o1.toString().compareToIgnoreCase( o2.toString() );
             }
         } );
         return result;
