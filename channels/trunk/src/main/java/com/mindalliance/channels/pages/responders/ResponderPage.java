@@ -12,13 +12,16 @@ import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
+import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.EventPhase;
+import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Job;
+import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -168,6 +171,8 @@ public class ResponderPage extends WebPage {
 
         final List<User> planners = service.getUserService().getPlanners( plan.getUri() );
 
+        // TODO password change fields
+
         add(
             new Label( "userName", user.getUsername() ),
             new Label( "personName", profile.displayString( 256 ) ),
@@ -253,7 +258,11 @@ public class ResponderPage extends WebPage {
                 ReportTask t = item.getModelObject();
                 Assignment a = t.assignment;
                 Part part = a.getPart();
+
                 PlanService planService = getPlanService();
+                Assignments allAssignments = planService.getAssignments( false );
+
+
                 List<Part> subtasks = myAssignments.from( a ).getParts();
                 // TODO back link to phase
 
@@ -298,6 +307,7 @@ public class ResponderPage extends WebPage {
                                                                        : "" )
                                 .setVisible( part.isRepeating() ),
                             new Label( "reqFlow", getTriggeringFlowName( part ) ),
+                            new Label( "reqFlowSrc", getTriggeringFlowSrc( part, allAssignments ) ),
                             new WebMarkupContainer( "operational" )
                                 .setVisible( part.isEffectivelyOperational() ),
                             newSimpleEoiList( eois )
@@ -308,12 +318,19 @@ public class ResponderPage extends WebPage {
                             new Label( "taskType", category )
                                 .setRenderBodyOnly( true ),
                             new Label( "reqFlow", getTriggeringFlowName( part ) ),
+                            new Label( "reqFlowSrc", getTriggeringFlowSrc( part, allAssignments ) ),
                             new WebMarkupContainer( "operational" )
                                 .setVisible( part.isEffectivelyOperational() )
                         )
                         .setVisible( Assignments.isRequest( part ) ),
                     new WebMarkupContainer( "subTask" )
-                        .add( newSimpleEoiList( eois ) )
+                        .add(
+                            newSimpleEoiList( eois ),
+                            new Label( "taskType", category )
+                                .setRenderBodyOnly( true ),
+                            new WebMarkupContainer( "operational" )
+                                .setVisible( part.isEffectivelyOperational() )
+                        )
                         .setVisible( Assignments.isOptional( part, planService ) ),
                     new WebMarkupContainer( "prohibited" )
                         .setVisible( part.isProhibited() ),
@@ -345,10 +362,11 @@ public class ResponderPage extends WebPage {
                         ).setVisible( !risks.isEmpty() || !gains.isEmpty() ),
 
                     new WebMarkupContainer( "superNote" )
-                       .setVisible( false ),
+                        .setVisible( false ),
 
                     new WebMarkupContainer( "teamDiv" )
-                       .setVisible( part.isAsTeam() ),
+                        .add( newContacts( getEmployments( allAssignments.assignedTo( part ) ), planService ) )
+                        .setVisible( part.isAsTeam() ),
 
                     newIncomingFlows( "criticalDiv",
                                       part.getEssentialFlows( false, planService ),
@@ -367,6 +385,45 @@ public class ResponderPage extends WebPage {
                 );
             }
         };
+    }
+
+    private String getTriggeringFlowSrc( Part part, Assignments allAssignments ) {
+        Set<Specable> specs = new HashSet<Specable>();
+
+        for ( Flow flow : getTriggeringFlows( part ) ) {
+            Node source = flow.getSource();
+            if ( source.isPart() )
+                specs.addAll( allAssignments.from( (Specable) source ).getActors() );
+
+            else {
+                // TODO find sources from connectors
+                Connector connector = (Connector) source;
+                Set<ExternalFlow> externalFlows = connector.getExternalFlows();
+                for ( ExternalFlow externalFlow : externalFlows ) {
+                    Node node = externalFlow.getSource();
+                    if ( node.isPart() )
+                        specs.addAll( allAssignments.from( (Specable) node ).getActors() );
+                }
+            }
+
+        }
+
+        List<String> sources = new ArrayList<String>( specs.size() );
+        for ( Specable spec : specs )
+            sources.add( spec.toString() );
+        Collections.sort( sources );
+
+        StringWriter writer = new StringWriter();
+        for ( int i = 0, sourcesSize = sources.size(); i < sourcesSize; i++ ) {
+            String source = sources.get( i );
+            if ( i == sourcesSize - 1 )
+                writer.append( " or " );
+            else if ( i > 0 )
+                writer.append( ", " );
+            writer.append( source );
+        }
+
+        return writer.toString();
     }
 
     private static String getTriggeringFlowName( Part part ) {
@@ -488,8 +545,7 @@ public class ResponderPage extends WebPage {
                 List<Part> opts = phaseEventAssignments.getOptionals( planService ).getParts();
 
                 item.add( new WebMarkupContainer( "phaseAnchor" ).add( new Label( "phaseText",
-                                                                                  eventPhase
-                                                                                      .toString() ) )
+                                                                         eventPhase.toString() ) )
                               .add( new AttributeModifier( "name", true, new Model<String>(
                                   "ep_" + item.getIndex() ) ) ),
 
@@ -749,8 +805,8 @@ public class ResponderPage extends WebPage {
         Collections.sort( result, new Comparator<Employment>() {
             @Override
             public int compare( Employment o1, Employment o2 ) {
-                return o1.getActor().getNormalizedName().compareToIgnoreCase(
-                            o2.getActor().getNormalizedName() );
+                return o1.toString().compareToIgnoreCase(
+                            o2.toString() );
             }
         } );
         return result;

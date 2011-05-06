@@ -18,7 +18,7 @@
 
     <div id="contents">
         <div class="title-desc">
-            <h1 class="subtitle">Procedures for <span wicket:id="personName">person's name</span></h1>
+            <h1 class="subtitle">Information Sharing  Procedures for <span wicket:id="personName">person's name</span></h1>
             <h2 wicket:id="planDescription" class="description">Plan description</h2>
         </div>
         <div id="about">
@@ -38,7 +38,7 @@
         </div>
 
         <div wicket:id="phases" class="phase">
-            <h2><span wicket:id="phaseSeq" class="seq">2.</span> <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
+            <h2><span wicket:id="phaseSeq" class="seq">2.</span> Situation: <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
             <div>
                 <p wicket:id="eventDesc">{event description}</p>
                 <p wicket:id="phaseDesc">{Phase description}</p>
@@ -146,7 +146,7 @@
                                 <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
                                 procedure is performed upon request of
                                 <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> by
-                                {source, source or source}.
+                                <span wicket:id="reqFlowSrc">{source, source or source}</span>.
                                 <span wicket:id="operational">It is currently operational.</span>
                             </span>
                         </p>
@@ -178,7 +178,7 @@
                         <span wicket:id="notifTask">
                             <p>
                                 This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                procedure is performed when receiving <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> from {source, source or source}.
+                                procedure is performed when receiving <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> from <span wicket:id="reqFlowSrc">{source, source or source}</span> .
                                 <span wicket:id="operational">It is currently operational.</span>
                             </p>
                             <div wicket:id="eois" class="eoiCont">
@@ -205,9 +205,9 @@
                         </span>
                         <span wicket:id="subTask">
                             <p>
-                                This {analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}
-                                procedure is a follow-up task for {task name}.
-                                {It is currently operational.}
+                                This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
+                                procedure is optional.
+                                <span wicket:id="operational">It is currently operational.</span>
                             </p>
                             <div wicket:id="eois">
                                 <p>
@@ -241,15 +241,41 @@
                     This task is performed as part of a team:
                 </p>
                 <table border="0">
-                    <!-- one or more of the following 2 rows-->
-                    <tr class="contact">
-                        <td>{agent name}</td>
-                        <td>{title}</td>
-                        <td>{organization}</td>
+                    <tr class="contactHeads">
+                        <th class="first">Name</th>
+                        <th>Organization, Title</th>
+                        <th>Contact Info</th>
+                        <th class="last">Clearance</th>
                     </tr>
-                    <tr class="infos">
-                        <td colspan="3">{contact infos}</td>
-                    </tr>
+                    <span wicket:id="perFlowContact">
+                        <!-- zero of more of the following 2 rows -->
+                        <tr wicket:id="contact" valign="top" class="contact">
+                            <td class="first" wicket:id="contact.name">{agent name}</td>
+                            <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                            <td><ul wicket:id="contactInfos">
+                                    <li wicket:id="contactInfo">
+                                        <em wicket:id="channelType">{channel type}:</em>
+                                        <span wicket:id="channel">{channel}</span>
+                                    </li>
+                                </ul>
+                                <span wicket:id="noInfo">N/A</span>
+                            </td>
+                            <td class="last" wicket:id="contact.classification">{classification}</td>
+                        </tr>
+                        <tr wicket:id="supervisor" valign="top" class="contact supervisor">
+                            <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
+                            <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                            <td><ul wicket:id="contactInfos">
+                                    <li wicket:id="contactInfo">
+                                        <em wicket:id="channelType">{channel type}:</em>
+                                        <span wicket:id="channel">{channel}</span>
+                                    </li>
+                                </ul>
+                                <span wicket:id="noInfo">N/A</span>
+                            </td>
+                            <td class="last" wicket:id="contact.classification">{classification}</td>
+                        </tr>
+                    </span>
                 </table>
             </div>
 
