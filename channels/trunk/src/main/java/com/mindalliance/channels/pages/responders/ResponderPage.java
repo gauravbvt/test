@@ -200,7 +200,7 @@ public class ResponderPage extends WebPage {
                  protected void populateItem( ListItem<Segment> item ) {
                      Segment segment = item.getModelObject();
                      item.add( new WebMarkupContainer( "phaseLink" )
-                                   .add( new Label( "phaseLinkText", fullTitle( segment ) ) )
+                                   .add( new Label( "phaseLinkText", item.getIndex() + 2 + ". " + fullTitle( segment ) ) )
                                    .add( new AttributeModifier( "href", true, new Model<String>(
                                        "#ep_" + item.getIndex() ) ) ) );
                  }
@@ -296,42 +296,32 @@ public class ResponderPage extends WebPage {
                                 .setRenderBodyOnly( true ),
                             new Label( "taskRecur", part.isRepeating() ? "It is repeated every " + part.getRepeatsEvery() + "."
                                                                        : "" )
-                                .setVisible( part.isRepeating() ),
-                            new WebMarkupContainer( "operational" )
-                                .setVisible( part.isEffectivelyOperational() )
+                                .setVisible( part.isRepeating() )
                         )
                         .setVisible( Assignments.isImmediate( part, planService ) ),
-                    new WebMarkupContainer( "notifTask" )
+                    new WebMarkupContainer( "promptedBy" )
                         .add(
-                            new Label( "taskType", category )
-                                .setRenderBodyOnly( true ),
-                            new Label( "taskRecur", part.isRepeating() ? part.getRepeatsEvery().toString()
-                                                                       : "" )
-                                .setVisible( part.isRepeating() ),
-                            new Label( "reqFlow", getTriggeringFlowName( part ) ),
-                            new Label( "reqFlowSrc", getTriggeringFlowSrc( part, allAssignments ) ),
-                            new WebMarkupContainer( "operational" )
-                                .setVisible( part.isEffectivelyOperational() ),
-                            newSimpleEoiList( eois )
+                            new WebMarkupContainer( "notifTask" )
+                                .add( new Label( "taskType", category ).setRenderBodyOnly( true ),
+                                      new Label( "taskRecur",
+                                                 part.isRepeating() ? part.getRepeatsEvery()
+                                                     .toString() : "" )
+                                          .setVisible( part.isRepeating() ),
+                                      new Label( "reqFlow", getTriggeringFlowName( part ) ),
+                                      new Label( "reqFlowSrc", getTriggeringFlowSrc( part ) ),
+                                      newSimpleEoiList( eois ) )
+                                .setVisible( Assignments.isNotification( part, planService ) ),
+                            new WebMarkupContainer( "reqTask" )
+                                .add( new Label( "taskType", category ).setRenderBodyOnly( true ),
+                                      new Label( "reqFlow", getTriggeringFlowName( part ) ),
+                                      new Label( "reqFlowSrc", getTriggeringFlowSrc( part ) ) )
+                                .setVisible( Assignments.isRequest( part ))
                         )
-                        .setVisible( Assignments.isNotification( part, planService ) ),
-                    new WebMarkupContainer( "reqTask" )
-                        .add(
-                            new Label( "taskType", category )
-                                .setRenderBodyOnly( true ),
-                            new Label( "reqFlow", getTriggeringFlowName( part ) ),
-                            new Label( "reqFlowSrc", getTriggeringFlowSrc( part, allAssignments ) ),
-                            new WebMarkupContainer( "operational" )
-                                .setVisible( part.isEffectivelyOperational() )
-                        )
-                        .setVisible( Assignments.isRequest( part ) ),
+                        .setVisible( Assignments.isNotification( part, planService )
+                                     || Assignments.isRequest( part ) ),
                     new WebMarkupContainer( "subTask" )
                         .add(
-                            newSimpleEoiList( eois ),
-                            new Label( "taskType", category )
-                                .setRenderBodyOnly( true ),
-                            new WebMarkupContainer( "operational" )
-                                .setVisible( part.isEffectivelyOperational() )
+                            newSimpleEoiList( eois )
                         )
                         .setVisible( Assignments.isOptional( part, planService ) ),
                     new WebMarkupContainer( "prohibited" )
@@ -339,10 +329,6 @@ public class ResponderPage extends WebPage {
                     new WebMarkupContainer( "term1" )
                         .add( new Label( "eventPhase", lcFirst( part.getSegment().getEventPhase().toString() ) ) )
                         .setVisible( part.isStartsWithSegment() ),
-                    new WebMarkupContainer( "canStart" )
-                        .setVisible( false ),
-                    new WebMarkupContainer( "canStop" )
-                        .setVisible( false ),
                     new WebMarkupContainer( "riskDiv" )
                         .add( new ListView<Goal>( "risks", risks ) {
                                     @Override
@@ -371,9 +357,8 @@ public class ResponderPage extends WebPage {
                         .setVisible( part.isAsTeam() ),
 
                     newIncomingFlows( "criticalDiv",
-                                      part.getEssentialFlows( false, planService ),
+                                      getInputs( part ),
                                       planService ),
-                    newIncomingFlows( "inputDiv", getInputDiv( part, planService ), planService ),
                     newDistribFlows( "distribDiv", getDistribDiv( part ), planService ),
                     newDistribFlows( "taskRfiDiv", getRfiDiv( part ), planService ),
 
@@ -389,7 +374,7 @@ public class ResponderPage extends WebPage {
         };
     }
 
-    private String getTriggeringFlowSrc( Part part, Assignments allAssignments ) {
+    private String getTriggeringFlowSrc( Part part ) {
         Set<Specable> specs = new HashSet<Specable>();
 
         for ( Flow flow : getTriggeringFlows( part ) ) {
@@ -411,8 +396,11 @@ public class ResponderPage extends WebPage {
         }
 
         List<String> sources = new ArrayList<String>( specs.size() );
-        for ( Specable spec : specs )
-            sources.add( spec.toString() );
+        for ( Specable spec : specs ) {
+            String s = spec.toString();
+            if ( !s.trim().isEmpty() )
+                sources.add( s );
+        }
         Collections.sort( sources );
 
         StringWriter writer = new StringWriter();
@@ -548,24 +536,26 @@ public class ResponderPage extends WebPage {
                 List<Part> immeds = segmentAssignments.getImmediates( planService ).getParts();
                 List<Part> opts = segmentAssignments.getOptionals( planService ).getParts();
 
-                item.add( new WebMarkupContainer( "phaseAnchor" ).add( new Label( "phaseText",
-                                                                                  fullTitle( segment ) ) )
-                              .add( new AttributeModifier( "name", true, new Model<String>(
-                                  "ep_" + item.getIndex() ) ) ),
+                List<ReportTask> tasks = numberTasks( segments,
+                                                      mySegmentAssignments.getAssignments() );
+
+                item.add( new WebMarkupContainer( "phaseAnchor" )
+                              .add( new Label( "phaseText", fullTitle( segment ) ) )
+                              .add( new AttributeModifier( "name", true,
+                                             new Model<String>( "ep_" + item.getIndex() ) ) ),
 
                           // TODO add back link to top
                           new Label( "segDesc", ensurePeriod( segment.getDescription() ) )
-                              .setVisible( !segment.getDescription().isEmpty() ), new Label(
-                    "eventDesc",
-                    ensurePeriod( eventPhase.getEvent().getDescription() ) ).setVisible( !eventPhase
-                    .getEvent().getDescription().isEmpty() ), new Label( "phaseDesc", ensurePeriod(
-                    "This happens in the event of " + lcFirst( eventPhase.getPhase()
-                                                                   .getDescription() ) ) )
-                    .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ), new Label(
-                        "phaseSeq",
-                        item.getIndex() + 2 + "." ),
+                              .setVisible( !segment.getDescription().isEmpty() ),
+                          new Label( "eventDesc", ensurePeriod( eventPhase.getEvent().getDescription() ) )
+                              .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
+                          new Label( "phaseDesc", ensurePeriod( "This happens in the event of "
+                                                                + lcFirst( eventPhase.getPhase().getDescription() ) ) )
+                              .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ),
+                          new Label( "phaseSeq", item.getIndex() + 2 + "." ),
 
-                          new WebMarkupContainer( "routineDiv" ).add( newTaskLinks( immeds ) )
+                          new WebMarkupContainer( "routineDiv" )
+                              .add( newTaskLinks( immeds ) )
                               .setVisible( !immeds.isEmpty() ),
 
                           newNotifSection( segmentAssignments.getNotifications( planService ) ),
@@ -577,10 +567,9 @@ public class ResponderPage extends WebPage {
 
                           newDocSection( getAttachments( planManager.getAttachmentManager(),
                                                          segmentAssignments.getSegments() ) ),
-                          newTasks( mySegmentAssignments,
-                                    numberTasks( segments, mySegmentAssignments.getAssignments() ) )
+                          newTasks( mySegmentAssignments, tasks )
+                    );
 
-                );
             }
         };
     }
@@ -696,6 +685,8 @@ public class ResponderPage extends WebPage {
                         item.add(
                             new Label( "flowName2", flow.getLabel() ),
                             new Label( "flowTiming", getTiming( flow, false ) ),
+                            new WebMarkupContainer( "critical" )
+                                .setVisible( flow.isCritical() ),
                             new WebMarkupContainer( "eoisRow" )
                                 .add( newEoiList( findEois( flow ) ) )
                                 .setRenderBodyOnly( true )
@@ -818,18 +809,16 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private List<Flow> getInputDiv( Part part, PlanService planService ) {
-        Set<Flow> essentials = new HashSet<Flow>(
-            planService.findEssentialFlowsFrom( part, false ) );
-        List<Flow> others = new ArrayList<Flow>();
-        Iterator<Flow> flows = part.flows();
+    private List<Flow> getInputs( Part part ) {
+        List<Flow> inputs = new ArrayList<Flow>();
+        Iterator<Flow> flows = part.receives();
         while ( flows.hasNext() ) {
-            Flow next = flows.next();
-            if ( !essentials.contains( next ) && !next.isTriggeringToTarget() )
-                others.add( next );
+            Flow flow = flows.next();
+            if ( !flow.isTriggeringToTarget() )
+                inputs.add( flow );
         }
 
-        return others;
+        return inputs;
     }
 
     //-----------------------------------
@@ -989,39 +978,38 @@ public class ResponderPage extends WebPage {
                protected void populateItem( ListItem<Assignment> item ) {
                    Assignment a = item.getModelObject();
                    final Part part = a.getPart();
-                   item.add(
-                       new ListView<Flow>( "flow", getTriggeringFlows( part ) ) {
-                           @Override
-                           protected void populateItem( ListItem<Flow> flowListItem ) {
-                               Flow flow = flowListItem.getModelObject();
-                               flowListItem.add(
-                                   new Label( "flowName", flow.getName() ),
-                                   new ListView<Specable>( "sources", getSources( flow ) ) {
-                                       @Override
-                                       protected void populateItem( ListItem<Specable> specItem ) {
-                                           Specable specable = specItem.getModelObject();
-                                           specItem.add( new Label( "source", specable.toString() ),
-                                                         new Label( "sourceSep",
-                                                                    specItem.getIndex()
-                                                                    == getViewSize() - 1 ? "" :
-                                                                    specItem.getIndex()
-                                                                    == getViewSize() - 2 ? " or "
-                                                                                  : ", " )
-                                                             .setRenderBodyOnly( true )
-                                           ).setRenderBodyOnly( true );
-
-
-                                       }
-                                   }.setRenderBodyOnly( true ),
-                                   new Label( "flowSep",
-                                              flowListItem.getIndex() == getViewSize() - 1 ? ". "
-                                            : flowListItem.getIndex() == getViewSize() - 2 ? " or "
-                                                                                    : ", " )
-                                        .setRenderBodyOnly( true )
-                               );
-                           }
-                       },
-                       newTaskLink( part ) );
+                   item.add( new ListView<Flow>( "flow", getTriggeringFlows( part ) ) {
+                       @Override
+                       protected void populateItem( ListItem<Flow> flowListItem ) {
+                           Flow flow = flowListItem.getModelObject();
+                           flowListItem.add( new Label( "flowName", flow.getName() ),
+                                             new ListView<Specable>( "sources",
+                                                                     getSources( flow ) ) {
+                                                 @Override
+                                                 protected void populateItem(
+                                                     ListItem<Specable> specItem ) {
+                                                     Specable specable = specItem.getModelObject();
+                                                     specItem.add( new Label( "source",
+                                                                              specable.toString() ),
+                                                                   new Label( "sourceSep",
+                                                                              specItem.getIndex()
+                                                                              == getViewSize() - 1
+                                                                              ? "" :
+                                                                              specItem.getIndex()
+                                                                              == getViewSize() - 2
+                                                                              ? " or " : ", " )
+                                                                       .setRenderBodyOnly( true ) )
+                                                         .setRenderBodyOnly( true );
+                                                 }
+                                             }.setRenderBodyOnly( true ),
+                                             new Label( "flowSep",
+                                                        flowListItem.getIndex() == getViewSize() - 1
+                                                        ? ". " :
+                                                        flowListItem.getIndex() == getViewSize() - 2
+                                                        ? " or " : ", " )
+                                                 .setRenderBodyOnly( true ) );
+                       }
+                   }, newTaskLink( part ) );
                }
            } )
            .setVisible( !rfis.isEmpty() );

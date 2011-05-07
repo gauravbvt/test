@@ -87,7 +87,8 @@
             </div>
 
             <div wicket:id="otherDiv">
-                <h3>Other tasks</h3>
+                <h3>Miscellaneous tasks</h3>
+                <p>The following tasks may be indicated:</p>
                 <ul>
                     <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
                 </ul>
@@ -107,75 +108,35 @@
 
                 <table class="taskHeader">
                     <tr>
-                        <th class="title"><span>Situation:</span></th>
-                        <td><span wicket:id="taskSummary">{summary of event/phase/location}</span></td>
-                    </tr>
-                    <tr>
-                        <th class="title"><span>Prompted By:</span></th>
-                        <td>...</td>
-                    </tr>
-                    <tr>
-                        <th class="title" valign="top"><span>Details:</span></th>
-                        <td class="procedureTd">
+                        <th class="title" valign="top"><span>Situation:</span></th>
+                        <td>
                             <p>
-                                <span wicket:id="instruct">{Task instruction}.</span>
+                                <span wicket:id="taskSummary">{summary of event/phase/location}</span>
                                 <span wicket:id="taskLoc">{Location}.</span>
-                                <span wicket:id="taskDuration">This task should be completed <span class="duration" wicket:id="dur">{duration}</span>.</span>
-                                <span wicket:id="canStart">
-                                    This procedure can start the {phase name, phase name and phase name} phase(s)
-                                    of {event name}.
-                                </span>
-                                <span wicket:id="canStop">
-                                    This procedure can terminate/prevent the {phase name} phase of {event name}
-                                    optional and start the {phase name, phase name and phase name} phases.
-                                </span>
-                                <span wicket:id="term1">
-                                    It terminates when <span wicket:id="eventPhase">{phase of event}</span> is no longer appropriate.
-                                </span>
-                                <span wicket:id="routineTask">
-                                    This is a routine
-                                    <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                    tasks.
-                                    <span wicket:id="taskRecur">{recurrence information}.</span>
-                                    <span wicket:id="operational">It is currently operational.</span>
-                                </span>
-                                <span wicket:id="reqTask">
+                            </p>
+                            <p wicket:id="prohibited">
+                                <!-- Optional -->
+                                <em>Note:</em> Even though documented here, this task is prohibited by policy
+                                (link).
+                            </p>
+                        </td>
+                    </tr>
+                    <tr wicket:id="promptedBy">
+                        <th class="title" valign="top"><span>Prompted By:</span></th>
+                        <td>
+                            <span wicket:id="reqTask">
+                                <p>
                                     This
                                     <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
                                     tasks is performed upon request of
                                     <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> by
                                     <span wicket:id="reqFlowSrc">{source, source or source}</span>.
-                                    <span wicket:id="operational">It is currently operational.</span>
-                                </span>
-                            </p>
-                            <p wicket:id="superNote">
-                                <em>Note:</em> This task is different in case of {event name}. See (link or page #)
-                            </p>
-                            <p wicket:id="prohibited">
-                                <!-- Optional -->
-                                <em>Note:</em> Even though documented here, this procedure is prohibited by policy
-                                (link).
-                            </p>
-                            <p wicket:id="riskDiv">
-                                <span wicket:id="risks">
-                                    This task addresses <span wicket:id="type" class="type">{risk type}</span>.
-                                </span>
-                                <span wicket:id="gains">
-                                    This task may achieve <span wicket:id="type" class="type">{risk type}</span>.
-                                </span>
-                                <span wicket:id="conseqs">
-                                    {Consequences
-                                        of task failure
-                                        of not notifying/replying
-                                        = failure to mitigate kinds of risks with max severity
-                                        = failure to capture kinds of opportunities with max value}
-                                </span>
-                            </p>
+                                </p>
+                            </span>
                             <span wicket:id="notifTask">
                                 <p>
                                     This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                    procedure is performed when receiving <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> from <span wicket:id="reqFlowSrc">{source, source or source}</span> .
-                                    <span wicket:id="operational">It is currently operational.</span>
+                                    task is performed when receiving <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> from <span wicket:id="reqFlowSrc">{source, source or source}</span>.
                                 </p>
                                 <div wicket:id="eois" class="eoiCont">
                                     <p>
@@ -199,12 +160,43 @@
                                     </table>
                                 </div>
                             </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="title" valign="top"><span>Details:</span></th>
+                        <td class="procedureTd">
+                            <p>
+                                <span wicket:id="instruct">{Task instruction}.</span>
+                                <span wicket:id="routineTask">
+                                    This is a routine
+                                    <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
+                                    task.
+                                    <span wicket:id="taskRecur">{recurrence information}.</span>
+                                </span>
+                                <span wicket:id="taskDuration">This task should be completed <span class="duration" wicket:id="dur">{duration}</span>.</span>
+                                <span wicket:id="term1">
+                                    It terminates when <span wicket:id="eventPhase">{phase of event}</span> is no longer appropriate.
+                                </span>
+                            </p>
+                            <p wicket:id="superNote">
+                                <em>Note:</em> This task is different in case of {event name}. See (link or page #)
+                            </p>
+                            <p wicket:id="riskDiv">
+                                <span wicket:id="risks">
+                                    This task addresses <span wicket:id="type" class="type">{risk type}</span>.
+                                </span>
+                                <span wicket:id="gains">
+                                    This task may achieve <span wicket:id="type" class="type">{risk type}</span>.
+                                </span>
+                                <span wicket:id="conseqs">
+                                    {Consequences
+                                        of task failure
+                                        of not notifying/replying
+                                        = failure to mitigate kinds of risks with max severity
+                                        = failure to capture kinds of opportunities with max value}
+                                </span>
+                            </p>
                             <span wicket:id="subTask">
-                                <p>
-                                    This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                    procedure is optional.
-                                    <span wicket:id="operational">It is currently operational.</span>
-                                </p>
                                 <div wicket:id="eois">
                                     <p>
                                         You are expected to already know the following information:
@@ -276,85 +268,16 @@
                 </div>
 
                 <div wicket:id="criticalDiv">
-                    <h3>Critical information</h3>
+                    <h3>Incoming information</h3>
                     <p>
-                        The following table list information critical to this procedure and
-                        its sources:
+                        The following table lists information received during the execution of this task:
                     </p>
                     <table border="0">
                         <span wicket:id="perFlow">
                             <tr>
-                                <th align="left" colspan="2"><span wicket:id="flowName2">{flow name}</span></th>
-                                <th align="right" colspan="2"><span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span></th>
-                            </tr>
-                            <span wicket:id="eoisRow">
-                                <tr class="eoiHeads">
-                                    <th class="first">Information</th>
-                                    <th>Description</th>
-                                    <th>Handling</th>
-                                    <th class="last">Classification</th>
-                                </tr>
-                                <tr class="eoi" wicket:id="eoi">
-                                    <td class="first" wicket:id="eoi.name">{EOI}</td>
-                                    <td wicket:id="eoi.desc">{description}</td>
-                                    <td wicket:id="eoi.handling">{handling}</td>
-                                    <td class="last" wicket:id="eoi.class">{classification}</td>
-                                </tr>
-                            </span>
-                            <tr wicket:id="contactHeads" class="contactHeads">
-                                <th class="first">Name</th>
-                                <th>Organization, Title</th>
-                                <th>Contact Info</th>
-                                <th class="last">Clearance</th>
-                            </tr>
-                            <span wicket:id="perFlowContact">
-                                <!-- zero of more of the following 2 rows -->
-                                <tr wicket:id="contact" valign="top" class="contact">
-                                    <td class="first" wicket:id="contact.name">{agent name}</td>
-                                    <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                    <td><ul wicket:id="contactInfos">
-                                            <li wicket:id="contactInfo">
-                                                <em wicket:id="channelType">{channel type}:</em>
-                                                <span wicket:id="channel">{channel}</span>
-                                            </li>
-                                        </ul>
-                                        <span wicket:id="noInfo">N/A</span>
-                                    </td>
-                                    <td class="last" wicket:id="contact.classification">{classification}</td>
-                                </tr>
-                                <tr wicket:id="supervisor" valign="top" class="contact supervisor">
-                                    <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
-                                    <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                    <td><ul wicket:id="contactInfos">
-                                            <li wicket:id="contactInfo">
-                                                <em wicket:id="channelType">{channel type}:</em>
-                                                <span wicket:id="channel">{channel}</span>
-                                            </li>
-                                        </ul>
-                                        <span wicket:id="noInfo">N/A</span>
-                                    </td>
-                                    <td class="last" wicket:id="contact.classification">{classification}</td>
-                                </tr>
-                            </span>
-                            <!-- Optional -->
-                            <tr wicket:id="flowEnding" class="note">
-                                <td class="terminated" colspan="4">
-                                    <em>Note:</em> This task is considered done when this information is received.
-                                </td>
-                            </tr>
-                        </span>
-                    </table>
-                </div>
-
-                <div wicket:id="inputDiv">
-                    <h3>Useful information sources</h3>
-                    <p>
-                        The following sources may provide pertinent information:
-                    </p>
-                    <table border="0">
-                        <span wicket:id="perFlow">
-                            <tr>
-                                <th align="left" colspan="2"><span wicket:id="flowName2">{flow name}</span></th>
+                                <th align="left" colspan="2"><span wicket:id="flowName2">{flow name}</span>
+                                    <span wicket:id="critical">(Critical)</span>
+                                </th>
                                 <th align="right" colspan="2"><span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span></th>
                             </tr>
                             <span wicket:id="eoisRow">
