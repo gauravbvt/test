@@ -19,6 +19,7 @@ import com.mindalliance.channels.model.Employment;
 import com.mindalliance.channels.model.EventPhase;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.model.Flow.Intent;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Job;
 import com.mindalliance.channels.model.Node;
@@ -211,7 +212,7 @@ public class ResponderPage extends WebPage {
     }
 
     private static String fullTitle( Segment segment ) {
-        return segment.getName() + " (" + lcFirst( segment.getPhaseEventTitle() ) + ")";
+        return segment.getName() + " (" + lcFirst( segment.getPhaseEventTitle() ) + ')';
     }
 
     private static List<ReportTask> numberTasks(
@@ -240,11 +241,8 @@ public class ResponderPage extends WebPage {
         Collections.sort( result, new Comparator<ReportTask>() {
             @Override
             public int compare( ReportTask o1, ReportTask o2 ) {
-                int i = o1.phaseSeq - o2.phaseSeq;
-                if ( i == 0 )
-                    return o1.taskSeq - o2.taskSeq;
-                else
-                    return i;
+                int i = o1.getPhaseSeq() - o2.getPhaseSeq();
+                return i == 0 ? o1.getTaskSeq() - o2.getTaskSeq() : i;
             }
         } );
         return result;
@@ -258,7 +256,7 @@ public class ResponderPage extends WebPage {
             @Override
             protected void populateItem( ListItem<ReportTask> item ) {
                 ReportTask t = item.getModelObject();
-                Assignment a = t.assignment;
+                Assignment a = t.getAssignment();
                 Part part = a.getPart();
 
                 PlanService planService = getPlanService();
@@ -268,7 +266,7 @@ public class ResponderPage extends WebPage {
                 List<Part> subtasks = myAssignments.from( a ).getParts();
                 // TODO back link to phase
 
-                List<EOI> eois = findStartingEois( part );
+                List<ElementOfInformation> eois = findStartingEois( part );
                 String category = part.getCategory() == null ? ""
                                                  : part.getCategory().getLabel().toLowerCase();
                 List<Goal> risks = getRisks( part );
@@ -279,8 +277,9 @@ public class ResponderPage extends WebPage {
                         .add( new AttributeModifier( "name", true, new Model<String>(
                               "t_" + part.getId() ) ) ),
                     new WebMarkupContainer( "backTask" )
-                        .add( new AttributeModifier( "href", true, new Model<String>( "#ep_" + ( t.phaseSeq - 2 ) ) ) ),
-                    new Label( "taskSeq", t.phaseSeq + "." + t.taskSeq + "." ),
+                        .add( new AttributeModifier( "href", true, new Model<String>( "#ep_" + ( t.getPhaseSeq()
+                                                                                                 - 2 ) ) ) ),
+                    new Label( "taskSeq", t.getPhaseSeq() + "." + t.getTaskSeq() + "." ),
                     new Label( "taskSummary", ensurePeriod( getTaskSummary( a ) ) ),
                     new Label( "instruct", ensurePeriod( part.getDescription() ) )
                         .setVisible( !part.getDescription().isEmpty() ),
@@ -289,7 +288,7 @@ public class ResponderPage extends WebPage {
                         .setVisible( part.getLocation() != null ),
                     new WebMarkupContainer( "taskDuration" )
                         .add( new Label( "dur", part.getCompletionTime() == null ? "" : part.getCompletionTime().toString() ) )
-                        .setVisible( part.getCompletionTime() != null ),
+                        .setVisible( part.getCompletionTime() != null && part.getCompletionTime().getSeconds() != 0 ),
                     new WebMarkupContainer( "routineTask" )
                         .add(
                             new Label( "taskType", category )
@@ -308,13 +307,15 @@ public class ResponderPage extends WebPage {
                                                      .toString() : "" )
                                           .setVisible( part.isRepeating() ),
                                       new Label( "reqFlow", getTriggeringFlowName( part ) ),
-                                      new Label( "reqFlowSrc", getTriggeringFlowSrc( part ) ),
+                                      new Label( "reqFlowSrc", getTriggeringFlowSrc(
+                                          getTriggeringFlows( part.receives() ) ) ),
                                       newSimpleEoiList( eois ) )
                                 .setVisible( Assignments.isNotification( part, planService ) ),
                             new WebMarkupContainer( "reqTask" )
                                 .add( new Label( "taskType", category ).setRenderBodyOnly( true ),
                                       new Label( "reqFlow", getTriggeringFlowName( part ) ),
-                                      new Label( "reqFlowSrc", getTriggeringFlowSrc( part ) ) )
+                                      new Label( "reqFlowSrc", getTriggeringFlowSrc(
+                                          getTriggeringFlows( part.receives() ) ) ) )
                                 .setVisible( Assignments.isRequest( part ))
                         )
                         .setVisible( Assignments.isNotification( part, planService )
@@ -356,17 +357,15 @@ public class ResponderPage extends WebPage {
                         .add( newContacts( getEmployments( allAssignments.assignedTo( part ) ), planService ) )
                         .setVisible( part.isAsTeam() ),
 
-                    newIncomingFlows( "criticalDiv",
-                                      getInputs( part ),
-                                      planService ),
-                    newDistribFlows( "distribDiv", getDistribList( part ), planService ),
-                    newDistribFlows( "taskRfiDiv", getRfiDiv( part ), planService ),
+                    newIncomingFlows( "criticalDiv", listInputs( part ) ),
+                    newOutgoingFlows( "distribDiv", listOutgoing( part ) ),
+                    newOutgoingFlows( "taskRfiDiv", listRequests( part ) ),
 
                     new WebMarkupContainer( "subtaskDiv" )
                        .add( newTaskLinks( subtasks ) )
                        .setVisible( !subtasks.isEmpty() ),
                     new WebMarkupContainer( "failDiv" )
-                       .setVisible( !getFailDiv( part ).isEmpty() ),
+                       .setVisible( !listFailures( part ).isEmpty() ),
 
                     newDocSection( planService.getAttachmentManager().getMediaReferences( part ) )
                 );
@@ -374,33 +373,15 @@ public class ResponderPage extends WebPage {
         };
     }
 
-    private String getTriggeringFlowSrc( Part part ) {
+    private static String getTriggeringFlowSrc( List<AggregatedFlow> flows ) {
         Set<Specable> specs = new HashSet<Specable>();
 
-        for ( Flow flow : getTriggeringFlows( part ) ) {
-            Node source = flow.getSource();
-            if ( source.isPart() )
-                specs.add( new ResourceSpec( (Specable) source ) );
-
-            else {
-                // TODO find sources from connectors
-                Connector connector = (Connector) source;
-                Set<ExternalFlow> externalFlows = connector.getExternalFlows();
-                for ( ExternalFlow externalFlow : externalFlows ) {
-                    Node node = externalFlow.getSource();
-                    if ( node.isPart() )
-                        specs.add( new ResourceSpec( (Specable) node ) );
-                }
-            }
-
-        }
+        for ( AggregatedFlow flow : flows )
+            specs.addAll( flow.getSources() );
 
         List<String> sources = new ArrayList<String>( specs.size() );
-        for ( Specable spec : specs ) {
-            String s = spec.toString();
-            if ( !s.trim().isEmpty() )
-                sources.add( s );
-        }
+        for ( Specable spec : specs )
+            sources.add( spec.toString() );
         Collections.sort( sources );
 
         StringWriter writer = new StringWriter();
@@ -417,8 +398,8 @@ public class ResponderPage extends WebPage {
     }
 
     private static String getTriggeringFlowName( Part part ) {
-        List<? extends Flow> triggeringFlows = getTriggeringFlows( part );
-        return triggeringFlows.isEmpty() ? "" : triggeringFlows.get( 0 ).getName();
+        List<AggregatedFlow> triggeringFlows = getTriggeringFlows( part.receives() );
+        return triggeringFlows.isEmpty() ? "" : triggeringFlows.get( 0 ).getLabel();
     }
 
     private static String lcFirst( String phrase ) {
@@ -432,30 +413,29 @@ public class ResponderPage extends WebPage {
     private static String ensurePeriod( String sentence ) {
         return sentence == null || sentence.isEmpty()
                || sentence.endsWith( "." ) || sentence.endsWith( ";" ) ? sentence
-                                        : sentence + "." ;
+                                        : sentence + '.';
     }
 
-    private Component newDistribFlows(
-        String id, final List<Flow> flows, final PlanService planService ) {
+    private Component newOutgoingFlows( String id, final List<AggregatedFlow> flows ) {
 
         return new WebMarkupContainer( id )
             .add(
-                new ListView<Flow>( "perFlow", flows ) {
+                new ListView<AggregatedFlow>( "perFlow", flows ) {
                     @Override
-                    protected void populateItem( ListItem<Flow> item ) {
-                        Flow flow = item.getModelObject();
-                        List<Employment> targets = getEmployments(
-                            planService.getAssignments().from( (Specable) flow.getSource() ) );
+                    protected void populateItem( ListItem<AggregatedFlow> item ) {
+                        AggregatedFlow flow = item.getModelObject();
 
                         item.add(
-                            new Label( "flowName2", MessageFormat.format( getVerb( flow ),
-                                                                          flow.getLabel() ) ),
-                            new Label( "flowTiming", getTiming( flow, true ) ),
+                            new Label( "flowName2", flow.getFormattedLabel() ),
+                            new Label( "flowTargets", ensurePeriod( flow.getSourcesString() ) ),
+                            new Label( "flowTiming", lcFirst( flow.getTiming() ) ),
                             new Label( "flowCard", flow.isAll() ? "all" : "any" ),
+                            new WebMarkupContainer( "critical" )
+                                .setVisible( flow.isCritical() ),
                             new WebMarkupContainer( "eoisRow" )
-                                .add( newEoiList( findEois( flow ) ) )
+                                .add( newEoiList( flow.getElementOfInformations() ) )
                                 .setRenderBodyOnly( true )
-                                .setVisible( !flow.getEois().isEmpty() ),
+                                .setVisible( flow.hasEois() ),
 
                             new WebMarkupContainer( "flowEnding" )
                                 .setVisible( flow.isTerminatingToSource() ),
@@ -472,37 +452,6 @@ public class ResponderPage extends WebPage {
 
             )
             .setVisible( !flows.isEmpty() );
-    }
-
-    private static String getVerb( Flow flow ) {
-        if ( flow.isAskedFor() )
-            return "Answer about {0}";
-
-        if ( flow.getIntent() == null )
-            return "Send {0}";
-
-        String verb;
-        switch ( flow.getIntent() ) {
-            case Alarm:
-                verb = "Send {0} alert";
-                break;
-            case Announcement:
-                verb = "Make announcement about {0}";
-                break;
-            case Command:
-                verb = "Issue {0} command";
-                break;
-            case Feedback:
-                verb = "Provide feedback about {0}";
-                break;
-            case Report:
-                verb = "Report about {0}";
-                break;
-            default:
-                verb = "Notify of {0}";
-        }
-
-        return verb;
     }
 
     //-----------------------------------
@@ -571,23 +520,24 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private static Component newSimpleEoiList( List<EOI> eois ) {
+    private static Component newSimpleEoiList( List<ElementOfInformation> eois ) {
         return new WebMarkupContainer( "eois" )
             .add( newEoiList( eois ) )
             .setVisible( !eois.isEmpty() );
     }
 
-    private static ListView<EOI> newEoiList( final List<EOI> eois ) {
-        return new ListView<EOI>( "eoi", eois ) {
+    private static ListView<ElementOfInformation> newEoiList(
+        final List<ElementOfInformation> eois ) {
+        return new ListView<ElementOfInformation>( "eoi", eois ) {
             @Override
-            protected void populateItem( ListItem<EOI> item ) {
-                EOI eoi = item.getModelObject();
-                item.add( new Label( "eoi.name", eoi.label ),
+            protected void populateItem( ListItem<ElementOfInformation> item ) {
+                ElementOfInformation eoi = item.getModelObject();
+                item.add( new Label( "eoi.name", eoi.getContent() ),
                           new Label( "eoi.desc",
-                                     notAvailable( ensurePeriod( eoi.eoi.getDescription() ) ) ),
-                          new Label( "eoi.handling", notAvailable( eoi.eoi.getSpecialHandling() ) ),
+                                     notAvailable( ensurePeriod( eoi.getDescription() ) ) ),
+                          new Label( "eoi.handling", notAvailable( eoi.getSpecialHandling() ) ),
                           new Label( "eoi.class",
-                                     getClassificationString( eoi.eoi.getClassifications() ) ) );
+                                     getClassificationString( eoi.getClassifications() ) ) );
                 if ( item.getIndex() == 0 )
                     item.add( new AttributeAppender( "class",
                                                      true,
@@ -626,67 +576,51 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private List<EOI> findStartingEois( Part part ) {
-        Set<EOI> eois = new HashSet<EOI>();
+    private static List<ElementOfInformation> findStartingEois( Part part ) {
+        Set<ElementOfInformation> eois = new HashSet<ElementOfInformation>();
         Iterator<Flow> receives = part.receives();
-        Map<String,EOI> seen = new HashMap<String, EOI>();
+        Map<String,ElementOfInformation> seen = new HashMap<String, ElementOfInformation>();
         while ( receives.hasNext() ) {
             Flow flow = receives.next();
             if ( flow.isTriggeringToTarget() ) {
                 for ( ElementOfInformation e : flow.getEois() ) {
-                    EOI eoi = new EOI( e, flow, null );
-                    EOI old = seen.get( eoi.label );
+                    ElementOfInformation old = seen.get( e.getContent() );
                     if ( old == null ) {
-                        seen.put( eoi.label, eoi );
-                        eois.add( eoi );
+                        seen.put( e.getContent(), e );
+                        eois.add( e );
                     }
                 }
             }
         }
 
-        List<EOI> result = new ArrayList<EOI>( eois );
-        Collections.sort( result );
-        return result;
-    }
-
-    private List<EOI> findEois( Flow flow ) {
-        Set<EOI> eois = new HashSet<EOI>();
-        Map<String, EOI> seen = new HashMap<String, EOI>();
-
-        for ( ElementOfInformation e : flow.getEois() ) {
-            EOI eoi = new EOI( e, flow, null );
-            EOI old = seen.get( eoi.label );
-            if ( old == null ) {
-                seen.put( eoi.label, eoi );
-                eois.add( eoi );
+        List<ElementOfInformation> result = new ArrayList<ElementOfInformation>( eois );
+        Collections.sort( result, new Comparator<ElementOfInformation>() {
+            @Override
+            public int compare( ElementOfInformation o1, ElementOfInformation o2 ) {
+                return o1.getContent().compareToIgnoreCase( o2.getContent() );
             }
-        }
-
-        List<EOI> result = new ArrayList<EOI>( eois );
-        Collections.sort( result );
+        } );
         return result;
     }
 
-    private Component newIncomingFlows(
-        String id, final List<Flow> flows, final PlanService planService ) {
+    private static Component newIncomingFlows( String id, final List<AggregatedFlow> flows ) {
         return new WebMarkupContainer( id )
             .add(
-                new ListView<Flow>( "perFlow", flows ) {
+                new ListView<AggregatedFlow>( "perFlow", flows ) {
                     @Override
-                    protected void populateItem( ListItem<Flow> item ) {
-                        Flow flow = item.getModelObject();
-                        List<Employment> sources = getEmployments(
-                            planService.getAssignments().with( flow.getSource() ) );
+                    protected void populateItem( ListItem<AggregatedFlow> item ) {
+                        AggregatedFlow flow = item.getModelObject();
 
                         item.add(
-                            new Label( "flowName2", flow.getLabel() ),
-                            new Label( "flowTiming", getTiming( flow, false ) ),
+                            new Label( "flowName2", flow.getFormattedLabel() ),
+                            new Label( "flowSources", flow.getSourcesString() ),
+                            new Label( "flowTiming", lcFirst( flow.getTiming() ) ),
                             new WebMarkupContainer( "critical" )
                                 .setVisible( flow.isCritical() ),
                             new WebMarkupContainer( "eoisRow" )
-                                .add( newEoiList( findEois( flow ) ) )
+                                .add( newEoiList( flow.getElementOfInformations() ) )
                                 .setRenderBodyOnly( true )
-                                .setVisible( !flow.getEois().isEmpty() ),
+                                .setVisible( flow.hasEois() ),
 
                             new WebMarkupContainer( "flowEnding" )
                                 .setVisible( flow.isTerminatingToTarget() )
@@ -769,20 +703,6 @@ public class ResponderPage extends WebPage {
                   new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() ) );
     }
 
-    private static String getTiming( Flow flow, boolean outgoing ) {
-        StringWriter w = new StringWriter();
-        Delay maxDelay = flow.getMaxDelay();
-        if ( outgoing )
-            w.append( maxDelay.getSeconds() == 0L ? "Immediately"
-                                                  : "Within " + maxDelay.toString() );
-        else {
-            w.append( flow.isAskedFor() ? "Available upon request" : "Provided" );
-            w.append( maxDelay.getSeconds() == 0L ? "" : " after at most " + maxDelay.toString() );
-        }
-
-        return w.toString();
-    }
-
     private static List<Employment> getEmployments( Assignments assignments ) {
         Map<Actor,Employment> employments = new HashMap<Actor,Employment>();
         for ( Assignment assignment : assignments.getAssignments() )
@@ -798,34 +718,59 @@ public class ResponderPage extends WebPage {
         return result;
     }
 
-    //-----------------------------------
-    private List<Flow> getInputs( Part part ) {
-        List<Flow> inputs = new ArrayList<Flow>();
-        Iterator<Flow> flows = part.receives();
-        while ( flows.hasNext() ) {
-            Flow flow = flows.next();
-            if ( !flow.isTriggeringToTarget() )
-                inputs.add( flow );
+    private static List<AggregatedFlow> aggregate( List<Flow> flows, boolean incoming ) {
+        Map<String,AggregatedFlow> map = new HashMap<String, AggregatedFlow>();
+        for ( Flow flow : flows ) {
+            AggregatedFlow aggregatedFlow = map.get( flow.getName() );
+            if ( aggregatedFlow == null ) {
+                aggregatedFlow = new AggregatedFlow( flow, incoming );
+                map.put( flow.getName(), aggregatedFlow );
+            } else
+                aggregatedFlow.addFlow( flow );
         }
 
-        return inputs;
-    }
-
-    //-----------------------------------
-    private List<Flow> getDistribList( Part part ) {
-        List<Flow> result = new ArrayList<Flow>();
-        Iterator<Flow> flows = part.sends();
-        while ( flows.hasNext() ) {
-            Flow flow = flows.next();
-            if ( !flow.isAskedFor() && !flow.isIfTaskFails() )
-                result.add( flow );
-        }
-
+        List<AggregatedFlow> result = new ArrayList<AggregatedFlow>( map.values() );
+        Collections.sort( result, new Comparator<AggregatedFlow>() {
+            @Override
+            public int compare( AggregatedFlow o1, AggregatedFlow o2 ) {
+                return o1.getFormattedLabel().compareToIgnoreCase( o2.getFormattedLabel() );
+            }
+        } );
         return result;
     }
 
     //-----------------------------------
-    private List<Flow> getFailDiv( Part part ) {
+    private static List<AggregatedFlow> listInputs( Part part ) {
+        List<Flow> inputs = new ArrayList<Flow>();
+        Iterator<Flow> flows = part.receives();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( !flow.isTriggeringToTarget()
+                 && !( flow.getSource().isConnector()
+                      && ( (Connector) flow.getSource() ).getExternalFlows().isEmpty() ) )
+                inputs.add( flow );
+        }
+
+        return aggregate( inputs, true );
+    }
+
+    //-----------------------------------
+    private static List<AggregatedFlow> listOutgoing( Part part ) {
+        List<Flow> result = new ArrayList<Flow>();
+        Iterator<Flow> flows = part.sends();
+        while ( flows.hasNext() ) {
+            Flow flow = flows.next();
+            if ( !flow.isAskedFor() && !flow.isIfTaskFails()
+                && !( flow.getTarget().isConnector()
+                     && ( (Connector) flow.getTarget() ).getExternalFlows().isEmpty() ) )
+                result.add( flow );
+        }
+
+        return aggregate( result, false );
+    }
+
+    //-----------------------------------
+    private static List<AggregatedFlow> listFailures( Part part ) {
         List<Flow> result = new ArrayList<Flow>();
         Iterator<Flow> flows = part.sends();
         while ( flows.hasNext() ) {
@@ -834,11 +779,11 @@ public class ResponderPage extends WebPage {
                 result.add( flow );
         }
 
-        return result;
+        return aggregate( result, false );
     }
 
     //-----------------------------------
-    private List<Flow> getRfiDiv( Part part ) {
+    private static List<AggregatedFlow> listRequests( Part part ) {
         List<Flow> result = new ArrayList<Flow>();
         Iterator<Flow> flows = part.sends();
         while ( flows.hasNext() ) {
@@ -847,7 +792,7 @@ public class ResponderPage extends WebPage {
                 result.add( flow );
         }
 
-        return result;
+        return aggregate( result, true );
     }
 
     //-----------------------------------
@@ -916,13 +861,13 @@ public class ResponderPage extends WebPage {
                        Assignment a = item.getModelObject();
                        final Part part = a.getPart();
                        item.add(
-                           new ListView<Flow>( "flow", getTriggeringFlows( part ) ) {
+                           new ListView<AggregatedFlow>( "flow", getTriggeringFlows( part.receives() ) ) {
                                @Override
-                               protected void populateItem( ListItem<Flow> flowListItem ) {
-                                   Flow flow = flowListItem.getModelObject();
+                               protected void populateItem( ListItem<AggregatedFlow> flowListItem ) {
+                                   AggregatedFlow flow = flowListItem.getModelObject();
                                    flowListItem.add(
-                                       new Label( "flowName", flow.getName() ),
-                                       new Label( "flowSources", getSourcesString( flow.getSource() ) ),
+                                       new Label( "flowName", flow.getLabel() ),
+                                       new Label( "flowSources", flow.getSourcesString() ),
                                        new Label( "flowSep", flowListItem.getIndex() == getViewSize() - 1 ? "."
                                                            : flowListItem.getIndex() == getViewSize() - 2 ? " or "
                                                            : ", ")
@@ -938,13 +883,13 @@ public class ResponderPage extends WebPage {
                        Assignment a = item.getModelObject();
                        final Part part = a.getPart();
                        item.add(
-                           new ListView<Flow>( "flow", getTriggeringFlows( part ) ) {
+                           new ListView<AggregatedFlow>( "flow", getTriggeringFlows( part.receives() ) ) {
                                @Override
-                               protected void populateItem( ListItem<Flow> flowListItem ) {
-                                   Flow flow = flowListItem.getModelObject();
+                               protected void populateItem( ListItem<AggregatedFlow> flowListItem ) {
+                                   AggregatedFlow flow = flowListItem.getModelObject();
                                    flowListItem.add(
-                                       new Label( "flowName", flow.getName() ),
-                                       new Label( "flowSources", getSourcesString( flow.getSource() ) ),
+                                       new Label( "flowName", flow.getLabel() ),
+                                       new Label( "flowSources", flow.getSourcesString() ),
                                        new Label( "flowSep", flowListItem.getIndex() == getViewSize() - 1 ? "."
                                                            : flowListItem.getIndex() == getViewSize() - 2 ? " or "
                                                            : ", ")
@@ -960,43 +905,6 @@ public class ResponderPage extends WebPage {
            .setVisible( !notifications.isEmpty() || !requests.isEmpty() );
     }
 
-    private static String getSourcesString( Node source ) {
-        if ( source.isPart() )
-            return new ResourceSpec( (Specable) source ).toString();
-
-        Connector connector = (Connector) source;
-        if ( connector.getExternalFlows().isEmpty() )
-            return "someone";
-
-        Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
-        for ( ExternalFlow externalFlow : connector.getExternalFlows() ) {
-            Node flowSource = externalFlow.getSource();
-            specs.add( flowSource.isPart() ? new ResourceSpec( (Specable) flowSource )
-                                           : new ResourceSpec() );
-        }
-
-        List<ResourceSpec> specList = new ArrayList<ResourceSpec>( specs );
-        Collections.sort( specList, new Comparator<ResourceSpec>() {
-            @Override
-            public int compare( ResourceSpec o1, ResourceSpec o2 ) {
-                return o1.toString().compareToIgnoreCase( o2.toString() );
-            }
-        } );
-
-        StringWriter w = new StringWriter();
-        for ( int i = 0; i < specList.size(); i++ ) {
-            w.append( specList.get( i ).toString() );
-            if ( i == specList.size() - 2 )
-                w.append( " or " );
-            else if ( i != specList.size() - 1 )
-                w.append( ", " );
-        }
-
-        return w.toString();
-
-
-    }
-
     //-----------------------------------
     private static Component newTaskLink( Part part ) {
         return new WebMarkupContainer( "link" )
@@ -1005,25 +913,20 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private List<? extends Specable> getSources( Flow flow ) {
-        return getPlanService().getAssignments( true ).with( flow.getSource() ).getActors();
-    }
-
-    //-----------------------------------
-    private static List<? extends Flow> getTriggeringFlows( Part part ) {
+    private static List<AggregatedFlow> getTriggeringFlows( Iterator<Flow> flows ) {
         List<Flow> result = new ArrayList<Flow>();
 
-        Iterator<Flow> flows = part.flows();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
-            if ( part.equals( flow.getTarget() )
-                    && flow.isTriggeringToTarget()
-                    && !flow.isAskedFor()
-                    && !flow.isProhibited() )
-                result.add( flow );
+            if ( flow.isTriggeringToTarget() ) {
+                Node source = flow.getSource();
+                if ( !source.isConnector()
+                     || !( (Connector) source ).getExternalFlows().isEmpty() )
+                    result.add( flow );
+            }
         }
 
-        return result;
+        return aggregate( result, true );
     }
 
     //-----------------------------------
@@ -1135,68 +1038,206 @@ public class ResponderPage extends WebPage {
         throw new NotFoundException();
     }
 
-    //=======================================================
-    private static class EOI implements Comparable<EOI> {
-
-        private final ElementOfInformation eoi;
-
-        private final String label;
-        private final int level;
-        private final EOI parent;
-
-        private EOI( ElementOfInformation eoi, Flow flow, EOI parent ) {
-            this.eoi = eoi;
-            label = eoi.getContent() ;//+ ( flow == null ? "" : " (from " + flow.getName() + ")" );
-            level = parent == null ? 0 : parent.level + 1;
-            this.parent = parent;
-        }
-
-        @Override
-        public boolean equals( Object obj ) {
-            if ( this == obj )
-                return true;
-
-            if ( obj != null && getClass() == obj.getClass() ) {
-                EOI eoi1 = (EOI) obj;
-                if ( eoi.equals( eoi1.eoi ) && label.equals( eoi1.label ) )
-                    return parent == null ? eoi1.parent == null
-                                          : parent.equals( eoi1.parent );
-            }
-
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = eoi.hashCode();
-            result = 31 * result + label.hashCode();
-            result = 31 * result + ( parent != null ? parent.hashCode() : 0 );
-            return result;
-        }
-
-        @Override
-        public int compareTo( EOI o ) {
-            return parent == null ? o.parent == null ? label.compareTo( o.label )
-                                                     : -1
-                                  : parent.equals( o.parent ) ? label.compareTo( o.label )
-                                                              : parent.compareTo( o.parent );
-        }
-    }
-
     //================================================
     /**
      *  Some report-specific extra information for an assignment.
      */
     private static class ReportTask implements Serializable {
-        private int phaseSeq;
-        private Assignment assignment;
-        private int taskSeq;
+        private final int phaseSeq;
+        private final Assignment assignment;
+        private final int taskSeq;
 
         private ReportTask( int phaseSeq, Assignment assignment, int taskSeq ) {
             this.phaseSeq = phaseSeq;
             this.assignment = assignment;
             this.taskSeq = taskSeq;
         }
+
+        public int getPhaseSeq() {
+            return phaseSeq;
+        }
+
+        public Assignment getAssignment() {
+            return assignment;
+        }
+
+        public int getTaskSeq() {
+            return taskSeq;
+        }
     }
 
+    //================================================
+    private static class AggregatedFlow {
+
+        private final String label;
+        private final Set<ResourceSpec> sources = new HashSet<ResourceSpec>();
+        private final Map<String,ElementOfInformation> eoiIndex =
+                    new HashMap<String, ElementOfInformation>();
+        private final boolean incoming;
+        private final Flow flow;
+
+        private Delay maxDelay = null;
+
+        private AggregatedFlow( Flow flow, boolean incoming ) {
+            label = flow.getName();
+            this.flow = flow;
+            this.incoming = incoming;
+            addFlow( flow );
+        }
+
+        private String getSourcesString() {
+            List<ResourceSpec> specList = new ArrayList<ResourceSpec>( sources );
+            Collections.sort( specList, new Comparator<ResourceSpec>() {
+                @Override
+                public int compare( ResourceSpec o1, ResourceSpec o2 ) {
+                    return o1.toString().compareToIgnoreCase( o2.toString() );
+                }
+            } );
+
+            StringWriter w = new StringWriter();
+            for ( int i = 0; i < specList.size(); i++ ) {
+                w.append( specList.get( i ).getReportSource() );
+                if ( i == specList.size() - 2 )
+                    w.append( " or " );
+                else if ( i != specList.size() - 1 )
+                    w.append( ", " );
+            }
+
+            return w.toString();
+        }
+
+        private String getFormattedLabel() {
+            String verb;
+            Intent intent = getIntent();
+            if ( incoming )
+                verb = "{0}";
+            else if ( isAskedFor() )
+                verb = "Answer about {0}";
+            else if ( intent == null )
+                verb = "Send {0}";
+            else
+                switch ( intent ) {
+                    case Alarm:
+                        verb = "Send {0} alert";
+                        break;
+                    case Announcement:
+                        verb = "Make announcement about {0}";
+                        break;
+                    case Command:
+                        verb = "Issue {0} command";
+                        break;
+                    case Feedback:
+                        verb = "Provide feedback about {0}";
+                        break;
+                    case Report:
+                        verb = "Report about {0}";
+                        break;
+                    default:
+                        verb = "Notify of {0}";
+                }
+
+            return MessageFormat.format( verb, label );
+        }
+
+        private String getTiming() {
+            StringWriter w = new StringWriter();
+            if ( incoming ) {
+                w.append( isAskedFor() ? "Available upon request" : "" );
+                w.append( maxDelay.getSeconds() == 0 ? ""
+                                                     : " after at most " + maxDelay.toString() );
+            } else
+                w.append( maxDelay.getSeconds() == 0 ? ""
+                                                     : "Within " + maxDelay.toString() );
+
+            return w.toString();
+        }
+
+        private void addFlow( Flow flow ) {
+            if ( incoming ) {
+                Node source = flow.getSource();
+                if ( source.isPart() )
+                    sources.add( new ResourceSpec( (Specable) source ) );
+                else
+                    for ( ExternalFlow externalFlow : ((Connector) source).getExternalFlows() ) {
+                        Node node = externalFlow.getSource();
+                        if ( node.isPart() )
+                            sources.add( new ResourceSpec( (Specable) node ) );
+                        // TODO else?
+                        }
+            } else {
+                Node target = flow.getTarget();
+                if ( target.isPart() )
+                    sources.add( new ResourceSpec( (Specable) target ) );
+                else
+                    for ( ExternalFlow externalFlow : ((Connector) target).getExternalFlows() ) {
+                        Node node = externalFlow.getTarget();
+                        if ( node.isPart() )
+                            sources.add( new ResourceSpec( (Specable) node ) );
+                        // TODO else?
+                        }
+            }
+
+            List<ElementOfInformation> eois = flow.getEois();
+            for ( ElementOfInformation eoi : eois ) {
+                String key = eoi.getContent();
+                if ( !eoiIndex.containsKey( key ) )
+                    eoiIndex.put( key, eoi );
+            }
+
+            // TODO compute minimum max delay
+            if ( maxDelay == null )
+                maxDelay = flow.getMaxDelay();
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public List<ElementOfInformation> getElementOfInformations() {
+            List<ElementOfInformation> result = new ArrayList<ElementOfInformation>( eoiIndex.values() );
+            Collections.sort( result, new Comparator<ElementOfInformation>() {
+                @Override
+                public int compare( ElementOfInformation o1, ElementOfInformation o2 ) {
+                    return o1.getContent().compareToIgnoreCase( o2.getContent() );
+                }
+            } );
+            return result;
+        }
+
+        public boolean hasEois() {
+            return !eoiIndex.isEmpty();
+        }
+
+        public boolean isAskedFor() {
+            return flow.isAskedFor();
+        }
+
+        public boolean isAll() {
+            return flow.isAll();
+        }
+
+        public boolean isCritical() {
+            return flow.isCritical();
+        }
+
+        public boolean isTerminatingToTarget() {
+            return flow.isTerminatingToTarget();
+        }
+
+        public boolean isTriggeringToTarget() {
+            return flow.isTriggeringToTarget();
+        }
+
+        public boolean isTerminatingToSource() {
+            return flow.isTerminatingToSource();
+        }
+
+        public Intent getIntent() {
+            return flow.getIntent();
+        }
+
+        public Set<ResourceSpec> getSources() {
+            return Collections.unmodifiableSet( sources );
+        }
+    }
 }

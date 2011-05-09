@@ -159,7 +159,7 @@
                             <p>
                                 <span wicket:id="instruct">{Task instruction}.</span>
                                 <span wicket:id="routineTask">
-                                    This is a routine
+                                    This is a
                                     <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
                                     task.
                                     <span wicket:id="taskRecur">{recurrence information}.</span>
@@ -266,10 +266,12 @@
                     <table border="0">
                         <span wicket:id="perFlow">
                             <tr>
-                                <th align="left" colspan="2"><span wicket:id="flowName2">{flow name}</span>
-                                    <span wicket:id="critical">(Critical)</span>
-                                </th>
-                                <th align="right" colspan="2"><span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span></th>
+                                <td align="left" colspan="4">
+                                    <span class="reqFlow" wicket:id="flowName2">{flow name}</span>
+
+                                    (from <span wicket:id="flowSources">{source, source or source}</span> <span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span>).
+                                    <span wicket:id="critical">This information is critical to this task.</span>
+                                </td>
                             </tr>
                             <span wicket:id="eoisRow">
                                 <tr class="eoiHeads">
@@ -297,7 +299,7 @@
 
                 <div wicket:id="distribDiv">
                     <!-- Optional -->
-                    <h3>Distribution list</h3>
+                    <h3>Outgoing Information</h3>
                     <p>
                         During or after the execution of this procedure, the following information
                         should be sent:
@@ -305,13 +307,13 @@
                     <table border="0">
                         <span wicket:id="perFlow">
                             <tr>
-                                <th colspan="2" align="left">
+                                <td colspan="4" align="left">
                                     <span wicket:id="flowName2">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
-                                </th>
-                                <th colspan="2" align="right">
                                     <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
                                     to <span wicket:id="flowCard" class="cardinality">{any|all}</span>
-                                </th>
+                                    <span wicket:id="flowTargets">target, target or target.</span>
+                                    <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
+                                </td>
                             </tr>
                             <span wicket:id="eoisRow">
                                 <tr class="eoiHeads">
