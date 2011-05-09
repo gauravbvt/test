@@ -359,7 +359,7 @@ public class ResponderPage extends WebPage {
                     newIncomingFlows( "criticalDiv",
                                       getInputs( part ),
                                       planService ),
-                    newDistribFlows( "distribDiv", getDistribDiv( part ), planService ),
+                    newDistribFlows( "distribDiv", getDistribList( part ), planService ),
                     newDistribFlows( "taskRfiDiv", getRfiDiv( part ), planService ),
 
                     new WebMarkupContainer( "subtaskDiv" )
@@ -406,11 +406,11 @@ public class ResponderPage extends WebPage {
         StringWriter writer = new StringWriter();
         for ( int i = 0, sourcesSize = sources.size(); i < sourcesSize; i++ ) {
             String source = sources.get( i );
+            writer.append( source );
             if ( i == sourcesSize - 2 )
                 writer.append( " or " );
-            else if ( i > 0 )
+            else if ( i != sourcesSize - 1  )
                 writer.append( ", " );
-            writer.append( source );
         }
 
         return writer.toString();
@@ -456,9 +456,6 @@ public class ResponderPage extends WebPage {
                                 .add( newEoiList( findEois( flow ) ) )
                                 .setRenderBodyOnly( true )
                                 .setVisible( !flow.getEois().isEmpty() ),
-
-                            newContacts( targets, planService )
-                                .setRenderBodyOnly( true ),
 
                             new WebMarkupContainer( "flowEnding" )
                                 .setVisible( flow.isTerminatingToSource() ),
@@ -558,9 +555,8 @@ public class ResponderPage extends WebPage {
                               .add( newTaskLinks( immeds ) )
                               .setVisible( !immeds.isEmpty() ),
 
-                          newNotifSection( segmentAssignments.getNotifications( planService ) ),
-
-                          newRfiSection( segmentAssignments.getRequests() ),
+                          newInputDiv( segmentAssignments.getNotifications( planService ),
+                                       segmentAssignments.getRequests() ),
 
                           new WebMarkupContainer( "otherDiv" ).add( newTaskLinks( opts ) )
                               .setVisible( !opts.isEmpty() ),
@@ -692,12 +688,6 @@ public class ResponderPage extends WebPage {
                                 .setRenderBodyOnly( true )
                                 .setVisible( !flow.getEois().isEmpty() ),
 
-                            new WebMarkupContainer( "contactHeads" )
-                                .setVisible( flow.isAskedFor() ),
-                            newContacts( sources, planService )
-                                .setVisible( flow.isAskedFor() )
-                                .setRenderBodyOnly( true ),
-
                             new WebMarkupContainer( "flowEnding" )
                                 .setVisible( flow.isTerminatingToTarget() )
 
@@ -822,7 +812,7 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private List<Flow> getDistribDiv( Part part ) {
+    private List<Flow> getDistribList( Part part ) {
         List<Flow> result = new ArrayList<Flow>();
         Iterator<Flow> flows = part.sends();
         while ( flows.hasNext() ) {
@@ -916,50 +906,95 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private Component newNotifSection( final Assignments notifications ) {
+    private Component newInputDiv( final Assignments notifications, Assignments requests ) {
 
-        return new WebMarkupContainer( "notDiv" )
-           .add( new ListView<Assignment>( "notLinks", notifications.getAssignments() ) {
-               @Override
-               protected void populateItem( ListItem<Assignment> item ) {
-                   Assignment a = item.getModelObject();
-                   final Part part = a.getPart();
-                   item.add(
-                       new ListView<Flow>( "flow", getTriggeringFlows( part ) ) {
-                           @Override
-                           protected void populateItem( ListItem<Flow> flowListItem ) {
-                               Flow flow = flowListItem.getModelObject();
-                               flowListItem.add(
-                                   new Label( "flowName", flow.getName() ),
-                                   new ListView<Specable>( "sources", getSources( flow ) ) {
-                                       @Override
-                                       protected void populateItem( ListItem<Specable> specItem ) {
-                                           Specable specable = specItem.getModelObject();
-                                           int size = getViewSize();
-                                           int index = specItem.getIndex();
-                                           specItem.add( new Label( "source", specable.toString() ),
-                                                         new Label( "sourceSep",
-                                                                    index == size - 1 ? "" :
-                                                                    index == size - 2 ? " or "
-                                                                                      : ", " )
-                                                             .setRenderBodyOnly( true )
-                                           ).setRenderBodyOnly( true );
+        return new WebMarkupContainer( "inputDiv" )
+           .add(
+               new ListView<Assignment>( "notLinks", notifications.getAssignments() ) {
+                   @Override
+                   protected void populateItem( ListItem<Assignment> item ) {
+                       Assignment a = item.getModelObject();
+                       final Part part = a.getPart();
+                       item.add(
+                           new ListView<Flow>( "flow", getTriggeringFlows( part ) ) {
+                               @Override
+                               protected void populateItem( ListItem<Flow> flowListItem ) {
+                                   Flow flow = flowListItem.getModelObject();
+                                   flowListItem.add(
+                                       new Label( "flowName", flow.getName() ),
+                                       new Label( "flowSources", getSourcesString( flow.getSource() ) ),
+                                       new Label( "flowSep", flowListItem.getIndex() == getViewSize() - 1 ? "."
+                                                           : flowListItem.getIndex() == getViewSize() - 2 ? " or "
+                                                           : ", ")
+                                   );
+                               }
+                           },
+                           newTaskLink( part ) );
+                   }
+               },
+               new ListView<Assignment>( "rfiLinks", requests.getAssignments() ) {
+                   @Override
+                   protected void populateItem( ListItem<Assignment> item ) {
+                       Assignment a = item.getModelObject();
+                       final Part part = a.getPart();
+                       item.add(
+                           new ListView<Flow>( "flow", getTriggeringFlows( part ) ) {
+                               @Override
+                               protected void populateItem( ListItem<Flow> flowListItem ) {
+                                   Flow flow = flowListItem.getModelObject();
+                                   flowListItem.add(
+                                       new Label( "flowName", flow.getName() ),
+                                       new Label( "flowSources", getSourcesString( flow.getSource() ) ),
+                                       new Label( "flowSep", flowListItem.getIndex() == getViewSize() - 1 ? "."
+                                                           : flowListItem.getIndex() == getViewSize() - 2 ? " or "
+                                                           : ", ")
 
-
-                                       }
-                                   }.setRenderBodyOnly( true ),
-                                   new Label( "flowSep",
-                                              flowListItem.getIndex() == getViewSize() - 1 ? ". "
-                                            : flowListItem.getIndex() == getViewSize() - 2 ? " or "
-                                                                                           : ", " )
-                                        .setRenderBodyOnly( true )
-                               );
-                           }
-                       },
-                       newTaskLink( part ) );
+                                   );
+                               }
+                           },
+                           newTaskLink( part ) );
+                   }
                }
-           } )
-           .setVisible( !notifications.isEmpty() );
+
+           )
+           .setVisible( !notifications.isEmpty() || !requests.isEmpty() );
+    }
+
+    private static String getSourcesString( Node source ) {
+        if ( source.isPart() )
+            return new ResourceSpec( (Specable) source ).toString();
+
+        Connector connector = (Connector) source;
+        if ( connector.getExternalFlows().isEmpty() )
+            return "someone";
+
+        Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
+        for ( ExternalFlow externalFlow : connector.getExternalFlows() ) {
+            Node flowSource = externalFlow.getSource();
+            specs.add( flowSource.isPart() ? new ResourceSpec( (Specable) flowSource )
+                                           : new ResourceSpec() );
+        }
+
+        List<ResourceSpec> specList = new ArrayList<ResourceSpec>( specs );
+        Collections.sort( specList, new Comparator<ResourceSpec>() {
+            @Override
+            public int compare( ResourceSpec o1, ResourceSpec o2 ) {
+                return o1.toString().compareToIgnoreCase( o2.toString() );
+            }
+        } );
+
+        StringWriter w = new StringWriter();
+        for ( int i = 0; i < specList.size(); i++ ) {
+            w.append( specList.get( i ).toString() );
+            if ( i == specList.size() - 2 )
+                w.append( " or " );
+            else if ( i != specList.size() - 1 )
+                w.append( ", " );
+        }
+
+        return w.toString();
+
+
     }
 
     //-----------------------------------
@@ -967,52 +1002,6 @@ public class ResponderPage extends WebPage {
         return new WebMarkupContainer( "link" )
             .add( new Label( "linkName", part.getTask() ) )
             .add( new AttributeModifier( "href", true, new Model<String>( "#t_" + part.getId() ) ) );
-    }
-
-    //-----------------------------------
-    private Component newRfiSection( final Assignments rfis ) {
-
-        return new WebMarkupContainer( "rfiDiv" )
-           .add( new ListView<Assignment>( "rfiLinks", rfis.getAssignments() ) {
-               @Override
-               protected void populateItem( ListItem<Assignment> item ) {
-                   Assignment a = item.getModelObject();
-                   final Part part = a.getPart();
-                   item.add( new ListView<Flow>( "flow", getTriggeringFlows( part ) ) {
-                       @Override
-                       protected void populateItem( ListItem<Flow> flowListItem ) {
-                           Flow flow = flowListItem.getModelObject();
-                           flowListItem.add( new Label( "flowName", flow.getName() ),
-                                             new ListView<Specable>( "sources",
-                                                                     getSources( flow ) ) {
-                                                 @Override
-                                                 protected void populateItem(
-                                                     ListItem<Specable> specItem ) {
-                                                     Specable specable = specItem.getModelObject();
-                                                     specItem.add( new Label( "source",
-                                                                              specable.toString() ),
-                                                                   new Label( "sourceSep",
-                                                                              specItem.getIndex()
-                                                                              == getViewSize() - 1
-                                                                              ? "" :
-                                                                              specItem.getIndex()
-                                                                              == getViewSize() - 2
-                                                                              ? " or " : ", " )
-                                                                       .setRenderBodyOnly( true ) )
-                                                         .setRenderBodyOnly( true );
-                                                 }
-                                             }.setRenderBodyOnly( true ),
-                                             new Label( "flowSep",
-                                                        flowListItem.getIndex() == getViewSize() - 1
-                                                        ? ". " :
-                                                        flowListItem.getIndex() == getViewSize() - 2
-                                                        ? " or " : ", " )
-                                                 .setRenderBodyOnly( true ) );
-                       }
-                   }, newTaskLink( part ) );
-               }
-           } )
-           .setVisible( !rfis.isEmpty() );
     }
 
     //-----------------------------------

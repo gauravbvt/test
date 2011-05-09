@@ -45,16 +45,25 @@
                 <p wicket:id="phaseDesc">{Phase description}</p>
             </div>
 
-            <div wicket:id="notDiv">
-                <h3>Tasks triggered by notification</h3>
+            <div wicket:id="inputDiv">
+                <h3>Tasks triggered by notification or requests for information:</h3>
                 <ul>
                     <li wicket:id="notLinks">
                         <a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a>
                         <span class="flow" wicket:id="flow">
                             upon receiving &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo; from
-                            <span wicket:id="sources">
-                                <span class="source" wicket:id="source">source</span><span wicket:id="sourceSep"></span>
-                            </span><span wicket:id="flowSep">.</span>
+                            <span class="source" wicket:id="flowSources">{source, source or source}.</span>
+                            <span wicket:id="flowSep">.</span>
+                        </span>
+                    </li>
+                    <li wicket:id="rfiLinks">
+                        <a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a>
+                        <span wicket:id="flow">
+                            when
+                            <span class="source" wicket:id="flowSource">source</span><span wicket:id="sourceSep"></span>
+                            requests information about
+                            &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo;
+                            <span wicket:id="flowSep">.</span>
                         </span>
                     </li>
                 </ul>
@@ -65,24 +74,6 @@
                 <p>Tasks executed normally in the context of this situation.</p>
                 <ul>
                     <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
-                </ul>
-            </div>
-
-            <div wicket:id="rfiDiv">
-                <h3>Tasks prompted by a request for information</h3>
-                <ul>
-                    <li wicket:id="rfiLinks">
-                        <a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a>
-                        <span wicket:id="flow">
-                            upon
-                            <span wicket:id="sources">
-                                <span class="source" wicket:id="source">source</span><span wicket:id="sourceSep"></span>
-                            </span>
-                            request information about
-                            &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo;.
-                            <span wicket:id="flowSep">.</span>
-                        </span>
-                    </li>
                 </ul>
             </div>
 
@@ -294,41 +285,6 @@
                                     <td class="last" wicket:id="eoi.class">{classification}</td>
                                 </tr>
                             </span>
-                            <tr wicket:id="contactHeads" class="contactHeads">
-                                <th class="first">Name</th>
-                                <th>Organization, Title</th>
-                                <th>Contact Info</th>
-                                <th class="last">Clearance</th>
-                            </tr>
-                            <span wicket:id="perFlowContact">
-                                <!-- zero of more of the following 2 rows -->
-                                <tr wicket:id="contact" valign="top" class="contact">
-                                    <td class="first" wicket:id="contact.name">{agent name}</td>
-                                    <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                    <td><ul wicket:id="contactInfos">
-                                            <li wicket:id="contactInfo">
-                                                <em wicket:id="channelType">{channel type}:</em>
-                                                <span wicket:id="channel">{channel}</span>
-                                            </li>
-                                        </ul>
-                                        <span wicket:id="noInfo">N/A</span>
-                                    </td>
-                                    <td class="last" wicket:id="contact.classification">{classification}</td>
-                                </tr>
-                                <tr wicket:id="supervisor" valign="top" class="contact supervisor">
-                                    <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
-                                    <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                    <td><ul wicket:id="contactInfos">
-                                            <li wicket:id="contactInfo">
-                                                <em wicket:id="channelType">{channel type}:</em>
-                                                <span wicket:id="channel">{channel}</span>
-                                            </li>
-                                        </ul>
-                                        <span wicket:id="noInfo">N/A</span>
-                                    </td>
-                                    <td class="last" wicket:id="contact.classification">{classification}</td>
-                                </tr>
-                            </span>
                             <!-- Optional -->
                             <tr wicket:id="flowEnding" class="note">
                                 <td class="terminated" colspan="4">
@@ -371,42 +327,6 @@
                                     <td class="last" wicket:id="eoi.class">{classification}</td>
                                 </tr>
                             </span>
-                            <tr class="contactHeads">
-                                <th class="first">Name</th>
-                                <th>Organization, Title</th>
-                                <th>Contact Info</th>
-                                <th class="last">Clearance</th>
-                            </tr>
-                            <span wicket:id="perFlowContact">
-                                <!-- zero of more of the following 2 rows -->
-                                <tr wicket:id="contact" valign="top" class="contact">
-                                    <td class="first" wicket:id="contact.name">{agent name}</td>
-                                    <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                    <td><ul wicket:id="contactInfos">
-                                            <li wicket:id="contactInfo">
-                                                <em wicket:id="channelType">{channel type}:</em>
-                                                <span wicket:id="channel">{channel}</span>
-                                            </li>
-                                        </ul>
-                                        <span wicket:id="noInfo">N/A</span>
-                                    </td>
-                                    <td class="last" wicket:id="contact.classification">{classification}</td>
-                                </tr>
-                                <tr wicket:id="supervisor" valign="top" class="contact supervisor">
-                                    <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
-                                    <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                    <td><ul wicket:id="contactInfos">
-                                            <li wicket:id="contactInfo">
-                                                <em wicket:id="channelType">{channel type}:</em>
-                                                <span wicket:id="channel">{channel}</span>
-                                            </li>
-                                        </ul>
-                                        <span wicket:id="noInfo">N/A</span>
-                                    </td>
-                                    <td class="last" wicket:id="contact.classification">{classification}</td>
-                                </tr>
-                            </span>
-
                             <tr wicket:id="noContext" class="note">
                                 <!-- Optional -->
                                 <td class="note" colspan="4">
@@ -451,41 +371,6 @@
                                     <td wicket:id="eoi.desc">{description}</td>
                                     <td wicket:id="eoi.handling">{handling}</td>
                                     <td class="last" wicket:id="eoi.class">{classification}</td>
-                                </tr>
-                            </span>
-                            <tr class="contactHeads">
-                                <th class="first">Name</th>
-                                <th>Organization, Title</th>
-                                <th>Contact Info</th>
-                                <th class="last">Clearance</th>
-                            </tr>
-                            <span wicket:id="perFlowContact">
-                                <!-- zero of more of the following 2 rows -->
-                                <tr wicket:id="contact" valign="top" class="contact">
-                                    <td class="first" wicket:id="contact.name">{agent name}</td>
-                                    <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                    <td><ul wicket:id="contactInfos">
-                                            <li wicket:id="contactInfo">
-                                                <em wicket:id="channelType">{channel type}:</em>
-                                                <span wicket:id="channel">{channel}</span>
-                                            </li>
-                                        </ul>
-                                        <span wicket:id="noInfo">N/A</span>
-                                    </td>
-                                    <td class="last" wicket:id="contact.classification">{classification}</td>
-                                </tr>
-                                <tr wicket:id="supervisor" valign="top" class="contact supervisor">
-                                    <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
-                                    <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                    <td><ul wicket:id="contactInfos">
-                                            <li wicket:id="contactInfo">
-                                                <em wicket:id="channelType">{channel type}:</em>
-                                                <span wicket:id="channel">{channel}</span>
-                                            </li>
-                                        </ul>
-                                        <span wicket:id="noInfo">N/A</span>
-                                    </td>
-                                    <td class="last" wicket:id="contact.classification">{classification}</td>
                                 </tr>
                             </span>
 
