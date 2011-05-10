@@ -10,6 +10,7 @@ import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Availability;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Connector;
@@ -174,41 +175,59 @@ public class ResponderPage extends WebPage {
 
         // TODO password change fields
 
-        add(
-            new Label( "userName", user.getUsername() ),
-            new Label( "personName", profile.displayString( 256 ) ),
-            new ListView<User>( "planners", planners ) {
+        List<Actor> actualActors = service.findAllActualActors( profile );
+        String myAvail ;
+        String myContact;
+        if ( actualActors.isEmpty() ) {
+            myAvail = "N/A";
+            myContact = "N/A";
+        } else {
+            Actor actor = actualActors.get( 0 );
+            Availability availability = actor.getAvailability();
+            myAvail = availability == null ? "N/A" : availability.toString();
+            myContact = actor.getChannelsString();
+        }
+
+        add( new Label( "userName", user.getUsername() ),
+             new Label( "personName",
+                        profile.displayString( 256 ) ),
+             new ListView<User>( "planners", planners ) {
                  @Override
                  protected void populateItem( ListItem<User> item ) {
                      User u = item.getModelObject();
-                     item.add(
-                         new ExternalLink( "planner", "mailTo:" + u.getEmail(), u.getFullName() + " <" + u.getEmail() + ">" ),
-                         new Label( "listSep",
-                                    item.getIndex() == getViewSize() - 1 ?  ". "
-                                  : item.getIndex() == getViewSize() - 2 ?  " or " : ", " )
-                            .setRenderBodyOnly( true )
-                         );
+                     item.add( new ExternalLink( "planner",
+                                                 "mailTo:" + u.getEmail(),
+                                                 u.getFullName() + " <" + u.getEmail() + ">" ),
+                               new Label( "listSep",
+                                          item.getIndex() == getViewSize() - 1 ? ". " :
+                                          item.getIndex() == getViewSize() - 2 ? " or " : ", " )
+                                   .setRenderBodyOnly( true ) );
                  }
-            },
+             },
 
-            new Label( "planName", plan.getName() ),
-            new Label( "planName2", plan.getName() ),
-            new Label( "planVersion", "v" + plan.getVersion() ),
-            new Label( "planDescription", plan.getDescription() ),
+             new Label( "planName", plan.getName() ),
+             new Label( "planName2", plan.getName() ),
+             new Label( "planVersion", "v" + plan.getVersion() ),
+             new Label( "planDescription", plan.getDescription() ),
+
+             new Label( "myRoles", profile.getReportTitle() ),
+             new Label( "myAvail", "Availability: " + myAvail ),
+             new Label( "myContact", myContact ),
 
              new ListView<Segment>( "phaseLinks", segments ) {
                  @Override
                  protected void populateItem( ListItem<Segment> item ) {
                      Segment segment = item.getModelObject();
                      item.add( new WebMarkupContainer( "phaseLink" )
-                                   .add( new Label( "phaseLinkText", item.getIndex() + 2 + ". " + fullTitle( segment ) ) )
+                                   .add( new Label( "phaseLinkText",
+                                                    item.getIndex() + 2 + ". "
+                                                    + fullTitle( segment ) ) )
                                    .add( new AttributeModifier( "href", true, new Model<String>(
                                        "#ep_" + item.getIndex() ) ) ) );
                  }
              },
 
-             newPhases( directAssignments, myAssignments, segments )
-        );
+             newPhases( directAssignments, myAssignments, segments ) );
     }
 
     private static String fullTitle( Segment segment ) {
@@ -291,8 +310,6 @@ public class ResponderPage extends WebPage {
                         .setVisible( part.getCompletionTime() != null && part.getCompletionTime().getSeconds() != 0 ),
                     new WebMarkupContainer( "routineTask" )
                         .add(
-                            new Label( "taskType", category )
-                                .setRenderBodyOnly( true ),
                             new Label( "taskRecur", part.isRepeating() ? "It is repeated every " + part.getRepeatsEvery() + "."
                                                                        : "" )
                                 .setVisible( part.isRepeating() )
@@ -364,8 +381,8 @@ public class ResponderPage extends WebPage {
                     new WebMarkupContainer( "subtaskDiv" )
                        .add( newTaskLinks( subtasks ) )
                        .setVisible( !subtasks.isEmpty() ),
-                    new WebMarkupContainer( "failDiv" )
-                       .setVisible( !listFailures( part ).isEmpty() ),
+
+                    newOutgoingFlows( "failDiv", listFailures( part ) ),
 
                     newDocSection( planService.getAttachmentManager().getMediaReferences( part ) )
                 );

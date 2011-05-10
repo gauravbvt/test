@@ -24,9 +24,9 @@
         <div id="about">
             <h2><span class="seq">1.</span> About me</h2>
             <ul>
-                <li>{Roles, organizations, jurisdictions}</li>
-                <li>{Contact info}</li>
-                <li>{Availability}</li>
+                <li wicket:id="myRoles">{Roles, organizations, jurisdictions}</li>
+                <li wicket:id="myContact">{Contact info}</li>
+                <li wicket:id="myAvail">{Availability}</li>
             </ul>
 
             <p>Report any errors or suggestions to <span wicket:id="planners"><a wicket:id="planner" href="#">{planner's coordinate}</a><span wicket:id="listSep">.</span></span></p>
@@ -159,9 +159,6 @@
                             <p>
                                 <span wicket:id="instruct">{Task instruction}.</span>
                                 <span wicket:id="routineTask">
-                                    This is a
-                                    <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                    task.
                                     <span wicket:id="taskRecur">{recurrence information}.</span>
                                 </span>
                                 <span wicket:id="taskDuration">This task should be completed <span class="duration" wicket:id="dur">{duration}</span>.</span>
@@ -354,12 +351,13 @@
                     <table border="0">
                         <span wicket:id="perFlow">
                             <tr>
-                                <th colspan="2" align="left">
+                                <td colspan="4" align="left">
                                     <span wicket:id="flowName2">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
-                                </th>
-                                <th colspan="2" align="right">
                                     <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
-                                </th>
+                                    to <span wicket:id="flowCard" class="cardinality">{any|all}</span>
+                                    <span wicket:id="flowTargets">target, target or target.</span>
+                                    <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
+                                </td>
                             </tr>
                             <span wicket:id="eoisRow">
                                 <tr class="eoiHeads">
@@ -404,36 +402,47 @@
                     <!-- Optional -->
                     <h3>Failure notifications</h3>
                     <p>
-                        This task may fail. Notifications should be sent to {one of|all of|} the following:
+                        This task may fail. Notifications should be sent to the following:
                     </p>
                     <table border="0">
-                        <tr class="contact">
-                            <td>{Alert|Issue command|Make announcement|Send report|Provide feedback}{immediately|within &hellip;}</td>
-                            <td>{agent name}</td>
-                            <td>{title}</td>
-                            <td>{organization}</td>
-                            <td>{classification}</td>
-                        </tr>
-                        <tr>
-                            <td class="infos" colspan="5">
-                                <p>{contact infos}</p>
-                                <p><em>Supervisor:</em> name, role, contact info</p>
-                            </td>
-                        </tr>
-                        <!-- one or more of the following -->
-                        <tr>
-                            <td class="eoi" colspan="5">
-                                EOI,  {description}, {handling}, {classification}
-                            </td>
-                        </tr>
+                        <span wicket:id="perFlow">
+                            <tr>
+                                <td colspan="4" align="left">
+                                    <span wicket:id="flowName2">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
+                                    <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
+                                    to <span wicket:id="flowCard" class="cardinality">{any|all}</span>
+                                    <span wicket:id="flowTargets">target, target or target.</span>
+                                    <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
+                                </td>
+                            </tr>
+                            <span wicket:id="eoisRow">
+                                <tr class="eoiHeads">
+                                    <th class="first">Information</th>
+                                    <th>Description</th>
+                                    <th>Handling</th>
+                                    <th class="last">Classification</th>
+                                </tr>
+                                <tr class="eoi" wicket:id="eoi">
+                                    <td class="first" wicket:id="eoi.name">{EOI}</td>
+                                    <td wicket:id="eoi.desc">{description}</td>
+                                    <td wicket:id="eoi.handling">{handling}</td>
+                                    <td class="last" wicket:id="eoi.class">{classification}</td>
+                                </tr>
+                            </span>
 
-                        <tr class="note">
+                            <tr wicket:id="noContext" class="note">
+                                <!-- Optional -->
+                                <td class="note" colspan="4">
+                                    <em>Note:</em> Do not mention context.
+                                </td>
+                            </tr>
                             <!-- Optional -->
-                            <td class="note" colspan="5">
-                                <em>Note:</em> Do not mention context.
-                            </td>
-                        </tr>
-                        <!-- repeat for all recipients -->
+                            <tr wicket:id="flowEnding" class="note">
+                                <td class="terminated" colspan="4">
+                                    <em>Note:</em> This task is considered done when this information is sent.
+                                </td>
+                            </tr>
+                        </span>
                     </table>
                 </div>
                 <div wicket:id="documents">
