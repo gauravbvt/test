@@ -425,6 +425,7 @@
                     <tr class="contactHeads">
                         <th class="first">Name</th>
                         <th>Organization, Title</th>
+                        <th>Roles</th>
                         <th>Contact Info</th>
                         <th class="last">Clearance</th>
                     </tr>
@@ -433,6 +434,10 @@
                         <tr wicket:id="contact" valign="top" class="contact">
                             <td class="first" wicket:id="contact.name">{agent name}</td>
                             <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                            <td><ul wicket:id="contactRoles">
+                                    <li wicket:id="contactRole">{Role}</li>
+                                </ul>
+                            </td>
                             <td><ul wicket:id="contactInfos">
                                     <li wicket:id="contactInfo">
                                         <em wicket:id="channelType">{channel type}:</em>
@@ -446,6 +451,10 @@
                         <tr wicket:id="supervisor" valign="top" class="contact supervisor">
                             <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
                             <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                            <td><ul wicket:id="contactRoles">
+                                    <li wicket:id="contactRole">{Role}</li>
+                                </ul>
+                            </td>
                             <td><ul wicket:id="contactInfos">
                                     <li wicket:id="contactInfo">
                                         <em wicket:id="channelType">{channel type}:</em>
