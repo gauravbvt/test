@@ -814,7 +814,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addOtherLink() {
         otherLink = new ModelObjectLink( "other-link",
                 new PropertyModel<Part>( this, "otherPart" ),
-                new Model<String>( isSend() ? "To" : "From" ) );
+                new Model<String>( isSend() ? "To task" : "From task" ) );
         otherLink.setOutputMarkupId( true );
         otherLink.add( new AttributeModifier( "class", true, new Model<String>( "part-link" ) ) );
         addOrReplace( otherLink );

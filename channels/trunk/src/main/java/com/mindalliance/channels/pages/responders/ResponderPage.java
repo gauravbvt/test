@@ -509,12 +509,12 @@ public class ResponderPage extends WebPage {
 
                           // TODO add back link to top
                           new Label( "segDesc", ensurePeriod( segment.getDescription() ) )
-                              .setVisible( !segment.getDescription().isEmpty() ),
-                          new Label( "eventDesc", ensurePeriod( eventPhase.getEvent().getDescription() ) )
-                              .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
-                          new Label( "phaseDesc", ensurePeriod( "This happens in the event of "
-                                                                + lcFirst( eventPhase.getPhase().getDescription() ) ) )
-                              .setVisible( !eventPhase.getPhase().getDescription().isEmpty() ),
+                              .setVisible( !segment.getDescription().isEmpty() )
+                        .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
+                          new Label( "phaseName", lcFirst( eventPhase.getPhase().getName() ) ),
+                        new Label( "eventName", lcFirst( eventPhase.getEvent().getName() ) ),
+                        new Label( "eventDesc", " (" + eventPhase.getEvent().getDescription() + ")" )
+                        .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
                           new Label( "phaseSeq", item.getIndex() + 2 + "." ),
 
                           new WebMarkupContainer( "routineDiv" )

@@ -41,12 +41,12 @@
             <h2><span wicket:id="phaseSeq" class="seq">2.</span> Situation: <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
             <div>
                 <p wicket:id="segDesc">{event description}</p>
-                <p wicket:id="eventDesc">{event description}</p>
-                <p wicket:id="phaseDesc">{Phase description}</p>
+                <p>The following task are to be executed during phase "<span wicket:id="phaseName">{Phase name}</span>" of event "<span wicket:id="eventName">{event name}</span>" <span wicket:id="eventDesc">{event description}</span>
+                </p>
             </div>
 
             <div wicket:id="inputDiv">
-                <h3>Tasks triggered by notification or requests for information:</h3>
+                <h3>Tasks triggered by notifications or requests for information:</h3>
                 <ul>
                     <li wicket:id="notLinks">
                         <a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a>
@@ -163,7 +163,7 @@
                                 </span>
                                 <span wicket:id="taskDuration">This task should be completed <span class="duration" wicket:id="dur">{duration}</span>.</span>
                                 <span wicket:id="term1">
-                                    It terminates when <span wicket:id="eventPhase">{phase of event}</span> is no longer appropriate.
+                                    Executed without prompting whenever <span wicket:id="eventPhase">{phase of event}</span>.
                                 </span>
                             </p>
                             <p wicket:id="superNote">
@@ -402,7 +402,7 @@
                     <!-- Optional -->
                     <h3>Failure notifications</h3>
                     <p>
-                        This task may fail. Notifications should be sent to the following:
+                        If this task fails, the following information should be sent:
                     </p>
                     <table border="0">
                         <span wicket:id="perFlow">
