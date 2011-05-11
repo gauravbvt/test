@@ -160,6 +160,7 @@ div.task h2 a.back {
 	padding:4px 0 0 0;
 }
 
+div#about h3,
 div.phase h3,
 div.task h3 {
     background: #E8E8E8;
@@ -182,7 +183,6 @@ span.duration,
 span.type,
 span.reqFlow {
 	font-weight:bold;
-    border-bottom: 1px dotted #333333;
 }
 
 

@@ -18,21 +18,21 @@
 
     <div id="contents">
         <div class="title-desc">
-            <h1 class="subtitle">Information Sharing  Procedures for <br /> <span wicket:id="personName">person's name</span></h1>
+            <h1 class="subtitle">Information Sharing Procedures <br />for <span wicket:id="personName">person's name</span></h1>
             <h2 wicket:id="planDescription" class="description">Plan description</h2>
         </div>
         <div id="about">
-            <h2><span class="seq">1.</span> About me</h2>
-            <ul>
-                <li wicket:id="myRoles">{Roles, organizations, jurisdictions}</li>
-                <li wicket:id="myContact">{Contact info}</li>
+            <h2><span class="seq">1.</span> About: <span wicket:id="myRoles">{Roles, organizations, jurisdictions}</span></h2>
+			<h3>Contact Info</h3>
+			<ul>
+				<li wicket:id="myContact">{Contact info}</li>
                 <li wicket:id="myAvail">{Availability}</li>
             </ul>
 
 <!--
             <p>Report any errors or suggestions to <span wicket:id="planners"><a wicket:id="planner" href="#">{planner's coordinate}</a><span wicket:id="listSep">.</span></span></p>
 -->
-
+			<h3>Table of Contents</h3>
             <p>Based on the information above, the <span wicket:id="planName" class="plan-name">{plan name}</span> plan provides procedures for the following situations:</p>
             <ul>
                 <li wicket:id="phaseLinks"><a wicket:id="phaseLink" href="#"><span wicket:id="phaseLinkText">{Phase name} phase of a/an {event name} ({level} level) (link or page #)</span></a></li>
