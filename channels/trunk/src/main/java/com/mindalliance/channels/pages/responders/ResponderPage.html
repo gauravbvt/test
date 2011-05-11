@@ -155,7 +155,7 @@
                             </span>
                         </td>
                     </tr>
-                    <tr>
+                    <tr wicket:id="details">
                         <th class="title" valign="top"><span>Details:</span></th>
                         <td class="procedureTd">
                             <p>
@@ -216,46 +216,9 @@
                 <div wicket:id="teamDiv">
                     <!--optional-->
                     <p>
-                        This task is performed as part of a team: {team specs}
+                        This task is performed as part of a team of <span wicket:id="teamSpec">people</span> :
                     </p>
- <!--                   <table border="0">
-                        <tr class="contactHeads">
-                            <th class="first">Name</th>
-                            <th>Organization, Title</th>
-                            <th>Contact Info</th>
-                            <th class="last">Clearance</th>
-                        </tr>
-                        <span wicket:id="perFlowContact">
-                            &lt;!&ndash; zero of more of the following 2 rows &ndash;&gt;
-                            <tr wicket:id="contact" valign="top" class="contact">
-                                <td class="first" wicket:id="contact.name">{agent name}</td>
-                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                <td><ul wicket:id="contactInfos">
-                                        <li wicket:id="contactInfo">
-                                            <em wicket:id="channelType">{channel type}:</em>
-                                            <span wicket:id="channel">{channel}</span>
-                                        </li>
-                                    </ul>
-                                    <span wicket:id="noInfo">N/A</span>
-                                </td>
-                                <td class="last" wicket:id="contact.classification">{classification}</td>
-                            </tr>
-                            <tr wicket:id="supervisor" valign="top" class="contact supervisor">
-                                <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
-                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                                <td><ul wicket:id="contactInfos">
-                                        <li wicket:id="contactInfo">
-                                            <em wicket:id="channelType">{channel type}:</em>
-                                            <span wicket:id="channel">{channel}</span>
-                                        </li>
-                                    </ul>
-                                    <span wicket:id="noInfo">N/A</span>
-                                </td>
-                                <td class="last" wicket:id="contact.classification">{classification}</td>
-                            </tr>
-                        </span>
-                    </table>
--->                </div>
+                </div>
 
                 <div wicket:id="criticalDiv">
                     <h3>Incoming information</h3>
@@ -453,6 +416,48 @@
                         <li wicket:id="document"><a wicket:id="docLink">(Document)</a></li>
                     </ul>
                 </div>
+            </div>
+
+            <div class="contactList" wicket:id="contactList">
+                <h2><span wicket:id="contactSeq">4.4.</span> Contact List</h2>
+                <p>This situation may require contacting the following persons or resources:</p>
+                <table border="0">
+                    <tr class="contactHeads">
+                        <th class="first">Name</th>
+                        <th>Organization, Title</th>
+                        <th>Contact Info</th>
+                        <th class="last">Clearance</th>
+                    </tr>
+                    <span wicket:id="perFlowContact">
+                        <!-- zero of more of the following 2 rows -->
+                        <tr wicket:id="contact" valign="top" class="contact">
+                            <td class="first" wicket:id="contact.name">{agent name}</td>
+                            <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                            <td><ul wicket:id="contactInfos">
+                                    <li wicket:id="contactInfo">
+                                        <em wicket:id="channelType">{channel type}:</em>
+                                        <span wicket:id="channel">{channel}</span>
+                                    </li>
+                                </ul>
+                                <span wicket:id="noInfo">N/A</span>
+                            </td>
+                            <td class="last" wicket:id="contact.classification">{classification}</td>
+                        </tr>
+                        <tr wicket:id="supervisor" valign="top" class="contact supervisor">
+                            <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
+                            <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                            <td><ul wicket:id="contactInfos">
+                                    <li wicket:id="contactInfo">
+                                        <em wicket:id="channelType">{channel type}:</em>
+                                        <span wicket:id="channel">{channel}</span>
+                                    </li>
+                                </ul>
+                                <span wicket:id="noInfo">N/A</span>
+                            </td>
+                            <td class="last" wicket:id="contact.classification">{classification}</td>
+                        </tr>
+                    </span>
+                </table>
 
             </div>
 
