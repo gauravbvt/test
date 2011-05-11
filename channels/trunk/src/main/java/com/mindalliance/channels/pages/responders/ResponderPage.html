@@ -216,9 +216,9 @@
                 <div wicket:id="teamDiv">
                     <!--optional-->
                     <p>
-                        This task is performed as part of a team:
+                        This task is performed as part of a team: {team specs}
                     </p>
-                    <table border="0">
+ <!--                   <table border="0">
                         <tr class="contactHeads">
                             <th class="first">Name</th>
                             <th>Organization, Title</th>
@@ -226,7 +226,7 @@
                             <th class="last">Clearance</th>
                         </tr>
                         <span wicket:id="perFlowContact">
-                            <!-- zero of more of the following 2 rows -->
+                            &lt;!&ndash; zero of more of the following 2 rows &ndash;&gt;
                             <tr wicket:id="contact" valign="top" class="contact">
                                 <td class="first" wicket:id="contact.name">{agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
@@ -255,7 +255,7 @@
                             </tr>
                         </span>
                     </table>
-                </div>
+-->                </div>
 
                 <div wicket:id="criticalDiv">
                     <h3>Incoming information</h3>

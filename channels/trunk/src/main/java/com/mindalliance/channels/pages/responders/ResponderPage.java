@@ -372,8 +372,8 @@ public class ResponderPage extends WebPage {
                         .setVisible( false ),
 
                     new WebMarkupContainer( "teamDiv" )
-                        .add( newContacts( getEmployments( allAssignments.assignedTo( part ) ), planService ) )
-                        .setVisible( part.isAsTeam() ),
+                        /*.add( newContacts( getEmployments( allAssignments.assignedTo( part ) ), planService ) )
+                        .setVisible( part.isAsTeam() )*/,
 
                     newIncomingFlows( "criticalDiv", listInputs( part ) ),
                     newOutgoingFlows( "distribDiv", listOutgoing( part ) ),
