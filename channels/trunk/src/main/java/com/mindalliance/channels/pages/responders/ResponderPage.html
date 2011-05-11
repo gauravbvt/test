@@ -29,7 +29,9 @@
                 <li wicket:id="myAvail">{Availability}</li>
             </ul>
 
+<!--
             <p>Report any errors or suggestions to <span wicket:id="planners"><a wicket:id="planner" href="#">{planner's coordinate}</a><span wicket:id="listSep">.</span></span></p>
+-->
 
             <p>Based on the information above, the <span wicket:id="planName" class="plan-name">{plan name}</span> plan provides procedures for the following situations:</p>
             <ul>
@@ -305,7 +307,7 @@
                         <span wicket:id="perFlow">
                             <tr>
                                 <td colspan="4" align="left">
-                                    <span wicket:id="flowName2">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
+                                    <span wicket:id="flowName2" class="reqFlow" >{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
                                     <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
                                     to <span wicket:id="flowCard" class="cardinality">{any|all}</span>
                                     <span wicket:id="flowTargets">target, target or target.</span>
@@ -352,7 +354,7 @@
                         <span wicket:id="perFlow">
                             <tr>
                                 <td colspan="4" align="left">
-                                    <span wicket:id="flowName2">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
+                                    <span wicket:id="flowName2" class="reqFlow">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
                                     <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
                                     to <span wicket:id="flowCard" class="cardinality">{any|all}</span>
                                     <span wicket:id="flowTargets">target, target or target.</span>
@@ -408,7 +410,7 @@
                         <span wicket:id="perFlow">
                             <tr>
                                 <td colspan="4" align="left">
-                                    <span wicket:id="flowName2">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
+                                    <span wicket:id="flowName2" class="reqFlow">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
                                     <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
                                     to <span wicket:id="flowCard" class="cardinality">{any|all}</span>
                                     <span wicket:id="flowTargets">target, target or target.</span>

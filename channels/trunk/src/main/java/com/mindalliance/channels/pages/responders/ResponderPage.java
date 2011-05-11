@@ -191,6 +191,7 @@ public class ResponderPage extends WebPage {
         add( new Label( "userName", user.getUsername() ),
              new Label( "personName",
                         profile.displayString( 256 ) ),
+/*
              new ListView<User>( "planners", planners ) {
                  @Override
                  protected void populateItem( ListItem<User> item ) {
@@ -204,6 +205,7 @@ public class ResponderPage extends WebPage {
                                    .setRenderBodyOnly( true ) );
                  }
              },
+*/
 
              new Label( "planName", plan.getName() ),
              new Label( "planName2", plan.getName() ),
@@ -220,8 +222,7 @@ public class ResponderPage extends WebPage {
                      Segment segment = item.getModelObject();
                      item.add( new WebMarkupContainer( "phaseLink" )
                                    .add( new Label( "phaseLinkText",
-                                                    item.getIndex() + 2 + ". "
-                                                    + fullTitle( segment ) ) )
+                                                    fullTitle( segment ) ) )
                                    .add( new AttributeModifier( "href", true, new Model<String>(
                                        "#ep_" + item.getIndex() ) ) ) );
                  }
@@ -391,14 +392,29 @@ public class ResponderPage extends WebPage {
     }
 
     private static String getTriggeringFlowSrc( List<AggregatedFlow> flows ) {
-        Set<Specable> specs = new HashSet<Specable>();
 
+        Set<String> sourcesStrings = new HashSet<String>(  );
+        for ( AggregatedFlow flow : flows ) {
+            Set<? extends Specable> specables = flow.getSources();
+            for ( Specable spec : specables ) {
+                String source = spec.toString();
+                if ( flow.getRestriction() != null ) {
+                    source += " if " + flow.getRestriction().getLabel( true );
+                }
+                sourcesStrings.add( source );
+            }
+        }
+        List<String> sources = new ArrayList<String>( sourcesStrings );
+
+/*
+        Set<Specable> specs = new HashSet<Specable>();
         for ( AggregatedFlow flow : flows )
             specs.addAll( flow.getSources() );
 
-        List<String> sources = new ArrayList<String>( specs.size() );
-        for ( Specable spec : specs )
+        for ( Specable spec : specs ) {
             sources.add( spec.toString() );
+        }
+*/
         Collections.sort( sources );
 
         StringWriter writer = new StringWriter();
@@ -410,7 +426,6 @@ public class ResponderPage extends WebPage {
             else if ( i != sourcesSize - 1  )
                 writer.append( ", " );
         }
-
         return writer.toString();
     }
 
@@ -759,12 +774,12 @@ public class ResponderPage extends WebPage {
     //-----------------------------------
     private static List<AggregatedFlow> listInputs( Part part ) {
         List<Flow> inputs = new ArrayList<Flow>();
-        Iterator<Flow> flows = part.receives();
+        Iterator<Flow> flows = part.getAllSharingReceives().iterator();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
             if ( !flow.isTriggeringToTarget()
-                 && !( flow.getSource().isConnector()
-                      && ( (Connector) flow.getSource() ).getExternalFlows().isEmpty() ) )
+                 /*&& !( flow.getSource().isConnector()
+                      && ( (Connector) flow.getSource() ).getExternalFlows().isEmpty() )*/ )
                 inputs.add( flow );
         }
 
@@ -774,12 +789,15 @@ public class ResponderPage extends WebPage {
     //-----------------------------------
     private static List<AggregatedFlow> listOutgoing( Part part ) {
         List<Flow> result = new ArrayList<Flow>();
+/*
         Iterator<Flow> flows = part.sends();
+*/
+        Iterator<Flow> flows = part.getAllSharingSends().iterator();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
             if ( !flow.isAskedFor() && !flow.isIfTaskFails()
-                && !( flow.getTarget().isConnector()
-                     && ( (Connector) flow.getTarget() ).getExternalFlows().isEmpty() ) )
+                /*&& !( flow.getTarget().isConnector()
+                     && ( (Connector) flow.getTarget() ).getExternalFlows().isEmpty() )*/ )
                 result.add( flow );
         }
 
@@ -789,7 +807,7 @@ public class ResponderPage extends WebPage {
     //-----------------------------------
     private static List<AggregatedFlow> listFailures( Part part ) {
         List<Flow> result = new ArrayList<Flow>();
-        Iterator<Flow> flows = part.sends();
+        Iterator<Flow> flows = part.getAllSharingSends().iterator();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
             if ( !flow.isAskedFor() && flow.isIfTaskFails() )
@@ -802,7 +820,7 @@ public class ResponderPage extends WebPage {
     //-----------------------------------
     private static List<AggregatedFlow> listRequests( Part part ) {
         List<Flow> result = new ArrayList<Flow>();
-        Iterator<Flow> flows = part.sends();
+        Iterator<Flow> flows = part.getAllSharingSends().iterator();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
             if ( flow.isAskedFor() )
@@ -1119,7 +1137,10 @@ public class ResponderPage extends WebPage {
                 else if ( i != specList.size() - 1 )
                     w.append( ", " );
             }
-
+            if ( flow.getRestriction() != null ) {
+                w.append( " if ");
+                w.append( flow.getRestriction().getLabel( !incoming ) );
+            }
             return w.toString();
         }
 
@@ -1255,6 +1276,10 @@ public class ResponderPage extends WebPage {
 
         public Set<ResourceSpec> getSources() {
             return Collections.unmodifiableSet( sources );
+        }
+
+        public Flow.Restriction getRestriction() {
+            return flow.getRestriction();
         }
     }
 }
