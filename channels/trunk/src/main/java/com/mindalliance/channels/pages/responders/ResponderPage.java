@@ -400,7 +400,7 @@ public class ResponderPage extends WebPage {
                       .add( new ListView<Goal>( "risks", risks ) {
                                 @Override
                                 protected void populateItem( ListItem<Goal> item ) {
-                                    item.add( new Label( "type", item.getModelObject().getFullTitle() ) );
+                                    item.add( new Label( "type", item.getModelObject().getPartialTitle() ) );
                                 }
                             },
 
@@ -560,10 +560,6 @@ public class ResponderPage extends WebPage {
                         .setVisible( !segment.getDescription().isEmpty() )
                         .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
 
-                    new Label( "phaseName", lcFirst( eventPhase.getPhase().getName() ) ),
-                    new Label( "eventName", lcFirst( eventPhase.getEvent().getName() ) ),
-                    new Label( "eventDesc", " (" + eventPhase.getEvent().getDescription() + ")" )
-                        .setVisible( !eventPhase.getEvent().getDescription().isEmpty() ),
                     new Label( "phaseSeq", item.getIndex() + 2 + "." ),
 
                     new WebMarkupContainer( "routineDiv" )
@@ -572,10 +568,6 @@ public class ResponderPage extends WebPage {
 
                     newInputDiv( segmentAssignments.getNotifications( planService ),
                                  segmentAssignments.getRequests() ),
-
-                    new WebMarkupContainer( "otherDiv" )
-                        .add( newTaskLinks( opts ) )
-                        .setVisible( !opts.isEmpty() ),
 
                     newDocSection( getAttachments( planManager.getAttachmentManager(),
                                                    segmentAssignments.getSegments() ) ),

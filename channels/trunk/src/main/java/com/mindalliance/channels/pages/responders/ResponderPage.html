@@ -18,7 +18,7 @@
 
     <div id="contents">
         <div class="title-desc">
-            <h1 class="subtitle">Information Sharing Procedures <br />for <span wicket:id="personName">person's name</span></h1>
+            <h1 class="subtitle">Information Sharing Guidelines <br />for <span wicket:id="personName">person's name</span></h1>
             <h2 wicket:id="planDescription" class="description">Plan description</h2>
         </div>
         <div id="about">
@@ -32,8 +32,8 @@
 <!--
             <p>Report any errors or suggestions to <span wicket:id="planners"><a wicket:id="planner" href="#">{planner's coordinate}</a><span wicket:id="listSep">.</span></span></p>
 -->
-			<h3>Table of Contents</h3>
-            <p>Based on the information above, the <span wicket:id="planName" class="plan-name">{plan name}</span> plan provides procedures for the following situations:</p>
+			<h3>Relevant situations</h3>
+            <p>The <span wicket:id="planName" class="plan-name">{plan name}</span> plan provides information sharing guidelines for the following situations:</p>
             <ul>
                 <li wicket:id="phaseLinks"><a wicket:id="phaseLink" href="#"><span wicket:id="phaseLinkText">{Phase name} phase of a/an {event name} ({level} level) (link or page #)</span></a></li>
             </ul>
@@ -43,8 +43,6 @@
             <h2><span wicket:id="phaseSeq" class="seq">2.</span> Situation: <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
             <div>
                 <p wicket:id="segDesc">{event description}</p>
-                <p>The following tasks are to be executed during phase "<span wicket:id="phaseName">{Phase name}</span>" of event "<span wicket:id="eventName">{event name}</span>" <span wicket:id="eventDesc">{event description}</span>
-                </p>
             </div>
 
             <div wicket:id="inputDiv">
@@ -73,15 +71,6 @@
 
             <div wicket:id="routineDiv">
                 <h3>Unprompted tasks</h3>
-                <p>Tasks executed normally in the context of this situation.</p>
-                <ul>
-                    <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
-                </ul>
-            </div>
-
-            <div wicket:id="otherDiv">
-                <h3>Miscellaneous tasks</h3>
-                <p>The following tasks may be indicated:</p>
                 <ul>
                     <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
                 </ul>
@@ -121,7 +110,7 @@
                                 <p>
                                     This
                                     <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                    tasks is performed upon request of
+                                    tasks is performed upon request for
                                     <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> by
                                     <span wicket:id="reqFlowSrc">{source, source or source}</span>.
                                 </p>
@@ -129,7 +118,7 @@
                             <span wicket:id="notifTask">
                                 <p>
                                     This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                    task is performed when receiving <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> from <span wicket:id="reqFlowSrc">{source, source or source}</span>.
+                                    task is performed when notified of <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> from <span wicket:id="reqFlowSrc">{source, source or source}</span>.
                                 </p>
                                 <div wicket:id="eois" class="eoiCont">
                                     <p>
@@ -263,7 +252,7 @@
                     <!-- Optional -->
                     <h3>Outgoing Information</h3>
                     <p>
-                        During or after the execution of this procedure, the following information
+                        During or after the execution of this task, the following information
                         should be sent:
                     </p>
                     <table border="0">
@@ -311,7 +300,7 @@
                     <!-- Optional -->
                     <h3>Requested information</h3>
                     <p>
-                        The following agents may request some information acquired during this procedure:
+                        The following agents may request some information acquired during execution of this task:
                     </p>
                     <table border="0">
                         <span wicket:id="perFlow">
@@ -357,7 +346,7 @@
 
                 <div wicket:id="subtaskDiv">
                     <h3>Subtasks</h3>
-                    <p>The following tasks may become relevant during or as a result of this procedure:</p>
+                    <p>The following tasks may become relevant during or as a result of executing this task:</p>
                     <ul>
                         <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
                     </ul>

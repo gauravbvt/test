@@ -376,7 +376,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public static boolean isImmediate( Part part, QueryService queryService ) {
-        return part.isStartsWithSegment() && !queryService.isOverridden( part );
+        return part.isStartsWithSegment();
     }
 
     /**
