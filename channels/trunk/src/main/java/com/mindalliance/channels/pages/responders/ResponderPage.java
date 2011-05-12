@@ -547,7 +547,8 @@ public class ResponderPage extends WebPage {
                 List<ReportTask> tasks = numberTasks( segments,
                                                       mySegmentAssignments.getAssignments() );
 
-                List<AggregatedContact> segmentContacts = findContacts( segment, mySegmentAssignments, profile );
+                List<AggregatedContact> segmentContacts = findContacts( planService,
+                                                                        segment, profile );
 
                 item.add(
                     new WebMarkupContainer( "phaseAnchor" )
@@ -585,10 +586,9 @@ public class ResponderPage extends WebPage {
         };
     }
 
-    private List<AggregatedContact> findContacts(
-        Segment segment, Assignments mySegmentAssignments, ResourceSpec profile ) {
+    private static List<AggregatedContact> findContacts(
+        PlanService planService, Segment segment, ResourceSpec profile ) {
 
-        PlanService planService = getPlanService();
         Assignments assignments = planService.getAssignments( false );
 
         Map<Actor,AggregatedContact> map = new HashMap<Actor, AggregatedContact>();
@@ -597,13 +597,14 @@ public class ResponderPage extends WebPage {
                                             assignments.with( segment ),
                                             segment.getAllSharingFlows() ) ) {
 
-            Employment employment = commitment.getBeneficiary().getEmployment();
+            Assignment beneficiary = commitment.getBeneficiary();
+            Employment employment = beneficiary.getEmployment();
             Actor actor = employment.getActor();
             AggregatedContact aggregatedContact = map.get( actor );
             if ( aggregatedContact == null )
-                map.put( actor, new AggregatedContact( planService, employment ) );
+                map.put( actor, new AggregatedContact( planService, beneficiary ) );
             else
-                aggregatedContact.merge( planService, employment );
+                aggregatedContact.merge( planService, beneficiary );
         }
 
         List<AggregatedContact> result = new ArrayList<AggregatedContact>( map.values() );
@@ -727,8 +728,7 @@ public class ResponderPage extends WebPage {
             .setVisible( !flows.isEmpty() );
     }
 
-    private static ListView<AggregatedContact> newContacts(
-        final List<AggregatedContact> sources ) {
+    private static ListView<AggregatedContact> newContacts( List<AggregatedContact> sources ) {
 
         return new ListView<AggregatedContact>( "perFlowContact", sources ) {
             @Override
@@ -738,13 +738,13 @@ public class ResponderPage extends WebPage {
                 AggregatedContact sup = aContact.getSupervisor();
 
                 MarkupContainer contact = newContact( "contact",
-                                                      aContact.getRoles(),
+                                                      aContact.getPartSpecs(),
                                                       aContact.getOrganization(),
                                                       aContact.getTitle(),
                                                       aContact.getActor(),
                                                       aContact.getChannels() );
                 Component supervisor = newContact( "supervisor",
-                                                   sup.getRoles(),
+                                                   sup.getPartSpecs(),
                                                    sup.getOrganization(),
                                                    sup.getTitle(),
                                                    sup.getActor(),
@@ -767,21 +767,19 @@ public class ResponderPage extends WebPage {
     }
 
     private static MarkupContainer newContact(
-        String id, List<Role> roles, Organization organization, String title, Actor actor,
-        final List<Channel> channels ) {
+        String id, List<ResourceSpec> roles, Organization organization, String title, Actor actor,
+        List<Channel> channels ) {
 
         return new WebMarkupContainer( id )
             .add( new Label( "contact.name", actor == null ? "" : actor.getName() ),
                   new Label( "contact.title", title.isEmpty() ? "" : ", " + title ),
                   new Label( "contact.classification",
-                             actor == null ? "" : ResponderPage.getClassificationString(
-                                                    actor.getClassifications() ) ),
+                             actor == null ? "" : getClassificationString( actor.getClassifications() ) ),
                   new Label( "contact.organization", organization == null ? "" : organization.toString() ),
-                  new ListView<Role>( "contactRoles", roles ) {
+                  new ListView<ResourceSpec>( "contactRoles", roles ) {
                       @Override
-                      protected void populateItem( ListItem<Role> roleListItem ) {
-                          roleListItem.add( new Label( "contactRole",
-                                                       roleListItem.getModelObject().toString() ) );
+                      protected void populateItem( ListItem<ResourceSpec> item ) {
+                          item.add( new Label( "contactRole", item.getModelObject().getReportTitle() ) );
                       }
                   },
 
@@ -1160,6 +1158,7 @@ public class ResponderPage extends WebPage {
         private final Organization organization;
         private final Set<Role> roles = new HashSet<Role>();
         private final Set<Channel> channels = new HashSet<Channel>();
+        private final Set<ResourceSpec> partSpecs = new HashSet<ResourceSpec>();
 
         private AggregatedContact() {
             actor = null;
@@ -1167,26 +1166,28 @@ public class ResponderPage extends WebPage {
             organization = null;
         }
 
-        private AggregatedContact( PlanService service, Employment employment ) {
+        private AggregatedContact( PlanService service, Assignment assignment ) {
+            Employment employment = assignment.getEmployment();
             actor = employment.getActor();
             title = employment.getJob().getTitle();
             organization = employment.getOrganization();
 
             if ( employment.getSupervisor() != null ) {
-                List<Employment> employments =
-                    service.findAllEmploymentsForActor( employment.getSupervisor() );
-                if ( !employments.isEmpty() ) {
-                    supervisor = new AggregatedContact( service, employments.get( 0 ) );
-
-                }
+                Assignments employments = service.getAssignments().with(
+                                                employment.getSupervisor() );
+                supervisor = !employments.isEmpty() ?
+                             new AggregatedContact( service, employments.getAssignments().get( 0 ) )
+                           : new AggregatedContact();
 
             } else
                 supervisor = new AggregatedContact();
 
-            merge( service, employment );
+            merge( service, assignment );
         }
 
-        public void merge( PlanService service, Employment employment ) {
+        public void merge( PlanService service, Assignment assignment ) {
+            Employment employment = assignment.getEmployment();
+            partSpecs.add( new ResourceSpec( assignment.getPart() ) );
             roles.add( employment.getRole() );
             channels.addAll( service.findAllChannelsFor( new ResourceSpec( employment ) ) );
         }
@@ -1227,6 +1228,11 @@ public class ResponderPage extends WebPage {
             return actor;
         }
 
+        public List<ResourceSpec> getPartSpecs() {
+            ArrayList<ResourceSpec> specs = new ArrayList<ResourceSpec>( partSpecs );
+            Collections.sort( specs );
+            return specs;
+        }
 
         @Override
         public boolean equals( Object obj ) {
