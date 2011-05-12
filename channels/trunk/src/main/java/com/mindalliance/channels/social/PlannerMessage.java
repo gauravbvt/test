@@ -68,7 +68,7 @@ public class PlannerMessage extends PersistentObject {
 
     public boolean isBroadcast() {
         User current = User.current();
-        return toUsername == null && current.isPlanner() // legacy - all planners
+        return toUsername == null // legacy - all planners
                 || toUsername.equals( PlannerMessagingService.PLANNERS ) && current.isPlanner()
                 || toUsername.equals( PlannerMessagingService.USERS );
     }

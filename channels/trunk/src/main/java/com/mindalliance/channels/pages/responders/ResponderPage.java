@@ -35,13 +35,18 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
+import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RedirectToUrlException;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -49,6 +54,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
@@ -92,6 +98,9 @@ public class ResponderPage extends WebPage {
     @SpringBean
     private UserService userService;
 
+    @SpringBean
+    private QueryService queryService;
+
     /**
      * Called for access without parameters.
      * Find the actor and plan corresponding to the current user and redirect to that page.
@@ -128,7 +137,7 @@ public class ResponderPage extends WebPage {
                 setResponsePage( AllResponders.class, parameters );
             } else {
                 PlanService service = initPlanService( uri, parameters.getInt( "v" ) );
-                init( service, getProfile( service, parameters ) );
+                init( service, getProfile( service, parameters ), parameters );
             }
 
         } catch ( StringValueConversionException e ) {
@@ -164,7 +173,7 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private void init( PlanService service, ResourceSpec profile ) {
+    private void init( PlanService service, ResourceSpec profile, PageParameters parameters ) {
 
         Plan plan = service.getPlan();
         Assignments myAssignments = service.getAssignments( true ).with( profile );
@@ -179,6 +188,9 @@ public class ResponderPage extends WebPage {
         List<Actor> actualActors = service.findAllActualActors( profile );
         String myAvail ;
         String myContact;
+        User assignedUser = userService.getUserNamed( parameters.getString( "user", "" ) );
+        if ( assignedUser == null && !user.isPlanner( plan.getUri() ) ) assignedUser = user;
+        String myName = assignedUser == null ? "" : assignedUser.getFullName();
         if ( actualActors.isEmpty() ) {
             myAvail = "N/A";
             myContact = "N/A";
@@ -188,7 +200,7 @@ public class ResponderPage extends WebPage {
             myAvail = availability == null ? "24/7" : availability.toString();
             myContact = actor.getChannelsString();
         }
-
+        addChannelsLogo();
         add( new Label( "userName", user.getUsername() ),
              new Label( "personName",
                         profile.displayString( 256 ) ),
@@ -213,9 +225,11 @@ public class ResponderPage extends WebPage {
              new Label( "planVersion", "v" + plan.getVersion() ),
              new Label( "planDescription", plan.getDescription() ),
 
+             new Label( "myName", "Name: " + myName )
+                .setVisible( !myName.isEmpty() ),
              new Label( "myRoles", profile.getReportTitle() ),
              new Label( "myAvail", "Availability: " + myAvail ),
-             new Label( "myContact", myContact ),
+             new Label( "myContact", "How to contact: " + myContact ),
 
              new ListView<Segment>( "phaseLinks", segments ) {
                  @Override
@@ -230,6 +244,23 @@ public class ResponderPage extends WebPage {
              },
 
              newPhases( directAssignments, myAssignments, segments, profile ) );
+    }
+
+    private void addChannelsLogo() {
+        WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome");
+        channels_logo.add( new AjaxEventBehavior( "onclick") {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                String homeUrl =  AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
+                RedirectPage page =  new RedirectPage( homeUrl );
+                setResponsePage( page );
+            }
+        });
+        add( channels_logo );
+    }
+
+    private Plan getPlan() {
+        return user.getPlan();
     }
 
     private static String fullTitle( Segment segment ) {
@@ -291,7 +322,7 @@ public class ResponderPage extends WebPage {
                 List<Part> subTasks = myAssignments.from( a ).getParts();
                 item.add(
                     new WebMarkupContainer( "taskAnchor" )
-                        .add( new Label( "taskName", part.getTask() ) )
+                        .add( new Label( "taskName", taskString( part ) ) )
                         .add( new AttributeModifier( "name", true, new Model<String>(
                               "t_" + part.getId() ) ) ),
 
@@ -440,6 +471,7 @@ public class ResponderPage extends WebPage {
                 if ( restriction != null && restriction != Restriction.Self ) {
                     source += " if " + restriction.getLabel( true );
                 }
+//                source += " (" + getActualOrganizationsString( spec, flow ) + ")";
                 sourcesStrings.add( source );
             }
         }
@@ -467,8 +499,7 @@ public class ResponderPage extends WebPage {
         if ( phrase.length() < 2 )
             return phrase;
 
-        return Character.toLowerCase( phrase.charAt( 0 ) )
-             + phrase.substring( 1 );
+        return ChannelsUtils.smartUncapitalize( phrase );
     }
 
     private static String ensurePeriod( String sentence ) {
@@ -494,7 +525,7 @@ public class ResponderPage extends WebPage {
                             new WebMarkupContainer( "critical" )
                                 .setVisible( flow.isCritical() ),
                             new WebMarkupContainer( "eoisRow" )
-                                .add( newEoiList( flow.getElementOfInformations() ) )
+                                .add( newEoiList( flow.getElementsOfInformation() ) )
                                 .setRenderBodyOnly( true )
                                 .setVisible( flow.hasEois() ),
 
@@ -568,7 +599,7 @@ public class ResponderPage extends WebPage {
                         .setVisible( !immeds.isEmpty() ),
 
                     newInputDiv( segmentAssignments.getNotifications( planService ),
-                                 segmentAssignments.getRequests() ),
+                            segmentAssignments.getRequests() ),
 
                     newDocSection( getAttachments( planManager.getAttachmentManager(),
                                                    segmentAssignments.getSegments() ) ),
@@ -711,7 +742,7 @@ public class ResponderPage extends WebPage {
                             new WebMarkupContainer( "critical" )
                                 .setVisible( flow.isCritical() ),
                             new WebMarkupContainer( "eoisRow" )
-                                .add( newEoiList( flow.getElementOfInformations() ) )
+                                .add( newEoiList( flow.getElementsOfInformation() ) )
                                 .setRenderBodyOnly( true )
                                 .setVisible( flow.hasEois() ),
 
@@ -988,8 +1019,31 @@ public class ResponderPage extends WebPage {
     //-----------------------------------
     private static Component newTaskLink( Part part ) {
         return new WebMarkupContainer( "link" )
-            .add( new Label( "linkName", part.getTask() ) )
+            .add( new Label( "linkName", taskString( part ) ) )
             .add( new AttributeModifier( "href", true, new Model<String>( "#t_" + part.getId() ) ) );
+    }
+
+    private static String taskString( Part part ) {
+        return part.getTask()
+                + resourceSpecString( part );
+    }
+
+private static String resourceSpecString( Part part ) {
+        ResourceSpec spec = part.resourceSpec();
+        StringBuilder sb = new StringBuilder();
+        if ( !spec.isAnyRole() && !spec.isAnyOrganization() ) {
+           sb.append( " (as ");
+           sb.append( spec.isAnyRole()
+                   ? "Member "
+                   : spec.getRole().getName() );
+           if ( !spec.isAnyOrganization() ) {
+               Organization org =  spec.getOrganization();
+               sb.append( " at ");
+               sb.append( org.getName() );
+           }
+           sb.append( ")" );
+        }
+        return sb.toString();
     }
 
     //-----------------------------------
@@ -1151,7 +1205,7 @@ public class ResponderPage extends WebPage {
     }
 
     //================================================
-    private static final class AggregatedContact implements Comparable<AggregatedContact> {
+    private static final class AggregatedContact implements Comparable<AggregatedContact>, Serializable {
         private final Actor actor;
         private AggregatedContact supervisor;
         private final String title;
@@ -1260,7 +1314,7 @@ public class ResponderPage extends WebPage {
     }
 
     //================================================
-    private static class AggregatedFlow {
+    private static class AggregatedFlow implements Serializable {
 
         private final String label;
         private final Set<ResourceSpec> sources = new HashSet<ResourceSpec>();
@@ -1389,7 +1443,7 @@ public class ResponderPage extends WebPage {
             return label;
         }
 
-        public List<ElementOfInformation> getElementOfInformations() {
+        public List<ElementOfInformation> getElementsOfInformation() {
             List<ElementOfInformation> result = new ArrayList<ElementOfInformation>( eoiIndex.values() );
             Collections.sort( result, new Comparator<ElementOfInformation>() {
                 @Override

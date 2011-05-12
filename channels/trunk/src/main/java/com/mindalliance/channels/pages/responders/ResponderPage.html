@@ -11,7 +11,7 @@
 <body>
 <div id="container">
     <div id="header">
-		<img src="../images/responder-report/channels-logo-small.png" width="19" height="22" alt="Channels Logo" />
+		<img wicket:id="channelsHome" class="logo" src="../images/responder-report/channels-logo-small.png" width="19" height="22" alt="Channels Logo" />
 		<h1>Channels &ndash; <span wicket:id="planName2">Plan name</span> <span wicket:id="planVersion">v1</span> &ndash; Responder Report</h1>
 		<a href="logout">Logout <span wicket:id="userName">user</span></a>
     </div>
@@ -25,6 +25,7 @@
             <h2><span class="seq">1.</span> About: <span wicket:id="myRoles">{Roles, organizations, jurisdictions}</span></h2>
 			<h3>Contact Info</h3>
 			<ul>
+                <li wicket:id="myName">{user name}</li>
 				<li wicket:id="myContact">{Contact info}</li>
                 <li wicket:id="myAvail">{Availability}</li>
             </ul>

@@ -9,12 +9,11 @@ import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.query.PlanService;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -24,6 +23,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -109,7 +109,7 @@ public class AllResponders extends WebPage {
 
         List<Plan> otherPlans = findOtherPlans( plan );
         List<User> otherPlanners = findOtherPlanners( planManager.getUserService(), plan );
-
+        addChannelsLogo();
         add(
             new Label( "userName", user.getUsername() ),
             new Label( "planName", plan.toString() ),
@@ -124,10 +124,9 @@ public class AllResponders extends WebPage {
                         parameters.put( VERSION, version );
                         Actor actor = p.getActor();
                         parameters.put( "agent", actor.getId() );
-
                         String userName = p.getUsername();
+                        parameters.put( "user", userName );
                         User user = planManager.getUserService().getUserNamed( userName );
-
                         item.add(
                             new BookmarkablePageLink<ResponderPage>(
                                 "responder", ResponderPage.class, parameters )
@@ -250,6 +249,24 @@ public class AllResponders extends WebPage {
 
         );
     }
+
+    private void addChannelsLogo() {
+        WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome");
+        channels_logo.add( new AjaxEventBehavior( "onclick") {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                String homeUrl =  AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
+                RedirectPage page =  new RedirectPage( homeUrl );
+                setResponsePage( page );
+            }
+        });
+        add( channels_logo );
+    }
+
+    private Plan getPlan() {
+        return user.getPlan();
+    }
+
 
     private static List<User> findUnassignedUsers( PlanService service ) {
         Collection<User> inputCollection = service.getUserService().getUsers();
