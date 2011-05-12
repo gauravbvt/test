@@ -163,12 +163,10 @@ div.task h2 a.back {
 div#about h3,
 div.phase h3,
 div.task h3 {
-    background: #E8E8E8;
     border-bottom: 1px solid #999999;
-    border-top: 1px solid #999999;
     font-size: 13px;
-    margin: 15px 0 7px;
-    padding: 4px 0 3px 10px;
+    margin: 15px 5px 7px 5px;
+    padding: 4px 5px 4px 5px;
     text-transform: uppercase;
 }
 
@@ -197,7 +195,7 @@ table {
 
 table td,
 table th {
-	padding:10px;
+	padding: 5px 10px;
 }
 
 table td.procedureTd {
@@ -218,6 +216,10 @@ table tr.eoi {
 	border-top: none;
 }
 
+table tr.contactHeads {
+	background: none repeat scroll 0 0 #E8E8E8;
+}
+
 table tr.contactHeads th,
 table tr.contact td,
 table tr.eoiHeads th,
@@ -234,7 +236,7 @@ table tr.contactHeads th.first,
 table tr.contact td.first,
 table tr.eoiHeads th.first,
 table tr.eoi td.first {
-	padding:5px 10px 5px 20px;
+	padding:5px 10px;
 }
 
 table.eois {
@@ -283,7 +285,8 @@ table.taskHeader tr {
     background: #F6F6F6;
     border-left: none;
     border-right: none;
-    border-top: 1px solid #999999;
+    border-top: none;
+	border-bottom:none;
 }
 
 table.taskHeader p {
@@ -292,9 +295,9 @@ table.taskHeader p {
 }
 
 table.taskHeader div.eoiCont {
-    border-top: 1px solid #999999;
-    margin: 7px 0 0;
-    padding: 10px 0 0;
+    border-top: none;
+    margin: 4px 0 0;
+    padding: 7px 0 0;
 }
 
 table.taskHeader div.eoiCont p {
