@@ -1308,15 +1308,6 @@ public interface QueryService {
     Assignments getAssignments( Boolean includeUnknowns, Boolean includeProhibited );
 
     /**
-     * Whether an actor is a direct or indirect supervisor of another.
-     *
-     * @param actor      an actor
-     * @param supervisor an actor
-     * @return a Boolean
-     */
-    Boolean hasSupervisor( Actor actor, Actor supervisor );
-
-    /**
      * Find all tags in domain.
      *
      * @return a list of tags

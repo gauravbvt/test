@@ -1364,7 +1364,7 @@ private static String resourceSpecString( Part part ) {
             else if ( isAskedFor() )
                 verb = "Answer about {0}";
             else if ( intent == null )
-                verb = "Send {0}";
+                verb = "Notify of {0}";
             else
                 switch ( intent ) {
                     case Alarm:

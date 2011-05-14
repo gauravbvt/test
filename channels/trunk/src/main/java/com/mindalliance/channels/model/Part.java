@@ -35,7 +35,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     /**
      * Default task name.
      */
-    static final String DEFAULT_TASK = "doing something";
+    static public String DEFAULT_TASK = "doing something";
 
     /**
      * The task label of this part (never null or empty).

@@ -1926,53 +1926,30 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns ) {
-        return findAllAssignments( part, includeUnknowns, false );
+        if ( part.isEmpty() )
+            return new ArrayList<Assignment>();
+        else
+            return findAllAssignments( part, includeUnknowns, false );
     }
 
     @Override
     public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns, Boolean includeProhibited ) {
         Place locale = getPlan().getLocale();
         Set<Assignment> result = new HashSet<Assignment>();
-        if ( includeProhibited || !part.isProhibited() ) {
-            List<Part> parts = findSynonymousParts( part );
-            for ( Employment e : findAllEmployments( part, locale ) ) {
-                Assignment assignment = new Assignment( e, part );
-                if ( !isProhibited( assignment, parts ) )
-                    result.add( assignment );
-            }
-
-            if ( includeUnknowns
-                    && result.isEmpty()
-                    && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() ) {
-                Organization partOrg = part.getOrganizationOrUnknown();
-                if ( partOrg.isUnknown() ) {
-                    Assignment assignment = new Assignment(
-                            new Employment( Actor.UNKNOWN,
-                                    partOrg,
-                                    new Job( Actor.UNKNOWN,
-                                            part.getRoleOrUnknown(),
-                                            part.getJurisdiction() ) ),
-                            part );
+        if ( !part.isEmpty() ) {
+            if ( includeProhibited || !part.isProhibited() ) {
+                List<Part> parts = findSynonymousParts( part );
+                for ( Employment e : findAllEmployments( part, locale ) ) {
+                    Assignment assignment = new Assignment( e, part );
                     if ( !isProhibited( assignment, parts ) )
                         result.add( assignment );
+                }
 
-                } else if ( partOrg.isType() ) {
-                    for ( Organization actualOrg : listActualEntities( Organization.class ) ) {
-                        if ( !containsParentOf( result, actualOrg ) ) {
-                            if ( actualOrg.getAllTypes().contains( partOrg ) ) {
-                                Assignment assignment = new Assignment(
-                                        new Employment( Actor.UNKNOWN,
-                                                actualOrg,
-                                                new Job( Actor.UNKNOWN,
-                                                        part.getRoleOrUnknown(),
-                                                        part.getJurisdiction() ) ),
-                                        part );
-                                if ( !isProhibited( assignment, parts ) )
-                                    result.add( assignment );
-                            }
-                        }
-                    }
-                    if ( result.isEmpty() ) {
+                if ( includeUnknowns
+                        && result.isEmpty()
+                        && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() ) {
+                    Organization partOrg = part.getOrganizationOrUnknown();
+                    if ( partOrg.isUnknown() ) {
                         Assignment assignment = new Assignment(
                                 new Employment( Actor.UNKNOWN,
                                         partOrg,
@@ -1982,6 +1959,34 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 part );
                         if ( !isProhibited( assignment, parts ) )
                             result.add( assignment );
+
+                    } else if ( partOrg.isType() ) {
+                        for ( Organization actualOrg : listActualEntities( Organization.class ) ) {
+                            if ( !containsParentOf( result, actualOrg ) ) {
+                                if ( actualOrg.getAllTypes().contains( partOrg ) ) {
+                                    Assignment assignment = new Assignment(
+                                            new Employment( Actor.UNKNOWN,
+                                                    actualOrg,
+                                                    new Job( Actor.UNKNOWN,
+                                                            part.getRoleOrUnknown(),
+                                                            part.getJurisdiction() ) ),
+                                            part );
+                                    if ( !isProhibited( assignment, parts ) )
+                                        result.add( assignment );
+                                }
+                            }
+                        }
+                        if ( result.isEmpty() ) {
+                            Assignment assignment = new Assignment(
+                                    new Employment( Actor.UNKNOWN,
+                                            partOrg,
+                                            new Job( Actor.UNKNOWN,
+                                                    part.getRoleOrUnknown(),
+                                                    part.getJurisdiction() ) ),
+                                    part );
+                            if ( !isProhibited( assignment, parts ) )
+                                result.add( assignment );
+                        }
                     }
                 }
             }
@@ -2938,24 +2943,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return getAssignments( true );
     }
 
-    @Override
-    /** @{inheritDoc} */
-    public Boolean hasSupervisor( Actor actor, Actor supervisor ) {
-        return hasSupervisor( actor, supervisor, new HashSet<Actor>() );
-    }
 
-    private boolean hasSupervisor( Actor actor, Actor supervisor, Set<Actor> visited ) {
-        if ( actor.isUnknown() || actor.equals( supervisor ) || visited.contains( actor ) ) return false;
-        visited.add( actor );
-        List<Employment> employments = findAllEmploymentsForActor( actor );
-        for ( Employment employment : employments ) {
-            Actor boss = employment.getSupervisor();
-            if ( boss != null ) {
-                if ( boss.equals( supervisor ) || hasSupervisor( boss, supervisor, visited ) ) return true;
-            }
-        }
-        return false;
-    }
 
     @Override
     /** @{inheritDoc} */
@@ -3162,7 +3150,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 case Supervisor:
                     return ModelObject.isNullOrUnknown( committer.getActor() )
                             || ModelObject.isNullOrUnknown( beneficiary.getActor() )
-                            || hasSupervisor( committer.getActor(), beneficiary.getActor() );
+                            || hasSupervisor( committer.getActor(), beneficiary.getActor(), committerOrg );
                 case Self:
                     return ModelObject.isNullOrUnknown( committer.getActor() )
                             || ModelObject.isNullOrUnknown( beneficiary.getActor() )
@@ -3176,6 +3164,21 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         }
 
         return true;
+    }
+
+    private boolean hasSupervisor( final Actor actor, final Actor supervisor, Organization org ) {
+        return CollectionUtils.exists(
+                org.getJobs(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Job job = (Job)object;
+                        return job.getActor().equals( actor )
+                                && job.getSupervisor() != null
+                                && job.getSupervisor().equals( supervisor );
+                    }
+                }
+        );
     }
 
     @Override

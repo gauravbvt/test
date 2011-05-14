@@ -10,13 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.PrintWriter;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
@@ -377,7 +377,9 @@ public class PlanDefinition extends Observable {
             if ( lastIdFile.exists() ) {
                 BufferedReader reader = new BufferedReader( new FileReader( lastIdFile ) );
                 try {
-                    lastId = Long.parseLong( reader.readLine() );
+                    String lastIdString = reader.readLine();
+                    if ( lastIdString != null )
+                        lastId = Long.parseLong( lastIdString );
                 } finally {
                     reader.close();
                 }
@@ -390,7 +392,7 @@ public class PlanDefinition extends Observable {
          * @param id the new id
          * @throws IOException on save errors
          */
-        public void setLastId( long id ) throws IOException {
+        public synchronized void setLastId( long id ) throws IOException {
             File idFile = getLastIdFile();
             idFile.delete();
 
