@@ -1490,7 +1490,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         if ( !( change.isSelected()
                 && change.isForInstanceOf( Node.class )
                 && change.isForProperty( "other" ) ) ) {
-            if ( change.isUpdated() && change.isForInstanceOf( Flow.class ) ) {
+            if ( change.isUpdated() ) {
                 setFlowUpdated( true );
             }
             super.changed( change );

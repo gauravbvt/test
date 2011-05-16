@@ -1573,6 +1573,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         if ( change.isNone() )
             return;
+        else
+            getCommander().updateUserActive();
         if ( change.isUnknown() ) {
             if ( !getPlan().getSegments().contains( segment ) ) {
                 segment = getPlan().getDefaultSegment();
