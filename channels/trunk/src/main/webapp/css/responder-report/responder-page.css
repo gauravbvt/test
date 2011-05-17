@@ -84,7 +84,7 @@ div#header h1 {
     padding: 7px 0 0 7px;
 }
 
-div#header a {
+div#header a.logout {
     background: url('../../images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
     color: #727272;
@@ -97,7 +97,7 @@ div#header a {
 	float:right;
 }
 
-div#header a:hover {
+div#header a.logout:hover {
     color: #333333;
 }
 
@@ -110,6 +110,24 @@ p {
 
 ul {
 	padding:5px 0 5px 35px;
+}
+
+ul.toc {
+}
+
+ul.toc li {
+    position: relative;
+}
+
+ul.toc span.tocHead {
+    display: block;
+    width: 75%;
+}
+ul.toc a.tocLink {
+    position: absolute;
+    left: 75%;
+    top: 0;
+    padding-left: 5px;
 }
 
 li {

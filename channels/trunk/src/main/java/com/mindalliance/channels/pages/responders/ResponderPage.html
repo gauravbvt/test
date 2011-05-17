@@ -11,9 +11,9 @@
 <body>
 <div id="container">
     <div id="header">
-		<img wicket:id="channelsHome" class="logo" src="../images/responder-report/channels-logo-small.png" width="19" height="22" alt="Channels Logo" />
-		<h1>Channels &ndash; <span wicket:id="planName2">Plan name</span> <span wicket:id="planVersion">v1</span> &ndash; Responder Report</h1>
-		<a href="logout">Logout <span wicket:id="userName">user</span></a>
+		<a href="home"><img class="logo" src="../images/responder-report/channels-logo-small.png" width="19" height="22" alt="Channels Logo" /></a>
+        <h1>Channels &ndash; <span wicket:id="planName2">Plan name</span> <span wicket:id="planVersion">v1</span> &ndash; Responder Report</h1>
+		<a class="logout" href="logout">Logout <span wicket:id="userName">user</span></a>
     </div>
 
     <div id="contents">
@@ -22,7 +22,7 @@
             <h2 wicket:id="planDescription" class="description">Plan description</h2>
         </div>
         <div id="about">
-            <h2><span class="seq">1.</span> About: <span wicket:id="myRoles">{Roles, organizations, jurisdictions}</span></h2>
+            <h2><span class="seq">About:</span> <span wicket:id="myRoles">{Roles, organizations, jurisdictions}</span></h2>
 			<h3>Contact Info</h3>
 			<ul>
                 <li wicket:id="myName">{user name}</li>
@@ -35,45 +35,50 @@
 -->
 			<h3>Relevant situations</h3>
             <p>The <span wicket:id="planName" class="plan-name">{plan name}</span> plan provides information sharing guidelines for the following situations:</p>
-            <ul>
-                <li wicket:id="phaseLinks"><a wicket:id="phaseLink" href="#"><span wicket:id="phaseLinkText">{Phase name} phase of a/an {event name} ({level} level) (link or page #)</span></a></li>
+            <ul class="toc">
+                <li wicket:id="phaseLinks">
+                    <span class="tocHead" wicket:id="phaseName">Phase</span>
+                    <a class="tocLink" wicket:id="phaseLink" href="#"><span wicket:id="phaseLinkText">{Situation X} phase of a/an {event name} ({level} level) (link or page #)</span></a></li>
             </ul>
         </div>
 
         <div wicket:id="phases" class="phase">
-            <h2><span wicket:id="phaseSeq" class="seq">2.</span> Situation: <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
+            <h2><span class="seq">Situation <span wicket:id="phaseSeq">1</span>:</span> <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
             <div>
                 <p wicket:id="segDesc">{event description}</p>
             </div>
 
             <div wicket:id="inputDiv">
                 <h3>Tasks triggered by notifications or requests for information:</h3>
-                <ul>
-                    <li wicket:id="notLinks">
-                        <a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a>
-                        <span class="flow" wicket:id="flow">
-                            upon receiving &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo; from
-                            <span class="source" wicket:id="flowSources">{source, source or source}.</span>
-                            <span wicket:id="flowSep">.</span>
-                        </span>
-                    </li>
-                    <li wicket:id="rfiLinks">
-                        <a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a>
-                        <span wicket:id="flow">
-                            when
-                            <span class="source" wicket:id="flowSource">source</span><span wicket:id="sourceSep"></span>
-                            requests information about
-                            &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo;
-                            <span wicket:id="flowSep">.</span>
-                        </span>
+                <ul class="toc">
+                    <li wicket:id="inputLinks">
+                        <span class="tocHead" wicket:id="linkName">{task name}</span>
+                        <ul>
+                            <span wicket:id="flow">
+                                <li class="flow" wicket:id="nFlow">
+                                    upon receiving &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo;
+                                    from <span class="source" wicket:id="flowSources">{source, source or source}.</span>
+                                </li>
+                                <li wicket:id="rFlow">
+                                    when <span class="source" wicket:id="flowSources">{source, source or source}</span>
+                                    requests information about
+                                    &ldquo;<span class="flowName" wicket:id="flowName">{flow name}</span>&rdquo;
+                                </li>
+                            </span>
+                        </ul>
+
+                        <a class="tocLink" href="#" wicket:id="link"><span wicket:id="linkValue">(link or page #)</span></a>
                     </li>
                 </ul>
             </div>
 
             <div wicket:id="routineDiv">
                 <h3>Unprompted tasks</h3>
-                <ul>
-                    <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
+                <ul class="toc">
+                    <li wicket:id="links">
+                        <span class="tocHead" wicket:id="linkName">{task name}</span>
+                        <a class="tocLink" href="#" wicket:id="link">
+                            <span wicket:id="linkValue">(link or page #)</span></a></li>
                 </ul>
             </div>
 
@@ -85,8 +90,8 @@
             </div>
             <div wicket:id="tasks" class="task">
                 <h2><a class="back" href="#" wicket:id="backTask">back</a>
-                    <span wicket:id="taskSeq" class="seq">1.1.</span>
-                    Task: <a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a>
+                    <span class="num">Task <span wicket:id="taskSeq" class="seq">1.1</span>:</span>
+                    <a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a>
                 </h2>
 
                 <table class="taskHeader">
@@ -346,8 +351,10 @@
                 <div wicket:id="subtaskDiv">
                     <h3>Subtasks</h3>
                     <p>The following tasks may become relevant during or as a result of executing this task:</p>
-                    <ul>
-                        <li wicket:id="links"><a href="#" wicket:id="link"><span wicket:id="linkName">{task name} (link or page #)</span></a></li>
+                    <ul class="toc">
+                        <li wicket:id="links">
+                            <span class="tocHead" wicket:id="linkName">{task name}</span>
+                            <a class="tocLink" href="#" wicket:id="link"><span wicket:id="linkValue">{task name} (link or page #)</span></a></li>
                     </ul>
                 </div>
 
@@ -407,7 +414,9 @@
             </div>
 
             <div class="contactList" wicket:id="contactList">
-                <h2><span wicket:id="contactSeq">4.4.</span> Contact List</h2>
+                <h2><span class="num">Contacts <span wicket:id="contactSeq">4.4</span>:</span>
+                    <span wicket:id="contactTitle">{Segment name}</span> resources
+                </h2>
                 <p>This situation may require contacting the following persons or resources:</p>
                 <table border="0">
                     <tr class="contactHeads">
@@ -460,6 +469,9 @@
 
         </div>
     </div>
+    <p class="disclaimer">This procedure report was produced automatically, based on input from
+participating agencies. Mind-Alliance Systems makes no warranty as to
+the completeness or accuracy of these procedures.</p>
 </div>
 
 </body>
