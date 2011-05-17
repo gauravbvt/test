@@ -27,6 +27,7 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.model.Part.Category;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
@@ -194,8 +195,7 @@ public class ResponderPage extends WebPage {
         List<ReportSegment> reportSegments = getSegments( service, profile );
         add(
             new Label( "userName", user.getUsername() ),
-            new Label( "personName",
-                       profile.displayString( 256 ) ),
+            new Label( "personName", profile.displayString( 256 ) ),
 
             new Label( "planName", plan.getName() ),
             new Label( "planName2", plan.getName() ),
@@ -225,69 +225,64 @@ public class ResponderPage extends WebPage {
         );
     }
 
-    private Plan getPlan() {
-        return user.getPlan();
-    }
-
     //-----------------------------------
-    private ListView<ReportTask> newTasks(
-        final ReportSegment segment, List<ReportTask> tasks ) {
+    private ListView<ReportTask> newTasks( final ReportSegment segment, List<ReportTask> tasks ) {
 
         return new ListView<ReportTask>( "tasks", tasks ) {
             @Override
             protected void populateItem( ListItem<ReportTask> item ) {
-                ReportTask t = item.getModelObject();
+                ReportTask task = item.getModelObject();
 
                 PlanService planService = getPlanService();
 
                 // TODO back link to phase
 
-                List<ElementOfInformation> eois = findStartingEois( t.getPart() );
-                String category = t.getPart().getCategory() == null ? ""
-                                                 : t.getPart().getCategory().getLabel().toLowerCase();
+                List<ElementOfInformation> eois = findStartingEois( task.getPart() );
                 item.add(
                     new WebMarkupContainer( "taskAnchor" )
-                        .add( new Label( "taskName", taskString( t.getPart() ) ) )
-                        .add( new AttributeModifier( "name", true, t.getAnchor() ) ),
+                        .add( new Label( "taskName", taskString( task.getPart() ) ) )
+                        .add( new AttributeModifier( "name", true, task.getAnchor() ) ),
 
                     new WebMarkupContainer( "backTask" )
                         .add( new AttributeModifier( "href", true, segment.getLink() ) ),
 
 
-                    new Label( "taskSeq", t.getSeqString() ),
-                    new Label( "taskSummary", t.getTaskSummary() ),
+                    new Label( "taskSeq", task.getSeqString() ),
+                    new Label( "taskSummary", task.getTaskSummary() ),
 
-                    new Label( "taskLoc", t.getLocation() == null ? ""
-                                        : ensurePeriod( "This task is located in " + t.getLocation() ) )
-                        .setVisible( t.getLocation() != null ),
+                    new Label( "taskLoc", task.getLocationString() )
+                        .setVisible( task.getLocation() != null ),
 
-                    newPromptedByDiv( t.getPart(), planService, eois, category ),
-                    newDetailsDiv( planService, t.getPart(), eois ),
+                    newPromptedByDiv( task, planService, eois ),
+                    newDetailsDiv( planService, task.getPart(), eois ),
 
                     new WebMarkupContainer( "prohibited" )
-                        .setVisible( t.getPart().isProhibited() ),
+                        .setVisible( task.isProhibited() ),
 
                     new WebMarkupContainer( "teamDiv" )
-                        .add( new Label( "teamSpec", new ResourceSpec( t.getPart() ).getReportTitle() ) )
-                        .setVisible( t.getPart().isAsTeam() ),
+                        .add( new Label( "teamSpec", new ResourceSpec( task.getPart() ).getReportTitle() ) )
+                        .setVisible( task.getPart().isAsTeam() ),
 
                     new WebMarkupContainer( "subtaskDiv" )
-                        .add( newTaskLinks( t.getSubtasks() ) )
-                        .setVisible( !t.getSubtasks().isEmpty() ),
+                        .add( newTaskLinks( task.getSubtasks() ) )
+                        .setVisible( !task.getSubtasks().isEmpty() ),
 
-                    newIncomingFlows( "criticalDiv", listInputs( t.getPart() ) ),
-                    newOutgoingFlows( "distribDiv", listOutgoing( t.getPart() ) ),
-                    newOutgoingFlows( "taskRfiDiv", listRequests( t.getPart() ) ),
-                    newOutgoingFlows( "failDiv", listFailures( t.getPart() ) ),
+                    newIncomingFlows( "criticalDiv", listInputs( task.getPart() ) ),
+                    newOutgoingFlows( "distribDiv", listOutgoing( task.getPart() ) ),
+                    newOutgoingFlows( "taskRfiDiv", listRequests( task.getPart() ) ),
+                    newOutgoingFlows( "failDiv", listFailures( task.getPart() ) ),
 
-                    newDocSection( planService.getAttachmentManager().getMediaReferences( t.getPart() ) )
+                    newDocSection( planService.getAttachmentManager().getMediaReferences( task.getPart() ) )
                 );
             }
         };
     }
 
     private static Component newPromptedByDiv(
-        Part part, PlanService planService, List<ElementOfInformation> eois, String category ) {
+        ReportTask task, PlanService planService, List<ElementOfInformation> eois ) {
+
+        Part part = task.getPart();
+        String category = task.getCategoryString();
         return new WebMarkupContainer( "promptedBy" )
             .add( new WebMarkupContainer( "notifTask" ).add( new Label( "taskType", category ).setRenderBodyOnly(
                 true ),
@@ -1105,14 +1100,11 @@ private static String resourceSpecString( Part part ) {
         }
 
         private List<AggregatedContact> findContacts(
-            PlanService planService, ResourceSpec profile ) {
-
-            Assignments assignments = planService.getAssignments( false );
+            PlanService service, ResourceSpec profile ) {
 
             Map<Actor,AggregatedContact> map = new HashMap<Actor, AggregatedContact>();
-            for ( Commitment commitment : planService.findAllCommitmentsOf(
-                                                profile,
-                                                assignments.with( profile ),
+            for ( Commitment commitment : service.findAllCommitmentsOf(
+                                                profile, service.getAssignments( false ),
                                                 segment.getAllSharingFlows() ) ) {
 
                 Assignment beneficiary = commitment.getBeneficiary();
@@ -1120,9 +1112,9 @@ private static String resourceSpecString( Part part ) {
                 Actor actor = employment.getActor();
                 AggregatedContact aggregatedContact = map.get( actor );
                 if ( aggregatedContact == null )
-                    map.put( actor, new AggregatedContact( planService, beneficiary ) );
+                    map.put( actor, new AggregatedContact( service, beneficiary ) );
                 else
-                    aggregatedContact.merge( planService, beneficiary );
+                    aggregatedContact.merge( service, beneficiary );
             }
 
             List<AggregatedContact> result = new ArrayList<AggregatedContact>( map.values() );
@@ -1254,10 +1246,6 @@ private static String resourceSpecString( Part part ) {
             return ensurePeriod( w.toString() );
         }
 
-        private Place getLocation() {
-            return part.getLocation();
-        }
-
         public List<ReportTask> getAllSubtasks() {
             List<ReportTask> result = new ArrayList<ReportTask>();
             addAllSubtasks( result );
@@ -1270,6 +1258,24 @@ private static String resourceSpecString( Part part ) {
                     tasks.add( subtask );
                     subtask.addAllSubtasks( tasks );
                     }
+        }
+
+        private String getCategoryString() {
+            Category category = part.getCategory();
+            return category == null ? "" : category.getLabel().toLowerCase();
+        }
+
+        private boolean isProhibited() {
+            return part.isProhibited();
+        }
+
+        private Place getLocation() {
+            return part.getLocation();
+        }
+
+        private String getLocationString() {
+            return getLocation() == null ? ""
+                                : ensurePeriod( "This task is located in " + getLocation() );
         }
     }
 
