@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.PlannerMessage;
@@ -107,7 +108,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
                 }
             } );
         if ( showTabs.contains( "Messages" ) )
-            tabs.add( new AbstractTab( new Model<String>( "Messages" ) ) {
+            tabs.add( new AbstractTab( new Model<String>(  User.current().isPlanner() ? "Messages" : "News") ) {
                 public Panel getPanel( String id ) {
                     plannerMessageListPanel = new PlannerMessageListPanel( id, SocialPanel.this, collapsible );
                     return plannerMessageListPanel;

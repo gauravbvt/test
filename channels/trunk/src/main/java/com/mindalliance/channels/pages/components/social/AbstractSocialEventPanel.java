@@ -110,8 +110,12 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 getUsername(),
                 poModel,
                 updatable );
-        menu.setVisible( !menu.isEmpty() );
+        menu.setVisible( !menu.isEmpty() && isPlanner() );
         socialItemContainer.add( menu );
+    }
+
+    private boolean isPlanner() {
+        return User.current().isPlanner();
     }
 
     private void addPhoto( WebMarkupContainer socialItemContainer ) {

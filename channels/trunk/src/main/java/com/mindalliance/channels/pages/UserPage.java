@@ -320,6 +320,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
             // Goto model
             new WebMarkupContainer( "model" )
                 .add( newTargetedLink( "gotoModel", "", PlanPage.class, null, plan ) )
+                    .add ( new Label( "modelDescription", getGotoModelDescription( user ,plan ) ) )
                 .setVisible( planner || plan.isTemplate() ),
 
             // Goto mapped procedures
@@ -336,16 +337,22 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
 
     private String getGotoReportLabel( User user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
-                ? "Procedures for all participants"
-                : "My procedures";
+                ? "Information sharing guidelines for all participants"
+                : "My information sharing guidelines";
+    }
+
+    private String getGotoModelDescription( User user, Plan plan ) {
+        return user.isPlanner( plan.getUri() ) && getPlan().isDevelopment()
+                ? "Build or modify the information sharing plan.\n" +
+                " (Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+.)"
+                : "View the information sharing plan.\n" +
+                "  (Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+.)";
     }
 
     private String getGotoReportDescription( User user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
-                ? "View and print the tasks and related communications (information sharing procedures) " +
-                "that are assigned to the participants in the plan."
-                : "View and print the tasks and related communications (information sharing procedures) " +
-                "that are assigned to you as a participant in the plan.";
+                ? "Set how users participate in the plan and view their information sharing guidelines."
+                : "View all tasks and related communications assigned to me according to my participation in this plan.";
     }
 
     private static Actor findActor( QueryService queryService, String userName ) {

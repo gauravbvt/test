@@ -1,7 +1,9 @@
 package com.mindalliance.channels.pages.components.support;
 
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.AjaxIndicatorAwareContainer;
@@ -42,7 +44,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     @SpringBean
     private MailSender mailSender;
 
-
+    private Identifiable about;
     private WebMarkupContainer feedbackContainer;
     private boolean question = true;
     private boolean problem;
@@ -60,9 +62,15 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
 
 
     public UserFeedbackPanel( String id ) {
+        this( id, null );
+    }
+
+    public UserFeedbackPanel( String id, Identifiable about ) {
         super( id );
+        this.about = about;
         init();
     }
+
 
     private void init() {
         dateFormat = new SimpleDateFormat( "yyyy/MM/dd HH:mm:ss" );
@@ -225,11 +233,34 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
                 + "\nUser: " + user.getFullName()
                 + "\n"
                 + dateFormat.format( new Date() )
+                + aboutString()
                 + "\n----------------------------------------------------------------------------\n\n"
                 + getContent()
                 + "\n\n----------------------------------------------------------------------------\n"
                 + clientInfo;
 
+    }
+
+    private String aboutString() {
+        if ( about == null ) {
+            return "";
+        }
+        else {
+            StringBuilder sb = new StringBuilder( );
+            sb.append("\nAbout: ");
+            sb.append( about.getTypeName() );
+            sb.append( " " );
+            sb.append( about.getName() );
+            sb.append( " [");
+            sb.append( about.getId() );
+            sb.append( "]");
+            if ( about instanceof SegmentObject ) {
+                SegmentObject segObj = (SegmentObject)about;
+                sb.append( " in segment ");
+                sb.append( segObj.getSegment().getName() );
+            }
+            return sb.toString();
+        }
     }
 
     private String getClientProperties() {

@@ -115,7 +115,12 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 adjustComponents( target );
             }
         };
+        showHideBroadcastsLink.setVisible( isPlanner() );
         add( showHideBroadcastsLink );
+    }
+
+    private boolean isPlanner() {
+        return  User.current().isPlanner();
     }
 
     private void addShowHideBroadcastsLabel() {
@@ -136,6 +141,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 adjustComponents( target );
             }
         };
+        sentReceivedLink.setVisible( isPlanner() );
         add( sentReceivedLink );
     }
 
@@ -170,6 +176,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private void addAboutMessages( int numberListed ) {
         aboutMessagesLabel = new Label( "aboutMessages", getAboutMessage( numberListed ) );
         aboutMessagesLabel.setOutputMarkupId( true );
+        aboutMessagesLabel.setVisible( isPlanner() );
         addOrReplace( aboutMessagesLabel );
     }
 
@@ -216,6 +223,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private void addNewMessage() {
         newMessageContainer = new WebMarkupContainer( "newMessage" );
         newMessageContainer.setOutputMarkupId( true );
+        newMessageContainer.setVisible( isPlanner() );
         addOrReplace( newMessageContainer );
         addRecipientChoice( newMessageContainer );
         addAbout( newMessageContainer );
