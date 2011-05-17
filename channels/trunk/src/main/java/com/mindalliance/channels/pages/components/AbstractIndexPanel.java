@@ -828,7 +828,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
          *
          * @return a string
          */
-        protected String getTitle() {
+        protected String getToolTip() {
             ModelObject mo = getIndexedModelObject();
             String kind = ( mo instanceof Part
                     ? "Task"
@@ -844,7 +844,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     ? "Actual " + mo.getClass().getSimpleName().toLowerCase()
                     : "Type of " + mo.getClass().getSimpleName().toLowerCase()
             );
-            return kind + ( isNameAbbreviated() ? ": " + getFullName() : "" );
+            return kind + ( isNameAbbreviated() ? ": " + getFullName() : "" ) + " [" + mo.getId() + "]";
         }
 
         /**
@@ -853,13 +853,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
          * @param mo model object
          * @return a string
          */
-        protected String getKind( ModelObject mo ) {
-            return ( mo instanceof Part
-                    ? "Task"
-                    : ( mo instanceof Flow )
-                    ? ( "Flow \"" + mo.getName() + "\"" )
-                    : mo.getClass().getSimpleName()
-            );
+        protected String getToolTip( ModelObject mo ) {
+            return mo.getTypeName() + " [" + mo.getId() + "]";
         }
     }
 
@@ -886,7 +881,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     "moLink",
                     new Model<ModelObject>( getIndexedModelObject() ),
                     new Model<String>( getAbbreviatedName() ),
-                    getTitle(),
+                    getToolTip(),
                     addToCss( getIndexedModelObject(), css  ) );
             italicizeIfEntityType( moLink, getIndexedModelObject() );
             add( moLink );
@@ -916,7 +911,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         private void initialize() {
             Label moLabel = new Label( "moLabel", new PropertyModel<String>( this, "abbreviatedName" ) );
             if ( isNameAbbreviated() ) {
-                moLabel.add( new AttributeModifier( "title", true, new Model<String>( getFullName() ) ) );
+                moLabel.add( new AttributeModifier(
+                        "title",
+                        true,
+                        new Model<String>( getFullName()  ) ) );
             }
             add( moLabel );
             ListView refList = new ListView<ModelObject>(
@@ -927,7 +925,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                             "moLink",
                             new Model<ModelObject>( item.getModelObject() ),
                             new Model<String>( getRank( item.getModelObject() ) ),
-                            getKind( item.getModelObject() ),
+                            getToolTip( item.getModelObject() ),
                             addToCss( item.getModelObject(), css ) );
                     item.add( moLink );
                 }
