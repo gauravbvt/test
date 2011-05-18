@@ -11,7 +11,6 @@ import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.ProcedureMapPage;
-import com.mindalliance.channels.pages.responders.ResponderPage;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -80,10 +79,10 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     private WebMarkupContainer messageContainer;
     private String message;
     /**
-      * Time at which a message appeared.
-      */
-     private long message_time = 0;
-
+     * Time at which a message appeared.
+     */
+    private long message_time = 0;
+    private Label welcomeLabel;
 
 
     public UserPage() {
@@ -121,8 +120,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     }
 
 
-
-     private void addForm() {
+    private void addForm() {
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
@@ -130,7 +128,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
                 // System.out.println( "Form submitted" );
             }
         };
-                 form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
+        form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
             @Override
             protected void onTimer( AjaxRequestTarget target ) {
                 try {
@@ -154,7 +152,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
 
     private void redirectHere() {
         String url = redirectUrl( "home", getPlan() );
-        RedirectPage page =  new RedirectPage( url );
+        RedirectPage page = new RedirectPage( url );
         setResponsePage( page );
     }
 
@@ -166,13 +164,13 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     }
 
     private void addChangeMessagePanel() {
-         messageContainer = new WebMarkupContainer( "message-container" );
-         messageContainer.setOutputMarkupId( true );
-         makeVisible( messageContainer, !getMessage().isEmpty() );
-         form.addOrReplace( messageContainer );
-         messageContainer.add( new MessagePanel( "message", new Model<String>( getMessage() ) ) );
-         message_time = System.currentTimeMillis();
-     }
+        messageContainer = new WebMarkupContainer( "message-container" );
+        messageContainer.setOutputMarkupId( true );
+        makeVisible( messageContainer, !getMessage().isEmpty() );
+        form.addOrReplace( messageContainer );
+        messageContainer.add( new MessagePanel( "message", new Model<String>( getMessage() ) ) );
+        message_time = System.currentTimeMillis();
+    }
 
     private String getMessage() {
         return message == null ? "" : message;
@@ -210,7 +208,9 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
 
 
     private void addWelcome() {
-        form.add( new Label( "userName", getUser().getFullName() ) );
+        welcomeLabel = new Label( "userName", getUser().getFullName() );
+        welcomeLabel.setOutputMarkupId( true );
+        form.addOrReplace( welcomeLabel );
     }
 
     private void addLoggedIn() {
@@ -302,37 +302,32 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         Actor actor = findActor( getQueryService(), user.getUsername() );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
-        BookmarkablePageLink<? extends WebPage > gotoReportLink =  newTargetedLink(
-                "gotoReport",
-                "",
-                ResponderPage.class,
-                ResponderPage.createParameters( planner ? null : actor, uri, plan.getVersion() ),
-                null,
-                plan );
+        BookmarkablePageLink<? extends WebPage> gotoReportLink =
+                getGuidelinesLink( "gotoReport", getQueryService(), getPlan(), User.current() );
         Label gotoReportLabel = new Label( "proceduresLabel", getGotoReportLabel( user, plan ) );
         gotoReportLink.add( gotoReportLabel );
         form.add(
-            // Goto admin
-            new WebMarkupContainer( "admin" )
-                .add( newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan ) )
-                .setVisible( user.isAdmin() ),
+                // Goto admin
+                new WebMarkupContainer( "admin" )
+                        .add( newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan ) )
+                        .setVisible( user.isAdmin() ),
 
-            // Goto model
-            new WebMarkupContainer( "model" )
-                .add( newTargetedLink( "gotoModel", "", PlanPage.class, null, plan ) )
-                    .add ( new Label( "modelDescription", getGotoModelDescription( user ,plan ) ) )
-                .setVisible( planner || plan.isTemplate() ),
+                // Goto model
+                new WebMarkupContainer( "model" )
+                        .add( newTargetedLink( "gotoModel", "", PlanPage.class, null, plan ) )
+                        .add( new Label( "modelDescription", getGotoModelDescription( user, plan ) ) )
+                        .setVisible( planner || plan.isTemplate() ),
 
-            // Goto mapped procedures
-            new WebMarkupContainer( "mapped" )
-                .add( newTargetedLink( "gotoMapped", "", ProcedureMapPage.class, null, plan ) ).
-                setVisible( planner || plan.isTemplate() ),
+                // Goto mapped procedures
+                new WebMarkupContainer( "mapped" )
+                        .add( newTargetedLink( "gotoMapped", "", ProcedureMapPage.class, null, plan ) ).
+                        setVisible( planner || plan.isTemplate() ),
 
-            // Goto personal procedures
-            new WebMarkupContainer( "report" )
-                .add( gotoReportLink )
-                .add ( new Label( "proceduresDescription", getGotoReportDescription( user ,plan ) ) )
-                .setVisible( planner || actor != null ) );
+                // Goto personal procedures
+                new WebMarkupContainer( "report" )
+                        .add( gotoReportLink )
+                        .add( new Label( "proceduresDescription", getGotoReportDescription( user, plan ) ) )
+                        .setVisible( planner || actor != null ) );
     }
 
     private String getGotoReportLabel( User user, Plan plan ) {
@@ -358,12 +353,12 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     private static Actor findActor( QueryService queryService, String userName ) {
         Participation participation = queryService.findParticipation( userName );
         return participation != null && participation.getActor() != null
-                        ? participation.getActor()
-                        : null;
+                ? participation.getActor()
+                : null;
     }
 
     private void addSocial() {
-        String[] tabsShown = {SocialPanel.CALENDAR, SocialPanel.SURVEYS, SocialPanel.MESSAGES/*, SocialPanel.USER*/};
+        String[] tabsShown = {SocialPanel.CALENDAR, SocialPanel.SURVEYS, SocialPanel.MESSAGES, SocialPanel.USER};
         socialPanel = new SocialPanel( "social", false, tabsShown );
         form.add( socialPanel );
     }
@@ -383,22 +378,27 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
             message = change.getMessage();
         }
         if ( change.isNone() ) {
-        }
-         else if ( change.isCommunicated() ) {
+        } else if ( change.isCommunicated() ) {
             // do something?
         }
     }
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( change.isUpdated()
+                && change.isForInstanceOf( Plan.class )
+                && change.isForProperty( "user" ) ) {
+            addWelcome();
+            target.addComponent( welcomeLabel );
+        }
         String message = change.getMessage();
         if ( message != null ) {
             addChangeMessagePanel();
             target.addComponent( messageContainer );
-        }else if ( change.isCommunicated() ) {
-                newMessage( target, change );
-                refreshSocialPanel( target, change );
-            }
+        } else if ( change.isCommunicated() ) {
+            newMessage( target, change );
+            refreshSocialPanel( target, change );
+        }
         if ( change.getScript() != null ) {
             target.appendJavascript( change.getScript() );
         }
@@ -423,7 +423,6 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     public void refreshSocialPanel( AjaxRequestTarget target, Change change ) {
         updateSocialPanel( target );
     }
-
 
 
     @Override

@@ -17,11 +17,11 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Comparator;
 
 /**
  * A user details service that keeps in sync with changes to the underlying user definition file.
@@ -166,7 +166,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
      * @throws IOException on write errors
      */
     @Override
-    public void save() throws IOException {
+    public synchronized void  save() throws IOException {
         long time = System.currentTimeMillis();
         synchronized ( this ) {
             lastModified = time;

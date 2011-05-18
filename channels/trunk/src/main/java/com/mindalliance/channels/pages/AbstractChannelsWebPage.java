@@ -7,8 +7,11 @@ import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.nlp.SemanticMatcher;
+import com.mindalliance.channels.pages.responders.ResponderPage;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
@@ -345,6 +348,28 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         } else {
             return planManager.getDefaultSupportCommunity();
         }
+    }
+
+    public static BookmarkablePageLink<? extends WebPage > getGuidelinesLink( String id, QueryService queryService, Plan plan, User user ) {
+        Actor actor = findActor( queryService, user.getUsername() );
+        String uri = plan.getUri();
+        boolean planner = user.isPlanner( uri );
+        BookmarkablePageLink<? extends WebPage> guidelinesLink = AbstractChannelsWebPage.newTargetedLink(
+                id,
+                "",
+                ResponderPage.class,
+                ResponderPage.createParameters( planner ? null : actor, uri, plan.getVersion() ),
+                null,
+                plan );
+        guidelinesLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
+        return guidelinesLink;
+    }
+
+    private static Actor findActor( QueryService queryService, String userName ) {
+        Participation participation = queryService.findParticipation( userName );
+        return participation != null && participation.getActor() != null
+                ? participation.getActor()
+                : null;
     }
 
 

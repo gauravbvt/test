@@ -10,6 +10,7 @@
      <div wicket:id="userInfo">
          <h3>My identity</h3>
          <table>
+             <tr><td>User id:</td><td><span wicket:id="userId">uid</span></td></tr>
              <tr><td>Name:</td><td><input type="text" wicket:id="fullName"/></td></tr>
              <tr><td>Personal email:</td><td><input type="text" wicket:id="email"/></td></tr>
          </table>
@@ -20,10 +21,15 @@
           </ul>
          <h3>My password</h3>
          <table>
-             <tr><td>Current password:</td><td><input type="text" wicket:id="password"/></td></tr>
+             <tr><td>Current password:</td><td><input type="password" wicket:id="password"/></td></tr>
              <tr><td>New password:</td><td><input type="text" wicket:id="newPassword"/></td></tr>
              <tr><td>Again:</td><td><input type="text" wicket:id="repeatNewPassword"/></td></tr>
          </table>
+         <div wicket:id="errorsContainer">
+             <ul>
+                 <li wicket:id="errors"><span wicket:id="error">error</span></li>
+             </ul>
+         </div>
          <div>
              <input wicket:id="apply" type="button" value="Apply" />
              <input wicket:id="reset" type="button" value="Reset"/>

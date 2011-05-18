@@ -13,7 +13,6 @@ import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.pages.reports.ProcedureMapPage;
-import com.mindalliance.channels.pages.reports.ProceduresReportPage;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.Component;
@@ -74,11 +73,11 @@ public class PlanShowMenuPanel extends MenuPanel {
 
             menuItems.add(
                     newLink(
-                            "Procedures report",
-                            newTargetedLink( "_blank", ProceduresReportPage.class, null ) ) );
+                            "IS guidelines",
+                            AbstractChannelsWebPage.getGuidelinesLink( "link", getQueryService(), getPlan(), User.current() ) ) );
             menuItems.add(
                     newLink(
-                            "Mapped procedures",
+                            "IS procedure map",
                             newTargetedLink( "_blank", ProcedureMapPage.class, null ) ) );
 
 /*
