@@ -84,7 +84,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
                 getUsersPresent() ) {
             protected void populateItem( ListItem<User> item ) {
                 User planner = item.getModelObject();
-                PlannerPresencePanel presencePanel = new PlannerPresencePanel(
+                UserPresencePanel presencePanel = new UserPresencePanel(
                         "presence",
                         planner.getUsername(),
                         item.getIndex(),

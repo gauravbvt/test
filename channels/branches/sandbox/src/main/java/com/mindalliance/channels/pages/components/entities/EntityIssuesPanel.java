@@ -13,8 +13,8 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
-import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -115,8 +115,9 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
     protected void addIncluded() {
         // containment (for non-events only)
         WebMarkupContainer containmentContainer = new WebMarkupContainer( "containmentContainer" );
+        containmentContainer.setOutputMarkupId( true );
         makeVisible( containmentContainer, !( getEntity() instanceof Event ) );
-        add( containmentContainer );
+        addOrReplace( containmentContainer );
         CheckBox includeContainedCheckBox = new CheckBox(
                 "includeContained",
                 new PropertyModel<Boolean>( this, "includeContained" ) );
@@ -132,15 +133,17 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         CheckBox includeWaivedCheckBox = new CheckBox(
                 "includeWaived",
                 new PropertyModel<Boolean>( this, "includeWaived" ) );
+        includeWaivedCheckBox.setOutputMarkupId( true );
         includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
             }
         } );
-        add( includeWaivedCheckBox );
+        addOrReplace( includeWaivedCheckBox );
         // Include from segment
         WebMarkupContainer inSegmentContainer = new WebMarkupContainer( "inSegmentContainer" );
-        add( inSegmentContainer );
+        inSegmentContainer.setOutputMarkupId( true );
+        addOrReplace( inSegmentContainer );
         CheckBox includeFromSegments = new CheckBox(
                 "includeFromSegments",
                 new PropertyModel<Boolean>( this, "includeFromSegments" ) );

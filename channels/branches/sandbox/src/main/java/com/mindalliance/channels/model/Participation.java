@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.query.QueryService;
 
@@ -118,4 +117,7 @@ public class Participation extends AbstractUnicastChannelable {
         return username == null;
     }
 
+    public boolean hasActor( Actor a ) {
+        return actor != null && actor.equals( a );
+    }
 }

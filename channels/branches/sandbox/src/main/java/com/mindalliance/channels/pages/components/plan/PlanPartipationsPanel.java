@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.plan;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
 import java.util.Set;
@@ -22,13 +23,21 @@ public class PlanPartipationsPanel extends AbstractCommandablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
+
+
     private void init() {
         addParticipations();
     }
 
     private void addParticipations() {
         ParticipationsPanel participationsPanel = new ParticipationsPanel( "participations" );
-        add( participationsPanel );
+        addOrReplace( participationsPanel );
     }
 
     /**

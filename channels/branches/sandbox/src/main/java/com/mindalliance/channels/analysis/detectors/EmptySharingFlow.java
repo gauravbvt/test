@@ -17,9 +17,9 @@ import java.util.List;
  * Date: Sep 14, 2010
  * Time: 2:25:12 PM
  */
-public class ReportFlowWithoutEOIs extends AbstractIssueDetector {
+public class EmptySharingFlow extends AbstractIssueDetector {
 
-    public ReportFlowWithoutEOIs() {
+    public EmptySharingFlow() {
     }
 
 
@@ -29,16 +29,11 @@ public class ReportFlowWithoutEOIs extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow)modelObject;
-        Flow.Intent intent = flow.getIntent();
-        if ( intent != null
-                && flow.isSharing()
-                && intent.equals( Flow.Intent.Report )
-                && flow.getEois().isEmpty() ) {
+        if ( flow.isSharing() && flow.getEois().isEmpty() ) {
             Issue issue = makeIssue( Issue.COMPLETENESS, flow );
-            issue.setDescription( "This report flow shares no element of information.");
-            issue.setSeverity( Level.Low );
-            issue.setRemediation( "Specify elements of information" +
-                    "\nor change the intent of the flow to something other than report.");
+            issue.setDescription( "This sharing flow has no element of information.");
+            issue.setSeverity( Level.Medium );
+            issue.setRemediation( "Specify elements of information." );
             issues.add( issue );
         }
         return issues;
@@ -63,5 +58,10 @@ public class ReportFlowWithoutEOIs extends AbstractIssueDetector {
      */
     protected String getLabel() {
         return "Report flow shares no elements of information";
+    }
+
+    @Override
+    public boolean canBeWaived() {
+        return true;
     }
 }

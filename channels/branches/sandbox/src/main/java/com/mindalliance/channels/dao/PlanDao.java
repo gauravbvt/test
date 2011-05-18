@@ -110,10 +110,10 @@ public class PlanDao extends AbstractDao {
      */
     public synchronized void save( Exporter exporter ) throws IOException {
         if ( isLoaded() ) {
+            version.setLastId( idGenerator.getLastAssignedId( plan ) );
             takeSnapshot( exporter );
             version.getJournalFile().delete();
             journal.reset();
-            version.setLastId( idGenerator.getLastAssignedId( plan ) );
         }
     }
 
@@ -188,9 +188,9 @@ public class PlanDao extends AbstractDao {
         version.getJournalFile().delete();
         FileOutputStream out = null;
         try {
+            version.setLastId( idGenerator.getLastAssignedId( plan ) );
             out = new FileOutputStream( version.getJournalFile() );
             exporter.export( getJournal(), out );
-            version.setLastId( idGenerator.getLastAssignedId( plan ) );
         } finally {
             if ( out != null )
                 out.close();

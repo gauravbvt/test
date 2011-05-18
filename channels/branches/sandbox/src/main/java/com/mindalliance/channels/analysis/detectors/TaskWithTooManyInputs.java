@@ -11,7 +11,6 @@ import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.query.Assignments;
-import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -51,7 +50,7 @@ public class TaskWithTooManyInputs extends AbstractIssueDetector {
             Issue issue = makeIssue( Issue.ROBUSTNESS, part );
             issue.setDescription( "Agents executing task \""
                     + part.getTitle()
-                    + "\" would receive information from too many different agents ("
+                    + "\" could receive information from too many different agents ("
                     + n
                     + ")." );
             issue.setRemediation( "Remove \"receive\" sharing flows"

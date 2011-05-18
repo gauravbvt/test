@@ -88,6 +88,12 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         addIndexedOnChoice();
         addNameRangePanel();
@@ -99,6 +105,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
                 "indexed",
                 new PropertyModel<String>( this, "indexedOn" ),
                 Arrays.asList( indexingChoices ) );
+        indexedOnChoices.setOutputMarkupId( true );
         indexedOnChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 nameRange = new NameRange();
@@ -108,7 +115,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
                 target.addComponent( whosWhoTable );
             }
         } );
-        add( indexedOnChoices );
+        addOrReplace( indexedOnChoices );
     }
 
     private void addNameRangePanel() {

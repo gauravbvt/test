@@ -14,6 +14,7 @@
 		    <a wicket:id="sentReceivedLink" href="#"><span wicket:id="sentReceived">show received</span></a>
 		</div>
 	</div>
+    <div wicket:id="aboutMessages" class="no-messages">No messages</div>
     <div wicket:id="plannerMessagesContainer" class="social-list messages">
         <span wicket:id="plannerMessages">
             <div wicket:id="plannerMessage">[planner message panel]</div>
@@ -23,7 +24,6 @@
 	        <a wicket:id="showFew" href="#">Show a few</a>
 		</div>
     </div>
-    <div wicket:id="noMessages" class="no-messages"><span>No messages</span></div>
     <div wicket:id="newMessage" class="new-message">
         <div><span>To:</span><select wicket:id="recipient"><option>All</option></select></div>
         <div wicket:id="aboutContainer"><span>About:</span> <span wicket:id="about">[model object link panel]</span></div>

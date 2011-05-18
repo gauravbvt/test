@@ -177,14 +177,18 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     }
 
     protected static String listActors( List<Actor> partActors ) {
-        StringBuilder sb = new StringBuilder();
         Iterator<Actor> actors = partActors.iterator();
-        while ( actors.hasNext() ) {
-            sb.append( actors.next().getName() );
-            if ( actors.hasNext() )
-                sb.append( ", " );
+        if ( !actors.hasNext() ) {
+            return "no one";
+        } else {
+            StringBuilder sb = new StringBuilder();
+            while ( actors.hasNext() ) {
+                sb.append( actors.next().getName() );
+                if ( actors.hasNext() )
+                    sb.append( ", " );
+            }
+            return sb.toString();
         }
-        return sb.toString();
     }
 
     protected String getIcon( ImagingService imagingService, Node node ) {

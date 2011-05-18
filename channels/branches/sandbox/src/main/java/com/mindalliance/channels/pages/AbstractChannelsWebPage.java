@@ -77,7 +77,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
 
     private Plan plan;
 
-    transient private QueryService queryService;
+    private transient QueryService queryService;
 
     public AbstractChannelsWebPage() {
     }
@@ -135,7 +135,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         this.semanticMatcher = semanticMatcher;
     }
 
-    static public void addPlanParameters( BookmarkablePageLink link, Plan plan ) {
+    public static void addPlanParameters( BookmarkablePageLink link, Plan plan ) {
         try {
             link.setParameter( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
@@ -215,6 +215,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         }
         if ( !getPlans().contains( plan ) )
             throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
+        User.current().setPlan( plan );
         getQueryService();
     }
 
@@ -237,9 +238,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
 
     private PlanService getQueryService( Plan plan ) {
         return new PlanService(
-                getPlanManager(),
-                getAttachmentManager(),
-                getSemanticMatcher(),
+                getPlanManager(), getSemanticMatcher(),
                 getUserService(),
                 plan );
     }
@@ -267,12 +266,13 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         return plan;
     }
 
-    static public <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
+    public static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
             String id,
             String target,
             Class<T> pageClass,
             PopupSettings popupSettings,
             Plan plan ) {
+
         BookmarkablePageLink<T> link = new BookmarkablePageLink<T>( id, pageClass );
         addPlanParameters( link, plan );
         link.add( new AttributeModifier( "target", true, new Model<String>( target ) ) );
@@ -282,7 +282,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         return link;
     }
 
-    static public <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
+    public static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
             String id,
             String target,
             Class<T> pageClass,
@@ -336,6 +336,15 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     protected static void makeVisible( Component component, boolean visible ) {
         component.add( new AttributeModifier( "style", true, new Model<String>(
                 visible ? "" : "display:none" ) ) );
+    }
+
+    protected String getSupportCommunity() {
+        Plan plan = User.current().getPlan();
+        if ( plan != null ) {
+            return  plan.getPlannerSupportCommunity( planManager.getDefaultSupportCommunity() );
+        } else {
+            return planManager.getDefaultSupportCommunity();
+        }
     }
 
 

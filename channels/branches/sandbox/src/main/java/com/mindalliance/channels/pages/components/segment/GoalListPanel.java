@@ -92,18 +92,24 @@ public class GoalListPanel extends AbstractCommandablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         goalsContainer = new WebMarkupContainer( "goalsDiv" );
         goalsContainer.setOutputMarkupId( true );
-        add( goalsContainer );
+        addOrReplace( goalsContainer );
         goalsContainer.add( makeAtEnd() );
         goalsContainer.add( makeGoalsTable() );
         moreContainer = new WebMarkupContainer( "moreDiv" );
         moreContainer.setOutputMarkupId( true );
-        add( moreContainer );
+        addOrReplace( moreContainer );
         initLabel();
         addDescriptionField();
-        moreContainer.add( makeTasksTable() );
+        moreContainer.addOrReplace( makeTasksTable() );
         makeVisible( moreContainer, false );
     }
 
@@ -178,7 +184,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                         target.addComponent( item );
                     }
                 } );
-        kindDropDownChoice.setEnabled( isLockedByUser( getSegment() ) );
+        kindDropDownChoice.setEnabled( wrapper.isMarkedForCreation() && isLockedByUser( getSegment() ) );
         item.add( kindDropDownChoice );
     }
 
@@ -207,7 +213,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                         }
                     }
                 } );
-        levelDropDownChoice.setEnabled( isLockedByUser( getSegment() ) );
+        levelDropDownChoice.setEnabled( wrapper.isMarkedForCreation() && isLockedByUser( getSegment() ) );
         item.add( levelDropDownChoice );
     }
 
@@ -239,7 +245,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
 
                     }
                 } );
-        categoryChoices.setEnabled( isLockedByUser( getSegment() ) );
+        categoryChoices.setEnabled( wrapper.isMarkedForCreation() && isLockedByUser( getSegment() ) );
         categoryChoices.setOutputMarkupId( true );
         item.addOrReplace( categoryChoices );
     }
@@ -253,7 +259,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 choices,
                 "organization",
                 Organization.class );
-        orgRefField.enable( isLockedByUser( getSegment() ) );
+        orgRefField.enable( wrapper.isMarkedForCreation() && isLockedByUser( getSegment() ) );
         item.add( orgRefField );
     }
 
@@ -319,20 +325,23 @@ public class GoalListPanel extends AbstractCommandablePanel {
         } );
         descriptionField.setOutputMarkupId( true );
         descriptionField.setEnabled( isLockedByUser( getSegment() ) );
-        moreContainer.add( descriptionField );
+        moreContainer.addOrReplace( descriptionField );
     }
 
     private Component makeTasksTable() {
+        Component tasksTable;
         if ( selectedGoal == null ) {
-            return new Label( "tasks", new Model<String>( "No goal selected" ) );
+            tasksTable = new Label( "tasks", new Model<String>( "No goal selected" ) );
         } else {
-            return new TasksTable(
+            tasksTable = new TasksTable(
                     "tasks",
                     new Model<Segment>( getSegment() ),
                     MAX_TASK_ROWS,
                     selectedGoal.getGoal()
             );
         }
+        tasksTable.setOutputMarkupId( true );
+        return tasksTable;
     }
 
     private List<Level> getCandidateLevels() {
@@ -473,7 +482,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
 
         public void addIfComplete() {
             assert markedForCreation;
-            if ( goal.getCategory() != null && goal.getLevel() != null && goal.getOrganization() != null ) {
+            if ( isComplete() ) {
                 if ( !getSegment().getGoals().contains( goal ) ) {
                     doCommand( new UpdatePlanObject(
                             getSegment(),

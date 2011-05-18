@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Responder Pages</title>
+    <link rel="stylesheet" href="../css/responder-report/all-responders.css" type="text/css" title="Playbook">
+    <link rel="stylesheet" href="../css/iPhone.css" type="text/css" media="only screen and (max-device-width: 480px)">
+</head>
+<body>
+<div id="container">
+    <div id="header">
+		<img wicket:id="channelsHome" class="logo" src="../images/logo_home.png" height="48" width="48" alt="Channels - Home" />
+      	<h1>Responder list for <span wicket:id="planName">plan</span></h1>
+		<ul>
+			<li>
+				<a href="logout">Logout <span wicket:id="userName">user</span></a>
+			</li>
+		</ul>
+    </div>
+    <div id="contents">
+        <div id="note">
+            <span>As a planner, you get access to all the responder pages.</span>
+        </div>
+        <div wicket:id="activeDiv">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr class="tablehead">
+					<th colspan="2">
+			            <p class="title">Active Users</p>
+						<p class="desc">Users that can log in to view their responder report</p>
+					</th>
+				</tr>
+				<tr wicket:id="activeResponders" class="tablecont">
+					<td class="name">
+	                    <a wicket:id="responder" class="responder">
+							<span wicket:id="responderName">a responder</span>
+						</a>
+						(<a wicket:id="userName">user name</a>) as
+						<span class="profile">
+							<span wicket:id="profile">agent</span>
+						</span>
+					</td>
+					<td class="remove">
+						<span class="menu" wicket:id="detachItem">
+							<a wicket:id="removeLink" href="#">
+								Remove
+							</a>
+						</span>
+					</td>
+				</tr>
+			</table>
+
+        </div>
+
+        <div wicket:id="agentsDiv">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+            	<tr class="tablehead">
+					<th colspan="2">
+						<p class="title">Agents</p>
+						<p class="desc">Persons defined in the plan that can be assigned to users</p>
+					</th>
+				</tr>
+				<tr wicket:id="agents" class="tablecont">
+					<td>
+	                	<a wicket:id="responder" class="responder">
+							<span wicket:id="responderName">a responder</span>
+						</a>
+                    	<span wicket:id="many">
+							(<span class="many">many</span>)
+						</span>
+					</td>
+					<td class="assign">
+                    	<ul wicket:id="assign">
+                            <li><a href="#">Assign</a>
+                                <ul class="popup">
+                                    <li wicket:id="addUser">
+                                        <a wicket:id="addLink" href="#">
+                                            <span wicket:id="userLink">A user</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                    	</ul>
+					</td>
+				</tr>
+			</table>
+        </div>
+
+
+        <div id="plannersDiv" wicket:id="plannersDiv">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr class="tablehead">
+					<th>
+						<p class="title">Other Planners</p>
+						<p class="desc">Planners who can edit this plan</p>
+					</th>
+				</tr>
+				<tr wicket:id="otherPlanners" class="tablecont">
+					<td>
+	        			<a wicket:id="planner" class="planner">other planner</a>
+					</td>
+				</tr>
+			</table>
+        </div>
+
+        <div id="otherPlans" wicket:id="plansDiv">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr class="tablehead">
+					<th>
+			            <p class="title">Other Plans</p>
+			            <p class="desc">Plans which you you can edit</p>
+					</th>
+				</tr>
+				<tr wicket:id="otherPlans" class="tablecont">
+					<td>
+	                	<a wicket:id="responderList" class="responderList">
+							<span wicket:id="otherPlanName">other plan</span>
+						</a>
+					</td>
+				</tr>
+			</table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

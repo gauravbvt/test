@@ -11,8 +11,8 @@ import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.ProcedureMapPage;
-import com.mindalliance.channels.pages.reports.ProceduresReportPage;
-import com.mindalliance.channels.pages.reports.SelectorPanel;
+import com.mindalliance.channels.pages.responders.ResponderPage;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -21,6 +21,7 @@ import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -53,6 +54,11 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( UserPage.class );
+
+    /**
+     * Minimium delay before a change message fades out.
+     */
+    public static final int MESSAGE_FADE_OUT_DELAY = 20;
 
     /**
      * The mail sender.
@@ -104,7 +110,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         addPlanClient();
         // addPlanMetrics();
         addReferences();
-        addGotoLinks();
+        addGotoLinks( getPlan(), getUser() );
         addSocial();
     }
 
@@ -136,7 +142,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
                     ErrorPage.emailException(
                             new Exception( "Timed update failed", e ),
                             mailSender,
-                            getApp().getPlannerSupportCommunity()
+                            getSupportCommunity()
                     );
                     redirectHere();
                 }
@@ -177,7 +183,21 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         getCommander().keepAlive( User.current().getUsername(), REFRESH_DELAY );
         getCommander().processDeaths();
         updateSocialPanel( target );
+        fadeOutMessagePanel( target );
     }
+
+    private void fadeOutMessagePanel( AjaxRequestTarget target ) {
+        if ( !getMessage().isEmpty() ) {
+            if ( ( System.currentTimeMillis() - message_time ) > ( MESSAGE_FADE_OUT_DELAY * 1000 ) ) {
+                target.appendJavascript( "$('div.change-message').fadeOut('slow');" );
+                message = null;
+            }
+        } else {
+            makeVisible( messageContainer, false );
+        }
+        target.addComponent( messageContainer );
+    }
+
 
     /**
      * Update social panel.
@@ -277,68 +297,74 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         );
     }
 
-    private void addGotoLinks() {
-        // Goto admin
-        WebMarkupContainer gotoAdminContainer = new WebMarkupContainer( "admin" );
-        form.add( gotoAdminContainer );
-        BookmarkablePageLink<AdminPage> gotoAdmin = newTargetedLink(
-                "gotoAdmin",
-                "",
-                AdminPage.class,
-                null,
-                getPlan()
-        );
-        gotoAdminContainer.setVisible( getUser().isAdmin() );
-        gotoAdminContainer.add( gotoAdmin );
-        // Goto model
-        WebMarkupContainer gotoModelContainer = new WebMarkupContainer( "model" );
-        form.add( gotoModelContainer );
-        BookmarkablePageLink<PlanPage> gotoPlan = newTargetedLink(
-                "gotoModel",
-                "",
-                PlanPage.class,
-                null,
-                getPlan()
-        );
-        gotoModelContainer.setVisible( getPlan().isTemplate() || getUser().isPlanner( getPlan().getUri() ) );
-        gotoModelContainer.add( gotoPlan );
-        // Goto mapped procedures
-        WebMarkupContainer gotoMappedContainer = new WebMarkupContainer( "mapped" );
-        form.add( gotoMappedContainer );
-        BookmarkablePageLink<ProcedureMapPage> gotoMapped = newTargetedLink(
-                "gotoMapped",
-                "",
-                ProcedureMapPage.class,
-                null,
-                getPlan()
-        );
-        gotoMappedContainer.add( gotoMapped );
-        gotoMappedContainer.setVisible( getPlan().isTemplate() || getUser().isPlanner( getPlan().getUri() ) );
-        // Goto personal procedures
-        WebMarkupContainer gotoReportContainer = new WebMarkupContainer( "report" );
-        form.add( gotoReportContainer );
-        Participation participation = getQueryService().findParticipation( getUser().getUsername() );
-        PageParameters params = new PageParameters();
-        Actor actor = participation != null && participation.getActor() != null
-                        ? participation.getActor()
-                        : null;
-        if ( actor != null ) {
-            params.put( SelectorPanel.ACTOR_PARM, actor.getId() );
-        }
-        BookmarkablePageLink<ProceduresReportPage> gotoReport = newTargetedLink(
+    private void addGotoLinks( Plan plan, User user ) {
+
+        Actor actor = findActor( getQueryService(), user.getUsername() );
+        String uri = plan.getUri();
+        boolean planner = user.isPlanner( uri );
+        BookmarkablePageLink<? extends WebPage > gotoReportLink =  newTargetedLink(
                 "gotoReport",
                 "",
-                ProceduresReportPage.class,
-                params,
+                ResponderPage.class,
+                ResponderPage.createParameters( planner ? null : actor, uri, plan.getVersion() ),
                 null,
-                getPlan()
-        );
-        gotoReportContainer.setVisible(  actor != null );
-        gotoReportContainer.add( gotoReport );
+                plan );
+        Label gotoReportLabel = new Label( "proceduresLabel", getGotoReportLabel( user, plan ) );
+        gotoReportLink.add( gotoReportLabel );
+        form.add(
+            // Goto admin
+            new WebMarkupContainer( "admin" )
+                .add( newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan ) )
+                .setVisible( user.isAdmin() ),
+
+            // Goto model
+            new WebMarkupContainer( "model" )
+                .add( newTargetedLink( "gotoModel", "", PlanPage.class, null, plan ) )
+                    .add ( new Label( "modelDescription", getGotoModelDescription( user ,plan ) ) )
+                .setVisible( planner || plan.isTemplate() ),
+
+            // Goto mapped procedures
+            new WebMarkupContainer( "mapped" )
+                .add( newTargetedLink( "gotoMapped", "", ProcedureMapPage.class, null, plan ) ).
+                setVisible( planner || plan.isTemplate() ),
+
+            // Goto personal procedures
+            new WebMarkupContainer( "report" )
+                .add( gotoReportLink )
+                .add ( new Label( "proceduresDescription", getGotoReportDescription( user ,plan ) ) )
+                .setVisible( planner || actor != null ) );
+    }
+
+    private String getGotoReportLabel( User user, Plan plan ) {
+        return user.isPlanner( plan.getUri() )
+                ? "Information sharing guidelines for all participants"
+                : "My information sharing guidelines";
+    }
+
+    private String getGotoModelDescription( User user, Plan plan ) {
+        return user.isPlanner( plan.getUri() ) && getPlan().isDevelopment()
+                ? "Build or modify the information sharing plan.\n" +
+                " (Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+.)"
+                : "View the information sharing plan.\n" +
+                "  (Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+.)";
+    }
+
+    private String getGotoReportDescription( User user, Plan plan ) {
+        return user.isPlanner( plan.getUri() )
+                ? "Set how users participate in the plan and view their information sharing guidelines."
+                : "View all tasks and related communications assigned to me according to my participation in this plan.";
+    }
+
+    private static Actor findActor( QueryService queryService, String userName ) {
+        Participation participation = queryService.findParticipation( userName );
+        return participation != null && participation.getActor() != null
+                        ? participation.getActor()
+                        : null;
     }
 
     private void addSocial() {
-        socialPanel = new SocialPanel( "social", false );
+        String[] tabsShown = {SocialPanel.CALENDAR, SocialPanel.SURVEYS, SocialPanel.MESSAGES/*, SocialPanel.USER*/};
+        socialPanel = new SocialPanel( "social", false, tabsShown );
         form.add( socialPanel );
     }
 

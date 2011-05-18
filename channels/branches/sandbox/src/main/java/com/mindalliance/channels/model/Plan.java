@@ -1,6 +1,8 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.model.Attachment.Type;
+import com.mindalliance.channels.model.Phase.Timing;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.util.InfoStandardsLoader;
 import com.mindalliance.channels.util.Loader;
@@ -35,92 +37,70 @@ import java.util.Set;
  */
 public class Plan extends ModelObject {
 
-    /**
-     * Logger.
-     */
+    /** Logger. */
     private static final Logger LOG = LoggerFactory.getLogger( Plan.class );
 
-    /**
-     * Name of the default phase of a plan.
-     */
+    /** Name of the default phase of a plan. */
     public static final String DEFAULT_PHASE_NAME = "Responding";
-    /**
-     * Timing of the default phase.
-     */
-    public static final Phase.Timing DEFAULT_PHASE_TIMING = Phase.Timing.Concurrent;
-    /**
-     * Whether the plan is meant as a template.
-     */
-    private boolean template = false;
 
-   /**
-     * The status of a (version of) plan.
-     */
+    /** Timing of the default phase. */
+    public static final Timing DEFAULT_PHASE_TIMING = Timing.Concurrent;
+
+    /** Whether the plan is meant as a template. */
+    private boolean template;
+
+    /** The status of a (version of) plan. */
     public enum Status implements Serializable {
-        /**
-         * In development.
-         */
+        /** In development. */
         DEVELOPMENT,
-        /**
-         * In production.
-         */
+        /** In production. */
         PRODUCTION,
-        /**
-         * Retired.
-         */
+        /** Retired. */
         RETIRED
     }
 
-    /**
-     * The segments, for convenience...
-     */
-    private Set<Segment> segments = new HashSet<Segment>();
+    /** The segments, for convenience... */
+    private final Set<Segment> segments = Collections.synchronizedSet( new HashSet<Segment>() );
 
-    /**
-     * Unplanned-for events.
-     */
-    private List<Event> incidents = new ArrayList<Event>();
-    /**
-     * Name of client sponsoring the plan.
-     */
+    /** Unplanned-for events. */
+    private List<Event> incidents = Collections.synchronizedList( new ArrayList<Event>() );
+
+    /** Name of client sponsoring the plan. */
     private String client = "Unnamed";
+
     /**
      * Unique resource identifier for the plan.
      * Always set when application loads.
      */
     private String uri = "default";
-    /**
-     * Whether dev, prod or retired.
-     */
+
+    /** Whether dev, prod or retired. */
     private Status status;
+
     /**
      * Version number.
      * Implied from folder where persisted
      */
     private int version;
-    /**
-     * User names of planners who voted to put this plan into production.
-     */
+
+    /** User names of planners who voted to put this plan into production. */
     private List<String> producers = new ArrayList<String>();
-    /**
-     * Date when version was in retirement, production or development.
-     */
+
+    /** Date when version was in retirement, production or development. */
     private Date whenVersioned;
-    /**
-     * Phases defined for this plan.
-     */
-    private List<Phase> phases = new ArrayList<Phase>();
-    /**
-     * Organization whose involvement is expected.
-     */
-    private List<Organization> organizations = new ArrayList<Organization>();
-    /**
-     * Classifications supported.
-     */
-    private List<Classification> classifications = new ArrayList<Classification>();
-    /**
-     * The plan's locale.
-     */
+
+    /** Phases defined for this plan. */
+    private List<Phase> phases = Collections.synchronizedList( new ArrayList<Phase>() );
+
+    /** Organization whose involvement is expected. */
+    private List<Organization> organizations =
+                        Collections.synchronizedList( new ArrayList<Organization>() );
+
+    /** Classifications supported. */
+    private List<Classification> classifications =
+                        Collections.synchronizedList( new ArrayList<Classification>() );
+
+    /** The plan's locale. */
     private Place locale;
 
     private String plannerSupportCommunity = "";
@@ -135,6 +115,11 @@ public class Plan extends ModelObject {
 
     private String surveyDefaultEmailAddress = "";
 
+    private String communityCalendar = "";
+
+    private String communityCalendarHost = "";
+
+    private String communityCalendarPrivateTicket = "";
 
     //-----------------------------
     public Plan() {
@@ -197,13 +182,26 @@ public class Plan extends ModelObject {
         this.plannerSupportCommunity = plannerSupportCommunity;
     }
 
-    public String getPlannerSupportCommunityUri( String defaultName ) {
-        String name = getPlannerSupportCommunity();
-        return name.isEmpty()
-                ? defaultName
-                : name;
+    public String getCommunityCalendar() {
+        return communityCalendar == null ? "" : communityCalendar;
     }
 
+    public void setCommunityCalendar( String communityCalendar ) {
+        this.communityCalendar = communityCalendar;
+    }
+
+    public String getCommunityCalendarHost() {
+        return communityCalendarHost == null ? "" : communityCalendarHost;
+    }
+
+    public void setCommunityCalendarHost( String communityCalendarHost ) {
+        this.communityCalendarHost = communityCalendarHost;
+    }
+
+    public String getPlannerSupportCommunity( String defaultName ) {
+        String name = getPlannerSupportCommunity();
+        return name.isEmpty() ? defaultName : name;
+    }
 
     public String getUserSupportCommunity() {
         return userSupportCommunity == null ? "" : userSupportCommunity;
@@ -213,11 +211,34 @@ public class Plan extends ModelObject {
         this.userSupportCommunity = supportCommunity;
     }
 
-    public String getUserSupportCommunityUri( String defaultName ) {
+    public String getUserSupportCommunity( String defaultName ) {
         String name = getUserSupportCommunity();
-        return name.isEmpty()
-                ? defaultName
-                : name;
+        return name.isEmpty() ? defaultName : name;
+    }
+
+    public String getCommunityCalendar( String defaultCalendar ) {
+        String name = getCommunityCalendar();
+        return name.isEmpty() ? defaultCalendar : name;
+    }
+
+    public String getCommunityCalendarHost( String defaultCalendarHost ) {
+        String name = getCommunityCalendarHost();
+        return name.isEmpty() ? defaultCalendarHost : name;
+    }
+
+    public String getCommunityCalendarPrivateTicket(
+        String defaultCommunityCalendarPrivateTicket ) {
+
+        String ticket = getCommunityCalendarPrivateTicket();
+        return ticket.isEmpty() ? defaultCommunityCalendarPrivateTicket : ticket;
+    }
+
+    public String getCommunityCalendarPrivateTicket() {
+        return communityCalendarPrivateTicket == null ? "" : communityCalendarPrivateTicket;
+    }
+
+    public void setCommunityCalendarPrivateTicket( String communityCalendarPrivateTicket ) {
+        this.communityCalendarPrivateTicket = communityCalendarPrivateTicket;
     }
 
     public String getSurveyApiKey() {
@@ -258,27 +279,27 @@ public class Plan extends ModelObject {
      * @return a string
      */
     public String getVersionedName() {
-        return getName() + " v." + getVersion() + "(" + getStatusString() + ")";
+        return getName() + " v." + version + '(' + getStatusString() + ')';
     }
 
     public Set<Segment> getSegments() {
-        return segments;
+        return new HashSet<Segment>( segments );
     }
 
     public List<Event> getIncidents() {
-        return incidents;
+        return new ArrayList<Event>( incidents );
     }
 
     public void setIncidents( List<Event> incidents ) {
-        this.incidents = incidents;
+        this.incidents = new ArrayList<Event>( incidents );
     }
 
     public List<Organization> getOrganizations() {
-        return organizations;
+        return Collections.unmodifiableList( organizations );
     }
 
     public void setOrganizations( List<Organization> organizations ) {
-        this.organizations = organizations;
+        this.organizations = new ArrayList<Organization>( organizations );
     }
 
     public String getClient() {
@@ -298,15 +319,15 @@ public class Plan extends ModelObject {
     }
 
     public String getVersionUri() {
-        return uri + ":" + version;
+        return uri + ':' + version;
     }
 
     public List<String> getProducers() {
-        return producers;
+        return Collections.unmodifiableList( producers );
     }
 
     public void setProducers( List<String> producers ) {
-        this.producers = producers;
+        this.producers = new ArrayList<String>( producers );
     }
 
     public void removeAllProducers() {
@@ -327,7 +348,8 @@ public class Plan extends ModelObject {
      * @param username a string
      */
     public void addProducer( String username ) {
-        if ( !producers.contains( username ) ) producers.add( username );
+        if ( !producers.contains( username ) )
+            producers.add( username );
     }
 
     /**
@@ -341,14 +363,13 @@ public class Plan extends ModelObject {
 
     public InfoStandard getInfoStandard( final String name ) {
         final Matcher matcher = Matcher.getInstance();
-        return (InfoStandard) CollectionUtils.find( getTags(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Tag tag = (Tag) object;
-                        return tag.isInfoStandard() && matcher.same( tag.getName(), name );
-                    }
-                } );
+        return (InfoStandard) CollectionUtils.find( getTags(), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                Tag tag = (Tag) object;
+                return tag.isInfoStandard() && matcher.same( tag.getName(), name );
+            }
+        } );
     }
 
     public boolean isTemplate() {
@@ -359,7 +380,6 @@ public class Plan extends ModelObject {
         this.template = template;
     }
 
-
     /**
      * Add event.
      *
@@ -367,7 +387,8 @@ public class Plan extends ModelObject {
      */
     public void addIncident( Event event ) {
         assert event.isType();
-        if ( !incidents.contains( event ) ) incidents.add( event );
+        if ( !incidents.contains( event ) )
+            incidents.add( event );
     }
 
     /**
@@ -377,33 +398,34 @@ public class Plan extends ModelObject {
      */
     public void addOrganization( Organization organization ) {
         assert organization.isActual();
-        if ( !organizations.contains( organization ) ) organizations.add( organization );
+        if ( !organizations.contains( organization ) )
+            organizations.add( organization );
     }
 
     public List<Classification> getClassifications() {
-        return classifications;
+        return Collections.unmodifiableList( classifications );
     }
 
     public void setClassifications( List<Classification> classifications ) {
-        this.classifications = classifications;
+        this.classifications = new ArrayList<Classification>( classifications );
     }
 
     /**
      * Find classification given system and name.
      *
      * @param system a string
-     * @param name   a string
+     * @param name a string
      * @return a classification or null
      */
     public Classification getClassification( String system, final String name ) {
-        return (Classification) CollectionUtils.find(
-                classificationsFor( system ),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ( (Classification) obj ).getName().equals( name );
-                    }
-                }
-        );
+        return (Classification) CollectionUtils.find( classificationsFor( system ),
+                                                      new Predicate() {
+                                                          @Override
+                                                          public boolean evaluate( Object object ) {
+                                                              return ( (Classification) object )
+                                                                  .getName().equals( name );
+                                                          }
+                                                      } );
     }
 
     /**
@@ -426,7 +448,6 @@ public class Plan extends ModelObject {
     public Phase getDefaultPhase() {
         return phases.get( 0 );
     }
-
 
     /**
      * Whether an event is an incident.
@@ -471,15 +492,15 @@ public class Plan extends ModelObject {
      * @return a segment
      */
     public Segment getDefaultSegment() {
-        return getSegments().iterator().next();
+        return segments.iterator().next();
     }
 
     public List<Phase> getPhases() {
-        return phases;
+        return Collections.unmodifiableList( phases );
     }
 
     public void setPhases( List<Phase> phases ) {
-        this.phases = phases;
+        this.phases = new ArrayList<Phase>( phases );
     }
 
     /**
@@ -491,79 +512,53 @@ public class Plan extends ModelObject {
         phases.add( phase );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String toString() {
-        return getName()
-                + " v."
-                + getVersion()
-                + " ("
-                + getStatusString()
-                + ")";
+        return getName() + " v." + version + " (" + getStatusString() + ')';
     }
 
     private String getStatusString() {
-        return isDevelopment()
-                ? "dev" : isProduction()
-                ? "prod" : "ret";
+        return isDevelopment() ? "dev" : isProduction() ? "prod" : "ret";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals( Object obj ) {
-        return this == obj
-                || obj != null
-                && obj instanceof Plan
-                && getVersionUri().equals( ( (Plan) obj ).getVersionUri() );
+        return this == obj || obj != null && obj instanceof Plan && getVersionUri()
+            .equals( ( (Plan) obj ).getVersionUri() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return getVersionUri().hashCode();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean references( final ModelObject mo ) {
         return ModelObject.areIdentical( locale, mo )
-                ||
-                CollectionUtils.exists(
-                        segments,
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return ModelObject.areIdentical( (ModelObject) obj, mo );
-                            }
-                        } )
-                ||
-                CollectionUtils.exists(
-                        incidents,
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return ModelObject.areIdentical( (ModelObject) obj, mo );
-                            }
-                        } )
-                ||
-                CollectionUtils.exists(
-                        organizations,
-                        new Predicate() {
-                            public boolean evaluate( Object obj ) {
-                                return ModelObject.areIdentical( (ModelObject) obj, mo );
-                            }
-                        } )
-                || CollectionUtils.exists(
-                phases,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ModelObject.areIdentical( (ModelObject) obj, mo );
-                    }
-                } );
+            || CollectionUtils.exists( segments, new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                   return ModelObject.areIdentical( (ModelObject) object, mo );
+                                }
+                            } )
+            || CollectionUtils.exists( incidents, new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    return ModelObject.areIdentical( (ModelObject) object, mo );
+                                }
+                            } )
+            || CollectionUtils.exists( organizations, new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    return ModelObject.areIdentical( (ModelObject) object, mo );
+                                }
+                            } )
+            || CollectionUtils.exists( phases, new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    return ModelObject.areIdentical( (ModelObject) object, mo );
+                                }
+                            } );
     }
 
     /**
@@ -573,9 +568,8 @@ public class Plan extends ModelObject {
      */
     public List<String> classificationSystems() {
         Set<String> systems = new HashSet<String>();
-        for ( Classification classification : classifications ) {
+        for ( Classification classification : classifications )
             systems.add( classification.getSystem() );
-        }
         List<String> classificationSystems = new ArrayList<String>( systems );
         Collections.sort( classificationSystems );
         return classificationSystems;
@@ -605,9 +599,9 @@ public class Plan extends ModelObject {
      * @return a boolean
      */
     public boolean addClassification( Classification classification ) {
-        if ( classifications.contains( classification ) ) {
+        if ( classifications.contains( classification ) )
             return false;
-        } else {
+        else {
             classifications.add( classification );
             return true;
         }
@@ -642,7 +636,8 @@ public class Plan extends ModelObject {
      */
     public int defaultLevelFor( String system ) {
         List<Classification> list = classificationsFor( system );
-        if ( list.isEmpty() ) return 0;
+        if ( list.isEmpty() )
+            return 0;
         int max = Integer.MIN_VALUE;
         for ( Classification classification : list ) {
             max = Math.max( max, classification.getLevel() );
@@ -650,14 +645,12 @@ public class Plan extends ModelObject {
         return max + 1;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Attachment.Type> getAttachmentTypes() {
-        List<Attachment.Type> types = super.getAttachmentTypes();
-        types.add( Attachment.Type.TAGS );
-        types.add( Attachment.Type.InfoStandards );
-        types.add( Attachment.Type.Image );
+    @Override
+    public List<Type> getAttachmentTypes() {
+        List<Type> types = super.getAttachmentTypes();
+        types.add( Type.TAGS );
+        types.add( Type.InfoStandards );
+        types.add( Type.Image );
         return types;
     }
 
@@ -675,7 +668,8 @@ public class Plan extends ModelObject {
         }
     }
 
-    private void reloadTagsFromUrl( String url, AttachmentManager attachmentManager, Loader loader ) {
+    private void reloadTagsFromUrl(
+        String url, AttachmentManager attachmentManager, Loader loader ) {
         BufferedReader in = null;
         try {
             InputStreamReader reader;

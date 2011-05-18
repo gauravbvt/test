@@ -23,6 +23,7 @@ import com.mindalliance.channels.pages.reports.AssignmentReportPage;
 import com.mindalliance.channels.pages.reports.CommitmentReportPage;
 import com.mindalliance.channels.pages.reports.ProcedureMapPage;
 import com.mindalliance.channels.pages.reports.ProceduresReportPage;
+import com.mindalliance.channels.pages.responders.ResponderPage;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
@@ -110,10 +111,6 @@ public class Channels extends WebApplication
      * Expansion id for social panel.
      */
     public static final long SOCIAL_ID = -1;
-    /**
-     * URI of support community.
-     */
-    private String supportCommunityUri;
 
     /**
      * Default Constructor.
@@ -136,6 +133,7 @@ public class Channels extends WebApplication
         getMarkupSettings().setStripWicketTags( true );
 
         mount( new QueryStringUrlCodingStrategy( "procedures", ProceduresReportPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "responders", ResponderPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "mapped", ProcedureMapPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "task", AssignmentReportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "flow", CommitmentReportPage.class ) );
@@ -333,14 +331,6 @@ public class Channels extends WebApplication
         this.planManager = planManager;
     }
 
-    public void setSupportCommunityUri( String supportCommunityUri ) {
-        this.supportCommunityUri = supportCommunityUri;
-    }
-
-    public String getSupportCommunityUri() {
-        return supportCommunityUri;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -362,12 +352,4 @@ public class Channels extends WebApplication
         };
     }
 
-    /**
-     * Get planner support community.
-     * @return a string
-     */
-    public String getPlannerSupportCommunity() {
-        return User.current().getPlan()
-                            .getPlannerSupportCommunityUri( getSupportCommunityUri() );
-    }
 }

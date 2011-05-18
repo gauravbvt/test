@@ -33,6 +33,13 @@ public class PlanTagsPanel extends AbstractCommandablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
+
     private void init() {
         addTagDomainPanel();
         addInfoStandard();
@@ -41,7 +48,7 @@ public class PlanTagsPanel extends AbstractCommandablePanel {
 
     private void addTagDomainPanel() {
         TagDomainPanel tagDomainPanel = new TagDomainPanel( "tags" );
-        add( tagDomainPanel );
+        addOrReplace( tagDomainPanel );
     }
 
     private void addInfoStandard() {

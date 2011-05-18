@@ -4,6 +4,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
@@ -37,6 +38,14 @@ public class PlanEvaluationPanel  extends AbstractCommandablePanel {
         super( id, iModel, expansions  );
         init();
     }
+
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
+
 
     private void init() {
         addEvaluation();

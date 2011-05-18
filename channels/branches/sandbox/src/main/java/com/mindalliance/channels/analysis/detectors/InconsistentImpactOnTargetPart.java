@@ -33,36 +33,36 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
      */
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
-        Flow commitment = (Flow) modelObject;
-        for ( Flow similar : getSimilarFlows( commitment ) ) {
-            if ( similar.isCritical() != commitment.isCritical() ) {
-                DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
-                issue.setDescription( "'"
-                        + commitment.getReceiveTitle()
+        Flow flow = (Flow) modelObject;
+        for ( Flow similar : getSimilarFlows( flow ) ) {
+            if ( similar.isCritical() != flow.isCritical() ) {
+                DetectedIssue issue = makeIssue( Issue.VALIDITY, flow );
+                issue.setDescription( "Inconsistent impacts: '"
+                        + flow.getReceiveTitle()
                         + "' is critical but '"
                         + similar.getReceiveTitle()
                         + "' is not." );
                 issue.setRemediation( "Make both or neither critical." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
-            } else if ( similar.isTriggeringToTarget() != commitment.isTriggeringToTarget() ) {
-                DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
-                issue.setDescription( "'"
-                        + commitment.getReceiveTitle()
+            } else if ( similar.isTriggeringToTarget() != flow.isTriggeringToTarget() ) {
+                DetectedIssue issue = makeIssue( Issue.VALIDITY, flow );
+                issue.setDescription( "Inconsistent impacts: '"
+                        + flow.getReceiveTitle()
                         + "' triggers '"
-                        + commitment.getTarget().getTitle()
+                        + flow.getTarget().getTitle()
                         + "' but '"
                         + similar.getReceiveTitle()
                         + "' does not." );
                 issue.setRemediation( "Have both trigger the task that consumes the information\nor have neither do it." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
-            } else if ( similar.isTerminatingToTarget() != commitment.isTerminatingToTarget() ) {
-                DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
-                issue.setDescription( "'"
-                        + commitment.getReceiveTitle()
+            } else if ( similar.isTerminatingToTarget() != flow.isTerminatingToTarget() ) {
+                DetectedIssue issue = makeIssue( Issue.VALIDITY, flow );
+                issue.setDescription( "Inconsistent impacts: '"
+                        + flow.getReceiveTitle()
                         + "' terminates '"
-                        + commitment.getTarget().getTitle()
+                        + flow.getTarget().getTitle()
                         + "' but '"
                         + similar.getReceiveTitle()
                         + "' does not." );
@@ -75,14 +75,14 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Flow> getSimilarFlows( final Flow commitment ) {
-        Part target = (Part) commitment.getTarget();
+    private List<Flow> getSimilarFlows( final Flow flow ) {
+        Part target = (Part) flow.getTarget();
         return (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( target.receivesNamed( commitment.getName() ) ),
+                IteratorUtils.toList( target.receivesNamed( flow.getName() ) ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return !obj.equals( commitment )
-                                && ((Flow)obj).isAskedFor() == commitment.isAskedFor();
+                        return !obj.equals( flow )
+                                && ((Flow)obj).isAskedFor() == flow.isAskedFor();
                     }
                 }
         );

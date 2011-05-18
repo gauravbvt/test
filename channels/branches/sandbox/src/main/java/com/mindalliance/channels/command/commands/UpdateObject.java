@@ -162,7 +162,6 @@ public abstract class UpdateObject extends AbstractCommand {
         } else {
             setTargetDescription( identifiable.toString() );
         }
-        commander.updateUserActive();
         return new Change( Change.Type.Updated, identifiable, (String) get( "property" ) );
     }
 

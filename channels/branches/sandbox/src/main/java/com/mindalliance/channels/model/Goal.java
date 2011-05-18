@@ -219,15 +219,25 @@ public class Goal implements Serializable, Mappable {
     }
 
     /**
+     * Return a partial title label for the goal (no mention of organization).
+     *
+     * @return a string
+     */
+    public String getPartialTitle() {
+        String label = "";
+        label += getLevelLabel();
+        label += intentLabel();
+        label += category.getLabel( positive ).toLowerCase();
+        return label;
+    }
+
+    /**
      * Return a full title label for the risk.
      *
      * @return a string
      */
     public String getFullTitle() {
-        String label = "";
-        label += getLevelLabel();
-        label += intentLabel();
-        label += category.getLabel( positive ).toLowerCase();
+        String label = getPartialTitle();
         label += positive ? " for " : " to ";
         label += organization.getName();
         return label;

@@ -74,6 +74,12 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         addIssueTypeChoice();
         addIncluded();
@@ -92,7 +98,8 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                 target.addComponent( issuesTable );
             }
         } );
-        add( issueTypeChoice );
+        issueTypeChoice.setOutputMarkupId( true );
+        addOrReplace( issueTypeChoice );
     }
 
     private List<String> getIssueTypeChoices() {
@@ -233,7 +240,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                         String id,
                         IModel<Issue> issueModel ) {
                     Issue issue = issueModel.getObject();
-                    boolean surveyed = surveyService.isSurveyed( issue );
+                    boolean surveyed = surveyService.isSurveyed( Survey.Type.Remediation, issue );
                     SurveyLinkPanel surveyLinkPanel = new SurveyLinkPanel( id, surveyed, issue );
                     cellItem.add( surveyLinkPanel );
                 }
@@ -251,7 +258,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     try {
-                        Survey survey = surveyService.getOrCreateSurvey( issue, getPlan() );
+                        Survey survey = surveyService.getOrCreateSurvey( Survey.Type.Remediation, issue, getPlan() );
                         update( target, new Change( Change.Type.Expanded, survey ) );
                     } catch ( SurveyException e ) {
                         LOG.error( "Fail to get or create survey on " + issue.getDetectorLabel() );

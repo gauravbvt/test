@@ -19,8 +19,10 @@ import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
@@ -53,7 +55,10 @@ import java.util.Set;
  * Time: 2:28:58 PM
  */
 public class OrganizationDetailsPanel extends EntityDetailsPanel {
-
+    /**
+     * Whether showing more details.
+     */
+    private boolean showingMore;
     /**
      * Actual parent name field.
      */
@@ -86,6 +91,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      * Container for details.
      */
     private WebMarkupContainer moDetailsDiv;
+    private WebMarkupContainer tabContainer;
+    private WebMarkupContainer assignmentsContainer;
+    private WebMarkupContainer commitmentsContainer;
+    private WebMarkupContainer moreContainer;
 
     public OrganizationDetailsPanel(
             String id,
@@ -100,19 +109,20 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
-        addMissionField(  );
-        addParentLink(  );
-        addParentField(  );
-        addLocationField(  );
-        addContactInfoPanel(  );
-        addReceiveFields(  );
-        addTabPanel(  );
-        addAssignmentsPanel(  );
-        addCommitmentsPanel(  );
+        addMissionField();
+        addParentLink();
+        addParentField();
+        addLocationField();
+        addContactInfoPanel();
+        addReceiveFields();
+        addMoreLink();
+        addTabPanel();
+        addAssignmentsPanel();
+        addCommitmentsPanel();
         adjustFields();
     }
 
-    private void addMissionField(  ) {
+    private void addMissionField() {
         missionField = new TextArea<String>( "mission",
                 new PropertyModel<String>( this, "mission" ) );
         missionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -124,15 +134,15 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     }
 
 
-    private void addParentLink(  ) {
-        parentLink =  new ModelObjectLink(
+    private void addParentLink() {
+        parentLink = new ModelObjectLink(
                 "org-link",
                 new PropertyModel<Organization>( getOrganization(), "parent" ),
                 new Model<String>( "Parent" ) );
         moDetailsDiv.addOrReplace( parentLink );
     }
 
-    private void addParentField(  ) {
+    private void addParentField() {
         Organization organization = getOrganization();
         // If organization is actual, parent must be actual
         actualParentField = new AutoCompleteTextField<String>( "actualParent",
@@ -149,7 +159,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         };
         actualParentField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addParentLink(  );
+                addParentLink();
                 target.addComponent( parentLink );
                 target.addComponent( actualParentField );
                 update( target, new Change( Change.Type.Updated, getModel().getObject(), "parent" ) );
@@ -168,7 +178,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         parentField.setVisible( getOrganization().isType() );
     }
 
-    private void addLocationField(  ) {
+    private void addLocationField() {
         WebMarkupContainer locationContainer = new WebMarkupContainer( "locationContainer" );
         locationContainer.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( locationContainer );
@@ -185,9 +195,8 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : locationChoices ) {
                     if ( getOrganization().isType() ) {
-                       if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
-                    }
-                    else if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
+                        if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
+                    } else if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
@@ -201,7 +210,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         locationContainer.add( locationField );
     }
 
-    private void addContactInfoPanel(  ) {
+    private void addContactInfoPanel() {
         WebMarkupContainer contactContainer = new WebMarkupContainer( "contactContainer" );
         contactContainer.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( contactContainer );
@@ -211,7 +220,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 new Model<Channelable>( organization ) ) );
     }
 
-    private void addReceiveFields(  ) {
+    private void addReceiveFields() {
         WebMarkupContainer receivesContainers = new WebMarkupContainer( "constraintsContainers" );
         receivesContainers.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( receivesContainers );
@@ -237,10 +246,38 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         receivesContainers.add( agreementsRequiredCheckBox );
     }
 
-    private void addTabPanel(  ) {
-        WebMarkupContainer tabContainer = new WebMarkupContainer( "tabContainer" );
-        tabContainer.setVisible( getOrganization().isActual() );
-        moDetailsDiv.add( tabContainer );
+    private void addMoreLink() {
+        moreContainer = new WebMarkupContainer( "moreContainer" );
+        moreContainer.setOutputMarkupId( true );
+        moreContainer.setVisible( getEntity().isActual() );
+        AjaxFallbackLink<String> moreLink = new AjaxFallbackLink<String>(
+                "more-link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                showingMore = !showingMore;
+                addMoreLink();
+                addAssignmentsPanel();
+                addCommitmentsPanel();
+                adjustFields();
+                target.addComponent( moreContainer );
+                target.addComponent( assignmentsContainer );
+                target.addComponent( commitmentsContainer );
+            }
+        };
+        moreContainer.add( moreLink );
+        moreLink.add( new AttributeModifier(
+                "class",
+                true,
+                new Model<String>( showingMore ? "less" : "more" ) ) );
+        moreLink.add( new Label( "moreOrLess", showingMore ? "less" : "more" ) );
+        moDetailsDiv.addOrReplace( moreContainer );
+    }
+
+
+    private void addTabPanel() {
+        tabContainer = new WebMarkupContainer( "tabContainer" );
+        tabContainer.setOutputMarkupId( true );
+        makeVisible( tabContainer, getOrganization().isActual() );
+        moDetailsDiv.addOrReplace( tabContainer );
         tabContainer.add( new AjaxTabbedPanel( "tabs", getTabs() ) );
     }
 
@@ -283,10 +320,11 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         return tabs;
     }
 
-    private void addAssignmentsPanel(  ) {
-        WebMarkupContainer assignmentsContainer = new WebMarkupContainer( "assignmentsContainer" );
-        assignmentsContainer.setVisible( getOrganization().isActual() );
-        moDetailsDiv.add( assignmentsContainer );
+    private void addAssignmentsPanel() {
+        assignmentsContainer = new WebMarkupContainer( "assignmentsContainer" );
+        assignmentsContainer.setOutputMarkupId( true );
+        makeVisible( assignmentsContainer, showingMore && getOrganization().isActual() );
+        moDetailsDiv.addOrReplace( assignmentsContainer );
         if ( getOrganization().isActual() ) {
             assignmentsContainer.add(
                     new AssignmentsTablePanel(
@@ -305,13 +343,16 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      * @return a list of assignments
      */
     public List<Assignment> getAssignments() {
-        return getQueryService().getAssignments().with( getOrganization() ).getAssignments();
+        return showingMore
+                ? getQueryService().getAssignments().with( getOrganization() ).getAssignments()
+                : new ArrayList<Assignment>();
     }
 
-    private void addCommitmentsPanel(  ) {
-        WebMarkupContainer commitmentsContainer = new WebMarkupContainer( "commitmentsContainer" );
-        commitmentsContainer.setVisible( getOrganization().isActual() );
-        moDetailsDiv.add( commitmentsContainer );
+    private void addCommitmentsPanel() {
+        commitmentsContainer = new WebMarkupContainer( "commitmentsContainer" );
+        commitmentsContainer.setOutputMarkupId( true );
+        makeVisible( commitmentsContainer, showingMore && getOrganization().isActual() );
+        moDetailsDiv.addOrReplace( commitmentsContainer );
         if ( getOrganization().isActual() ) {
             commitmentsContainer.add(
                     new CommitmentsTablePanel(
@@ -330,12 +371,13 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      * @return a list of assignments
      */
     public List<Commitment> getCommitments() {
-//        return getQueryService().findAllCommitmentsOf( getOrganization() );
         QueryService queryService = getQueryService();
-        return queryService.findAllCommitmentsOf(
+        return showingMore
+                ? queryService.findAllCommitmentsOf(
                 getOrganization(),
                 queryService.getAssignments( false ),
-                queryService.findAllFlows() );
+                queryService.findAllFlows() )
+                : new ArrayList<Commitment>();
     }
 
     @SuppressWarnings( "unchecked" )
@@ -527,17 +569,17 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-         if ( change.isUpdated() ) {
-                String property = change.getProperty();
-             if ( property.equals( "parent" ) ) {
-                 addParentLink( );
-                 target.addComponent( parentLink );
-                 super.updateWith(
-                         target,
-                         new Change( Change.Type.Updated, getOrganization(), "types" ),
-                         updated );
-             }
-         }
+        if ( change.isUpdated() ) {
+            String property = change.getProperty();
+            if ( property.equals( "parent" ) ) {
+                addParentLink();
+                target.addComponent( parentLink );
+                super.updateWith(
+                        target,
+                        new Change( Change.Type.Updated, getOrganization(), "types" ),
+                        updated );
+            }
+        }
         super.updateWith( target, change, updated );
     }
 

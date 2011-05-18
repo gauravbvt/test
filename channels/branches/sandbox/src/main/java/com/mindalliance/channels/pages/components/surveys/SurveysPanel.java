@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.surveys;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.SegmentObject;
@@ -486,17 +485,12 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
             return survey.getContactedCount();
         }
 
-        public ModelObject getAbout() {
-            Issue issue = surveyService.findIssue( survey );
-            if ( issue != null ) {
-                return issue.getAbout();
-            } else {
-                return null;
-            }
+        public Identifiable getAbout() {
+            return survey.getAbout( surveyService.getAnalyst() );
         }
 
         public Segment getSegment() {
-            ModelObject about = getAbout();
+            Identifiable about = getAbout();
             if ( about instanceof SegmentObject ) {
                 return ( (SegmentObject) about ).getSegment();
             } else {
@@ -506,6 +500,10 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
 
         public String getStatus() {
             return survey.getStatus().getLabel();
+        }
+
+        public String getSurveyType() {
+            return survey.getSurveyType();
         }
 
     }
@@ -528,7 +526,11 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // Columns
             columns.add( makeColumn(
-                    "Created on",
+                    "Type",
+                    "surveyType",
+                    EMPTY ) );
+            columns.add( makeColumn(
+                    "created on",
                     "formattedCreationDate",
                     null,
                     EMPTY,
@@ -539,7 +541,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
                     "issuer",
                     EMPTY ) );
             columns.add( makeColumn(
-                    "for issue",
+                    "titled",
                     "title",
                     EMPTY ) );
             columns.add( makeFilterableLinkColumn(

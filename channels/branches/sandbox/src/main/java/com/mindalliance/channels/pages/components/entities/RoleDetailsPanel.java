@@ -16,13 +16,17 @@ import com.mindalliance.channels.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
@@ -60,6 +64,10 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
      */
     private static final int MAX_ROWS = 13;
     /**
+     * Whether showing more details.
+     */
+    private boolean showingMore = false;
+    /**
      * What "column" to index names on.
      */
     private String indexedOn;
@@ -84,6 +92,8 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
      * Container to add components to.
      */
     private WebMarkupContainer moDetailsDiv;
+    private WebMarkupContainer performersContainer;
+    private AjaxFallbackLink<String> moreLink;
 
     public RoleDetailsPanel(
             String id,
@@ -96,14 +106,45 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
      * {@inheritDoc}
      */
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
-        indexedOn = getIndexingChoices().get(0);
+        indexedOn = getIndexingChoices().get( 0 );
         nameRange = new NameRange();
         filters = new ArrayList<Identifiable>();
         this.moDetailsDiv = moDetailsDiv;
+        addMoreLink();
+        addRolePerformers();
+    }
+
+    private void addMoreLink() {
+        moreLink = new AjaxFallbackLink<String>(
+                "more-link" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                showingMore = !showingMore;
+                addMoreLink();
+                addRolePerformers();
+                target.addComponent( moreLink );
+                target.addComponent( performersContainer );
+            }
+        };
+        moreLink.add( new AttributeModifier(
+                "class",
+                true,
+                new Model<String>( showingMore ? "less" : "more" ) ) );
+        moreLink.add( new Label( "moreOrLess", showingMore ? "less" : "more" ) );
+        moreLink.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( moreLink );
+    }
+
+
+    private void addRolePerformers() {
+        performersContainer = new WebMarkupContainer( "performersContainer" );
+        performersContainer.setOutputMarkupId( true );
+        makeVisible( performersContainer, showingMore );
+        moDetailsDiv.addOrReplace( performersContainer );
         addIndexedOnChoice();
         addNameRangePanel();
         addRoleEmploymentTable();
     }
+
 
     private void addIndexedOnChoice() {
         DropDownChoice<String> indexedOnChoices = new DropDownChoice<String>(
@@ -119,7 +160,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
                 target.addComponent( roleEmploymentTable );
             }
         } );
-        moDetailsDiv.add( indexedOnChoices );
+        performersContainer.add( indexedOnChoices );
     }
 
     private List<String> getIndexingChoices() {
@@ -141,7 +182,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
                 "All names"
         );
         nameRangePanel.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( nameRangePanel );
+        performersContainer.addOrReplace( nameRangePanel );
     }
 
     private void addRoleEmploymentTable() {
@@ -151,7 +192,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
                 MAX_ROWS
         );
         roleEmploymentTable.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( roleEmploymentTable );
+        performersContainer.addOrReplace( roleEmploymentTable );
     }
 
     public String getIndexedOn() {
@@ -203,62 +244,66 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
      */
     @SuppressWarnings( "unchecked" )
     public List<String> getIndexedNames() {
-        List<Employment> employments = getQueryService().findAllEmploymentsForRole( getRole() );
-        if ( indexedOn.equals( ACTORS ) ) {
-            return (List<String>) CollectionUtils.collect(
-                    employments,
-                    new Transformer() {
-                        public Object transform( Object obj ) {
-                            return ( (Employment) obj ).getActor().getLastName();
-                        }
-                    } );
-        } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
-            return (List<String>) CollectionUtils.collect(
-                    CollectionUtils.select(
-                            employments,
-                            new Predicate() {
-                                public boolean evaluate( Object obj ) {
-                                    return ( (Employment) obj ).getOrganization() != null;
-                                }
-                            } ),
-                    new Transformer() {
-                        public Object transform( Object obj ) {
-                            return ( (Employment) obj ).getOrganization().getName();
-                        }
+        if ( showingMore ) {
+            List<Employment> employments = getQueryService().findAllEmploymentsForRole( getRole() );
+            if ( indexedOn.equals( ACTORS ) ) {
+                return (List<String>) CollectionUtils.collect(
+                        employments,
+                        new Transformer() {
+                            public Object transform( Object obj ) {
+                                return ( (Employment) obj ).getActor().getLastName();
+                            }
+                        } );
+            } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
+                return (List<String>) CollectionUtils.collect(
+                        CollectionUtils.select(
+                                employments,
+                                new Predicate() {
+                                    public boolean evaluate( Object obj ) {
+                                        return ( (Employment) obj ).getOrganization() != null;
+                                    }
+                                } ),
+                        new Transformer() {
+                            public Object transform( Object obj ) {
+                                return ( (Employment) obj ).getOrganization().getName();
+                            }
 
-                    } );
-        }  else if ( indexedOn.equals( ROLES ) ) {
-            return (List<String>) CollectionUtils.collect(
-                    CollectionUtils.select(
-                            employments,
-                            new Predicate() {
-                                public boolean evaluate( Object obj ) {
-                                    return ( (Employment) obj ).getRole() != null;
-                                }
-                            } ),
-                    new Transformer() {
-                        public Object transform( Object obj ) {
-                            return ( (Employment) obj ).getRole().getName();
-                        }
+                        } );
+            } else if ( indexedOn.equals( ROLES ) ) {
+                return (List<String>) CollectionUtils.collect(
+                        CollectionUtils.select(
+                                employments,
+                                new Predicate() {
+                                    public boolean evaluate( Object obj ) {
+                                        return ( (Employment) obj ).getRole() != null;
+                                    }
+                                } ),
+                        new Transformer() {
+                            public Object transform( Object obj ) {
+                                return ( (Employment) obj ).getRole().getName();
+                            }
 
-                    } );
-        } else if ( indexedOn.equals( LOCATIONS ) ) {
-            return (List<String>) CollectionUtils.collect(
-                    CollectionUtils.select(
-                            employments,
-                            new Predicate() {
-                                public boolean evaluate( Object obj ) {
-                                    return ( (Employment) obj ).getLocation() != null;
-                                }
-                            } ),
-                    new Transformer() {
-                        public Object transform( Object obj ) {
-                            return ( (Employment) obj ).getLocation().getName();
-                        }
+                        } );
+            } else if ( indexedOn.equals( LOCATIONS ) ) {
+                return (List<String>) CollectionUtils.collect(
+                        CollectionUtils.select(
+                                employments,
+                                new Predicate() {
+                                    public boolean evaluate( Object obj ) {
+                                        return ( (Employment) obj ).getLocation() != null;
+                                    }
+                                } ),
+                        new Transformer() {
+                            public Object transform( Object obj ) {
+                                return ( (Employment) obj ).getLocation().getName();
+                            }
 
-                    } );
+                        } );
+            } else {
+                throw new IllegalStateException( "Can't index on " + indexedOn );
+            }
         } else {
-            throw new IllegalStateException( "Can't index on " + indexedOn );
+            return new ArrayList<String>();
         }
     }
 
@@ -269,14 +314,15 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
      */
     @SuppressWarnings( "unchecked" )
     public List<Employment> getEmployments() {
-        return (List<Employment>) CollectionUtils.select(
+        return showingMore
+                ? (List<Employment>) CollectionUtils.select(
                 getQueryService().findAllEmploymentsForRole( getRole() ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return !isFilteredOut( (Employment) obj ) && isInNameRange( (Employment) obj );
                     }
-                }
-        );
+                } )
+                : new ArrayList<Employment>();
 
     }
 
@@ -298,7 +344,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
         } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
             return employment.getOrganization() != null
                     && nameRange.contains( employment.getOrganization().getName() );
-        }  else if ( indexedOn.equals( ROLES ) ) {
+        } else if ( indexedOn.equals( ROLES ) ) {
             return employment.getRole() != null
                     && nameRange.contains( employment.getRole().getName() );
         } else if ( indexedOn.equals( LOCATIONS ) ) {

@@ -142,7 +142,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     @Override
     public String toString() {
         return ( getActorName() )
-                + ( getTitle().isEmpty() ? "" : " (" + title + " )" )
+                + ( getTitle().isEmpty() ? "" : " (" + title + ")" )
                 + ( getRoleName().isEmpty() ? "" : " as " + getRoleName() )
                 + ( getJurisdictionName().isEmpty() ? "" : " for " + getJurisdictionName() );
     }

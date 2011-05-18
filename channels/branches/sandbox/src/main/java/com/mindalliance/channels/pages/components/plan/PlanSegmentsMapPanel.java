@@ -104,6 +104,12 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         addGroupingChoices();
         addPlanSizing();
@@ -118,21 +124,23 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
         CheckBox groupByPhaseCheckBox = new CheckBox(
                 "groupByPhase",
                 new PropertyModel<Boolean>( this, "groupByPhase" ) );
+        groupByPhaseCheckBox.setOutputMarkupId( true );
         groupByPhaseCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 refresh( target );
             }
         } );
-        add( groupByPhaseCheckBox );
+        addOrReplace( groupByPhaseCheckBox );
         CheckBox groupByEventCheckBox = new CheckBox(
                 "groupByEvent",
                 new PropertyModel<Boolean>( this, "groupByEvent" ) );
+        groupByEventCheckBox.setOutputMarkupId( true );
         groupByEventCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 refresh( target );
             }
         } );
-        add( groupByEventCheckBox );
+        addOrReplace( groupByEventCheckBox );
     }
 
     public boolean isGroupByPhase() {

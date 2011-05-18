@@ -82,6 +82,12 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
         addAttachmentTable();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void addAttachmentTypeChoice() {
         DropDownChoice<String> typeChoice = new DropDownChoice<String>(
                 "types",
@@ -97,13 +103,14 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
                     }
                 }
         );
+        typeChoice.setOutputMarkupId( true );
         typeChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addAttachmentTable();
                 target.addComponent( attachmentTable );
             }
         } );
-        add( typeChoice );
+        addOrReplace( typeChoice );
     }
 
     private void addAttachmentTable() {

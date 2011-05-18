@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.dao.User;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -19,7 +18,7 @@ import java.io.StringWriter;
 /**
  * A custom error page, nothing fancy...
  */
-public class ErrorPage extends WebPage {
+public class ErrorPage extends AbstractChannelsWebPage {
 
     /**
      * The logger.
@@ -71,7 +70,7 @@ public class ErrorPage extends WebPage {
     @Override
     protected void configureResponse() {
         super.configureResponse();
-        String supportCommunity = getApp().getPlannerSupportCommunity();
+        String supportCommunity = getSupportCommunity();
         if ( exception != null ) {
             emailException(
                     exception,
@@ -113,10 +112,6 @@ public class ErrorPage extends WebPage {
     @Override
     public boolean isErrorPage() {
         return true;
-    }
-
-    private Channels getApp() {
-        return (Channels) getApplication();
     }
 
 

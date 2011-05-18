@@ -216,7 +216,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             if ( !isInvisible( vertex ) ) {
                 if ( !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                    list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
+                    list.add( new DOTAttribute( "tooltip", sanitize( "Issues: " + getAnalyst().getIssuesSummary( vertex,
                             Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
                 } else {
                     String tooltip = vertex.getTitle();
@@ -224,7 +224,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                         List<Actor> partActors = getAnalyst().getQueryService().findAllActualActors(
                                 ( (Part) vertex ).resourceSpec() );
                         if ( partActors.size() > 1 ) {
-                            tooltip = sanitize( listActors( partActors ) );
+                            tooltip = "Executed by " + sanitize( listActors( partActors ) );
                         }
                     }
                     list.add( new DOTAttribute( "tooltip", tooltip ) );
@@ -354,7 +354,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 if ( !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( edge, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                    list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( edge,
+                    list.add( new DOTAttribute( "tooltip", "Issues: " + sanitize( getAnalyst().getIssuesSummary( edge,
                             Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
                 } else {
                     list.add( new DOTAttribute( "tooltip", sanitize( edge.getTitle() ) ) );

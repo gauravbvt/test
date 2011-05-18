@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Flow;
@@ -69,7 +70,8 @@ public class InvalidChannel extends AbstractIssueDetector {
                 } else {
                     if ( channel.getAddress().isEmpty()
                             && modelObject.isEntity()
-                            && ( (ModelEntity) modelObject ).isActual() ) {
+                            && ( (ModelEntity) modelObject ).isActual()
+                            && !( modelObject instanceof Actor && ( (Actor) modelObject ).isPlaceHolder() ) ) {
                         problem = "The " + channel.getMedium().getName() + " channel's address is empty.";
                         remediation = "Enter a valid address.";
                     }

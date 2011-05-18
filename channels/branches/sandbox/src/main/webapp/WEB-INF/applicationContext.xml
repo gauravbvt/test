@@ -24,9 +24,7 @@ CONFIGURATION NOTES:
         default-autowire="byName">
 
     <!-- =========================== Main Components -->
-    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels">
-        <property name="supportCommunityUri" value="channels@mind-alliance.com"/>
-    </bean>
+    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels"/>
     <bean id="idGenerator" class="com.mindalliance.channels.dao.PerPlanIdGenerator"/>
     <bean id="issueScanner" class="com.mindalliance.channels.analysis.IssueScanner"/>
 
@@ -62,6 +60,10 @@ CONFIGURATION NOTES:
         <constructor-arg ref="definitionManager" />
         <property name="importDirectory" value="${channels.home}${file.separator}import"/>
         <property name="databaseFactory" ref="databaseFactory"/>
+        <property name="defaultSupportCommunity" value="channels@mind-alliance.com"/>
+        <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/embed"/>
+        <property name="defaultCommunityCalendar" value="channels.mindalliance@gmail.com"/>
+        <property name="defaultCommunityCalendarPrivateTicket" value="2eeb23a44773bca4cf51901c486a2275"/>
         <property name="builtInMedia">
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>
@@ -78,6 +80,7 @@ CONFIGURATION NOTES:
                 <ref bean="chat"/>
                 <ref bean="im"/>
                 <ref bean="radio"/>
+                <ref bean="twoWayRadio"/>
                 <ref bean="television"/>
                 <ref bean="courier"/>
                 <ref bean="mail"/>
@@ -121,15 +124,7 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
-        <property name="velocityProperties">
-            <value>
-                resource.loader=file
-                file.resource.loader.class=org.apache.velocity.runtime.resource.loader.FileResourceLoader
-                file.resource.loader.path=${channels.home}/templates
-                file.resource.loader.cache=true
-                file.resource.loader.modificationCheckInterval=2
-            </value>
-        </property>
+       <property name="resourceLoaderPath" value="/WEB-INF/templates"/>
     </bean>
 
     <bean id="detective" class="com.mindalliance.channels.analysis.DefaultDetective">
@@ -200,9 +195,9 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithoutAssignments"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>
                <!-- <bean class="com.mindalliance.channels.analysis.detectors.OrganizationMissingExpectedCommitment"/>-->
-                <bean class="com.mindalliance.channels.analysis.detectors.ReportFlowWithoutEOIs"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.EmptySharingFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorWithoutContactInfo"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.AgentIsTaskBottleneck"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ActorIsTaskBottleneck"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.TaskHasTooManyCommitments"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.TaskWithTooManyInputs"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.MeaninglessFlowRestriction"/>
@@ -220,6 +215,8 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.SegmentContextNeverCaused"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowEOIsNotStandardCompliant"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.AmbiguousSharingFlow"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ActorPlaceHolderWithoutParticipation"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ActorWithNonMatchingParticipation"/>
             </list>
         </property>
     </bean>
@@ -352,6 +349,12 @@ CONFIGURATION NOTES:
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Broadcast"/>
+    </bean>
+    <bean id="twoWayRadio" class="com.mindalliance.channels.model.TransmissionMedium">
+        <property name="name" value="Two way radio"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Multicast"/>
     </bean>
     <bean id="television" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Television"/>

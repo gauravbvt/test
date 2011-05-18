@@ -38,12 +38,13 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
         CheckBox includeWaivedCheckBox = new CheckBox(
                 "includeWaived",
                 new PropertyModel<Boolean>( this, "includeWaived" ) );
+        includeWaivedCheckBox.setOutputMarkupId( true );
         includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
             }
         } );
-        add( includeWaivedCheckBox );
+        addOrReplace( includeWaivedCheckBox );
     }
 
     public boolean isIncludeWaived() {

@@ -730,7 +730,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses() ) ) );
         titlePanel.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Collapsed, getFlow() ) );
+                Change change = new Change( Change.Type.Collapsed, getFlow() );
+                change.addQualifier( "updated", isFlowUpdated() );
+                update( target, change );
             }
         } );
         titlePanel.setOutputMarkupId( true );
@@ -812,7 +814,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addOtherLink() {
         otherLink = new ModelObjectLink( "other-link",
                 new PropertyModel<Part>( this, "otherPart" ),
-                new Model<String>( isSend() ? "To" : "From" ) );
+                new Model<String>( isSend() ? "To task" : "From task" ) );
         otherLink.setOutputMarkupId( true );
         otherLink.add( new AttributeModifier( "class", true, new Model<String>( "part-link" ) ) );
         addOrReplace( otherLink );
@@ -1355,15 +1357,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
-    public void changed( Change change ) {
-        // ignore selection of other node - don't propagate selection
-        if ( !( change.isSelected()
-                && change.isForInstanceOf( Node.class )
-                && change.isForProperty( "other" ) ) ) {
-            super.changed( change );
-        }
-    }
-
     /**
      * Get label for flow's intent.
      *
@@ -1492,11 +1485,23 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
+    public void changed( Change change ) {
+        // ignore selection of other node - don't propagate selection
+        if ( !( change.isSelected()
+                && change.isForInstanceOf( Node.class )
+                && change.isForProperty( "other" ) ) ) {
+            if ( change.isUpdated() ) {
+                setFlowUpdated( true );
+            }
+            super.changed( change );
+        }
+    }
 
     /**
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        change.addQualifier( "updated", isFlowUpdated() );
         if ( change.isSelected()
                 && change.isForInstanceOf( Node.class )
                 && change.isForProperty( "other" ) ) {
@@ -1512,7 +1517,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } else {
             if ( change.isUpdated() ) {
                 Flow flow = getFlow();
-
                 if ( flow != null )
                     adjustFieldsOnUpdate( flow, target );
 //                target.addComponent( this );

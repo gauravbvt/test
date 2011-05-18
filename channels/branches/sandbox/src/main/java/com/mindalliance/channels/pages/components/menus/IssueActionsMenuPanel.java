@@ -7,6 +7,7 @@ import com.mindalliance.channels.command.commands.PasteAttachment;
 import com.mindalliance.channels.command.commands.RemoveIssue;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
@@ -31,10 +32,14 @@ import java.util.List;
  */
 public class IssueActionsMenuPanel extends MenuPanel {
 
-    /** Whether the issue is shown collapsed. */
+    /**
+     * Whether the issue is shown collapsed.
+     */
     private boolean isCollapsed;
 
-    /** The survey service. */
+    /**
+     * The survey service.
+     */
     @SpringBean
     private SurveyService surveyService;
 
@@ -44,7 +49,9 @@ public class IssueActionsMenuPanel extends MenuPanel {
         doInit();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void init() {
         // do nothing
@@ -54,7 +61,9 @@ public class IssueActionsMenuPanel extends MenuPanel {
         super.init();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Component> getMenuItems() throws CommandException {
         Commander commander = getCommander();
@@ -67,51 +76,55 @@ public class IssueActionsMenuPanel extends MenuPanel {
 
             // Show/hide details
             menuItems.add(
-                new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( isCollapsed ? "Show details" : "Hide details" ),
-                    new AjaxFallbackLink( "link" ) {
-                        @Override
-                        public void onClick( AjaxRequestTarget target ) {
-                            update(
-                                target,
-                                new Change(
-                                    isCollapsed ? Change.Type.Expanded : Change.Type.Collapsed,
-                                    getIssue() ) );
-                        }
-                    } ) );
-
-            // Create/view survey
-            if ( getPlan().isDevelopment() ) {
-                String itemLabel = surveyService.isSurveyed( getIssue() ) ? "View survey"
-                                                                          : "Create survey";
-
-                menuItems.add(
-                    getIssue().getDescription().isEmpty() || getIssue().getRemediation().isEmpty() ?
-
-                          newStyledLabel( itemLabel, "disabled" )
-
-                        : new LinkMenuItem(
+                    new LinkMenuItem(
                             "menuItem",
-                            new Model<String>( itemLabel ),
+                            new Model<String>( isCollapsed ? "Show details" : "Hide details" ),
                             new AjaxFallbackLink( "link" ) {
                                 @Override
                                 public void onClick( AjaxRequestTarget target ) {
-                                    try {
-                                        update(
+                                    update(
                                             target,
                                             new Change(
-                                                Change.Type.Expanded,
-                                                surveyService.getOrCreateSurvey( getIssue(), getPlan() ) ) );
-                                    } catch ( SurveyException e ) {
-                                        LoggerFactory.getLogger( getClass() ).warn(
-                                            "Error clicking on survey link", e );
-                                        target.addComponent( IssueActionsMenuPanel.this );
-                                        target.prependJavascript(
-                                            "alert('Oops -- " + e.getMessage() + "');" );
-                                    }
+                                                    isCollapsed ? Change.Type.Expanded : Change.Type.Collapsed,
+                                                    getIssue() ) );
                                 }
                             } ) );
+
+            // Create/view survey
+            if ( getPlan().isDevelopment() ) {
+                String itemLabel = surveyService.isSurveyed( Survey.Type.Remediation, getIssue() )
+                        ? "View survey"
+                        : "Create survey";
+
+                menuItems.add(
+                        getIssue().getDescription().isEmpty() || getIssue().getRemediation().isEmpty() ?
+
+                                newStyledLabel( itemLabel, "disabled" )
+
+                                : new LinkMenuItem(
+                                "menuItem",
+                                new Model<String>( itemLabel ),
+                                new AjaxFallbackLink( "link" ) {
+                                    @Override
+                                    public void onClick( AjaxRequestTarget target ) {
+                                        try {
+                                            update(
+                                                    target,
+                                                    new Change(
+                                                            Change.Type.Expanded,
+                                                            surveyService.getOrCreateSurvey(
+                                                                    Survey.Type.Remediation,
+                                                                    getIssue(),
+                                                                    getPlan() ) ) );
+                                        } catch ( SurveyException e ) {
+                                            LoggerFactory.getLogger( getClass() ).warn(
+                                                    "Error clicking on survey link", e );
+                                            target.addComponent( IssueActionsMenuPanel.this );
+                                            target.prependJavascript(
+                                                    "alert('Oops -- " + e.getMessage() + "');" );
+                                        }
+                                    }
+                                } ) );
             }
 
             // Commands
@@ -123,14 +136,15 @@ public class IssueActionsMenuPanel extends MenuPanel {
 
             else
                 menuItems.add(
-                    editedByLabel( "menuItem", getIssue(), getLockOwner( getIssue() ) ) );
+                        editedByLabel( "menuItem", getIssue(), getLockOwner( getIssue() ) ) );
 
             return menuItems;
-        }    }
+        }
+    }
 
     private static Component newStyledLabel( String label, String style ) {
         return new Label( "menuItem", label )
-          .add( new AttributeModifier( "class", true, new Model<String>( style ) ) );
+                .add( new AttributeModifier( "class", true, new Model<String>( style ) ) );
     }
 
     private Issue getIssue() {
@@ -142,16 +156,16 @@ public class IssueActionsMenuPanel extends MenuPanel {
         Issue issue = getIssue();
         if ( !issue.isDetected() ) {
             commandWrappers.add(
-                new CommandWrapper( new RemoveIssue( (UserIssue) issue ) ) {
-                    @Override
-                    public void onExecuted( AjaxRequestTarget target, Change change ) {
-                        update( target, change );
-                    }
-                } );
+                    new CommandWrapper( new RemoveIssue( (UserIssue) issue ) ) {
+                        @Override
+                        public void onExecuted( AjaxRequestTarget target, Change change ) {
+                            update( target, change );
+                        }
+                    } );
 
             if ( !isCollapsed )
                 commandWrappers.add(
-                    new CommandWrapper( new PasteAttachment( (UserIssue) issue ) ) {
+                        new CommandWrapper( new PasteAttachment( (UserIssue) issue ) ) {
                             @Override
                             public void onExecuted( AjaxRequestTarget target, Change change ) {
                                 update( target, change );

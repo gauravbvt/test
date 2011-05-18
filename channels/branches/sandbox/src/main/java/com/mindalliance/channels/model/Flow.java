@@ -1287,6 +1287,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         );
     }
 
+    public boolean isToSelf() {
+        return restriction != null && restriction == Restriction.Self;
+    }
+
 
     /**
      * The significance of a flow.

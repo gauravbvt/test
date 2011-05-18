@@ -3,6 +3,13 @@
         <question type="instruction">
             <title>
                 <![CDATA[
+                    Sent to [%%GET_sgUID]
+                ]]>
+            </title>
+        </question>
+        <question type="instruction">
+            <title>
+                <![CDATA[
                     <h1>
                       <img width="57" hspace="10" height="65" align="middle" alt="Channels logo"
                          src="https://app.sgizmo.com/users/56191/channels-logo.png"/>
@@ -65,11 +72,6 @@
         </question>
         <question type="essay" required="false">
             <title>Further comments</title>
-        </question>
-        <question type="textbox" required="false">
-            <title>
-                Enter your Channels user id here for attribution
-            </title>
         </question>
         <question type="instruction">
             <title>

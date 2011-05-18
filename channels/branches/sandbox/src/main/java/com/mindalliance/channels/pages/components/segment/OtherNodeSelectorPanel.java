@@ -210,7 +210,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
         secondChoiceInput.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 makeVisible( secondChoice, false );
-                if ( isUnknownOtherSelected() ) {
+                if ( isUnknownOtherSelected() || selectedOtherNode.equals( nodeModel.getObject() ) ) {
                     selectedOtherNode = otherNodeModel.getObject();
                 }
                 if ( isOtherNodeChanged() )
@@ -230,6 +230,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
         List<Node> firstChoices = new ArrayList<Node>();
         firstChoices.addAll( firstChoiceNodes.getObject() );
         firstChoices.remove( selectedOtherNode );
+        firstChoices.remove( nodeModel.getObject() );
         Collections.sort( firstChoices, new Comparator<Node>() {
             public int compare( Node n1, Node n2 ) {
                 return Collator.getInstance().compare( displayString( n1 ), displayString( n2 ) );
@@ -245,6 +246,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
     public List<Node> getSecondChoices() {
         List<Node> nodes = new ArrayList<Node>( secondChoiceNodes.getObject() );
         if ( selectedOtherNode != null ) nodes.remove( selectedOtherNode );
+        nodes.remove( nodeModel.getObject() );
         return nodes;
     }
 

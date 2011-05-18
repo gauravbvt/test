@@ -1,23 +1,28 @@
 package com.mindalliance.channels.surveys;
 
+import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Plan;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -29,49 +34,11 @@ import java.util.StringTokenizer;
  * Date: Aug 21, 2009
  * Time: 7:23:40 AM
  */
-public class Survey implements Identifiable, Serializable {
+abstract public class Survey implements Identifiable, Serializable {
     /**
      * Max title length.
      */
-    private static final int MAX_TITLE_LENGTH = 80;
-
-    /**
-     * Unknown survey.
-     */
-    public static Survey UNKNOWN;
-    /**
-     * Unknown survey id.
-     */
-    public static final long UNKNOWN_ID = Long.MIN_VALUE;
-
-    static {
-        UNKNOWN = new Survey();
-        UNKNOWN.setId( UNKNOWN_ID );
-    }
-
-    /**
-     * The status of a survey.
-     */
-    public enum Status implements Serializable {
-        Created( "Created" ),
-        In_design( "New" ),
-        Launched( "Launched" ),
-        Closed( "Closed" );
-
-        private String label;
-
-        Status( String label ) {
-            this.label = label;
-        }
-
-        public String getLabel() {
-            return label;
-        }
-    }
-
-    public boolean isUnknown() {
-        return id == UNKNOWN_ID;
-    }
+    public static final int MAX_TITLE_LENGTH = 80;
 
     /**
      * The current status of the survey.
@@ -81,10 +48,6 @@ public class Survey implements Identifiable, Serializable {
      * id of registered survey (launched or closed). Negative if not registered.
      */
     private long id = -1L;
-    /**
-     * Soec of the issue the survey is about.
-     */
-    private IssueSpec issueSpec;
     /**
      * Name of the user who created or last configured the survey.
      */
@@ -123,13 +86,73 @@ public class Survey implements Identifiable, Serializable {
      */
     private SurveyData surveyData;
 
+    /**
+     * Unknown survey.
+     */
+    public static Survey UNKNOWN = UnknownSurvey.getInstance();
+
+    public abstract Identifiable findIdentifiable( Analyst analyst ) throws NotFoundException;
+
+    public abstract boolean matches( Type type, Identifiable identifiable );
+
+    public abstract String getInvitationTemplate();
+
+    public abstract String getSurveyTemplate();
+
+    protected abstract List<String> getDefaultContacts( Analyst analyst );
+
+    public abstract String getTitle();
+
+    protected abstract String getIdentifiableSpecs();
+
+    protected abstract void setIdentifiableSpecs( String specs );
+
+    public abstract Identifiable getAbout( Analyst analyst );
+
+    public abstract String getSurveyType();
+
+
+    /**
+     * The status of a survey.
+     */
+    public enum Status implements Serializable {
+        Created( "Created" ),
+        In_design( "New" ),
+        Launched( "Launched" ),
+        Closed( "Closed" );
+
+        private String label;
+
+        Status( String label ) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+    }
+
+    public enum Type implements Serializable {
+        /**
+         * Issue remediation.
+         */
+        Remediation,
+        /**
+         * Unknown.
+         */
+        Unknown
+    }
+
+    public boolean isUnknown() {
+        return false;
+    }
+
     public Survey() {
         status = Status.In_design;
     }
 
-    public Survey( Issue issue ) {
+    public Survey( Identifiable identifiable ) {
         this();
-        issueSpec = new IssueSpec( issue );
         userName = User.current().getUsername();
     }
 
@@ -143,14 +166,6 @@ public class Survey implements Identifiable, Serializable {
 
     public void setStatus( Status status ) {
         this.status = status;
-    }
-
-    public IssueSpec getIssueSpec() {
-        return issueSpec;
-    }
-
-    public void setIssueSpec( IssueSpec issueSpec ) {
-        this.issueSpec = issueSpec;
     }
 
     public String getUserName() {
@@ -241,12 +256,10 @@ public class Survey implements Identifiable, Serializable {
     /**
      * Add a user to the survey.
      *
-     * @param usernames a collection of strings
+     * @param contacts a collection of contacts
      */
-    public void addContacts( Collection<String> usernames ) {
-        for ( String username : usernames ) {
-            addContact( username );
-        }
+    public void addContacts( Collection<Contact> contacts ) {
+        this.contacts.addAll( contacts );
     }
 
     public void addContact( String username ) {
@@ -310,6 +323,8 @@ public class Survey implements Identifiable, Serializable {
         if ( isUnknown() ) {
             sb.append( "(unknown)" );
         } else {
+            sb.append( getClass().getName() );
+            sb.append( ',' );
             sb.append( id );
             sb.append( ',' );
             sb.append( status.name() );
@@ -337,7 +352,7 @@ public class Survey implements Identifiable, Serializable {
             }
             sb.append( ',' );
             try {
-                sb.append( URLEncoder.encode( issueSpec.toString(), "UTF-8" ) );
+                sb.append( URLEncoder.encode( getIdentifiableSpecs(), "UTF-8" ) );
             } catch ( UnsupportedEncodingException e ) {
                 throw new RuntimeException( " Failed to encode" );
             }
@@ -345,35 +360,42 @@ public class Survey implements Identifiable, Serializable {
         return sb.toString();
     }
 
+    @SuppressWarnings( "unchecked" )
     public static Survey fromString( String s ) {
         try {
-            Survey survey = new Survey();
             StringTokenizer tokens = new StringTokenizer( s, "," );
+            String surveyClass = tokens.nextToken();
             long id = Long.parseLong( tokens.nextToken() );
-            survey.setId( id );
             Survey.Status status = Survey.Status.valueOf( tokens.nextToken() );
-            survey.setStatus( status );
-            survey.setUserName( tokens.nextToken() );
-            survey.setIssuer( tokens.nextToken() );
-            survey.setCreationDate( dateFormat.parse( tokens.nextToken() ) );
+            String userName = tokens.nextToken();
+            String issuer = tokens.nextToken();
+            Date creationDate = dateFormat.parse( tokens.nextToken() );
             String token = tokens.nextToken();
-            if ( !token.equals( "0" ) ) {
-                survey.setLaunchDate( dateFormat.parse( token ) );
-            }
+            Date launchDate = !token.equals( "0" ) ? dateFormat.parse( token ) : null;
             token = tokens.nextToken();
-            if ( !token.equals( "0" ) ) {
-                survey.setClosedDate( dateFormat.parse( token ) );
-            }
+            Date closedDate = !token.equals( "0" ) ? dateFormat.parse( token ) : null;
             String contactsString = tokens.nextToken();
-            StringTokenizer contacts = new StringTokenizer( contactsString, ":" );
-            while ( contacts.hasMoreTokens() ) {
-                survey.addContact( Contact.fromString( contacts.nextToken() ) );
+            List<Contact> contacts = new ArrayList<Contact>();
+            StringTokenizer tokenizer = new StringTokenizer( contactsString, ":" );
+            while ( tokenizer.hasMoreTokens() ) {
+                contacts.add( Contact.fromString( tokenizer.nextToken() ) );
             }
-            String encoded = tokens.nextToken();
-            survey.setIssueSpec( IssueSpec.fromString( URLDecoder.decode( encoded, "UTF-8" ) ) );
+            String specs = URLDecoder.decode( tokens.nextToken(), "UTF-8" );
+            Class<? extends Survey> clazz = (Class<? extends Survey>) Survey.class
+                    .getClassLoader().loadClass( surveyClass );
+            Survey survey = clazz.newInstance();
+            survey.setId( id );
+            survey.setStatus( status );
+            survey.setUserName( userName );
+            survey.setIssuer( issuer );
+            survey.setCreationDate( creationDate );
+            survey.setLaunchDate( launchDate );
+            survey.setClosedDate( closedDate );
+            survey.addContacts( contacts );
+            survey.setIdentifiableSpecs( specs );
             return survey;
         } catch ( Exception e ) {
-            throw new RuntimeException( "Can't decode issue spec", e );
+            throw new RuntimeException( "Can't load survey", e );
         }
     }
 
@@ -395,21 +417,6 @@ public class Survey implements Identifiable, Serializable {
         return status == Status.Closed;
     }
 
-    /**
-     * Get short title for the survey.
-     *
-     * @return a string
-     */
-    public String getTitle() {
-        String title;
-        if ( isAboutDetectedIssue() )
-            title = issueSpec.getDetectorLabel();
-        else
-            title = StringUtils.abbreviate(
-                    issueSpec.getDescription(),
-                    MAX_TITLE_LENGTH );
-        return title;
-    }
 
     /**
      * Get registration title for the survey (includes plan uri).
@@ -419,11 +426,6 @@ public class Survey implements Identifiable, Serializable {
      */
     public String getRegistrationTitle( String planUri ) {
         return getTitle() + " (in " + planUri + ")";
-    }
-
-    private boolean isAboutDetectedIssue() {
-        Long userIssueId = issueSpec.getUserIssueId();
-        return userIssueId == null;
     }
 
     public String getPlanText() {
@@ -503,5 +505,53 @@ public class Survey implements Identifiable, Serializable {
         else
             return dateFormat.format( creationDate );
     }
+
+    protected Map<String, Object> getSurveyContext( SurveyService surveyService, Plan plan ) {
+        User issuer = getIssuer( surveyService.getUserService() );
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put( "plan", getPlanText() );
+        context.put( "deadline", getDeadlineText() );
+        context.put( "issuer", issuer != null
+                ? issuer.getFullName()
+                : "(unknown)" );
+        context.put( "email", issuer != null
+                ? issuer.getEmail()
+                : surveyService.getDefaultEmailAddress( plan ) );
+        context.put( "survey", getTitle() );
+        return context;
+    }
+
+    protected User getIssuer( UserService userService ) {
+        return userService.getUserNamed( getUserName() );
+    }
+
+    public Map<String, Object> getInvitationContext( SurveyService surveyService,
+                                                     User user, User issuer, Plan plan ) {
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put( "user", user );
+        context.put( "issuer", issuer );
+        context.put( "survey", this );
+        context.put( "surveyUrl", getSurveyLink( user ) );
+        return context;
+    }
+
+    public String getSurveyLink( User user ) {
+        return getSurveyData().getPublishLink()
+                + "?sgUID="
+                + user.getEmail();
+    }
+
+    public boolean hasContact( final String userName ) {
+        return CollectionUtils.exists(
+                contacts,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Contact) object ).getUsername().equals( userName );
+                    }
+                }
+        );
+    }
+
 
 }

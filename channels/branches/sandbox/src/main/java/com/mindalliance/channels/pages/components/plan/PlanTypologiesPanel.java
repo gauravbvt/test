@@ -95,6 +95,12 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         selectedTypeKind = "Organization";
         addTypeKindChoice();
@@ -110,6 +116,7 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
                 new PropertyModel<String>( this, "selectedTypeKind" ),
                 Arrays.asList( TYPE_KINDS )
         );
+        typeKindChoice.setOutputMarkupId( true );
         typeKindChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -120,11 +127,12 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
                 target.addComponent( typeIndexContainer );
             }
         } );
-        add( typeKindChoice );
+        addOrReplace( typeKindChoice );
     }
 
     private void addAlgos() {
         neatoCheckBox = new CheckBox( "neato", new PropertyModel<Boolean>( this, "neato" ) );
+        neatoCheckBox.setOutputMarkupId( true );
         neatoCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -133,8 +141,9 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
                 target.addComponent( dotCheckBox );
             }
         } );
-        add( neatoCheckBox );
+        addOrReplace( neatoCheckBox );
         dotCheckBox = new CheckBox( "dot", new PropertyModel<Boolean>( this, "dot" ) );
+        dotCheckBox.setOutputMarkupId( true );
         dotCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -143,7 +152,7 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
                 target.addComponent( neatoCheckBox );
             }
         } );
-        add( dotCheckBox );
+        addOrReplace( dotCheckBox );
     }
 
     private void addTypologySizing() {

@@ -641,7 +641,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     ErrorPage.emailException(
                             new Exception( "Timed update failed", e ),
                             mailSender,
-                            getApp().getPlannerSupportCommunity()
+                            getSupportCommunity()
                     );
                     redirectToPlan();
                 }
@@ -712,8 +712,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             updateRefreshNowNotice();
             if ( getPlan().isDevelopment() ) {
                 target.addComponent( refreshNeededComponent );
-                fadeOutMessagePanel( target );
             }
+            fadeOutMessagePanel( target );
         }
         segmentPanel.updateSocialPanel( target );
     }
@@ -1406,7 +1406,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void viewAspect( Change change, String aspect ) {
         aspects.remove( change.getId() );
-        tryReleasingLock( change );
+        // tryReleasingLock( change );
         if ( aspect != null && !aspect.isEmpty() ) {
             updateAspects( change, aspect );
         }
@@ -1464,8 +1464,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 aspectsShown.remove( aspect );
             }
         }
+/*
         if ( closingAspectReleasesLock( change, aspect ) )
             tryReleasingLock( change );
+*/
     }
 
     private <T extends ModelObject> T getModelObjectViewed( Class<T> clazz, String aspect ) {
@@ -1571,6 +1573,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         if ( change.isNone() )
             return;
+        else
+            getCommander().updateUserActive();
         if ( change.isUnknown() ) {
             if ( !getPlan().getSegments().contains( segment ) ) {
                 segment = getPlan().getDefaultSegment();
@@ -1685,6 +1689,13 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( !change.isNone() ) {
             if ( change.isForInstanceOf( Plan.class ) && change.isSelected() ) {
                 redirectToPlan();
+            } else if ( change.isAspectReplaced() ) {
+                replaceAspect( change, target );
+            } else if ( change.isAspectViewed()
+                    || change.isAspectClosed()
+                    || change.isExpanded()
+                    || ( change.isCollapsed() && changes.get( change.getId() ) == null ) ) {
+                openOrCloseChild( change, target );
             } else if ( change.isUndoing() || change.isUnknown() || change.isRecomposed()
                     || change.isAdded() && change.isForInstanceOf( Part.class ) ) {
                 refresh( target, change, new ArrayList<Updatable>() );
@@ -1697,7 +1708,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     change.setProperty( "?" );
                 }
             } else if ( change.isCollapsed() && changes.get( change.getId() ) != null ) {
-                refreshAll( target );
+                refresh( target, change, updated );
             } else if ( change.isForInstanceOf( Flow.class ) && change.isExpanded() ) {
                 updateMaximizedFlow( target, change );
                 refreshHeadersMenusAndNavigation( target, change, updated );
@@ -1721,6 +1732,54 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
     }
 
+    private void openOrCloseChild( Change change, AjaxRequestTarget target ) {
+        List<Updatable> updated = new ArrayList<Updatable>(  );
+        if ( change.isForInstanceOf( Plan.class )) {
+           refreshPlanEditPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( Segment.class) ) {
+            refreshSegmentEditPanel( target, change, updated );
+        }  else if ( change.isForInstanceOf( ModelEntity.class) ) {
+            refreshEntityPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( Part.class) && change.isForProperty( "assignments" ) ) {
+            refreshAssignmentsPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( Part.class) && change.isForProperty( "overrides" ) ) {
+            refreshOverridesPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( SegmentObject.class) && change.isForProperty( "failure" ) ) {
+            refreshFailureImpactsPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( SegmentObject.class) && change.isForProperty( "dissemination" ) ) {
+            refreshDisseminationPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( Flow.class) && change.isForProperty( "commitments" ) ) {
+            refreshCommitmentsPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( Flow.class) && change.isForProperty( "eois" ) ) {
+            refreshEOIsPanel( target, change, updated );
+            if ( (Boolean)change.getQualifier( "updated" ) ) {
+               refreshSegmentPanel( target, change, updated );
+            }
+        } else if ( change.getId() == -1 || change.isForInstanceOf( SegmentObject.class ) ) {
+            refreshSegmentPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( Survey.class) ) {
+            refreshSurveysPanel( target, change, updated );
+        }
+        refreshHeadersMenusAndNavigation( target, change, updated );
+    }
+
+    private void replaceAspect( Change change, AjaxRequestTarget target ) {
+        String aspect = change.getProperty();
+        Component maPanel =
+                change.isForInstanceOf( Plan.class )
+                        ? planEditPanel
+                        : change.isForInstanceOf( Segment.class )
+                        ? segmentEditPanel
+                        : change.isForInstanceOf( ModelEntity.class )
+                        ? entityPanel
+                        : null;
+        if ( maPanel != null && maPanel instanceof AbstractMultiAspectPanel ) {
+            ( (AbstractMultiAspectPanel) maPanel ).showAspect( aspect, change, target );
+        } else {
+            LOG.warn( "Aspect not replaced from" + change );
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -1729,7 +1788,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void refreshAll( AjaxRequestTarget target ) {
-        refresh( target, new Change( Change.Type.Unknown ), new ArrayList<Updatable>() );
+        Change change = new Change( Change.Type.Unknown );
+        change.setProperty( "refresh" );
+        refresh( target, change, new ArrayList<Updatable>() );
     }
 
     /**
@@ -1750,6 +1811,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         updateSelectors( target, change );
         refreshChildren( target, change, updated );
         refreshHeadersMenusAndNavigation( target, change, updated );
+        changes = new HashMap<Long, Change>();
     }
 
     private void refreshHeadersMenusAndNavigation( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
@@ -1859,7 +1921,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
         Plan plan = getPlan();
-        if ( change.isUnknown() || change.isDisplay() && identifiable instanceof Plan ) {
+        if ( change.isUnknown() ||
+                change.isDisplay() && identifiable instanceof Plan ) {
             addPlanEditPanel();
             target.addComponent( planEditPanel );
         } else if ( planEditPanel instanceof PlanEditPanel ) {
@@ -1874,8 +1937,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
         if ( change.isUnknown()
-                || ( change.isDisplay() || change.isAdded() ) && identifiable instanceof Segment
-                || change.isSelected() && identifiable instanceof Part ) {
+            ||
+                ( change.isDisplay() || change.isAdded() )
+                && identifiable != null
+                && identifiable instanceof Segment
+                ||
+                identifiable != null && change.isSelected() && identifiable instanceof Part ) {
             addSegmentEditPanel();
             target.addComponent( segmentEditPanel );
             target.addComponent( segmentDropDownChoice );
@@ -1890,8 +1957,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshEntityPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         ModelEntity entity = findExpandedEntity();
-        if ( change.isUnknown()
-                || change.isDisplay() && change.isForInstanceOf( ModelEntity.class ) ) {
+        if ( change.isUnknown() || entity == null ||
+                change.isDisplay()
+                        && change.isForInstanceOf( ModelEntity.class ) ) {
             addEntityPanel();
             target.addComponent( entityPanel );
         } else if ( entityPanel instanceof EntityPanel ) {
@@ -1900,15 +1968,17 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     updated,
                     getAspectShown( entity ) );
         }
-    }
+    }                                                     //
 
     private void refreshAssignmentsPanel(
             AjaxRequestTarget target,
             Change change,
             List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown()
-                || identifiable instanceof Part && change.isAspect( "assignments" ) ) {
+        if ( change.isUnknown() ||
+                identifiable != null
+                && identifiable instanceof Part
+                && change.isAspect( "assignments" ) ) {
             addAssignmentsPanel();
             target.addComponent( assignmentsPanel );
         } else if ( assignmentsPanel instanceof PartAssignmentsPanel ) {
@@ -1919,8 +1989,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshCommitmentsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown()
-                || identifiable instanceof Flow && change.isAspect( "commitments" ) ) {
+        if ( change.isUnknown() ||
+                identifiable != null
+                && identifiable instanceof Flow
+                && change.isAspect( "commitments" ) ) {
             addCommitmentsPanel();
             target.addComponent( commitmentsPanel );
         } else if ( commitmentsPanel instanceof SharingCommitmentsPanel ) {
@@ -1931,7 +2003,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshEOIsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown() || identifiable instanceof Flow && ( change.isCollapsed()
+        if ( change.isUnknown() ||
+                identifiable != null
+                && identifiable instanceof Flow
+                && ( change.isCollapsed()
                 || change.isAspect( "eois" ) ) ) {
             addEOIsPanel();
             target.addComponent( eoisPanel );
@@ -1943,7 +2018,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshFailureImpactsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown() || identifiable instanceof SegmentObject && change.isAspect(
+        if ( change.isUnknown() ||
+                identifiable != null
+                && identifiable instanceof SegmentObject
+                && change.isAspect(
                 "failure" ) ) {
             addFailureImpactsPanel();
             target.addComponent( failureImpactsPanel );
@@ -1955,8 +2033,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshDisseminationPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown()
-                || identifiable instanceof SegmentObject
+        if ( change.isUnknown() ||
+                identifiable != null && identifiable instanceof SegmentObject
                 && change.isAspect( "dissemination" ) ) {
             boolean showTargets = change.hasQualifier( "show", "targets" );
             Subject subject = (Subject) change.getQualifier( "subject" );
@@ -1969,8 +2047,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void refreshOverridesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown()
-                || identifiable instanceof Part
+        if ( change.isUnknown() ||
+                identifiable != null
+                && identifiable instanceof Part
                 && change.isAspect( "overrides" ) ) {
             addOverridesPanel();
             target.addComponent( overridesPanel );
@@ -1982,7 +2061,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshSurveysPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown() || change.isDisplay() && identifiable instanceof Survey ) {
+        if ( change.isUnknown() ||
+                identifiable != null
+                        && change.isDisplay()
+                        && identifiable instanceof Survey ) {
             Survey expandedSurvey = (Survey) identifiable;
             Survey viewedSurvey = ( expandedSurvey == null || expandedSurvey.isUnknown() )
                     ? Survey.UNKNOWN

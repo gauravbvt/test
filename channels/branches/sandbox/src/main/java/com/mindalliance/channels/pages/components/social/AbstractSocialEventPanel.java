@@ -9,6 +9,7 @@ import com.mindalliance.channels.odb.PersistentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.menus.SocialItemMenuPanel;
+import com.mindalliance.channels.social.PlannerMessagingService;
 import com.mindalliance.channels.social.PlanningEventService;
 import com.mindalliance.channels.social.PresenceEvent;
 import org.apache.wicket.AttributeModifier;
@@ -19,6 +20,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -64,9 +66,8 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         this.updatable = updatable;
     }
 
-    public abstract String getTime();
 
-    public abstract String getLongTime();
+    public abstract Date getDate();
 
     protected abstract void moreInit( WebMarkupContainer socialItemContainer );
 
@@ -109,8 +110,12 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 getUsername(),
                 poModel,
                 updatable );
-        menu.setVisible( !menu.isEmpty() );
+        menu.setVisible( !menu.isEmpty() && isPlanner() );
         socialItemContainer.add( menu );
+    }
+
+    private boolean isPlanner() {
+        return User.current().isPlanner();
     }
 
     private void addPhoto( WebMarkupContainer socialItemContainer ) {
@@ -137,21 +142,35 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         socialItemContainer.add( icon );
     }
 
+    public String getTime() {
+        return getShortTimeElapsedString( getDate() );
+    }
+
+    public String getLongTime() {
+        return getLongTimeElapsedString( getDate() );
+    }
+
     public String getUserFullNameAndRole() {
         if ( getUsername() == null )
             return "all users";
         else {
             String userName = getUsername();
-            String name = getQueryService().findUserFullName( userName );
-            String userRole = getQueryService().findUserRole( userName );
-            return name
-                    + (
-                    userRole.equals( User.PLANNER)
-                    ? " (planner)"
-                    : userRole.equals( User.ADMIN )
-                    ? " (admin)"
-                    : ""
-            );
+            if ( username.equals( PlannerMessagingService.PLANNERS ) ) {
+                return "All planners";
+            } else if ( username.equals( PlannerMessagingService.USERS ) ) {
+                return "Everyone";
+            } else {
+                String name = getQueryService().findUserFullName( userName );
+                String userRole = getQueryService().findUserRole( userName );
+                return name
+                        + (
+                        userRole.equals( User.PLANNER )
+                                ? " (planner)"
+                                : userRole.equals( User.ADMIN )
+                                ? " (admin)"
+                                : ""
+                );
+            }
         }
     }
 
@@ -237,9 +256,92 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     protected PresenceEvent getLatestPresenceEvent() {
         if ( latestPresenceEvent == null ) {
-            latestPresenceEvent = getPlanningEventService().findLatestPresence( getUsername(), getPlan()  );
+            latestPresenceEvent = getPlanningEventService().findLatestPresence( getUsername(), getPlan() );
         }
         return latestPresenceEvent;
+    }
+
+    public String getShortTimeElapsedString( Date date ) {
+        if ( date == null ) return "";
+        Date end = new Date();
+        long diffInSeconds = ( end.getTime() - date.getTime() ) / 1000;
+        /* sec */
+        long seconds = ( diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds );
+        /* min */
+        long minutes = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
+        /* hours */
+        long hours = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 24 ? diffInSeconds % 24 : diffInSeconds;
+        /* days */
+        long days = diffInSeconds / 24;
+
+        StringBuilder sb = new StringBuilder();
+        if ( days > 0 ) {
+            sb.append( days );
+            sb.append( " day" );
+            sb.append( days > 1 ? "s" : "" );
+        }
+        if ( hours > 0 ) {
+            if ( sb.length() == 0 ) {
+                sb.append( hours );
+                sb.append( " hour" );
+                sb.append( hours > 1 ? "s" : "" );
+            }
+        }
+        if ( minutes > 0 ) {
+            if ( sb.length() == 0 ) {
+                sb.append( minutes );
+                sb.append( " minute" );
+                sb.append( minutes > 1 ? "s" : "" );
+            }
+        }
+        if ( sb.length() == 0 ) {
+            sb.append( seconds );
+            sb.append( " second" );
+            sb.append( seconds > 1 ? "s" : "" );
+        }
+        sb.append( " ago" );
+        return sb.toString();
+    }
+
+    public String getLongTimeElapsedString( Date date ) {
+        if ( date == null ) return "";
+        Date end = new Date();
+        long diffInSeconds = ( end.getTime() - date.getTime() ) / 1000;
+        /* sec */
+        long seconds = ( diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds );
+        /* min */
+        long minutes = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
+        /* hours */
+        long hours = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 24 ? diffInSeconds % 24 : diffInSeconds;
+        /* days */
+        long days = diffInSeconds / 24;
+
+        StringBuilder sb = new StringBuilder();
+        if ( days > 0 ) {
+            sb.append( days );
+            sb.append( " day" );
+            sb.append( days > 1 ? "s" : "" );
+        }
+        if ( hours > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( hours );
+            sb.append( " hour" );
+            sb.append( hours > 1 ? "s" : "" );
+        }
+        if ( minutes > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( minutes );
+            sb.append( " minute" );
+            sb.append( minutes > 1 ? "s" : "" );
+        }
+        if ( sb.length() == 0 || seconds > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( seconds );
+            sb.append( " second" );
+            sb.append( seconds > 1 ? "s" : "" );
+        }
+        sb.append( " ago" );
+        return sb.toString();
     }
 
 

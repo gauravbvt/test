@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+     <div wicket:id="userInfo">
+         <h3>My identity</h3>
+         <table>
+             <tr><td>Name:</td><td><input type="text" wicket:id="fullName"/></td></tr>
+             <tr><td>Personal email:</td><td><input type="text" wicket:id="email"/></td></tr>
+         </table>
+         <h3>In this plan </h3>
+         <ul>
+             <li>I am<span wicket:id="userRole">a planner</span></li>
+             <li wicket:id="assignation">I participate as the NJ Transit Chief of police</li>
+          </ul>
+         <h3>My password</h3>
+         <table>
+             <tr><td>Current password:</td><td><input type="text" wicket:id="password"/></td></tr>
+             <tr><td>New password:</td><td><input type="text" wicket:id="newPassword"/></td></tr>
+             <tr><td>Again:</td><td><input type="text" wicket:id="repeatNewPassword"/></td></tr>
+         </table>
+         <div>
+             <input wicket:id="apply" type="button" value="Apply" />
+             <input wicket:id="reset" type="button" value="Reset"/>
+         </div>
+     </div>
+</wicket:panel>
+</body>
+</html>

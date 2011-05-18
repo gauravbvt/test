@@ -123,7 +123,6 @@ public class EntityPanel extends AbstractMultiAspectPanel {
                 new PropertyModel<ModelEntity>( this, "object" ) );
     }
 
-
     /**
      * {@inheritDoc}
      */

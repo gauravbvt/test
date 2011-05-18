@@ -227,9 +227,7 @@ public class DefaultCommander implements Commander {
 
     private PlanService getQueryService( Plan plan ) {
         return new PlanService(
-                getPlanManager(),
-                attachmentManager,
-                semanticMatcher,
+                getPlanManager(), semanticMatcher,
                 userService,
                 plan );
     }
@@ -321,6 +319,7 @@ public class DefaultCommander implements Commander {
     private Change execute( Command command ) throws CommandException {
         Change change;
         String userName = command.getUserName();
+        updateUserActive( userName );
         if ( command.isAuthorized() )
             try {
                 Collection<Long> grabbedLocks = lockManager.lock( userName, command.getLockingSet() );
@@ -333,10 +332,9 @@ public class DefaultCommander implements Commander {
             } catch ( LockingException e ) {
                 throw new CommandException( e.getMessage(), e );
             }
-        else
+        else {
             throw new CommandException( "Required locks not acquired" );
-
-        updateUserActive( userName );
+        }
         return change;
     }
 

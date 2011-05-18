@@ -193,7 +193,7 @@ public class ResourceSpec extends ModelObject implements Specable {
             sb.append( role.getName() );
         }
         if ( !isAnyOrganization() ) {
-            sb.append( " from " );
+            sb.append( " at " );
             sb.append( organization.getName() );
         }
         if ( !isAnyJurisdiction() ) {

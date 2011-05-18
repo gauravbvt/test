@@ -1,11 +1,12 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.model.GeoLocatable;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.GeoLocatable;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -28,6 +29,13 @@ public class PlanEventsPanel extends AbstractCommandablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
+
     private void init() {
         addEventsMapLink();
         addEventList();
@@ -40,7 +48,8 @@ public class PlanEventsPanel extends AbstractCommandablePanel {
                 new Model<String>( "All events in plan with known locations" ),
                 geoLocatables,
                 new Model<String>( "Show events in plan" ) );
-        add( eventsMapLink );
+        eventsMapLink.setOutputMarkupId( true );
+        addOrReplace( eventsMapLink );
     }
 
     private void addEventList() {
@@ -48,7 +57,7 @@ public class PlanEventsPanel extends AbstractCommandablePanel {
                 "incidents",
                 new PropertyModel<Plan>( this, "plan" ),
                 getExpansions() );
-        add( incidentListPanel );
+        addOrReplace( incidentListPanel );
     }
 
     /**

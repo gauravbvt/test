@@ -1,6 +1,7 @@
 package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.dao.PlanDefinition.Version;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.TransmissionMedium;
@@ -76,6 +77,18 @@ public class PlanManager {
      * Name of the default support community.
      */
     private String defaultSupportCommunity;
+    /**
+     * URI of the default community calendar host.
+     */
+    private String defaultCommunityCalendarHost;
+    /**
+     * Name of the default community calendar.
+     */
+    private String defaultCommunityCalendar;
+    /**
+     * Name of the default community calendar private ticket.
+     */
+    private String defaultCommunityCalendarPrivateTicket;
 
     //------------------------------------------
     /**
@@ -159,6 +172,30 @@ public class PlanManager {
 
     public void setDefaultSupportCommunity( String defaultSupportCommunity ) {
         this.defaultSupportCommunity = defaultSupportCommunity;
+    }
+
+    public String getDefaultCommunityCalendar() {
+        return defaultCommunityCalendar;
+    }
+
+    public void setDefaultCommunityCalendar( String defaultCommunityCalendar ) {
+        this.defaultCommunityCalendar = defaultCommunityCalendar;
+    }
+
+    public String getDefaultCommunityCalendarHost() {
+        return defaultCommunityCalendarHost;
+    }
+
+    public void setDefaultCommunityCalendarHost( String defaultCommunityCalendarHost ) {
+        this.defaultCommunityCalendarHost = defaultCommunityCalendarHost;
+    }
+
+    public String getDefaultCommunityCalendarPrivateTicket() {
+        return defaultCommunityCalendarPrivateTicket;
+    }
+
+    public void setDefaultCommunityCalendarPrivateTicket( String defaultCommunityCalendarPrivateTicket ) {
+        this.defaultCommunityCalendarPrivateTicket = defaultCommunityCalendarPrivateTicket;
     }
 
     /**
@@ -335,6 +372,24 @@ public class PlanManager {
                 return ( (Plan) object ).getUri().equals( uri );
             }
         } );
+    }
+
+    /**
+     * Get a specific plan
+     * @param uri the plan uri
+     * @param version the version
+     * @return the plan or null if not found
+     */
+    public Plan getPlan( String uri, int version ) {
+
+        PlanDefinition definition = definitionManager.get( uri );
+        if ( definition != null ) {
+            Version v = definition.get( version );
+            if ( v != null )
+                return getDao( uri, v.isDevelopment() ).getPlan();
+        }
+
+        return null;
     }
 
     /**
@@ -610,6 +665,7 @@ public class PlanManager {
         user.getUserInfo().setAuthorities( role, uri, getPlans() );
         user.setPlan( uri != null ? getDefaultPlan( user ) : null );
     }
+
 
     //=============================================================
     /**

@@ -7,10 +7,10 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Connector;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.EventPhase;
 import com.mindalliance.channels.model.ExternalFlow;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
@@ -185,6 +185,18 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
+    public Assignments with( EventPhase... eventPhases ) {
+        if ( eventPhases == null ) return this;
+        Set<EventPhase> eventPhaseSet = new HashSet<EventPhase>( Arrays.asList( eventPhases ) );
+        Assignments result = new Assignments( locale );
+
+        for ( Segment segment : segmentMap.keySet() )
+            if ( eventPhaseSet.contains( segment.getEventPhase() ) )
+                result.add( segmentMap.get( segment ) );
+
+        return result;
+    }
+
     public Assignments with( Node node ) {
         if ( node == null ) return this;
         if ( node.isPart() )
@@ -279,7 +291,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
                 : ( (Role) specable ).reportString();
     }
 
-    private static <T extends ModelObject> List<T> toSortedList( Collection<T> collection ) {
+    private static <T extends Comparable> List<T> toSortedList( Collection<T> collection ) {
         List<T> result = new ArrayList<T>( collection );
         Collections.sort( result );
         return result;
@@ -327,6 +339,17 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return toSortedList( phases );
     }
 
+    public List<EventPhase> getEventPhases() {
+        Set<EventPhase> eventPhases = new HashSet<EventPhase>( segmentMap.size() );
+        for ( Segment segment : segmentMap.keySet() ) {
+            EventPhase eventPhase = segment.getEventPhase();
+            if ( eventPhase != null )
+                eventPhases.add( eventPhase );
+        }
+
+        return toSortedList( eventPhases );
+    }
+
     //--------------------------------------
     public List<Part> getParts() {
         Set<Part> parts = new HashSet<Part>();
@@ -353,7 +376,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public static boolean isImmediate( Part part, QueryService queryService ) {
-        return part.isStartsWithSegment() && !queryService.isOverridden( part );
+        return part.isStartsWithSegment();
     }
 
     /**
@@ -362,7 +385,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
      * @param queryService a query service
      * @return a list of assignments
      */
-    public Assignments getOptionals( QueryService queryService) {
+    public Assignments getOptionals( QueryService queryService ) {
         Assignments result = new Assignments( locale );
 
         for ( Assignment assignment : this )
@@ -392,7 +415,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-    public static boolean isNotification( Part part, QueryService queryService) {
+    public static boolean isNotification( Part part, QueryService queryService ) {
         boolean found = false;
         Iterator<Flow> flows = part.flows();
         while ( flows.hasNext() && !found ) {

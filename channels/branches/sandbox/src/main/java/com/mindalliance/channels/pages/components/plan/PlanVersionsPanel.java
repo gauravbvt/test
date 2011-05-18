@@ -64,6 +64,12 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         dateFormat = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" );
         addCurrentVersion();
@@ -75,13 +81,15 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
     private void addCurrentVersion() {
         Label versionLabel = new Label(
                 "currentVersion", "" + getPlan().getVersion() );
-        add( versionLabel );
+        versionLabel.setOutputMarkupId( true );
+        addOrReplace( versionLabel );
     }
 
     private void addProductionVersion() {
         Plan prodPlan = getPlanManager().findProductionPlan( getPlan().getUri() );
         WebMarkupContainer prodContainer = new WebMarkupContainer( "prod" );
-        add( prodContainer );
+        prodContainer.setOutputMarkupId( true );
+        addOrReplace( prodContainer );
         Label versionLabel = new Label(
                 "prodVersion",
                 prodPlan == null ? "" : "" + prodPlan.getVersion() );
@@ -97,15 +105,18 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
         Plan devPlan = getPlanManager().findDevelopmentPlan( getPlan().getUri() );
         Label versionLabel = new Label(
                 "devVersion", "" + devPlan.getVersion() );
-        add( versionLabel );
+        versionLabel.setOutputMarkupId( true );
+        addOrReplace( versionLabel );
         Label dateLabel = new Label(
                 "devDate", dateFormat.format( devPlan.getWhenVersioned() ) );
-        add( dateLabel );
+        dateLabel.setOutputMarkupId( true );
+        addOrReplace( dateLabel );
     }
 
     private void addVotes() {
         WebMarkupContainer prodVotesContainer = new WebMarkupContainer( "prodVotes" );
-        add( prodVotesContainer );
+        prodVotesContainer.setOutputMarkupId( true );
+        addOrReplace( prodVotesContainer );
         final List<Vote> votes = getVotes();
         ListView<Vote> voteList = new ListView<Vote>( "votes", votes ) {
             protected void populateItem( ListItem<Vote> item ) {

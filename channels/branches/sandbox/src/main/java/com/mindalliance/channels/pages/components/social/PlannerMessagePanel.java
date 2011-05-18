@@ -9,6 +9,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import java.util.Date;
+
 /**
  * Planner message panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -63,12 +65,9 @@ public class PlannerMessagePanel extends AbstractSocialEventPanel {
         return cssClasses + super.getCssClasses();
     }
 
-    public String getTime() {
-        return getPlannerMessage().getShortTimeElapsedString();
-    }
-
-    public String getLongTime() {
-        return getPlannerMessage().getLongTimeElapsedString();
+    @Override
+    public Date getDate() {
+        return getPlannerMessage().getDate();
     }
 
     protected void moreInit( WebMarkupContainer socialItemContainer ) {

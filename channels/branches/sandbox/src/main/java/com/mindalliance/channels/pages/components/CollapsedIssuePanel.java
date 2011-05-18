@@ -14,7 +14,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -62,10 +62,10 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         WebMarkupContainer surveyLinkContainer = new WebMarkupContainer( "surveyLinkContainer" );
         surveyLinkContainer.setVisible( issue.isDetected() && !issue.isWaived() );
         add( surveyLinkContainer );
-        AjaxFallbackLink surveyLink = new AjaxFallbackLink( "surveyLink" ) {
+        IndicatingAjaxFallbackLink surveyLink = new IndicatingAjaxFallbackLink( "surveyLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 try {
-                    Survey survey = surveyService.getOrCreateSurvey( issue, getPlan() );
+                    Survey survey = surveyService.getOrCreateSurvey( Survey.Type.Remediation, issue, getPlan() );
                     update( target, new Change( Change.Type.Expanded, survey ) );
                 } catch ( SurveyException e ) {
                     e.printStackTrace();
@@ -78,7 +78,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         Label surveyActionLabel = new Label(
                 "surveyAction",
                 new Model<String>(
-                        surveyService.isSurveyed( issue )
+                        surveyService.isSurveyed( Survey.Type.Remediation, issue )
                                 ? "View survey"
                                 : "Create survey"
                 ) );

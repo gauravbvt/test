@@ -46,12 +46,6 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         whenLastChanged = new HashMap<String,Date>();
     }
 
-    public PlannerMessage broadcastMessage( String text, Plan plan ) {
-        PlannerMessage message = new PlannerMessage( text, plan.getUri() );
-        addSentMessage( message, plan );
-        return message;
-    }
-
     public void setDatabaseFactory( ODBTransactionFactory databaseFactory ) {
         this.databaseFactory = databaseFactory;
     }
@@ -65,28 +59,32 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         whenLastChanged.put( plan.getUri(), new Date() );
     }
 
-    public void sendMessage( PlannerMessage message, boolean emailIt, Plan plan ) {
+    public boolean sendMessage( PlannerMessage message, boolean emailIt, Plan plan ) {
+        boolean success = true;
         addSentMessage( message, plan );
         if ( emailIt ) {
-            email( message, plan );
+            success = email( message, plan );
         }
+        return success;
     }
 
     public boolean email( PlannerMessage message, Plan plan ) {
-        List<User> toPlanners = new ArrayList<User>();
+        List<User> recipients = new ArrayList<User>();
         String username = message.getToUsername();
         String text = "";
         User currentUser = User.current();
         String summary = StringUtils.abbreviate( message.getText(), SUMMARY_MAX );
-        if ( username == null ) {
-            toPlanners = userService.getPlanners( plan.getUri() );
+        if ( username == null || username.equals( PLANNERS ) ) {
+            recipients = userService.getPlanners( plan.getUri() );
+        } else if ( username.equals( USERS ) ) {
+            recipients = userService.getUsers( plan.getUri() );
         } else {
-            toPlanners.add( userService.getUserNamed( username ) );
+            recipients.add( userService.getUserNamed( username ) );
         }
         try {
-            for ( User toPlanner : toPlanners ) {
+            for ( User recipient : recipients ) {
                 SimpleMailMessage email = new SimpleMailMessage();
-                email.setTo( toPlanner.getEmail() );
+                email.setTo( recipient.getEmail() );
                 email.setSubject( "["
                         + plan.getName()
                         + "] "
@@ -103,14 +101,14 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                 mailSender.send( email );
                 LOG.info( currentUser.getUsername()
                         + " emailed message to "
-                        + toPlanner.getUsername() );
+                        + recipient.getUsername() );
             }
             getOdb( plan ).update( message.getClass(), message.getId(), "emailed", true );
             return true;
         } catch ( Exception e ) {
             LOG.warn( currentUser.getUsername()
                     + " failed to email message to "
-                    + ( username == null ? "all planners" : username ), e );
+                    +  username, e );
             return false;
         }
     }

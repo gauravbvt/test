@@ -9,6 +9,7 @@ import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.entities.EntitiesPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
@@ -40,6 +41,14 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
+
+
     private void init() {
         addGeomapLink();
         addTabPanel();
@@ -57,7 +66,9 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
     }
 
     private void addTabPanel() {
-        add( new AjaxTabbedPanel( "tabs", getTabs() ) );
+        AjaxTabbedPanel tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() );
+        tabbedPanel.setOutputMarkupId( true );
+        addOrReplace( tabbedPanel );
     }
 
     private List<ITab> getTabs() {

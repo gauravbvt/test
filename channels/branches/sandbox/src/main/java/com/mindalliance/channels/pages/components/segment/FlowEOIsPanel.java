@@ -85,6 +85,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
      */
     AjaxFallbackLink linkedClassificationsLink;
     private boolean isSend;
+    /**
+     * Whether the eois are updated.
+     */
+    private boolean eoisUpdated = false;
 
     public FlowEOIsPanel( String id, Model<Flow> flowModel, boolean isSend, Set<Long> expansions ) {
         super( id, flowModel, expansions );
@@ -447,25 +451,34 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         return !guessNewEOIs().isEmpty();
     }
 
+    /**
+     * Incrementally guess new EOIs.
+     *
+     * @return a list of new EOIs
+     */
     private List<ElementOfInformation> guessNewEOIs() {
         List<ElementOfInformation> newEois = new ArrayList<ElementOfInformation>();
         Node source = getFlow().getSource();
-        if ( source.isPart() ) {
-            addGuessedFromSourceSends( (Part) source, newEois );
-            addGuessedFromSourceReceives( ( (Part) source ), newEois );
-            addGuessedFromInfoStandards( newEois );
-        }
         Node target = getFlow().getTarget();
-        if ( target.isPart() ) {
-            addGuessedFromNeeds( (Part) target, newEois );
-            addGuessedFromCapabilities( newEois );
-        }
+        boolean added = false;
+        added = addGuessedFromInfoStandards( newEois );
+        if ( getFlow().isSharing() && !added )
+            added = addGuessedFromNeed( newEois );
+        if ( getFlow().isSharing() && !added )
+            added = addGuessedFromCapability( newEois );
+        if ( source.isPart() && !added )
+            added = addGuessedFromOtherSends( (Part) source, newEois );
+        if ( target.isPart() && !added )
+            added = addGuessedFromOtherReceives( (Part) target, newEois );
+        if ( source.isPart() && !added )
+            addGuessedSentFromReceives( ( (Part) source ), newEois );
         return newEois;
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addGuessedFromCapabilities( List<ElementOfInformation> newEois ) {
+    private boolean addGuessedFromCapability( List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
+        int size = newEois.size();
         Matcher matcher = Matcher.getInstance();
         List<String> contents = (List<String>) CollectionUtils.collect(
                 flow.getEois(),
@@ -473,9 +486,8 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         contents.addAll( (List<String>) CollectionUtils.collect(
                 newEois,
                 TransformerUtils.invokerTransformer( "getContent" ) ) );
-        Iterator<Flow> capabilities = getQueryService().findAllCapabilitiesNamed( flow.getName() ).iterator();
-        while ( capabilities.hasNext() ) {
-            Flow capability = capabilities.next();
+        Flow capability = findRelatedCapability();
+        if ( capability != null ) {
             for ( ElementOfInformation capabilityEoi : capability.getEois() ) {
                 if ( !matcher.contains( contents, capabilityEoi.getContent() ) ) {
                     // Use the first one as-is. Will improve later. Maybe.
@@ -484,11 +496,33 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 }
             }
         }
+        return size < newEois.size();
+    }
+
+    private Flow findRelatedCapability() {
+        Flow capability = null;
+        Node source = getFlow().getSource();
+        if ( source.isPart() ) {
+            final String flowName = getFlow().getName();
+            capability = (Flow) CollectionUtils.find(
+                    ( (Part) source ).getCapabilities(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            Flow capability = (Flow) object;
+                            return !capability.equals( getFlow() )
+                                    && Matcher.getInstance().same( flowName, capability.getName() );
+                        }
+                    }
+            );
+        }
+        return capability;
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addGuessedFromNeeds( Part target, List<ElementOfInformation> newEois ) {
+    private boolean addGuessedFromNeed( List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
+        int size = newEois.size();
         Matcher matcher = Matcher.getInstance();
         List<String> contents = (List<String>) CollectionUtils.collect(
                 flow.getEois(),
@@ -496,9 +530,8 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         contents.addAll( (List<String>) CollectionUtils.collect(
                 newEois,
                 TransformerUtils.invokerTransformer( "getContent" ) ) );
-        Iterator<Flow> needs = target.getNeeds().iterator();
-        while ( needs.hasNext() ) {
-            Flow need = needs.next();
+        Flow need = findRelatedNeed();
+        if ( need != null ) {
             if ( !need.equals( flow ) && matcher.same( flow.getName(), need.getName() ) ) {
                 for ( ElementOfInformation needEoi : need.getEois() ) {
                     if ( !matcher.contains( contents, needEoi.getContent() ) ) {
@@ -509,11 +542,60 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 }
             }
         }
+        return size < newEois.size();
+    }
+
+    private Flow findRelatedNeed() {
+        Flow need = null;
+        Node target = getFlow().getTarget();
+        if ( target.isPart() ) {
+            final String flowName = getFlow().getName();
+            need = (Flow) CollectionUtils.find(
+                    ( (Part) target ).getNeeds(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            Flow need = (Flow) object;
+                            return !need.equals( getFlow() )
+                                    && Matcher.getInstance().same( flowName, need.getName() );
+                        }
+                    }
+            );
+        }
+        return need;
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addGuessedFromInfoStandards( List<ElementOfInformation> newEois ) {
+    private boolean addGuessedFromOtherReceives( Part target, List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
+        int size = newEois.size();
+        Matcher matcher = Matcher.getInstance();
+        List<String> contents = (List<String>) CollectionUtils.collect(
+                flow.getEois(),
+                TransformerUtils.invokerTransformer( "getContent" ) );
+        contents.addAll( (List<String>) CollectionUtils.collect(
+                newEois,
+                TransformerUtils.invokerTransformer( "getContent" ) ) );
+        Iterator<Flow> sharingReceives = target.receives();
+        while ( sharingReceives.hasNext() ) {
+            Flow sharingReceive = sharingReceives.next();
+            if ( matcher.same( flow.getName(), sharingReceive.getName() ) ) {
+                for ( ElementOfInformation needEoi : sharingReceive.getEois() ) {
+                    if ( !matcher.contains( contents, needEoi.getContent() ) ) {
+                        // Use the first one as-is. Will improve later. Maybe.
+                        newEois.add( new ElementOfInformation( needEoi ) );
+                        contents.add( needEoi.getContent() );
+                    }
+                }
+            }
+        }
+        return size < newEois.size();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private boolean addGuessedFromInfoStandards( List<ElementOfInformation> newEois ) {
+        Flow flow = getFlow();
+        int size = newEois.size();
         Matcher matcher = Matcher.getInstance();
         List<String> contents = (List<String>) CollectionUtils.collect(
                 flow.getEois(),
@@ -527,11 +609,13 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 }
             }
         }
+        return size < newEois.size();
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addGuessedFromSourceSends( Part source, List<ElementOfInformation> newEois ) {
+    private boolean addGuessedFromOtherSends( Part source, List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
+        int size = newEois.size();
         Matcher matcher = Matcher.getInstance();
         List<String> contents = (List<String>) CollectionUtils.collect(
                 flow.getEois(),
@@ -552,11 +636,13 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 }
             }
         }
+        return size < newEois.size();
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addGuessedFromSourceReceives( Part source, List<ElementOfInformation> newEois ) {
+    private boolean addGuessedSentFromReceives( Part source, List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
+        int size = newEois.size();
         final Matcher matcher = Matcher.getInstance();
         String flowName = flow.getName();
         List<String> contents = (List<String>) CollectionUtils.collect(
@@ -627,6 +713,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
             }
             newEois.add( newEoi );
         }
+        return size < newEois.size();
     }
 
 
@@ -647,12 +734,20 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         return doCommand( new LinkFlowClassifications( getFlow() ) );
     }
 
+    public void changed( Change change ) {
+        if ( change.isUpdated() && change.isForInstanceOf( Flow.class ) ) {
+            eoisUpdated = true;
+        }
+        super.changed( change );
+    }
+
 
     /**
      * {@inheritDoc}
      */
     protected void close( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, getFlow() );
+        Change change = new Change( Change.Type.AspectClosed, getFlow(), ExpandedFlowPanel.EOIS );
+        change.addQualifier( "updated", eoisUpdated );
         update( target, change );
     }
 

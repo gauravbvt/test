@@ -30,7 +30,7 @@ public class User implements UserDetails {
     /**
      * Raw information from the property file.
      */
-    private final UserInfo userInfo;
+    private UserInfo userInfo;
 
     /**
      * True if user is anonymous.
@@ -52,6 +52,7 @@ public class User implements UserDetails {
         userInfo = new UserInfo( "(Anonymous)", "bla,Anonymous,bla" );
     }
 
+
     public User( UserInfo userInfo ) {
         this.userInfo = userInfo;
         anonymous = false;
@@ -71,6 +72,11 @@ public class User implements UserDetails {
 
     public UserInfo getUserInfo() {
         return userInfo;
+    }
+
+//    @Secured( "ROLE_ADMIN" )
+    public void setUserInfo( UserInfo userInfo ) {
+        this.userInfo = userInfo;
     }
 
     public String getEmail() {
@@ -193,22 +199,16 @@ public class User implements UserDetails {
         return isPlanner( getPlan().getUri() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return getUsername();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals( Object obj ) {
         if ( this == obj )
             return true;
-        if ( obj == null || getClass() != obj.getClass() )
+        if ( obj == null || !getClass().isAssignableFrom( obj.getClass() ) )
             return false;
 
         User user = (User) obj;
@@ -216,9 +216,6 @@ public class User implements UserDetails {
                 && getUsername().equals( user.getUsername() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         int result = getUsername().hashCode();
@@ -266,6 +263,19 @@ public class User implements UserDetails {
      * @return a String
      */
     public String getRole( String planUri ) {
+        return userInfo.isAdmin() ? ADMIN
+                : userInfo.isPlanner( planUri ) ? PLANNER
+                : userInfo.isUser( planUri ) ? PARTICIPANT
+                : UNAUTHORIZED;
+    }
+
+    /**
+     * Return a string describing the most privileged role of the user.
+     *
+     * @return a String
+     */
+    public String getRole( ) {
+        String planUri = getPlanUri();
         return userInfo.isAdmin() ? ADMIN
                 : userInfo.isPlanner( planUri ) ? PLANNER
                 : userInfo.isUser( planUri ) ? PARTICIPANT

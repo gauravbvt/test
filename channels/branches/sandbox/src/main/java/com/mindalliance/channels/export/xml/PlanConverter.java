@@ -90,6 +90,15 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "userSupportCommunity" );
         writer.setValue( plan.getUserSupportCommunity() );
         writer.endNode();
+        writer.startNode( "communityCalendarHost" );
+        writer.setValue( plan.getCommunityCalendarHost() );
+        writer.endNode();
+        writer.startNode( "communityCalendar" );
+        writer.setValue( plan.getCommunityCalendar() );
+        writer.endNode();
+        writer.startNode( "communityCalendarPrivateTicket" );
+        writer.setValue( plan.getCommunityCalendarPrivateTicket() );
+        writer.endNode();
         writer.startNode( "surveyApiKey" );
         writer.setValue( plan.getSurveyApiKey() );
         writer.endNode();
@@ -205,7 +214,13 @@ public class PlanConverter extends AbstractChannelsConverter {
                 plan.setPlannerSupportCommunity( reader.getValue() );
             } else if ( nodeName.equals( "userSupportCommunity" ) ) {
                 plan.setUserSupportCommunity( reader.getValue() );
-            } else if ( nodeName.equals( "surveyApiKey" ) ) {
+            } else if ( nodeName.equals( "communityCalendarHost" ) ) {
+                plan.setCommunityCalendarHost( reader.getValue() );
+            } else if ( nodeName.equals( "communityCalendar" ) ) {
+                plan.setCommunityCalendar( reader.getValue() );
+            }  else if ( nodeName.equals( "communityCalendarPrivateTicket" ) ) {
+                plan.setCommunityCalendarPrivateTicket( reader.getValue() );
+            }else if ( nodeName.equals( "surveyApiKey" ) ) {
                 plan.setSurveyApiKey( reader.getValue() );
             } else if ( nodeName.equals( "surveyUserKey" ) ) {
                 plan.setSurveyUserKey( reader.getValue() );

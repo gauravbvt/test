@@ -13,18 +13,15 @@ import java.io.Serializable;
  * Date: 1/11/11
  * Time: 9:35 AM
  */
-public class EventPhase implements Serializable {
-    /**
-     * A type of event.
-     */
+public class EventPhase implements Serializable, Comparable<EventPhase> {
+
+    /** A type of event. */
     private Event event;
-    /**
-     * A phase of the event.
-     */
+
+    /** A phase of the event. */
     private Phase phase;
-    /**
-     * A rating of the event.
-     */
+
+    /** A rating of the event. */
     private Level eventLevel;
 
     public EventPhase() {
@@ -67,37 +64,72 @@ public class EventPhase implements Serializable {
         setEventLevel( eventPhase.getEventLevel() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append( StringUtils.capitalize( getPhase().getName() ) );
+        sb.append( StringUtils.capitalize( phase.getName() ) );
         sb.append( ' ' );
-        sb.append( getPhase().getPreposition() );
+        sb.append( phase.getPreposition() );
         sb.append( ' ' );
-        sb.append( ChannelsUtils.smartUncapitalize( getEvent().getName() ) );
-        if ( getEventLevel() != null ) {
+        sb.append( ChannelsUtils.smartUncapitalize( event.getName() ) );
+        if ( eventLevel != null ) {
             sb.append( " (" );
-            sb.append( getEventLevel().getLabel() );
+            sb.append( eventLevel.getLabel() );
             sb.append( ')' );
         }
         return sb.toString();
     }
 
+    @Override
+    public int compareTo( EventPhase o ) {
+        if ( o == null )
+            return 1;
+        int a1 = o.getPhase() == null ? 1 : phase.compareTo( o.getPhase() );
+        if ( a1 == 0 ) {
+            int a2 = o.getEvent() == null ? 1 : event.compareTo( o.getEvent() );
+            return a2 != 0 ? a2
+                 : o.getEventLevel() == null ? 1
+                 : eventLevel.compareTo( o.getEventLevel() );
+        }
+        return a1;
+    }
+
     /**
      * Whether references a given model object.
+     *
      * @param mo a model object
      * @return a boolean
      */
     public boolean references( ModelObject mo ) {
-        return ModelObject.areIdentical( getPhase(), mo )
-                || ModelObject.areIdentical( getEvent(), mo );
+        return ModelObject.areIdentical( phase, mo ) || ModelObject.areIdentical( event, mo );
     }
 
     public boolean narrowsOrEquals( EventPhase other, Place locale ) {
-        return phase.equals( other.getPhase() )
-                && event.narrowsOrEquals( other.getEvent(), locale )
-                && Level.isSubsumedBy( eventLevel, other.getEventLevel() );
+        return phase.equals( other.getPhase() ) && event.narrowsOrEquals( other.getEvent(), locale )
+               && Level.isSubsumedBy( eventLevel, other.getEventLevel() );
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o )
+            return true;
+
+        if ( o == null || getClass() != o.getClass() )
+            return false;
+
+        EventPhase that = (EventPhase) o;
+
+        if ( event == null ? that.event != null : !event.equals( that.event ) )
+            return false;
+
+        return eventLevel == that.eventLevel
+            && ( phase == null ? that.getPhase() == null : phase.equals( that.getPhase() ) );
+    }
+
+    @Override
+    public int hashCode() {
+        int result = event != null ? event.hashCode() : 0;
+        result = 31 * result + ( phase != null ? phase.hashCode() : 0 );
+        result = 31 * result + ( eventLevel != null ? eventLevel.hashCode() : 0 );
+        return result;
     }
 }

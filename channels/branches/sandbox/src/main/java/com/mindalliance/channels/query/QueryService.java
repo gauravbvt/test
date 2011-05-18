@@ -3,6 +3,7 @@ package com.mindalliance.channels.query;
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.Dao;
 import com.mindalliance.channels.dao.PlanManager;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Agreement;
@@ -1307,15 +1308,6 @@ public interface QueryService {
     Assignments getAssignments( Boolean includeUnknowns, Boolean includeProhibited );
 
     /**
-     * Whether an actor is a direct or indirect supervisor of another.
-     *
-     * @param actor      an actor
-     * @param supervisor an actor
-     * @return a Boolean
-     */
-    Boolean hasSupervisor( Actor actor, Actor supervisor );
-
-    /**
      * Find all tags in domain.
      *
      * @return a list of tags
@@ -1413,4 +1405,11 @@ public interface QueryService {
      * @return a list of flows
      */
     List<Flow> findAllCapabilitiesNamed( String name );
+
+    /**
+     * Find all users that participate a a given actor.
+     * @param actor an actor
+     * @return a list of users
+     */
+    List<User> findUsersParticipatingAs( Actor actor );
 }

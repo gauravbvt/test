@@ -44,6 +44,12 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
         init();
     }
 
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
+
     private void init() {
         selectedEntity = entityModel.getObject();
         addEntityNetworkPanel();
