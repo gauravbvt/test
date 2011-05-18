@@ -38,15 +38,23 @@ public class SocialPanel extends AbstractUpdatablePanel {
     @SpringBean
     private PlanningEventService planningEventService;
 
+    public static final String PRESENCE = "Presence";
+    public static final String ACTIVITIES = "Activities";
+    public static final String MESSAGES = "Messages";
+    public static final String CALENDAR = "Calendar";
+    public static final String SURVEYS = "Surveys";
+    public static final String USER = "User";
     public static final String SEND_MESSAGE = "sendMessage";
     public static final String DELETE_MESSAGE = "deleteMessage";
     public static final String EMAIL_MESSAGE = "emailMessage";
+
     private AjaxTabbedPanel tabbedPanel;
     private PlannerMessageListPanel plannerMessageListPanel;
     private CommandEventListPanel commandEventListPanel;
     private UserPresenceListPanel plannerPresenceListPanel;
     private SurveyListPanel surveyListPanel;
     private CalendarPanel calendarPanel;
+    private UserInfoPanel userProfilePanel;
     /**
      * When last refreshed.
      */
@@ -93,35 +101,35 @@ public class SocialPanel extends AbstractUpdatablePanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        if ( showTabs.contains( "Presence" ) )
+        if ( showTabs.contains( PRESENCE ) )
             tabs.add( new AbstractTab( new Model<String>( "Presence" ) ) {
                 public Panel getPanel( String id ) {
                     plannerPresenceListPanel = new UserPresenceListPanel( id, SocialPanel.this, collapsible );
                     return plannerPresenceListPanel;
                 }
             } );
-        if ( showTabs.contains( "Activities" ) )
+        if ( showTabs.contains( ACTIVITIES ) )
             tabs.add( new AbstractTab( new Model<String>( "Activities" ) ) {
                 public Panel getPanel( String id ) {
                     commandEventListPanel = new CommandEventListPanel( id, SocialPanel.this, collapsible );
                     return commandEventListPanel;
                 }
             } );
-        if ( showTabs.contains( "Messages" ) )
-            tabs.add( new AbstractTab( new Model<String>(  User.current().isPlanner() ? "Messages" : "News") ) {
+        if ( showTabs.contains( MESSAGES ) )
+            tabs.add( new AbstractTab( new Model<String>( getMessagesTabTitle() ) ) {
                 public Panel getPanel( String id ) {
                     plannerMessageListPanel = new PlannerMessageListPanel( id, SocialPanel.this, collapsible );
                     return plannerMessageListPanel;
                 }
             } );
-        if ( showTabs.contains( "Calendar" ) )
+        if ( showTabs.contains( CALENDAR ) )
             tabs.add( new AbstractTab( new Model<String>( "Calendar" ) ) {
                 public Panel getPanel( String id ) {
                     calendarPanel = new CalendarPanel( id, collapsible );
                     return calendarPanel;
                 }
             } );
-        if ( showTabs.contains( "Surveys" ) ) {
+        if ( showTabs.contains( SURVEYS ) ) {
             AbstractTab tab = new AbstractTab( new Model<String>( "Surveys" ) ) {
                 public Panel getPanel( String id ) {
                     surveyListPanel = new SurveyListPanel( id, SocialPanel.this, collapsible );
@@ -130,7 +138,20 @@ public class SocialPanel extends AbstractUpdatablePanel {
             };
             tabs.add( tab );
         }
+        if ( showTabs.contains( USER ) ) {
+            AbstractTab tab = new AbstractTab( new Model<String>( "About me") ) {
+                public Panel getPanel( String id ) {
+                    userProfilePanel = new UserInfoPanel( id, SocialPanel.this, collapsible );
+                    return userProfilePanel;
+                }
+            };
+            tabs.add( tab );
+        }
         return tabs;
+    }
+
+    private String getMessagesTabTitle() {
+       return User.current().isPlanner() ? "Messages" : "News";
     }
 
     private String getSelectedTabTitle() {
@@ -144,7 +165,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( commandEventListPanel != null && getSelectedTabTitle().equals( "Activities" )  ) {
             commandEventListPanel.refresh( target, change );
         }
-        if ( plannerMessageListPanel != null && getSelectedTabTitle().equals( "Messages" )  ) {
+        if ( plannerMessageListPanel != null && getSelectedTabTitle().equals( getMessagesTabTitle() )  ) {
             plannerMessageListPanel.refresh( target, change );
         }
         Date whenLastReceived = plannerMessagingService.getWhenLastReceived( getPlan() );
@@ -158,8 +179,8 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( action.equals( SEND_MESSAGE )
                 || action.equals( DELETE_MESSAGE )
                 || action.equals( EMAIL_MESSAGE ) ) {
-            if ( !getSelectedTabTitle().equals( "Messages" ) ) {
-                selectTabTitled( "Messages" );
+            if ( !getSelectedTabTitle().equals( getMessagesTabTitle() ) ) {
+                selectTabTitled( getMessagesTabTitle() );
                 target.addComponent( tabbedPanel );
             }
 
@@ -188,7 +209,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     public void newMessage( AjaxRequestTarget target, Change change ) {
         ModelObject about = (ModelObject) change.getSubject( getQueryService() );
         String sendTo = change.getProperty();
-        selectTabTitled( "Messages" );
+        selectTabTitled( getMessagesTabTitle() );
         plannerMessageListPanel.newMessage( sendTo == null ? "" : sendTo, about, target );
         target.addComponent( tabbedPanel );
     }

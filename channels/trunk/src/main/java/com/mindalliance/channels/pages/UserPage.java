@@ -306,7 +306,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
                 "gotoReport",
                 "",
                 ResponderPage.class,
-                ResponderPage.createParameters( actor, uri, plan.getVersion() ),
+                ResponderPage.createParameters( planner ? null : actor, uri, plan.getVersion() ),
                 null,
                 plan );
         Label gotoReportLabel = new Label( "proceduresLabel", getGotoReportLabel( user, plan ) );
@@ -363,7 +363,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     }
 
     private void addSocial() {
-        String[] tabsShown = {"Calendar", "Surveys", "Messages"};
+        String[] tabsShown = {SocialPanel.CALENDAR, SocialPanel.SURVEYS, SocialPanel.MESSAGES/*, SocialPanel.USER*/};
         socialPanel = new SocialPanel( "social", false, tabsShown );
         form.add( socialPanel );
     }
