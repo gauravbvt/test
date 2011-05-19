@@ -643,6 +643,11 @@ public class GoalListPanel extends AbstractCommandablePanel {
             return "Goal wrapper";
         }
 
+        @Override
+        public boolean isModifiableInProduction() {
+            return false;
+        }
+
         public void setDescription( String value ) {
             String oldValue = goal.getDescription();
             if ( !oldValue.equals( value ) ) {

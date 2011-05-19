@@ -379,8 +379,17 @@ public class DefaultCommander implements Commander {
 
     @Override
     public synchronized Change doCommand( Command command ) {
+        return executeCommand( command, true );
+    }
+
+    @Override
+    public synchronized Change doUnsafeCommand( Command command ) {
+        return executeCommand( command, false );
+    }
+
+    private Change executeCommand( Command command, boolean safe ) {
         try {
-            if ( !getPlan().isDevelopment() )
+            if ( safe && !getPlan().isDevelopment() )
                 throw new CommandException(
                         "This version is no longer in development. You need to refresh. " );
             if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
@@ -402,6 +411,7 @@ public class DefaultCommander implements Commander {
             return Change.failed( e.getMessage() );
         }
     }
+
 
     @Override
     public synchronized Change undo() {

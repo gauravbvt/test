@@ -307,7 +307,8 @@ public class PlanManager {
                 synchronized ( dao ) {
                     Journal journal = dao.getJournal();
                     if ( command.forcesSnapshot()
-                         || journal.size() >= getDefinitionManager().getSnapshotThreshold() )
+                         || journal.size() >= getDefinitionManager().getSnapshotThreshold()
+                         || plan.isProduction() )
                         dao.save( exporter );
                     else {
                         journal.addCommand( command );

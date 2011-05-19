@@ -157,6 +157,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public abstract void setEffectiveChannels( List<Channel> channels );
 
+    @Override
+    public List<Channel> getModifiableChannels() {
+        return getEffectiveChannels();
+    }
+
     /**
      * {@inheritDoc}
      */

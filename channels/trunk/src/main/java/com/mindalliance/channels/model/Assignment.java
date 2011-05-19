@@ -240,6 +240,11 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
     }
 
     @Override
+    public boolean isModifiableInProduction() {
+        return false;
+    }
+
+    @Override
     public String getName() {
         return part.getTask();
     }

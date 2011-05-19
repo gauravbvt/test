@@ -36,6 +36,11 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
         return getChannels();
     }
 
+    @Override
+    public List<Channel> getModifiableChannels() {
+        return getEffectiveChannels();
+    }
+
     /**
      * {@inheritDoc}
      */

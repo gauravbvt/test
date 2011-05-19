@@ -8,6 +8,7 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.pages.Releaseable;
 import org.apache.wicket.model.IModel;
 
@@ -47,16 +48,33 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     }
 
     /**
+     * Execute a command even in production.
+     *
+     * @param command a command
+     * @return the change caused
+     */
+    protected Change doUnsafeCommand( Command command ) {
+        Commander commander = getCommander();
+        return commander.doUnsafeCommand( command );
+    }
+
+
+    /**
      * Whether an identifiable object is locked by current user.
      *
      * @param identifiable an identifiable object
      * @return a boolean
      */
     protected boolean isLockedByUser( Identifiable identifiable ) {
-        return getPlan().isDevelopment()
-                && !isImmutable( identifiable )
-                && getLockManager().isLockedByUser(
-                            User.current().getUsername(), identifiable.getId() );
+        return noLockRequired( identifiable ) ||
+                ( ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
+                        && !isImmutable( identifiable )
+                        && getLockManager().isLockedByUser(
+                        User.current().getUsername(), identifiable.getId() ) );
+    }
+
+    private boolean noLockRequired( Identifiable identifiable ) {
+        return identifiable instanceof Participation;
     }
 
     /**
@@ -67,7 +85,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      */
     protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
         return getPlan().isDevelopment() &&
-                        ( isImmutable( identifiable )
+                ( isImmutable( identifiable )
                         || isLockedByUser( identifiable ) );
     }
 

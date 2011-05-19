@@ -4,8 +4,9 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Participation;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -58,6 +59,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     private TextField<String> repeatNewPasswordText;
     private List<String> errors;
     private WebMarkupContainer errorsContainer;
+    private Participation participation;
 
     public UserInfoPanel( String id, SocialPanel socialPanel, boolean collapsible ) {
         super( id, collapsible );
@@ -66,6 +68,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     protected void init() {
         super.init();
+        participation = getParticipation();
         resetAll();
     }
 
@@ -119,13 +122,31 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private void addParticipation() {
+        Actor actor = findActor();
         String assignation = getAssignation();
         userInfoContainer.add( new Label( "userRole", getUserRole() ) );
         Label assignationLabel = new Label( "assignation", assignation );
-        assignationLabel.setVisible( !assignation.isEmpty() );
+        assignationLabel.setVisible( actor != null );
         userInfoContainer.add( assignationLabel );
+        // Updated agent contact info
+        WebMarkupContainer updatedContactContainer = new WebMarkupContainer( "updatedContact" );
+        updatedContactContainer.setVisible( actor != null );
+        updatedContactContainer.add(
+                participation != null
+                        ? new ChannelListPanel( "contactInfo", new Model<Channelable>( participation ), false )
+                        : new Label( "contactInfo", "" )
+        );
+        userInfoContainer.add( updatedContactContainer );
 
+    }
 
+    private String getAgentContactInfo() {
+        Actor actor = findActor();
+        return actor == null ? "" : actor.getChannelsString();
+    }
+
+    private Participation getParticipation() {
+        return getQueryService().findParticipation( user.getUsername() );
     }
 
     private String getUserRole() {
@@ -138,16 +159,22 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private String getAssignation() {
-        Actor actor = findActor( getQueryService(), user.getUsername() );
+        Actor actor = findActor();
+        StringBuilder sb = new StringBuilder();
         if ( actor != null ) {
-            return "I participate as " + actor.getName() + ".";
-        } else {
-            return "";
+            sb.append( "I participate as " );
+            sb.append( actor.getName() );
+            String channelsString = actor.getChannelsString();
+            if ( !channelsString.isEmpty() ) {
+                sb.append( ", reachable via " );
+                sb.append( channelsString );
+            }
+            sb.append( '.' );
         }
+        return sb.toString();
     }
 
-    private static Actor findActor( QueryService queryService, String userName ) {
-        Participation participation = queryService.findParticipation( userName );
+    private Actor findActor() {
         return participation != null && participation.getActor() != null
                 ? participation.getActor()
                 : null;
