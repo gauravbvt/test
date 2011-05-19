@@ -43,10 +43,18 @@
         </div>
 
         <div wicket:id="phases" class="phase">
-            <h2><span class="seq">Situation <span wicket:id="phaseSeq">1</span>:</span> <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
-            <div>
-                <p wicket:id="segDesc">{event description}</p>
-            </div>
+            <h2><span class="seq">Situation <span wicket:id="phaseSeq">1</span>:</span>
+                <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name}</span></a></h2>
+            <table class="taskHeader">
+                <tr>
+                    <th valign="top"><p>Context:</p></th>
+                    <td><p wicket:id="context">{Context}</p></td>
+                </tr>
+                <tr>
+                    <th valign="top"><p>Description:</p></th>
+                    <td><p wicket:id="segDesc">{Segment description}</p></td>
+                </tr>
+            </table>
 
             <div wicket:id="inputDiv">
                 <h3>Tasks triggered by notifications or requests for information:</h3>
@@ -96,10 +104,14 @@
 
                 <table class="taskHeader">
                     <tr>
-                        <th class="title" valign="top"><span>Situation:</span></th>
+                        <th class="title" valign="top"><p>Situation:</p></th>
                         <td>
-	                        <span wicket:id="taskSummary">{summary of event/phase/location}</span>
-                            <span wicket:id="taskLoc">{Location}.</span>
+                            <p>
+                                <span wicket:id="taskSummary">{summary of event/phase/location}</span>
+                                Executed as <span wicket:id="taskRole">{role}</span>
+                                <span wicket:id="taskLoc">{Location}.</span>
+                            </p>
+
                             <p wicket:id="prohibited">
                                 <!-- Optional -->
                                 <em>Note:</em> Even though documented here, this task is prohibited by policy
@@ -108,7 +120,7 @@
                         </td>
                     </tr>
                     <tr wicket:id="promptedBy">
-                        <th class="title" valign="top"><span>Prompted By:</span></th>
+                        <th class="title" valign="top"><p>Prompted By:</p></th>
                         <td>
                             <span wicket:id="reqTask">
                                 <p>
@@ -149,7 +161,7 @@
                         </td>
                     </tr>
                     <tr wicket:id="details">
-                        <th class="title" valign="top"><span>Details:</span></th>
+                        <th class="title" valign="top"><p>Details:</p></th>
                         <td class="procedureTd">
                             <p>
                                 <span wicket:id="instruct">{Task instruction}.</span>

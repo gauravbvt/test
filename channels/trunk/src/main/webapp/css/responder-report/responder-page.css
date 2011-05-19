@@ -216,10 +216,6 @@ table th {
 	padding: 5px 10px;
 }
 
-table td.procedureTd {
-	padding:10px 0 10px 10px;
-}
-
 table tbody tr {
 	border: 1px solid #999999;
 	background:#e8e8e8;
