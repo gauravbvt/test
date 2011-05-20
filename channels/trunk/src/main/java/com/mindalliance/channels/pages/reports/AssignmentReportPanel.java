@@ -490,11 +490,10 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
 
         @Override
         public String toString() {
-            String prefix = all ? "all "
-                    : !isActor() || getActor().isArchetype() ? "a "
-                    : "";
 
-            return prefix + super.getReportSource();
+            return getReportSource( all ? "all "
+                                        : !isActor() || getActor().isArchetype() ? "a "
+                                        : "" );
         }
     }
 
