@@ -242,15 +242,15 @@ public class ResponderPage extends WebPage {
         if ( assignedUser == null && !user.isPlanner( plan.getUri() ) ) assignedUser = user;
         String myName = assignedUser == null ? "" : assignedUser.getFullName();
         String myAvail;
-        String myContact;
+        List<Channel> myContacts;
         if ( actualActors.isEmpty() ) {
             myAvail = "N/A";
-            myContact = "N/A";
+            myContacts = new ArrayList<Channel>();
         } else {
             Actor actor = actualActors.get( 0 );
             Availability availability = actor.getAvailability();
             myAvail = availability == null ? "24/7" : availability.toString();
-            myContact = actor.getChannelsString();
+            myContacts = actor.getEffectiveChannels();
         }
 
         List<ReportSegment> reportSegments = getSegments( service, profile );
@@ -267,7 +267,34 @@ public class ResponderPage extends WebPage {
                .setVisible( !myName.isEmpty() ),
             new Label( "myRoles", profile.getReportTitle() ),
             new Label( "myAvail", "Availability: " + myAvail ),
-            new Label( "myContact", "How to contact: " + myContact ),
+            new WebMarkupContainer( "myContact" )
+                .add( new ListView<Channel>( "channel", myContacts ) {
+                        @Override
+                        protected void populateItem( ListItem<Channel> item ) {
+                            Channel channel = item.getModelObject();
+                            String label = channel.getMedium().getLabel();
+                            String address = channel.getAddress().isEmpty() ? "N/A"
+                                                                            : channel.getAddress();
+                            item.add( new WebMarkupContainer( "notEmail" ).add( new Label(
+                                "channelType",
+                                label + ":" ), new Label( "channel", address ) ).setVisible(
+                                channel.getAddress().isEmpty() || !label.equals( "Email" ) ),
+                                      new WebMarkupContainer( "email" ).add( new Label( "channel",
+                                                                                        address )
+                                                                                 .add( new AttributeModifier(
+                                                                                     "href",
+                                                                                     true,
+                                                                                     new Model<String>(
+                                                                                         "mailTo:"
+                                                                                         + address ) ) ) )
+                                          .setVisible(
+                                              !channel.getAddress().isEmpty() && label.equals(
+                                                  "Email" ) ) );
+                        }
+                    }.setRenderBodyOnly( true ) )
+                .setVisible( !actualActors.isEmpty() ),
+            new WebMarkupContainer( "myNoContact" )
+                .setVisible( actualActors.isEmpty() ),
 
             new ListView<ReportSegment>( "phaseLinks", reportSegments ) {
                 @Override
@@ -622,8 +649,8 @@ public class ResponderPage extends WebPage {
                     new WebMarkupContainer( "specAnchor" )
                         .add( new Label( "spec", spec.getReportSource( "" ) )
                                 .setRenderBodyOnly( true ) )
-                        .add( new AttributeModifier( "name", true,
-                                    new Model<String>( "s_" + spec.hashCode() ) ) ),
+                        .add( new AttributeModifier( "name", true, new Model<String>(
+                            "s_" + spec.hashCode() ) ) ),
                     new ListView<AggregatedContact>( "perFlowContact", contactList ) {
                         @Override
                         protected void populateItem( ListItem<AggregatedContact> sourceItem ) {
@@ -631,15 +658,12 @@ public class ResponderPage extends WebPage {
                             AggregatedContact sup = aContact.getSupervisor();
 
                             MarkupContainer contact = newContact( "contact",
-                                                                aContact.getPartSpecs(),
-                                                                aContact
-                                                                    .getOrganization(),
+                                                                aContact.getOrganization(),
                                                                 aContact.getTitle(),
                                                                 aContact.getActor(),
                                                                 aContact
                                                                     .getChannels() );
                             Component supervisor = newContact( "supervisor",
-                                                             sup.getPartSpecs(),
                                                              sup.getOrganization(),
                                                              sup.getTitle(),
                                                              sup.getActor(),
@@ -672,8 +696,7 @@ public class ResponderPage extends WebPage {
     }
 
     private static MarkupContainer newContact(
-        String id, List<ResourceSpec> roles, Organization organization, String title, Actor actor,
-        List<Channel> channels ) {
+        String id, Organization organization, String title, Actor actor, List<Channel> channels ) {
 
         return new WebMarkupContainer( id )
             .add( new Label( "contact.name", actor == null ? "" : actor.getName() ),
@@ -951,7 +974,9 @@ public class ResponderPage extends WebPage {
             for ( ReportTask task : tasks )
                 specs.addAll( task.getContactSpecs() );
 
-            return new ArrayList<ResourceSpec>( specs );
+            List<ResourceSpec> result = new ArrayList<ResourceSpec>( specs );
+            Collections.sort( result );
+            return result;
         }
 
         private List<AggregatedContact> findContacts( PlanService service, ResourceSpec profile ) {

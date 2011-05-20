@@ -26,7 +26,17 @@
 			<h3>Contact Info</h3>
 			<ul>
                 <li wicket:id="myName">{user name}</li>
-				<li wicket:id="myContact">{Contact info}</li>
+				<li>How to contact:
+                    <ul wicket:id="myContact">
+                        <span wicket:id="channel">
+                            <li wicket:id="notEmail"><em wicket:id="channelType">Channel:</em>
+                                <span wicket:id="channel">{Contact info}</span></li>
+                            <li wicket:id="email"><em>Email:</em>
+                                <a href="#" wicket:id="channel">{Contact info}</a></li>
+                        </span>
+                    </ul>
+                    <span wicket:id="myNoContact">N/A</span>
+                </li>
                 <li wicket:id="myAvail">{Availability}</li>
             </ul>
 
