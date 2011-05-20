@@ -67,6 +67,16 @@ div.eoiCont {
 	padding:10px 0 0 0;
 }
 
+div#disclaimer {
+    border-top: 1px solid #CCCCCC;
+    color: #666666;
+    font-size: 11px;
+    margin: 20px 0 0 0;
+    padding: 20px 0 0 0;
+    text-align: center;
+}
+
+
 /* ----- Header ----- */
 
 div#header img {
@@ -305,7 +315,7 @@ table.taskHeader tr {
 
 table.taskHeader p {
 	line-height: 150%;
-	padding: 0 5px 5px 0;
+	padding: 0 5px 0 0;
 }
 
 table.taskHeader div.eoiCont {
