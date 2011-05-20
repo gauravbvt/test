@@ -147,6 +147,7 @@ public class Channels extends WebApplication
         mount( new IndexedParamUrlCodingStrategy( "uploads", UploadPage.class ) );
         mount( new IndexedParamUrlCodingStrategy( "icons", IconPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "login.html", LoginPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "newPasswordRequest.html", NewPasswordPage.class ) );
 
         mount( new QueryStringUrlCodingStrategy( "segment.xml", ExportPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "segment.png", FlowMapPage.class ) );

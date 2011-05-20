@@ -2,6 +2,7 @@
 // All rights reserved.
 package com.mindalliance.channels.dao;
 
+import org.springframework.mail.MailSender;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -44,6 +45,7 @@ public interface UserService {
 
     /**
      * Return users sorted by username.
+     *
      * @return the users
      */
     List<User> getUsers();
@@ -66,14 +68,25 @@ public interface UserService {
 
     /**
      * Get a sorted list of all user names.
+     *
      * @return a list
      */
     List<String> getUsernames();
 
     /**
      * Get all users (regulars and planners) of a given plan.
+     *
      * @param uri the plan's uri
      * @return the list
      */
     List<User> getUsers( String uri );
+
+    /**
+     * Change the user's password and email a notice.
+     *
+     * @param user       a user
+     * @param mailSender a mail sender service
+     * @return a boolean indicating success
+     */
+    boolean changePassword( User user, PlanManager planManager, MailSender mailSender );
 }

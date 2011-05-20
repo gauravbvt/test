@@ -3,6 +3,8 @@ package com.mindalliance.channels.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 
 /**
  * A user details service that keeps in sync with changes to the underlying user definition file.
@@ -309,4 +312,56 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
                 result.add( user );
         return result;
     }
+
+    @Override
+    public boolean changePassword( User user, PlanManager planManager, MailSender mailSender ) {
+        boolean success = false;
+        String newPassword = makeNewPassword();
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo( user.getEmail() );
+        String fromAddress =  planManager.getDefaultSupportCommunity();
+        email.setFrom( fromAddress );
+        email.setReplyTo( fromAddress );
+        String subject = "New password";
+        email.setSubject( subject );
+        String text = "Dear "
+                + user.getFullName()
+                + " ("
+                + user.getUsername()
+                + "),\n\n"
+                + "Your new Channels password is\n\n"
+                + "--------\n"
+                + newPassword
+                + "\n--------"
+                + "\n\nFor further assistance, please contact us at "
+                + fromAddress
+                + ".";
+        email.setText( text );
+        LOG.info( fromAddress
+                + " emailing \"" + subject + "\" to "
+                + user.getEmail() );
+        try {
+            mailSender.send( email );
+            user.getUserInfo().setPassword( newPassword );
+            save();
+            success = true;
+        } catch ( Exception exc ) {
+            LOG.warn( fromAddress
+                    + " failed to email server error ", exc );
+        }
+        return success;
+    }
+
+    private String makeNewPassword() {
+        StringBuilder sb = new StringBuilder( );
+        int min = 'a';
+        int max = 'z';
+        Random random = new Random( );
+        for ( int i=0; i<8; i++ )  {
+           int c = random.nextInt( max - min ) + min;
+            sb.append( (char)c );
+        }
+        return sb.toString();
+    }
+
 }
