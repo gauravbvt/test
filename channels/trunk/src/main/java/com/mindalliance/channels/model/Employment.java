@@ -213,5 +213,7 @@ public class Employment implements GeoLocatable, Specable {
                 && job.narrowsOrEquals( other.getJob(), locale  );
     }
 
-
+    public String getTitle() {
+        return job.getTitle();
+    }
 }
