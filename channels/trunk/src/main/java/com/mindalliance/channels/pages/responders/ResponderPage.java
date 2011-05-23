@@ -139,44 +139,11 @@ public class ResponderPage extends WebPage {
         }
     }
 
-    private static boolean isAllowed(
-        Organization committer, Organization beneficiary, Restriction restriction ) {
-
-        if ( restriction == null )
-            return true;
-
-        switch ( restriction ) {
-            case SameTopOrganization:
-                return ModelObject.isNullOrUnknown( committer )
-                       || ModelObject.isNullOrUnknown( beneficiary )
-                       || committer.getTopOrganization().equals(
-                            beneficiary.getTopOrganization() );
-            case SameOrganization:
-                return ModelObject.isNullOrUnknown( committer )
-                       || ModelObject.isNullOrUnknown( beneficiary )
-                       || committer.narrowsOrEquals( beneficiary, null )
-                       || beneficiary.narrowsOrEquals( committer, null );
-            case DifferentOrganizations:
-                return ModelObject.isNullOrUnknown( committer )
-                       || ModelObject.isNullOrUnknown( beneficiary )
-                       || !committer.narrowsOrEquals( beneficiary, null )
-                          && !beneficiary.narrowsOrEquals( committer, null );
-            case DifferentTopOrganizations:
-                return ModelObject.isNullOrUnknown( committer )
-                       || ModelObject.isNullOrUnknown( beneficiary )
-                       || !committer.getTopOrganization().equals(
-                            beneficiary.getTopOrganization() );
-            default:
-                return true;
-        }
-    }
-
     private static List<ElementOfInformation> sortedEOIs( List<ElementOfInformation> result ) {
 
         Collections.sort( result, new Comparator<ElementOfInformation>() {
             @Override
             public int compare( ElementOfInformation o1, ElementOfInformation o2 ) {
-
                 return o1.getContent().compareToIgnoreCase( o2.getContent() );
             }
         } );
@@ -195,7 +162,6 @@ public class ResponderPage extends WebPage {
             new LoadableDetachableModel<PlanService>() {
                 @Override
                 protected PlanService load() {
-
                     return new PlanService(
                         planManager, null, userService, planManager.getPlan( uri, version ) );
                 }
@@ -204,7 +170,6 @@ public class ResponderPage extends WebPage {
     }
 
     private PlanService getPlanService() {
-
         return (PlanService) getDefaultModelObject();
     }
 
@@ -213,68 +178,25 @@ public class ResponderPage extends WebPage {
 
         Plan plan = service.getPlan();
         // TODO password change fields
-        List<Actor> actualActors = service.findAllActualActors( profile );
-        User assignedUser = userService.getUserNamed( parameters.getString( "user", "" ) );
-        if ( assignedUser == null && !user.isPlanner( plan.getUri() ) )
-            assignedUser = user;
-        String myName = assignedUser == null ? "" : assignedUser.getFullName();
-        String myAvail;
-        List<Channel> myContacts;
-        if ( actualActors.isEmpty() ) {
-            myAvail = AggregatedContact.N_A;
-            myContacts = new ArrayList<Channel>();
-        } else {
-            Actor actor = actualActors.get( 0 );
-            Availability availability = actor.getAvailability();
-            myAvail = availability == null ? "24/7" : availability.toString();
-            myContacts = actor.getEffectiveChannels();
-        }
+
+        AggregatedContact contact = new AggregatedContact( service, profile );
 
         List<ReportSegment> reportSegments = getSegments( service, profile );
         add(
             new Label( "userName", user.getUsername() ),
-            new Label( "personName", profile.displayString( 256 ) ),
+            new Label( "personName", contact.getActorName() ),
             new Label( "planName", plan.getName() ),
             new Label( "planName2", plan.getName() ),
             new Label( "planVersion", "v" + plan.getVersion() ),
             new Label( "planDescription", plan.getDescription() ),
-            new Label( "myName", "Name: " + myName ).setVisible( !myName.isEmpty() ),
-            new Label( "myRoles", profile.getReportTitle() ),
-            new Label( "myAvail", "Availability: " + myAvail ),
-            new WebMarkupContainer( "myContact" ).add(
-                new ListView<Channel>( "channel", myContacts ) {
-                    @Override
-                    protected void populateItem( ListItem<Channel> item ) {
 
-                        Channel channel = item.getModelObject();
-                        String label = channel.getMedium().getLabel();
-                        String address =
-                            channel.getAddress().isEmpty() ?
-                            AggregatedContact.N_A : channel.getAddress();
-                        item.add(
-                            new WebMarkupContainer( "notEmail" )
-                                .add(
-                                    new Label( "channelType", label + ":" ),
-                                    new Label( "channel", address ) )
-                                .setVisible(
-                                    channel.getAddress().isEmpty() || !"Email".equals( label ) ),
-                            new WebMarkupContainer( "email" )
-                                .add(
-                                    new Label( "channel", address ).add(
-                                        new AttributeModifier(
-                                            "href",
-                                            true,
-                                            new Model<String>( "mailTo:" + address ) ) ) )
-                                .setVisible(
-                                    !channel.getAddress().isEmpty() && "Email".equals( label ) ) );
-                    }
-                }.setRenderBodyOnly( true ) )
-                .setVisible( !actualActors.isEmpty() ),
-            new WebMarkupContainer( "myNoContact" ).setVisible( actualActors.isEmpty() ),
+            newContact( "contact", contact )
+                .add( new Label( "myAvail", contact.getAvailability() ) )
+                .setRenderBodyOnly( true ),
+
             new ListView<ReportSegment>( "phaseLinks", reportSegments ) {
                 @Override
                 protected void populateItem( ListItem<ReportSegment> item ) {
-
                     item.getModelObject().addLinkTo( item );
                 }
             },
@@ -550,78 +472,72 @@ public class ResponderPage extends WebPage {
                     if ( source.getPartSpecs().contains( spec ) )
                         contactList.add( source );
 
+                if ( contactList.isEmpty() )
+                    contactList.add(  new AggregatedContact() );
+
                 specItem.add(
                     new WebMarkupContainer( "specAnchor" )
-                        .add(
-                            new Label(
-                                "spec",
-                                spec.getReportSource( "" ) ).setRenderBodyOnly( true ) )
-                        .add(
-                            new AttributeModifier(
-                                "name", true, new Model<String>( "s_" + spec.hashCode() ) ) ),
+                        .add( new Label( "spec", spec.getReportSource( "" ) ).setRenderBodyOnly(
+                            true ) )
+                        .add( new AttributeModifier( "name",
+                                                     true,
+                                                     new Model<String>( "s_" + spec.hashCode() ) ) ),
 
                     new ListView<AggregatedContact>( "perFlowContact", contactList ) {
                         @Override
-                        protected void populateItem(
-                            ListItem<AggregatedContact> sourceItem ) {
+                        protected void populateItem( ListItem<AggregatedContact> sourceItem ) {
 
-                            AggregatedContact aContact = sourceItem.getModelObject();
-                            AggregatedContact sup = aContact.getSupervisor();
-                            MarkupContainer contact = newContact(
-                                "contact",
-                                aContact.getOrganization(),
-                                aContact.getTitle(),
-                                aContact.getChannels(), aContact.getActorName(),
-                                aContact.getClassifications() );
-                            Component supervisor = newContact(
-                                "supervisor",
-                                sup.getOrganization(),
-                                sup.getTitle(),
-                                sup.getChannels(), sup.getActorName(), sup.getClassifications() ).setVisible( sup.getActor() != null );
+                            AggregatedContact contact = sourceItem.getModelObject();
+                            AggregatedContact supervisor = contact.getSupervisor();
+                            MarkupContainer contactComp = newContact( "contact", contact );
+                            Component superComp = newContact( "supervisor", supervisor )
+                                                      .setVisible( supervisor.getActor() != null );
 
-                            sourceItem.add( contact, supervisor );
+                            sourceItem.add( contactComp, superComp );
                             if ( sourceItem.getIndex() == 0 )
-                                contact.add(
-                                    new AttributeAppender(
-                                        "class", true, new Model<String>( "first" ), " " ) );
+                                contactComp.add( new AttributeAppender( "class",
+                                                                    true,
+                                                                    new Model<String>( "first" ),
+                                                                    " " ) );
                             if ( sourceItem.getIndex() == getViewSize() - 1 ) {
-                                Component component = sup.getActor() == null ? contact : supervisor;
-                                component.add(
-                                    new AttributeAppender(
-                                        "class", true, new Model<String>( "last" ), " " ) );
-                            }
-                        }
-                    } );
+                                Component component = supervisor.getActor() == null ?
+                                                      contactComp : superComp;
+                                component.add( new AttributeAppender( "class",
+                                                                      true,
+                                                                      new Model<String>( "last" ),
+                                                                      " " ) );
+                          }
+                      }
+                  } );
             }
         };
     }
 
-    private static MarkupContainer newContact(
-        String id, Organization organization, String title, List<Channel> channels,
-        String actorName, String classifications ) {
+    private static MarkupContainer newContact( String id, AggregatedContact contact ) {
+        Organization organization = contact.getOrganization();
+        String title = contact.getTitle();
+        List<Channel> channels = contact.getChannels();
 
-        return new WebMarkupContainer( id ).add(
-            new Label(
-                "contact.name", actorName ),
-            new Label( "contact.title", title.isEmpty() ? "" : ", " + title ),
-            new Label(
-                "contact.classification", classifications ),
-            new Label(
-                "contact.organization", organization == null ? "" : organization.toString() ),
-            new WebMarkupContainer( "contactInfos" ).add(
-                new ListView<Channel>(
-                    "contactInfo", channels ) {
-                    @Override
-                    protected void populateItem(
-                        ListItem<Channel> item ) {
+        return new WebMarkupContainer( id )
+            .add( new Label( "contact.name", contact.getActorName() ),
+                  new Label( "contact.title", title.isEmpty() ? "" : ", " + title ),
+                  new Label( "contact.classification", contact.getClassifications() ),
+                  new Label( "contact.organization",
+                             organization == null ? "" : organization.toString() ),
 
-                        Channel channel = item.getModelObject();
-                        item.add(
-                            new Label( "channelType", channel.getMedium().getLabel() + ":" ),
-                            new Label( "channel", channel.getAddress() ) );
-                    }
-                } ).setVisible( !channels.isEmpty() ),
-            new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() ) );
+                  new WebMarkupContainer( "contactInfos" )
+                      .add( new ListView<Channel>( "contactInfo", channels ) {
+                          @Override
+                          protected void populateItem( ListItem<Channel> item ) {
+
+                              Channel channel = item.getModelObject();
+                              item.add( new Label( "channelType",
+                                                   channel.getMedium().getLabel() + ":" ),
+                                        new Label( "channel", channel.getAddress() ) );
+                          }
+                      } ).setVisible( !channels.isEmpty() ),
+
+                  new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() ) );
     }
 
     private static List<ReportSegment> getSegments( PlanService planService, Specable profile ) {
@@ -630,15 +546,13 @@ public class ResponderPage extends WebPage {
         Assignments allAssignments = planService.getAssignments( false );
         Assignments profileAssignments = allAssignments.with( profile );
         Assignments assignedByOthers = profileAssignments.notFrom( profile );
-        for ( Segment segment : assignedByOthers.getSegments() ) {
-            ReportSegment reportSegment = new ReportSegment(
-                planService,
-                profile,
-                result.size() + 1,
-                segment,
-                assignedByOthers.with( segment ) );
-            result.add( reportSegment );
-        }
+        for ( Segment segment : assignedByOthers.getSegments() )
+            result.add( new ReportSegment(
+                                planService,
+                                profile,
+                                result.size() + 1,
+                                segment,
+                                assignedByOthers.with( segment ) ) );
         return result;
     }
 
@@ -832,8 +746,7 @@ public class ResponderPage extends WebPage {
                     reportTask.setType( PROMPTED );
                 }
 
-                List<ReportTask> subs = reportTask.getAllSubtasks();
-                for ( ReportTask task : subs ) {
+                for ( ReportTask task : reportTask.getAllSubtasks() ) {
                     subtasks.add( task );
                     tasks.add( task );
                     task.setType( SUBTASK );
@@ -848,11 +761,9 @@ public class ResponderPage extends WebPage {
                 immediate.setTaskSeq( i++ );
             for ( ReportTask sub : subtasks )
                 sub.setTaskSeq( i++ );
-            Collections.sort(
-                tasks, new Comparator<ReportTask>() {
+            Collections.sort( tasks, new Comparator<ReportTask>() {
                 @Override
                 public int compare( ReportTask o1, ReportTask o2 ) {
-
                     return o1.getTaskSeq() - o2.getTaskSeq();
                 }
             } );
@@ -882,7 +793,8 @@ public class ResponderPage extends WebPage {
                 if ( aggregatedContact == null )
                     map.put( actor, new AggregatedContact( service, beneficiary, contactSpecs ) );
                 else
-                    aggregatedContact.merge( service,
+                    aggregatedContact.merge(
+                        service,
                         beneficiary.getPart().resourceSpec(),
                         beneficiary.getEmployment(),
                         contactSpecs );
@@ -893,7 +805,6 @@ public class ResponderPage extends WebPage {
         }
 
         public int getSeq() {
-
             return seq;
         }
 
@@ -1006,12 +917,12 @@ public class ResponderPage extends WebPage {
                 } else
                     aggregatedFlow.addFlow( flow );
             }
+
             List<AggregatedFlow> result = new ArrayList<AggregatedFlow>( map.values() );
             Collections.sort(
                 result, new Comparator<AggregatedFlow>() {
                 @Override
                 public int compare( AggregatedFlow o1, AggregatedFlow o2 ) {
-
                     return o1.getFormattedLabel().compareToIgnoreCase( o2.getFormattedLabel() );
                 }
             } );
@@ -1019,35 +930,29 @@ public class ResponderPage extends WebPage {
         }
 
         private boolean isStartWithSegment() {
-
             return part.isStartsWithSegment();
         }
 
         private String getEventPhase() {
-
             return lcFirst( String.valueOf( part.getSegment().getEventPhase() ) );
         }
 
         private boolean getCompletionTime() {
-
             Delay completionTime = part.getCompletionTime();
             return completionTime != null && completionTime.getSeconds() != 0;
         }
 
         private String getCompletionString() {
-
             return part.getCompletionTime() == null ?
                 "" :
                 String.valueOf( part.getCompletionTime() );
         }
 
         private boolean isNotification( PlanService planService ) {
-
             return Assignments.isNotification( part, planService );
         }
 
         private boolean isRequest() {
-
             return Assignments.isRequest( part );
         }
 
@@ -1062,22 +967,18 @@ public class ResponderPage extends WebPage {
         }
 
         private String getRepetition() {
-
             return isRepeating() ? String.valueOf( part.getRepeatsEvery() ) : "";
         }
 
         private String getDescription() {
-
             return ensurePeriod( part.getDescription() );
         }
 
         private boolean isRepeating() {
-
             return part.isRepeating();
         }
 
         private String getTriggeringFlowName() {
-
             List<AggregatedFlow> triggeringFlows = getTriggeringFlows();
             return triggeringFlows.isEmpty() ? "" : triggeringFlows.get( 0 ).getLabel();
         }
@@ -1096,18 +997,15 @@ public class ResponderPage extends WebPage {
         }
 
         public void setType( Type type ) {
-
             this.type = type;
         }
 
         private boolean isSubtask() {
-
-            return type == Type.SUBTASK;
+            return type == SUBTASK;
         }
 
         private boolean isImmediate() {
-
-            return type == Type.IMMEDIATE;
+            return type == IMMEDIATE;
         }
 
         private List<Goal> getGains() {
@@ -1131,7 +1029,6 @@ public class ResponderPage extends WebPage {
         }
 
         private String getRoleString() {
-
             return getRoleString( part.resourceSpec() );
         }
 
@@ -1150,7 +1047,6 @@ public class ResponderPage extends WebPage {
         }
 
         private String getTitle() {
-
             return part.getTask();
         }
 
@@ -1212,12 +1108,10 @@ public class ResponderPage extends WebPage {
         }
 
         private Model<String> getLink() {
-
             return new Model<String>( "#t_" + part.getId() );
         }
 
         private String getLabel() {
-
             return "Task " + getSeqString();
         }
 
@@ -1227,27 +1121,22 @@ public class ResponderPage extends WebPage {
         }
 
         public int getTaskSeq() {
-
             return taskSeq;
         }
 
         public void setTaskSeq( int taskSeq ) {
-
             this.taskSeq = taskSeq;
         }
 
         public String getTask() {
-
             return part.getTask();
         }
 
         public List<ReportTask> getSubtasks() {
-
             return Collections.unmodifiableList( subtasks );
         }
 
         private Model<String> getAnchor() {
-
             return new Model<String>( "t_" + part.getId() );
         }
 
@@ -1278,7 +1167,6 @@ public class ResponderPage extends WebPage {
         }
 
         private String getCategoryString() {
-
             Category category = part.getCategory();
             return category == null ? "" : category.getLabel().toLowerCase();
         }
@@ -1301,17 +1189,14 @@ public class ResponderPage extends WebPage {
         }
 
         private String getTeamSpec() {
-
             return new ResourceSpec( part ).getReportTitle();
         }
 
         private boolean isAsTeam() {
-
             return part.isAsTeam();
         }
 
         private List<Attachment> getAttachmentsFrom( AttachmentManager attachmentManager ) {
-
             return attachmentManager.getMediaReferences( part );
         }
 
@@ -1358,12 +1243,16 @@ public class ResponderPage extends WebPage {
         private final Organization organization;
         private final Set<Channel> channels = new HashSet<Channel>();
         private final Set<ResourceSpec> partSpecs = new HashSet<ResourceSpec>();
+        private final Participation participation;
+        private final String actorName;
 
         private AggregatedContact() {
-
             actor = null;
             title = "";
             organization = null;
+            participation = null;
+            actorName = "";
+            supervisor = this;
         }
 
         private AggregatedContact(
@@ -1379,6 +1268,10 @@ public class ResponderPage extends WebPage {
             actor = employment.getActor();
             title = employment.getTitle();
             organization = employment.getOrganization();
+            participation = findParticipation( service, actor );
+            actorName = participation != null ?
+                               participation.getUserFullName( service ) :
+                               actor == null ? "" : actor.getName();
 
             Actor sup = employment.getSupervisor();
             if ( sup == null )
@@ -1395,6 +1288,39 @@ public class ResponderPage extends WebPage {
             merge( service, part.resourceSpec(), employment, contactSpecs );
         }
 
+        private AggregatedContact( PlanService service, ResourceSpec profile ) {
+
+            actor = profile.getActor();
+            participation = findParticipation( service, actor );
+
+            List<Employment> employments = service.findAllEmploymentsForActor( actor );
+            if ( employments.isEmpty() ) {
+                title = "";
+                organization = null;
+            } else {
+                Employment firstEmployment = employments.get( 0 );
+                title = firstEmployment.getTitle();
+                organization = firstEmployment.getOrganization();
+            }
+
+            actorName = participation != null ?
+                               participation.getUserFullName( service ) :
+                               actor == null ? "" : actor.getName();;
+
+            List<ResourceSpec> specs = new ArrayList<ResourceSpec>();
+            for ( Employment employment : employments )
+                merge( service, profile, employment, specs );
+
+        }
+
+        private static Participation findParticipation( PlanService service, Actor actor ) {
+            for ( Participation participation : service.list( Participation.class ) )
+                if ( actor.equals( participation.getActor() ) )
+                    return participation;
+
+            return null;
+        }
+
         public void merge(
             PlanService service, ResourceSpec profile, Employment employment,
             List<ResourceSpec> contactSpecs ) {
@@ -1403,7 +1329,11 @@ public class ResponderPage extends WebPage {
                 if ( profile.narrowsOrEquals( contactSpec, null ) )
                     partSpecs.add( contactSpec );
 
-            channels.addAll( service.findAllChannelsFor( new ResourceSpec( employment ) ) );
+            channels.addAll(
+                participation == null ?
+                    service.findAllChannelsFor( new ResourceSpec( employment ) ) :
+                    participation.getEffectiveChannels()
+            );
         }
 
         private String getClassifications() {
@@ -1411,38 +1341,32 @@ public class ResponderPage extends WebPage {
         }
 
         private String getActorName() {
-            return actor == null ? "" : actor.getName();
+            return actorName;
         }
 
         public AggregatedContact getSupervisor() {
-
             return supervisor;
         }
 
         public String getTitle() {
-
             return title;
         }
 
         public List<Channel> getChannels() {
-
             List<Channel> result = new ArrayList<Channel>( channels );
             Collections.sort( result );
             return result;
         }
 
         public Organization getOrganization() {
-
             return organization;
         }
 
         public Actor getActor() {
-
             return actor;
         }
 
         public List<ResourceSpec> getPartSpecs() {
-
             List<ResourceSpec> specs = new ArrayList<ResourceSpec>( partSpecs );
             Collections.sort( specs );
             return specs;
@@ -1461,15 +1385,19 @@ public class ResponderPage extends WebPage {
 
         @Override
         public int hashCode() {
-
             return actor != null ? actor.hashCode() : 0;
         }
 
         @Override
         public int compareTo( AggregatedContact o ) {
-
             int i = organization.compareTo( o.getOrganization() );
-            return i == 0 ? actor.compareTo( o.getActor() ) : i;
+            return i == 0 ? actorName.compareTo( o.getActorName() ) : i;
+        }
+
+        public String getAvailability() {
+            return actor == null || actor.getAvailability() == null ?
+                   N_A :
+                   actor.getAvailability().toString();
         }
     }
 
@@ -1517,6 +1445,38 @@ public class ResponderPage extends WebPage {
             List<ResourceSpec> result = new ArrayList<ResourceSpec>();
             result.add( new ResourceSpec( spec ) );
             return result;
+        }
+
+        private static boolean isAllowed(
+            Organization committer, Organization beneficiary, Restriction restriction ) {
+
+            if ( restriction == null )
+                return true;
+
+            switch ( restriction ) {
+                case SameTopOrganization:
+                    return ModelObject.isNullOrUnknown( committer )
+                           || ModelObject.isNullOrUnknown( beneficiary )
+                           || committer.getTopOrganization().equals(
+                                beneficiary.getTopOrganization() );
+                case SameOrganization:
+                    return ModelObject.isNullOrUnknown( committer )
+                           || ModelObject.isNullOrUnknown( beneficiary )
+                           || committer.narrowsOrEquals( beneficiary, null )
+                           || beneficiary.narrowsOrEquals( committer, null );
+                case DifferentOrganizations:
+                    return ModelObject.isNullOrUnknown( committer )
+                           || ModelObject.isNullOrUnknown( beneficiary )
+                           || !committer.narrowsOrEquals( beneficiary, null )
+                              && !beneficiary.narrowsOrEquals( committer, null );
+                case DifferentTopOrganizations:
+                    return ModelObject.isNullOrUnknown( committer )
+                           || ModelObject.isNullOrUnknown( beneficiary )
+                           || !committer.getTopOrganization().equals(
+                                beneficiary.getTopOrganization() );
+                default:
+                    return true;
+            }
         }
 
         private String getSourcesString( PlanService service ) {

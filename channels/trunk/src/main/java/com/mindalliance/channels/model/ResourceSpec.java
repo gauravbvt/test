@@ -214,7 +214,7 @@ public class ResourceSpec extends ModelObject implements Specable {
         if ( isAnyRole() )
             sb.append( showActor ? actor.getName() : "someone" );
         else {
-            sb.append( showActor ? actor.getName() + ", " : prefix );
+            sb.append( showActor ? "the " : prefix );
             sb.append( role.getName() );
         }
         if ( !isAnyOrganization() ) {

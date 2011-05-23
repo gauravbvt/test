@@ -22,27 +22,25 @@
             <h2 wicket:id="planDescription" class="description">Plan description</h2>
         </div>
         <div id="about">
-            <h2><span class="seq">About:</span> <span wicket:id="myRoles">{Roles, organizations, jurisdictions}</span></h2>
-			<h3>Contact Info</h3>
-			<ul>
-                <li wicket:id="myName">{user name}</li>
-				<li>How to contact:
-                    <ul wicket:id="myContact">
-                        <span wicket:id="channel">
-                            <li wicket:id="notEmail"><em wicket:id="channelType">Channel:</em>
-                                <span wicket:id="channel">{Contact info}</span></li>
-                            <li wicket:id="email"><em>Email:</em>
-                                <a href="#" wicket:id="channel">{Contact info}</a></li>
-                        </span>
-                    </ul>
-                    <span wicket:id="myNoContact">N/A</span>
-                </li>
-                <li wicket:id="myAvail">{Availability}</li>
-            </ul>
+            <span wicket:id="contact">
+                <h2><span class="seq">About:</span> <span wicket:id="contact.name">{agent name}</span></h2>
+                <h3>Contact Info</h3>
+                <ul>
+                    <li>Role: <span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span></li>
+                    <li>How to contact:
+                        <ul wicket:id="contactInfos">
+                            <li wicket:id="contactInfo">
+                                <em wicket:id="channelType">{channel type}:</em>
+                                <span wicket:id="channel">{channel}</span>
+                            </li>
+                        </ul>
+                        <span wicket:id="noInfo">N/A</span>
+                    </li>
+                    <li>Classification: <span wicket:id="contact.classification">{classification}</span></li>
+                    <li>Availability: <span wicket:id="myAvail">{Availability}</span></li>
+                </ul>
+            </span>
 
-<!--
-            <p>Report any errors or suggestions to <span wicket:id="planners"><a wicket:id="planner" href="#">{planner's coordinate}</a><span wicket:id="listSep">.</span></span></p>
--->
 			<h3>Relevant situations</h3>
             <p>The <span wicket:id="planName" class="plan-name">{plan name}</span> plan provides information sharing guidelines for the following situations:</p>
             <ul class="toc">
@@ -449,7 +447,7 @@
                             <th class="last">Clearance</th>
                         </tr>
                         <span wicket:id="perFlowContact">
-                            <!-- zero of more of the following 2 rows -->
+                            <!-- zero of ore of the following 2 rows -->
                             <tr wicket:id="contact" valign="top" class="contact">
                                 <td class="first" wicket:id="contact.name">{agent name}</td>
                                 <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
