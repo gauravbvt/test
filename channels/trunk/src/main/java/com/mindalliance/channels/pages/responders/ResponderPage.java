@@ -1,6 +1,5 @@
 // Copyright (C) 2010 Mind-Alliance Systems LLC.
 // All rights reserved.
-
 package com.mindalliance.channels.pages.responders;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
@@ -75,10 +74,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * The responder report.  This page is different for every user.
- */
+import static com.mindalliance.channels.pages.responders.ResponderPage.ReportTask.Type.*;
 
+/** The responder report.  This page is different for every user. */
 public class ResponderPage extends WebPage {
 
     private static final Logger LOG = LoggerFactory.getLogger( ResponderPage.class );
@@ -96,22 +94,22 @@ public class ResponderPage extends WebPage {
     private UserService userService;
 
     /**
-     * Called for access without parameters.
-     * Find the actor and plan corresponding to the current user and redirect to that page.
-     * Otherwise, redirect to access denied.
+     * Called for access without parameters. Find the actor and plan corresponding to the current
+     * user and redirect to that page. Otherwise, redirect to access denied.
      */
-    public ResponderPage() {
+    private ResponderPage() {
 
         try {
             PlanService service = createPlanService( user );
             Plan plan = service.getPlan();
-
             setRedirect( true );
             setResponsePage(
                 ResponderPage.class,
-                createParameters( user.isPlanner( plan.getUri() ) ? new ResourceSpec()
-                                                                  : getProfile( service, user ),
-                                  plan.getUri(), plan.getVersion() ) );
+                createParameters(
+                    user.isPlanner( plan.getUri() ) ? new ResourceSpec()
+                                                    : getProfile( service, user ),
+                    plan.getUri(),
+                    plan.getVersion() ) );
 
         } catch ( NotFoundException e ) {
             // User has no responder page
@@ -121,11 +119,10 @@ public class ResponderPage extends WebPage {
     }
 
     public ResponderPage( PageParameters parameters ) {
-        super( parameters );
 
+        super( parameters );
         try {
             String uri = parameters.getString( "plan" );
-
             if ( user.isPlanner( uri ) && parameters.size() == 2 ) {
                 setRedirect( false );
                 setResponsePage( AllResponders.class, parameters );
@@ -133,79 +130,58 @@ public class ResponderPage extends WebPage {
                 PlanService service = initPlanService( uri, parameters.getInt( "v" ) );
                 init( service, getProfile( service, parameters ), parameters );
             }
-
         } catch ( StringValueConversionException e ) {
             LOG.info( "Bad parameter: " + parameters, e );
             throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
-
         } catch ( NotFoundException e ) {
             LOG.info( "Not found: " + parameters, e );
             throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
         }
     }
 
-    private static List<ResourceSpec> actualize(
-                PlanService service, Specable spec, Restriction restriction, Specable origin ) {
-
-
-        Organization org = spec.getOrganization();
-        if ( org != null && !org.isUnknown() && !org.isActual() ) {
-            List<ResourceSpec> result = new ArrayList<ResourceSpec>();
-            for ( ModelEntity entity : service.findAllNarrowingOrEqualTo( org ) )
-                if ( entity.isActual() ) {
-                    Organization actualOrg = (Organization) entity;
-                    if ( restriction == null || isAllowed( origin.getOrganization(),
-                                                           actualOrg,
-                                                           restriction ) )
-                        result.add( new ResourceSpec( spec.getActor(),
-                                                      spec.getRole(),
-                                                      actualOrg,
-                                                      spec.getJurisdiction() ) );
-                }
-
-            if ( result.size() < 2 )
-                return result;
-        }
-
-        List<ResourceSpec> result = new ArrayList<ResourceSpec>();
-        result.add( new ResourceSpec( spec ) );
-
-        return result;
-    }
-
     private static boolean isAllowed(
         Organization committer, Organization beneficiary, Restriction restriction ) {
 
-        if ( restriction != null )
-            switch ( restriction ) {
-                    case SameTopOrganization:
-                        return ModelObject.isNullOrUnknown( committer )
-                                || ModelObject.isNullOrUnknown( beneficiary )
-                                || committer.getTopOrganization()
-                                .equals( beneficiary.getTopOrganization() );
+        if ( restriction == null )
+            return true;
 
-                    case SameOrganization:
-                        return ModelObject.isNullOrUnknown( committer )
-                                || ModelObject.isNullOrUnknown( beneficiary )
-                                || committer.narrowsOrEquals( beneficiary, null )
-                                || beneficiary.narrowsOrEquals( committer, null );
+        switch ( restriction ) {
+            case SameTopOrganization:
+                return ModelObject.isNullOrUnknown( committer )
+                       || ModelObject.isNullOrUnknown( beneficiary )
+                       || committer.getTopOrganization().equals(
+                            beneficiary.getTopOrganization() );
+            case SameOrganization:
+                return ModelObject.isNullOrUnknown( committer )
+                       || ModelObject.isNullOrUnknown( beneficiary )
+                       || committer.narrowsOrEquals( beneficiary, null )
+                       || beneficiary.narrowsOrEquals( committer, null );
+            case DifferentOrganizations:
+                return ModelObject.isNullOrUnknown( committer )
+                       || ModelObject.isNullOrUnknown( beneficiary )
+                       || !committer.narrowsOrEquals( beneficiary, null )
+                          && !beneficiary.narrowsOrEquals( committer, null );
+            case DifferentTopOrganizations:
+                return ModelObject.isNullOrUnknown( committer )
+                       || ModelObject.isNullOrUnknown( beneficiary )
+                       || !committer.getTopOrganization().equals(
+                            beneficiary.getTopOrganization() );
+            default:
+                return true;
+        }
+    }
 
-                    case DifferentOrganizations:
-                        return ModelObject.isNullOrUnknown( committer )
-                                || ModelObject.isNullOrUnknown( beneficiary )
-                                || !committer.narrowsOrEquals( beneficiary, null )
-                                    && !beneficiary.narrowsOrEquals( committer, null );
+    private static List<ElementOfInformation> sortedEOIs( List<ElementOfInformation> result ) {
 
-                    case DifferentTopOrganizations:
-                        return ModelObject.isNullOrUnknown( committer )
-                                || ModelObject.isNullOrUnknown( beneficiary )
-                                || !committer.getTopOrganization()
-                                    .equals( beneficiary.getTopOrganization() );
+        Collections.sort( result, new Comparator<ElementOfInformation>() {
+            @Override
+            public int compare( ElementOfInformation o1, ElementOfInformation o2 ) {
 
-                    default:
-                }
+                return o1.getContent().compareToIgnoreCase( o2.getContent() );
+            }
+        } );
 
-        return true;
+        return result;
     }
 
     //-----------------------------------
@@ -215,18 +191,20 @@ public class ResponderPage extends WebPage {
         if ( planManager.getPlan( uri, version ) == null )
             throw new NotFoundException();
 
-        setDefaultModel( new LoadableDetachableModel<PlanService>() {
-            @Override
-            protected PlanService load() {
-                return new PlanService( planManager, null, userService,
-                                        planManager.getPlan( uri, version ) );
-            }
-        } );
+        setDefaultModel(
+            new LoadableDetachableModel<PlanService>() {
+                @Override
+                protected PlanService load() {
 
+                    return new PlanService(
+                        planManager, null, userService, planManager.getPlan( uri, version ) );
+                }
+            } );
         return (PlanService) getDefaultModelObject();
     }
 
     private PlanService getPlanService() {
+
         return (PlanService) getDefaultModelObject();
     }
 
@@ -234,17 +212,16 @@ public class ResponderPage extends WebPage {
     private void init( PlanService service, ResourceSpec profile, PageParameters parameters ) {
 
         Plan plan = service.getPlan();
-
         // TODO password change fields
-
         List<Actor> actualActors = service.findAllActualActors( profile );
         User assignedUser = userService.getUserNamed( parameters.getString( "user", "" ) );
-        if ( assignedUser == null && !user.isPlanner( plan.getUri() ) ) assignedUser = user;
+        if ( assignedUser == null && !user.isPlanner( plan.getUri() ) )
+            assignedUser = user;
         String myName = assignedUser == null ? "" : assignedUser.getFullName();
         String myAvail;
         List<Channel> myContacts;
         if ( actualActors.isEmpty() ) {
-            myAvail = "N/A";
+            myAvail = AggregatedContact.N_A;
             myContacts = new ArrayList<Channel>();
         } else {
             Actor actor = actualActors.get( 0 );
@@ -257,60 +234,51 @@ public class ResponderPage extends WebPage {
         add(
             new Label( "userName", user.getUsername() ),
             new Label( "personName", profile.displayString( 256 ) ),
-
             new Label( "planName", plan.getName() ),
             new Label( "planName2", plan.getName() ),
             new Label( "planVersion", "v" + plan.getVersion() ),
             new Label( "planDescription", plan.getDescription() ),
-
-            new Label( "myName", "Name: " + myName )
-               .setVisible( !myName.isEmpty() ),
+            new Label( "myName", "Name: " + myName ).setVisible( !myName.isEmpty() ),
             new Label( "myRoles", profile.getReportTitle() ),
             new Label( "myAvail", "Availability: " + myAvail ),
-            new WebMarkupContainer( "myContact" )
-                .add( new ListView<Channel>( "channel", myContacts ) {
-                        @Override
-                        protected void populateItem( ListItem<Channel> item ) {
-                            Channel channel = item.getModelObject();
-                            String label = channel.getMedium().getLabel();
-                            String address = channel.getAddress().isEmpty() ? "N/A"
-                                                                            : channel.getAddress();
-                            item.add( new WebMarkupContainer( "notEmail" ).add( new Label(
-                                "channelType",
-                                label + ":" ), new Label( "channel", address ) ).setVisible(
-                                channel.getAddress().isEmpty() || !label.equals( "Email" ) ),
-                                      new WebMarkupContainer( "email" ).add( new Label( "channel",
-                                                                                        address )
-                                                                                 .add( new AttributeModifier(
-                                                                                     "href",
-                                                                                     true,
-                                                                                     new Model<String>(
-                                                                                         "mailTo:"
-                                                                                         + address ) ) ) )
-                                          .setVisible(
-                                              !channel.getAddress().isEmpty() && label.equals(
-                                                  "Email" ) ) );
-                        }
-                    }.setRenderBodyOnly( true ) )
-                .setVisible( !actualActors.isEmpty() ),
-            new WebMarkupContainer( "myNoContact" )
-                .setVisible( actualActors.isEmpty() ),
+            new WebMarkupContainer( "myContact" ).add(
+                new ListView<Channel>( "channel", myContacts ) {
+                    @Override
+                    protected void populateItem( ListItem<Channel> item ) {
 
+                        Channel channel = item.getModelObject();
+                        String label = channel.getMedium().getLabel();
+                        String address =
+                            channel.getAddress().isEmpty() ?
+                            AggregatedContact.N_A : channel.getAddress();
+                        item.add(
+                            new WebMarkupContainer( "notEmail" )
+                                .add(
+                                    new Label( "channelType", label + ":" ),
+                                    new Label( "channel", address ) )
+                                .setVisible(
+                                    channel.getAddress().isEmpty() || !"Email".equals( label ) ),
+                            new WebMarkupContainer( "email" )
+                                .add(
+                                    new Label( "channel", address ).add(
+                                        new AttributeModifier(
+                                            "href",
+                                            true,
+                                            new Model<String>( "mailTo:" + address ) ) ) )
+                                .setVisible(
+                                    !channel.getAddress().isEmpty() && "Email".equals( label ) ) );
+                    }
+                }.setRenderBodyOnly( true ) )
+                .setVisible( !actualActors.isEmpty() ),
+            new WebMarkupContainer( "myNoContact" ).setVisible( actualActors.isEmpty() ),
             new ListView<ReportSegment>( "phaseLinks", reportSegments ) {
                 @Override
                 protected void populateItem( ListItem<ReportSegment> item ) {
-                    ReportSegment segment = item.getModelObject();
-                    item.add(
-                        new Label( "phaseName", segment.getName() ),
-                        new WebMarkupContainer( "phaseLink" )
-                            .add( new Label( "phaseLinkText", segment.getTitle() )
-                                      .setRenderBodyOnly( true ) )
-                            .add( new AttributeModifier( "href", true, segment.getLink() ) ) );
+
+                    item.getModelObject().addLinkTo( item );
                 }
             },
-
-            newPhases( reportSegments )
-        );
+            newPhases( reportSegments ) );
     }
 
     //-----------------------------------
@@ -319,8 +287,8 @@ public class ResponderPage extends WebPage {
         return new ListView<ReportSegment>( "phases", segments ) {
             @Override
             protected void populateItem( ListItem<ReportSegment> item ) {
-                ReportSegment segment = item.getModelObject();
 
+                ReportSegment segment = item.getModelObject();
                 item.add(
                     new WebMarkupContainer( "phaseAnchor" )
                         .add( new Label( "phaseText", segment.getName() ) )
@@ -330,28 +298,20 @@ public class ResponderPage extends WebPage {
                     new Label( "context", segment.getContext() ),
                     new Label( "segDesc", ensurePeriod( segment.getDescription() ) )
                         .setVisible( !segment.getDescription().isEmpty() ),
-
                     new Label( "phaseSeq", Integer.toString( segment.getSeq() ) ),
-
                     new WebMarkupContainer( "routineDiv" )
                         .add( newTaskLinks( segment.getImmediates() ) )
                         .setVisible( !segment.getImmediates().isEmpty() ),
-
                     newInputDiv( segment.getPrompted() ),
-
-                    newDocSection(
-                        segment.getAttachmentsFrom( planManager.getAttachmentManager() ) ),
+                    newDocSection( segment.getAttachmentsFrom( planManager.getAttachmentManager() ) ),
 
                     newTasks( segment, segment.getTasks() ),
-
                     new WebMarkupContainer( "contactList" )
                         .add(
                             new Label( "contactSeq", segment.getContactSeq() ),
                             new Label( "contactTitle", segment.getName() ),
-                            newContacts( segment.getContacts(), segment.getContactSpecs() )
-                        )
-                        .setVisible( !segment.getContacts().isEmpty() )
-                    );
+                            newContacts( segment.getContacts(), segment.getContactSpecs() ) )
+                        .setVisible( !segment.getContacts().isEmpty() ) );
             }
         };
     }
@@ -362,47 +322,36 @@ public class ResponderPage extends WebPage {
         return new ListView<ReportTask>( "tasks", tasks ) {
             @Override
             protected void populateItem( ListItem<ReportTask> item ) {
+
                 ReportTask task = item.getModelObject();
-
                 PlanService planService = getPlanService();
-
                 // TODO back link to phase
-
-                item.add( new WebMarkupContainer( "taskAnchor" )
-                              .add( new Label( "taskName", task.getTitle() ) )
-                              .add( new AttributeModifier( "name", true, task.getAnchor() ) ),
-
-                          new WebMarkupContainer( "backTask" ).add(
-                              new AttributeModifier( "href", true, segment.getLink() ) ),
-
-                          new Label( "taskSeq", task.getSeqString() ),
-                          new Label( "taskSummary", lcFirst( task.getTaskSummary() ) ),
-                          new Label( "taskRole", ensurePeriod( task.getRoleString() ) ),
-
-                          new Label( "taskLoc", task.getLocationString() )
-                              .setVisible( task.getLocation() != null ),
-
-                          newPromptedByDiv( task, planService ),
-                          newDetailsDiv( task ),
-
-                          new WebMarkupContainer( "prohibited" )
-                              .setVisible( task.isProhibited() ),
-
-                          new WebMarkupContainer( "teamDiv" )
-                              .add( new Label( "teamSpec", task.getTeamSpec() ) )
-                              .setVisible( task.isAsTeam() ),
-
-                          new WebMarkupContainer( "subtaskDiv" )
-                              .add( newTaskLinks( task.getSubtasks() ) )
-                              .setVisible( !task.getSubtasks().isEmpty() ),
-
-                          newIncomingFlows( "criticalDiv", task.getInputs() ),
-                          newOutgoingFlows( "distribDiv", task.getOutgoing() ),
-                          newOutgoingFlows( "taskRfiDiv", task.getRequests() ),
-                          newOutgoingFlows( "failDiv", task.getFailures() ),
-
-                          newDocSection( task.getAttachmentsFrom(
-                                                planService.getAttachmentManager() ) ) );
+                item.add(
+                    new WebMarkupContainer( "taskAnchor" )
+                        .add( new Label( "taskName", task.getTitle() ) )
+                        .add( new AttributeModifier( "name", true, task.getAnchor() ) ),
+                    new WebMarkupContainer( "backTask" )
+                        .add( new AttributeModifier( "href", true, segment.getLink() ) ),
+                    new Label( "taskSeq", task.getSeqString() ),
+                    new Label( "taskSummary", lcFirst( task.getTaskSummary() ) ),
+                    new Label( "taskRole", ensurePeriod( task.getRoleString() ) ),
+                    new Label( "taskLoc", task.getLocationString() )
+                        .setVisible( task.getLocation() != null ),
+                    newPromptedByDiv( task, planService ),
+                    newDetailsDiv( task ),
+                    new WebMarkupContainer( "prohibited" ).setVisible( task.isProhibited() ),
+                    new WebMarkupContainer( "teamDiv" )
+                        .add( new Label( "teamSpec", task.getTeamSpec() ) )
+                        .setVisible( task.isAsTeam() ),
+                    new WebMarkupContainer( "subtaskDiv" )
+                        .add( newTaskLinks( task.getSubtasks() ) )
+                        .setVisible( !task.getSubtasks().isEmpty() ),
+                    newIncomingFlows( task.getInputs() ),
+                    newOutgoingFlows( "distribDiv", task.getOutgoing() ),
+                    newOutgoingFlows( "taskRfiDiv", task.getRequests() ),
+                    newOutgoingFlows( "failDiv", task.getFailures() ),
+                    newDocSection(
+                        task.getAttachmentsFrom( planService.getAttachmentManager() ) ) );
             }
         };
     }
@@ -411,58 +360,48 @@ public class ResponderPage extends WebPage {
 
         List<Goal> risks = task.getRisks();
         List<Goal> gains = task.getGains();
-
         return new WebMarkupContainer( "details" )
-            .add( new Label( "instruct", task.getDescription() )
-                    .setVisible( !task.getDescription().isEmpty() ),
-
-                  new WebMarkupContainer( "routineTask" )
-                      .add( new Label( "taskRecur",
-                                       task.isRepeating() ? "It is repeated every "
-                                                            + task.getRepetition() + '.' : "" )
-                                .setVisible( task.isRepeating() ) )
-                      .setVisible( task.isImmediate() ),
-
-                  new WebMarkupContainer( "taskDuration" )
-                      .add( new Label( "dur", task.getCompletionString() ) )
-                      .setVisible( task.getCompletionTime() ),
-
-                  new WebMarkupContainer( "term1" )
-                      .add( new Label( "eventPhase", task.getEventPhase() ) )
-                      .setVisible( task.isStartWithSegment() ),
+            .add( new Label( "instruct",
+                             task.getDescription() ).setVisible( !task.getDescription().isEmpty() ),
+                  new WebMarkupContainer( "routineTask" ).add( new Label( "taskRecur",
+                                                                          task.isRepeating() ?
+                                                                          "It is repeated every "
+                                                                          + task.getRepetition()
+                                                                          + '.' :
+                                                                          "" ).setVisible( task.isRepeating() ) ).setVisible(
+                      task.isImmediate() ),
+                  new WebMarkupContainer( "taskDuration" ).add( new Label( "dur",
+                                                                           task.getCompletionString() ) ).setVisible(
+                      task.getCompletionTime() ),
+                  new WebMarkupContainer( "term1" ).add( new Label( "eventPhase",
+                                                                    task.getEventPhase() ) ).setVisible(
+                      task.isStartWithSegment() ),
 
                   // TODO super-event override notice
-                  new WebMarkupContainer( "superNote" )
-                      .setVisible( false ),
+                  new WebMarkupContainer( "superNote" ).setVisible( false ),
 
-                  new WebMarkupContainer( "riskDiv" )
-                      .add( new ListView<Goal>( "risks", risks ) {
-                                @Override
-                                protected void populateItem( ListItem<Goal> item ) {
-                                    item.add( new Label( "type",
-                                                         item.getModelObject().getPartialTitle() ) );
-                                }
-                            },
+                  new WebMarkupContainer( "riskDiv" ).add( new ListView<Goal>( "risks", risks ) {
+                      @Override
+                      protected void populateItem( ListItem<Goal> item ) {
 
-                            new ListView<Goal>( "gains", gains ) {
-                                @Override
-                                protected void populateItem(
-                                    ListItem<Goal> item ) {
-                                    item.add( new Label( "type",
-                                                         item.getModelObject().getFullTitle() ) );
-                                }
-                            },
+                          item.add( new Label( "type", item.getModelObject().getPartialTitle() ) );
+                      }
+                                                           }, new ListView<Goal>( "gains", gains ) {
+                                                               @Override
+                                                               protected void populateItem(
+                                                                   ListItem<Goal> item ) {
 
-                            // TODO Add consequences of task failure
-                            new WebMarkupContainer( "conseqs" ).setVisible( false ) )
+                                                                   item.add( new Label( "type",
+                                                                                        item.getModelObject().getFullTitle() ) );
+                                                               }
+                                                           },
+                                                           // TODO Add consequences of task failure
+                                                           new WebMarkupContainer( "conseqs" ).setVisible(
+                                                               false )
+                  ).setVisible( !risks.isEmpty() || !gains.isEmpty() ),
 
-                      .setVisible( !risks.isEmpty() || !gains.isEmpty() ),
-
-                  new WebMarkupContainer( "subTask" )
-                      .add( newSimpleEoiList( task.getStartingEois() ) )
-                      .setVisible( task.isSubtask() )
-
-            )
+                  new WebMarkupContainer( "subTask" ).add( newSimpleEoiList( task.getStartingEois() ) ).setVisible(
+                      task.isSubtask() ) )
 
             .setVisible( !risks.isEmpty() || !gains.isEmpty() || task.isStartWithSegment()
                          || task.isImmediate() || task.isSubtask() || task.getCompletionTime() );
@@ -470,42 +409,39 @@ public class ResponderPage extends WebPage {
 
     private static Component newPromptedByDiv( ReportTask task, PlanService planService ) {
 
-        return new WebMarkupContainer( "promptedBy" )
-            .add( new WebMarkupContainer( "notifTask" )
-                      .add( new Label( "taskType", task.getCategoryString() )
-                                .setRenderBodyOnly( true ),
-                            new Label( "taskRecur", task.getRepetition() )
-                                .setVisible( task.isRepeating() ),
-                            new Label( "reqFlow",
-                                       task.getTriggeringFlowName() ),
-                            new Label( "reqFlowSrc", task.getTriggeringSources( planService ) ),
-                            newSimpleEoiList( task.getStartingEois() ) )
-                      .setVisible( task.isNotification( planService ) ),
+        return new WebMarkupContainer( "promptedBy" ).add(
+            new WebMarkupContainer( "notifTask" )
+                .add(
+                    new Label( "taskType", task.getCategoryString() ).setRenderBodyOnly( true ),
+                    new Label( "taskRecur", task.getRepetition() ).setVisible( task.isRepeating() ),
+                    new Label( "reqFlow", task.getTriggeringFlowName() ),
+                    new Label( "reqFlowSrc", task.getTriggeringSources( planService ) ),
+                    newSimpleEoiList( task.getStartingEois() ) )
+                .setVisible( task.isNotification( planService ) ),
 
-                  new WebMarkupContainer( "reqTask" )
-                      .add( new Label( "taskType", task.getCategoryString() )
-                                .setRenderBodyOnly( true ),
-                            new Label( "reqFlow", task.getTriggeringFlowName() ),
-                            new Label( "reqFlowSrc",
-                                        task.getTriggeringSources( planService ) ) )
-                      .setVisible( task.isRequest() ) )
-
-            .setVisible( task.isNotification( planService ) || task.isRequest() );
+            new WebMarkupContainer( "reqTask" )
+                .add(
+                    new Label(
+                        "taskType", task.getCategoryString() ).setRenderBodyOnly( true ),
+                    new Label( "reqFlow", task.getTriggeringFlowName() ),
+                    new Label( "reqFlowSrc", task.getTriggeringSources( planService ) ) ).setVisible(
+                    task.isRequest() ) )
+                .setVisible( task.isNotification( planService ) || task.isRequest() );
     }
 
     private static String lcFirst( String phrase ) {
+
         if ( phrase.length() < 2 )
             return phrase;
-
         return ChannelsUtils.smartUncapitalize( phrase );
     }
 
     private static String ensurePeriod( String sentence ) {
-        return sentence == null
-            || sentence.isEmpty()
-            || sentence.endsWith( "." )
-            || sentence.endsWith( ";" ) ? sentence
-                                        : sentence + '.';
+
+        return sentence == null || sentence.isEmpty() || sentence.endsWith( "." )
+               || sentence.endsWith( ";" ) ?
+                    sentence :
+                    sentence + '.';
     }
 
     private Component newOutgoingFlows( String id, final List<AggregatedFlow> flows ) {
@@ -515,38 +451,30 @@ public class ResponderPage extends WebPage {
                 new ListView<AggregatedFlow>( "perFlow", flows ) {
                     @Override
                     protected void populateItem( ListItem<AggregatedFlow> item ) {
-                        AggregatedFlow flow = item.getModelObject();
 
+                        AggregatedFlow flow = item.getModelObject();
                         item.add(
                             new Label( "flowName2", flow.getFormattedLabel() ),
-                            new Label( "flowTargets", ensurePeriod( flow.getSourcesString( getPlanService() ) ) ),
+                            new Label(
+                                "flowTargets",
+                                ensurePeriod( flow.getSourcesString( getPlanService() ) ) ),
                             new Label( "flowTiming", lcFirst( flow.getTiming() ) ),
-                            new WebMarkupContainer( "critical" )
-                                .setVisible( flow.isCritical() ),
-                            new WebMarkupContainer( "eoisRow" )
-                                .add( newEoiList( flow.getElementsOfInformation() ) )
-                                .setRenderBodyOnly( true )
-                                .setVisible( flow.hasEois() ),
+                            new WebMarkupContainer( "critical" ).setVisible( flow.isCritical() ),
+                            new WebMarkupContainer( "eoisRow" ).add( newEoiList( flow.getElementsOfInformation() ) ).setRenderBodyOnly(
+                                true ).setVisible( flow.hasEois() ),
 
-                            new WebMarkupContainer( "flowEnding" )
-                                .setVisible( flow.isTerminatingToSource() ),
+                            new WebMarkupContainer( "flowEnding" ).setVisible( flow.isTerminatingToSource() ),
 
                             // TODO ask JF about where to get this
-                            new WebMarkupContainer( "noContext" )
-                                .setVisible( false )
-
-                        );
+                            new WebMarkupContainer( "noContext" ).setVisible( false ) );
                     }
-                }
-                    .setRenderBodyOnly( true )
-
-
-            )
+                }.setRenderBodyOnly( true ) )
             .setVisible( !flows.isEmpty() );
     }
 
     //-----------------------------------
     private static Component newSimpleEoiList( List<ElementOfInformation> eois ) {
+
         return new WebMarkupContainer( "eois" )
             .add( newEoiList( eois ) )
             .setVisible( !eois.isEmpty() );
@@ -554,82 +482,58 @@ public class ResponderPage extends WebPage {
 
     private static ListView<ElementOfInformation> newEoiList(
         final List<ElementOfInformation> eois ) {
+
         return new ListView<ElementOfInformation>( "eoi", eois ) {
             @Override
             protected void populateItem( ListItem<ElementOfInformation> item ) {
+
                 ElementOfInformation eoi = item.getModelObject();
-                item.add( new Label( "eoi.name", eoi.getContent() ),
-                          new Label( "eoi.desc",
-                                     notAvailable( ensurePeriod( eoi.getDescription() ) ) ),
-                          new Label( "eoi.handling", notAvailable( eoi.getSpecialHandling() ) ),
-                          new Label( "eoi.class",
-                                     getClassificationString( eoi.getClassifications() ) ) );
+                item.add(
+                    new Label( "eoi.name", eoi.getContent() ),
+                    new Label( "eoi.desc", notAvailable( ensurePeriod( eoi.getDescription() ) ) ),
+                    new Label( "eoi.handling", notAvailable( eoi.getSpecialHandling() ) ),
+                    new Label( "eoi.class", getClassificationString( eoi.getClassifications() ) ) );
+
                 if ( item.getIndex() == 0 )
-                    item.add( new AttributeAppender( "class",
-                                                     true,
-                                                     new Model<String>( "first" ),
-                                                     " " ) );
+                    item.add(
+                        new AttributeAppender( "class", true, new Model<String>( "first" ), " " ) );
                 if ( item.getIndex() == getViewSize() - 1 )
-                    item.add( new AttributeAppender( "class",
-                                                     true,
-                                                     new Model<String>( "last" ),
-                                                     " " ) );
+                    item.add(
+                        new AttributeAppender( "class", true, new Model<String>( "last" ), " " ) );
             }
         };
     }
 
     private static String notAvailable( String description ) {
-        return description == null || description.isEmpty() ? "N/A" : description ;
+
+        return description == null || description.isEmpty() ? AggregatedContact.N_A : description;
     }
 
     //-----------------------------------
     private static String getClassificationString( List<Classification> classifications ) {
 
-        if ( classifications.isEmpty() )
-            return "N/A";
-
-        StringWriter w = new StringWriter();
-        for ( int i = 0; i < classifications.size(); i++ ) {
-            Classification classification = classifications.get( i );
-            w.append( classification.toString() );
-            if ( i == classifications.size() - 2 )
-                w.append( " or " );
-            else if ( i != classifications.size() - 1 )
-                w.append( ", " );
-        }
-
-        return w.toString();
+        return classifications.isEmpty() ? AggregatedContact.N_A : listToString( classifications );
     }
 
-    private Component newIncomingFlows( String id, final List<AggregatedFlow> flows ) {
-        return new WebMarkupContainer( id )
+    private Component newIncomingFlows( final List<AggregatedFlow> flows ) {
+
+        return new WebMarkupContainer( "criticalDiv" )
             .add(
                 new ListView<AggregatedFlow>( "perFlow", flows ) {
                     @Override
                     protected void populateItem( ListItem<AggregatedFlow> item ) {
-                        AggregatedFlow flow = item.getModelObject();
 
+                        AggregatedFlow flow = item.getModelObject();
                         item.add(
                             new Label( "flowName2", flow.getFormattedLabel() ),
                             new Label( "flowSources", flow.getSourcesString( getPlanService() ) ),
                             new Label( "flowTiming", lcFirst( flow.getTiming() ) ),
-                            new WebMarkupContainer( "critical" )
-                                .setVisible( flow.isCritical() ),
-                            new WebMarkupContainer( "eoisRow" )
-                                .add( newEoiList( flow.getElementsOfInformation() ) )
-                                .setRenderBodyOnly( true )
-                                .setVisible( flow.hasEois() ),
-
-                            new WebMarkupContainer( "flowEnding" )
-                                .setVisible( flow.isTerminatingToTarget() )
-
-                        );
+                            new WebMarkupContainer( "critical" ).setVisible( flow.isCritical() ),
+                            new WebMarkupContainer( "eoisRow" ).add( newEoiList( flow.getElementsOfInformation() ) ).setRenderBodyOnly(
+                                true ).setVisible( flow.hasEois() ),
+                            new WebMarkupContainer( "flowEnding" ).setVisible( flow.isTerminatingToTarget() ) );
                     }
-                }
-                    .setRenderBodyOnly( true )
-
-
-            )
+                }.setRenderBodyOnly( true ) )
             .setVisible( !flows.isEmpty() );
     }
 
@@ -639,102 +543,102 @@ public class ResponderPage extends WebPage {
         return new ListView<ResourceSpec>( "group", contactSpecs ) {
             @Override
             protected void populateItem( ListItem<ResourceSpec> specItem ) {
+
                 ResourceSpec spec = specItem.getModelObject();
                 final List<AggregatedContact> contactList = new ArrayList<AggregatedContact>();
                 for ( AggregatedContact source : sources )
                     if ( source.getPartSpecs().contains( spec ) )
-                            contactList.add( source );
+                        contactList.add( source );
 
                 specItem.add(
                     new WebMarkupContainer( "specAnchor" )
-                        .add( new Label( "spec", spec.getReportSource( "" ) )
-                                .setRenderBodyOnly( true ) )
-                        .add( new AttributeModifier( "name", true, new Model<String>(
-                            "s_" + spec.hashCode() ) ) ),
+                        .add(
+                            new Label(
+                                "spec",
+                                spec.getReportSource( "" ) ).setRenderBodyOnly( true ) )
+                        .add(
+                            new AttributeModifier(
+                                "name", true, new Model<String>( "s_" + spec.hashCode() ) ) ),
+
                     new ListView<AggregatedContact>( "perFlowContact", contactList ) {
                         @Override
-                        protected void populateItem( ListItem<AggregatedContact> sourceItem ) {
+                        protected void populateItem(
+                            ListItem<AggregatedContact> sourceItem ) {
+
                             AggregatedContact aContact = sourceItem.getModelObject();
                             AggregatedContact sup = aContact.getSupervisor();
-
-                            MarkupContainer contact = newContact( "contact",
-                                                                aContact.getOrganization(),
-                                                                aContact.getTitle(),
-                                                                aContact.getActor(),
-                                                                aContact
-                                                                    .getChannels() );
-                            Component supervisor = newContact( "supervisor",
-                                                             sup.getOrganization(),
-                                                             sup.getTitle(),
-                                                             sup.getActor(),
-                                                             sup.getChannels() )
-                                .setVisible( sup.getActor() != null );
+                            MarkupContainer contact = newContact(
+                                "contact",
+                                aContact.getOrganization(),
+                                aContact.getTitle(),
+                                aContact.getChannels(), aContact.getActorName(),
+                                aContact.getClassifications() );
+                            Component supervisor = newContact(
+                                "supervisor",
+                                sup.getOrganization(),
+                                sup.getTitle(),
+                                sup.getChannels(), sup.getActorName(), sup.getClassifications() ).setVisible( sup.getActor() != null );
 
                             sourceItem.add( contact, supervisor );
-
                             if ( sourceItem.getIndex() == 0 )
-                                contact.add( new AttributeAppender( "class",
-                                                                  true,
-                                                                  new Model<String>(
-                                                                      "first" ),
-                                                                  " " ) );
+                                contact.add(
+                                    new AttributeAppender(
+                                        "class", true, new Model<String>( "first" ), " " ) );
                             if ( sourceItem.getIndex() == getViewSize() - 1 ) {
-                                Component component =
-                                    sup.getActor() == null ? contact : supervisor;
-                                component.add( new AttributeAppender( "class",
-                                                                    true,
-                                                                    new Model<String>(
-                                                                        "last" ),
-                                                                    " " ) );
+                                Component component = sup.getActor() == null ? contact : supervisor;
+                                component.add(
+                                    new AttributeAppender(
+                                        "class", true, new Model<String>( "last" ), " " ) );
                             }
                         }
                     } );
             }
         };
-
-
     }
 
     private static MarkupContainer newContact(
-        String id, Organization organization, String title, Actor actor, List<Channel> channels ) {
+        String id, Organization organization, String title, List<Channel> channels,
+        String actorName, String classifications ) {
 
-        return new WebMarkupContainer( id )
-            .add( new Label( "contact.name", actor == null ? "" : actor.getName() ),
-                  new Label( "contact.title", title.isEmpty() ? "" : ", " + title ),
-                  new Label( "contact.classification",
-                             actor == null ? ""
-                                     : getClassificationString( actor.getClassifications() ) ),
-                  new Label( "contact.organization",
-                             organization == null ? "" : organization.toString() ),
+        return new WebMarkupContainer( id ).add(
+            new Label(
+                "contact.name", actorName ),
+            new Label( "contact.title", title.isEmpty() ? "" : ", " + title ),
+            new Label(
+                "contact.classification", classifications ),
+            new Label(
+                "contact.organization", organization == null ? "" : organization.toString() ),
+            new WebMarkupContainer( "contactInfos" ).add(
+                new ListView<Channel>(
+                    "contactInfo", channels ) {
+                    @Override
+                    protected void populateItem(
+                        ListItem<Channel> item ) {
 
-                  new WebMarkupContainer( "contactInfos" )
-                      .add( new ListView<Channel>( "contactInfo", channels ) {
-                          @Override
-                          protected void populateItem( ListItem<Channel> item ) {
-                              Channel channel = item.getModelObject();
-                              item.add( new Label( "channelType",
-                                                   channel.getMedium().getLabel() + ":" ),
-                                        new Label( "channel", channel.getAddress() ) );
-                          }
-                      } ).setVisible( !channels.isEmpty() ),
-
-                  new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() ) );
+                        Channel channel = item.getModelObject();
+                        item.add(
+                            new Label( "channelType", channel.getMedium().getLabel() + ":" ),
+                            new Label( "channel", channel.getAddress() ) );
+                    }
+                } ).setVisible( !channels.isEmpty() ),
+            new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() ) );
     }
 
     private static List<ReportSegment> getSegments( PlanService planService, Specable profile ) {
-        List<ReportSegment> result = new ArrayList<ReportSegment>();
 
+        List<ReportSegment> result = new ArrayList<ReportSegment>();
         Assignments allAssignments = planService.getAssignments( false );
         Assignments profileAssignments = allAssignments.with( profile );
         Assignments assignedByOthers = profileAssignments.notFrom( profile );
         for ( Segment segment : assignedByOthers.getSegments() ) {
-            ReportSegment reportSegment =
-                new ReportSegment(
-                    planService, profile,
-                    result.size() + 1, segment, assignedByOthers.with( segment ) );
+            ReportSegment reportSegment = new ReportSegment(
+                planService,
+                profile,
+                result.size() + 1,
+                segment,
+                assignedByOthers.with( segment ) );
             result.add( reportSegment );
         }
-
         return result;
     }
 
@@ -742,60 +646,61 @@ public class ResponderPage extends WebPage {
     private Component newInputDiv( List<ReportTask> inputs ) {
 
         return new WebMarkupContainer( "inputDiv" )
-           .add( new ListView<ReportTask>( "inputLinks", inputs ) {
-               @Override
-               protected void populateItem( ListItem<ReportTask> item ) {
-                   ReportTask task = item.getModelObject();
-                   item.add( new ListView<AggregatedFlow>( "flow", task.getTriggeringFlows() ) {
-                       @Override
-                       protected void populateItem( ListItem<AggregatedFlow> flowItem ) {
-                           AggregatedFlow flow = flowItem.getModelObject();
-                           PlanService service = getPlanService();
-                           flowItem.add( new WebMarkupContainer( "nFlow" ).add( new Label(
-                               "flowName",
-                               flow.getLabel() ), new Label( "flowSources", flow.getSourcesString(
-                               service ) ) ).setVisible( !flow.isAskedFor() ),
-                                         new WebMarkupContainer( "rFlow" ).add( new Label(
-                                             "flowName",
-                                             flow.getLabel() ), new Label( "flowSources",
-                                                                           flow.getSourcesString(
-                                                                               service ) ) )
-                                             .setVisible( flow.isAskedFor() )
+            .add(
+                new ListView<ReportTask>( "inputLinks", inputs ) {
+                    @Override
+                    protected void populateItem( ListItem<ReportTask> item ) {
 
-                           );
-                       }
-                   }.setRenderBodyOnly( true ),
-                             new Label( "linkName", task.getTitle() ),
-                             newTaskLink( task ) );
-               }
-           }
+                        ReportTask task = item.getModelObject();
+                        item.add(
+                            new ListView<AggregatedFlow>( "flow", task.getTriggeringFlows() ) {
+                                @Override
+                                protected void populateItem( ListItem<AggregatedFlow> flowItem ) {
 
-           )
-           .setVisible( !inputs.isEmpty() );
+                                    AggregatedFlow flow = flowItem.getModelObject();
+                                    PlanService service = getPlanService();
+                                    flowItem.add(
+                                        new WebMarkupContainer( "nFlow" ).add(
+                                            new Label( "flowName", flow.getLabel() ), new Label(
+                                            "flowSources",
+                                            flow.getSourcesString( service ) ) ).setVisible( !flow.isAskedFor() ),
+                                        new WebMarkupContainer( "rFlow" ).add(
+                                            new Label( "flowName", flow.getLabel() ), new Label(
+                                            "flowSources",
+                                            flow.getSourcesString( service ) ) ).setVisible( flow.isAskedFor() ) );
+                                }
+                            }.setRenderBodyOnly( true ),
+
+                            new Label( "linkName", task.getTitle() ), newTaskLink( task ) );
+                    }
+                } )
+            .setVisible( !inputs.isEmpty() );
     }
 
     //-----------------------------------
     private static Component newTaskLink( ReportTask task ) {
+
         return new WebMarkupContainer( "link" )
-            .add(
-                new Label( "linkValue", task.getLabel() )
-            )
+            .add( new Label( "linkValue", task.getLabel() ) )
             .add( new AttributeModifier( "href", true, task.getLink() ) );
     }
 
     //-----------------------------------
     private static Component newDocSection( final List<Attachment> attachments ) {
+
         return new WebMarkupContainer( "documents" )
-           .add( new ListView<Attachment>( "document", attachments ) {
-               @Override
-               protected void populateItem( ListItem<Attachment> item ) {
-                   Attachment attachment = item.getModelObject();
-                   item.add( new ExternalLink( "docLink",
-                                               attachment.getUrl(),
-                                               attachment.getLabel() ) );
-               }
-           } )
-           .setVisible( !attachments.isEmpty() );
+            .add(
+                new ListView<Attachment>( "document", attachments ) {
+                    @Override
+                    protected void populateItem( ListItem<Attachment> item ) {
+
+                        Attachment attachment = item.getModelObject();
+                        item.add(
+                            new ExternalLink(
+                                "docLink", attachment.getUrl(), attachment.getLabel() ) );
+                    }
+                } )
+            .setVisible( !attachments.isEmpty() );
     }
 
     //-----------------------------------
@@ -804,32 +709,30 @@ public class ResponderPage extends WebPage {
         return new ListView<ReportTask>( "links", routines ) {
             @Override
             protected void populateItem( ListItem<ReportTask> item ) {
+
                 ReportTask task = item.getModelObject();
-                item.add(
-                    new Label( "linkName", task.getTask() ),
-                    newTaskLink( task ) );
+                item.add( new Label( "linkName", task.getTask() ), newTaskLink( task ) );
             }
         };
     }
 
-    public static String listToString( List<?> list ) {
-        StringWriter writer = new StringWriter();
+    private static String listToString( List<?> list ) {
 
+        StringWriter w = new StringWriter();
         for ( int i = 0; i < list.size(); i++ ) {
-            writer.append( String.valueOf( list.get( i ) ) );
+            w.append( String.valueOf( list.get( i ) ) );
             if ( i == list.size() - 2 )
-                writer.append( " or " );
+                w.append( " or " );
             else if ( i != list.size() - 1 )
-                writer.append( ", " );
+                w.append( ", " );
         }
-
-        return writer.toString();
+        return w.toString();
     }
 
     //-----------------------------------
     public static PageParameters createParameters( Specable profile, String uri, int version ) {
-        PageParameters result = new PageParameters();
 
+        PageParameters result = new PageParameters();
         result.put( "plan", uri );
         result.put( "v", version );
         if ( profile != null ) {
@@ -842,26 +745,26 @@ public class ResponderPage extends WebPage {
             if ( profile.getJurisdiction() != null )
                 result.put( "place", profile.getJurisdiction().getId() );
         }
-
         return result;
     }
 
     //-----------------------------------
     private static ResourceSpec getProfile( PlanService service, PageParameters parameters )
         throws NotFoundException {
-
         // TODO check read permission
-
         try {
             Actor actor = parameters.containsKey( "agent" ) ?
-                        service.find( Actor.class, parameters.getLong( "agent" ) ) : null;
+                service.find( Actor.class, parameters.getLong( "agent" ) ) :
+                null;
             Role role = parameters.containsKey( "role" ) ?
-                        service.find( Role.class, parameters.getLong( "role" ) ) : null;
+                service.find( Role.class, parameters.getLong( "role" ) ) :
+                null;
             Organization organization = parameters.containsKey( "org" ) ?
-                        service.find( Organization.class, parameters.getLong( "org" ) ) : null;
+                service.find( Organization.class, parameters.getLong( "org" ) ) :
+                null;
             Place jurisdiction = parameters.containsKey( "place" ) ?
-                        service.find( Place.class, parameters.getLong( "place" ) ) : null;
-
+                service.find( Place.class, parameters.getLong( "place" ) ) :
+                null;
             return new ResourceSpec( actor, role, organization, jurisdiction );
 
         } catch ( StringValueConversionException ignored ) {
@@ -879,45 +782,36 @@ public class ResponderPage extends WebPage {
 
         return new ResourceSpec( participation.getActor(), null, null, null );
     }
-
     //-----------------------------------
+
     /**
      * Find a plan service for a user.
+     *
      * @param user the logged in user
      * @return a service for the first readable plan in which the user is an active participant or a
-     * planner.
+     *         planner.
      * @throws NotFoundException when no adequate plan was found
      */
     private PlanService createPlanService( User user ) throws NotFoundException {
+
         for ( Plan readablePlan : planManager.getReadablePlans( user ) ) {
             PlanService service = new PlanService( planManager, null, userService, readablePlan );
-
             if ( user.isPlanner( readablePlan.getUri() )
                  || service.findParticipation( user.getUsername() ) != null )
                 return service;
         }
-
-        throw new NotFoundException();
-    }
-
-    //-----------------------------------
-    private PlanService createPlanService( String uri, int version ) throws NotFoundException {
-        for ( Plan plan : planManager.getPlansWithUri( uri ) )
-            if ( plan.getVersion() == version )
-                return new PlanService( planManager, null, userService, plan );
-
         throw new NotFoundException();
     }
 
     //================================================
     private static class ReportSegment implements Serializable {
+
         private final int seq;
         private final Segment segment;
         private final List<ReportTask> tasks = new ArrayList<ReportTask>();
         private final List<ReportTask> immediates = new ArrayList<ReportTask>();
         private final List<ReportTask> prompted = new ArrayList<ReportTask>();
         private final List<ReportTask> subtasks = new ArrayList<ReportTask>();
-
         private final List<AggregatedContact> contacts;
 
         private ReportSegment(
@@ -926,26 +820,23 @@ public class ResponderPage extends WebPage {
 
             this.seq = seq;
             this.segment = segment;
-
             for ( Assignment assignment : assignments ) {
-                ReportTask reportTask = new ReportTask( seq, assignment,
-                                                        planService.getAssignments().with( profile ) );
+                ReportTask reportTask =
+                    new ReportTask( seq, assignment, planService.getAssignments().with( profile ) );
                 tasks.add( reportTask );
-
                 if ( Assignments.isImmediate( assignment.getPart(), planService ) ) {
                     immediates.add( reportTask );
-                    reportTask.setType( ReportTask.Type.IMMEDIATE );
-                }
-                else {
+                    reportTask.setType( IMMEDIATE );
+                } else {
                     prompted.add( reportTask );
-                    reportTask.setType( ReportTask.Type.PROMPTED );
+                    reportTask.setType( PROMPTED );
                 }
 
                 List<ReportTask> subs = reportTask.getAllSubtasks();
                 for ( ReportTask task : subs ) {
                     subtasks.add( task );
                     tasks.add( task );
-                    task.setType( ReportTask.Type.SUBTASK );
+                    task.setType( SUBTASK );
                 }
             }
 
@@ -957,10 +848,11 @@ public class ResponderPage extends WebPage {
                 immediate.setTaskSeq( i++ );
             for ( ReportTask sub : subtasks )
                 sub.setTaskSeq( i++ );
-
-            Collections.sort( tasks, new Comparator<ReportTask>() {
+            Collections.sort(
+                tasks, new Comparator<ReportTask>() {
                 @Override
                 public int compare( ReportTask o1, ReportTask o2 ) {
+
                     return o1.getTaskSeq() - o2.getTaskSeq();
                 }
             } );
@@ -969,11 +861,10 @@ public class ResponderPage extends WebPage {
         }
 
         private List<ResourceSpec> getContactSpecs() {
-            Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
 
+            Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
             for ( ReportTask task : tasks )
                 specs.addAll( task.getContactSpecs() );
-
             List<ResourceSpec> result = new ArrayList<ResourceSpec>( specs );
             Collections.sort( result );
             return result;
@@ -982,68 +873,72 @@ public class ResponderPage extends WebPage {
         private List<AggregatedContact> findContacts( PlanService service, ResourceSpec profile ) {
 
             List<ResourceSpec> contactSpecs = getContactSpecs();
-
-            Map<Actor,AggregatedContact> map = new HashMap<Actor, AggregatedContact>();
+            Map<Actor, AggregatedContact> map = new HashMap<Actor, AggregatedContact>();
             for ( Commitment commitment : service.findAllCommitmentsOf(
-                                                profile,
-                                                service.getAssignments( false ),
-                                                segment.getAllSharingFlows() ) ) {
-
+                profile, service.getAssignments( false ), segment.getAllSharingFlows() ) ) {
                 Assignment beneficiary = commitment.getBeneficiary();
                 Actor actor = beneficiary.getEmployment().getActor();
                 AggregatedContact aggregatedContact = map.get( actor );
                 if ( aggregatedContact == null )
                     map.put( actor, new AggregatedContact( service, beneficiary, contactSpecs ) );
                 else
-                    aggregatedContact.merge( service, beneficiary, contactSpecs );
+                    aggregatedContact.merge( service,
+                        beneficiary.getPart().resourceSpec(),
+                        beneficiary.getEmployment(),
+                        contactSpecs );
             }
-
             List<AggregatedContact> result = new ArrayList<AggregatedContact>( map.values() );
             Collections.sort( result );
             return result;
         }
 
         public int getSeq() {
+
             return seq;
         }
 
         public List<ReportTask> getImmediates() {
+
             return Collections.unmodifiableList( immediates );
         }
 
         public List<ReportTask> getPrompted() {
+
             return Collections.unmodifiableList( prompted );
         }
 
-        public Segment getSegment() {
-            return segment;
-        }
-
         public List<ReportTask> getTasks() {
+
             return Collections.unmodifiableList( tasks );
         }
 
         public String getName() {
+
             return segment.getName();
         }
 
         public String getTitle() {
+
             return "Situation " + seq;
         }
 
         public IModel<String> getLink() {
+
             return new Model<String>( "#ep_" + seq );
         }
 
         public IModel<String> getAnchor() {
+
             return new Model<String>( "ep_" + seq );
         }
 
         public String getDescription() {
+
             return segment.getDescription();
         }
 
         public List<AggregatedContact> getContacts() {
+
             return Collections.unmodifiableList( contacts );
         }
 
@@ -1053,24 +948,33 @@ public class ResponderPage extends WebPage {
             attachments.addAll( attachmentManager.getMediaReferences( segment ) );
             attachments.addAll( attachmentManager.getMediaReferences( segment.getEvent() ) );
             attachments.addAll( attachmentManager.getMediaReferences( segment.getPhase() ) );
-
             return attachments;
         }
 
         private String getContactSeq() {
+
             return seq + "." + ( tasks.size() + 1 );
         }
 
         public String getContext() {
+
             return segment.getPhaseEventTitle();
         }
-    }
 
+        private void addLinkTo( WebMarkupContainer item ) {
+
+            item.add(
+                new Label( "phaseName", getName() ),
+                new WebMarkupContainer( "phaseLink" )
+                    .add(
+                        new Label( "phaseLinkText", getTitle() ).setRenderBodyOnly( true ) )
+                    .add( new AttributeModifier( "href", true, getLink() ) ) );
+        }
+    }
     //================================================
-    /**
-     *  Some report-specific extra information for an assignment.
-     */
-    private static class ReportTask implements Serializable {
+
+    /** Some report-specific extra information for an assignment. */
+    public static class ReportTask implements Serializable {
 
         private final int phaseSeq;
         private int taskSeq;
@@ -1085,93 +989,101 @@ public class ResponderPage extends WebPage {
             this.phaseSeq = phaseSeq;
             this.assignment = assignment;
             part = assignment.getPart();
-
             // TODO take care of possibility of loops
             for ( Assignment sub : assignments.from( assignment ) )
                 subtasks.add( new ReportTask( phaseSeq, sub, assignments ) );
         }
 
         private List<AggregatedFlow> aggregate( List<Flow> flows, boolean incoming ) {
-            Map<String,AggregatedFlow> map = new HashMap<String, AggregatedFlow>();
+
+            Map<String, AggregatedFlow> map = new HashMap<String, AggregatedFlow>();
             for ( Flow flow : flows ) {
                 AggregatedFlow aggregatedFlow = map.get( flow.getName() );
                 if ( aggregatedFlow == null ) {
                     AggregatedFlow newFlow = new AggregatedFlow( flow, incoming );
                     newFlow.setOrigin( assignment );
                     map.put( flow.getName(), newFlow );
-                }
-                else
+                } else
                     aggregatedFlow.addFlow( flow );
             }
-
             List<AggregatedFlow> result = new ArrayList<AggregatedFlow>( map.values() );
-            Collections.sort( result, new Comparator<AggregatedFlow>() {
+            Collections.sort(
+                result, new Comparator<AggregatedFlow>() {
                 @Override
                 public int compare( AggregatedFlow o1, AggregatedFlow o2 ) {
+
                     return o1.getFormattedLabel().compareToIgnoreCase( o2.getFormattedLabel() );
                 }
             } );
-
             return result;
         }
 
         private boolean isStartWithSegment() {
+
             return part.isStartsWithSegment();
         }
 
         private String getEventPhase() {
+
             return lcFirst( String.valueOf( part.getSegment().getEventPhase() ) );
         }
 
         private boolean getCompletionTime() {
+
             Delay completionTime = part.getCompletionTime();
-            return completionTime != null
-                && completionTime.getSeconds() != 0;
+            return completionTime != null && completionTime.getSeconds() != 0;
         }
 
         private String getCompletionString() {
-            return part.getCompletionTime() == null ? ""
-                                                    : String.valueOf( part.getCompletionTime() );
+
+            return part.getCompletionTime() == null ?
+                "" :
+                String.valueOf( part.getCompletionTime() );
         }
 
         private boolean isNotification( PlanService planService ) {
+
             return Assignments.isNotification( part, planService );
         }
 
         private boolean isRequest() {
+
             return Assignments.isRequest( part );
         }
 
         private String getTriggeringSources( PlanService service ) {
 
-            Set<String> sourcesStrings = new HashSet<String>(  );
+            Set<String> sourcesStrings = new HashSet<String>();
             for ( AggregatedFlow flow : getTriggeringFlows() )
                 sourcesStrings.add( flow.getSourcesString( service ) );
             List<String> sources = new ArrayList<String>( sourcesStrings );
             Collections.sort( sources );
-
             return listToString( sources );
         }
 
         private String getRepetition() {
-            return isRepeating() ? String.valueOf( part.getRepeatsEvery() )
-                                 : "";
+
+            return isRepeating() ? String.valueOf( part.getRepeatsEvery() ) : "";
         }
 
         private String getDescription() {
+
             return ensurePeriod( part.getDescription() );
         }
 
         private boolean isRepeating() {
+
             return part.isRepeating();
         }
 
         private String getTriggeringFlowName() {
+
             List<AggregatedFlow> triggeringFlows = getTriggeringFlows();
             return triggeringFlows.isEmpty() ? "" : triggeringFlows.get( 0 ).getLabel();
         }
 
         private List<AggregatedFlow> getTriggeringFlows() {
+
             List<Flow> result = new ArrayList<Flow>();
             for ( Flow flow : part.getAllSharingReceives() )
                 if ( flow.isTriggeringToTarget() ) {
@@ -1180,109 +1092,105 @@ public class ResponderPage extends WebPage {
                          || !( (Connector) source ).getExternalFlows().isEmpty() )
                         result.add( flow );
                 }
-
             return aggregate( result, true );
         }
 
-        public Type getType() {
-            return type;
-        }
-
         public void setType( Type type ) {
+
             this.type = type;
         }
 
         private boolean isSubtask() {
+
             return type == Type.SUBTASK;
         }
 
         private boolean isImmediate() {
+
             return type == Type.IMMEDIATE;
         }
 
         private List<Goal> getGains() {
+
             Collection<Goal> goals = part.getGoals();
-            List<Goal> answer = new ArrayList<Goal>( goals.size());
+            List<Goal> answer = new ArrayList<Goal>( goals.size() );
             for ( Goal item : goals )
                 if ( item.isPositive() )
                     answer.add( item );
-
             return answer;
         }
 
         private List<Goal> getRisks() {
+
             Collection<Goal> goals = part.getGoals();
-            List<Goal> answer = new ArrayList<Goal>( goals.size());
+            List<Goal> answer = new ArrayList<Goal>( goals.size() );
             for ( Goal item : goals )
                 if ( !item.isPositive() )
                     answer.add( item );
-
             return answer;
         }
 
         private String getRoleString() {
+
             return getRoleString( part.resourceSpec() );
         }
 
         private static String getRoleString( ResourceSpec spec ) {
+
             StringBuilder sb = new StringBuilder();
-
             if ( !spec.isAnyRole() && !spec.isAnyOrganization() ) {
-               sb.append( spec.isAnyRole()
-                       ? "Member "
-                       : spec.getRole().getName() );
-               if ( !spec.isAnyOrganization() ) {
-                   Organization org =  spec.getOrganization();
-                   sb.append( " at ");
-                   sb.append( org.getName() );
-               }
+                sb.append( spec.isAnyRole() ? "Member " : spec.getRole().getName() );
+                if ( !spec.isAnyOrganization() ) {
+                    Organization org = spec.getOrganization();
+                    sb.append( " at " );
+                    sb.append( org.getName() );
+                }
             }
-
             return sb.toString();
         }
 
         private String getTitle() {
+
             return part.getTask();
         }
 
         //-----------------------------------
         private List<AggregatedFlow> getFailures() {
+
             List<Flow> result = new ArrayList<Flow>();
             for ( Flow flow : part.getAllSharingSends() )
                 if ( !flow.isAskedFor() && flow.isIfTaskFails() )
                     result.add( flow );
-
             return aggregate( result, false );
         }
 
         //-----------------------------------
         private List<AggregatedFlow> getRequests() {
+
             List<Flow> result = new ArrayList<Flow>();
             for ( Flow flow : part.getAllSharingSends() )
                 if ( flow.isAskedFor() )
                     result.add( flow );
-
             return aggregate( result, true );
         }
 
         //-----------------------------------
         private List<AggregatedFlow> getOutgoing() {
-            List<Flow> result = new ArrayList<Flow>();
 
+            List<Flow> result = new ArrayList<Flow>();
             for ( Flow flow : part.getAllSharingSends() )
                 if ( !flow.isAskedFor() && !flow.isIfTaskFails() )
                     result.add( flow );
-
             return aggregate( result, false );
         }
 
         //-----------------------------------
         private List<AggregatedFlow> getInputs() {
+
             List<Flow> inputs = new ArrayList<Flow>();
             for ( Flow flow : part.getAllSharingReceives() )
                 if ( !flow.isTriggeringToTarget() )
                     inputs.add( flow );
-
             return aggregate( inputs, true );
         }
 
@@ -1290,7 +1198,7 @@ public class ResponderPage extends WebPage {
         private List<ElementOfInformation> getStartingEois() {
 
             Set<ElementOfInformation> elements = new HashSet<ElementOfInformation>();
-            Map<String,ElementOfInformation> seen = new HashMap<String, ElementOfInformation>();
+            Map<String, ElementOfInformation> seen = new HashMap<String, ElementOfInformation>();
             for ( AggregatedFlow flow : getTriggeringFlows() )
                 if ( flow.isTriggeringToTarget() )
                     for ( ElementOfInformation e : flow.getElementsOfInformation() ) {
@@ -1300,127 +1208,128 @@ public class ResponderPage extends WebPage {
                             elements.add( e );
                         }
                     }
-
-            List<ElementOfInformation> result = new ArrayList<ElementOfInformation>( elements );
-            Collections.sort( result, new Comparator<ElementOfInformation>() {
-                @Override
-                public int compare( ElementOfInformation o1, ElementOfInformation o2 ) {
-                    return o1.getContent().compareToIgnoreCase( o2.getContent() );
-                }
-            } );
-            return result;
+            return sortedEOIs( new ArrayList<ElementOfInformation>( elements ) );
         }
 
         private Model<String> getLink() {
+
             return new Model<String>( "#t_" + part.getId() );
         }
 
         private String getLabel() {
+
             return "Task " + getSeqString();
         }
 
         private String getSeqString() {
+
             return Integer.toString( phaseSeq ) + '.' + taskSeq;
         }
 
         public int getTaskSeq() {
+
             return taskSeq;
         }
 
         public void setTaskSeq( int taskSeq ) {
+
             this.taskSeq = taskSeq;
         }
 
-        public Part getPart() {
-            return part;
-        }
-
         public String getTask() {
+
             return part.getTask();
         }
 
         public List<ReportTask> getSubtasks() {
+
             return Collections.unmodifiableList( subtasks );
         }
 
         private Model<String> getAnchor() {
+
             return new Model<String>( "t_" + part.getId() );
         }
 
         private String getTaskSummary() {
+
             StringWriter w = new StringWriter();
             w.append( String.valueOf( part.getSegment() ) );
-
             Place location = assignment.getLocation();
             if ( location != null )
-                w.append( " in " )
-                 .append( String.valueOf( location ) );
-
+                w.append( " in " ).append( String.valueOf( location ) );
             return ensurePeriod( w.toString() );
         }
 
         public List<ReportTask> getAllSubtasks() {
+
             List<ReportTask> result = new ArrayList<ReportTask>();
             addAllSubtasks( result );
             return result;
         }
 
         private void addAllSubtasks( List<ReportTask> tasks ) {
+
             for ( ReportTask subtask : subtasks )
                 if ( !tasks.contains( subtask ) ) {
                     tasks.add( subtask );
                     subtask.addAllSubtasks( tasks );
-                    }
+                }
         }
 
         private String getCategoryString() {
+
             Category category = part.getCategory();
             return category == null ? "" : category.getLabel().toLowerCase();
         }
 
         private boolean isProhibited() {
+
             return part.isProhibited();
         }
 
         private Place getLocation() {
+
             return part.getLocation();
         }
 
         private String getLocationString() {
-            return getLocation() == null ? ""
-                                : ensurePeriod( "This task is located in " + getLocation() );
+
+            return getLocation() == null ?
+                "" :
+                ensurePeriod( "This task is located in " + getLocation() );
         }
 
         private String getTeamSpec() {
+
             return new ResourceSpec( part ).getReportTitle();
         }
 
         private boolean isAsTeam() {
+
             return part.isAsTeam();
         }
 
         private List<Attachment> getAttachmentsFrom( AttachmentManager attachmentManager ) {
+
             return attachmentManager.getMediaReferences( part );
         }
 
         public Set<ResourceSpec> getContactSpecs() {
-            Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
 
+            Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
             for ( Flow receive : part.getAllSharingReceives() )
                 if ( receive.isAskedFor() ) {
                     Node source = receive.getSource();
                     if ( source.isConnector() ) {
-                        for ( ExternalFlow flow : ((Connector) source).getExternalFlows() ) {
+                        for ( ExternalFlow flow : ( (Connector) source ).getExternalFlows() ) {
                             Node externalSource = flow.getSource();
                             if ( !externalSource.isConnector() )
                                 specs.add( new ResourceSpec( (Specable) externalSource ) );
-
                         }
                     } else
                         specs.add( new ResourceSpec( (Specable) source ) );
-
                 }
-
             for ( Flow send : part.getAllSharingSends() ) {
                 Node target = send.getTarget();
                 if ( target.isConnector() )
@@ -1432,24 +1341,26 @@ public class ResponderPage extends WebPage {
                 else
                     specs.add( new ResourceSpec( (Specable) target ) );
             }
-
             return specs;
         }
 
-        public enum Type { IMMEDIATE, PROMPTED, SUBTASK }
+        public enum Type {IMMEDIATE, PROMPTED, SUBTASK}
     }
 
     //================================================
-    private static final class AggregatedContact implements Comparable<AggregatedContact>, Serializable {
+    private static final class AggregatedContact
+        implements Comparable<AggregatedContact>, Serializable {
+
+        private static final String N_A = "N/A";
         private final Actor actor;
         private AggregatedContact supervisor;
         private final String title;
         private final Organization organization;
-        private final Set<Role> roles = new HashSet<Role>();
         private final Set<Channel> channels = new HashSet<Channel>();
         private final Set<ResourceSpec> partSpecs = new HashSet<ResourceSpec>();
 
         private AggregatedContact() {
+
             actor = null;
             title = "";
             organization = null;
@@ -1458,106 +1369,107 @@ public class ResponderPage extends WebPage {
         private AggregatedContact(
             PlanService service, Assignment assignment, List<ResourceSpec> contactSpecs ) {
 
-            Employment employment = assignment.getEmployment();
+            this( service, assignment.getPart(), assignment.getEmployment(), contactSpecs );
+        }
+
+        private AggregatedContact(
+            PlanService service, Part part, Employment employment,
+            List<ResourceSpec> contactSpecs ) {
+
             actor = employment.getActor();
-            title = employment.getJob().getTitle();
+            title = employment.getTitle();
             organization = employment.getOrganization();
 
             Actor sup = employment.getSupervisor();
-            if ( sup != null ) {
-                Assignments employments = service.getAssignments().with( sup );
-                supervisor = employments.isEmpty() ? new AggregatedContact()
-                                                   : new AggregatedContact( service,
-                                                                            employments
-                                                                                .getAssignments()
-                                                                                .get( 0 ),
-                                                                            contactSpecs );
-
-            } else
+            if ( sup == null )
                 supervisor = new AggregatedContact();
+            else {
+                Assignments employments = service.getAssignments().with( sup );
+                supervisor = employments.isEmpty() ?
+                             new AggregatedContact() :
+                             new AggregatedContact( service,
+                                                    employments.getAssignments().get( 0 ),
+                                                    contactSpecs );
+            }
 
-            merge( service, assignment, contactSpecs );
+            merge( service, part.resourceSpec(), employment, contactSpecs );
         }
 
         public void merge(
-            PlanService service, Assignment assignment, List<ResourceSpec> contactSpecs ) {
+            PlanService service, ResourceSpec profile, Employment employment,
+            List<ResourceSpec> contactSpecs ) {
 
-            Employment employment = assignment.getEmployment();
+            for ( ResourceSpec contactSpec : contactSpecs )
+                if ( profile.narrowsOrEquals( contactSpec, null ) )
+                    partSpecs.add( contactSpec );
 
-            ResourceSpec partSpec = assignment.getPart().resourceSpec();
-            for ( ResourceSpec contactSpec : contactSpecs ) {
-                if ( partSpec.narrowsOrEquals( contactSpec, null ) )
-                        partSpecs.add( contactSpec );
-            }
-
-            roles.add( employment.getRole() );
             channels.addAll( service.findAllChannelsFor( new ResourceSpec( employment ) ) );
         }
 
+        private String getClassifications() {
+            return actor == null ? N_A : getClassificationString( actor.getClassifications() );
+        }
+
+        private String getActorName() {
+            return actor == null ? "" : actor.getName();
+        }
+
         public AggregatedContact getSupervisor() {
+
             return supervisor;
         }
 
-        public String getName() {
-            return actor.getNormalizedName();
-        }
-
         public String getTitle() {
+
             return title;
         }
 
-        public List<Role> getRoles() {
-            List<Role> result = new ArrayList<Role>( roles );
-            Collections.sort( result );
-            return result;
-        }
-
         public List<Channel> getChannels() {
+
             List<Channel> result = new ArrayList<Channel>( channels );
             Collections.sort( result );
             return result;
         }
 
         public Organization getOrganization() {
+
             return organization;
         }
 
-        public List<Classification> getClearances() {
-            return actor.getClearances();
-        }
-
         public Actor getActor() {
+
             return actor;
         }
 
         public List<ResourceSpec> getPartSpecs() {
-            ArrayList<ResourceSpec> specs = new ArrayList<ResourceSpec>( partSpecs );
+
+            List<ResourceSpec> specs = new ArrayList<ResourceSpec>( partSpecs );
             Collections.sort( specs );
             return specs;
         }
 
         @Override
         public boolean equals( Object obj ) {
+
             if ( this == obj )
                 return true;
-
             if ( obj == null || getClass() != obj.getClass() )
                 return false;
-
             AggregatedContact that = (AggregatedContact) obj;
-            return actor == null ? that.getActor() == null
-                                 : actor.equals( that.getActor() );
+            return actor == null ? that.getActor() == null : actor.equals( that.getActor() );
         }
 
         @Override
         public int hashCode() {
+
             return actor != null ? actor.hashCode() : 0;
         }
 
         @Override
         public int compareTo( AggregatedContact o ) {
+
             int i = organization.compareTo( o.getOrganization() );
-            return i == 0 ? actor.compareTo( o.getActor() ) : i ;
+            return i == 0 ? actor.compareTo( o.getActor() ) : i;
         }
     }
 
@@ -1566,38 +1478,64 @@ public class ResponderPage extends WebPage {
 
         private final String label;
         private final Set<ResourceSpec> sources = new HashSet<ResourceSpec>();
-        private final Map<String,ElementOfInformation> eoiIndex =
-                    new HashMap<String, ElementOfInformation>();
+        private final Map<String, ElementOfInformation> eoiIndex =
+            new HashMap<String, ElementOfInformation>();
         private final boolean incoming;
         private final Flow flow;
         private Assignment origin;
-
-        private Delay maxDelay = null;
+        private Delay maxDelay;
 
         private AggregatedFlow( Flow flow, boolean incoming ) {
+
             label = flow.getName();
             this.flow = flow;
             this.incoming = incoming;
             addFlow( flow );
         }
 
+        private static List<ResourceSpec> actualize(
+            PlanService service, Specable spec, Restriction restriction, Specable origin ) {
+
+            Organization org = spec.getOrganization();
+            if ( org != null && !org.isUnknown() && !org.isActual() ) {
+                List<ResourceSpec> result = new ArrayList<ResourceSpec>();
+                for ( ModelEntity entity : service.findAllNarrowingOrEqualTo( org ) )
+                    if ( entity.isActual() ) {
+                        Organization actualOrg = (Organization) entity;
+                        if ( restriction == null || isAllowed(
+                            origin.getOrganization(), actualOrg, restriction ) )
+                            result.add(
+                                new ResourceSpec(
+                                    spec.getActor(),
+                                    spec.getRole(),
+                                    actualOrg,
+                                    spec.getJurisdiction() ) );
+                    }
+                if ( result.size() < 2 )
+                    return result;
+            }
+            List<ResourceSpec> result = new ArrayList<ResourceSpec>();
+            result.add( new ResourceSpec( spec ) );
+            return result;
+        }
+
         private String getSourcesString( PlanService service ) {
+
             Set<ResourceSpec> set = new HashSet<ResourceSpec>();
             for ( ResourceSpec source : sources )
                 set.addAll( actualize( service, source, flow.getRestriction(), origin ) );
-
             List<ResourceSpec> specList = new ArrayList<ResourceSpec>( set );
-            Collections.sort( specList, new Comparator<ResourceSpec>() {
+            Collections.sort(
+                specList, new Comparator<ResourceSpec>() {
                 @Override
                 public int compare( ResourceSpec o1, ResourceSpec o2 ) {
+
                     return o1.toString().compareToIgnoreCase( o2.toString() );
                 }
             } );
-
             List<String> list = new ArrayList<String>( specList.size() );
             for ( ResourceSpec spec : specList )
-                list.add( spec.getReportSource( isAll()? "all " : "any " ) );
-
+                list.add( spec.getReportSource( isAll() ? "all " : "any " ) );
             if ( flow.getRestriction() != null )
                 switch ( flow.getRestriction() ) {
                     case SameTopOrganization:
@@ -1605,19 +1543,17 @@ public class ResponderPage extends WebPage {
                     case DifferentOrganizations:
                     case DifferentTopOrganizations:
                         return listToString( list );
-
                     case SameLocation:
                     case DifferentLocations:
                     case Supervisor:
                     case Self:
                     case Other:
                 }
-
-            return listToString( list )
-                + flow.getRestrictionString( !incoming );
+            return listToString( list ) + flow.getRestrictionString( !incoming );
         }
 
         private String getFormattedLabel() {
+
             String verb;
             Intent intent = getIntent();
             if ( incoming )
@@ -1646,121 +1582,110 @@ public class ResponderPage extends WebPage {
                     default:
                         verb = "Notify of {0}";
                 }
-
             return MessageFormat.format( verb, label );
         }
 
-        public Assignment getOrigin() {
-            return origin;
-        }
-
         public void setOrigin( Assignment origin ) {
+
             this.origin = origin;
         }
 
         private String getTiming() {
+
             StringWriter w = new StringWriter();
             if ( incoming ) {
                 w.append( isAskedFor() ? "Available upon request" : "" );
-                w.append( maxDelay.getSeconds() == 0 ? ""
-                                                     : " after at most " + maxDelay.toString() );
+                w.append(
+                    maxDelay.getSeconds() == 0 ? "" : " after at most " + maxDelay.toString() );
             } else
-                w.append( maxDelay.getSeconds() == 0 ? ""
-                                                     : "Within " + maxDelay.toString() );
-
+                w.append( maxDelay.getSeconds() == 0 ? "" : "Within " + maxDelay.toString() );
             return w.toString();
         }
 
         private void addFlow( Flow flow ) {
+
             if ( incoming ) {
                 Node source = flow.getSource();
                 if ( source.isPart() )
                     sources.add( new ResourceSpec( (Specable) source ) );
                 else
-                    for ( ExternalFlow externalFlow : ((Connector) source).getExternalFlows() ) {
+                    for ( ExternalFlow externalFlow : ( (Connector) source ).getExternalFlows() ) {
                         Node node = externalFlow.getSource();
                         if ( node.isPart() )
                             sources.add( new ResourceSpec( (Specable) node ) );
                         // TODO else?
-                        }
+                    }
             } else {
                 Node target = flow.getTarget();
                 if ( target.isPart() )
                     sources.add( new ResourceSpec( (Specable) target ) );
                 else
-                    for ( ExternalFlow externalFlow : ((Connector) target).getExternalFlows() ) {
+                    for ( ExternalFlow externalFlow : ( (Connector) target ).getExternalFlows() ) {
                         Node node = externalFlow.getTarget();
                         if ( node.isPart() )
                             sources.add( new ResourceSpec( (Specable) node ) );
                         // TODO else?
-                        }
+                    }
             }
-
             List<ElementOfInformation> eois = flow.getEois();
             for ( ElementOfInformation eoi : eois ) {
                 String key = eoi.getContent();
                 if ( !eoiIndex.containsKey( key ) )
                     eoiIndex.put( key, eoi );
             }
-
             // TODO compute minimum max delay
             if ( maxDelay == null )
                 maxDelay = flow.getMaxDelay();
         }
 
         public String getLabel() {
+
             return label;
         }
 
         public List<ElementOfInformation> getElementsOfInformation() {
-            List<ElementOfInformation> result = new ArrayList<ElementOfInformation>( eoiIndex.values() );
-            Collections.sort( result, new Comparator<ElementOfInformation>() {
-                @Override
-                public int compare( ElementOfInformation o1, ElementOfInformation o2 ) {
-                    return o1.getContent().compareToIgnoreCase( o2.getContent() );
-                }
-            } );
-            return result;
+
+            return sortedEOIs( new ArrayList<ElementOfInformation>( eoiIndex.values() ) );
         }
 
         public boolean hasEois() {
+
             return !eoiIndex.isEmpty();
         }
 
         public boolean isAskedFor() {
+
             return flow.isAskedFor();
         }
 
         public boolean isAll() {
+
             return flow.isAll();
         }
 
         public boolean isCritical() {
+
             return flow.isCritical();
         }
 
         public boolean isTerminatingToTarget() {
+
             return flow.isTerminatingToTarget();
         }
 
         public boolean isTriggeringToTarget() {
+
             return flow.isTriggeringToTarget();
         }
 
         public boolean isTerminatingToSource() {
+
             return flow.isTerminatingToSource();
         }
 
         public Intent getIntent() {
+
             return flow.getIntent();
-        }
-
-        public Set<ResourceSpec> getSources() {
-            return Collections.unmodifiableSet( sources );
-        }
-
-        public Flow.Restriction getRestriction() {
-            return flow.getRestriction();
         }
     }
 }
