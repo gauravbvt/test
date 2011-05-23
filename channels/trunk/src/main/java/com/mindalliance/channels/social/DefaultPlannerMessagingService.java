@@ -6,6 +6,7 @@ import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.odb.ODBAccessor;
 import com.mindalliance.channels.odb.ODBTransactionFactory;
 import org.apache.commons.lang.StringUtils;
+import org.neodatis.odb.core.query.criteria.ComposedExpression;
 import org.neodatis.odb.core.query.criteria.Where;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,6 +124,12 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
     }
 
     public Iterator<PlannerMessage> getReceivedMessages( Plan plan ) {
+        ComposedExpression isBroadcast = Where.or();
+        isBroadcast.add( Where.equal( "toUsername", PlannerMessagingService.USERS ) );
+        if ( User.current().isPlanner() ) {
+            isBroadcast.add( Where.isNull( "toUsername" ) ); // legacy for all planners
+           isBroadcast.add( Where.equal( "toUsername", PlannerMessagingService.PLANNERS ) );
+        }
         return getOdb( plan ).iterate(
                 PlannerMessage.class,
                 Where.and()
@@ -131,8 +138,8 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                         Where.or()
                                 .add( Where.equal( "toUsername", getUsername() ) )
                                 .add( Where.and()
-                                .add( Where.isNull( "toUsername" ) )
-                                .add( Where.not( Where.equal( "fromUsername", getUsername() ) ) ) )
+                                    .add( isBroadcast )
+                                    .add( Where.not( Where.equal( "fromUsername", getUsername() ) ) ) )
                 ),
                 ODBAccessor.Ordering.Descendant,
                 "date"

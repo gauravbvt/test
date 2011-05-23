@@ -225,7 +225,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
     private boolean isFocusSelected() {
-        return focus != null && !focus.isEmpty();
+        return focus != null && !focus.isEmpty() && getFocusEntity()!= null;
     }
 
     private List<String> getFocusKindChoices() {
@@ -388,8 +388,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
     public void setFocusName( String s ) {
-        if ( s != null && !s.isEmpty() && !s.equals( PROMPT ) )
-            focus = s;
+            focus = (s == null || s.equals(  PROMPT )) ? "" : s;
     }
 
     public String getSummarizeChoice() {
@@ -470,7 +469,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private ModelEntity getFocusEntity() {
         ModelEntity focusEntity = null;
-        if ( focusKind != null && isFocusSelected() ) {
+        if ( focusKind != null && focus != null && !focus.isEmpty() ) {
             if ( focusKind.equals( ORG ) ) {
                 focusEntity = getQueryService().findActualEntity( Organization.class, focus );
             } else if ( focusKind.equals( ACTOR ) ) {

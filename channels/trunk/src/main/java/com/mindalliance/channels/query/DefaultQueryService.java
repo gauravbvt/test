@@ -1947,7 +1947,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
                 if ( includeUnknowns
                         && result.isEmpty()
-                        && !part.resourceSpec().isAnyone() && part.getActorOrUnknown().isUnknown() ) {
+                        && !part.resourceSpec().isAnyone()
+                        && part.getActorOrUnknown().isUnknown() ) {
                     Organization partOrg = part.getOrganizationOrUnknown();
                     if ( partOrg.isUnknown() ) {
                         Assignment assignment = new Assignment(

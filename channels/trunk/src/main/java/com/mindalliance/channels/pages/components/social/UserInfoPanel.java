@@ -244,8 +244,8 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                         change.setProperty( "user" );
                         if ( !newPassword.isEmpty() ) {
                             change.setMessage( isValidNewPassword()
-                                    ? "Your password was changed."
-                                    : "You password was NOT changed." );
+                                    ? "Your password is changed."
+                                    : "Your password was NOT changed (new password not confirmed)." );
                         }
                         resetAll();
                         target.addComponent( UserInfoPanel.this );
@@ -286,11 +286,14 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             errors.add( "An email address is required" );
         else if ( !isValidEmail( temp.getEmail() ) )
             errors.add( "The email address is invalid" );
-        if ( !newPassword.isEmpty() && !repeatNewPassword.isEmpty() && !isValidNewPassword() )
+        if ( !newPassword.isEmpty() && !repeatNewPassword.isEmpty() && !isValidNewPassword() ) {
             if ( !newPassword.equals( repeatNewPassword ) )
                 errors.add( "The new password is not correctly repeated" );
             else
                 errors.add( "The new password must have at least 6 characters" );
+        }/* else {
+            errors.add( "Provide a new password and confirm it" );
+        }*/
     }
 
     private boolean isRobustPassword( String val ) {
