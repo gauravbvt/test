@@ -82,6 +82,11 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return "detected issue";
     }
 
+    @Override
+    public boolean isModifiableInProduction() {
+        return false;
+    }
+
     public String getKind() {
         return kind;
     }

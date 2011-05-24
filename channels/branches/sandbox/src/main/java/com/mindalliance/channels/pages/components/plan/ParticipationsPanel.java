@@ -7,6 +7,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
@@ -307,6 +308,12 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
     }
 
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( !(change.isUpdated() && change.isForInstanceOf( Channelable.class ) ) ) {
+            super.updateWith( target, change, updated );
+        }
+    }
+
 
     private void setSelectedParticipation( ParticipationWrapper pw ) {
         if ( selectedParticipation != null && selectedParticipation.getParticipation() != null ) {
@@ -321,11 +328,27 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private void addParticipation() {
         participationDiv = new WebMarkupContainer( "participationDiv" );
         participationDiv.setOutputMarkupId( true );
-        makeVisible( participationDiv, selectedParticipation != null );
+        makeVisible( participationDiv, isAssignedParticipationSelected() );
         addOrReplace( participationDiv );
         addParticipationLabel();
         addParticipationLink();
+        addParticipationActorChannels();
         addParticipationChannels();
+    }
+
+    private boolean isAssignedParticipationSelected() {
+       return selectedParticipation != null
+                && selectedParticipation.getActor() != null;
+    }
+
+    private void addParticipationActorChannels() {
+        ParticipationWrapper pw = getParticipation();
+        String channelsString = pw != null && pw.getActor() != null
+                ? pw.getActor().getChannelsString()
+                : "None";
+        Label label = new Label( "actorChannels", channelsString );
+        label.setOutputMarkupId( true );
+        participationDiv.addOrReplace( label );
     }
 
     private void addParticipationLabel() {
@@ -359,11 +382,12 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private void addParticipationChannels() {
         Component participationChannels;
         if ( selectedParticipation == null ) {
-            participationChannels = new Label( "channels", "" );
+            participationChannels = new Label( "participationChannels", "" );
         } else {
             participationChannels = new ChannelListPanel(
-                    "channels",
-                    new PropertyModel<Channelable>( this, "channelable" ) );
+                    "participationChannels",
+                    new Model<Channelable>( getParticipation().getParticipation() ),
+                    getPlan().isDevelopment() );
         }
         participationChannels.setOutputMarkupId( true );
         participationDiv.addOrReplace( participationChannels );
@@ -376,24 +400,6 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
      */
     public ParticipationWrapper getParticipation() {
         return selectedParticipation;
-    }
-
-    /**
-     * Get selected participation.
-     *
-     * @return a participation
-     */
-    public Channelable getChannelable() {
-        if ( selectedParticipation == null ) {
-            return null;
-        } else {
-            Participation participation = selectedParticipation.getParticipation();
-            if ( participation.getActor() == null ) {
-                return participation;
-            } else {
-                return participation.getActor();
-            }
-        }
     }
 
 
@@ -500,7 +506,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                     "",
                     "contact",
                     "select",
-                    null,
+                    "actor",
                     "more",
                     ParticipationsPanel.this
             ) );

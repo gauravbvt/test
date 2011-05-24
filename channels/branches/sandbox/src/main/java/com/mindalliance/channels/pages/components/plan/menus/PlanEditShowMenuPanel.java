@@ -36,7 +36,7 @@ public class PlanEditShowMenuPanel extends MenuPanel {
                     newItem( "Secrecy classifications", PlanEditPanel.CLASSIFICATIONS ),
                     newItem( "All organizations", PlanEditPanel.ORGANIZATIONS ),
                     newItem( "All segments", PlanEditPanel.MAP ),
-                    newItem( "Procedures map", PlanEditPanel.PROCEDURES ),
+                    newItem( "Procedure map", PlanEditPanel.PROCEDURES ),
                     newItem( "Who's who", PlanEditPanel.WHOSWHO ),
                     newItem( "All issues", PlanEditPanel.ISSUES ),
                     newItem( "Bibliography", PlanEditPanel.BIBLIOGRAPHY ),

@@ -42,6 +42,15 @@ public interface Commander {
     Change doCommand( Command command );
 
     /**
+     * Executes a command on behalf of the user, even in production.
+     * Locks are grabbed
+     *
+     * @param command a command
+     * @return an change
+     */
+    Change doUnsafeCommand( Command command );
+
+    /**
      * Whether user could undo a previous command right now.
      *
      * @return a boolean

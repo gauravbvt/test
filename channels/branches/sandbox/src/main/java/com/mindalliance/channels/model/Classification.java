@@ -67,6 +67,11 @@ public class Classification implements Identifiable, Comparable {
         return "classification";
     }
 
+    @Override
+    public boolean isModifiableInProduction() {
+        return false;
+    }
+
     public void setName( String name ) {
         assert this.name.isEmpty();
         this.name = name;

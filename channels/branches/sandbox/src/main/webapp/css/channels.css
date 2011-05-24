@@ -2136,6 +2136,7 @@ body.support iframe {
     top: 10px;
 }
 
+/*
 .support .feedback .feedback-form {
     font-size: 11px;
     background:#fafafa;
@@ -2147,6 +2148,71 @@ body.support iframe {
 .support .feedback .cancelSend {
     margin-top: 5px;
 }
+*/
+
+
+/* ----- Header - Feedback ----- */
+
+body.support a.feedback-button {
+    background: url('../images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px;
+    margin-left: 5px;
+    text-transform: capitalize;
+    outline: none;
+}
+
+body.support a.feedback-button {
+    color: #333333;
+}
+
+body.support div.feedback div.feedback-form {
+	float:right;
+	padding:0 5px 0 0;
+}
+
+body.support div.feedback-form-cont {
+	display:block;
+	background: #dddddd;
+	font-size:11px;
+    border: 1px solid #a7a9ac;
+	padding:5px;
+	position:relative;
+	margin:1px 0 0 5px;
+}
+
+body.support div.feedback-options {
+	padding:0 0 5px 0;
+}
+
+body.support div.feedback-urgency {
+	padding:5px 0 5px 0;
+}
+
+body.support div.feedback-form-cont textarea {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	padding:5px;
+}
+
+body.support div.cancelSend input {
+	font-size:10px;
+	padding:2px;
+	background:#cccccc;
+	border:1px solid #666666;
+}
+
+body.support div.cancelSend input:hover {
+	font-size:10px;
+	padding:2px;
+	background:#f6f6f6;
+	border:1px solid #999999;
+	color:#333333;
+}
+
 
 /* ----- ALPHA - Links ----- */
 

@@ -28,4 +28,11 @@ public interface Identifiable extends Nameable {
      * @return a string
      */
     String getTypeName();
+
+    /**
+     * Whether it can be modified in production.
+     *
+     * @return a boolean
+     */
+    boolean isModifiableInProduction();
 }

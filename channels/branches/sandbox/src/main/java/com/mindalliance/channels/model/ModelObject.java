@@ -78,6 +78,11 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
         return getClass().getSimpleName().toLowerCase();
     }
 
+    @Override
+    public boolean isModifiableInProduction() {
+        return false;
+    }
+
     public long getId() {
         return id;
     }

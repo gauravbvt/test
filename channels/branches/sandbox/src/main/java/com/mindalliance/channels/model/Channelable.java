@@ -13,11 +13,18 @@ import java.util.List;
 public interface Channelable extends Identifiable {
 
     /**
-     * Get the channels.
+     * Get the channels that apply.
      *
-     * @return a set of channels
+     * @return a list of channels
      */
     List<Channel> getEffectiveChannels();
+
+    /**
+     * Get the channels that can be modified.
+     *
+     * @return a list of channels
+     */
+    List<Channel> getModifiableChannels();
 
     /**
      * Add a channel.
@@ -69,6 +76,7 @@ public interface Channelable extends Identifiable {
 
     /**
      * Whether the channelable is an entity.
+     *
      * @return a boolean
      */
     boolean isEntity();

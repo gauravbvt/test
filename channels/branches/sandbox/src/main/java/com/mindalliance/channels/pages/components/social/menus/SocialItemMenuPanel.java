@@ -6,6 +6,7 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.odb.PersistentObject;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
@@ -65,7 +66,7 @@ public class SocialItemMenuPanel extends MenuPanel {
         final String currentUsername = User.current().getUsername();
         if ( participation != null ) {
             final Actor actor = participation.getActor();
-            if ( actor != null ) {
+            if ( actor != null && canShowAgentProfile() ) {
                 Link link = new AjaxFallbackLink( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         update( target, new Change( Change.Type.Expanded, actor ) );
@@ -93,7 +94,7 @@ public class SocialItemMenuPanel extends MenuPanel {
         if ( po != null && po instanceof PlannerMessage ) {
             PlannerMessage message = (PlannerMessage) po;
             if ( message.getFromUsername().equals( currentUsername ) ) {
-                Link link = new ConfirmedAjaxFallbackLink( "link", "Delete this message (unsend it)?" ) {
+                Link link = new ConfirmedAjaxFallbackLink( "link", "Delete this message? (\"Unsend\" it)" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         updatable.update( target, po, SocialPanel.DELETE_MESSAGE );
                     }
@@ -114,6 +115,10 @@ public class SocialItemMenuPanel extends MenuPanel {
                     link ) );
         }
         return menuItems;
+    }
+
+    private boolean canShowAgentProfile() {
+        return ( (Component) updatable ).getPage().getClass().isAssignableFrom( PlanPage.class );
     }
 
     private PersistentObject getPersistentObject() {

@@ -2,6 +2,11 @@ package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.query.DefaultQueryService;
 import com.mindalliance.channels.query.QueryService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A participation represents a Channels user who is also an actor.
@@ -119,5 +124,37 @@ public class Participation extends AbstractUnicastChannelable {
 
     public boolean hasActor( Actor a ) {
         return actor != null && actor.equals( a );
+    }
+
+    @Override
+    /**
+     * Participation channels override actor channels when same medium.
+     */
+    public List<Channel> getEffectiveChannels() {
+        List<Channel> effectiveChannels = new ArrayList<Channel>( getChannels() );
+        if ( actor != null ) {
+            for ( final Channel channel : actor.getEffectiveChannels() ) {
+                if ( !CollectionUtils.exists(
+                        effectiveChannels,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ( (Channel) object ).getMedium().equals( channel.getMedium() );
+                            }
+                        } ) ) {
+                    effectiveChannels.add( channel );
+                }
+            }
+        }
+        return effectiveChannels;
+    }
+
+    public List<Channel> getModifiableChannels() {
+        return getChannels();
+    }
+
+    @Override
+    public boolean isModifiableInProduction() {
+        return true;
     }
 }

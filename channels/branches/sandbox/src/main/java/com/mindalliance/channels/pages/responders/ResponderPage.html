@@ -22,17 +22,25 @@
             <h2 wicket:id="planDescription" class="description">Plan description</h2>
         </div>
         <div id="about">
-            <h2><span class="seq">About:</span> <span wicket:id="myRoles">{Roles, organizations, jurisdictions}</span></h2>
-			<h3>Contact Info</h3>
-			<ul>
-                <li wicket:id="myName">{user name}</li>
-				<li wicket:id="myContact">{Contact info}</li>
-                <li wicket:id="myAvail">{Availability}</li>
-            </ul>
+            <span wicket:id="contact">
+                <h2><span class="seq">About:</span> <span wicket:id="contact.name">{agent name}</span></h2>
+                <h3>Contact Info</h3>
+                <ul>
+                    <li>Role: <span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span></li>
+                    <li>How to contact:
+                        <ul wicket:id="contactInfos">
+                            <li wicket:id="contactInfo">
+                                <em wicket:id="channelType">{channel type}:</em>
+                                <span wicket:id="channel">{channel}</span>
+                            </li>
+                        </ul>
+                        <span wicket:id="noInfo">N/A</span>
+                    </li>
+                    <li>Classification: <span wicket:id="contact.classification">{classification}</span></li>
+                    <li>Availability: <span wicket:id="myAvail">{Availability}</span></li>
+                </ul>
+            </span>
 
-<!--
-            <p>Report any errors or suggestions to <span wicket:id="planners"><a wicket:id="planner" href="#">{planner's coordinate}</a><span wicket:id="listSep">.</span></span></p>
--->
 			<h3>Relevant situations</h3>
             <p>The <span wicket:id="planName" class="plan-name">{plan name}</span> plan provides information sharing guidelines for the following situations:</p>
             <ul class="toc">
@@ -43,10 +51,18 @@
         </div>
 
         <div wicket:id="phases" class="phase">
-            <h2><span class="seq">Situation <span wicket:id="phaseSeq">1</span>:</span> <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name} phase: {Before/During/After} a/an {event name} ({level} level)</span></a></h2>
-            <div>
-                <p wicket:id="segDesc">{event description}</p>
-            </div>
+            <h2><span class="seq">Situation <span wicket:id="phaseSeq">1</span>:</span>
+                <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name}</span></a></h2>
+            <table class="taskHeader">
+                <tr>
+                    <th valign="top"><p>Context:</p></th>
+                    <td><p wicket:id="context">{Context}</p></td>
+                </tr>
+                <tr>
+                    <th valign="top"><p>Description:</p></th>
+                    <td><p wicket:id="segDesc">{Segment description}</p></td>
+                </tr>
+            </table>
 
             <div wicket:id="inputDiv">
                 <h3>Tasks triggered by notifications or requests for information:</h3>
@@ -89,17 +105,21 @@
                 </ul>
             </div>
             <div wicket:id="tasks" class="task">
-                <h2><a class="back" href="#" wicket:id="backTask">back</a>
+                <h2><a class="back" href="#" wicket:id="backTask">[ back ]</a>
                     <span class="num">Task <span wicket:id="taskSeq" class="seq">1.1</span>:</span>
                     <a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a>
                 </h2>
 
                 <table class="taskHeader">
                     <tr>
-                        <th class="title" valign="top"><span>Situation:</span></th>
+                        <th class="title" valign="top"><p>Situation:</p></th>
                         <td>
-	                        <span wicket:id="taskSummary">{summary of event/phase/location}</span>
-                            <span wicket:id="taskLoc">{Location}.</span>
+                            <p>
+                                <span wicket:id="taskSummary">{summary of event/phase/location}</span>
+                                Executed as <span wicket:id="taskRole">{role}</span>
+                                <span wicket:id="taskLoc">{Location}.</span>
+                            </p>
+
                             <p wicket:id="prohibited">
                                 <!-- Optional -->
                                 <em>Note:</em> Even though documented here, this task is prohibited by policy
@@ -108,7 +128,7 @@
                         </td>
                     </tr>
                     <tr wicket:id="promptedBy">
-                        <th class="title" valign="top"><span>Prompted By:</span></th>
+                        <th class="title" valign="top"><p>Prompted By:</p></th>
                         <td>
                             <span wicket:id="reqTask">
                                 <p>
@@ -149,7 +169,7 @@
                         </td>
                     </tr>
                     <tr wicket:id="details">
-                        <th class="title" valign="top"><span>Details:</span></th>
+                        <th class="title" valign="top"><p>Details:</p></th>
                         <td class="procedureTd">
                             <p>
                                 <span wicket:id="instruct">{Task instruction}.</span>
@@ -216,7 +236,7 @@
                 <div wicket:id="criticalDiv">
                     <h3>Incoming information</h3>
                     <p>
-                        The following table lists information received during the execution of this task:
+                        The following table lists information needed for the execution of this task:
                     </p>
                     <table border="0">
                         <span wicket:id="perFlow">
@@ -265,8 +285,7 @@
                                 <td colspan="4" align="left">
                                     <span wicket:id="flowName2" class="reqFlow" >{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
                                     <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
-                                    to <span wicket:id="flowCard" class="cardinality">{any|all}</span>
-                                    <span wicket:id="flowTargets">target, target or target.</span>
+                                    to <span wicket:id="flowTargets">target, target or target.</span>
                                     <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
                                 </td>
                             </tr>
@@ -312,7 +331,7 @@
                                 <td colspan="4" align="left">
                                     <span wicket:id="flowName2" class="reqFlow">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
                                     <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
-                                    to <span wicket:id="flowCard" class="cardinality">{any|all}</span>
+                                    to
                                     <span wicket:id="flowTargets">target, target or target.</span>
                                     <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
                                 </td>
@@ -370,7 +389,7 @@
                                 <td colspan="4" align="left">
                                     <span wicket:id="flowName2" class="reqFlow">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
                                     <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
-                                    to <span wicket:id="flowCard" class="cardinality">{any|all}</span>
+                                    to
                                     <span wicket:id="flowTargets">target, target or target.</span>
                                     <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
                                 </td>
@@ -418,60 +437,53 @@
                     <span wicket:id="contactTitle">{Segment name}</span> resources
                 </h2>
                 <p>This situation may require contacting the following persons or resources:</p>
-                <table border="0">
-                    <tr class="contactHeads">
-                        <th class="first">Name</th>
-                        <th>Organization, Title</th>
-                        <th>Roles</th>
-                        <th>Contact Info</th>
-                        <th class="last">Clearance</th>
-                    </tr>
-                    <span wicket:id="perFlowContact">
-                        <!-- zero of more of the following 2 rows -->
-                        <tr wicket:id="contact" valign="top" class="contact">
-                            <td class="first" wicket:id="contact.name">{agent name}</td>
-                            <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                            <td><ul wicket:id="contactRoles">
-                                    <li wicket:id="contactRole">{Role}</li>
-                                </ul>
-                            </td>
-                            <td><ul wicket:id="contactInfos">
-                                    <li wicket:id="contactInfo">
-                                        <em wicket:id="channelType">{channel type}:</em>
-                                        <span wicket:id="channel">{channel}</span>
-                                    </li>
-                                </ul>
-                                <span wicket:id="noInfo">N/A</span>
-                            </td>
-                            <td class="last" wicket:id="contact.classification">{classification}</td>
+                <div wicket:id="group" class="contactGroup">
+                    <h3><a wicket:id="specAnchor"><span wicket:id="spec">{Contact group}</span></a></h3>
+                    <table border="0">
+                        <tr class="contactHeads">
+                            <th class="first">Name</th>
+                            <th>Organization, Title</th>
+                            <th>Contact Info</th>
+                            <th class="last">Clearance</th>
                         </tr>
-                        <tr wicket:id="supervisor" valign="top" class="contact supervisor">
-                            <td class="first" wicket:id="contact.name"><em>Supervisor:</em> {agent name}</td>
-                            <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
-                            <td><ul wicket:id="contactRoles">
-                                    <li wicket:id="contactRole">{Role}</li>
-                                </ul>
-                            </td>
-                            <td><ul wicket:id="contactInfos">
-                                    <li wicket:id="contactInfo">
-                                        <em wicket:id="channelType">{channel type}:</em>
-                                        <span wicket:id="channel">{channel}</span>
-                                    </li>
-                                </ul>
-                                <span wicket:id="noInfo">N/A</span>
-                            </td>
-                            <td class="last" wicket:id="contact.classification">{classification}</td>
-                        </tr>
-                    </span>
-                </table>
+                        <span wicket:id="perFlowContact">
+                            <!-- zero of ore of the following 2 rows -->
+                            <tr wicket:id="contact" valign="top" class="contact">
+                                <td class="first" wicket:id="contact.name">{agent name}</td>
+                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td><ul wicket:id="contactInfos">
+                                        <li wicket:id="contactInfo">
+                                            <em wicket:id="channelType">{channel type}:</em>
+                                            <span wicket:id="channel">{channel}</span>
+                                        </li>
+                                    </ul>
+                                    <span wicket:id="noInfo">N/A</span>
+                                </td>
+                                <td class="last" wicket:id="contact.classification">{classification}</td>
+                            </tr>
+                            <tr wicket:id="supervisor" valign="top" class="contact supervisor">
+                                <td class="first"><em>Supervisor:</em> <span wicket:id="contact.name">{agent name}</span></td>
+                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td><ul wicket:id="contactInfos">
+                                        <li wicket:id="contactInfo">
+                                            <em wicket:id="channelType">{channel type}:</em>
+                                            <span wicket:id="channel">{channel}</span>
+                                        </li>
+                                    </ul>
+                                    <span wicket:id="noInfo">N/A</span>
+                                </td>
+                                <td class="last" wicket:id="contact.classification">{classification}</td>
+                            </tr>
+                        </span>
+                    </table>
+                </div>
 
             </div>
 
         </div>
+	    <div id="disclaimer">These information sharing guidelines were produced automatically, based on input from
+participating agencies.<br />Mind-Alliance Systems makes no warranty as to the completeness or accuracy of these guidelines.</div>
     </div>
-    <p class="disclaimer">This procedure report was produced automatically, based on input from
-participating agencies. Mind-Alliance Systems makes no warranty as to
-the completeness or accuracy of these procedures.</p>
 </div>
 
 </body>

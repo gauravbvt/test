@@ -206,14 +206,15 @@ public class ResourceSpec extends ModelObject implements Specable {
     /**
      * Get a report-formatted description.
      * @return a string
+     * @param prefix a/any/all or nothing
      */
-    public String getReportSource() {
+    public String getReportSource( String prefix ) {
         StringBuilder sb = new StringBuilder();
         boolean showActor = isActor() && !actor.isArchetype() && !actor.isUnknown();
         if ( isAnyRole() )
-            sb.append( showActor ? actor.getName() : "Someone" );
+            sb.append( showActor ? actor.getName() : "someone" );
         else {
-            sb.append( showActor ? actor.getName() + ", " : "" );
+            sb.append( showActor ? "the " : prefix );
             sb.append( role.getName() );
         }
         if ( !isAnyOrganization() ) {

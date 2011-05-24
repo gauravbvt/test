@@ -67,8 +67,6 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private AjaxFallbackLink showMore;
     private Updatable updatable;
     private WebMarkupContainer newMessageContainer;
-    private AjaxFallbackLink sendAndEmailLink;
-    private AjaxFallbackLink sendLink;
     private AjaxFallbackLink showHideBroadcastsLink;
     private Label showHideBroadcastsLabel;
     private AjaxFallbackLink sentReceivedLink;
@@ -313,8 +311,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 new PropertyModel<String>( this, "newMessageText" ) );
         textArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( sendLink );
-                target.addComponent( sendAndEmailLink );
+                // do nothing
             }
         } );
         newMessageContainer.add( textArea );
@@ -330,7 +327,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addSend( final WebMarkupContainer newMessageContainer ) {
-        sendLink = new AjaxFallbackLink( "send" ) {
+        AjaxFallbackLink sendLink = new AjaxFallbackLink( "send" ) {
             public void onClick( AjaxRequestTarget target ) {
                 if ( !getNewMessageText().isEmpty() ) {
                     sendNewMessage( false );
@@ -351,7 +348,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addSendAndEmail( final WebMarkupContainer newMessageContainer ) {
-        sendAndEmailLink = new IndicatingAjaxFallbackLink( "sendAndEmail" ) {
+        AjaxFallbackLink sendAndEmailLink = new IndicatingAjaxFallbackLink( "sendAndEmail" ) {
             public void onClick( AjaxRequestTarget target ) {
                 if ( !getNewMessageText().isEmpty() ) {
                     boolean success = sendNewMessage( true );

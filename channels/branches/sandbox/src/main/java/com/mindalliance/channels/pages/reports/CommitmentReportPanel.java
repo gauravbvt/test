@@ -331,7 +331,7 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
         Part otherPart = getOtherPart();
         return ( isSending() ? "Sent to " : "Received from " )
                 + reportHelper.getPlanService().getAssignments().assignedTo( otherPart
-        ).getCommonSpec( otherPart ).getReportSource();
+        ).getCommonSpec( otherPart ).getReportSource( "" );
     }
 
     private Part getOtherPart() {

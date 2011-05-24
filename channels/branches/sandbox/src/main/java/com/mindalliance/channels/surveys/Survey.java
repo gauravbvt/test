@@ -253,6 +253,11 @@ abstract public class Survey implements Identifiable, Serializable {
         return "Survey";
     }
 
+    @Override
+    public boolean isModifiableInProduction() {
+        return false;
+    }
+
     /**
      * Add a user to the survey.
      *

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Channelable;
@@ -63,6 +64,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
      */
     private static TransmissionMedium NewMediumType;
 
+    private boolean canAddNewMedium = true;
+
     static {
         /*NewMedium = new TransmissionMedium( "New medium" );
         // fake id -- need only be different from newMediumType
@@ -73,9 +76,14 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         NewMediumType.setId( Long.MAX_VALUE );
     }
 
-    public ChannelListPanel( String id, IModel<? extends Channelable> model ) {
+    public ChannelListPanel( String id, IModel<? extends Channelable> model, boolean canAddNewMedium ) {
         super( id, model, null );
+        this.canAddNewMedium = canAddNewMedium;
         init();
+    }
+
+    public ChannelListPanel( String id, IModel<? extends Channelable> model ) {
+        this( id, model, true );
     }
 
     private void init() {
@@ -103,7 +111,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         target.addComponent( channelsList );
         update( target,
                 new Change( Change.Type.Updated, getChannelable(),
-                        "effectiveChannels" ) );                                      // NON-NLS
+                        "modifiableChannels" ) );                                      // NON-NLS
     }
 
     private Channelable getChannelable() {
@@ -121,7 +129,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Get the channelable's effective channels, wrapped
+     * Get the channelable's modifiable channels, wrapped
      *
      * @return a list of Wrappers
      */
@@ -131,7 +139,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             boolean setable = isLockedByUser( channelable ) && channelable.canSetChannels();
 
             List<Wrapper> list = new ArrayList<Wrapper>();
-            for ( Channel channel : channelable.getEffectiveChannels() )
+            for ( Channel channel : channelable.getModifiableChannels() )
                 list.add( new Wrapper( channel, !setable ) );
 
             // To-be-added channel when medium is set
@@ -144,6 +152,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
     }
 
     //====================================================
+
     /**
      * A wrapper to keep track of the deletion state of channel.
      */
@@ -214,12 +223,21 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         }
 
         private void doAction( Channelable channelable, UpdateObject.Action action ) {
-            doCommand(
-                    UpdateObject.makeCommand(
-                            channelable,
-                            "effectiveChannels",
-                            channel,
-                            action ) );
+            if ( channelable.isModifiableInProduction() ) {
+                doUnsafeCommand(
+                        UpdateObject.makeCommand(
+                                channelable,
+                                "modifiableChannels",
+                                channel,
+                                action ) );
+            } else {
+                doCommand( channelable,
+                        UpdateObject.makeCommand(
+                                channelable,
+                                "modifiableChannels",
+                                channel,
+                                action ) );
+            }
         }
 
         public TransmissionMedium getMedium() {
@@ -238,7 +256,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 } else
 */
                 if ( value.equals( NewMediumType ) ) {
-                    medium =  doSafeFindOrCreateType(
+                    medium = doSafeFindOrCreateType(
                             TransmissionMedium.class,
                             NewMediumType.getName() );
                 } else {
@@ -256,13 +274,22 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         public void setAddress( String address ) {
             if ( channel != null ) {
                 Channelable channelable = getChannelable();
-                int index = channelable.getEffectiveChannels().indexOf( channel );
+                int index = channelable.getModifiableChannels().indexOf( channel );
                 if ( index >= 0 )
-                    doCommand( UpdateObject.makeCommand(
+                    doCommand( channelable,
+                            UpdateObject.makeCommand(
                             channelable,
-                            "effectiveChannels[" + index + "].address",
+                            "modifiableChannels[" + index + "].address",
                             address == null ? "" : address.trim(),
                             UpdateObject.Action.Set ) );
+            }
+        }
+
+        protected Change doCommand( Channelable channelable, Command command ) {
+            if ( channelable.isModifiableInProduction() ) {
+                return ChannelListPanel.super.doUnsafeCommand( command );
+            } else {
+                return ChannelListPanel.super.doCommand( command );
             }
         }
 
@@ -275,6 +302,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
     }
 
     //====================================================
+
     /**
      * Visualizer of a wrapped channel.
      */
@@ -303,10 +331,12 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             item.add( addressField );
             item.add( createChoices( wrapper ) );
             item.add( createMover( wrapper ) );
+/*
             Label channelText = new Label( "channel-string",                              // NON-NLS
                     wrapper.getChannel().toString() );
-            channelText.setVisible( wrapper.isReadOnly() );
+            channelText.setVisible( !getChannelable().isEntity() && wrapper.isReadOnly() );
             item.add( channelText );
+*/
         }
 
         private AjaxFallbackLink<?> createMover( final Wrapper wrapper ) {
@@ -319,11 +349,11 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 }
             };
 
-            List<Channel> effectiveChannels = getChannelable().getEffectiveChannels();
+            List<Channel> modifiableChannels = getChannelable().getModifiableChannels();
             result.setVisible(
-                    !effectiveChannels.isEmpty()
+                    !modifiableChannels.isEmpty()
                             && canBeEdited()
-                            && !wrapper.getChannel().equals( effectiveChannels.get( 0 ) )
+                            && !wrapper.getChannel().equals( modifiableChannels.get( 0 ) )
                             && !wrapper.isMarkedForCreation() );
             return result;
         }
@@ -336,8 +366,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     return Collator.getInstance().compare( o1.getLabel(), o2.getLabel() );
                 }
             } );
-            // candidates.add( NewMedium );
-            candidates.add( NewMediumType );
+            if ( canAddNewMedium )
+                candidates.add( NewMediumType );
             return candidates;
         }
 
@@ -391,8 +421,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     } );
 
             flagIfInvalid( addressField, wrapper );
-            addressField.setVisible( !wrapper.isMarkedForCreation() && getChannelable().isEntity() );
-            addressField.setEnabled( canBeEdited() );
+            addressField.setVisible( !wrapper.isMarkedForCreation() && getChannelable().isEntity() && canBeEdited() );
+            //           addressField.setEnabled( canBeEdited() );
             return addressField;
         }
 
@@ -400,8 +430,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             CheckBox result = new CheckBox(
                     "included", new PropertyModel<Boolean>( wrapper, "included" ) );      // NON-NLS
             addUpdatingBehavior( result );
-            result.setEnabled( !wrapper.isReadOnly() && isEnabled() );
-            makeVisible( result, !wrapper.isMarkedForCreation() );
+            // result.setEnabled( !wrapper.isReadOnly() && isEnabled() );
+            makeVisible( result, !wrapper.isMarkedForCreation() && !wrapper.isReadOnly() );
             return result;
         }
 
@@ -410,7 +440,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 Channel channel = wrapper.getChannel();
                 String problem = getChannelable().validate( channel );
                 if ( problem == null ) {
-                    for ( Channel c : getChannelable().getEffectiveChannels() ) {
+                    for ( Channel c : getChannelable().getModifiableChannels() ) {
                         if ( c != channel && c.equals( channel ) ) {
                             problem = "Repeated";
                         }

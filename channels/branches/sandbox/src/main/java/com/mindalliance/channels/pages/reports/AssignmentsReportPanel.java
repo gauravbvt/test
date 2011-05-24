@@ -206,7 +206,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                 item.add( reportHelper.newFlowLink( part, assignment.getEmployment() ), new Label( "to", getToLabel(
                         assignment ) ).setVisible( !selector.isActorSelected() ), new Label( "source",
                         prefix
-                                .getReportSource() )
+                                .getReportSource( "" ) )
                         .add( new AttributeModifier( "title", true, new Model<String>( getSourcesList(
                                 sources,
                                 prefix ) ) ) ),
@@ -304,7 +304,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
         Part part = assignment.getPart();
         return selector.getAllAssignments()
                 .getSources( part ).without( assignment.getActor() )
-                .getCommonSpec( part ).getReportSource();
+                .getCommonSpec( part ).getReportSource( "" );
     }
 
     private Component newSubtaskList( List<Assignment> subtasks ) {
@@ -366,7 +366,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         prefix.getOrganization() == null ? employment.getOrganization() : null,
                         prefix.getJurisdiction() == null ? employment.getJurisdiction() : null
                 );
-                buf.append( spec.getReportSource() );
+                buf.append( spec.getReportSource( "" ) );
             }
         }
         return buf.toString();
