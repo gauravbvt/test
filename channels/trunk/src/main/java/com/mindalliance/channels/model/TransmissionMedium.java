@@ -84,7 +84,7 @@ public class TransmissionMedium extends ModelEntity {
     private void compilePattern( String addressPattern ) {
         compiledPattern = null;
         try {
-            if ( !addressPattern.isEmpty() )
+            if ( addressPattern != null && !addressPattern.isEmpty() )
                 compiledPattern = Pattern.compile( addressPattern );
         } catch ( PatternSyntaxException e ) {
             LOG.warn( "Invalid pattern: " + addressPattern );
@@ -196,7 +196,7 @@ public class TransmissionMedium extends ModelEntity {
     }
 
     public void setAddressPattern( String addressPattern ) {
-        this.addressPattern = addressPattern;
+        this.addressPattern = addressPattern == null ? "" : addressPattern;
         compilePattern( addressPattern );
     }
 
@@ -303,8 +303,8 @@ public class TransmissionMedium extends ModelEntity {
      */
     public boolean isAddressValid( String address ) {
         Pattern pattern = getEffectiveCompiledAddressPattern();
-        return pattern != null
-                && pattern.matcher( address ).matches();
+        return pattern == null
+                || pattern.matcher( address ).matches();
     }
 
 

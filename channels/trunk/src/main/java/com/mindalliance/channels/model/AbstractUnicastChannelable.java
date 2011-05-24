@@ -1,5 +1,8 @@
 package com.mindalliance.channels.model;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +84,9 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
         return true;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean canSetChannels() {
         return true;
     }
@@ -100,4 +105,17 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
         return super.isUndefined() && channels.isEmpty();
     }
 
+    @Override
+    public boolean references( final ModelObject mo ) {
+        return super.references( mo )
+                || ( mo instanceof TransmissionMedium
+                && CollectionUtils.exists(
+                channels,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Channel) object ).getMedium().equals( mo );
+                    }
+                } ) );
+    }
 }

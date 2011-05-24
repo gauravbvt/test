@@ -269,7 +269,7 @@ public class TypesPanel extends AbstractCommandablePanel {
             assert isMarkedForCreation();
             if ( name != null && !name.isEmpty()) {
                 type = doSafeFindOrCreateType( getEntity().getClass(), name );
-                if ( type != null  && !getEntity().hasType( type ) ) {
+                if ( type != null  && !type.isUniversal() && !getEntity().hasType( type ) ) {
                     doCommand( new UpdatePlanObject(
                             getEntity(),
                             "types",
