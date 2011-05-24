@@ -14,6 +14,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
@@ -40,6 +41,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
      * The logger.
      */
     private final Logger LOG = LoggerFactory.getLogger( UserFeedbackPanel.class );
+    private final static String LABEL = "Send feedback";
 
     @SpringBean
     private MailSender mailSender;
@@ -59,15 +61,23 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     private AjaxCheckBox questionCheckBox;
     private static final int MAX_SUBJECT_LENGTH = 60;
     private String clientInfo = "";
+    private String feedbackLabel;
+    private String topic;
 
 
     public UserFeedbackPanel( String id ) {
-        this( id, null );
+        this( id, null, null, null );
     }
 
-    public UserFeedbackPanel( String id, Identifiable about ) {
+    public UserFeedbackPanel( String id, Identifiable about, String label ) {
+        this( id, about, label, null );
+    }
+
+    public UserFeedbackPanel( String id, Identifiable about, String label, String topic ) {
         super( id );
         this.about = about;
+        feedbackLabel = label;
+        this.topic = topic;
         init();
     }
 
@@ -95,6 +105,11 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
             }
         };
         add( newFeedback );
+        newFeedback.add(  new Label("label", getFeedbackLabel() ) );
+    }
+
+    private String getFeedbackLabel() {
+        return feedbackLabel == null ? LABEL : feedbackLabel;
     }
 
     private void addFeedbackFields() {
@@ -258,6 +273,14 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
                 SegmentObject segObj = (SegmentObject)about;
                 sb.append( " in segment ");
                 sb.append( segObj.getSegment().getName() );
+                sb.append( " [" );
+                sb.append( segObj.getSegment().getId() );
+                sb.append( "]");
+            }
+            if ( topic != null ) {
+                sb.append( " (" );
+                sb.append( topic );
+                sb.append( ')' );
             }
             return sb.toString();
         }

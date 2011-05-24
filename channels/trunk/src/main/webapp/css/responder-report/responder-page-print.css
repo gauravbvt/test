@@ -25,6 +25,11 @@ div.task h2 a.back {
 	display:none;
 }
 
+/* Feedback */
+span.feedback-container {
+    display:none;
+}
+
 table > tbody > tr {
 	border-top: 2px solid #999999;
 }

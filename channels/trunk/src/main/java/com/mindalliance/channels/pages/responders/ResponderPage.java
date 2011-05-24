@@ -9,7 +9,6 @@ import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Attachment;
-import com.mindalliance.channels.model.Availability;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Commitment;
@@ -36,6 +35,7 @@ import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.util.ChannelsUtils;
@@ -74,7 +74,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.mindalliance.channels.pages.responders.ResponderPage.ReportTask.Type.*;
+import static com.mindalliance.channels.pages.responders.ResponderPage.ReportTask.Type.IMMEDIATE;
+import static com.mindalliance.channels.pages.responders.ResponderPage.ReportTask.Type.PROMPTED;
+import static com.mindalliance.channels.pages.responders.ResponderPage.ReportTask.Type.SUBTASK;
 
 /** The responder report.  This page is different for every user. */
 public class ResponderPage extends WebPage {
@@ -183,7 +185,10 @@ public class ResponderPage extends WebPage {
 
         List<ReportSegment> reportSegments = getSegments( service, profile );
         add(
+            new UserFeedbackPanel( "planFeedback", plan, "Send overall feedback" ),
+/*
             new Label( "userName", user.getUsername() ),
+*/
             new Label( "personName", contact.getActorName() ),
             new Label( "planName", plan.getName() ),
             new Label( "planName2", plan.getName() ),
@@ -215,7 +220,7 @@ public class ResponderPage extends WebPage {
                     new WebMarkupContainer( "phaseAnchor" )
                         .add( new Label( "phaseText", segment.getName() ) )
                         .add( new AttributeModifier( "name", true, segment.getAnchor() ) ),
-
+                    new UserFeedbackPanel( "segmentFeedback", segment.getSegment(), "Send feedback" ),
                     // TODO add back link to top
                     new Label( "context", segment.getContext() ),
                     new Label( "segDesc", ensurePeriod( segment.getDescription() ) )
@@ -232,6 +237,11 @@ public class ResponderPage extends WebPage {
                         .add(
                             new Label( "contactSeq", segment.getContactSeq() ),
                             new Label( "contactTitle", segment.getName() ),
+                            new UserFeedbackPanel(
+                                    "contactListFeedback",
+                                    segment.getSegment(),
+                                    "Send feedback",
+                                    "Contact list"),
                             newContacts( segment.getContacts(), segment.getContactSpecs() ) )
                         .setVisible( !segment.getContacts().isEmpty() ) );
             }
@@ -252,6 +262,7 @@ public class ResponderPage extends WebPage {
                     new WebMarkupContainer( "taskAnchor" )
                         .add( new Label( "taskName", task.getTitle() ) )
                         .add( new AttributeModifier( "name", true, task.getAnchor() ) ),
+                    new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback" ),
                     new WebMarkupContainer( "backTask" )
                         .add( new AttributeModifier( "href", true, segment.getLink() ) ),
                     new Label( "taskSeq", task.getSeqString() ),
@@ -519,7 +530,11 @@ public class ResponderPage extends WebPage {
         List<Channel> channels = contact.getChannels();
 
         return new WebMarkupContainer( id )
-            .add( new Label( "contact.name", contact.getActorName() ),
+            .add( new UserFeedbackPanel(
+                    "contactFeedback",
+                    contact.getParticipation(),
+                    "Send feedback" ),
+                    new Label( "contact.name", contact.getActorName() ),
                   new Label( "contact.title", title.isEmpty() ? "" : ", " + title ),
                   new Label( "contact.classification", contact.getClassifications() ),
                   new Label( "contact.organization",
@@ -537,7 +552,7 @@ public class ResponderPage extends WebPage {
                           }
                       } ).setVisible( !channels.isEmpty() ),
 
-                  new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() ) );
+                  new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() )  );
     }
 
     private static List<ReportSegment> getSegments( PlanService planService, Specable profile ) {
@@ -880,6 +895,10 @@ public class ResponderPage extends WebPage {
                     .add(
                         new Label( "phaseLinkText", getTitle() ).setRenderBodyOnly( true ) )
                     .add( new AttributeModifier( "href", true, getLink() ) ) );
+        }
+
+        public Segment getSegment() {
+            return segment;
         }
     }
     //================================================
@@ -1229,6 +1248,10 @@ public class ResponderPage extends WebPage {
             return specs;
         }
 
+        public Part getPart() {
+            return part;
+        }
+
         public enum Type {IMMEDIATE, PROMPTED, SUBTASK}
     }
 
@@ -1398,6 +1421,10 @@ public class ResponderPage extends WebPage {
             return actor == null || actor.getAvailability() == null ?
                    N_A :
                    actor.getAvailability().toString();
+        }
+
+        public Participation getParticipation() {
+            return participation;
         }
     }
 
