@@ -303,7 +303,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
         BookmarkablePageLink<? extends WebPage> gotoReportLink =
-                getGuidelinesLink( "gotoReport", getQueryService(), getPlan(), User.current() );
+                getGuidelinesLink( "gotoReport", getQueryService(), getPlan(), User.current(), true );
         Label gotoReportLabel = new Label( "proceduresLabel", getGotoReportLabel( user, plan ) );
         gotoReportLink.add( gotoReportLabel );
         form.add(

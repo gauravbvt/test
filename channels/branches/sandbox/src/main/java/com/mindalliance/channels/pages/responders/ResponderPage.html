@@ -11,19 +11,27 @@
 <body>
 <div id="container">
     <div id="header">
-		<a href="home"><img class="logo" src="../images/responder-report/channels-logo-small.png" width="19" height="22" alt="Channels Logo" /></a>
+		<a href="home"><img class="logo" src="/images/logo_home.png" width="48" height="48" alt="Channels Logo" /></a>
         <h1>Channels &ndash; <span wicket:id="planName2">Plan name</span> <span wicket:id="planVersion">v1</span> &ndash; Responder Report</h1>
+        <span wicket:id="planFeedback" class="feedback-container">[feedback panel]</span>
+<!--
 		<a class="logout" href="logout">Logout <span wicket:id="userName">user</span></a>
+-->
     </div>
 
     <div id="contents">
         <div class="title-desc">
-            <h1 class="subtitle">Information Sharing Guidelines <br />for <span wicket:id="personName">person's name</span></h1>
+            <h1 class="subtitle">
+                Information Sharing Guidelines <br />for <span wicket:id="personName">person's name</span>
+            </h1>
             <h2 wicket:id="planDescription" class="description">Plan description</h2>
         </div>
         <div id="about">
             <span wicket:id="contact">
-                <h2><span class="seq">About:</span> <span wicket:id="contact.name">{agent name}</span></h2>
+                <h2>
+                    <span class="seq">About:</span> <span wicket:id="contact.name">{agent name}</span>
+                    <span wicket:id="contactFeedback" class="feedback-container">[feedback panel]</span>
+                </h2>
                 <h3>Contact Info</h3>
                 <ul>
                     <li>Role: <span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span></li>
@@ -51,8 +59,11 @@
         </div>
 
         <div wicket:id="phases" class="phase">
-            <h2><span class="seq">Situation <span wicket:id="phaseSeq">1</span>:</span>
-                <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name}</span></a></h2>
+            <h2>
+                <span class="seq">Situation <span wicket:id="phaseSeq">1</span>:</span>
+                <a wicket:id="phaseAnchor"><span wicket:id="phaseText">{Phase name}</span></a>
+                <span wicket:id="segmentFeedback" class="feedback-container">[feedback panel]</span>
+            </h2>
             <table class="taskHeader">
                 <tr>
                     <th valign="top"><p>Context:</p></th>
@@ -108,6 +119,7 @@
                 <h2><a class="back" href="#" wicket:id="backTask">[ back ]</a>
                     <span class="num">Task <span wicket:id="taskSeq" class="seq">1.1</span>:</span>
                     <a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a>
+                    <span wicket:id="taskFeedback" class="feedback-container">[feedback panel]</span>
                 </h2>
 
                 <table class="taskHeader">
@@ -435,6 +447,7 @@
             <div class="contactList" wicket:id="contactList">
                 <h2><span class="num">Contacts <span wicket:id="contactSeq">4.4</span>:</span>
                     <span wicket:id="contactTitle">{Segment name}</span> resources
+                    <span wicket:id="contactListFeedback" class="feedback-container">[feedback panel]</span>
                 </h2>
                 <p>This situation may require contacting the following persons or resources:</p>
                 <div wicket:id="group" class="contactGroup">

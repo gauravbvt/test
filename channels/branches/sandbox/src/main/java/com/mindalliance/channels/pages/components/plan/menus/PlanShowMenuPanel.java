@@ -74,7 +74,7 @@ public class PlanShowMenuPanel extends MenuPanel {
             menuItems.add(
                     newLink(
                             "IS guidelines",
-                            AbstractChannelsWebPage.getGuidelinesLink( "link", getQueryService(), getPlan(), User.current() ) ) );
+                            AbstractChannelsWebPage.getGuidelinesLink( "link", getQueryService(), getPlan(), User.current(), false ) ) );
             menuItems.add(
                     newLink(
                             "IS procedure map",

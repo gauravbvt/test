@@ -52,7 +52,7 @@ div#container {
 
 div#header {
     width: 1000px;
-    height: 30px;
+    height: 54px;
     background: #c3d9ff;
     border-bottom: 1px solid #999999;
 	font-size:12px;
@@ -89,12 +89,12 @@ div#header h1 {
     color: #333333;
     display: block;
     float: left;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: bold;
-    padding: 7px 0 0 7px;
+    padding: 16px 0 0 7px;
 }
 
-div#header a.logout {
+/*div#header a.logout {
     background: url('../../images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
     color: #727272;
@@ -109,7 +109,7 @@ div#header a.logout {
 
 div#header a.logout:hover {
     color: #333333;
-}
+}*/
 
 
 /* ----- Typography ----- */
@@ -185,7 +185,7 @@ div.task h2 a {
 div.task h2 a.back {
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
-	padding:4px 0 0 0;
+	padding:2px 0 0 0;
 }
 
 div#about h3,
@@ -344,3 +344,71 @@ table tr.contact ul {
 	margin: 0;
 	padding: 0;
 }
+
+/* Feedback */
+span.feedback-container a {
+    background: url('/images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px;
+    margin-left: 5px;
+    text-transform: capitalize;
+    outline: none;
+}
+
+span.feedback-container a:hover {
+    color: #333333;
+}
+
+
+#header span.feedback-container {
+	float:right;
+	padding:21px 5px 0 0;
+}
+
+#contents span.feedback-container {
+	float:right;
+	padding:4px 5px 0 0;
+}
+
+div.feedback-form-cont {
+	display:block;
+	background: #dddddd;
+	font-size:11px;
+    border: 1px solid #a7a9ac;
+	padding:5px;
+	position:relative;
+	margin:3px 0 0 5px;
+}
+
+div.feedback-options {
+	padding:0 0 5px 0;
+}
+
+div.feedback-urgency {
+	padding:5px 0 5px 0;
+}
+
+div.feedback-form-cont textarea {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	padding:5px;
+}
+
+div.cancelSend input {
+	font-size:10px;
+	padding:2px;
+	background:#cccccc;
+	border:1px solid #666666;
+}
+
+div.cancelSend input:hover {
+	font-size:10px;
+	padding:2px;
+	background:#f6f6f6;
+	border:1px solid #999999;
+	color:#333333;
+}
+

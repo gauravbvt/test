@@ -350,7 +350,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         }
     }
 
-    public static BookmarkablePageLink<? extends WebPage > getGuidelinesLink( String id, QueryService queryService, Plan plan, User user ) {
+    public static BookmarkablePageLink<? extends WebPage > getGuidelinesLink(
+            String id,
+            QueryService queryService,
+            Plan plan,
+            User user,
+            boolean samePage ) {
         Actor actor = findActor( queryService, user.getUsername() );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
@@ -361,7 +366,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
                 ResponderPage.createParameters( planner ? null : actor, uri, plan.getVersion() ),
                 null,
                 plan );
-        guidelinesLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
+        if ( !samePage )
+            guidelinesLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return guidelinesLink;
     }
 

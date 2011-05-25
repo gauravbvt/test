@@ -120,24 +120,27 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     @Override
     public int[] getImageSize( String url ) {
         int[] size = new int[2];
+        size[0] = 0;
+        size[1] = 0;
         try {
             BufferedImage image = getImage( url );
             size[0] = image.getWidth();
             size[1] = image.getHeight();
-
         } catch ( IOException e ) {
             LOG.warn( "Unable to get image size for " + url, e );
-            size[0] = 0;
-            size[1] = 0;
         }
-
         return size;
     }
 
     private BufferedImage getImage( String url ) throws IOException {
-        return isUploadedFileDocument( url ) ? ImageIO.read( getUploadedImageFile( url ) )
+        BufferedImage image = isUploadedFileDocument( url ) ? ImageIO.read( getUploadedImageFile( url ) )
                 : isFileDocument( url ) ? ImageIO.read( new File( url ) )
                 : ImageIO.read( new URL( url ) );
+        if ( image == null ) {
+            LOG.warn( "No image at " + url );
+            throw new IOException( "No image at " + url  );
+        }
+        return image;
     }
 
     private static boolean isFileDocument( String url ) {
