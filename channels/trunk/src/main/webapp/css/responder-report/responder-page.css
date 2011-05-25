@@ -373,6 +373,23 @@ span.feedback-container a:hover {
 	padding:4px 5px 0 0;
 }
 
+td span.feedback-container {
+	float:right;
+	padding:3px 0 0 0;
+}
+
+td span.feedback-container a {
+    background: url('/images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 8px;
+    font-weight: bold;
+    padding: 2px;
+    margin-left: 5px;
+    text-transform: capitalize;
+    outline: none;
+}
+
 div.feedback-form-cont {
 	display:block;
 	background: #dddddd;

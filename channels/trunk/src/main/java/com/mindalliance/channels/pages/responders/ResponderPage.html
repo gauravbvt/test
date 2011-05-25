@@ -258,6 +258,7 @@
 
                                     (from <span wicket:id="flowSources">{source, source or source}</span> <span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span>).
                                     <span wicket:id="critical">This information is critical to this task.</span>
+                                    <span wicket:id="incomingFeedback" class="feedback-container">[feedback panel]</span>
                                 </td>
                             </tr>
                             <span wicket:id="eoisRow">
@@ -299,6 +300,7 @@
                                     <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
                                     to <span wicket:id="flowTargets">target, target or target.</span>
                                     <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
+                                    <span wicket:id="outgoingFlowFeedback" class="feedback-container">[feedback panel]</span>
                                 </td>
                             </tr>
                             <span wicket:id="eoisRow">
@@ -346,6 +348,7 @@
                                     to
                                     <span wicket:id="flowTargets">target, target or target.</span>
                                     <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
+                                    <span wicket:id="outgoingFlowFeedback" class="feedback-container">[feedback panel]</span>
                                 </td>
                             </tr>
                             <span wicket:id="eoisRow">
@@ -404,7 +407,7 @@
                                     to
                                     <span wicket:id="flowTargets">target, target or target.</span>
                                     <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
-                                </td>
+                                    <span wicket:id="outgoingFlowFeedback" class="feedback-container">[feedback panel]</span>                               </td>
                             </tr>
                             <span wicket:id="eoisRow">
                                 <tr class="eoiHeads">
