@@ -77,11 +77,11 @@ public class SocialItemMenuPanel extends MenuPanel {
                         new Model<String>( "Show profile" ),
                         link ) );
             }
-            String participant = participation.getUsername();
+            final String participant = participation.getUsername();
             if ( participant != null && !participant.equals( currentUsername ) ) {
                 Link link = new AjaxFallbackLink( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
-                        updatable.update( target, currentUsername, SocialPanel.SEND_MESSAGE );
+                        updatable.update( target, participant, SocialPanel.SEND_MESSAGE );
                     }
                 };
                 menuItems.add( new LinkMenuItem(

@@ -1650,8 +1650,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
             if ( change.isUpdated() && change.isForProperty( "other" ) ) {
                 expandFlow( change );
             } else if ( change.isSelected() ) {
+                if ( flowMaximized ) {
+                    change.setType( Change.Type.Recomposed );
+                } else {
+                    change.setType( Change.Type.Expanded );
+                }
                 flowMaximized = false;
-                change.setType( Change.Type.Expanded );
                 if ( changedFlow.getSegment() != segment ) {
                     setSegment( changedFlow.getSegment() );
                     change.setType( Change.Type.Recomposed );

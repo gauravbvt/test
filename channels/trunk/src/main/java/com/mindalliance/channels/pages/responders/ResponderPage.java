@@ -1648,8 +1648,8 @@ public class ResponderPage extends WebPage {
         }
 
         public boolean isAll() {
-
-            return flow.isAll();
+            // An external flow is by definition always to all assigned to targeted task.
+            return flow.isExternal() || flow.isAll();
         }
 
         public boolean isCritical() {
