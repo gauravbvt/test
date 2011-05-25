@@ -378,6 +378,10 @@ span.feedback-container a {
     outline: none;
 }
 
+div.phase h2 span.feedback-container a, div.task h2 span.feedback-container a {
+    color: #727272;
+}
+
 td span.feedback-container a , h2 span.feedback-container a{
     font-size: 8px;
 }
@@ -388,6 +392,7 @@ td span.feedback-container a{
 
 h2 span.feedback-container a{
     padding: 4px;
+    border: 1px solid #a7a9ac;
 }
 
 td span.feedback-container a {
