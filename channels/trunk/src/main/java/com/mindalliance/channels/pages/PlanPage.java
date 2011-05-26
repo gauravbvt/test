@@ -1328,7 +1328,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void expand( Identifiable identifiable ) {
-        expand( new Change( Change.Type.None, identifiable ) );
+        if ( identifiable != null )
+            expand( new Change( Change.Type.None, identifiable ) );
     }
 
     private void expand( Change change ) {
@@ -1377,7 +1378,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void collapse( Identifiable identifiable ) {
-        collapse( new Change( Change.Type.None, identifiable ) );
+        if ( identifiable != null )
+            collapse( new Change( Change.Type.None, identifiable ) );
     }
 
     private void collapse( Change change ) {
