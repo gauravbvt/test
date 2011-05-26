@@ -329,7 +329,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     }
 
     /**
-     * Find all places this one is contained in, avoiding circularities.
+     * Find all places this one is contained in, avoiding circularity.
      *
      * @return a list of places
      */
@@ -345,18 +345,20 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
                 containers.add( within );
                 containers.addAll( within.safeContainment( visited ) );
             }
+            // TODO - deal with place type that must be contained in an actual place?
         }
         return containers;
     }
 
-    @Override
+  @Override
     public Place getPlaceBasis() {
-        if ( getGeoLocation() == null )
+        GeoLocation geoLoc = getGeoLocation();
+        if ( geoLoc == null )
             for ( Place container : containment() )
                 if ( container.getGeoLocation() != null )
                     return container;
 
-        return this;
+        return geoLoc == null ? null : this;
     }
 
     /**
