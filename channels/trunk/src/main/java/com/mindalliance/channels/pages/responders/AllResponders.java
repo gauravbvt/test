@@ -3,14 +3,23 @@
 
 package com.mindalliance.channels.pages.responders;
 
+import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.command.LockManager;
+import com.mindalliance.channels.command.LockingException;
+import com.mindalliance.channels.command.commands.CreateEntityIfNew;
+import com.mindalliance.channels.command.commands.UpdateObject;
+import com.mindalliance.channels.command.commands.UpdateObject.Action;
+import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.query.PlanService;
+import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -28,6 +37,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,6 +63,12 @@ public class AllResponders extends WebPage {
 
     @SpringBean
     private PlanManager planManager;
+
+    @SpringBean
+    private Commander commander;
+
+    @SpringBean
+    private LockManager lockManager;
 
     public AllResponders() {
 
@@ -126,19 +142,27 @@ public class AllResponders extends WebPage {
                         parameters.put( "agent", actor.getId() );
                         String userName = p.getUsername();
                         parameters.put( "user", userName );
-                        User user = planManager.getUserService().getUserNamed( userName );
+                        User otherUser = planManager.getUserService().getUserNamed( userName );
                         item.add(
                             new BookmarkablePageLink<ResponderPage>(
                                 "responder", ResponderPage.class, parameters )
-                                  .add( new Label( "responderName", user.getFullName() )
+                                  .add( new Label( "responderName", otherUser.getFullName() )
                                             .setRenderBodyOnly( true ) ),
-                            new ExternalLink( "userName", "mailTo:" + user.getEmail(), userName ),
+                            new ExternalLink( "userName", "mailTo:" + otherUser.getEmail(), userName ),
                             new WebMarkupContainer( "detachItem" )
                                 .add( new Link<Participation>( "removeLink", item.getModel() ) {
                                     @Override
                                     public void onClick() {
-                                        createService( plan ).remove( getModelObject() );
-                                        planManager.save( plan );
+                                        Participation participation = getModelObject();
+                                        try {
+                                            lockManager.lock( user.getUsername(), plan.getId() );
+                                            assign( getCommander( plan ), participation, null );
+                                            lockManager.release( user.getUsername(), plan.getId() );
+                                        } catch ( LockingException e ) {
+                                            LoggerFactory.getLogger( getClass() ).warn(
+                                                "Unable to get plan lock",
+                                                e );
+                                        }
                                         getPage().detachModels();
                                         setRedirect( true );
                                         setResponsePage( ResponderPage.class, getPage().getPageParameters() );
@@ -173,17 +197,17 @@ public class AllResponders extends WebPage {
                                         tListItem.add( new Link<User>( "addLink", tListItem.getModel() ) {
                                             @Override
                                             public void onClick() {
-                                                PlanService s = createService( plan );
-                                                String username = getModelObject().getUsername();
-                                                Participation p = s.findParticipation( username );
-                                                if ( p == null ) {
-                                                    p = new Participation( username );
-                                                    s.add( p );
+                                                try {
+                                                    Commander cmdr = getCommander( plan );
+                                                    String username = getModelObject().getUsername();
+                                                    lockManager.lock( user.getUsername(), plan.getId() );
+                                                    assign( cmdr,
+                                                            findParticipation( cmdr, username ),
+                                                            actor );
+                                                    lockManager.release( user.getUsername(), plan.getId() );
+                                                } catch ( LockingException e ) {
+                                                    LoggerFactory.getLogger( getClass() ).warn( "Unable to get plan lock", e );
                                                 }
-                                                p.setActor( actor );
-                                                p.setActual();
-                                                planManager.save( plan );
-
                                                 getPage().detachModels();
                                                 setRedirect( true );
                                                 setResponsePage( ResponderPage.class,
@@ -250,6 +274,48 @@ public class AllResponders extends WebPage {
         );
     }
 
+    private static void assign( Commander commander, Participation participation, Actor actor ) {
+        participation.setActor( actor );
+        commander.doCommand( new UpdatePlanObject( participation,
+                                                   "actor",
+                                                   actor,
+                                                   Action.Set ) );
+
+    }
+
+    /**
+     * Commander needs some tending to prior to use.
+     * @param plan
+     * */
+    private Commander getCommander( Plan plan ) {
+        // Adjust so commander actually behave as expected
+        user.setPlan( plan );
+        PlanService service = createService( plan );
+        commander.setPlanDao( service.getDao() );
+        commander.setLockManager( lockManager );
+
+        return commander;
+    }
+
+    private static Participation findParticipation( Commander cmdr, String username ) {
+        QueryService planService = cmdr.getQueryService();
+        Participation participation = planService.findParticipation( username );
+        if ( participation == null ) {
+            Participation newPart = (Participation) cmdr.doCommand(
+                new CreateEntityIfNew(
+                        Participation.class,
+                        username,
+                        ModelEntity.Kind.Actual )
+                ).getSubject( planService );
+
+            newPart.setActual();
+            return newPart;
+        }
+        else
+            return participation;
+
+    }
+
     private void addChannelsLogo() {
         WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome");
         channels_logo.add( new AjaxEventBehavior( "onclick") {
@@ -269,7 +335,8 @@ public class AllResponders extends WebPage {
 
 
     private static List<User> findUnassignedUsers( PlanService service ) {
-        Collection<User> inputCollection = service.getUserService().getUsers();
+        String uri = service.getPlan().getUri();
+        Collection<User> inputCollection = service.getUserService().getUsers( uri );
         List<User> answer = new ArrayList<User>( inputCollection.size());
         for ( User u : inputCollection ) {
             Participation participation = service.findParticipation( u.getUsername() );
