@@ -264,16 +264,16 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
             StringBuilder sb = new StringBuilder( );
             sb.append("\nAbout: ");
             sb.append( about.getTypeName() );
-            sb.append( " " );
+            sb.append( " \"" );
             sb.append( about.getName() );
-            sb.append( " [");
+            sb.append( "\" [");
             sb.append( about.getId() );
             sb.append( "]");
             if ( about instanceof SegmentObject ) {
                 SegmentObject segObj = (SegmentObject)about;
-                sb.append( " in segment ");
+                sb.append( " in segment \"");
                 sb.append( segObj.getSegment().getName() );
-                sb.append( " [" );
+                sb.append( "\" [" );
                 sb.append( segObj.getSegment().getId() );
                 sb.append( "]");
             }

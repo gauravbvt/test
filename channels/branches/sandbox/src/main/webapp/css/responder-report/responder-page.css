@@ -346,6 +346,26 @@ table tr.contact ul {
 }
 
 /* Feedback */
+span.feedback-container a:hover {
+    color: #333333;
+}
+
+span.feedback-container {
+	float:right;
+}
+
+#header span.feedback-container {
+	padding:21px 5px 0 0;
+}
+
+h2 span.feedback-container {
+	padding:6px 5px 0 0;
+}
+
+td span.feedback-container {
+	padding:2px 0 0 0;
+}
+
 span.feedback-container a {
     background: url('/images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
@@ -358,19 +378,25 @@ span.feedback-container a {
     outline: none;
 }
 
-span.feedback-container a:hover {
-    color: #333333;
+div.phase h2 span.feedback-container a, div.task h2 span.feedback-container a {
+    color: #727272;
 }
 
-
-#header span.feedback-container {
-	float:right;
-	padding:21px 5px 0 0;
+td span.feedback-container a , h2 span.feedback-container a{
+    font-size: 8px;
 }
 
-#contents span.feedback-container {
-	float:right;
-	padding:4px 5px 0 0;
+td span.feedback-container a{
+    padding: 2px;
+}
+
+h2 span.feedback-container a{
+    padding: 4px;
+    border: 1px solid #a7a9ac;
+}
+
+td span.feedback-container a {
+    margin-left: 5px;
 }
 
 div.feedback-form-cont {

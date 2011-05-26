@@ -393,6 +393,7 @@ public class ResponderPage extends WebPage {
                                 ensurePeriod( flow.getSourcesString( getPlanService() ) ) ),
                             new Label( "flowTiming", lcFirst( flow.getTiming() ) ),
                             new WebMarkupContainer( "critical" ).setVisible( flow.isCritical() ),
+                            new UserFeedbackPanel( "outgoingFlowFeedback", flow.getFlow(), "Send feedback" ),
                             new WebMarkupContainer( "eoisRow" ).add( newEoiList( flow.getElementsOfInformation() ) ).setRenderBodyOnly(
                                 true ).setVisible( flow.hasEois() ),
 
@@ -462,6 +463,7 @@ public class ResponderPage extends WebPage {
                             new Label( "flowSources", flow.getSourcesString( getPlanService() ) ),
                             new Label( "flowTiming", lcFirst( flow.getTiming() ) ),
                             new WebMarkupContainer( "critical" ).setVisible( flow.isCritical() ),
+                            new UserFeedbackPanel( "incomingFeedback", flow.getFlow(), "Send feedback" ),
                             new WebMarkupContainer( "eoisRow" ).add( newEoiList( flow.getElementsOfInformation() ) ).setRenderBodyOnly(
                                 true ).setVisible( flow.hasEois() ),
                             new WebMarkupContainer( "flowEnding" ).setVisible( flow.isTerminatingToTarget() ) );
@@ -1646,8 +1648,8 @@ public class ResponderPage extends WebPage {
         }
 
         public boolean isAll() {
-
-            return flow.isAll();
+            // An external flow is by definition always to all assigned to targeted task.
+            return flow.isExternal() || flow.isAll();
         }
 
         public boolean isCritical() {
@@ -1673,6 +1675,10 @@ public class ResponderPage extends WebPage {
         public Intent getIntent() {
 
             return flow.getIntent();
+        }
+
+        public Flow getFlow() {
+            return flow;
         }
     }
 }

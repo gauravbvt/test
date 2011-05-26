@@ -120,6 +120,8 @@ div.zoom {
     position: inherit;
     z-index: 1000;
     cursor: pointer;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 4px 4px 0 4px;
 }
 
 div.maximized > div.zoom {
