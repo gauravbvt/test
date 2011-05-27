@@ -548,9 +548,28 @@ public class ResponderPage extends WebPage {
                           protected void populateItem( ListItem<Channel> item ) {
 
                               Channel channel = item.getModelObject();
-                              item.add( new Label( "channelType",
-                                                   channel.getMedium().getLabel() + ":" ),
-                                        new Label( "channel", channel.getAddress() ) );
+                              String label = channel.getMedium().getLabel();
+                              boolean isEmail = "Email".equals( label );
+                              String address = channel.getAddress();
+                              item.add(
+                                  new WebMarkupContainer( "mail" )
+                                      .add(
+                                          new WebMarkupContainer( "mailTo" )
+                                            .add( new Label( "channel", address ) )
+                                            .add( new AttributeModifier( "href", true,
+                                                    new Model<String>( "mailTo:" + address ) ) )
+
+                                      )
+                                      .setRenderBodyOnly( true )
+                                      .setVisible( isEmail ),
+                                  new WebMarkupContainer( "notMail" )
+                                      .add(
+                                          new Label( "channelType", label + ":" ),
+                                          new Label( "channel", address )
+                                      )
+                                      .setRenderBodyOnly( true )
+                                      .setVisible( !isEmail )
+                              );
                           }
                       } ).setVisible( !channels.isEmpty() ),
 
@@ -560,9 +579,10 @@ public class ResponderPage extends WebPage {
     private static List<ReportSegment> getSegments( PlanService planService, Specable profile ) {
 
         List<ReportSegment> result = new ArrayList<ReportSegment>();
-        Assignments allAssignments = planService.getAssignments( false );
-        Assignments profileAssignments = allAssignments.with( profile );
-        Assignments assignedByOthers = profileAssignments.notFrom( profile );
+        Assignments assignedByOthers = planService.getAssignments( false, false )
+                                        .with( profile )
+                                        .notFrom( profile );
+
         for ( Segment segment : assignedByOthers.getSegments() )
             result.add( new ReportSegment(
                                 planService,
@@ -591,18 +611,21 @@ public class ResponderPage extends WebPage {
                                     AggregatedFlow flow = flowItem.getModelObject();
                                     PlanService service = getPlanService();
                                     flowItem.add(
-                                        new WebMarkupContainer( "nFlow" ).add(
-                                            new Label( "flowName", flow.getLabel() ), new Label(
-                                            "flowSources",
-                                            flow.getSourcesString( service ) ) ).setVisible( !flow.isAskedFor() ),
-                                        new WebMarkupContainer( "rFlow" ).add(
-                                            new Label( "flowName", flow.getLabel() ), new Label(
-                                            "flowSources",
-                                            flow.getSourcesString( service ) ) ).setVisible( flow.isAskedFor() ) );
+                                        new WebMarkupContainer( "nFlow" )
+                                            .add( new Label( "flowName", flow.getLabel() ),
+                                                  new Label( "flowSources",
+                                                             flow.getSourcesString( service ) ) )
+                                            .setVisible( !flow.isAskedFor() ),
+                                        new WebMarkupContainer( "rFlow" )
+                                            .add( new Label( "flowName", flow.getLabel() ),
+                                                  new Label( "flowSources",
+                                                             flow.getSourcesString( service ) ) )
+                                            .setVisible( flow.isAskedFor() ) );
                                 }
                             }.setRenderBodyOnly( true ),
 
-                            new Label( "linkName", task.getTitle() ), newTaskLink( task ) );
+                            new Label( "linkName", task.getTitle() ),
+                            newTaskLink( task ) );
                     }
                 } )
             .setVisible( !inputs.isEmpty() );
@@ -1137,7 +1160,6 @@ public class ResponderPage extends WebPage {
         }
 
         private String getSeqString() {
-
             return Integer.toString( phaseSeq ) + '.' + taskSeq;
         }
 
@@ -1193,12 +1215,10 @@ public class ResponderPage extends WebPage {
         }
 
         private boolean isProhibited() {
-
             return part.isProhibited();
         }
 
         private Place getLocation() {
-
             return part.getLocation();
         }
 
@@ -1222,32 +1242,7 @@ public class ResponderPage extends WebPage {
         }
 
         public Set<ResourceSpec> getContactSpecs() {
-
-            Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
-            for ( Flow receive : part.getAllSharingReceives() )
-                if ( receive.isAskedFor() ) {
-                    Node source = receive.getSource();
-                    if ( source.isConnector() ) {
-                        for ( ExternalFlow flow : ( (Connector) source ).getExternalFlows() ) {
-                            Node externalSource = flow.getSource();
-                            if ( !externalSource.isConnector() )
-                                specs.add( new ResourceSpec( (Specable) externalSource ) );
-                        }
-                    } else
-                        specs.add( new ResourceSpec( (Specable) source ) );
-                }
-            for ( Flow send : part.getAllSharingSends() ) {
-                Node target = send.getTarget();
-                if ( target.isConnector() )
-                    for ( ExternalFlow flow : ( (Connector) target ).getExternalFlows() ) {
-                        Node externalTarget = flow.getTarget();
-                        if ( !externalTarget.isConnector() )
-                            specs.add( new ResourceSpec( (Specable) externalTarget ) );
-                    }
-                else
-                    specs.add( new ResourceSpec( (Specable) target ) );
-            }
-            return specs;
+            return part.getContactSpecs();
         }
 
         public Part getPart() {

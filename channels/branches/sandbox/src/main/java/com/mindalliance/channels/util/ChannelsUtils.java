@@ -596,4 +596,14 @@ public final class ChannelsUtils {
             return StringUtils.uncapitalize( s );
 
     }
+
+    /**
+     * Remove all extra blanks from a string.
+     *
+     * @param s a string
+     * @return a string
+     */
+    public static String stripExtraBlanks( String s ) {
+        return s.trim().replaceAll( "\\s+", " " );
+    }
 }

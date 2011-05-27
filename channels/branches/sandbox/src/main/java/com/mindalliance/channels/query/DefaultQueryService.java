@@ -321,7 +321,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, Long id ) {
         T result;
-
         // If entity can only be a type, find or create a type.
         if ( !ModelEntity.canBeActualOrType( clazz )
                 && ModelEntity.defaultKindFor( clazz ).equals( ModelEntity.Kind.Type ) )

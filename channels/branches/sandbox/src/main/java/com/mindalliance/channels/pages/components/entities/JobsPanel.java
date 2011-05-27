@@ -772,7 +772,22 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             else
                 return null;
         }
+
+         /**
+         * Get jurisdiction place from its name.
+         * Returns null if name is empty.
+         *
+         * @return a place
+         */
+        public Actor getSupervisor() {
+            if ( !getSupervisorName().isEmpty() )
+                return getQueryService().findOrCreate( Actor.class, getSupervisorName() );
+            else
+                return null;
+        }
     }
+
+
 
     /**
      * Job entity panel.

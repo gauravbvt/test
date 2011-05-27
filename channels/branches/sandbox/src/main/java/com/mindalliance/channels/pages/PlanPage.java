@@ -1328,7 +1328,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void expand( Identifiable identifiable ) {
-        expand( new Change( Change.Type.None, identifiable ) );
+        if ( identifiable != null )
+            expand( new Change( Change.Type.None, identifiable ) );
     }
 
     private void expand( Change change ) {
@@ -1336,7 +1337,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( change.isForInstanceOf( ModelEntity.class ) ) {
             // ModelObject entity = (ModelObject) identifiable;
             ModelObject previous = findExpandedEntity();
-            if ( previous != null ) {
+            if ( previous != null && !previous.equals( change.getSubject( getQueryService() ) ) ) {
                 /*String previousAspect = getAspectShown( previous );
                 viewAspect( entity, previousAspect );*/
                 collapse( new Change( Change.Type.None, previous ) );
@@ -1377,7 +1378,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void collapse( Identifiable identifiable ) {
-        collapse( new Change( Change.Type.None, identifiable ) );
+        if ( identifiable != null )
+            collapse( new Change( Change.Type.None, identifiable ) );
     }
 
     private void collapse( Change change ) {

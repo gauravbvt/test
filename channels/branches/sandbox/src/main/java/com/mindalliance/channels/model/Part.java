@@ -113,7 +113,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
 
     @Override
     public String getTitle() {
-        return MessageFormat.format( "{0} {1}", getName(), WordUtils.uncapitalize( getTask() ) );
+        return MessageFormat.format( "{0} {1}", getName(), WordUtils.uncapitalize( task ) );
     }
 
     @Override
@@ -373,8 +373,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      */
     @SuppressWarnings( "unchecked" )
     public List<Goal> getMitigations() {
-        return (List<Goal>) CollectionUtils.select(
-                getGoals(),
+        return (List<Goal>) CollectionUtils.select( goals,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -409,7 +408,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
 
     @Override
     public boolean isEffectivelyOperational() {
-        return isOperational();
+        return operational;
     }
 
     public boolean isProhibited() {
@@ -500,7 +499,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     @Override
     public String displayString( int maxItemLength ) {
         return resourceSpec().displayString( maxItemLength )
-                + " (" + StringUtils.abbreviate( getTask(), maxItemLength ) + ")";
+                + " (" + StringUtils.abbreviate( task, maxItemLength ) + ")";
     }
 
     @Override
@@ -700,9 +699,9 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
             label += getOrganization().getName();
         }
         if ( !label.isEmpty() ) label += sep;
-        label += getTask();
-        if ( isRepeating() ) {
-            label += " (every " + getRepeatsEvery().toString() + ")";
+        label += task;
+        if ( repeating ) {
+            label += " (every " + repeatsEvery.toString() + ")";
         }
         return label;
     }
@@ -726,7 +725,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         sb.append( getFullTitle( " ", queryService ) );
         if ( location != null ) {
             sb.append( " at " );
-            sb.append( getLocation().getName() );
+            sb.append( location.getName() );
         }
         return sb.toString();
     }
@@ -742,7 +741,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      * @return a boolean
      */
     public boolean initiatesEvent() {
-        return getInitiatedEvent() != null;
+        return initiatedEvent != null;
     }
 
     @Override
@@ -830,7 +829,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      */
     public boolean isUseful() {
         return !goals.isEmpty()
-                || ( isTerminatesEventPhase() && getSegment().hasTerminatingRisks() );
+                || terminatesEventPhase && getSegment().hasTerminatingRisks();
     }
 
     /**
@@ -918,8 +917,8 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      */
     public List<Goal> getGoalsAchieved() {
         Set<Goal> goals = new HashSet<Goal>();
-        goals.addAll( getGoals() );
-        if ( isTerminatesEventPhase() && getSegment().hasTerminatingRisks() ) {
+        goals.addAll( this.goals );
+        if ( terminatesEventPhase && getSegment().hasTerminatingRisks() ) {
             goals.addAll( getSegment().getRisks() );
         }
         return new ArrayList<Goal>( goals );
@@ -966,9 +965,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         return priority.getNegativeLabel().toLowerCase();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = super.getAttachmentTypes();
         types.add( Attachment.Type.PolicyMust );
@@ -985,24 +982,23 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     public Map<String, Object> mapState() {
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "description", getDescription() );
-        state.put( "task", getTask() );
-        state.put( "repeatsEvery", new Delay( getRepeatsEvery() ) );
-        state.put( "completionTime", new Delay( getCompletionTime() ) );
+        state.put( "task", task );
+        state.put( "repeatsEvery", new Delay( repeatsEvery ) );
+        state.put( "completionTime", new Delay( completionTime ) );
         state.put( "attachments", new ArrayList<Attachment>( getAttachments() ) );
         state.put( "waivedIssueDetections", new ArrayList<String>( getWaivedIssueDetections() ) );
-        state.put( "selfTerminating", isSelfTerminating() );
-        state.put( "repeating", isRepeating() );
-        state.put( "terminatesEventPhase", isTerminatesEventPhase() );
-        state.put( "startsWithSegment", isStartsWithSegment() );
+        state.put( "selfTerminating", selfTerminating );
+        state.put( "repeating", repeating );
+        state.put( "terminatesEventPhase", terminatesEventPhase );
+        state.put( "startsWithSegment", startsWithSegment );
         List<Map<String, Object>> goalMaps = new ArrayList<Map<String, Object>>();
-        for ( Goal goal : getGoals() ) {
+        for ( Goal goal : goals ) {
             goalMaps.add( goal.toMap() );
         }
         state.put( "goals", goalMaps );
-        if ( getInitiatedEvent() != null )
+        if ( initiatedEvent != null )
             state.put(
-                    "initiatedEvent",
-                    getInitiatedEvent().getName() );
+                    "initiatedEvent", initiatedEvent.getName() );
         if ( getActor() != null )
             state.put(
                     "actor",
@@ -1018,10 +1014,10 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
             state.put(
                     "jurisdiction",
                     Arrays.asList( getJurisdiction().getName(), getJurisdiction().isType() ) );
-        if ( getLocation() != null )
+        if ( location != null )
             state.put(
                     "location",
-                    Arrays.asList( getLocation().getName(), getLocation().isType() ) );
+                    Arrays.asList( location.getName(), location.isType() ) );
         return state;
 
     }
@@ -1032,9 +1028,9 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      * @return a string
      */
     public String getTaskWithCategory() {
-        String str = getTask();
-        if ( getCategory() != null ) {
-            str += " (" + getCategory().getLabel().toLowerCase() + ")";
+        String str = task;
+        if ( category != null ) {
+            str += " (" + category.getLabel().toLowerCase() + ')';
         }
         return str;
     }
@@ -1154,7 +1150,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     }
 
     public boolean matchesTaskOf( Part other, Place locale ) {
-        return Matcher.getInstance().same( getTask(), other.getTask() )
+        return Matcher.getInstance().same( task, other.getTask() )
                 && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
     }
 
@@ -1190,6 +1186,33 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         return getRole() != null;
     }
 
+    public Set<ResourceSpec> getContactSpecs() {
+        Set<ResourceSpec> specs = new HashSet<ResourceSpec>();
+        for ( Flow receive : getAllSharingReceives() )
+            if ( receive.isAskedFor() ) {
+                Node source = receive.getSource();
+                if ( source.isConnector() ) {
+                    for ( ExternalFlow flow : ( (Connector) source ).getExternalFlows() ) {
+                        Node externalSource = flow.getSource();
+                        if ( !externalSource.isConnector() )
+                            specs.add( new ResourceSpec( (Specable) externalSource ) );
+                    }
+                } else
+                    specs.add( new ResourceSpec( (Specable) source ) );
+            }
+        for ( Flow send : getAllSharingSends() ) {
+            Node target = send.getTarget();
+            if ( target.isConnector() )
+                for ( ExternalFlow flow : ( (Connector) target ).getExternalFlows() ) {
+                    Node externalTarget = flow.getTarget();
+                    if ( !externalTarget.isConnector() )
+                        specs.add( new ResourceSpec( (Specable) externalTarget ) );
+                }
+            else
+                specs.add( new ResourceSpec( (Specable) target ) );
+        }
+        return specs;
+    }
 
     /**
      * Category of tasks.

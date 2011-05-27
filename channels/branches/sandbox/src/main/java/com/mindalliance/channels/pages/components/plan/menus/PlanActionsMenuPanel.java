@@ -68,8 +68,8 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
             menuItems.add(
                 new LinkMenuItem(
                     "menuItem",
-                    new Model<String>( "Logout " + User.current().getUsername() ),
-                    new ConfirmedAjaxFallbackLink( "link", "Log out?" ) {
+                    new Model<String>( "Sign out " + User.current().getUsername() ),
+                    new ConfirmedAjaxFallbackLink( "link", "Sign out?" ) {
                         @Override
                         public void onClick( AjaxRequestTarget target ) {
                             getCommander().absent( User.current().getUsername() );

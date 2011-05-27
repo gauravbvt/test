@@ -272,8 +272,8 @@ public class DefaultCommander implements Commander {
             if ( isReplaying() && ModelEntity.class.isAssignableFrom( clazz ) ) {
                 LOG.warn( "Recreating not found entity " + clazz.getSimpleName() + "[" + id + "] on journal replay" );
                 try {
-                    return (T)getQueryService().safeFindOrCreate( (Class<? extends ModelEntity>)clazz, "unknown", id );
-                } catch (Exception exc) {
+                    return (T) getQueryService().safeFindOrCreate( (Class<? extends ModelEntity>) clazz, "unknown", id );
+                } catch ( Exception exc ) {
                     throw new CommandException( "Failed to create missing entity while replaying journal", e );
                 }
             } else {
@@ -284,8 +284,10 @@ public class DefaultCommander implements Commander {
 
 
     @Override
-    public synchronized void resetUserHistory( String userName, boolean all ) {
-        history.resetForUser( userName, all );
+    public void resetUserHistory( String userName, boolean all ) {
+        synchronized ( getPlan() ) {
+            history.resetForUser( userName, all );
+        }
     }
 
     @Override
@@ -339,52 +341,58 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public synchronized boolean canUndo() {
-        if ( getPlan().isDevelopment() ) {
-            Memento memento = history.getUndo();
-            if ( memento != null ) {
-                Command command = memento.getCommand();
-                if ( command.isUndoable() ) {
-                    try {
-                        return command.noLockRequired() || canDo( command.getUndoCommand( this ) );
-                    } catch ( CommandException e ) {
-                        LOG.debug( "Unable to test undo-ability", e );
+    public boolean canUndo() {
+        synchronized ( getPlan() ) {
+            if ( getPlan().isDevelopment() ) {
+                Memento memento = history.getUndo();
+                if ( memento != null ) {
+                    Command command = memento.getCommand();
+                    if ( command.isUndoable() ) {
+                        try {
+                            return command.noLockRequired() || canDo( command.getUndoCommand( this ) );
+                        } catch ( CommandException e ) {
+                            LOG.debug( "Unable to test undo-ability", e );
+                        }
                     }
                 }
             }
+            return false;
         }
-
-        return false;
     }
 
     @Override
-    public synchronized boolean canRedo() {
-        if ( getPlan().isDevelopment() ) {
-            Memento memento = history.getRedo();
-            if ( memento != null ) {
-                Command command = memento.getCommand();
-                if ( command.isUndoable() ) {
-                    try {
-                        return command.noLockRequired() || canDo( command.getUndoCommand( this ) );
-                    } catch ( CommandException e ) {
-                        LOG.debug( "Unable to test redo-ability", e );
+    public boolean canRedo() {
+        synchronized ( getPlan() ) {
+            if ( getPlan().isDevelopment() ) {
+                Memento memento = history.getRedo();
+                if ( memento != null ) {
+                    Command command = memento.getCommand();
+                    if ( command.isUndoable() ) {
+                        try {
+                            return command.noLockRequired() || canDo( command.getUndoCommand( this ) );
+                        } catch ( CommandException e ) {
+                            LOG.debug( "Unable to test redo-ability", e );
+                        }
                     }
                 }
             }
+            return false;
         }
-
-        return false;
     }
 
 
     @Override
-    public synchronized Change doCommand( Command command ) {
-        return executeCommand( command, true );
+    public Change doCommand( Command command ) {
+        synchronized ( getPlan() ) {
+            return executeCommand( command, true );
+        }
     }
 
     @Override
-    public synchronized Change doUnsafeCommand( Command command ) {
-        return executeCommand( command, false );
+    public Change doUnsafeCommand( Command command ) {
+        synchronized ( getPlan() ) {
+                return executeCommand( command, false );
+        }
     }
 
     private Change executeCommand( Command command, boolean safe ) {
@@ -414,8 +422,9 @@ public class DefaultCommander implements Commander {
 
 
     @Override
-    public synchronized Change undo() {
-        Memento memento = history.getUndo();
+    public Change undo() {
+        synchronized ( getPlan() ) {
+                Memento memento = history.getUndo();
         if ( memento == null ) {
             return Change.failed( "Nothing can be undone right now." );
         }
@@ -439,11 +448,13 @@ public class DefaultCommander implements Commander {
         } catch ( CommandException e ) {
             return Change.failed( "Could not undo" );
         }
+        }
     }
 
     @Override
-    public synchronized Change redo() {
-        // Get memento of undoing command
+    public Change redo() {
+        synchronized ( getPlan() ) {
+                // Get memento of undoing command
         Memento memento = history.getRedo();
         if ( memento == null ) {
             return Change.failed( "Nothing can be redone right now." );
@@ -462,6 +473,7 @@ public class DefaultCommander implements Commander {
             return change;
         } catch ( CommandException e ) {
             return Change.failed( "Failed to redo" );
+        }
         }
     }
 
@@ -483,9 +495,11 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public synchronized boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
-        return !( name == null || name.trim().isEmpty() )
+    public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
+        synchronized ( getPlan() ) {
+                return !( name == null || name.trim().isEmpty() )
                 && getQueryService().cleanup( clazz, name );
+        }
     }
 
     @Override
@@ -538,14 +552,18 @@ public class DefaultCommander implements Commander {
         return history.getLastModifier();
     }
 
-    private synchronized void updateUserActive( String userName ) {
-        whenLastActive.put( userName, System.currentTimeMillis() );
+    private void updateUserActive( String userName ) {
+        synchronized ( getPlan() ) {
+                whenLastActive.put( userName, System.currentTimeMillis() );
+        }
     }
 
     @Override
-    public synchronized void keepAlive( String username, int refreshDelay ) {
-        for ( PresenceListener presenceListener : presenceListeners ) {
+    public void keepAlive( String username, int refreshDelay ) {
+        synchronized ( getPlan() ) {
+                for ( PresenceListener presenceListener : presenceListeners ) {
             presenceListener.keepAlive( username, getPlan(), refreshDelay );
+        }
         }
     }
 
@@ -555,8 +573,9 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public synchronized void processDeaths() {
-        Set<String> deads = new HashSet<String>();
+    public  void processDeaths() {
+        synchronized ( getPlan() ) {
+                Set<String> deads = new HashSet<String>();
         for ( PresenceListener presenceListener : presenceListeners ) {
             deads.addAll( presenceListener.giveMeYourDead( getPlan() ) );
         }
@@ -564,18 +583,22 @@ public class DefaultCommander implements Commander {
             LOG.info( "{} is done planning", userName );
             lockManager.release( userName );
         }
-    }
-
-    @Override
-    public synchronized void absent( String username ) {
-        for ( PresenceListener presenceListener : presenceListeners ) {
-            presenceListener.inactive( username, getPlan() );
         }
     }
 
     @Override
-    public synchronized void processTimeOuts() {
-        long now = System.currentTimeMillis();
+    public  void absent( String username ) {
+        synchronized ( getPlan() ) {
+                for ( PresenceListener presenceListener : presenceListeners ) {
+            presenceListener.inactive( username, getPlan() );
+        }
+        }
+    }
+
+    @Override
+    public void processTimeOuts() {
+        synchronized ( getPlan() ) {
+                long now = System.currentTimeMillis();
         long timeoutMillis = timeout * 1000L;
         if ( timeoutMillis < now - whenLastCheckedForTimeouts ) {
             for ( String userName : whenLastActive.keySet() ) {
@@ -589,16 +612,21 @@ public class DefaultCommander implements Commander {
 
             whenLastCheckedForTimeouts = now;
         }
+        }
     }
 
     @Override
-    public synchronized boolean isTimedOut() {
-        return timedOut.contains( User.current().getUsername() );
+    public  boolean isTimedOut() {
+        synchronized ( getPlan() ) {
+                return timedOut.contains( User.current().getUsername() );
+        }
     }
 
     @Override
-    public synchronized void clearTimeOut() {
-        timedOut.remove( User.current().getUsername() );
+    public void clearTimeOut() {
+        synchronized ( getPlan() ) {
+                timedOut.remove( User.current().getUsername() );
+        }
     }
 
     @Override

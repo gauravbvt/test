@@ -48,6 +48,7 @@ public class ModelObjectRef implements Serializable {
     private Identifiable identifiable;
 
     public ModelObjectRef( Identifiable identifiable ) {
+        assert identifiable != null;
         if ( identifiable instanceof ModelEntity ) {
             entityName = identifiable.getName();
             ModelEntity.Kind kind = ( (ModelEntity) identifiable ).getKind();
