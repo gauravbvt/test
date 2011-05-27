@@ -370,6 +370,7 @@ span.feedback-container a {
     background: url('/images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
     color: #727272;
+    font-family:Arial, Helvetica, sans-serif;
     font-size: 10px;
     font-weight: bold;
     padding: 4px;
@@ -383,6 +384,7 @@ div.phase h2 span.feedback-container a, div.task h2 span.feedback-container a {
 }
 
 td span.feedback-container a , h2 span.feedback-container a{
+    font-family:Arial, Helvetica, sans-serif;
     font-size: 8px;
 }
 
