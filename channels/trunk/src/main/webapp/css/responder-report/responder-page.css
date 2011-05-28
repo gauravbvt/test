@@ -225,6 +225,9 @@ table td,
 table th {
 	padding: 5px 10px;
 }
+table th {
+    white-space: nowrap;
+}
 
 table tbody tr {
 	border: 1px solid #999999;

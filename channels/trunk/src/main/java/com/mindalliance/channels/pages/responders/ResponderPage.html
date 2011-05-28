@@ -50,7 +50,7 @@
                         </ul>
                         <span wicket:id="noInfo">N/A</span>
                     </li>
-                    <li>Classification: <span wicket:id="contact.classification">{classification}</span></li>
+                    <li>Clearance: <span wicket:id="contact.classification">{classification}</span></li>
                     <li>Availability: <span wicket:id="myAvail">{Availability}</span></li>
                 </ul>
             </span>
@@ -134,8 +134,9 @@
                         <td>
                             <p>
                                 <span wicket:id="taskSummary">{summary of event/phase/location}</span>
-                                Executed as <span wicket:id="taskRole">{role}</span>
+                                This task is executed as <span wicket:id="taskRole">{role}</span>
                                 <span wicket:id="taskLoc">{Location}.</span>
+                                <span wicket:id="taskRecur">This task is repeated every X days.</span>
                             </p>
 
                             <p wicket:id="prohibited">
@@ -158,31 +159,35 @@
                                 </p>
                             </span>
                             <span wicket:id="notifTask">
-                                <p>
-                                    This <span wicket:id="taskType">{analysis|audit|direction|operations|operation coordination|operations management| planning/preparing|policy setting}</span>
-                                    task is performed when notified of <span wicket:id="reqFlow" class="reqFlow">{flow name}</span> from <span wicket:id="reqFlowSrc">{source, source or source}</span>.
+                                <p wicket:id="notifTask1">
+                                    This task is performed when notified of <span wicket:id="reqFlow" class="reqFlow">{flow name}</span>
+                                    by <span wicket:id="reqFlowSrc">{source, source or source}</span>.
                                 </p>
-                                <div wicket:id="eois" class="eoiCont">
+                                <span wicket:id="notifTask2">
                                     <p>
-                                        The following information should have been included in the communication:
+                                        When notified of <span wicket:id="reqFlow" class="reqFlow">{flow name}</span>
+                                        by <span wicket:id="reqFlowSrc">{source, source or source}</span>,
+                                        the following information should be available:
                                     </p>
-                                    <table class="eois nested">
-                                        <thead>
-                                            <th>Information</th>
-                                            <th>Description</th>
-                                            <th>Handling</th>
-                                            <th>Classification</th>
-                                        </thead>
-                                        <tbody>
-                                            <tr wicket:id="eoi">
-                                                <td wicket:id="eoi.name">{EOI}</td>
-                                                <td wicket:id="eoi.desc">{description}</td>
-                                                <td wicket:id="eoi.handling">{handling}</td>
-                                                <td wicket:id="eoi.class">{classification}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    <div wicket:id="eois" class="eoiCont">
+                                        <table class="eois nested">
+                                            <thead>
+                                                <th>Information</th>
+                                                <th>Description</th>
+                                                <th>Handling</th>
+                                                <th>Classification</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr wicket:id="eoi">
+                                                    <td wicket:id="eoi.name">{EOI}</td>
+                                                    <td wicket:id="eoi.desc">{description}</td>
+                                                    <td wicket:id="eoi.handling">{handling}</td>
+                                                    <td wicket:id="eoi.class">{classification}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </span>
                             </span>
                         </td>
                     </tr>
@@ -247,7 +252,7 @@
                 <div wicket:id="teamDiv">
                     <!--optional-->
                     <p>
-                        This task is performed as part of a team of <span wicket:id="teamSpec">people</span> :
+                        This task is performed as part of a team of <span wicket:id="teamSpec">people</span>.
                     </p>
                 </div>
 

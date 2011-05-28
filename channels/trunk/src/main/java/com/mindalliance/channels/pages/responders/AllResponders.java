@@ -7,7 +7,6 @@ import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.LockingException;
 import com.mindalliance.channels.command.commands.CreateEntityIfNew;
-import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdateObject.Action;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.dao.PlanManager;

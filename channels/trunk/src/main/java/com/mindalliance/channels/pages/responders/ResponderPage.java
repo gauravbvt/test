@@ -130,7 +130,7 @@ public class ResponderPage extends WebPage {
                 setResponsePage( AllResponders.class, parameters );
             } else {
                 PlanService service = initPlanService( uri, parameters.getInt( "v" ) );
-                init( service, getProfile( service, parameters ), parameters );
+                init( service, getProfile( service, parameters ) );
             }
         } catch ( StringValueConversionException e ) {
             LOG.info( "Bad parameter: " + parameters, e );
@@ -176,7 +176,7 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private void init( PlanService service, ResourceSpec profile, PageParameters parameters ) {
+    private void init( PlanService service, ResourceSpec profile ) {
 
         Plan plan = service.getPlan();
         // TODO password change fields
@@ -270,6 +270,7 @@ public class ResponderPage extends WebPage {
                     new Label( "taskRole", ensurePeriod( task.getRoleString() ) ),
                     new Label( "taskLoc", task.getLocationString() )
                         .setVisible( task.getLocation() != null ),
+                    new Label( "taskRecur", task.getRepetition() ).setVisible( task.isRepeating() ),
                     newPromptedByDiv( task, planService ),
                     newDetailsDiv( task ),
                     new WebMarkupContainer( "prohibited" ).setVisible( task.isProhibited() ),
@@ -291,6 +292,7 @@ public class ResponderPage extends WebPage {
 
     private static Component newDetailsDiv( ReportTask task ) {
 
+        // TODO hide details when empty
         List<Goal> risks = task.getRisks();
         List<Goal> gains = task.getGains();
         return new WebMarkupContainer( "details" )
@@ -340,26 +342,45 @@ public class ResponderPage extends WebPage {
                          || task.isImmediate() || task.isSubtask() || task.getCompletionTime() );
     }
 
-    private static Component newPromptedByDiv( ReportTask task, PlanService planService ) {
+    private Component newPromptedByDiv( ReportTask task, PlanService planService ) {
 
-        return new WebMarkupContainer( "promptedBy" ).add(
-            new WebMarkupContainer( "notifTask" )
-                .add(
-                    new Label( "taskType", task.getCategoryString() ).setRenderBodyOnly( true ),
-                    new Label( "taskRecur", task.getRepetition() ).setVisible( task.isRepeating() ),
-                    new Label( "reqFlow", task.getTriggeringFlowName() ),
-                    new Label( "reqFlowSrc", task.getTriggeringSources( planService ) ),
-                    newSimpleEoiList( task.getStartingEois() ) )
-                .setVisible( task.isNotification( planService ) ),
+        // TODO handle tasks prompted by multiple different requests or notification mixes
 
-            new WebMarkupContainer( "reqTask" )
-                .add(
-                    new Label(
-                        "taskType", task.getCategoryString() ).setRenderBodyOnly( true ),
-                    new Label( "reqFlow", task.getTriggeringFlowName() ),
-                    new Label( "reqFlowSrc", task.getTriggeringSources( planService ) ) ).setVisible(
-                    task.isRequest() ) )
-                .setVisible( task.isNotification( planService ) || task.isRequest() );
+        boolean notification = task.isNotification( planService );
+        return new WebMarkupContainer( "promptedBy" )
+            .add(
+                new ListView<AggregatedFlow>( "notifTask", task.getTriggeringFlows() ) {
+                    @Override
+                    protected void populateItem( ListItem<AggregatedFlow> item ) {
+                        AggregatedFlow flow = item.getModelObject();
+                        List<ElementOfInformation> eois = flow.getElementsOfInformation();
+                        String sourcesString = flow.getSourcesString( getPlanService() );
+                        item.add(
+                            new WebMarkupContainer( "notifTask1" )
+                                .add(
+                                    new Label( "reqFlow", flow.getLabel() ),
+                                    new Label( "reqFlowSrc", sourcesString ) )
+                                .setVisible( eois.isEmpty() ),
+                            new WebMarkupContainer( "notifTask2" )
+                                .add(
+                                    new Label( "reqFlow", flow.getLabel() ),
+                                    new Label( "reqFlowSrc", sourcesString ),
+                                  newSimpleEoiList( eois )
+                                )
+                                .setVisible( !eois.isEmpty() ) );
+                    }
+                }.setVisible( notification ),
+
+                new WebMarkupContainer( "reqTask" )
+                    .add(
+                        new Label(
+                            "taskType", task.getCategoryString() ).setRenderBodyOnly( true ),
+                        new Label( "reqFlow", task.getTriggeringFlowName() ),
+                        new Label( "reqFlowSrc", task.getTriggeringSources( planService ) ) )
+                    .setVisible( task.isRequest() )
+            )
+
+            .setVisible( notification || task.isRequest() );
     }
 
     private static String lcFirst( String phrase ) {
@@ -564,7 +585,7 @@ public class ResponderPage extends WebPage {
                                       .setVisible( isEmail ),
                                   new WebMarkupContainer( "notMail" )
                                       .add(
-                                          new Label( "channelType", label + ":" ),
+                                          new Label( "channelType", label + ':' ),
                                           new Label( "channel", address )
                                       )
                                       .setRenderBodyOnly( true )
@@ -951,18 +972,13 @@ public class ResponderPage extends WebPage {
 
         private List<AggregatedFlow> aggregate( List<Flow> flows, boolean incoming ) {
 
-            Map<String, AggregatedFlow> map = new HashMap<String, AggregatedFlow>();
+            List<AggregatedFlow> result = new ArrayList<AggregatedFlow>( flows.size() );
             for ( Flow flow : flows ) {
-                AggregatedFlow aggregatedFlow = map.get( flow.getName() );
-                if ( aggregatedFlow == null ) {
-                    AggregatedFlow newFlow = new AggregatedFlow( flow, incoming );
-                    newFlow.setOrigin( assignment );
-                    map.put( flow.getName(), newFlow );
-                } else
-                    aggregatedFlow.addFlow( flow );
+                AggregatedFlow newFlow = new AggregatedFlow( flow, incoming );
+                newFlow.setOrigin( assignment );
+                result.add( newFlow );
             }
 
-            List<AggregatedFlow> result = new ArrayList<AggregatedFlow>( map.values() );
             Collections.sort(
                 result, new Comparator<AggregatedFlow>() {
                 @Override
@@ -1011,7 +1027,7 @@ public class ResponderPage extends WebPage {
         }
 
         private String getRepetition() {
-            return isRepeating() ? String.valueOf( part.getRepeatsEvery() ) : "";
+            return isRepeating() ? "This is repeated every " + part.getRepeatsEvery() + '.' : "";
         }
 
         private String getDescription() {
@@ -1519,7 +1535,7 @@ public class ResponderPage extends WebPage {
             } );
             List<String> list = new ArrayList<String>( specList.size() );
             for ( ResourceSpec spec : specList )
-                list.add( spec.getReportSource( isAll() ? "all " : "any " ) );
+                list.add( spec.getReportSource( !incoming && isAll() ? "every " : "any " ) );
             if ( flow.getRestriction() != null )
                 switch ( flow.getRestriction() ) {
                     case SameTopOrganization:
