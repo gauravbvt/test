@@ -284,7 +284,8 @@ public class AllResponders extends WebPage {
 
     /**
      * Commander needs some tending to prior to use.
-     * @param plan
+     * @param plan a plan
+     * @return a commander
      * */
     private Commander getCommander( Plan plan ) {
         // Adjust so commander actually behave as expected

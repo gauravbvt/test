@@ -67,7 +67,7 @@ public class TimePeriodPanel extends AbstractCommandablePanel {
         };
         dayOnCheckBox.setEnabled( isLockedByUser( getAvailable() ) );
         add( dayOnCheckBox );
-        String dayName = Availability.getDayOfWeek( dayIndex );
+        String dayName = Availability.dayOfWeek( dayIndex );
         add( new Label( "dayName", dayName ) );
     }
 

@@ -126,7 +126,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         }
 
         public String toString() {
-            return Availability.getDayOfWeek( day ) + " " + timePeriod.toString();
+            return Availability.dayOfWeek( day ) + " " + timePeriod.toString();
         }
     }
 }

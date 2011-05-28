@@ -31,7 +31,8 @@ public class AvailabilityPanel extends AbstractCommandablePanel {
     private IModel<Available> availableModel;
     // private WebMarkupContainer regularHoursContainer;
     private WebMarkupContainer timePeriodsContainer;
-    // private boolean regularHours;
+    private boolean twentyFourSeven = true;
+    private AjaxCheckBox twentyFourSevenCheckBox;
 
     public AvailabilityPanel( String id,
                               IModel<Available> iModel ) {
@@ -42,12 +43,11 @@ public class AvailabilityPanel extends AbstractCommandablePanel {
 
     private void init() {
         addTwentyFourSeven();
-        // addRegularHours();
         addTimePeriods();
     }
 
     private void addTwentyFourSeven() {
-        AjaxCheckBox twentyFourSevenCheckBox = new AjaxCheckBox(
+        twentyFourSevenCheckBox = new AjaxCheckBox(
                 "twentyFourSeven",
                 new PropertyModel<Boolean>( this, "twentyFourSeven" ) ) {
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -55,6 +55,7 @@ public class AvailabilityPanel extends AbstractCommandablePanel {
                 makeVisible( timePeriodsContainer, !isTwentyFourSeven() );
                 // target.addComponent( regularHoursContainer );
                 target.addComponent( timePeriodsContainer );
+                target.addComponent( twentyFourSevenCheckBox );
                 update(target, new Change(Change.Type.Updated, getAvailable(), "availability" ));
             }
         };
@@ -62,23 +63,6 @@ public class AvailabilityPanel extends AbstractCommandablePanel {
         add( twentyFourSevenCheckBox );
     }
 
-    /*private void addRegularHours() {
-        regularHoursContainer = new WebMarkupContainer( "regularHoursContainer" );
-        regularHoursContainer.setOutputMarkupId( true );
-        add( regularHoursContainer );
-        AjaxCheckBox regularHoursCheckBox = new AjaxCheckBox(
-                "regularHours",
-                new PropertyModel<Boolean>( this, "regularHours" ) ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                addTimePeriods();
-                makeVisible( timePeriodsContainer, !isTwentyFourSeven() );
-                target.addComponent( twentyFourSevenCheckBox );
-                target.addComponent( timePeriodsContainer );
-            }
-        };
-        regularHoursContainer.add( regularHoursCheckBox );
-    }
-*/
     private void addTimePeriods() {
         timePeriodsContainer = new WebMarkupContainer( "timePeriodsContainer" );
         timePeriodsContainer.setOutputMarkupId( true );
@@ -97,6 +81,7 @@ public class AvailabilityPanel extends AbstractCommandablePanel {
             }
         };
         timePeriodsContainer.add( timePeriodsList );
+        makeVisible( timePeriodsContainer, !isTwentyFourSeven() );
     }
 
     private List<TimePeriod> getTimePeriods() {
@@ -111,30 +96,20 @@ public class AvailabilityPanel extends AbstractCommandablePanel {
     }
 
     public boolean isTwentyFourSeven() {
-        return getAvailable().getAvailability() == null;
+        return twentyFourSeven && getAvailable().getAvailability().isAlways();
     }
 
     public void setTwentyFourSeven( boolean val ) {
-        Availability availability = val ? null : new Availability();
-        doCommand( new UpdatePlanObject(
-                getAvailable(),
-                "availability",
-                availability,
-                UpdateObject.Action.Set
-                ) );
-//        regularHours = !twentyFourSeven;
+        twentyFourSeven = val;
+        if ( val )
+            doCommand( new UpdatePlanObject(
+                    getAvailable(),
+                    "availability",
+                    new Availability(),
+                    UpdateObject.Action.Set
+                    ) );
     }
 
-/*
-    public boolean isRegularHours() {
-        return regularHours;
-    }
-
-    public void setRegularHours( boolean regularHours ) {
-        this.regularHours = regularHours;
-        twentyFourSeven = !regularHours;
-    }
-*/
 
 
 }

@@ -49,6 +49,7 @@ import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.nlp.Proximity;
 import com.mindalliance.channels.nlp.SemanticMatcher;
+import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -295,7 +296,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
         if ( name != null && !name.trim().isEmpty() ) {
-            String root = name.trim();
+            String root = ChannelsUtils.stripExtraBlanks( name );
+            if ( !name.equals(  root ) ) {
+                LOG.warn( "\"" + name +"\""
+                        + " of " + clazz.getSimpleName()
+                        + "[" + id + "]"
+                        + " stripped to \"" + root + "\"");
+            }
             String candidateName = root;
             int i = 1;
             while ( i < 10 ) {

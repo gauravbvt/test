@@ -29,7 +29,7 @@ public class Availability implements Serializable {
             timePeriods.add( new TimePeriod( fromTime, toTime ) );
     }
 
-    public static String getDayOfWeek( int dayIndex ) {
+    public static String dayOfWeek( int dayIndex ) {
         switch (dayIndex) {
             case 0: return "Sunday";
             case 1: return "Monday";
@@ -41,7 +41,22 @@ public class Availability implements Serializable {
             default: throw new IllegalArgumentException( "Unknown day");
         }
     }
-    
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder( );
+        if ( isAlways() ) {
+            sb.append( "Always" );
+        } else {
+            for ( int i = 0; i < 7; i++ ) {
+                TimePeriod timePeriod = timePeriods.get( i );
+                sb.append( dayOfWeek( i) );
+                sb.append( ": " );
+                sb.append(  timePeriod.toString() );
+                if ( i < 6 ) sb.append( ", " );
+            }
+        }
+        return sb.toString();
+    }
 
     public List<TimePeriod> getTimePeriods() {
         return timePeriods;
@@ -69,18 +84,29 @@ public class Availability implements Serializable {
 
     public Availability overlap( Availability other ) {
         Availability overlap = new Availability();
-        for ( int i = 0; i < 6; i++ ) {
+        for ( int i = 0; i < 7; i++ ) {
             overlap.setTimePeriod( i, getTimePeriod( i ).overlap( other.getTimePeriod( i ) ) );
         }
         return overlap;
     }
 
     public boolean isEmpty() {
-        for ( int i = 0; i < 6; i++ ) {
-            if ( !( getTimePeriod( i ).isEmpty() || getTimePeriod( i ).isNil() ) )
+        for ( TimePeriod timePeriod : timePeriods) {
+            if ( !( timePeriod.isEmpty() || timePeriod.isNil() ) )
                 return false;
         }
         return true;
+    }
+
+    public boolean isAlways() {
+        boolean always = true;
+        for ( TimePeriod timePeriod : timePeriods) {
+           if ( !timePeriod.isAllDay() ) {
+               always = false;
+               break;
+           }
+        }
+        return always;
     }
 
 }
