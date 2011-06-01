@@ -558,7 +558,7 @@ public class ResponderPage extends WebPage {
                     contact.getParticipation(),
                     "Send feedback" ),
                     new Label( "contact.name", contact.getActorName() ),
-                  new Label( "contact.title", title.isEmpty() ? "" : ", " + title ),
+                  new Label( "contact.title", title.isEmpty() ? "" : title ),
                   new Label( "contact.classification", contact.getClassifications() ),
                   new Label( "contact.organization",
                              organization == null ? "" : organization.toString() ),
@@ -1341,7 +1341,7 @@ public class ResponderPage extends WebPage {
 
             actorName = participation != null ?
                                participation.getUserFullName( service ) :
-                               actor == null ? "" : actor.getName();;
+                               actor == null ? "" : actor.getName();
 
             List<ResourceSpec> specs = new ArrayList<ResourceSpec>();
             for ( Employment employment : employments )

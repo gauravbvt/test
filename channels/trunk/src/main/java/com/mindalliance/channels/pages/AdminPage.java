@@ -204,7 +204,8 @@ public class AdminPage extends AbstractChannelsWebPage {
 
                                     @Override
                                     protected void onUpdate( AjaxRequestTarget target ) {
-                                        target.addComponent( get( "users" ) );
+                                        // target.addComponent( get( "users" ) );
+                                        setResponsePage( AdminPage.class );
                                     }
                                 } ),
 
