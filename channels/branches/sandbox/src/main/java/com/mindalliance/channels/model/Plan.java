@@ -60,10 +60,10 @@ public class Plan extends ModelObject {
     }
 
     /** The segments, for convenience... */
-    private final Set<Segment> segments = Collections.synchronizedSet( new HashSet<Segment>() );
+    private final Set<Segment> segments = new HashSet<Segment>();
 
     /** Unplanned-for events. */
-    private List<Event> incidents = Collections.synchronizedList( new ArrayList<Event>() );
+    private List<Event> incidents = new ArrayList<Event>();
 
     /** Name of client sponsoring the plan. */
     private String client = "Unnamed";
@@ -90,15 +90,13 @@ public class Plan extends ModelObject {
     private Date whenVersioned;
 
     /** Phases defined for this plan. */
-    private List<Phase> phases = Collections.synchronizedList( new ArrayList<Phase>() );
+    private List<Phase> phases = new ArrayList<Phase>();
 
     /** Organization whose involvement is expected. */
-    private List<Organization> organizations =
-                        Collections.synchronizedList( new ArrayList<Organization>() );
+    private List<Organization> organizations = new ArrayList<Organization>();
 
     /** Classifications supported. */
-    private List<Classification> classifications =
-                        Collections.synchronizedList( new ArrayList<Classification>() );
+    private List<Classification> classifications = new ArrayList<Classification>();
 
     /** The plan's locale. */
     private Place locale;
@@ -283,11 +281,11 @@ public class Plan extends ModelObject {
     }
 
     public Set<Segment> getSegments() {
-        return new HashSet<Segment>( segments );
+        return segments;
     }
 
     public List<Event> getIncidents() {
-        return new ArrayList<Event>( incidents );
+        return incidents;
     }
 
     public void setIncidents( List<Event> incidents ) {
@@ -295,7 +293,7 @@ public class Plan extends ModelObject {
     }
 
     public List<Organization> getOrganizations() {
-        return Collections.unmodifiableList( organizations );
+        return organizations;
     }
 
     public void setOrganizations( List<Organization> organizations ) {
@@ -323,7 +321,7 @@ public class Plan extends ModelObject {
     }
 
     public List<String> getProducers() {
-        return Collections.unmodifiableList( producers );
+        return producers;
     }
 
     public void setProducers( List<String> producers ) {
@@ -403,7 +401,7 @@ public class Plan extends ModelObject {
     }
 
     public List<Classification> getClassifications() {
-        return Collections.unmodifiableList( classifications );
+        return classifications;
     }
 
     public void setClassifications( List<Classification> classifications ) {
@@ -496,7 +494,7 @@ public class Plan extends ModelObject {
     }
 
     public List<Phase> getPhases() {
-        return Collections.unmodifiableList( phases );
+        return phases;
     }
 
     public void setPhases( List<Phase> phases ) {
