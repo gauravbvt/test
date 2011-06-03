@@ -113,6 +113,12 @@ div.pageHeader span#spinner span {
 	padding:0 0 0 3px;
 }
 
+div.pageHeader .help-icon {
+    position: absolute;
+    top: 9px;
+    padding-left: 25px;
+}
+
 
 /* ----- Header - Signout ----- */
 

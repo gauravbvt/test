@@ -1274,7 +1274,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             Part target = (Part) getTarget();
             Part otherSource = (Part) other.getSource();
             Part otherTarget = (Part) other.getTarget();
-            return !( target.equals( otherTarget ) && source.equals( otherSource ) )
+            return !( source.equals( otherSource ) )
                     && target.overridesOrEquals( otherTarget, locale )
                     && source.overridesOrEquals( otherSource, locale );
         } else
