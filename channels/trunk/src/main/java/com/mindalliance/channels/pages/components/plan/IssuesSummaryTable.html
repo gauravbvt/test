@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table class="data-table">
+        <thead>
+            <tr class="headers">
+                <th>Validity issues</th>
+                <th>Completeness issues</th>
+                <th>Robustness issues</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="even">
+               <td wicket:id="validityMetrics"> 10 issues (10%)</td>
+               <td wicket:id="completenessMetrics"> 10 issues (10%)</td>
+               <td wicket:id="robustnessMetrics"> 10 issues (10%)</td>
+            </tr>
+            <tr class="even">
+                <td>
+                    <ul>
+                        <li wicket:id="validitySeverity">
+                            <span wicket:id="severityMetrics"> Extreme: 3 issues (3%)</span>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li wicket:id="completenessSeverity">
+                            <span wicket:id="severityMetrics"> Extreme: 3 issues (3%)</span>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li wicket:id="robustnessSeverity">
+                            <span wicket:id="severityMetrics"> Extreme: 3 issues (3%)</span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr class="odd">
+                <td wicket:id="validityWaivedMetrics"> 10 issues (10%)</td>
+                <td wicket:id="completenessWaivedMetrics"> 10 issues (10%)</td>
+                <td wicket:id="robustnessWaivedMetrics"> 10 issues (10%)</td>
+            </tr>
+            <tr class="odd">
+                <td>
+                    <ul>
+                        <li wicket:id="validityWaivedSeverity">
+                            <span wicket:id="severityMetrics"> Extreme: 3 issues (3%)</span>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li wicket:id="completenessWaivedSeverity">
+                            <span wicket:id="severityMetrics"> Extreme: 3 issues (3%)</span>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li wicket:id="robustnessWaivedSeverity">
+                            <span wicket:id="severityMetrics"> Extreme: 3 issues (3%)</span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+         </tbody>
+    </table>
+</wicket:panel>
+</body>
+</html>

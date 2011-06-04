@@ -166,6 +166,21 @@ public class UserIssue extends ModelObject implements Issue {
         return "User defined";
     }
 
+    @Override
+    public boolean isValidity() {
+        return getType().equals( Issue.VALIDITY );
+    }
+
+    @Override
+    public boolean isCompleteness() {
+        return getType().equals( Issue.COMPLETENESS );
+    }
+
+    @Override
+    public boolean isRobustness() {
+        return getType().equals( Issue.ROBUSTNESS );
+    }
+
     /**
      * {@inheritDoc}
      */

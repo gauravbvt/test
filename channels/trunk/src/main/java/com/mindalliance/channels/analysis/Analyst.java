@@ -92,6 +92,32 @@ public interface Analyst {
     List<Issue> listUnwaivedIssues( ModelObject modelObject, String property );
 
     /**
+     * Use all waived issue detectors to find issues about a model object.
+     *
+     * @param modelObject               -- the model object being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @return a list of issues detected
+     */
+    List<Issue> listWaivedIssues( ModelObject modelObject, Boolean includingPropertySpecific );
+
+    /**
+     * Use all waived issue detectors to find issues about an assignment.
+     *
+     * @param assignment               -- the assignment being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @return a list of issues detected
+     */
+    List<Issue> listWaivedIssues( Assignment assignment, Boolean includingPropertySpecific );
+
+    /**
+     * Use all waived issue detectors to find issues about a model object's property.
+     *
+     * @param modelObject -- the model object being analyzed
+     * @param property    -- the name of a property of the model object
+     * @return a list of issues detected
+     */
+    List<Issue> listWaivedIssues( ModelObject modelObject, String property );
+    /**
      * Tests whether a specific property of a model object has issues.
      *
      * @param modelObject -- the model object being analyzed
@@ -258,6 +284,14 @@ public interface Analyst {
      */
     List<Issue> findAllUnwaivedIssues();
 
+
+    /**
+     * Find all waived issues on all model objects in the plan.
+     *
+     * @return a list of issues.
+     */
+    List<Issue> findAllWaivedIssues();
+
     /**
      * Find any relationship between a plan segment and another.
      * A relationship is one or more external flow in the from-segment referencing a connector in
@@ -310,4 +344,5 @@ public interface Analyst {
      */
     List<EntityRelationship> findEntityRelationships(
             Segment segment, ModelEntity entity );
+
 }

@@ -95,6 +95,21 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return detectorLabel;
     }
 
+    @Override
+    public boolean isValidity() {
+        return getType().equals( Issue.VALIDITY );
+    }
+
+    @Override
+    public boolean isCompleteness() {
+        return getType().equals( Issue.COMPLETENESS );
+    }
+
+    @Override
+    public boolean isRobustness() {
+        return getType().equals( Issue.ROBUSTNESS );
+    }
+
     public void setDetectorLabel( String detectorLabel ) {
         this.detectorLabel = detectorLabel;
     }
