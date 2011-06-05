@@ -10,7 +10,8 @@ import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
-import com.mindalliance.channels.pages.reports.ProcedureMapPage;
+import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
+import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -25,6 +26,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.pages.RedirectPage;
@@ -102,6 +104,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         addChangeMessagePanel();
         addWelcome();
         addLoggedIn();
+        addHelp();
         addFeedback();
         addPlanSelector();
         addPlanImage();
@@ -162,6 +165,19 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         spinner.add( new AttributeModifier( "id", true, new Model<String>( "spinner" ) ) );
         form.addOrReplace( spinner );
     }
+
+    private void addHelp() {
+        BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
+        helpLink.add( new AttributeModifier( "target", true, new Model<String>( "help" ) ) );
+        helpLink.setPopupSettings( new PopupSettings(
+                PopupSettings.RESIZABLE |
+                        PopupSettings.SCROLLBARS |
+                        PopupSettings.MENU_BAR |
+                        PopupSettings.TOOL_BAR ) );
+
+        form.add( helpLink );
+    }
+
 
     private void addChangeMessagePanel() {
         messageContainer = new WebMarkupContainer( "message-container" );
@@ -302,10 +318,10 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         Actor actor = findActor( getQueryService(), user.getUsername() );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
-        BookmarkablePageLink<? extends WebPage> gotoReportLink =
-                getGuidelinesLink( "gotoReport", getQueryService(), getPlan(), User.current(), true );
-        Label gotoReportLabel = new Label( "proceduresLabel", getGotoReportLabel( user, plan ) );
-        gotoReportLink.add( gotoReportLabel );
+        BookmarkablePageLink<? extends WebPage> gotoGuidelinesLink =
+                getGuidelinesLink( "gotoGuidelines", getQueryService(), getPlan(), User.current(), true );
+        Label gotoReportLabel = new Label( "guidelinesLabel", getGuidelinesReportLabel( user, plan ) );
+        gotoGuidelinesLink.add( gotoReportLabel );
         form.add(
                 // Goto admin
                 new WebMarkupContainer( "admin" )
@@ -319,18 +335,30 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
                         .setVisible( planner || plan.isTemplate() ),
 
                 // Goto mapped procedures
-                new WebMarkupContainer( "mapped" )
-                        .add( newTargetedLink( "gotoMapped", "", ProcedureMapPage.class, null, plan ) ).
+                new WebMarkupContainer( "procedures" )
+                        .add( newTargetedLink( "gotoProcedures", "", ProcedureMapPage.class, null, plan ) ).
                         setVisible( planner || plan.isTemplate() ),
 
-                // Goto personal procedures
-                new WebMarkupContainer( "report" )
-                        .add( gotoReportLink )
-                        .add( new Label( "proceduresDescription", getGotoReportDescription( user, plan ) ) )
-                        .setVisible( planner || actor != null ) );
+                // Goto guidelines
+                new WebMarkupContainer( "guidelines" )
+                        .add( gotoGuidelinesLink )
+                        .add( new Label( "guidelinesDescription", getGotoGuidelinesDescription( user, plan ) ) )
+                        .setVisible( planner || actor != null ),
+
+                // Goto issues report
+                new WebMarkupContainer( "issues" )
+                        .add( AbstractChannelsWebPage.newTargetedLink(
+                                "gotoIssues",
+                                "",
+                                IssuesPage.class,
+                                IssuesPage.createParameters( uri, plan.getVersion() ),
+                                null,
+                                plan ) )
+                        .setVisible( planner || plan.isTemplate() ) );
+
     }
 
-    private String getGotoReportLabel( User user, Plan plan ) {
+    private String getGuidelinesReportLabel( User user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
                 ? "Information sharing guidelines for all participants"
                 : "My information sharing guidelines";
@@ -344,7 +372,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
                 "  (Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+.)";
     }
 
-    private String getGotoReportDescription( User user, Plan plan ) {
+    private String getGotoGuidelinesDescription( User user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
                 ? "Set how users participate in the plan and view their information sharing guidelines."
                 : "View all tasks and related communications assigned to me according to my participation in this plan.";

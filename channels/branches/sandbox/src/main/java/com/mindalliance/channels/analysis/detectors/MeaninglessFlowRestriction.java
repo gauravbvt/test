@@ -107,7 +107,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Meaningless flow restriction";
     }
 }

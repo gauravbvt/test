@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.reports;
+package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Plan;

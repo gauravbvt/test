@@ -94,7 +94,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Conflicting entity categorization";
     }
 }

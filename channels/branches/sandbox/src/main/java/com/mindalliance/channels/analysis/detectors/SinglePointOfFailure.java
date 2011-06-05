@@ -51,7 +51,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Single point of failure";
     }
 

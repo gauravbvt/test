@@ -57,7 +57,7 @@ public class SegmentWithoutGoal extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Segment has no stated goal";
     }
 

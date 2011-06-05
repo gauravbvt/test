@@ -99,7 +99,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         return null;
     }
 
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Availability gap in assignments";
     }
    /** {@inheritDoc} */
@@ -126,7 +126,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         }
 
         public String toString() {
-            return Availability.getDayOfWeek( day ) + " " + timePeriod.toString();
+            return Availability.dayOfWeek( day ) + " " + timePeriod.toString();
         }
     }
 }

@@ -77,7 +77,7 @@ public class AgreementWithoutCommitment extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Sharing agreement without commitment";
     }
 

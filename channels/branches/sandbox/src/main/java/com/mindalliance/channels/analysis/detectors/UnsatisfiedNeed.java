@@ -124,7 +124,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Information need not fully satisfied";
     }
 

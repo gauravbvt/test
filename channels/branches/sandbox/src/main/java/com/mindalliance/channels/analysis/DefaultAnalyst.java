@@ -157,6 +157,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return detectAllIssues( modelObject, property, true );
     }
 
+    /**
+      * {@inheritDoc}
+      */
     public List<Issue> listUnwaivedIssues(
             ModelObject modelObject, Boolean includingPropertySpecific ) {
         return detectUnwaivedIssues(
@@ -165,6 +168,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 includingPropertySpecific );
     }
 
+    /**
+      * {@inheritDoc}
+      */
     public List<Issue> listUnwaivedIssues( ModelObject modelObject, String property ) {
         return detectUnwaivedIssues( modelObject, property, true );
     }
@@ -176,6 +182,30 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
          return detectUnwaivedIssues( assignment, includingPropertySpecific );
      }
 
+    /**
+      * {@inheritDoc}
+      */
+    public List<Issue> listWaivedIssues(
+            ModelObject modelObject, Boolean includingPropertySpecific ) {
+        return detectWaivedIssues(
+                modelObject,
+                null,
+                includingPropertySpecific );
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+    public List<Issue> listWaivedIssues( ModelObject modelObject, String property ) {
+        return detectWaivedIssues( modelObject, property, true );
+    }
+
+    /**
+      * {@inheritDoc}
+      */
+     public List<Issue> listWaivedIssues( Assignment assignment, Boolean includingPropertySpecific ) {
+         return detectWaivedIssues( assignment, includingPropertySpecific );
+     }
 
 
     /**
@@ -465,6 +495,43 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return issues;
     }
 
+    private List<Issue> detectWaivedIssues(
+            ModelObject modelObject,
+            String property,
+            boolean includingPropertySpecific ) {
+        if ( property != null ) {
+            return detective.detectWaivedPropertyIssues( modelObject, property );
+        } else {
+            List<Issue> issues = new ArrayList<Issue>();
+            if ( includingPropertySpecific ) {
+                issues.addAll( detective.detectWaivedIssues( modelObject, true ) );
+            }
+            issues.addAll( detective.detectWaivedIssues( modelObject, false ) );
+            return issues;
+        }
+    }
+
+    private List<Issue> detectWaivedIssues(
+            Assignment assignment,
+            boolean includingPropertySpecific ) {
+        List<Issue> issues = new ArrayList<Issue> ();
+        issues.addAll( detectWaivedIssues( assignment.getPart(), null, includingPropertySpecific ));
+        Actor actor = assignment.getActor();
+        if ( actor != null && !actor.isUnknown() ) {
+            issues.addAll( detectWaivedIssues( actor, null, includingPropertySpecific ));
+        }
+        Role role = assignment.getRole();
+        if ( role != null && !role.isUnknown() ) {
+            issues.addAll( detectWaivedIssues( role, null, includingPropertySpecific ));
+        }
+        Organization org = assignment.getOrganization();
+        if ( org != null && !org.isUnknown() ) {
+            issues.addAll( detectWaivedIssues( org, null, includingPropertySpecific ));
+        }
+        return issues;
+    }
+
+
 
     /**
      * Get the imaging service.
@@ -520,6 +587,26 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             }
         }
         return allUnwaivedIssues;
+    }
+
+    @Override
+    public List<Issue> findAllWaivedIssues() {
+        List<Issue> allWaivedIssues = new ArrayList<Issue>();
+        // allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( getPlan(), true ) );
+        for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
+            allWaivedIssues.addAll( listWaivedIssues( mo, true ) );
+        }
+        for ( Segment segment : queryService.list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
+            while ( parts.hasNext() ) {
+                allWaivedIssues.addAll( listWaivedIssues( parts.next(), true ) );
+            }
+            Iterator<Flow> flows = segment.flows();
+            while ( flows.hasNext() ) {
+                allWaivedIssues.addAll( listWaivedIssues( flows.next(), true ) );
+            }
+        }
+        return allWaivedIssues;
     }
 
     /**

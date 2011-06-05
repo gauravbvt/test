@@ -44,7 +44,7 @@ public class RedundantFlow extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Redundant sharing flow";
     }
 

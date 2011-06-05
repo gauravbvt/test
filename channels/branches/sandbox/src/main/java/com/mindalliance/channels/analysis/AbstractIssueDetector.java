@@ -126,7 +126,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         return issue;
     }
 
-    protected abstract String getLabel();
+    protected abstract String getKindLabel();
 
     /**
      * Make detected issue.
@@ -148,7 +148,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
 
     private void initializeDetectedIssue( DetectedIssue issue ) {
         issue.setKind( getKind() );
-        issue.setDetectorLabel( getLabel() );
+        issue.setDetectorLabel( getKindLabel() );
         issue.setCanBeWaived( canBeWaived() );
         issue.setDefaultRemediators( getDefaultRemediators() );
     }

@@ -11,7 +11,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.nlp.SemanticMatcher;
-import com.mindalliance.channels.pages.responders.ResponderPage;
+import com.mindalliance.channels.pages.reports.responders.ResponderPage;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;

@@ -61,7 +61,7 @@ public class PlaceContainedInSelf extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Place contained in itself";
     }
 }

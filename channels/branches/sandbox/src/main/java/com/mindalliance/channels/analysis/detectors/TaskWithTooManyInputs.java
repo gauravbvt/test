@@ -119,7 +119,7 @@ public class TaskWithTooManyInputs extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Agents assigned to task receive information from too many sources";
     }
 

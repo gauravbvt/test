@@ -44,7 +44,7 @@ public class NoSourceRedundancy extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Only one source of critical information";
     }
 

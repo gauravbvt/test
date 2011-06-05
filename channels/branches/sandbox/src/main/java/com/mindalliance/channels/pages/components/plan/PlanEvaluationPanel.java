@@ -49,6 +49,7 @@ public class PlanEvaluationPanel  extends AbstractCommandablePanel {
 
     private void init() {
         addEvaluation();
+        addIssuesSummary();
     }
 
     private void addEvaluation() {
@@ -82,6 +83,10 @@ public class PlanEvaluationPanel  extends AbstractCommandablePanel {
         Label robustnessLabel = new Label( "robustness", new PropertyModel<String>( this, "robustnessLabel" ) );
         robustnessLabel.setOutputMarkupId( true );
         evaluation.add( robustnessLabel );
+    }
+
+    private void addIssuesSummary() {
+        add(  new IssuesSummaryTable( "issuesSummary" ) );
     }
 
     /**
@@ -171,7 +176,7 @@ public class PlanEvaluationPanel  extends AbstractCommandablePanel {
      */
     public String getRobustnessLabel() {
         int count = getAnalyst().countTestFailures( getPlan(), Issue.ROBUSTNESS );
-        return count == 0 ? "Robust" : ( "Not robust (" + count + ( count == 1 ? " issue)" : " issues)" ) );
+        return count == 0 ? "Robust" : ( "Not yet robust (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
 

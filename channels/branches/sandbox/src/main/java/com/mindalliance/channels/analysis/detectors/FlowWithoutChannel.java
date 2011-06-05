@@ -85,7 +85,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Flow without channel";
     }
 }

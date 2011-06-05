@@ -90,7 +90,7 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "No plan segment for event phase";
     }
 

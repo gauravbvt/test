@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.support;
 
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.pages.Channels;
@@ -105,7 +106,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
             }
         };
         add( newFeedback );
-        newFeedback.add(  new Label("label", getFeedbackLabel() ) );
+        newFeedback.add( new Label( "label", getFeedbackLabel() ) );
     }
 
     private String getFeedbackLabel() {
@@ -259,23 +260,22 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     private String aboutString() {
         if ( about == null ) {
             return "";
-        }
-        else {
-            StringBuilder sb = new StringBuilder( );
-            sb.append("\nAbout: ");
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append( "\nAbout: " );
             sb.append( about.getTypeName() );
             sb.append( " \"" );
-            sb.append( about.getName() );
-            sb.append( "\" [");
+            sb.append( about instanceof Part ? ( (Part) about ).getTask() : about.getName() );
+            sb.append( "\" [" );
             sb.append( about.getId() );
-            sb.append( "]");
+            sb.append( "]" );
             if ( about instanceof SegmentObject ) {
-                SegmentObject segObj = (SegmentObject)about;
-                sb.append( " in segment \"");
+                SegmentObject segObj = (SegmentObject) about;
+                sb.append( " in segment \"" );
                 sb.append( segObj.getSegment().getName() );
                 sb.append( "\" [" );
                 sb.append( segObj.getSegment().getId() );
-                sb.append( "]");
+                sb.append( "]" );
             }
             if ( topic != null ) {
                 sb.append( " (" );

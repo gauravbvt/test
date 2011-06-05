@@ -66,7 +66,7 @@ public class ActorIsTaskBottleneck extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Single agent assigned to critical task is bottleneck";
     }
 

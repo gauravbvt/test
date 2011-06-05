@@ -136,12 +136,19 @@ public class TimePeriod implements Serializable {
     }
 
     public String toString() {
-        return "From "
-                + pad( getFromHour() )
-                + ":" + pad( getFromMinute() )
-                + " to "
-                + pad( getToHour() )
-                + ":" + pad( getToMinute() );
+        if ( isAllDay() ) {
+            return "All day";
+        } else if (isNil() || isEmpty() ) {
+            return "Not available";
+        }
+        else {
+                return "From "
+                        + pad( getFromHour() )
+                        + ":" + pad( getFromMinute() )
+                        + " to "
+                        + pad( getToHour() )
+                        + ":" + pad( getToMinute() );
+            }
     }
 
     private String pad( int val ) {

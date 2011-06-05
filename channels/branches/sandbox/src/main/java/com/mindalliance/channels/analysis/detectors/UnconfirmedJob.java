@@ -40,7 +40,7 @@ public class UnconfirmedJob extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Unconfirmed job of agent in organization";
     }
 

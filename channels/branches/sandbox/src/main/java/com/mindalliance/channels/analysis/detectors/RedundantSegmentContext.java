@@ -60,7 +60,7 @@ public class RedundantSegmentContext extends AbstractIssueDetector {
     }
 
     @Override
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Redundancy in segment context";
     }
 

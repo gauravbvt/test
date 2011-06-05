@@ -56,7 +56,7 @@ public class EmptySharingFlow extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Report flow shares no elements of information";
     }
 

@@ -80,7 +80,7 @@ public class CircularSupervision extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Cirular supervision";
     }
 

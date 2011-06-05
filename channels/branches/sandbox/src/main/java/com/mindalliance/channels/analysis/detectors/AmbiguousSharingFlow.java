@@ -70,7 +70,7 @@ public class AmbiguousSharingFlow extends AbstractIssueDetector {
     }
 
     @Override
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Ambiguous information sharing";
     }
 

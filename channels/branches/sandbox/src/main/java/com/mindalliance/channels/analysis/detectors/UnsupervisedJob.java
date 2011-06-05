@@ -58,7 +58,7 @@ public class UnsupervisedJob extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Unsupervised job";
     }
 

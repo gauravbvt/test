@@ -87,7 +87,7 @@ public class InsufficientClearance extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Insufficient clearance";
     }
 

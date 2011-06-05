@@ -12,7 +12,7 @@ import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
-import com.mindalliance.channels.pages.reports.ProcedureMapPage;
+import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.Component;

@@ -96,7 +96,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Flow over unsecure medium";
     }
 

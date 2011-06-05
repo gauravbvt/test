@@ -156,5 +156,24 @@ public interface Issue extends Identifiable, Serializable {
      */
     String getDetectorLabel();
 
+    /**
+     * Whether is a validity issue.
+     *
+     * @return a boolean
+     */
+    boolean isValidity();
 
+    /**
+     * Whether is a completeness issue.
+     *
+     * @return a boolean
+     */
+    boolean isCompleteness();
+
+    /**
+     * Whether is a robustness issue.
+     *
+     * @return a boolean
+     */
+    boolean isRobustness();
 }

@@ -41,7 +41,7 @@ public class FlowToSelf extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Sharing with self";
     }
 

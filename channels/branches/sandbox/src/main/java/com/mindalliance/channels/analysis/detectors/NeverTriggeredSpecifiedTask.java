@@ -54,7 +54,7 @@ public class NeverTriggeredSpecifiedTask extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Task never starts";
     }
 }

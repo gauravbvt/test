@@ -1,7 +1,7 @@
 // Copyright (C) 2010 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.pages.responders;
+package com.mindalliance.channels.pages.reports.responders;
 
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
@@ -284,7 +284,8 @@ public class AllResponders extends WebPage {
 
     /**
      * Commander needs some tending to prior to use.
-     * @param plan
+     * @param plan a plan
+     * @return a commander
      * */
     private Commander getCommander( Plan plan ) {
         // Adjust so commander actually behave as expected
@@ -300,7 +301,7 @@ public class AllResponders extends WebPage {
         QueryService planService = cmdr.getQueryService();
         Participation participation = planService.findParticipation( username );
         if ( participation == null ) {
-            Participation newPart = (Participation) cmdr.doCommand(
+            Participation newPart = (Participation) cmdr.doUnsafeCommand(
                 new CreateEntityIfNew(
                         Participation.class,
                         username,

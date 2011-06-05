@@ -38,7 +38,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Agent in no organization or in too many";
     }
 

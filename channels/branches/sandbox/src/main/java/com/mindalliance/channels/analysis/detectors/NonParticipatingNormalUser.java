@@ -66,7 +66,7 @@ public class NonParticipatingNormalUser extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Non-planner user is not a participant";
     }
 

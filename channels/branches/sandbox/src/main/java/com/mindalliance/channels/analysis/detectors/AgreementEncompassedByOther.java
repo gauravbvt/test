@@ -76,7 +76,7 @@ public class AgreementEncompassedByOther extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Redundant sharing agreement ";
     }
 

@@ -61,7 +61,7 @@ public class AlarmNotANotification extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Alarm is not a notification";
     }
 

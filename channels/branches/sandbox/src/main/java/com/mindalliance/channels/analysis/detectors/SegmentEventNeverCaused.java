@@ -61,7 +61,7 @@ public class SegmentEventNeverCaused extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Planned-for event may never be caused";
     }
 }

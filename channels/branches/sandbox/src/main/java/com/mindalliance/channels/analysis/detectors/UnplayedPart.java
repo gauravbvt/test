@@ -61,7 +61,7 @@ public class UnplayedPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Unassigned task";
     }
 

@@ -1,6 +1,6 @@
 // Copyright (C) 2010 Mind-Alliance Systems LLC.
 // All rights reserved.
-package com.mindalliance.channels.pages.responders;
+package com.mindalliance.channels.pages.reports.responders;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanManager;
@@ -74,9 +74,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.mindalliance.channels.pages.responders.ResponderPage.ReportTask.Type.IMMEDIATE;
-import static com.mindalliance.channels.pages.responders.ResponderPage.ReportTask.Type.PROMPTED;
-import static com.mindalliance.channels.pages.responders.ResponderPage.ReportTask.Type.SUBTASK;
+import static com.mindalliance.channels.pages.reports.responders.ResponderPage.ReportTask.Type.IMMEDIATE;
+import static com.mindalliance.channels.pages.reports.responders.ResponderPage.ReportTask.Type.PROMPTED;
+import static com.mindalliance.channels.pages.reports.responders.ResponderPage.ReportTask.Type.SUBTASK;
 
 /** The responder report.  This page is different for every user. */
 public class ResponderPage extends WebPage {

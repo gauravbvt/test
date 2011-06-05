@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.pages.reports.ProceduresReportPage;
+import com.mindalliance.channels.pages.procedures.ProceduresReportPage;
 import org.junit.Test;
 
 /**

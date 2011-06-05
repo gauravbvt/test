@@ -165,7 +165,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     private void addMoreLink() {
         moreContainer = new WebMarkupContainer( "moreContainer" );
         moreContainer.setOutputMarkupId( true );
-        moreContainer.setVisible( getEntity().isActual() );
+        moreContainer.setVisible( getActor().isActual() );
         AjaxFallbackLink<String> moreLink = new AjaxFallbackLink<String>(
                 "more-link" ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -211,14 +211,14 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         moDetailsDiv.add( contactContainer );
         contactContainer.add( new ChannelListPanel(
                 "channels",
-                new Model<Channelable>( (Actor) getEntity() ) ) );
-        contactContainer.setVisible( getEntity().isActual() );
+                new Model<Channelable>( getActor() ) ) );
+        contactContainer.setVisible( getActor().isActual() );
     }
 
     private void addAvailabilityPanel() {
         moDetailsDiv.add( new AvailabilityPanel(
                 "availability",
-                new Model<Available>( (Actor) getEntity() ) ) );
+                new Model<Available>( getActor() ) ) );
     }
 
     private void addClearances() {
@@ -226,12 +226,12 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         moDetailsDiv.add( clearancesContainer );
         clearancesContainer.add( new ClassificationsPanel(
                 "clearances",
-                new Model<Identifiable>( getEntity() ),
+                new Model<Identifiable>( getActor() ),
                 "clearances",
                 isLockedByUser( getActor() )
         )
         );
-        clearancesContainer.setVisible( getEntity().isActual() );
+        clearancesContainer.setVisible( getActor().isActual() );
     }
 
     private void addArchetypicalCheckBox() {
@@ -249,7 +249,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         isArchetypeCheckBox.setOutputMarkupId( true );
         isArchetypeCheckBox.setEnabled( !isPlaceHolder() );
         archetypeContainer.add( isArchetypeCheckBox );
-        archetypeContainer.setVisible( getEntity().isActual() );
+        archetypeContainer.setVisible( getActor().isActual() );
         moDetailsDiv.add( archetypeContainer );
     }
 
@@ -268,7 +268,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         isPlaceHolderCheckBox.setOutputMarkupId( true );
         isPlaceHolderCheckBox.setEnabled( !isArchetype() );
         placeHolderContainer.add( isPlaceHolderCheckBox );
-        placeHolderContainer.setVisible( getEntity().isActual() );
+        placeHolderContainer.setVisible( getActor().isActual() );
         moDetailsDiv.add( placeHolderContainer );
     }
 
@@ -282,7 +282,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 update( target, new Change( Change.Type.Updated, getActor(), "system" ) );
             }
         } );
-        systemContainer.setVisible( getEntity().isActual() );
+        systemContainer.setVisible( getActor().isActual() );
         systemContainer.add( systemCheckBox );
     }
 

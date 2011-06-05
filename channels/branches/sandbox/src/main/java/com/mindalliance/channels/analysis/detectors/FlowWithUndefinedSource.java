@@ -53,7 +53,7 @@ public class FlowWithUndefinedSource extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Source of flow undefined";
     }
 }

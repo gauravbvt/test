@@ -57,7 +57,7 @@ public class ContradictoryPolicies extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Contradictory policies";
     }
 }

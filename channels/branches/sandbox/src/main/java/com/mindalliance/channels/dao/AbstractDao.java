@@ -11,7 +11,6 @@ import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -182,8 +181,7 @@ abstract class AbstractDao implements Dao {
     /**
      * {@inheritDoc}
      */
-    public <T extends ModelObject> T findOrCreate( Class<T> clazz, String rawName, Long id ) {
-        String name = ChannelsUtils.stripExtraBlanks( rawName );
+    public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id ) {
         T result = null;
 
         if ( name != null && !name.isEmpty() ) {

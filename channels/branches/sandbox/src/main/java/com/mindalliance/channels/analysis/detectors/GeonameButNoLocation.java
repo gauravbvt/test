@@ -51,7 +51,7 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
     }
 
     @Override
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Can't put place on a map";
     }
 }

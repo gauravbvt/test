@@ -58,7 +58,7 @@ public class FlowWithUndefinedTarget extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Target of flow undefined";
     }
 }

@@ -58,7 +58,7 @@ public class UnverifiedPostalCode extends AbstractIssueDetector {
     }
 
     @Override
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Postal code can't be verified";
     }
 

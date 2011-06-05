@@ -72,7 +72,7 @@ public class RedundantEOI extends AbstractIssueDetector {
     /**
      * {inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Redundant element of information";
     }
 }

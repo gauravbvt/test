@@ -33,7 +33,7 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "No known agent in task's named role";
     }
 

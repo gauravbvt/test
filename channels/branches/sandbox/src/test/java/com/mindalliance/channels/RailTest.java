@@ -4,7 +4,7 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.pages.AdminPage;
-import com.mindalliance.channels.pages.reports.CommitmentReportPage;
+import com.mindalliance.channels.pages.procedures.CommitmentReportPage;
 import org.junit.Test;
 import org.springframework.test.context.TestExecutionListeners;
 

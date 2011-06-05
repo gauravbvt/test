@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.reports;
+package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
@@ -80,7 +80,7 @@ public class VCardPanel extends AbstractUpdatablePanel {
     }
 
     public String getDefaultPictureUrl() {
-        return prefix + ( spec.isActor() ?  "images/actor.user.png"
+        return prefix + ( spec.isActor() ? "images/actor.user.png"
                         : spec.isOrganization()? "images/organization.building.png"
                         : spec.isRole()? "images/role.png"
                         : "images/system.png" );
