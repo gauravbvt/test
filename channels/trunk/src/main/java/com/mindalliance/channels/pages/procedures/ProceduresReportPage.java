@@ -1,8 +1,7 @@
-package com.mindalliance.channels.pages.reports;
+package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
@@ -85,7 +84,7 @@ public class ProceduresReportPage extends AbstractReportPage {
         channels_logo.add( new AjaxEventBehavior( "onclick") {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                String homeUrl =  AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
+                String homeUrl =  redirectUrl( "home", getPlan() );
                 RedirectPage page =  new RedirectPage( homeUrl );
                 setResponsePage( page );
             }

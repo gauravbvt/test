@@ -71,7 +71,7 @@ public class BroadcastOnlyChannels extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Sharing over broadcast channels only";
     }
 

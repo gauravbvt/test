@@ -35,7 +35,7 @@ public class PartWithInvalidTiming extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Task repeats too soon";
     }
 

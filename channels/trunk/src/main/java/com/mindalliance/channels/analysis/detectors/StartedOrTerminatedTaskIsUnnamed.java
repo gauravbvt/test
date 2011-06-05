@@ -68,7 +68,7 @@ public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Unnamed task started or terminated";
     }
 }

@@ -318,7 +318,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Expected sharing commitments missing";
     }
 

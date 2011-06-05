@@ -36,7 +36,7 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Segment has same goal as another segment";
     }
 

@@ -39,7 +39,7 @@ public class OrphanedPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Task neither consumes nor produces information";
     }
 

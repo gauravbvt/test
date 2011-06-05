@@ -64,7 +64,7 @@ public class ActorPlaceHolderWithoutParticipation extends AbstractIssueDetector 
     }
 
     @Override
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "No user participates as placeholder agent";
     }
 

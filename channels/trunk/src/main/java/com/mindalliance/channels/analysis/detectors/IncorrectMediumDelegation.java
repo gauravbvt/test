@@ -116,7 +116,7 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
         return null;
     }
 
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Communication medium delegates to inappropriate medium";
     }
 }

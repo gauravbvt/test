@@ -70,7 +70,7 @@ public class ActorWithNonMatchingParticipation extends AbstractIssueDetector {
     }
 
     @Override
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Agent assigned to user with different name";
     }
 

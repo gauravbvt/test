@@ -57,7 +57,7 @@ public class ConfirmedAgreementWithoutMOU extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Confirmed sharing agreement without MOU";
     }
 }

@@ -86,7 +86,7 @@ public class CyclicTriggering extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Cyclic task triggering";
     }
 

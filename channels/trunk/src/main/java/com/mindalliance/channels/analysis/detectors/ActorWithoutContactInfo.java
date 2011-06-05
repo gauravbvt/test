@@ -55,7 +55,7 @@ public class ActorWithoutContactInfo extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Agent without contact info";
     }
 

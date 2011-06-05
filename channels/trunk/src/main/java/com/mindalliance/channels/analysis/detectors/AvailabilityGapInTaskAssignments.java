@@ -99,7 +99,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         return null;
     }
 
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Availability gap in assignments";
     }
    /** {@inheritDoc} */

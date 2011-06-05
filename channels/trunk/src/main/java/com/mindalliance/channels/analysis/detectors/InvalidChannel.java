@@ -40,7 +40,7 @@ public class InvalidChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Incorrect channel";
     }
 

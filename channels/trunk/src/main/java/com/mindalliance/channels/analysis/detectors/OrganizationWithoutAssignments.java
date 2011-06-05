@@ -63,7 +63,7 @@ public class OrganizationWithoutAssignments extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Organization without task assignments";
     }
 

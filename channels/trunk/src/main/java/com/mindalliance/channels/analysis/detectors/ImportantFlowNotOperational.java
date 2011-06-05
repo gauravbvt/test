@@ -59,7 +59,7 @@ public class ImportantFlowNotOperational  extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Important sharing flow is not operational";
     }
 

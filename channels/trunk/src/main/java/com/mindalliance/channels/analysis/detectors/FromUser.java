@@ -33,7 +33,7 @@ public class FromUser extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "User defined";
     }
 

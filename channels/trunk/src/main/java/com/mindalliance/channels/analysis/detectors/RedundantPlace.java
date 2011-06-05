@@ -70,7 +70,7 @@ public class RedundantPlace extends AbstractIssueDetector {
         return null;
     }
 
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Redundant place";
     }
 

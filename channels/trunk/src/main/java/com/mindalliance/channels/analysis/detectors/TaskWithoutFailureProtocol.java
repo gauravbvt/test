@@ -72,7 +72,7 @@ public class TaskWithoutFailureProtocol extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Important task without failure notification protocol";
     }
 

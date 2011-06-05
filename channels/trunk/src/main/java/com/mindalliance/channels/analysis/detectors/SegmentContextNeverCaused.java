@@ -109,7 +109,7 @@ public class SegmentContextNeverCaused extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Segment context may never come to be";
     }
 

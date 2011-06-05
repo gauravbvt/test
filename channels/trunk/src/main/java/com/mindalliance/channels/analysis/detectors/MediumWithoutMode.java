@@ -57,7 +57,7 @@ public class MediumWithoutMode extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Medium transmission mode is unknown";
     }
 }

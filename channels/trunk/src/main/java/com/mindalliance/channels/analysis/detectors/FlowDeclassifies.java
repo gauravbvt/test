@@ -103,7 +103,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Information is declassified";
     }
 

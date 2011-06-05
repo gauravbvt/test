@@ -1,7 +1,7 @@
 // Copyright (C) 2010 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.pages.responders;
+package com.mindalliance.channels.pages.reports.responders;
 
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;

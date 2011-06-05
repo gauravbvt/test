@@ -106,7 +106,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
         return null;
     }
 
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Plan locale is relative";
     }
 

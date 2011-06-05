@@ -34,7 +34,7 @@ public class SegmentNeverEnds extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Segment's event phase may never end";
     }
 

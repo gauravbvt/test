@@ -75,7 +75,7 @@ public class RedundantChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Redundant channel";
     }
 }

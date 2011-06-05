@@ -67,7 +67,7 @@ public class PartWithActorOrRoleButNoOrganization extends AbstractIssueDetector 
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Task's agent or role is named but not the organization";
     }
 }

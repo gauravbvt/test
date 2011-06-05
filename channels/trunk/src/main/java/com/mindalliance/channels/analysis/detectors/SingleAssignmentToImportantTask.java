@@ -65,7 +65,7 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Important task has only one assignment";
     }
 

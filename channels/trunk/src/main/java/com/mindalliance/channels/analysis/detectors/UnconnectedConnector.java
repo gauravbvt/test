@@ -41,7 +41,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Ignored information need or capability";
     }
 

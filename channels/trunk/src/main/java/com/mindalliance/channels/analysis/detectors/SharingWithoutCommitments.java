@@ -114,7 +114,7 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Sharing flow implies no commitments";
     }
 

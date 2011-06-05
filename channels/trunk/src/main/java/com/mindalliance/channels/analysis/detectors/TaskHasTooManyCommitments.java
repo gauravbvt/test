@@ -136,7 +136,7 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Agents assigned to task have too many sharing commitments";
     }
 

@@ -59,7 +59,7 @@ public class ImportantTaskNotOperational extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Important task is not operational";
     }
 

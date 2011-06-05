@@ -10,7 +10,7 @@ import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
-import com.mindalliance.channels.pages.reports.VCardPanel;
+import com.mindalliance.channels.pages.procedures.VCardPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;

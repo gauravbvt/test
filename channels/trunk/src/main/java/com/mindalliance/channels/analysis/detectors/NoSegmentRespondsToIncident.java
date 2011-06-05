@@ -69,7 +69,7 @@ public class NoSegmentRespondsToIncident extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "No plan segment for incident";
     }
 }

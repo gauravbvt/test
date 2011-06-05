@@ -90,7 +90,7 @@ public class UntimelyDissemination extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Untimely dissemination";
     }
 

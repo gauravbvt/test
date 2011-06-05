@@ -74,7 +74,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Task is triggered but never started";
     }
 }

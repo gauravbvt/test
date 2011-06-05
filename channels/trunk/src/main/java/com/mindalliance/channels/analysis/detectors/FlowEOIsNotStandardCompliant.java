@@ -75,7 +75,7 @@ public class FlowEOIsNotStandardCompliant extends AbstractIssueDetector {
     }
 
     @Override
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Flow EOIs not standard compliant";
     }
 

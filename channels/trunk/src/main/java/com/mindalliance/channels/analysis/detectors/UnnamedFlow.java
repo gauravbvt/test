@@ -49,7 +49,7 @@ public class UnnamedFlow extends AbstractIssueDetector {
         return "name";
     }
 
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Information flow is not named";
     }
 }

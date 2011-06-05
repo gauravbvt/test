@@ -84,7 +84,7 @@ public class OrganizationWithNoAssignmentToCategoryOfTask extends AbstractIssueD
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "Organization not assigned a category of tasks";
     }
 

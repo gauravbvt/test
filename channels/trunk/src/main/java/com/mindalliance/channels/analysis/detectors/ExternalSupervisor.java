@@ -88,7 +88,7 @@ public class ExternalSupervisor extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    protected String getLabel() {
+    protected String getKindLabel() {
         return "External supervisor";
     }
 
