@@ -443,3 +443,31 @@ div.cancelSend input:hover {
 	color:#333333;
 }
 
+
+/* Issues report */
+
+#issuesMetrics h2 {
+    margin-top: 3em;
+}
+
+table.issues-metrics {
+    width: 720px;
+}
+
+table.issues-metrics tr.even, table.data-table tr.even {
+    background: #F3F3F3;
+}
+
+table.issues-metrics tr.odd, table.data-table tr.odd {
+    background: #E8E8E8;
+}
+
+table.issues-severity {
+    width: 90%;
+}
+
+table.issues-severity td, table.issues-severity th {
+    text-align: center;
+}
+
+

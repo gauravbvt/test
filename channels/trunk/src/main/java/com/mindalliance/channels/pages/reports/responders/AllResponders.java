@@ -301,7 +301,7 @@ public class AllResponders extends WebPage {
         QueryService planService = cmdr.getQueryService();
         Participation participation = planService.findParticipation( username );
         if ( participation == null ) {
-            Participation newPart = (Participation) cmdr.doCommand(
+            Participation newPart = (Participation) cmdr.doUnsafeCommand(
                 new CreateEntityIfNew(
                         Participation.class,
                         username,

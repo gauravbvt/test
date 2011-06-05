@@ -5,9 +5,11 @@ import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.Model;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
 
     private final String issueType;
     private Map<String, List<Issue>> issues;
-    private Map<String, String> issueLabels = new HashMap<String, String>(  );
+    private Map<String, String> issueLabels = new HashMap<String, String>();
     private int allIssuesCount;
 
     public IssuesMetrics( String id, String issueType ) {
@@ -48,8 +50,12 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
                 getIssueKinds() ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
+                item.add( new AttributeModifier(
+                        "class",
+                        true,
+                        new Model<String>( item.getIndex() % 2 == 0 ? "even" : "odd" ) ) );
                 String kind = item.getModelObject();
-                item.add( new Label( "kind", issueLabels.get(  kind ) ) );
+                item.add( new Label( "kind", issueLabels.get( kind ) ) );
                 item.add( new Label( "count", issueCount( kind ) ) );
                 item.add( new Label( "minor", severityCount( kind, Level.Low ) ) );
                 item.add( new Label( "major", severityCount( kind, Level.Medium ) ) );
@@ -75,7 +81,7 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
         MessageFormat mf = new MessageFormat( "{0} ({1,number,percent})" );
         double count = issues.get( kind ).size();
         double percent = count / allIssuesCount;
-        Object[] args = {count, Math.max( percent, percent > 0 ? 0.01 : 0.0 ) };
+        Object[] args = {count, Math.max( percent, percent > 0 ? 0.01 : 0.0 )};
         return mf.format( args );
     }
 
@@ -95,24 +101,25 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
         } );
         return issueKinds;
     }
+
     @SuppressWarnings( "unchecked" )
     private Map<String, List<Issue>> getIssues() {
         if ( issues == null ) {
             issues = new HashMap<String, List<Issue>>();
-            List<Issue> allUnwaivedIssues = (List<Issue>)CollectionUtils.select(
+            List<Issue> allUnwaivedIssues = (List<Issue>) CollectionUtils.select(
                     getAnalyst().findAllUnwaivedIssues(),
-                    new Predicate(){
+                    new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            return ((Issue)object).getType().equals( issueType );
+                            return ( (Issue) object ).getType().equals( issueType );
                         }
                     }
-                    );
+            );
             for ( Issue issue : allUnwaivedIssues ) {
                 String kind = issue.getKind();
                 List<Issue> issuesOfKind = issues.get( kind );
                 if ( issuesOfKind == null ) {
-                    issueLabels.put( kind, issue.getDetectorLabel( ) );
+                    issueLabels.put( kind, issue.getDetectorLabel() );
                     issuesOfKind = new ArrayList<Issue>();
                     issues.put( kind, issuesOfKind );
                 }
