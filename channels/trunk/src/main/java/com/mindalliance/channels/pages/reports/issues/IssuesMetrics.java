@@ -5,11 +5,9 @@ import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.Model;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -50,10 +48,12 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
                 getIssueKinds() ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
+/*
                 item.add( new AttributeModifier(
                         "class",
                         true,
                         new Model<String>( item.getIndex() % 2 == 0 ? "even" : "odd" ) ) );
+*/
                 String kind = item.getModelObject();
                 item.add( new Label( "kind", issueLabels.get( kind ) ) );
                 item.add( new Label( "count", issueCount( kind ) ) );
