@@ -34,7 +34,7 @@
                 </h2>
                 <h3>Contact Info</h3>
                 <ul>
-                    <li>Role:  <span wicket:id="contact.title">, {title}</span> at <span wicket:id="contact.organization">{organization}</span></li>
+                    <li>Role:  <span wicket:id="contact.roles">{role at org}, {role at org} and {role at org}</span></li>
                     <li>How to contact:
                         <ul wicket:id="contactInfos">
                             <li wicket:id="contactInfo">
@@ -469,7 +469,7 @@
                     <table border="0">
                         <tr class="contactHeads">
                             <th class="first">Name</th>
-                            <th>Organization, Title</th>
+                            <th>Roles</th>
                             <th>Contact Info</th>
                             <th class="last">Clearance</th>
                         </tr>
@@ -477,7 +477,7 @@
                             <!-- zero of ore of the following 2 rows -->
                             <tr wicket:id="contact" valign="top" class="contact">
                                 <td class="first" wicket:id="contact.name">{agent name}</td>
-                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td><span wicket:id="contact.roles">{roles}</span></td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
                                             <span wicket:id="mail">
@@ -496,7 +496,7 @@
                             </tr>
                             <tr wicket:id="supervisor" valign="top" class="contact supervisor">
                                 <td class="first"><em>Supervisor:</em> <span wicket:id="contact.name">{agent name}</span></td>
-                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td><span wicket:id="contact.roles">{organization}</span></td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
                                             <span wicket:id="mail">

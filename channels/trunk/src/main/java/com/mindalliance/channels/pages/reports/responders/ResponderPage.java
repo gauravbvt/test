@@ -38,6 +38,7 @@ import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.PlanService;
+import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -130,7 +131,10 @@ public class ResponderPage extends WebPage {
                 setResponsePage( AllResponders.class, parameters );
             } else {
                 PlanService service = initPlanService( uri, parameters.getInt( "v" ) );
-                init( service, getProfile( service, parameters ) );
+
+                String override = parameters.getString( "user", null );
+
+                init( service, getProfile( service, parameters ), override );
             }
         } catch ( StringValueConversionException e ) {
             LOG.info( "Bad parameter: " + parameters, e );
@@ -176,12 +180,13 @@ public class ResponderPage extends WebPage {
     }
 
     //-----------------------------------
-    private void init( PlanService service, ResourceSpec profile ) {
+    private void init( PlanService service, ResourceSpec profile, String override ) {
 
         Plan plan = service.getPlan();
-        // TODO password change fields
 
-        AggregatedContact contact = new AggregatedContact( service, profile );
+        AggregatedContact contact =
+            user.isPlanner( plan.getUri() ) ? new AggregatedContact( service, profile.getActor(), override )
+                                            : new AggregatedContact( service, profile.getActor(), user.getUsername() );
 
         List<ReportSegment> reportSegments = getSegments( service, profile );
         add(
@@ -221,7 +226,7 @@ public class ResponderPage extends WebPage {
                         .add( new Label( "phaseText", segment.getName() ) )
                         .add( new AttributeModifier( "name", true, segment.getAnchor() ) ),
                     new UserFeedbackPanel( "segmentFeedback", segment.getSegment(), "Send feedback" ),
-                    // TODO add back link to top
+
                     new Label( "context", segment.getContext() ),
                     new Label( "segDesc", ensurePeriod( segment.getDescription() ) )
                         .setVisible( !segment.getDescription().isEmpty() ),
@@ -257,7 +262,7 @@ public class ResponderPage extends WebPage {
 
                 ReportTask task = item.getModelObject();
                 PlanService planService = getPlanService();
-                // TODO back link to phase
+
                 item.add(
                     new WebMarkupContainer( "taskAnchor" )
                         .add( new Label( "taskName", task.getTitle() ) )
@@ -280,10 +285,10 @@ public class ResponderPage extends WebPage {
                     new WebMarkupContainer( "subtaskDiv" )
                         .add( newTaskLinks( task.getSubtasks() ) )
                         .setVisible( !task.getSubtasks().isEmpty() ),
-                    newIncomingFlows( task.getInputs() ),
-                    newOutgoingFlows( "distribDiv", task.getOutgoing() ),
-                    newOutgoingFlows( "taskRfiDiv", task.getRequests() ),
-                    newOutgoingFlows( "failDiv", task.getFailures() ),
+                    newIncomingFlows( task.getInputs( planService ) ),
+                    newOutgoingFlows( "distribDiv", task.getOutgoing( planService ) ),
+                    newOutgoingFlows( "taskRfiDiv", task.getRequests( planService ) ),
+                    newOutgoingFlows( "failDiv", task.getFailures( planService ) ),
                     newDocSection(
                         task.getAttachmentsFrom( planService.getAttachmentManager() ) ) );
             }
@@ -296,15 +301,14 @@ public class ResponderPage extends WebPage {
         List<Goal> risks = task.getRisks();
         List<Goal> gains = task.getGains();
         return new WebMarkupContainer( "details" )
-            .add( new Label( "instruct",
-                             task.getDescription() ).setVisible( !task.getDescription().isEmpty() ),
-                  new WebMarkupContainer( "routineTask" ).add( new Label( "taskRecur",
-                                                                          task.isRepeating() ?
-                                                                          "It is repeated every "
-                                                                          + task.getRepetition()
-                                                                          + '.' :
-                                                                          "" ).setVisible( task.isRepeating() ) ).setVisible(
-                      task.isImmediate() ),
+            .add( new Label( "instruct", task.getDescription() )
+                      .setVisible( !task.getDescription().isEmpty() ),
+                  new WebMarkupContainer( "routineTask" )
+                      .add( new Label( "taskRecur",
+                                       task.isRepeating() ?
+                                       "It is repeated every " + task.getRepetition() + '.' :
+                                       "" ).setVisible( task.isRepeating() ) )
+                      .setVisible( task.isImmediate() ),
                   new WebMarkupContainer( "taskDuration" ).add( new Label( "dur",
                                                                            task.getCompletionString() ) ).setVisible(
                       task.getCompletionTime() ),
@@ -467,7 +471,8 @@ public class ResponderPage extends WebPage {
     //-----------------------------------
     private static String getClassificationString( List<Classification> classifications ) {
 
-        return classifications.isEmpty() ? AggregatedContact.N_A : listToString( classifications );
+        return classifications.isEmpty() ? AggregatedContact.N_A : listToString( classifications,
+                                                                                 " or " );
     }
 
     private Component newIncomingFlows( final List<AggregatedFlow> flows ) {
@@ -558,10 +563,9 @@ public class ResponderPage extends WebPage {
                     contact.getParticipation(),
                     "Send feedback" ),
                     new Label( "contact.name", contact.getActorName() ),
-                  new Label( "contact.title", title.isEmpty() ? "" : title ),
+
+                  new Label( "contact.roles", contact.getRoles() ),
                   new Label( "contact.classification", contact.getClassifications() ),
-                  new Label( "contact.organization",
-                             organization == null ? "" : organization.toString() ),
 
                   new WebMarkupContainer( "contactInfos" )
                       .add( new ListView<Channel>( "contactInfo", channels ) {
@@ -600,17 +604,19 @@ public class ResponderPage extends WebPage {
     private static List<ReportSegment> getSegments( PlanService planService, Specable profile ) {
 
         List<ReportSegment> result = new ArrayList<ReportSegment>();
-        Assignments assignedByOthers = planService.getAssignments( false, false )
-                                        .with( profile )
-                                        .notFrom( profile );
+        Assignments allAssignments = planService.getAssignments( false, false );
+        Assignments myAssignments = allAssignments.with( profile );
+        Assignments assignedByOthers = myAssignments.notFrom( profile );
 
-        for ( Segment segment : assignedByOthers.getSegments() )
+        List<Flow> allFlows = planService.findAllFlows();
+        for ( Segment segment : assignedByOthers.getSegments() ) {
             result.add( new ReportSegment(
                                 planService,
                                 profile,
                                 result.size() + 1,
                                 segment,
-                                assignedByOthers.with( segment ) ) );
+                                assignedByOthers.with( segment ), allAssignments, allFlows ) );
+        }
         return result;
     }
 
@@ -691,13 +697,13 @@ public class ResponderPage extends WebPage {
         };
     }
 
-    private static String listToString( List<?> list ) {
+    private static String listToString( List<?> list, String lastSep ) {
 
         StringWriter w = new StringWriter();
         for ( int i = 0; i < list.size(); i++ ) {
             w.append( String.valueOf( list.get( i ) ) );
             if ( i == list.size() - 2 )
-                w.append( " or " );
+                w.append( lastSep );
             else if ( i != list.size() - 1 )
                 w.append( ", " );
         }
@@ -791,13 +797,15 @@ public class ResponderPage extends WebPage {
 
         private ReportSegment(
             PlanService planService, Specable profile, int seq, Segment segment,
-            Assignments assignments ) {
+            Assignments assignments, Assignments allAssignments, List<Flow> allFlows ) {
 
             this.seq = seq;
             this.segment = segment;
             for ( Assignment assignment : assignments ) {
                 ReportTask reportTask =
-                    new ReportTask( seq, assignment, planService.getAssignments().with( profile ) );
+                    new ReportTask( seq, assignment,
+                                    assignments, planService, allAssignments, allFlows );
+
                 tasks.add( reportTask );
                 if ( Assignments.isImmediate( assignment.getPart(), planService ) ) {
                     immediates.add( reportTask );
@@ -947,8 +955,8 @@ public class ResponderPage extends WebPage {
             return segment;
         }
     }
-    //================================================
 
+    //================================================
     /** Some report-specific extra information for an assignment. */
     public static class ReportTask implements Serializable {
 
@@ -958,25 +966,38 @@ public class ResponderPage extends WebPage {
         private final Assignment assignment;
         private final Part part;
         private final List<ReportTask> subtasks = new ArrayList<ReportTask>();
+        private final List<Commitment> commitmentsOf;
+        private final List<Commitment> commitmentsTo;
 
         private ReportTask(
-            int phaseSeq, Assignment assignment, Assignments assignments ) {
+            int phaseSeq, Assignment assignment, Assignments assignments, QueryService queryService,
+            Assignments allAssignments, List<Flow> allFlows ) {
 
             this.phaseSeq = phaseSeq;
             this.assignment = assignment;
             part = assignment.getPart();
             // TODO take care of possibility of loops
             for ( Assignment sub : assignments.from( assignment ) )
-                subtasks.add( new ReportTask( phaseSeq, sub, assignments ) );
+                subtasks.add( new ReportTask( phaseSeq, sub, assignments, queryService, allAssignments, allFlows ) );
+            commitmentsOf = queryService.findAllCommitmentsOf( assignment, allAssignments, allFlows );
+            commitmentsTo = queryService.findAllCommitmentsTo( assignment, allAssignments, allFlows );
+
         }
 
         private List<AggregatedFlow> aggregate( List<Flow> flows, boolean incoming ) {
 
             List<AggregatedFlow> result = new ArrayList<AggregatedFlow>( flows.size() );
+            Map<String,AggregatedFlow> flowMap = new HashMap<String, AggregatedFlow>();
             for ( Flow flow : flows ) {
-                AggregatedFlow newFlow = new AggregatedFlow( flow, incoming );
-                newFlow.setOrigin( assignment );
-                result.add( newFlow );
+                AggregatedFlow old = flowMap.get( flow.getName() );
+                if ( old == null ) {
+                    AggregatedFlow newFlow = new AggregatedFlow( flow, incoming );
+                    newFlow.setOrigin( assignment );
+                    flowMap.put( flow.getName(), newFlow );
+                    result.add( newFlow );
+                }
+                else
+                    old.addFlow( flow );
             }
 
             Collections.sort(
@@ -1023,7 +1044,7 @@ public class ResponderPage extends WebPage {
                 sourcesStrings.add( flow.getSourcesString( service ) );
             List<String> sources = new ArrayList<String>( sourcesStrings );
             Collections.sort( sources );
-            return listToString( sources );
+            return listToString( sources, " or " );
         }
 
         private String getRepetition() {
@@ -1046,13 +1067,15 @@ public class ResponderPage extends WebPage {
         private List<AggregatedFlow> getTriggeringFlows() {
 
             List<Flow> result = new ArrayList<Flow>();
-            for ( Flow flow : part.getAllSharingReceives() )
+            for ( Commitment commitment : commitmentsTo ) {
+                Flow flow = commitment.getSharing();
                 if ( flow.isTriggeringToTarget() ) {
                     Node source = flow.getSource();
                     if ( !source.isConnector()
                          || !( (Connector) source ).getExternalFlows().isEmpty() )
                         result.add( flow );
                 }
+            }
             return aggregate( result, true );
         }
 
@@ -1111,42 +1134,52 @@ public class ResponderPage extends WebPage {
         }
 
         //-----------------------------------
-        private List<AggregatedFlow> getFailures() {
+        private List<AggregatedFlow> getFailures( PlanService planService ) {
 
             List<Flow> result = new ArrayList<Flow>();
-            for ( Flow flow : part.getAllSharingSends() )
+            for ( Commitment commitment : commitmentsOf ) {
+                Flow flow = commitment.getSharing();
                 if ( !flow.isAskedFor() && flow.isIfTaskFails() )
                     result.add( flow );
+            }
+
             return aggregate( result, false );
         }
 
         //-----------------------------------
-        private List<AggregatedFlow> getRequests() {
+        private List<AggregatedFlow> getRequests( PlanService planService ) {
 
             List<Flow> result = new ArrayList<Flow>();
-            for ( Flow flow : part.getAllSharingSends() )
+
+            for ( Commitment commitment : commitmentsOf ) {
+                Flow flow = commitment.getSharing();
                 if ( flow.isAskedFor() )
                     result.add( flow );
+            }
+
             return aggregate( result, true );
         }
 
         //-----------------------------------
-        private List<AggregatedFlow> getOutgoing() {
-
+        private List<AggregatedFlow> getOutgoing( PlanService planService ) {
             List<Flow> result = new ArrayList<Flow>();
-            for ( Flow flow : part.getAllSharingSends() )
+            for ( Commitment commitment : commitmentsOf ) {
+                Flow flow = commitment.getSharing();
                 if ( !flow.isAskedFor() && !flow.isIfTaskFails() )
                     result.add( flow );
+            }
             return aggregate( result, false );
         }
 
         //-----------------------------------
-        private List<AggregatedFlow> getInputs() {
-
+        private List<AggregatedFlow> getInputs( PlanService service ) {
             List<Flow> inputs = new ArrayList<Flow>();
-            for ( Flow flow : part.getAllSharingReceives() )
+            for ( Commitment commitment : commitmentsTo ) {
+                Flow flow = commitment.getSharing();
                 if ( !flow.isTriggeringToTarget() )
                     inputs.add( flow );
+            }
+
             return aggregate( inputs, true );
         }
 
@@ -1279,6 +1312,7 @@ public class ResponderPage extends WebPage {
         private final Organization organization;
         private final Set<Channel> channels = new HashSet<Channel>();
         private final Set<ResourceSpec> partSpecs = new HashSet<ResourceSpec>();
+        private final Set<Employment> roles = new HashSet<Employment>();
         private final Participation participation;
         private final String actorName;
 
@@ -1304,7 +1338,7 @@ public class ResponderPage extends WebPage {
             actor = employment.getActor();
             title = employment.getTitle();
             organization = employment.getOrganization();
-            participation = findParticipation( service, actor );
+            participation = findParticipation( service, actor, null );
             actorName = participation != null ?
                                participation.getUserFullName( service ) :
                                actor == null ? "" : actor.getName();
@@ -1324,34 +1358,52 @@ public class ResponderPage extends WebPage {
             merge( service, part.resourceSpec(), employment, contactSpecs );
         }
 
-        private AggregatedContact( PlanService service, ResourceSpec profile ) {
+        private AggregatedContact( PlanService service, Actor actor, String username ) {
+             this( service, actor, findParticipation( service, actor, username ) );
+         }
 
-            actor = profile.getActor();
-            participation = findParticipation( service, actor );
+        private AggregatedContact( PlanService service, Actor actor, Participation participation ) {
 
-            List<Employment> employments = service.findAllEmploymentsForActor( actor );
-            if ( employments.isEmpty() ) {
-                title = "";
-                organization = null;
-            } else {
-                Employment firstEmployment = employments.get( 0 );
-                title = firstEmployment.getTitle();
-                organization = firstEmployment.getOrganization();
-            }
+             this.participation = participation;
+             this.actor = actor;
 
-            actorName = participation != null ?
-                               participation.getUserFullName( service ) :
-                               actor == null ? "" : actor.getName();
+             List<Employment> employments = service.findAllEmploymentsForActor( actor );
+             if ( employments.isEmpty() ) {
+                 title = "";
+                 organization = null;
+             } else {
+                 Employment firstEmployment = employments.get( 0 );
+                 title = firstEmployment.getTitle();
+                 organization = firstEmployment.getOrganization();
+             }
 
-            List<ResourceSpec> specs = new ArrayList<ResourceSpec>();
-            for ( Employment employment : employments )
-                merge( service, profile, employment, specs );
+             actorName = participation != null ?
+                                participation.getUserFullName( service ) :
+                                actor == null ? "" : actor.getName();;
 
+             List<ResourceSpec> specs = new ArrayList<ResourceSpec>();
+             for ( Employment employment : employments )
+                 merge( service, new ResourceSpec( actor ), employment, specs );
+
+         }
+
+          private static Participation findParticipation( PlanService service, Actor actor, String username ) {
+              List<Participation> list = service.list( Participation.class );
+              if ( username != null )
+                  for ( Participation participation : list )
+                      if ( username.equals( participation.getUsername() ) )
+                          return participation;
+
+              for ( Participation participation : list )
+                if ( actor.equals( participation.getActor() ) )
+                    return participation;
+
+            return null;
         }
 
-        private static Participation findParticipation( PlanService service, Actor actor ) {
+        private static Participation findParticipation( PlanService service, String username ) {
             for ( Participation participation : service.list( Participation.class ) )
-                if ( actor.equals( participation.getActor() ) )
+                if ( username.equals( participation.getUsername() ) )
                     return participation;
 
             return null;
@@ -1364,6 +1416,8 @@ public class ResponderPage extends WebPage {
             for ( ResourceSpec contactSpec : contactSpecs )
                 if ( profile.narrowsOrEquals( contactSpec, null ) )
                     partSpecs.add( contactSpec );
+
+            roles.add( employment );
 
             channels.addAll(
                 participation == null ?
@@ -1378,6 +1432,22 @@ public class ResponderPage extends WebPage {
 
         private String getActorName() {
             return actorName;
+        }
+
+        public String getRoles() {
+            List<Employment> list = new ArrayList<Employment>( roles );
+            Collections.sort( list, new Comparator<Employment>() {
+                @Override
+                public int compare( Employment o1, Employment o2 ) {
+                    int i = o1.getOrganization().compareTo( o2.getOrganization() );
+                    return i == 0 ? o1.getRole().compareTo( o2.getRole() ) : i ;
+                }
+            } );
+            List<String> strings = new ArrayList<String>( list.size() );
+            for ( Employment employment : list )
+                strings.add( employment.getLabel() );
+
+            return listToString( strings, " and " );
         }
 
         public AggregatedContact getSupervisor() {
@@ -1427,7 +1497,17 @@ public class ResponderPage extends WebPage {
         @Override
         public int compareTo( AggregatedContact o ) {
             int i = organization.compareTo( o.getOrganization() );
-            return i == 0 ? actorName.compareTo( o.getActorName() ) : i;
+
+            if ( i != 0 )
+                return i;
+
+            if ( actorName == null )
+                return -1;
+            else if ( o.getActorName() == null ) {
+                return 1;
+            }
+            else
+                return actorName.compareTo( o.getActorName() );
         }
 
         public String getAvailability() {
@@ -1494,16 +1574,14 @@ public class ResponderPage extends WebPage {
                 return true;
 
             switch ( restriction ) {
+                case Supervisor:
                 case SameTopOrganization:
                     return ModelObject.isNullOrUnknown( committer )
                            || ModelObject.isNullOrUnknown( beneficiary )
                            || committer.getTopOrganization().equals(
                                 beneficiary.getTopOrganization() );
                 case SameOrganization:
-                    return ModelObject.isNullOrUnknown( committer )
-                           || ModelObject.isNullOrUnknown( beneficiary )
-                           || committer.narrowsOrEquals( beneficiary, null )
-                           || beneficiary.narrowsOrEquals( committer, null );
+                    return committer != null && committer.equals( beneficiary );
                 case DifferentOrganizations:
                     return ModelObject.isNullOrUnknown( committer )
                            || ModelObject.isNullOrUnknown( beneficiary )
@@ -1533,6 +1611,7 @@ public class ResponderPage extends WebPage {
                     return o1.toString().compareToIgnoreCase( o2.toString() );
                 }
             } );
+
             List<String> list = new ArrayList<String>( specList.size() );
             for ( ResourceSpec spec : specList )
                 list.add( spec.getReportSource( !incoming && isAll() ? "every " : "any " ) );
@@ -1542,14 +1621,14 @@ public class ResponderPage extends WebPage {
                     case SameOrganization:
                     case DifferentOrganizations:
                     case DifferentTopOrganizations:
-                        return listToString( list );
+                        return listToString( list, " or " );
                     case SameLocation:
                     case DifferentLocations:
                     case Supervisor:
                     case Self:
                     case Other:
                 }
-            return listToString( list ) + flow.getRestrictionString( !incoming );
+            return listToString( list, " or " ) + flow.getRestrictionString( !incoming );
         }
 
         private String getFormattedLabel() {
