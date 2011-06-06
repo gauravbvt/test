@@ -128,15 +128,24 @@ h2.description {
 	font-size: 20px;
 	font-weight: normal;
 	line-height: 150%;
-	padding: 0 100px 40px;
+	padding: 0 50px 25px 50px;
 	text-align: center;
 	font-family:Georgia, "Times New Roman", Times, serif;
 }
 
-
-#issuesMetrics h2 {
-    margin-top: 3em;
+div#summary h2,
+div#issuesMetrics h2 {
+    background: #CCCCCC;
+    border-bottom: 2px solid #999999;
+    border-top: 2px solid #999999;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 40px 0 10px;
+    padding: 5px 0 5px 10px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	text-transform:capitalize;
 }
+
 
 /* ----- Tables ----- */
 
@@ -149,7 +158,7 @@ table {
 
 table td,
 table th {
-	padding: 5px 10px;
+	padding: 5px 5px 5px 10px;
 }
 table th {
     white-space: nowrap;
@@ -157,10 +166,10 @@ table th {
 
 table tbody tr {
 	border: 1px solid #999999;
-	background:#e8e8e8;
 }
 
-/* Feedback */
+/* ----- Feedback ----- */
+
 span.feedback-container a:hover {
     color: #333333;
 }
@@ -255,23 +264,39 @@ div.cancelSend input:hover {
 	color:#333333;
 }
 
-
-table.issues-metrics, table.data-table {
+table.issues-metrics,
+table.data-table {
     width: 720px;
 }
 
-table.issues-metrics tr.even, table.data-table tr.even {
-    background: #F3F3F3;
+table.issues-metrics thead tr,
+table.data-table thead tr {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
 }
 
-table.issues-metrics tr.odd, table.data-table tr.odd {
-    background: #E8E8E8;
+table.issues-metrics tr.parent,
+table.data-table tr.parent {
+	font-weight: bold;
+	background: #e8e8e8;
+	font-size:11px;
+}
+
+table.issues-metrics tr.child,
+table.data-table tr.child {
+    background: #F3F3F3;
+	font-weight:normal;
+	font-size:11px;
 }
 
 table.issues-severity {
-    width: 90%;
+    width: 97%;
+	font-size:11px;
+	margin:10px 0;
 }
 
-table.issues-severity td, table.issues-severity th {
+table.issues-severity td,
+table.issues-severity th {
     text-align: center;
+	border:1px solid #CCCCCC;
 }

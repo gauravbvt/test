@@ -183,10 +183,17 @@ div.task h2 a {
 }
 
 div.task h2 a.back {
-	font-size:12px;
-	font-family:Arial, Helvetica, sans-serif;
-	padding:2px 0 0 0;
+    background: url('/images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 8px;
+    font-weight: bold;
+    padding: 3px 4px;
+    text-transform: capitalize;
+    outline: none;
 }
+
 
 div#about h3,
 div.phase h3,
@@ -223,7 +230,7 @@ table {
 
 table td,
 table th {
-	padding: 5px 10px;
+	padding: 5px 3px 5px 10px;
 }
 table th {
     white-space: nowrap;
@@ -362,11 +369,11 @@ span.feedback-container {
 }
 
 h2 span.feedback-container {
-	padding:6px 5px 0 0;
+	padding:3px 5px 0 0;
 }
 
 td span.feedback-container {
-	padding:2px 0 0 0;
+	padding:0;
 }
 
 span.feedback-container a {
@@ -412,6 +419,8 @@ div.feedback-form-cont {
 	padding:5px;
 	position:relative;
 	margin:3px 0 0 5px;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:normal;
 }
 
 div.feedback-options {
