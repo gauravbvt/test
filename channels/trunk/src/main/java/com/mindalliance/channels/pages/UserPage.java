@@ -168,14 +168,12 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
 
     private void addHelp() {
         Attachment help = getHelp();
-/*
+
         if ( help != null ) {
-            ExternalLink helpLink = new ExternalLink( "help-link",
-                    help.getUrl(), getAttachmentManager().getLabel( getPlan(), help ) );
+            ExternalLink helpLink = new ExternalLink( "help-link", help.getUrl() );
             form.add( helpLink );
 
         } else {
-*/
             BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
             helpLink.add( new AttributeModifier( "target", true, new Model<String>( "help" ) ) );
             helpLink.setPopupSettings( new PopupSettings(
@@ -185,7 +183,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
                             PopupSettings.TOOL_BAR ) );
 
             form.add( helpLink );
-//        }
+        }
     }
 
 
