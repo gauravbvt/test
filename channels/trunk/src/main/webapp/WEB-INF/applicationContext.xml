@@ -138,6 +138,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.PartWithActorOrRoleButNoOrganization"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithoutChannel"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.InvalidChannel"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.EmptyChannelAddress"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnnamedFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedSource"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.FlowWithUndefinedTarget"/>
@@ -193,7 +194,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.PlanLocaleIsRelative"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.AlarmNotANotification"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithoutAssignments"/>
-                <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>
+                <!--<bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>-->
                <!-- <bean class="com.mindalliance.channels.analysis.detectors.OrganizationMissingExpectedCommitment"/>-->
                 <bean class="com.mindalliance.channels.analysis.detectors.EmptySharingFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorWithoutContactInfo"/>
@@ -347,19 +348,19 @@ CONFIGURATION NOTES:
     <bean id="radio" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Radio"/>
         <property name="kind" value="Type"/>
-        <property name="addressPattern" value=".+"/>
+        <property name="addressPattern" value=".*"/>
         <property name="cast" value="Broadcast"/>
     </bean>
     <bean id="twoWayRadio" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Two way radio"/>
         <property name="kind" value="Type"/>
-        <property name="addressPattern" value=".+"/>
+        <property name="addressPattern" value=".*"/>
         <property name="cast" value="Multicast"/>
     </bean>
     <bean id="television" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Television"/>
         <property name="kind" value="Type"/>
-        <property name="addressPattern" value=".+"/>
+        <property name="addressPattern" value=".*"/>
         <property name="cast" value="Broadcast"/>
     </bean>
     <bean id="courier" class="com.mindalliance.channels.model.TransmissionMedium">

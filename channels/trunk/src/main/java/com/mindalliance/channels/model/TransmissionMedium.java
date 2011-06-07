@@ -360,6 +360,8 @@ public class TransmissionMedium extends ModelEntity {
 
     private List<String> getAddressPatterns() {
         Set<String> patterns = new HashSet<String>();
+        if ( !addressPattern.isEmpty() && !addressPattern.equals( ".*" ) )
+            patterns.add( addressPattern );
         for ( ModelEntity type : getAllTypes() ) {
             String pattern = ( (TransmissionMedium) type ).getAddressPattern();
             // drop empty or universal pattern

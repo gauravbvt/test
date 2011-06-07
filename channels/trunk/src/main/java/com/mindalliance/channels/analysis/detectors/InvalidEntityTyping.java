@@ -49,29 +49,6 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
-            // Two types used are mutually inconsistent.
-            for (ModelEntity otherType : types ) {
-                if (!type.equals( otherType )) {
-                    if ( !otherType.validates( type, locale ) ) {
-                        Issue issue = makeIssue( Issue.VALIDITY, entity );
-                         issue.setDescription( "The type " + type.getName()
-                                 + " is inconsistent with other type "
-                                 + otherType.getName()
-                         );
-                         issue.setRemediation( "Remove type "
-                                 + type.getKindLabel()
-                                 + " " + type.getName()
-                                 + " from the categorization of  " + entity.getName()
-                                 + "\n or remove " + otherType.getName()
-                                 + " from the categorization of " + entity.getName()
-                                 + "\n or change the definition of " + type.getName()
-                                 + "\n or change the definition of " + otherType.getName()
-                         );
-                         issue.setSeverity( Level.Medium );
-                         issues.add( issue );
-                    }
-                }
-            }
         }
         return issues;
     }

@@ -11,6 +11,7 @@ import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,8 +33,10 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
         List<Hierarchical> roots = findRoots( digraph );
         printoutRankedVertices( out, roots );
         List<Hierarchical> ranked = roots;
+        List<Hierarchical> placed = new ArrayList<Hierarchical>( ranked );
         while ( !ranked.isEmpty() ) {
-            ranked = findAllChildrenOf( ranked, digraph );
+            ranked = findAllChildrenOf( ranked, digraph, placed );
+            placed.addAll(  ranked );
             printoutRankedVertices( out, ranked );
         }
     }
@@ -53,12 +56,14 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
     @SuppressWarnings( "unchecked" )
     private List<Hierarchical> findAllChildrenOf(
             final List<Hierarchical> ranked,
-            DirectedGraph<Hierarchical, HierarchyRelationship> digraph ) {
+            DirectedGraph<Hierarchical, HierarchyRelationship> digraph,
+            final List<Hierarchical> placed ) {
         return (List<Hierarchical>) CollectionUtils.select(
                 digraph.vertexSet(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        return !CollectionUtils.intersection( ranked, ( (Hierarchical) obj ).getSuperiors() ).isEmpty();
+                        return !placed.contains(  (Hierarchical)obj )
+                        && !CollectionUtils.intersection( ranked, ( (Hierarchical) obj ).getSuperiors() ).isEmpty();
                     }
                 } );
     }
