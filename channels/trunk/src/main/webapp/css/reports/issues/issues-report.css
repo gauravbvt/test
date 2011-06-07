@@ -300,3 +300,8 @@ table.issues-severity th {
     text-align: center;
 	border:1px solid #CCCCCC;
 }
+
+.no-issues {
+    margin-left: 20px;
+    font-style: italic;
+}

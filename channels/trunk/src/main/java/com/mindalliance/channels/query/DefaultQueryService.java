@@ -930,8 +930,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Part part = parts.next();
                 Actor actor = part.getActor();
                 ResourceSpec partSpec = part.resourceSpec();
-                if ( organization.narrowsOrEquals( part.getOrganizationOrUnknown(), locale )
-                        && actor != null && actor.isActual() && partSpec.getOrganization() != null ) {
+                Organization partOrg = part.getOrganizationOrUnknown();
+                if ( actor != null
+                        && actor.isActual()
+                        && !partOrg.isUnknown()
+                        && (  partOrg.isType() && organization.narrowsOrEquals( partOrg, locale )
+                                || partOrg.isActual() && organization.equals( partOrg )  ) ) {
 
                     Job job = Job.from( new ResourceSpec( actor,
                             partSpec.getRole(),

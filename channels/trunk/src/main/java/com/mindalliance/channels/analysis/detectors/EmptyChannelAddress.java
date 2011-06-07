@@ -37,6 +37,7 @@ public class EmptyChannelAddress extends AbstractIssueDetector {
             String remediation = "";
             if ( channel.getAddress().isEmpty() ) {
                 if ( channel.getMedium().requiresAddress()
+                        && !( modelObject instanceof Flow )
                         && !( modelObject.isEntity() && ( (ModelEntity) modelObject ).isType() )
                         && !( modelObject instanceof Actor && ( (Actor) modelObject ).isPlaceHolder() ) ) {
                     problem = "The " + channel.getMedium().getName() + " channel's address is required but empty.";

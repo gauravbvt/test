@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.list.ListView;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,7 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
     private List<Issue> allUnwaivedIssues = null;
 
     private List<Issue> allWaivedIssues = null;
+    private List<Level> levels;
 
     public IssuesSummaryTable( String id ) {
         super( id );
@@ -35,16 +37,16 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        addValidity();
-        addCompleteness();
         addRobustness();
+        addCompleteness();
+        addValidity();
     }
 
     private void addValidity() {
         add( new Label( "validityMetrics", issuesTypeMetrics( Issue.VALIDITY, false ) ) );
         add( new ListView<Level>(
                 "validitySeverity",
-                Arrays.asList( Level.values() )
+                levels()
         ) {
             @Override
             protected void populateItem( ListItem<Level> item ) {
@@ -56,7 +58,7 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
         add( new Label( "validityWaivedMetrics", issuesTypeMetrics( Issue.VALIDITY, true ) ) );
         add( new ListView<Level>(
                 "validityWaivedSeverity",
-                Arrays.asList( Level.values() )
+                levels()
         ) {
             @Override
             protected void populateItem( ListItem<Level> item ) {
@@ -71,7 +73,7 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
         add( new Label( "completenessMetrics", issuesTypeMetrics( Issue.COMPLETENESS, false ) ) );
         add( new ListView<Level>(
                 "completenessSeverity",
-                Arrays.asList( Level.values() )
+                levels()
         ) {
             @Override
             protected void populateItem( ListItem<Level> item ) {
@@ -83,7 +85,7 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
         add( new Label( "completenessWaivedMetrics", issuesTypeMetrics( Issue.COMPLETENESS, true ) ) );
         add( new ListView<Level>(
                 "completenessWaivedSeverity",
-                Arrays.asList( Level.values() )
+                levels()
         ) {
             @Override
             protected void populateItem( ListItem<Level> item ) {
@@ -98,27 +100,35 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
         add( new Label( "robustnessMetrics", issuesTypeMetrics( Issue.ROBUSTNESS, false ) ) );
         add( new ListView<Level>(
                 "robustnessSeverity",
-                Arrays.asList( Level.values() )
+                levels()
         ) {
             @Override
             protected void populateItem( ListItem<Level> item ) {
                 item.add( new Label(
                         "severityMetrics",
-                        severityMetrics( item.getModelObject(), Issue.COMPLETENESS, false ) ) );
+                        severityMetrics( item.getModelObject(), Issue.ROBUSTNESS, false ) ) );
             }
         } );
         add( new Label( "robustnessWaivedMetrics", issuesTypeMetrics( Issue.ROBUSTNESS, true ) ) );
         add( new ListView<Level>(
                 "robustnessWaivedSeverity",
-                Arrays.asList( Level.values() )
+                levels()
         ) {
             @Override
             protected void populateItem( ListItem<Level> item ) {
                 item.add( new Label(
                         "severityMetrics",
-                        severityMetrics( item.getModelObject(), Issue.COMPLETENESS, true ) ) );
+                        severityMetrics( item.getModelObject(), Issue.ROBUSTNESS, true ) ) );
             }
         } );
+    }
+
+    private List<Level> levels() {
+        if ( levels == null ) {
+            levels = Arrays.asList( Level.values() );
+            Collections.reverse( levels );
+        }
+        return levels;
     }
 
     private String issuesTypeMetrics( String type, boolean waived ) {
