@@ -75,14 +75,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.mindalliance.channels.pages.reports.responders.ResponderPage.ReportTask.Type.IMMEDIATE;
-import static com.mindalliance.channels.pages.reports.responders.ResponderPage.ReportTask.Type.PROMPTED;
-import static com.mindalliance.channels.pages.reports.responders.ResponderPage.ReportTask.Type.SUBTASK;
+import static com.mindalliance.channels.pages.reports.responders.ParticipantPage.ReportTask.Type.IMMEDIATE;
+import static com.mindalliance.channels.pages.reports.responders.ParticipantPage.ReportTask.Type.PROMPTED;
+import static com.mindalliance.channels.pages.reports.responders.ParticipantPage.ReportTask.Type.SUBTASK;
 
-/** The responder report.  This page is different for every user. */
-public class ResponderPage extends WebPage {
+/** The participant report.  This page is different for every user. */
+public class ParticipantPage extends WebPage {
 
-    private static final Logger LOG = LoggerFactory.getLogger( ResponderPage.class );
+    private static final Logger LOG = LoggerFactory.getLogger( ParticipantPage.class );
 
     /** The current logged-in user. */
     @SpringBean
@@ -100,14 +100,14 @@ public class ResponderPage extends WebPage {
      * Called for access without parameters. Find the actor and plan corresponding to the current
      * user and redirect to that page. Otherwise, redirect to access denied.
      */
-    private ResponderPage() {
+    private ParticipantPage() {
 
         try {
             PlanService service = createPlanService( user );
             Plan plan = service.getPlan();
             setRedirect( true );
             setResponsePage(
-                ResponderPage.class,
+                ParticipantPage.class,
                 createParameters(
                     user.isPlanner( plan.getUri() ) ? new ResourceSpec()
                                                     : getProfile( service, user ),
@@ -115,20 +115,20 @@ public class ResponderPage extends WebPage {
                     plan.getVersion() ) );
 
         } catch ( NotFoundException e ) {
-            // User has no responder page
-            LOG.info( user.getFullName() + " not a responder", e );
-            throw new RedirectToUrlException( "/static/nonResponder.html" );
+            // User has no participant page
+            LOG.info( user.getFullName() + " not a participant", e );
+            throw new RedirectToUrlException( "/static/nonParticipant.html" );
         }
     }
 
-    public ResponderPage( PageParameters parameters ) {
+    public ParticipantPage( PageParameters parameters ) {
 
         super( parameters );
         try {
             String uri = parameters.getString( "plan" );
             if ( user.isPlanner( uri ) && parameters.size() == 2 ) {
                 setRedirect( false );
-                setResponsePage( AllResponders.class, parameters );
+                setResponsePage( AllParticipants.class, parameters );
             } else {
                 PlanService service = initPlanService( uri, parameters.getInt( "v" ) );
 

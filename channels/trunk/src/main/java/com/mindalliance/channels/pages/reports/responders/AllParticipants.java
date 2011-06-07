@@ -51,7 +51,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 /** A planner's table of contents to responders pages. */
 
-public class AllResponders extends WebPage {
+public class AllParticipants extends WebPage {
 
     private static final String PLAN = "plan";
 
@@ -69,7 +69,7 @@ public class AllResponders extends WebPage {
     @SpringBean
     private LockManager lockManager;
 
-    public AllResponders() {
+    public AllParticipants() {
 
         List<Plan> plans = planManager.getPlannablePlans( user );
         if ( plans.isEmpty() )
@@ -81,10 +81,10 @@ public class AllResponders extends WebPage {
         pageParameters.put( VERSION, plan.getVersion() );
 
         setRedirect( true );
-        setResponsePage( ResponderPage.class, pageParameters );
+        setResponsePage( ParticipantPage.class, pageParameters );
     }
 
-    public AllResponders( PageParameters parameters ) {
+    public AllParticipants( PageParameters parameters ) {
         super( parameters );
 
         try {
@@ -143,8 +143,8 @@ public class AllResponders extends WebPage {
                         parameters.put( "user", userName );
                         User otherUser = planManager.getUserService().getUserNamed( userName );
                         item.add(
-                            new BookmarkablePageLink<ResponderPage>(
-                                "responder", ResponderPage.class, parameters )
+                            new BookmarkablePageLink<ParticipantPage>(
+                                "responder", ParticipantPage.class, parameters )
                                   .add( new Label( "responderName", otherUser.getFullName() )
                                             .setRenderBodyOnly( true ) ),
                             new ExternalLink( "userName", "mailTo:" + otherUser.getEmail(), userName ),
@@ -164,7 +164,7 @@ public class AllResponders extends WebPage {
                                         }
                                         getPage().detachModels();
                                         setRedirect( true );
-                                        setResponsePage( ResponderPage.class, getPage().getPageParameters() );
+                                        setResponsePage( ParticipantPage.class, getPage().getPageParameters() );
                                     }
                                 } )
                                 .setOutputMarkupId( true ),
@@ -185,7 +185,7 @@ public class AllResponders extends WebPage {
                     protected void populateItem( ListItem<Actor> item ) {
                         final Actor actor = item.getModelObject();
                         PageParameters parameters =
-                            ResponderPage.createParameters( actor, uri, version );
+                            ParticipantPage.createParameters( actor, uri, version );
 
                         item.add(
                             new WebMarkupContainer( "assign" )
@@ -209,7 +209,7 @@ public class AllResponders extends WebPage {
                                                 }
                                                 getPage().detachModels();
                                                 setRedirect( true );
-                                                setResponsePage( ResponderPage.class,
+                                                setResponsePage( ParticipantPage.class,
                                                                  getPage().getPageParameters() );
                                             }
                                         }.add( new Label( "userLink", u.getFullName() ) ) );
@@ -217,8 +217,8 @@ public class AllResponders extends WebPage {
                                 } )
                                 .setVisible( !unassigned.isEmpty() ),
 
-                            new BookmarkablePageLink<ResponderPage>(
-                                "responder", ResponderPage.class, parameters )
+                            new BookmarkablePageLink<ParticipantPage>(
+                                "responder", ParticipantPage.class, parameters )
                                     .add( new Label( "responderName", actor.getNormalizedName() )
                                               .setRenderBodyOnly( true ) ),
 
@@ -243,8 +243,8 @@ public class AllResponders extends WebPage {
                         parameters.put( PLAN, p.getUri() );
                         parameters.put( VERSION, p.getVersion() );
 
-                        item.add( new BookmarkablePageLink<ResponderPage>(
-                            "responderList", ResponderPage.class, parameters )
+                        item.add( new BookmarkablePageLink<ParticipantPage>(
+                            "responderList", ParticipantPage.class, parameters )
                                       .add( new Label( "otherPlanName", p.toString() )
                                                 .setRenderBodyOnly( true ) ) );
 

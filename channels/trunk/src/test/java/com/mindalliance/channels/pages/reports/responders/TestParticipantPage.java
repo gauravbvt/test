@@ -1,7 +1,6 @@
 // Copyright (C) 2010 Mind-Alliance Systems LLC.
 // All rights reserved.
-
-package com.mindalliance.channels.pages.responders;
+package com.mindalliance.channels.pages.reports.responders;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.AbstractChannelsTest.InstallSamplesListener;
@@ -10,8 +9,6 @@ import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.pages.reports.responders.AllResponders;
-import com.mindalliance.channels.pages.reports.responders.ResponderPage;
 import com.mindalliance.channels.query.PlanService;
 import org.junit.Test;
 import org.springframework.test.context.TestExecutionListeners;
@@ -21,45 +18,45 @@ import javax.servlet.http.HttpServletResponse;
 /** ... */
 
 @TestExecutionListeners ( InstallSamplesListener.class )
-public class TestResponderPage extends AbstractChannelsTest {
+public class TestParticipantPage extends AbstractChannelsTest {
 
     @Test
     public void testPlanner() {
         login( "denis" );
-        assertRendered( "responders", AllResponders.class );
+        assertRendered( "participants", AllParticipants.class );
     }
 
     @Test
     public void testNormal() {
         associate( "guest", "mindalliance.com/channels/plans/railsec", "Joseph Neumann" );
-        assertRendered( "responders", ResponderPage.class );
+        assertRendered( "participants", ParticipantPage.class );
     }
 
     @Test
     public void testBadUri() {
         associate( "guest", "mindalliance.com/channels/plans/railsec", "Joseph Neumann" );
-        assertErrorRendering( "responders?plan=mindalliance.com/channels/plans/waitasec&v=1",
+        assertErrorRendering( "participants?plan=mindalliance.com/channels/plans/waitasec&v=1",
                               HttpServletResponse.SC_NOT_FOUND );
     }
 
     @Test
     public void testBadValue() {
         associate( "guest", "mindalliance.com/channels/plans/railsec", "Joseph Neumann" );
-        assertErrorRendering( "responders?plan=mindalliance.com/channels/plans/railsec&v=abc",
+        assertErrorRendering( "participants?plan=mindalliance.com/channels/plans/railsec&v=abc",
                               HttpServletResponse.SC_NOT_FOUND );
     }
 
     @Test
     public void testBadValue2() {
         associate( "guest", "mindalliance.com/channels/plans/railsec", "Joseph Neumann" );
-        assertErrorRendering( "responders?plan=mindalliance.com/channels/plans/railsec&v=1&agent=booboo",
+        assertErrorRendering( "participants?plan=mindalliance.com/channels/plans/railsec&v=1&agent=booboo",
                               HttpServletResponse.SC_NOT_FOUND );
     }
 
     @Test
     public void testNoParticipation() {
         associate( "guest", "mindalliance.com/channels/plans/railsec", "Joseph Neumann" );
-        assertErrorRendering( "responders?plan=mindalliance.com/channels/plans/acme&v=1&agent=234",
+        assertErrorRendering( "participants?plan=mindalliance.com/channels/plans/acme&v=1&agent=234",
                               HttpServletResponse.SC_NOT_FOUND );
     }
 

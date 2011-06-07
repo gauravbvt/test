@@ -11,7 +11,7 @@ import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.nlp.SemanticMatcher;
-import com.mindalliance.channels.pages.reports.responders.ResponderPage;
+import com.mindalliance.channels.pages.reports.responders.ParticipantPage;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
@@ -362,8 +362,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         BookmarkablePageLink<? extends WebPage> guidelinesLink = AbstractChannelsWebPage.newTargetedLink(
                 id,
                 "",
-                ResponderPage.class,
-                ResponderPage.createParameters( planner ? null : actor, uri, plan.getVersion() ),
+                ParticipantPage.class,
+                ParticipantPage.createParameters( planner ? null : actor, uri, plan.getVersion() ),
                 null,
                 plan );
         if ( !samePage )

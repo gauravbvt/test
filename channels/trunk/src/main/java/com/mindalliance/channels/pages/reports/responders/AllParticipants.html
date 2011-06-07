@@ -4,7 +4,7 @@
       xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
       lang="en">
 <head>
-    <title>Channels - Responder Pages</title>
+    <title>Channels - Participant Pages</title>
     <link rel="stylesheet" href="../css/responder-report/all-responders.css" type="text/css" title="Playbook">
     <link rel="stylesheet" href="../css/iPhone.css" type="text/css" media="only screen and (max-device-width: 480px)">
 </head>
@@ -12,7 +12,7 @@
 <div id="container">
     <div id="header">
 		<img wicket:id="channelsHome" class="logo" src="../images/logo_home.png" height="48" width="48" alt="Channels - Home" />
-      	<h1>Responder list for <span wicket:id="planName">plan</span></h1>
+      	<h1>Participant list for <span wicket:id="planName">plan</span></h1>
 		<ul>
 			<li>
 				<a href="logout">Sign out <span wicket:id="userName">user</span></a>
@@ -21,20 +21,20 @@
     </div>
     <div id="contents">
         <div id="note">
-            <span>As a planner, you get access to all the responder pages.</span>
+            <span>As a planner, you get access to all the participant pages.</span>
         </div>
         <div wicket:id="activeDiv">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr class="tablehead">
 					<th colspan="2">
 			            <p class="title">Active Users</p>
-						<p class="desc">Users that can log in to view their responder report</p>
+						<p class="desc">Users that can log in to view their participant report</p>
 					</th>
 				</tr>
 				<tr wicket:id="activeResponders" class="tablecont">
 					<td class="name">
 	                    <a wicket:id="responder" class="responder">
-							<span wicket:id="responderName">a responder</span>
+							<span wicket:id="responderName">a participant</span>
 						</a>
 						(<a wicket:id="userName">user name</a>) as
 						<span class="profile">
@@ -64,7 +64,7 @@
 				<tr wicket:id="agents" class="tablecont">
 					<td>
 	                	<a wicket:id="responder" class="responder">
-							<span wicket:id="responderName">a responder</span>
+							<span wicket:id="responderName">a participant</span>
 						</a>
                     	<span wicket:id="many">
 							(<span class="many">many</span>)
