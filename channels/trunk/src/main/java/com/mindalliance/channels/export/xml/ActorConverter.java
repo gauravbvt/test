@@ -63,6 +63,7 @@ public class ActorConverter extends EntityConverter {
         }
         if ( actor.isPlaceHolder() ) {
             writer.startNode( "placeHolder" );
+            writer.addAttribute( "singular", Boolean.toString( actor.isPlaceHolderSingular() ) );
             writer.setValue( "true" );
             writer.endNode();
         }
@@ -105,6 +106,9 @@ public class ActorConverter extends EntityConverter {
         } else if ( nodeName.equals( "placeHolder" ) ) {
             boolean val = reader.getValue().equals( "true" );
             actor.setPlaceHolder( val );
+            if ( reader.getAttributeCount() > 0 ) {
+                actor.setPlaceHolderSingular( Boolean.parseBoolean( reader.getAttribute( "singular" ) ) );
+            }
         } else if ( nodeName.equals( "clearance" ) ) {
             Classification clearance = (Classification) context.convertAnother( plan, Classification.class );
             actor.addClearance( clearance );

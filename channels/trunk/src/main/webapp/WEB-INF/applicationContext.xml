@@ -218,6 +218,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.AmbiguousSharingFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorPlaceHolderWithoutParticipation"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorWithNonMatchingParticipation"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.ActorWithTooManyParticipations"/>
             </list>
         </property>
     </bean>

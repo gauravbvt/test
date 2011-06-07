@@ -223,7 +223,7 @@ public class AllResponders extends WebPage {
                                               .setRenderBodyOnly( true ) ),
 
                             new WebMarkupContainer( "many" )
-                                            .setVisible( actor.isArchetype() )
+                                            .setVisible( !actor.isSingular() )
                         ).setOutputMarkupId( true );
 
                         if ( item.getIndex() == getViewSize() - 1 )
@@ -395,7 +395,7 @@ public class AllResponders extends WebPage {
         Set<Actor> result = new HashSet<Actor>( users.size() );
         for ( Participation p : users ) {
             Actor actor = p.getActor();
-            if ( !actor.isArchetype() )
+            if ( actor.isSingular() )
                 result.add( actor );
         }
 

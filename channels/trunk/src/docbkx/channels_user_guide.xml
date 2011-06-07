@@ -6152,6 +6152,31 @@
 
                 <entry><para>Yes</para></entry>
               </row>
+
+              <row>
+                <entry><para>Too many participations as agent</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Unassign users</para>
+                  </listitem>
+                  
+                  <listitem>
+                    <para>or make the agent an archetype</para>
+                  </listitem>
+                  
+                  <listitem>
+                    <para>or make the agent a placeholder of which there can be more than one</para>
+                  </listitem>
+                  
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+              
+            
             </tbody>
           </tgroup>
         </informaltable>
@@ -6973,12 +6998,29 @@
                     </listitem>
 
                     <listitem>
-                      <para>r make the agent not a place holder.</para>
+                      <para>or make the agent not a place holder.</para>
                     </listitem>
                   </itemizedlist></entry>
 
                 <entry><para>Yes</para></entry>
               </row>
+  
+              <row>
+                <entry><para>Required channel address is empty</para></entry>
+                
+                <entry><para>Depends on impacted tasks or medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Enter a valid address</para>
+                  </listitem>
+                  
+                  </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+              
+            
             </tbody>
           </tgroup>
         </informaltable>

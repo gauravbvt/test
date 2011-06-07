@@ -23,7 +23,12 @@
         <th align="right">
             <label for="placeHolder">Is placeholder:</label>
         </th>
-        <td><input id="placeHolder" wicket:id="isPlaceHolder" type="checkbox"/></td>
+        <td>
+            <input id="placeHolder" wicket:id="isPlaceHolder" type="checkbox"/>
+            <span wicket:id="singularity">
+                and there can only be one <input wicket:id="isSingular" type="checkbox"/>
+            </span>
+        </td>
     </tr>
     <tr wicket:id="contact">
         <th align="right">

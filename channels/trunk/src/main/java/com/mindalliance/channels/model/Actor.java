@@ -39,12 +39,17 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * The actor's time-based availability.
      * Null means 24/7.
      */
-    private Availability availability = new Availability(  );
+    private Availability availability = new Availability();
 
     /**
      * Clearances.
      */
     private List<Classification> clearances = new ArrayList<Classification>();
+
+    /**
+     * Whether placeholder is singular.
+     */
+    private boolean placeHolderSingular = false;
 
     public Actor() {
     }
@@ -96,13 +101,21 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         if ( placeHolder ) archetype = false;
     }
 
+    public boolean isPlaceHolderSingular() {
+        return placeHolderSingular;
+    }
+
+    public void setPlaceHolderSingular( boolean placeHolderSingular ) {
+        this.placeHolderSingular = placeHolderSingular;
+    }
+
     public Availability getAvailability() {
         return availability;
     }
 
     public void setAvailability( Availability val ) {
-        availability = (val == null)
-                ? new Availability( )
+        availability = ( val == null )
+                ? new Availability()
                 : val;
     }
 
@@ -190,7 +203,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         List<Attachment.Type> types = new ArrayList<Attachment.Type>();
         if ( !hasImage() )
             types.add( Attachment.Type.Image );
-        types.addAll( super.getAttachmentTypes( ) );
+        types.addAll( super.getAttachmentTypes() );
         return types;
     }
 
@@ -246,4 +259,12 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         return null;
     }
 
+    /**
+     * Whether can be associated with at most one user.
+     *
+     * @return a boolean
+     */
+    public boolean isSingular() {
+        return !isArchetype() && ( !isPlaceHolder() || isPlaceHolderSingular() );
+    }
 }

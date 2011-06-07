@@ -91,6 +91,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     private CheckBox isPlaceHolderCheckBox;
     /**
+     * Container for placeholder singularity setting.
+     */
+    private WebMarkupContainer singularityContainer;
+    /**
      * Is system checkbox.
      */
     private CheckBox systemCheckBox;
@@ -134,6 +138,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     private WebMarkupContainer commitmentsContainer;
     private WebMarkupContainer participantsContainer;
     private WebMarkupContainer moreContainer;
+    private CheckBox isPlaceHolderSingularCheckBox;
+
 
     public ActorDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -145,7 +151,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
         addArchetypicalCheckBox();
-        addPlaceHolderCheckBox();
+        addPlaceHolderCheckBoxes();
         addIsSystem();
         addContactInfo();
         addAvailabilityPanel();
@@ -243,6 +249,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
                 target.addComponent( isPlaceHolderCheckBox );
+                target.addComponent( singularityContainer );
                 update( target, new Change( Change.Type.Updated, getActor(), "archetype" ) );
             }
         } );
@@ -253,7 +260,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         moDetailsDiv.add( archetypeContainer );
     }
 
-    private void addPlaceHolderCheckBox() {
+    private void addPlaceHolderCheckBoxes() {
         WebMarkupContainer placeHolderContainer = new WebMarkupContainer( "placeHolder" );
         isPlaceHolderCheckBox = new CheckBox(
                 "isPlaceHolder",
@@ -262,12 +269,29 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
                 target.addComponent( isArchetypeCheckBox );
-                update( target, new Change( Change.Type.Updated, getActor(), "archetype" ) );
+                target.addComponent( singularityContainer );
+                update( target, new Change( Change.Type.Updated, getActor(), "placeHolder" ) );
             }
         } );
         isPlaceHolderCheckBox.setOutputMarkupId( true );
         isPlaceHolderCheckBox.setEnabled( !isArchetype() );
         placeHolderContainer.add( isPlaceHolderCheckBox );
+        // singularity
+        singularityContainer = new WebMarkupContainer( "singularity" );
+        singularityContainer.setOutputMarkupId( true );
+        isPlaceHolderSingularCheckBox = new CheckBox(
+                "isSingular",
+                new PropertyModel<Boolean>( this, "placeHolderSingular" ) );
+        isPlaceHolderSingularCheckBox.setEnabled( isLockedByUser( getActor() ) );
+        isPlaceHolderSingularCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                adjustFields();
+                update( target, new Change( Change.Type.Updated, getActor(), "placeHolderSingular" ) );
+            }
+        } );
+        singularityContainer.add(  isPlaceHolderSingularCheckBox );
+        placeHolderContainer.add( singularityContainer );
+        
         placeHolderContainer.setVisible( getActor().isActual() );
         moDetailsDiv.add( placeHolderContainer );
     }
@@ -287,7 +311,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     private void adjustFields() {
+        makeVisible( singularityContainer, isPlaceHolder() );
         isPlaceHolderCheckBox.setEnabled( isLockedByUser( getActor() ) && !isArchetype() );
+        isPlaceHolderSingularCheckBox.setEnabled( isLockedByUser( getActor() ) );
         isArchetypeCheckBox.setEnabled( isLockedByUser( getActor() ) && !isPlaceHolder() );
         systemCheckBox.setEnabled( isLockedByUser( getActor() ) );
         rolesContainer.setVisible( getActor().isActual() );
@@ -613,6 +639,20 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     public void setPlaceHolder( boolean val ) {
         doCommand( new UpdatePlanObject( getActor(), "placeHolder", val ) );
     }
+
+    /**
+      * Whether the actor is a place holder.
+      *
+      * @return a boolean
+      */
+     public boolean isPlaceHolderSingular() {
+         return getActor().isPlaceHolderSingular();
+     }
+
+     public void setPlaceHolderSingular( boolean val ) {
+         doCommand( new UpdatePlanObject( getActor(), "placeHolderSingular", val ) );
+     }
+
 
     private Actor getActor() {
         return (Actor) getEntity();

@@ -128,9 +128,9 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         Label assignationLabel = new Label( "assignation", assignation );
         assignationLabel.setVisible( actor != null );
         userInfoContainer.add( assignationLabel );
-        // Updated agent contact info
+        // Updated agent contact info if assigned to non-archetype actor
         WebMarkupContainer updatedContactContainer = new WebMarkupContainer( "updatedContact" );
-        updatedContactContainer.setVisible( actor != null );
+        updatedContactContainer.setVisible( actor != null && !actor.isArchetype() );
         updatedContactContainer.add(
                 participation != null
                         ? new ChannelListPanel( "contactInfo", new Model<Channelable>( participation ), false )
