@@ -6175,6 +6175,21 @@
                 
                 <entry><para>No</para></entry>
               </row>
+ 
+              <row>
+                <entry><para>More than one send can terminate the task</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Have the task terminated by at most one send</para>
+                  </listitem>
+                  
+               </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
               
             
             </tbody>

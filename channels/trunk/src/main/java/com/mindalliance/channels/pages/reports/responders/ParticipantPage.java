@@ -271,7 +271,7 @@ public class ParticipantPage extends WebPage {
                     new WebMarkupContainer( "backTask" )
                         .add( new AttributeModifier( "href", true, segment.getLink() ) ),
                     new Label( "taskSeq", task.getSeqString() ),
-                    new Label( "taskSummary", lcFirst( task.getTaskSummary() ) ),
+                    new Label( "taskSummary", "The context is " + lcFirst( task.getTaskSummary() ) ),
                     new Label( "taskRole", ensurePeriod( task.getRoleString() ) ),
                     new Label( "taskLoc", task.getLocationString() )
                         .setVisible( task.getLocation() != null ),
@@ -1235,7 +1235,7 @@ public class ParticipantPage extends WebPage {
         private String getTaskSummary() {
 
             StringWriter w = new StringWriter();
-            w.append( String.valueOf( part.getSegment() ) );
+            w.append( String.valueOf( part.getSegment().getPhaseEventTitle() ) );
             Place location = assignment.getLocation();
             if ( location != null )
                 w.append( " in " ).append( String.valueOf( location ) );

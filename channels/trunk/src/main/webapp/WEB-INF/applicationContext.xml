@@ -219,6 +219,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorPlaceHolderWithoutParticipation"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorWithNonMatchingParticipation"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorWithTooManyParticipations"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartTerminatedByManySends"/>
             </list>
         </property>
     </bean>
