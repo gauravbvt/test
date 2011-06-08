@@ -2876,7 +2876,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 xform.getType(),
                                 flow.getMaxDelay(),
                                 subject,
-                                new Subject( flow.getName(), eoi.getContent() ),
+                                new Subject( flow.getName(), eoi.getContent(), eoi.isTimeSensitive() ),
                                 startPart,
                                 startSubject,
                                 showTargets ) );

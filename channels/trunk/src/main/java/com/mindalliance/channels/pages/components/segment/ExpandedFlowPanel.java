@@ -367,7 +367,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     public List<String> getEoiSummaries() {
         List<String> eoiStrings = new ArrayList<String>();
         for ( ElementOfInformation eoi : getFlow().getEois() ) {
-            eoiStrings.add( eoi.getLabel() );
+            eoiStrings.add( eoi.getLabel() + ( eoi.isTimeSensitive() ? "*" : "" ) );
         }
         if ( eoiStrings.isEmpty() ) {
             eoiStrings.add( "(none)" );
@@ -807,7 +807,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addOtherField() {
-         addOtherLink();
+        addOtherLink();
         addOtherChoice();
     }
 

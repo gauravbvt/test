@@ -3,6 +3,7 @@ package com.mindalliance.channels.util;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Connector;
+import com.mindalliance.channels.model.Copyable;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.ExternalFlow;
@@ -63,7 +64,7 @@ public final class ChannelsUtils {
         attributes.put( "eois", flow.copyEois() );
         attributes.put( "askedFor", flow.isAskedFor() );
         attributes.put( "all", flow.isAll() );
-        attributes.put( "maxDelay", new Delay( flow.getMaxDelay() ) );
+        attributes.put( "maxDelay", flow.getMaxDelay().copy() );
         attributes.put( "channels", flow.getChannelsCopy() );
         attributes.put( "attachments", new ArrayList<Attachment>( flow.getAttachments() ) );
         attributes.put( "waivedIssueDetections", new ArrayList<String>( flow.getWaivedIssueDetections() ) );
@@ -414,6 +415,9 @@ public final class ChannelsUtils {
                     List copy = (List) value.getClass().newInstance();
                     copy.addAll( (List) value );
                     value = copy;
+                }
+                if ( value instanceof Copyable ) {
+                    value = ( (Copyable) value ).copy();
                 }
                 PropertyUtils.setProperty( object, property, value );
             } catch ( IllegalAccessException e ) {

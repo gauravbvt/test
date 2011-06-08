@@ -39,33 +39,35 @@ public class UntimelyDissemination extends AbstractIssueDetector {
         if ( flow.isNeed() ) {
             Part target = (Part) flow.getTarget();
             for ( ElementOfInformation eoi : flow.getEois() ) {
-                Subject subject = new Subject( flow.getName(), eoi.getContent() );
-                // dissemination from sources
-                List<Dissemination> disseminations = queryService.findAllDisseminations(
-                        target,
-                        subject,
-                        false );
-                if ( !disseminations.isEmpty() ) {
-                    boolean untimely = CollectionUtils.exists(
-                            disseminations,
-                            new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                    Dissemination d = (Dissemination) object;
-                                    return d.getDelay().compareTo( flow.getMaxDelay() ) > 0;
-                                }
-                            } );
-                    if ( untimely ) {
-                        Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
-                        issue.setDescription( "The need for element \""
-                                + eoi.getContent()
-                                + "\" might not be satisfied in a timely manner." );
-                        issue.setRemediation( "Increase the max delay of the information need"
-                                + "\nor reduce the max delays of flows disseminating the element \""
-                                + eoi.getContent()
-                                + "\"." );
-                        issue.setSeverity( getTaskFailureSeverity( target ) );
-                        issues.add( issue );
+                if ( eoi.isTimeSensitive() ) {
+                    Subject subject = new Subject( flow.getName(), eoi.getContent(), eoi.isTimeSensitive() );
+                    // dissemination from sources
+                    List<Dissemination> disseminations = queryService.findAllDisseminations(
+                            target,
+                            subject,
+                            false );
+                    if ( !disseminations.isEmpty() ) {
+                        boolean untimely = CollectionUtils.exists(
+                                disseminations,
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        Dissemination d = (Dissemination) object;
+                                        return d.getDelay().compareTo( flow.getMaxDelay() ) > 0;
+                                    }
+                                } );
+                        if ( untimely ) {
+                            Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                            issue.setDescription( "The need for element \""
+                                    + eoi.getContent()
+                                    + "\" might not be satisfied in a timely manner." );
+                            issue.setRemediation( "Increase the max delay of the information need"
+                                    + "\nor reduce the max delays of flows disseminating the element \""
+                                    + eoi.getContent()
+                                    + "\"." );
+                            issue.setSeverity( getTaskFailureSeverity( target ) );
+                            issues.add( issue );
+                        }
                     }
                 }
             }

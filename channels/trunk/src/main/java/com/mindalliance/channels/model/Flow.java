@@ -5,6 +5,7 @@ import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.PredicateUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -255,7 +256,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     public void addEoi( ElementOfInformation eoi ) {
         if ( !eois.contains( eoi ) ) {
             if ( isNeed() ) {
-                eoi.retainContentOnly();
+                eoi.retainContentAndTimeSensitivityOnly();
             }
             eois.add( eoi );
         }
@@ -1162,12 +1163,16 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
-     * Get a copy of the elements fo information in a flow.
+     * Get a copy of the elements of information in a flow.
      *
      * @return a list of elements of information
      */
     public List<ElementOfInformation> copyEois() {
-        return new ArrayList<ElementOfInformation>( eois );
+        List<ElementOfInformation> copy = new ArrayList<ElementOfInformation>(  );
+        for ( ElementOfInformation eoi : eois ) {
+            copy.add( new ElementOfInformation( eoi ) );
+        }
+        return copy;
     }
 
     public String getRestrictionString( boolean isSend ) {
@@ -1205,7 +1210,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     public List<Subject> getAllSubjects() {
         Set<Subject> subjects = new HashSet<Subject>();
         for ( ElementOfInformation eoi : getEois() ) {
-            Subject subject = new Subject( getName(), eoi.getContent() );
+            Subject subject = new Subject( getName(), eoi.getContent(), eoi.isTimeSensitive() );
             subjects.add( subject );
         }
         List<Subject> results = new ArrayList<Subject>();
@@ -1294,6 +1299,24 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public boolean isToSelf() {
         return restriction != null && restriction == Restriction.Self;
+    }
+
+    public boolean isTimeSensitive() {
+        return getEois().isEmpty()
+                || CollectionUtils.exists( eois, PredicateUtils.invokerPredicate( "isTimeSensitive" ) );
+    }
+
+    public boolean isTimeSensitive( final String eoiContent ) {
+        return CollectionUtils.exists(
+                eois,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        ElementOfInformation eoi = (ElementOfInformation) object;
+                        return eoi.isTimeSensitive() && Matcher.getInstance().matches( eoi.getContent(), eoiContent );
+                    }
+                }
+        );
     }
 
 
@@ -1464,7 +1487,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
 
         public String getLabel( boolean isSend ) {
-            if ( this == Supervisor || this == Self || this == Other) {
+            if ( this == Supervisor || this == Self || this == Other ) {
                 return ( isSend ? "to " : "from " ) + toString();
             } else {
                 return "in " + toString();
