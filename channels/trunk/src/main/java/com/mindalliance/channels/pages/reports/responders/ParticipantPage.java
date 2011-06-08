@@ -312,8 +312,8 @@ public class ParticipantPage extends WebPage {
                   new WebMarkupContainer( "taskDuration" ).add( new Label( "dur",
                                                                            task.getCompletionString() ) ).setVisible(
                       task.getCompletionTime() ),
-                  new WebMarkupContainer( "term1" ).add( new Label( "eventPhase",
-                                                                    task.getEventPhase() ) ).setVisible(
+                  new WebMarkupContainer( "term1" )/*.add( new Label( "eventPhase",
+                                                                    task.getEventPhase() ) )*/.setVisible(
                       task.isStartWithSegment() ),
 
                   // TODO super-event override notice
