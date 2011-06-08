@@ -10,8 +10,8 @@ import com.mindalliance.channels.dao.UserInfo;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Participation;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.pages.reports.responders.AllResponders;
-import com.mindalliance.channels.pages.reports.responders.ResponderPage;
+import com.mindalliance.channels.pages.reports.responders.AllParticipants;
+import com.mindalliance.channels.pages.reports.responders.ParticipantPage;
 import com.mindalliance.channels.query.PlanService;
 import org.junit.Test;
 import org.springframework.test.context.TestExecutionListeners;
@@ -26,13 +26,13 @@ public class TestResponderPage extends AbstractChannelsTest {
     @Test
     public void testPlanner() {
         login( "denis" );
-        assertRendered( "responders", AllResponders.class );
+        assertRendered( "responders", AllParticipants.class );
     }
 
     @Test
     public void testNormal() {
         associate( "guest", "mindalliance.com/channels/plans/railsec", "Joseph Neumann" );
-        assertRendered( "responders", ResponderPage.class );
+        assertRendered( "responders", ParticipantPage.class );
     }
 
     @Test
