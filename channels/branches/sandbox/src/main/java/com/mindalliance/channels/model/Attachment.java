@@ -51,7 +51,10 @@ public class Attachment implements Serializable, Comparable<Attachment> {
         /**
          * Info standards.
          */
-        InfoStandards( "Info standards");
+        InfoStandards( "Info standards"),
+
+        Help( "Help" );
+
 
 
         //--------------------------------
@@ -181,6 +184,10 @@ public class Attachment implements Serializable, Comparable<Attachment> {
 
     public boolean isInfoStandards() {
         return type == Type.InfoStandards;
+    }
+
+    public boolean isHelp() {
+        return type == Type.Help;
     }
 
 

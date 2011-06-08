@@ -297,11 +297,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
         if ( name != null && !name.trim().isEmpty() ) {
             String root = ChannelsUtils.stripExtraBlanks( name );
-            if ( !name.equals(  root ) ) {
-                LOG.warn( "\"" + name +"\""
+            if ( !name.equals( root ) ) {
+                LOG.warn( "\"" + name + "\""
                         + " of " + clazz.getSimpleName()
                         + "[" + id + "]"
-                        + " stripped to \"" + root + "\"");
+                        + " stripped to \"" + root + "\"" );
             }
             String candidateName = root;
             int i = 1;
@@ -930,8 +930,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 Part part = parts.next();
                 Actor actor = part.getActor();
                 ResourceSpec partSpec = part.resourceSpec();
-                if ( organization.narrowsOrEquals( part.getOrganizationOrUnknown(), locale )
-                        && actor != null && actor.isActual() && partSpec.getOrganization() != null ) {
+                Organization partOrg = part.getOrganizationOrUnknown();
+                if ( actor != null
+                        && actor.isActual()
+                        && !partOrg.isUnknown()
+                        && (  partOrg.isType() && organization.narrowsOrEquals( partOrg, locale )
+                                || partOrg.isActual() && organization.equals( partOrg )  ) ) {
 
                     Job job = Job.from( new ResourceSpec( actor,
                             partSpec.getRole(),
@@ -2951,7 +2955,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
 
-
     @Override
     /** @{inheritDoc} */
     public List<Tag> findTagDomain() {
@@ -3179,7 +3182,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        Job job = (Job)object;
+                        Job job = (Job) object;
                         return job.getActor().equals( actor )
                                 && job.getSupervisor() != null
                                 && job.getSupervisor().equals( supervisor );
@@ -3237,6 +3240,21 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             }
         }
         return users;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Participation> findAllParticipationsFor( final Actor actor ) {
+        return (List<Participation>) CollectionUtils.select(
+                list( Participation.class ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Actor assigned = ( (Participation) object ).getActor();
+                        return assigned != null && assigned.equals( actor );
+                    }
+                }
+        );
     }
 }
 

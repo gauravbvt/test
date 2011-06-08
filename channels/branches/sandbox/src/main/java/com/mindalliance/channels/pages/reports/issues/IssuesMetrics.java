@@ -5,11 +5,10 @@ import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.Model;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
     private Map<String, List<Issue>> issues;
     private Map<String, String> issueLabels = new HashMap<String, String>();
     private int allIssuesCount;
+    private WebMarkupContainer issueMetricsContainer;
 
     public IssuesMetrics( String id, String issueType ) {
         super( id );
@@ -41,19 +41,31 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
 
     private void init() {
         allIssuesCount = getAnalyst().findAllUnwaivedIssues().size();
+        issueMetricsContainer = new WebMarkupContainer( "issue-metrics" );
+        issueMetricsContainer.setVisible( !getIssues().isEmpty() );
+        add( issueMetricsContainer );
         addKinds();
+        addNoIssues();
+    }
+
+    private void addNoIssues() {
+        WebMarkupContainer noIssuesContainer = new WebMarkupContainer( "no-issues" );
+        noIssuesContainer.setVisible( getIssues().isEmpty() );
+        add( noIssuesContainer );
     }
 
     private void addKinds() {
-        add( new ListView<String>(
+        issueMetricsContainer.add( new ListView<String>(
                 "kinds",
                 getIssueKinds() ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
+/*
                 item.add( new AttributeModifier(
                         "class",
                         true,
                         new Model<String>( item.getIndex() % 2 == 0 ? "even" : "odd" ) ) );
+*/
                 String kind = item.getModelObject();
                 item.add( new Label( "kind", issueLabels.get( kind ) ) );
                 item.add( new Label( "count", issueCount( kind ) ) );

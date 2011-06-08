@@ -7,7 +7,7 @@
         lang="en">
 <body>
 <wicket:panel>
-  <table class="issues-metrics">
+  <table wicket:id="issue-metrics" class="issues-metrics">
      <thead>
         <th>Kind</th>
         <th>Count</th>
@@ -19,13 +19,13 @@
             <td wicket:id="count">20 (10%)</td>
             <td>
                 <table class="issues-severity">
-                    <tr>
+                    <tr class="parent">
                         <th>Extreme</th>
                         <th>Severe</th>
                         <th>Major</th>
                         <th>Minor</th>
                     </tr>
-                    <tr>
+                    <tr class="child">
                         <td wicket:id="extreme">1</td>
                         <td wicket:id="severe">1</td>
                         <td wicket:id="major">1</td>
@@ -36,6 +36,8 @@
         </tr>
       </tbody>
   </table>
+   <div wicket:id="no-issues" class="no-issues"> No issues found </div>
+
 </wicket:panel>
 </body>
 </html>

@@ -167,15 +167,23 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
     }
 
     private void addHelp() {
-        BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
-        helpLink.add( new AttributeModifier( "target", true, new Model<String>( "help" ) ) );
-        helpLink.setPopupSettings( new PopupSettings(
-                PopupSettings.RESIZABLE |
-                        PopupSettings.SCROLLBARS |
-                        PopupSettings.MENU_BAR |
-                        PopupSettings.TOOL_BAR ) );
+        Attachment help = getHelp();
 
-        form.add( helpLink );
+        if ( help != null ) {
+            ExternalLink helpLink = new ExternalLink( "help-link", help.getUrl() );
+            form.add( helpLink );
+
+        } else {
+            BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
+            helpLink.add( new AttributeModifier( "target", true, new Model<String>( "help" ) ) );
+            helpLink.setPopupSettings( new PopupSettings(
+                    PopupSettings.RESIZABLE |
+                            PopupSettings.SCROLLBARS |
+                            PopupSettings.MENU_BAR |
+                            PopupSettings.TOOL_BAR ) );
+
+            form.add( helpLink );
+        }
     }
 
 
@@ -298,6 +306,18 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         };
         referencesContainer.add( attachmentList );
         referencesContainer.setVisible( !references.isEmpty() );
+    }
+
+    private Attachment getHelp() {
+        return (Attachment) CollectionUtils.find(
+                getPlan().getAttachments(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Attachment) object ).isHelp();
+                    }
+                }
+        );
     }
 
     @SuppressWarnings( "unchecked" )

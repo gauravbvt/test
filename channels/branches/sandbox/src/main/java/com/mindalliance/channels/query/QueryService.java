@@ -1412,4 +1412,11 @@ public interface QueryService {
      * @return a list of users
      */
     List<User> findUsersParticipatingAs( Actor actor );
+
+    /**
+     * Find all participations where users are identified as a given actor.
+     * @param actor an actor
+     * @return a list of participations
+     */
+    List<Participation> findAllParticipationsFor( Actor actor );
 }

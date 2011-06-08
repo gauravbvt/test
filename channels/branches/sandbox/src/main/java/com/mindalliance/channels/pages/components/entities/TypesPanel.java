@@ -243,6 +243,10 @@ public class TypesPanel extends AbstractCommandablePanel {
             return getEntity().getAllImplicitTypes().contains( type );
         }
 
+        public boolean isExplicit() {
+            return getEntity().getTypes().contains( type );
+        }
+
         public boolean isUniversal() {
             return type != null && type.isUniversal();
         }
@@ -291,7 +295,7 @@ public class TypesPanel extends AbstractCommandablePanel {
         }
 
         public boolean isRemovable() {
-            return !isMarkedForCreation() && !isImplicit() && !isInherited() && !isUniversal();
+            return !isMarkedForCreation() && isExplicit();
         }
     }
 }

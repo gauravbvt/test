@@ -369,6 +369,30 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
     }
 
     /**
+     * Has an image attachment.
+     *
+     * @return a boolean
+     */
+    public boolean hasHelp() {
+        return CollectionUtils.exists(
+                getAttachments(),
+                PredicateUtils.invokerPredicate( "isHelp" )
+        );
+    }
+
+    public boolean hasAttachmentOfType( final Attachment.Type attachmentType ) {
+        return CollectionUtils.exists(
+                getAttachments(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Attachment)object).getType().equals( attachmentType );
+                    }
+                }
+        );
+    }
+
+    /**
      * Get url of image attachment if any.
      *
      * @return a string

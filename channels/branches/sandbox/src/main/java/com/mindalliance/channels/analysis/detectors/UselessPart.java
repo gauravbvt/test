@@ -39,7 +39,7 @@ public class UselessPart extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Useless task";
+        return "Apparently useless task";
     }
 
     /**

@@ -649,6 +649,8 @@ public class Plan extends ModelObject {
         types.add( Type.TAGS );
         types.add( Type.InfoStandards );
         types.add( Type.Image );
+        if ( !hasAttachmentOfType( Attachment.Type.Help ) )
+            types.add(  Type.Help );
         return types;
     }
 

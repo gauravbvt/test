@@ -12,7 +12,6 @@ import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
-import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.Component;
@@ -71,22 +70,6 @@ public class PlanShowMenuPanel extends MenuPanel {
             if ( plan.isDevelopment() )
                 menuItems.add( collapsible( Survey.UNKNOWN, "Hide surveys", "Surveys" ) );
 
-            menuItems.add(
-                    newLink(
-                            "IS guidelines",
-                            AbstractChannelsWebPage.getGuidelinesLink( "link", getQueryService(), getPlan(), User.current(), false ) ) );
-            menuItems.add(
-                    newLink(
-                            "IS procedure map",
-                            newTargetedLink( "_blank", ProcedureMapPage.class, null ) ) );
-
-/*
-            if ( User.current().isAdmin() )
-                menuItems.add(
-                        newLink(
-                                "Admin page",
-                                newTargetedLink( "link", AdminPage.class, null ) ) );
-*/
             menuItems.addAll(
                     Arrays.asList(
                             newLink( "All segments", plan, PlanEditPanel.MAP ),

@@ -4,7 +4,7 @@
       xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
       lang="en">
 <head>
-    <title>Channels - Responder Report</title>
+    <title>Channels - Participant Report</title>
 	<link rel="stylesheet" href="../css/responder-report/responder-page.css" type="text/css" media="screen, print" />
 	<link rel="stylesheet" href="../css/responder-report/responder-page-print.css" type="text/css" media="print" />
 </head>
@@ -12,7 +12,7 @@
 <div id="container">
     <div id="header">
 		<a href="home"><img class="logo" src="/images/logo_home.png" width="48" height="48" alt="Channels Logo" /></a>
-        <h1>Channels &ndash; <span wicket:id="planName2">Plan name</span> <span wicket:id="planVersion">v1</span> &ndash; Responder Report</h1>
+        <h1>Channels &ndash; <span wicket:id="planName2">Plan name</span> <span wicket:id="planVersion">v1</span> &ndash; Participant Report</h1>
         <span wicket:id="planFeedback" class="feedback-container">[feedback panel]</span>
 <!--
 		<a class="logout" href="logout">Sign out <span wicket:id="userName">user</span></a>
@@ -34,13 +34,13 @@
                 </h2>
                 <h3>Contact Info</h3>
                 <ul>
-                    <li>Role:  <span wicket:id="contact.title">, {title}</span> at <span wicket:id="contact.organization">{organization}</span></li>
+                    <li>Role:  <span wicket:id="contact.roles">{role at org}, {role at org} and {role at org}</span></li>
                     <li>How to contact:
                         <ul wicket:id="contactInfos">
                             <li wicket:id="contactInfo">
                                 <span wicket:id="mail">
                                     <em>Email:</em>
-                                    <a wicket:id="mailTo" href="ResponderPage.html#"><span wicket:id="channel">{channel}</span></a>
+                                    <a wicket:id="mailTo" href="#"><span wicket:id="channel">{channel}</span></a>
                                 </span>
                                 <span wicket:id="notMail">
                                     <em wicket:id="channelType">{channel type}:</em>
@@ -60,7 +60,7 @@
             <ul class="toc">
                 <li wicket:id="phaseLinks">
                     <span class="tocHead" wicket:id="phaseName">Phase</span>
-                    <a class="tocLink" wicket:id="phaseLink" href="ResponderPage.html#"><span wicket:id="phaseLinkText">{Situation X} phase of a/an {event name} ({level} level) (link or page #)</span></a></li>
+                    <a class="tocLink" wicket:id="phaseLink" href="#"><span wicket:id="phaseLinkText">{Situation X} phase of a/an {event name} ({level} level) (link or page #)</span></a></li>
             </ul>
         </div>
 
@@ -100,7 +100,7 @@
                             </span>
                         </ul>
 
-                        <a class="tocLink" href="ResponderPage.html#" wicket:id="link"><span wicket:id="linkValue">(link or page #)</span></a>
+                        <a class="tocLink" href="#" wicket:id="link"><span wicket:id="linkValue">(link or page #)</span></a>
                     </li>
                 </ul>
             </div>
@@ -110,7 +110,7 @@
                 <ul class="toc">
                     <li wicket:id="links">
                         <span class="tocHead" wicket:id="linkName">{task name}</span>
-                        <a class="tocLink" href="ResponderPage.html#" wicket:id="link">
+                        <a class="tocLink" href="#" wicket:id="link">
                             <span wicket:id="linkValue">(link or page #)</span></a></li>
                 </ul>
             </div>
@@ -122,7 +122,7 @@
                 </ul>
             </div>
             <div wicket:id="tasks" class="task">
-                <h2><a class="back" href="ResponderPage.html#" wicket:id="backTask">[ back ]</a>
+                <h2><a class="back" href="#" wicket:id="backTask">Back</a>
                     <span class="num">Task <span wicket:id="taskSeq" class="seq">1.1</span>:</span>
                     <a wicket:id="taskAnchor"><span wicket:id="taskName">{Task name}</span></a>
                     <span wicket:id="taskFeedback" class="feedback-container">[feedback panel]</span>
@@ -399,7 +399,7 @@
                     <ul class="toc">
                         <li wicket:id="links">
                             <span class="tocHead" wicket:id="linkName">{task name}</span>
-                            <a class="tocLink" href="ResponderPage.html#" wicket:id="link"><span wicket:id="linkValue">{task name} (link or page #)</span></a></li>
+                            <a class="tocLink" href="#" wicket:id="link"><span wicket:id="linkValue">{task name} (link or page #)</span></a></li>
                     </ul>
                 </div>
 
@@ -469,7 +469,7 @@
                     <table border="0">
                         <tr class="contactHeads">
                             <th class="first">Name</th>
-                            <th>Organization, Title</th>
+                            <th>Roles</th>
                             <th>Contact Info</th>
                             <th class="last">Clearance</th>
                         </tr>
@@ -477,12 +477,12 @@
                             <!-- zero of ore of the following 2 rows -->
                             <tr wicket:id="contact" valign="top" class="contact">
                                 <td class="first" wicket:id="contact.name">{agent name}</td>
-                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td><span wicket:id="contact.roles">{roles}</span></td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
                                             <span wicket:id="mail">
                                                 <em>Email:</em>
-                                                <a wicket:id="mailTo" href="ResponderPage.html#"><span wicket:id="channel">{channel}</span></a>
+                                                <a wicket:id="mailTo" href="#"><span wicket:id="channel">{channel}</span></a>
                                             </span>
                                             <span wicket:id="notMail">
                                                 <em wicket:id="channelType">{channel type}:</em>
@@ -496,12 +496,12 @@
                             </tr>
                             <tr wicket:id="supervisor" valign="top" class="contact supervisor">
                                 <td class="first"><em>Supervisor:</em> <span wicket:id="contact.name">{agent name}</span></td>
-                                <td><span wicket:id="contact.organization">{organization}</span><span wicket:id="contact.title">, {title}</span> </td>
+                                <td><span wicket:id="contact.roles">{organization}</span></td>
                                 <td><ul wicket:id="contactInfos">
                                         <li wicket:id="contactInfo">
                                             <span wicket:id="mail">
                                                 <em>Email:</em>
-                                                <a wicket:id="mailTo" href="ResponderPage.html#"><span wicket:id="channel">{channel}</span></a>
+                                                <a wicket:id="mailTo" href="#"><span wicket:id="channel">{channel}</span></a>
                                             </span>
                                             <span wicket:id="notMail">
                                                 <em wicket:id="channelType">{channel type}:</em>
