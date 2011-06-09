@@ -40,7 +40,8 @@ public class UntimelyNecessarySharing extends AbstractIssueDetector {
             if ( !criticalNeeds.isEmpty() ) {
                 Delay commitmentDelay = flow.getMaxDelay();
                 for ( Flow criticalNeed : criticalNeeds ) {
-                    if ( commitmentDelay.compareTo( criticalNeed.getMaxDelay() ) > 0 ) {
+                    if ( criticalNeed.isTimeSensitive()
+                            && commitmentDelay.compareTo( criticalNeed.getMaxDelay() ) > 0 ) {
                         DetectedIssue issue = makeIssue( Issue.ROBUSTNESS, flow );
                         issue.setDescription(
                                 "The needed information \""

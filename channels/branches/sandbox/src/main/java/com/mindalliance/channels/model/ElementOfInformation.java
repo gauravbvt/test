@@ -35,6 +35,11 @@ public class ElementOfInformation implements Classifiable {
     private String specialHandling = "";
 
     private Transformation transformation = new Transformation();
+    /**
+     * Whether this EOI is subject to the timeliness-from-availability requirements on the flow if notification.
+     * Meaningful only for EOIs of info needs.
+     */
+    private boolean timeSensitive = false;
 
     public ElementOfInformation() {
     }
@@ -45,6 +50,7 @@ public class ElementOfInformation implements Classifiable {
         description = eoi.getDescription();
         specialHandling = eoi.getSpecialHandling();
         transformation = eoi.getTransformation();
+        timeSensitive = eoi.isTimeSensitive();
     }
 
     public ElementOfInformation( String content ) {
@@ -73,6 +79,14 @@ public class ElementOfInformation implements Classifiable {
 
     public void setSpecialHandling( String specialHandling ) {
         this.specialHandling = specialHandling;
+    }
+
+    public boolean isTimeSensitive() {
+        return timeSensitive;
+    }
+
+    public void setTimeSensitive( boolean timeSensitive ) {
+        this.timeSensitive = timeSensitive;
     }
 
     public List<Classification> getClassifications() {
@@ -193,11 +207,10 @@ public class ElementOfInformation implements Classifiable {
     /**
      * Reset all properties except content.
      */
-    public void retainContentOnly() {
+    public void retainContentAndTimeSensitivityOnly() {
         setClassifications( new ArrayList<Classification>() );
         setDescription( "" );
         setSpecialHandling( "" );
-
     }
 
     /**
@@ -234,6 +247,7 @@ public class ElementOfInformation implements Classifiable {
                         ? other.getDescription()
                         : eoi.getDescription();
         merged.setDescription( mergedDescription );
+        merged.setTimeSensitive( eoi.isTimeSensitive() && other.isTimeSensitive() );
         return merged;
     }
 

@@ -53,6 +53,11 @@ public class ElementOfInformationConverter extends AbstractChannelsConverter {
             context.convertAnother( eoi.getTransformation() );
             writer.endNode();
         }
+        if ( eoi.isTimeSensitive() ) {
+            writer.startNode( "timeSensitive" );
+            writer.setValue( Boolean.toString( true ) );
+            writer.endNode();
+        }
     }
 
     /**
@@ -80,6 +85,8 @@ public class ElementOfInformationConverter extends AbstractChannelsConverter {
                         context.get( "segment" ),
                         Transformation.class );
                 eoi.setTransformation( transformation );
+            } else if ( nodeName.equals( "timeSensitive" ) ) {
+                eoi.setTimeSensitive( Boolean.valueOf( reader.getValue() ) );
             }
             reader.moveUp();
         }

@@ -12,7 +12,7 @@ import java.util.List;
  * Date: Jan 29, 2009
  * Time: 1:59:28 PM
  */
-public class Delay implements Comparable, Serializable {
+public class Delay implements Comparable, Copyable, Serializable {
 
     /**
      * Time units
@@ -68,6 +68,10 @@ public class Delay implements Comparable, Serializable {
     public Delay( int amount, Unit unit ) {
         this.amount = amount;
         this.unit = unit;
+    }
+
+    public Copyable copy() {
+        return new Delay( this );
     }
 
     /**

@@ -252,6 +252,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 item.setOutputMarkupId( true );
                 addConfirmed( item );
                 addContent( item );
+                addTimeSensitive( item );
                 addClassifications( item );
                 addDescription( item );
                 addSpecialHandling( item );
@@ -311,6 +312,24 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         contentText.setEnabled( !isReadOnly() );
         item.addOrReplace( contentText );
     }
+
+    private void addTimeSensitive( ListItem<EOIWrapper> item ) {
+        EOIWrapper wrapper = item.getModelObject();
+        CheckBox timeSensitiveCheckBox = new CheckBox(
+                "timeSensitive",
+                new PropertyModel<Boolean>( wrapper, "timeSensitive" )
+        );
+        timeSensitiveCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
+            }
+        } );
+        makeVisible( timeSensitiveCheckBox, !isSend && !getFlow().isSharing() && !wrapper.isMarkedForCreation() );
+        timeSensitiveCheckBox.setEnabled( !isReadOnly() );
+        item.addOrReplace( timeSensitiveCheckBox );
+    }
+
+
 
     private void addClassifications( ListItem<EOIWrapper> item ) {
         WebMarkupContainer classificationsContainer = new WebMarkupContainer( "classificationsContainer" );
@@ -396,10 +415,11 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         }
     }
 
-    private void addTrace( final ListItem<EOIWrapper> item ) {
+    private void addTrace( ListItem<EOIWrapper> item ) {
+        final EOIWrapper eoiWrapper = item.getModelObject();
         WebMarkupContainer traceContainer = new WebMarkupContainer( "traceContainer" );
         traceContainer.setOutputMarkupId( true );
-        traceContainer.setVisible( !getFlow().isNeed() && !item.getModelObject().isMarkedForCreation() );
+        traceContainer.setVisible( !getFlow().isNeed() && !eoiWrapper.isMarkedForCreation() );
         item.addOrReplace( traceContainer );
         AjaxFallbackLink traceLink = new AjaxFallbackLink( "trace" ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -407,7 +427,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 change.addQualifier( "show", isSend ? "targets" : "sources" );
                 change.addQualifier(
                         "subject",
-                        new Subject( getFlow().getName(), item.getModelObject().getContent() ) );
+                        new Subject(
+                                getFlow().getName(),
+                                eoiWrapper.getContent(),
+                                eoiWrapper.isTimeSensitive() ) );
                 update( target, change );
             }
         };
@@ -898,6 +921,19 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                     }
                 }
             }
+        }
+
+        public boolean isTimeSensitive() {
+            return eoi.isTimeSensitive();
+        }
+
+        public void setTimeSensitive( boolean val ) {
+            doCommand( UpdateObject.makeCommand(
+                    getFlow(),
+                    "eois[" + index + "].timeSensitive",
+                    val,
+                    UpdateObject.Action.Set
+            ) );
         }
 
         public String getDescription() {

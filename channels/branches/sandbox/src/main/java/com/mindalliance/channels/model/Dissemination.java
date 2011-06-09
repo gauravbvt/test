@@ -153,7 +153,9 @@ public class Dissemination implements Serializable {
         if ( need == null ) {
             return null;
         } else {
-            return need.getMaxDelay();
+            return need.isTimeSensitive( neededSubject.getContent() )
+                        ? need.getMaxDelay()
+                        : null;
         }
     }
 
@@ -167,7 +169,7 @@ public class Dissemination implements Serializable {
 
     public boolean isTimely() {
         Delay required = getNeedMaxDelay();
-        return required == null || getDelay().compareTo( required ) <= 0;
+        return !getSubject().isTimeSensitive() || required == null || getDelay().compareTo( required ) <= 0;
     }
 
     public boolean equals( Object other ) {

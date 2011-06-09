@@ -219,6 +219,9 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorPlaceHolderWithoutParticipation"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorWithNonMatchingParticipation"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorWithTooManyParticipations"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.PartTerminatedByManySends"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.NeedWithNoTimeSensitiveEOI"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.AgentWithoutSupervisorCommitsToOne"/>
             </list>
         </property>
     </bean>

@@ -6175,6 +6175,21 @@
                 
                 <entry><para>No</para></entry>
               </row>
+ 
+              <row>
+                <entry><para>More than one send can terminate the task</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Have the task terminated by at most one send</para>
+                  </listitem>
+                  
+               </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
               
             
             </tbody>
@@ -7018,6 +7033,24 @@
                   </itemizedlist></entry>
                 
                 <entry><para>No</para></entry>
+              </row>
+ 
+              <row>
+                <entry><para>Agent commits to share with supervisor but has none</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Identify the agent’s supervisor</para>
+                  </listitem>
+                  <listitem>
+                    <para>or remove the restriction to share only with a supervisor</para>
+                  </listitem>
+                  
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
               </row>
               
             
