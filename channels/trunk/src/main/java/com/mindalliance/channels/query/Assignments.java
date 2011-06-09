@@ -286,6 +286,16 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
+    public List<Flow> getSharingFlows() {
+        Set<Flow> flows = new HashSet<Flow>();
+        for ( Assignment assignment : this ) {
+            Part part = assignment.getPart();
+            flows.addAll( part.getAllSharingSends() );
+            flows.addAll( part.getAllSharingReceives() );
+        }
+        return new ArrayList<Flow>( flows );
+    }
+
     public static String stringify( Specable specable ) {
         return specable instanceof Actor ? ( (Actor) specable ).getNormalizedName()
                 : ( (Role) specable ).reportString();
