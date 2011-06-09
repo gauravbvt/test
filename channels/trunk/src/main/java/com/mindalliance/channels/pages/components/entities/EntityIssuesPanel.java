@@ -112,7 +112,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
     /**
      * {@inheritDoc}
      */
-    protected void addIncluded() {
+    protected void addFilters() {
         // containment (for non-events only)
         WebMarkupContainer containmentContainer = new WebMarkupContainer( "containmentContainer" );
         containmentContainer.setOutputMarkupId( true );

@@ -193,4 +193,18 @@ public class Matcher {
         }
     }
 
+    /**
+     * Whether the string contains all of the matching strings contains (case insensitive).
+     *
+     * @param string      a string
+     * @param otherStrings a list of strings
+     * @return a boolean
+     */
+    public boolean matchesAll( String string, List<String> otherStrings ) {
+            String slc = string.toLowerCase();
+            for ( String o : otherStrings ) {
+                if ( !slc.contains( o.toLowerCase() ) ) return false;
+            }
+        return true;
+    }
 }
