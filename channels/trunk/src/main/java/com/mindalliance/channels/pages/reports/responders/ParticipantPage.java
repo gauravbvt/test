@@ -933,7 +933,7 @@ public class ParticipantPage extends WebPage {
             for ( Assignment assignment : assignments ) {
                 ReportTask reportTask =
                     new ReportTask( seq, assignment,
-                                    assignments, planService, allAssignments, allFlows );
+                                    assignments, planService, allAssignments );
 
                 tasks.add( reportTask );
                 if ( Assignments.isImmediate( assignment.getPart(), planService ) ) {
@@ -1078,16 +1078,16 @@ public class ParticipantPage extends WebPage {
 
         private ReportTask(
             int phaseSeq, Assignment assignment, Assignments assignments, QueryService queryService,
-            Assignments allAssignments, List<Flow> allFlows ) {
+            Assignments allAssignments ) {
 
             this.phaseSeq = phaseSeq;
             this.assignment = assignment;
             part = assignment.getPart();
             // TODO take care of possibility of loops
             for ( Assignment sub : assignments.from( assignment ) )
-                subtasks.add( new ReportTask( phaseSeq, sub, assignments, queryService, allAssignments, allFlows ) );
-            commitmentsOf = queryService.findAllCommitmentsOf( assignment, allAssignments, allFlows );
-            commitmentsTo = queryService.findAllCommitmentsTo( assignment, allAssignments, allFlows );
+                subtasks.add( new ReportTask( phaseSeq, sub, assignments, queryService, allAssignments ) );
+            commitmentsOf = queryService.findAllCommitmentsOf( assignment, allAssignments, part.getAllSharingSends() );
+            commitmentsTo = queryService.findAllCommitmentsTo( assignment, allAssignments, part.getAllSharingReceives() );
 
         }
 
