@@ -34,6 +34,10 @@ public class ConnectionSpecification implements Serializable {
      * External flow id.
      */
     private Long externalFlowId;
+    /**
+     * The name of the restriction.
+     */
+    private String restriction;
 
     public ConnectionSpecification() {
     }
@@ -76,5 +80,13 @@ public class ConnectionSpecification implements Serializable {
 
     public void setExternalFlowId( Long externalFlowId ) {
         this.externalFlowId = externalFlowId;
+    }
+
+    public String getRestriction() {
+        return restriction;
+    }
+
+    public void setRestriction( String restriction ) {
+        this.restriction = restriction;
     }
 }

@@ -1168,7 +1168,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a list of elements of information
      */
     public List<ElementOfInformation> copyEois() {
-        List<ElementOfInformation> copy = new ArrayList<ElementOfInformation>(  );
+        List<ElementOfInformation> copy = new ArrayList<ElementOfInformation>();
         for ( ElementOfInformation eoi : eois ) {
             copy.add( new ElementOfInformation( eoi ) );
         }
@@ -1259,8 +1259,15 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return infoStandards;
     }
 
+    /**
+     * Other flow encompasses this one.
+     *
+     * @param other  a flow
+     * @param locale the plan's locale
+     * @return a boolean
+     */
     public boolean matchesInfoOf( Flow other, Place locale ) {
-        return Restriction.matchedBy( getRestriction(), other.getRestriction() )
+        return Restriction.implies( getRestriction(), other.getRestriction() )
                 && Matcher.getInstance().same( getName(), other.getName() )
                 && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
     }
@@ -1455,7 +1462,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         DifferentLocations,
         Supervisor,
         Self,
-        Other;
+        Other,
+        SameOrganizationAndLocation;
 
         public String toString() {
             switch ( this ) {
@@ -1477,6 +1485,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     return "self";
                 case Other:
                     return "someone else";
+                case SameOrganizationAndLocation:
+                    return "the same organization and location";
                 default:
                     return name();
             }
@@ -1510,13 +1520,26 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             return null;
         }
 
-
+        /**
+         * Resolve to most constraining if compatible, else null.
+         *
+         * @param restriction a restriction
+         * @param other       a restriction
+         * @return a restriction or null
+         */
         public static Restriction resolve( Restriction restriction, Restriction other ) {
             if ( restriction == null ) return other;
             if ( other == null ) return restriction;
             if ( restriction == other ) return restriction;
             if ( restriction == Self || other == Self ) return Self;
-            if ( other == SameTopOrganization && restriction == SameOrganization ) return SameOrganization;
+            if ( other == SameTopOrganization && restriction == SameOrganization )
+                return SameOrganization;
+            if ( other == SameOrganizationAndLocation && restriction == SameOrganization )
+                return SameOrganizationAndLocation;
+            if ( other == SameOrganizationAndLocation && restriction == SameLocation )
+                return SameOrganizationAndLocation;
+            if ( other == SameOrganizationAndLocation && restriction == SameTopOrganization )
+                return SameOrganizationAndLocation;
             if ( restriction == DifferentTopOrganizations && other == DifferentOrganizations )
                 return DifferentOrganizations;
             if ( other == DifferentTopOrganizations && restriction == DifferentOrganizations )
@@ -1525,17 +1548,21 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
 
         /**
-         * Is a restriction matched by another (null means no restriction)?
+         * Does a restriction imply another (null means no restriction)?
+         * I.e. is the other more general?
          *
          * @param restriction a restriction or null
          * @param other       a restriction or null
          * @return a boolean
          */
-        public static boolean matchedBy( Restriction restriction, Restriction other ) {
+        public static boolean implies( Restriction restriction, Restriction other ) {
             return restriction == null
-                    || other == null
+                    || other == null  // no restriction
                     || restriction.equals( other )
-                    || restriction == SameTopOrganization && other == SameOrganization;
+                    || restriction == SameOrganization && other == SameTopOrganization
+                    || restriction == SameOrganizationAndLocation && other == SameOrganization
+                    || restriction == SameOrganizationAndLocation && other == SameLocation
+                    || restriction == SameOrganizationAndLocation && other == SameTopOrganization;
         }
 
 

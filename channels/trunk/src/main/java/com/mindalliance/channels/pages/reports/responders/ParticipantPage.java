@@ -811,6 +811,7 @@ public class ParticipantPage extends WebPage {
                             || committer.getTopOrganization().equals(
                             beneficiary.getTopOrganization() );
                 case SameOrganization:
+                case SameOrganizationAndLocation:
                     return committer != null && committer.equals( beneficiary );
                 case DifferentOrganizations:
                     return ModelObject.isNullOrUnknown( committer )
@@ -1673,6 +1674,7 @@ public class ParticipantPage extends WebPage {
                     case DifferentTopOrganizations:
                         return listToString( list, " or " );
                     case SameLocation:
+                    case SameOrganizationAndLocation:
                     case DifferentLocations:
                     case Supervisor:
                     case Self:
