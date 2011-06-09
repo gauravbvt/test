@@ -1403,10 +1403,12 @@ public class ParticipantPage extends WebPage {
 
         public Set<ContactSpec> getContactSpecs( PlanService service ) {
             Set<ContactSpec> specs = new HashSet<ContactSpec>();
-            List<AggregatedFlow> flows = getOutgoing( service );
-            flows.addAll( getInputs( service ) );
-            for ( AggregatedFlow flow : flows )
-                specs.addAll( flow.getOthers() );
+            for ( AggregatedFlow outgoing : getOutgoing( service ) )
+                if( !outgoing.isAskedFor() )
+                     specs.addAll( outgoing.getOthers() );
+            for ( AggregatedFlow input : getInputs( service ) )
+                if ( input.isAskedFor() )
+                    specs.addAll( input.getOthers() );
 
 //            Map<ContactSpec,ContactSpec> map = new HashMap<ContactSpec, ContactSpec>();
 //            for ( Commitment commitment : commitmentsOf ) {
@@ -1725,7 +1727,7 @@ public class ParticipantPage extends WebPage {
                                                 new ResourceSpec( (Specable) node ) );
             for ( Commitment commitment : commitments ) {
                 if ( flow.equals( commitment.getSharing() ) )
-                    spec.addContact( service, commitment.getBeneficiary() );
+                    spec.addContact( service, incoming ? commitment.getCommitter() : commitment.getBeneficiary() );
 
             }
             others.add( spec );
