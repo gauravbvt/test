@@ -44,6 +44,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
             Actor targetActor = target.getActor();
             if ( ( restriction == Flow.Restriction.SameOrganization ||
                     restriction == Flow.Restriction.SameTopOrganization ||
+                    restriction == Flow.Restriction.SameOrganizationAndLocation ||
                     restriction == Flow.Restriction.DifferentOrganizations ||
                     restriction == Flow.Restriction.DifferentTopOrganizations )
                     && sourceOrg != null
@@ -59,7 +60,8 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             } else if ( ( restriction == Flow.Restriction.SameLocation ||
-                    restriction == Flow.Restriction.DifferentLocations )
+                    restriction == Flow.Restriction.DifferentLocations
+                || restriction == Flow.Restriction.SameOrganizationAndLocation )
                     && sourceLoc != null
                     && targetLoc != null
                     && sourceLoc.isActual()

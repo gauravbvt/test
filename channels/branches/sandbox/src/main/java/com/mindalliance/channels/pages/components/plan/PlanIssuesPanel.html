@@ -7,7 +7,17 @@
         lang="en">
 <body>
 <wicket:extend>
-    <input wicket:id="includeWaived" type="checkbox"/> include waived issues
+    in segment
+    <select wicket:id="segment">
+        <option>segment</option>
+    </select>
+    of severity
+    <select wicket:id="severity">
+        <option>severe</option>
+    </select>
+    and kind
+    <input wicket:id="kind" type="text" class="phrase"/>
+    <input wicket:id="includeWaived" type="checkbox"/> Include waived issues
 </wicket:extend>
 </body>
 </html>

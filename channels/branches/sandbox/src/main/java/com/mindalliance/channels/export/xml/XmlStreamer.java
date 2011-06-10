@@ -412,6 +412,10 @@ public class XmlStreamer implements ImportExportFactory {
                         : planDao.connect( part, externalConnector, innerName, null ) );
             }
             copy( localInnerFlow, externalFlow );
+            String restriction = conSpec.getRestriction();
+            if ( restriction != null ) {
+                externalFlow.setRestriction( Flow.Restriction.valueOf( restriction ) );
+            }
             planDao.disconnect( localInnerFlow );
         }
 
@@ -429,6 +433,7 @@ public class XmlStreamer implements ImportExportFactory {
             external.setReferencesEventPhase( inner.isReferencesEventPhase() );
             external.setOperational( inner.isOperational() );
             external.setIfTaskFails( inner.isIfTaskFails() );
+            external.setRestriction( inner.getRestriction() );
         }
 
         @SuppressWarnings( "unchecked" )

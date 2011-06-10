@@ -82,7 +82,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
 
     private void init() {
         addIssueTypeChoice();
-        addIncluded();
+        addFilters();
         addIssuesTable();
     }
 
@@ -124,7 +124,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
     /**
      * Add fields that augment the scope for issues.
      */
-    abstract protected void addIncluded();
+    abstract protected void addFilters();
 
     private void addIssuesTable() {
         issuesTable = new IssuesTable(
@@ -199,7 +199,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     AbstractIssueTablePanel.this ) );
             columns.add( makeColumn(
                     "Severity",
-                    "severity.label",
+                    "severity.negativeLabel",
                     null,
                     EMPTY,
                     null,

@@ -191,6 +191,8 @@ public class FlowConverter extends AbstractChannelsConverter {
             Flow innerFlow = connector.getInnerFlow();
             writer.startNode( "flow" );
             writer.addAttribute( "name", innerFlow.getName() );
+            if ( innerFlow.getRestriction() != null )
+                writer.addAttribute( "restriction", innerFlow.getRestriction().name() );
             writer.endNode();
             Part part = (Part) ( connector.isSource()
                     ? innerFlow.getTarget()
@@ -354,6 +356,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         String task = null;
         String taskDescription = "";
         String partId = null;
+        String restriction = null;
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -365,6 +368,7 @@ public class FlowConverter extends AbstractChannelsConverter {
                 String name = reader.getAttribute( "name" ).trim();
                 if ( nodeName.equals( "flow" ) ) {
                     flowName = name;
+                    restriction = reader.getAttribute( "restriction" );
                 } else if ( nodeName.equals( "part-role" ) ) {
                     roleName = name;
                 } else if ( nodeName.equals( "part-task" ) ) {
@@ -390,6 +394,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                 roleName,
                 organizationName ) );
         conSpec.setExternalFlowId( flowId );
+        if ( restriction != null )
+            conSpec.setRestriction( restriction );
         addConnectionSpec( connector, conSpec );
     }
 

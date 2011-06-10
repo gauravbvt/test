@@ -1,15 +1,25 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,12 +39,95 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
      * Whether to show waived issues.
      */
     private boolean includeWaived = false;
+    /**
+     * Segment filtered on, or null.
+     */
+    private Segment segment;
+    private Level severity;
+    private List<String> kindHints = new ArrayList<String>();
+    private static final String ANY = "Any";
 
-     public PlanIssuesPanel( String id ) {
+    public PlanIssuesPanel( String id ) {
         super( id, null, MAX_ROWS );
     }
 
-    protected void addIncluded() {
+    protected void addFilters() {
+        addIncludeWaived();
+        addInSegment();
+        addOfSeverity();
+        addOfKind();
+    }
+
+    private void addInSegment() {
+        DropDownChoice<String> segmentChoice = new DropDownChoice<String>(
+                "segment",
+                new PropertyModel<String>( this, "segmentName" ),
+                getSegmentsNames()
+        );
+        segmentChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateIssuesTable( target );
+            }
+        } );
+        add( segmentChoice );
+    }
+
+    private List<String> getSegmentsNames() {
+        List<String> segmentNames = new ArrayList<String>();
+        segmentNames.add( ANY );
+        List<String> sorted = new ArrayList<String>();
+        for ( Segment seg : getSegments() ) {
+            sorted.add( StringUtils.abbreviate( seg.getName(), 20 ) );
+        }
+        Collections.sort( sorted );
+        segmentNames.addAll( sorted );
+        return segmentNames;
+    }
+
+    private List<? extends Segment> getSegments() {
+        return new ArrayList<Segment>( getPlan().getSegments() );
+    }
+
+    private void addOfSeverity() {
+        DropDownChoice<String> severityChoice = new DropDownChoice<String>(
+                "severity",
+                new PropertyModel<String>( this, "severityName" ),
+                getSeverityNames()
+        );
+        severityChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateIssuesTable( target );
+            }
+        } );
+        add( severityChoice );
+    }
+
+    private List<String> getSeverityNames() {
+        List<String> severityNames = new ArrayList<String>();
+        severityNames.add( ANY );
+        for ( Level level : Level.values() ) {
+            severityNames.add( level.getNegativeLabel() );
+        }
+        return severityNames;
+    }
+
+
+    private void addOfKind() {
+        TextField<String> kindHintField = new TextField<String>(
+                "kind",
+                new PropertyModel<String>( this, "kindHint" ) );
+        kindHintField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateIssuesTable( target );
+            }
+        } );
+        add( kindHintField );
+    }
+
+    private void addIncludeWaived() {
         CheckBox includeWaivedCheckBox = new CheckBox(
                 "includeWaived",
                 new PropertyModel<Boolean>( this, "includeWaived" ) );
@@ -55,16 +148,69 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
         this.includeWaived = includeWaived;
     }
 
+    public String getSegmentName() {
+        return segment == null ? ANY : segment.getName();
+    }
+
+    public void setSegmentName( final String val ) {
+        if ( val.equals( ANY ) ) {
+            segment = null;
+        } else {
+            segment = (Segment) CollectionUtils.find(
+                    getSegments(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (Segment) object ).getName().equals( val );
+                        }
+                    }
+            );
+
+        }
+    }
+
+
+    public String getSeverityName() {
+        return severity == null ? ANY : severity.getNegativeLabel();
+    }
+
+    public void setSeverityName( final String val ) {
+        if ( val.equals( ANY ) ) {
+            severity = null;
+        } else {
+            severity = (Level) CollectionUtils.find(
+                    Arrays.asList( Level.values() ),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (Level) object ).getNegativeLabel().equals( val );
+                        }
+                    }
+            );
+
+        }
+    }
+
+    public String getKindHint() {
+        return StringUtils.join( kindHints, " " );
+    }
+
+    public void setKindHint( String val ) {
+        this.kindHints =
+                val == null
+                        ? new ArrayList<String>() :
+                        Arrays.asList( StringUtils.split( val.toLowerCase(), ' ' ) );
+    }
+
     /**
      * Get all issues, possibly filtered on the model object they are about.
      *
      * @return a list of issues
      */
-    @SuppressWarnings( "unchecked" )
     public List<Issue> getIssues() {
         List<Issue> issues;
+        // Get issues by about and waived
         ModelObject about = getAbout();
-        final String issueType = getIssueType();
         if ( about != null ) {
             issues = getAnalyst().listIssues( about, true, includeWaived );
         } else {
@@ -74,12 +220,68 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
                 issues = getAnalyst().findAllUnwaivedIssues();
             }
         }
+        // filter by type
+        issues = filterByType( issues, getIssueType() );
+        // filter by segment
+        issues = filterBySegment( issues );
+        // filter by severity
+        issues = filterBySeverity( issues );
+        // filter by kind
+        issues = filterByKind( issues );
+        return issues;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Issue> filterByType( List<Issue> issues, final String issueType ) {
         return (List<Issue>) CollectionUtils.select(
                 issues,
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return ( issueType.equals( ALL )
                                 || ( (Issue) obj ).getType().equals( issueType ) );
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Issue> filterBySegment( List<Issue> issues ) {
+        return (List<Issue>) CollectionUtils.select(
+                issues,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        ModelObject about = ( (Issue) obj ).getAbout();
+                        return segment == null ||
+                                about instanceof SegmentObject
+                                        && ( (SegmentObject) about ).getSegment().equals( segment );
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Issue> filterBySeverity( List<Issue> issues ) {
+        return (List<Issue>) CollectionUtils.select(
+                issues,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return severity == null
+                                || ( (Issue) obj ).getSeverity().equals( severity );
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Issue> filterByKind( List<Issue> issues ) {
+        final Matcher matcher = Matcher.getInstance();
+        return (List<Issue>) CollectionUtils.select(
+                issues,
+                new Predicate() {
+                    public boolean evaluate( Object obj ) {
+                        return kindHints == null || kindHints.isEmpty()
+                                ||
+                                matcher.matchesAll( ( (Issue) obj ).getDetectorLabel(), kindHints );
                     }
                 }
         );

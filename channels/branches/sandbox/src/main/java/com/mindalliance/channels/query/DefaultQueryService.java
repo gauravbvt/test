@@ -934,8 +934,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 if ( actor != null
                         && actor.isActual()
                         && !partOrg.isUnknown()
-                        && (  partOrg.isType() && organization.narrowsOrEquals( partOrg, locale )
-                                || partOrg.isActual() && organization.equals( partOrg )  ) ) {
+                        && ( partOrg.isType() && organization.narrowsOrEquals( partOrg, locale )
+                        || partOrg.isActual() && organization.equals( partOrg ) ) ) {
 
                     Job job = Job.from( new ResourceSpec( actor,
                             partSpec.getRole(),
@@ -1710,7 +1710,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             Flow in = incoming.next();
             if ( in.isSharing()
                     && Matcher.getInstance().same( in.getName(), info )
-                    && Flow.Restriction.matchedBy( need.getRestriction(), in.getRestriction() ) ) {
+                    // in's restriction is same or more specific so it satisfies need's restriction
+                    && Flow.Restriction.implies( in.getRestriction(), need.getRestriction() ) ) {
                 sharings.add( in );
             }
         }
@@ -3150,7 +3151,16 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                             || ModelObject.isNullOrUnknown( beneficiaryLocation )
                             || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
                             || beneficiaryLocation.narrowsOrEquals( committerLocation, locale );
-
+                case SameOrganizationAndLocation:
+                    return ( ModelObject.isNullOrUnknown( committerLocation )
+                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
+                            || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
+                            || beneficiaryLocation.narrowsOrEquals( committerLocation, locale ) )
+                            &&
+                            ( ModelObject.isNullOrUnknown( committerOrg )
+                                    || ModelObject.isNullOrUnknown( beneficiaryOrg )
+                                    || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
+                                    || beneficiaryOrg.narrowsOrEquals( committerOrg, locale ) );
                 case DifferentLocations:
                     return ModelObject.isNullOrUnknown( committerLocation )
                             || ModelObject.isNullOrUnknown( beneficiaryLocation )
