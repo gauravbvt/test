@@ -246,10 +246,10 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                         new WebMarkupContainer( "subtaskDiv" )
                                 .add( newTaskLinks( task.getSubtasks() ) )
                                 .setVisible( !task.getSubtasks().isEmpty() ),
-                        newIncomingFlows( task.getInputs( planService ) ),
-                        newOutgoingFlows( "distribDiv", task.getOutgoing( planService ) ),
-                        newOutgoingFlows( "taskRfiDiv", task.getRequests( planService ) ),
-                        newOutgoingFlows( "failDiv", task.getFailures( planService ) ),
+                        newIncomingFlows( task.getInputs() ),
+                        newOutgoingFlows( "distribDiv", task.getOutgoing() ),
+                        newOutgoingFlows( "taskRfiDiv", task.getRequests() ),
+                        newOutgoingFlows( "failDiv", task.getFailures() ),
                         newDocSection(
                                 task.getAttachmentsFrom( planService.getAttachmentManager() ) ) );
             }
@@ -301,8 +301,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                                                                new WebMarkupContainer( "conseqs" ).setVisible(
                                                                    false )
                       ).setVisible( !risks.isEmpty() || !gains.isEmpty() ),
-                      new WebMarkupContainer( "subTask" ).add( newSimpleEoiList( task.getStartingEois(
-                          getQueryService() ) ) ).setVisible( task.isSubtask() ) )
+                      new WebMarkupContainer( "subTask" ).add( newSimpleEoiList( task.getStartingEois() ) ).setVisible( task.isSubtask() ) )
 
                 .setVisible( !risks.isEmpty() || !gains.isEmpty() || task.isStartWithSegment()
                              || task.isImmediate() || task.isSubtask() || task.getCompletionTime() );
@@ -315,7 +314,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         boolean notification = task.isNotification( planService );
         return new WebMarkupContainer( "promptedBy" )
                 .add( new ListView<AggregatedFlow>( "notifTask",
-                                                    task.getTriggeringFlows( planService ) ) {
+                                                    task.getTriggeringFlows() ) {
                     @Override
                     protected void populateItem( ListItem<AggregatedFlow> item ) {
                         AggregatedFlow flow = item.getModelObject();
@@ -340,8 +339,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                                                                           task.getCategoryString() ).setRenderBodyOnly(
                           true ),
                                                                new Label( "reqFlow",
-                                                                          task.getTriggeringFlowName(
-                                                                              planService ) ),
+                                                                          task.getTriggeringFlowName() ),
                                                                new Label( "reqFlowSrc",
                                                                           task.getTriggeringSources(
                                                                               planService ) ) ).setVisible(
@@ -457,7 +455,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                 .setVisible( !flows.isEmpty() );
     }
 
-    private static Component newContacts( List<ContactSpec> contactSpecs ) {
+    private Component newContacts( List<ContactSpec> contactSpecs ) {
 
         return new ListView<ContactSpec>( "group", contactSpecs ) {
             @Override
@@ -467,6 +465,10 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                 final List<AggregatedContact> contactList = spec.getContactList();
                 if ( contactList.isEmpty() )
                     contactList.add( new AggregatedContact() );
+
+                QueryService service = getQueryService();
+                for ( AggregatedContact contact : contactList )
+                    contact.resolveChannels( service );
 
                 specItem.add(
                         new WebMarkupContainer( "specAnchor" )
@@ -545,21 +547,23 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                       new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() ) );
     }
 
-    private static List<ReportSegment> getSegments( QueryService planService, Specable profile ) {
+    private static List<ReportSegment> getSegments( QueryService planService, Specable myProfile ) {
 
         List<ReportSegment> result = new ArrayList<ReportSegment>();
-        Assignments allAssignments = planService.getAssignments( false, false );
-        Assignments myAssignments = allAssignments.with( profile );
-        Assignments assignedByOthers = myAssignments.notFrom( profile );
 
-        Commitments commitments = new Commitments( planService, profile, allAssignments );
-        for ( Segment segment : assignedByOthers.getSegments() ) {
-            result.add( new ReportSegment(
-                    planService, result.size() + 1,
-                    segment,
-                    assignedByOthers.with( segment ), allAssignments,
-                    commitments ) );
-        }
+        Assignments allAssignments = planService.getAssignments( false, false );
+        Commitments commitments = new Commitments( planService, myProfile, allAssignments );
+
+        Assignments myAssignments = allAssignments.with( myProfile );
+        Assignments assignedByOthers = myAssignments.notFrom( myProfile );
+
+        for ( Segment segment : assignedByOthers.getSegments() )
+            result.add( new ReportSegment( planService,
+                                           result.size() + 1,
+                                           segment,
+                                           assignedByOthers.with( segment ),
+                                           allAssignments,
+                                           commitments ) );
         return result;
     }
 
@@ -573,7 +577,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                         QueryService service = getQueryService();
                         ReportTask task = item.getModelObject();
                         item.add( new ListView<AggregatedFlow>( "flow",
-                                                                task.getTriggeringFlows( service ) ) {
+                                                                task.getTriggeringFlows() ) {
                             @Override
                             protected void populateItem( ListItem<AggregatedFlow> flowItem ) {
                                 AggregatedFlow flow = flowItem.getModelObject();
@@ -760,10 +764,12 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                 for ( ModelEntity entity : service.findAllNarrowingOrEqualTo( org ) )
                     if ( entity.isActual() ) {
                         Organization actualOrg = (Organization) entity;
-                        if ( restriction == null || isAllowed( origin.getOrganization(),
-                                actualOrg ) ) {
-                            ContactSpec newSpec = new ContactSpec( restriction,
-                                    new ResourceSpec( spec.getActor(),
+                        if ( restriction == null
+                             || isAllowed( origin.getOrganization(), actualOrg ) ) {
+                            ContactSpec newSpec = new ContactSpec(
+                                    restriction,
+                                    new ResourceSpec(
+                                            spec.getActor(),
                                             spec.getRole(),
                                             actualOrg,
                                             spec.getJurisdiction() ) );
@@ -840,10 +846,11 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             return result;
         }
 
-        private void addContact( QueryService service, Assignment beneficiary ) {
+        private void addContact(
+            QueryService service, Assignment beneficiary, Assignments assignments ) {
             Employment employment = beneficiary.getEmployment();
             if ( !contactIndex.containsKey( employment ) ) {
-                AggregatedContact e = new AggregatedContact( service, beneficiary );
+                AggregatedContact e = new AggregatedContact( service, beneficiary, assignments );
                 contacts.add( e );
                 contactIndex.put( employment, e );
             }
@@ -924,16 +931,14 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         private final List<AggregatedContact> contacts;
 
         private ReportSegment(
-            QueryService planService, int seq, Segment segment, Assignments assignments,
+            QueryService planService, int seq, Segment segment, Assignments segmentAssignments,
             Assignments allAssignments, Commitments commitments ) {
 
             this.seq = seq;
             this.segment = segment;
-            for ( Assignment assignment : assignments ) {
-                ReportTask reportTask =
-                        new ReportTask( seq, assignment,
-                                assignments, planService, allAssignments,
-                                commitments.with( assignment ) );
+            for ( Assignment assignment : segmentAssignments ) {
+                ReportTask reportTask = new ReportTask( seq, assignment );
+                reportTask.resolve( segmentAssignments, planService, allAssignments, commitments );
 
                 tasks.add( reportTask );
                 if ( Assignments.isImmediate( assignment.getPart(), planService ) ) {
@@ -959,12 +964,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                 immediate.setTaskSeq( i++ );
             for ( ReportTask sub : subtasks )
                 sub.setTaskSeq( i++ );
-            Collections.sort( tasks, new Comparator<ReportTask>() {
-                @Override
-                public int compare( ReportTask o1, ReportTask o2 ) {
-                    return o1.getTaskSeq() - o2.getTaskSeq();
-                }
-            } );
+            Collections.sort( tasks );
 
             contacts = findContacts( planService );
         }
@@ -973,7 +973,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
 
             Set<ContactSpec> specs = new HashSet<ContactSpec>();
             for ( ReportTask task : tasks )
-                for ( ContactSpec taskSpec : task.getContactSpecs( service ) )
+                for ( ContactSpec taskSpec : task.getContactSpecs() )
                     specs.addAll( taskSpec.actualize( service, task.getAssignment() ) );
 
             List<ContactSpec> result = new ArrayList<ContactSpec>( specs );
@@ -1068,7 +1068,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
     /**
      * Some report-specific extra information for an assignment.
      */
-    public static class ReportTask implements Serializable {
+    public static class ReportTask implements Serializable, Comparable<ReportTask> {
 
         private final int phaseSeq;
         private int taskSeq;
@@ -1076,21 +1076,61 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         private final Assignment assignment;
         private final Part part;
         private final List<ReportTask> subtasks = new ArrayList<ReportTask>();
-        private final Commitments commitmentsOf;
-        private final Commitments commitmentsTo;
+        private Commitments commitmentsOf;
+        private Commitments commitmentsTo;
 
-        private ReportTask(
-            int phaseSeq, Assignment assignment, Assignments assignments, QueryService queryService,
-            Assignments allAssignments, Commitments commitments ) {
+        private List<AggregatedFlow> triggeringFlows;
+        private List<AggregatedFlow> inputs;
+        private List<AggregatedFlow> outgoing;
+        private List<AggregatedFlow> requests;
+        private List<AggregatedFlow> failures;
+
+        private ReportTask( int phaseSeq, Assignment assignment ) {
 
             this.phaseSeq = phaseSeq;
             this.assignment = assignment;
             part = assignment.getPart();
+        }
+
+        private void resolve(
+            Assignments segmentAssignments, QueryService service,
+            Assignments allAssignments, Commitments commitments ) {
+
             // TODO take care of possibility of loops
-            for ( Assignment sub : assignments.from( assignment ) )
-                subtasks.add( new ReportTask( phaseSeq, sub, assignments, queryService, allAssignments, commitments ) );
+            for ( Assignment sub : segmentAssignments.from( assignment ) ) {
+                ReportTask task = new ReportTask( phaseSeq, sub );
+                task.resolve( segmentAssignments, service, allAssignments, commitments );
+                subtasks.add( task );
+            }
+
             commitmentsOf = commitments.of( assignment );
             commitmentsTo = commitments.to( assignment );
+
+            triggeringFlows = getTriggeringFlows( service, allAssignments );
+            inputs = getInputs( service, allAssignments );
+            outgoing = getOutgoing( service, allAssignments );
+            requests = getRequests( service, allAssignments );
+            failures = getFailures( service, allAssignments );
+        }
+
+        public List<AggregatedFlow> getFailures() {
+            return failures;
+        }
+
+        public List<AggregatedFlow> getInputs() {
+            return inputs;
+        }
+
+        public List<AggregatedFlow> getOutgoing() {
+            return outgoing;
+        }
+
+        public List<AggregatedFlow> getRequests() {
+            return requests;
+        }
+
+        public List<AggregatedFlow> getTriggeringFlows() {
+            return triggeringFlows;
         }
 
         public Assignment getAssignment() {
@@ -1098,7 +1138,8 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         }
 
         private List<AggregatedFlow> aggregate(
-                Collection<Flow> flows, boolean incoming, QueryService service ) {
+            Collection<Flow> flows, boolean incoming, QueryService service,
+            Assignments assignments ) {
 
             List<AggregatedFlow> result = new ArrayList<AggregatedFlow>( flows.size() );
             Map<String, AggregatedFlow> flowMap = new HashMap<String, AggregatedFlow>();
@@ -1108,12 +1149,12 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                 AggregatedFlow old = flowMap.get( flow.getName() );
                 if ( old == null ) {
                     AggregatedFlow newFlow = new AggregatedFlow( flow, incoming, commitments,
-                            service );
+                            service, assignments );
                     newFlow.setOrigin( assignment );
                     flowMap.put( flow.getName(), newFlow );
                     result.add( newFlow );
                 } else
-                    old.addFlow( flow, commitments, service );
+                    old.addFlow( flow, commitments, service, assignments );
             }
 
             Collections.sort(
@@ -1126,16 +1167,16 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             return result;
         }
 
-        private boolean isStartWithSegment() {
+        public boolean isStartWithSegment() {
             return part.isStartsWithSegment();
         }
 
-        private boolean getCompletionTime() {
+        public boolean getCompletionTime() {
             Delay completionTime = part.getCompletionTime();
             return completionTime != null && completionTime.getSeconds() != 0;
         }
 
-        private String getCompletionString() {
+        public String getCompletionString() {
             return part.getCompletionTime() == null ?
                     "" :
                     String.valueOf( part.getCompletionTime() );
@@ -1152,7 +1193,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         private String getTriggeringSources( QueryService service ) {
 
             Set<String> sourcesStrings = new HashSet<String>();
-            for ( AggregatedFlow flow : getTriggeringFlows( service ) )
+            for ( AggregatedFlow flow : triggeringFlows )
                 sourcesStrings.add( flow.getSourcesString( service ) );
             List<String> sources = new ArrayList<String>( sourcesStrings );
             Collections.sort( sources );
@@ -1171,12 +1212,12 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             return part.isRepeating();
         }
 
-        private String getTriggeringFlowName( QueryService service ) {
-            List<AggregatedFlow> triggeringFlows = getTriggeringFlows( service );
-            return triggeringFlows.isEmpty() ? "" : triggeringFlows.get( 0 ).getLabel();
+        private String getTriggeringFlowName() {
+            return this.triggeringFlows.isEmpty() ? "" : this.triggeringFlows.get( 0 ).getLabel();
         }
 
-        private List<AggregatedFlow> getTriggeringFlows( QueryService service ) {
+        private List<AggregatedFlow> getTriggeringFlows(
+            QueryService service, Assignments assignments ) {
 
             Set<Flow> result = new HashSet<Flow>();
             for ( Commitment commitment : commitmentsTo ) {
@@ -1188,7 +1229,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                         result.add( flow );
                 }
             }
-            return aggregate( result, true, service );
+            return aggregate( result, true, service, assignments );
         }
 
         public void setType( Type type ) {
@@ -1246,7 +1287,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         }
 
         //-----------------------------------
-        private List<AggregatedFlow> getFailures( QueryService service ) {
+        private List<AggregatedFlow> getFailures( QueryService service, Assignments assignments ) {
 
             Set<Flow> result = new HashSet<Flow>();
             for ( Commitment commitment : commitmentsOf ) {
@@ -1255,11 +1296,11 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                     result.add( flow );
             }
 
-            return aggregate( result, false, service );
+            return aggregate( result, false, service, assignments );
         }
 
         //-----------------------------------
-        private List<AggregatedFlow> getRequests( QueryService service ) {
+        private List<AggregatedFlow> getRequests( QueryService service, Assignments assignments ) {
 
             Set<Flow> result = new HashSet<Flow>();
 
@@ -1269,22 +1310,22 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                     result.add( flow );
             }
 
-            return aggregate( result, true, service );
+            return aggregate( result, true, service, assignments );
         }
 
         //-----------------------------------
-        private List<AggregatedFlow> getOutgoing( QueryService service ) {
+        private List<AggregatedFlow> getOutgoing( QueryService service, Assignments assignments ) {
             Set<Flow> result = new HashSet<Flow>();
             for ( Commitment commitment : commitmentsOf ) {
                 Flow flow = commitment.getSharing();
                 if ( !flow.isAskedFor() && !flow.isIfTaskFails() )
                     result.add( flow );
             }
-            return aggregate( result, false, service );
+            return aggregate( result, false, service, assignments );
         }
 
         //-----------------------------------
-        private List<AggregatedFlow> getInputs( QueryService service ) {
+        private List<AggregatedFlow> getInputs( QueryService service, Assignments assignments ) {
             Set<Flow> inputs = new HashSet<Flow>();
             for ( Commitment commitment : commitmentsTo ) {
                 Flow flow = commitment.getSharing();
@@ -1292,15 +1333,15 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                     inputs.add( flow );
             }
 
-            return aggregate( inputs, true, service );
+            return aggregate( inputs, true, service, assignments );
         }
 
         //-----------------------------------
-        private List<ElementOfInformation> getStartingEois( QueryService service ) {
+        private List<ElementOfInformation> getStartingEois() {
 
             Set<ElementOfInformation> elements = new HashSet<ElementOfInformation>();
             Map<String, ElementOfInformation> seen = new HashMap<String, ElementOfInformation>();
-            for ( AggregatedFlow flow : getTriggeringFlows( service ) )
+            for ( AggregatedFlow flow : getTriggeringFlows() )
                 if ( flow.isTriggeringToTarget() )
                     for ( ElementOfInformation e : flow.getElementsOfInformation() ) {
                         ElementOfInformation old = seen.get( e.getContent() );
@@ -1402,29 +1443,15 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             return attachmentManager.getMediaReferences( part );
         }
 
-        public Set<ContactSpec> getContactSpecs( QueryService service ) {
+        public Set<ContactSpec> getContactSpecs() {
             Set<ContactSpec> specs = new HashSet<ContactSpec>();
-            for ( AggregatedFlow outgoing : getOutgoing( service ) )
-                if ( !outgoing.isAskedFor() )
-                    specs.addAll( outgoing.getOthers() );
-            for ( AggregatedFlow input : getInputs( service ) )
+            for ( AggregatedFlow flow : outgoing )
+                if ( !flow.isAskedFor() )
+                    specs.addAll( flow.getOthers() );
+            for ( AggregatedFlow input : inputs )
                 if ( input.isAskedFor() )
                     specs.addAll( input.getOthers() );
 
-//            Map<ContactSpec,ContactSpec> map = new HashMap<ContactSpec, ContactSpec>();
-//            for ( Commitment commitment : commitmentsOf ) {
-//                Assignment beneficiary = commitment.getBeneficiary();
-//                ContactSpec e = new ContactSpec(
-//                                    commitment.getSharing().getRestriction(),
-//                                    new ResourceSpec( beneficiary.getResourceSpec()  ) );
-//                ContactSpec old = map.get( e );
-//                if ( old == null ) {
-//                    map.put( e, e );
-//                    specs.add( e );
-//                    old = e;
-//                }
-//                old.addContact( service, beneficiary );
-//            }
             return specs;
         }
 
@@ -1432,7 +1459,12 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             return part;
         }
 
-        public enum Type {IMMEDIATE, PROMPTED, SUBTASK}
+        @Override
+        public int compareTo( ReportTask o ) {
+            return taskSeq - o.getTaskSeq();
+        }
+
+        public enum Type { IMMEDIATE, PROMPTED, SUBTASK }
     }
 
     //================================================
@@ -1444,8 +1476,8 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         private AggregatedContact supervisor;
         private final String title;
         private final Organization organization;
-        private final Set<Channel> channels = new HashSet<Channel>();
-        private final Set<Employment> roles = new HashSet<Employment>();
+        private final List<Channel> channels = new ArrayList<Channel>();
+        private final Set<Employment> employments = new HashSet<Employment>();
         private final Participation participation;
         private final String actorName;
 
@@ -1458,12 +1490,14 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             supervisor = this;
         }
 
-        private AggregatedContact( QueryService service, Assignment assignment ) {
+        private AggregatedContact(
+            QueryService service, Assignment assignment, Assignments assignments ) {
 
-            this( service, assignment.getEmployment() );
+            this( service, assignment.getEmployment(), assignments );
         }
 
-        private AggregatedContact( QueryService service, Employment employment ) {
+        private AggregatedContact(
+            QueryService service, Employment employment, Assignments assignments ) {
 
             actor = employment.getActor();
             title = employment.getTitle();
@@ -1477,14 +1511,13 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             if ( sup == null )
                 supervisor = new AggregatedContact();
             else {
-                Assignments employments = service.getAssignments().with( sup );
+                Assignments employments = assignments.with( sup );
                 supervisor = employments.isEmpty() ?
                         new AggregatedContact() :
                         new AggregatedContact( service,
-                                employments.getAssignments().get( 0 ) );
+                                employments.getAssignments().get( 0 ), assignments );
             }
-
-            merge( service, employment );
+            employments.add( employment );
         }
 
         private AggregatedContact( QueryService service, Actor actor, String username ) {
@@ -1511,7 +1544,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                     actor == null ? "" : actor.getName();
 
             for ( Employment employment : employments )
-                merge( service, employment );
+                this.employments.add( employment );
 
         }
 
@@ -1529,15 +1562,20 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             return null;
         }
 
-        public void merge( QueryService service, Employment employment ) {
+        public void resolveChannels( QueryService service ) {
+            if ( channels.isEmpty() ) {
+                Set<Channel> set = new HashSet<Channel>();
+                for ( Employment employment : employments ) {
+                    set.addAll(
+                            participation == null ?
+                                    service.findAllChannelsFor( new ResourceSpec( employment ) ) :
+                                    participation.getEffectiveChannels()
 
-            if ( !roles.contains( employment ) ) {
-                roles.add( employment );
-                channels.addAll(
-                        participation == null ?
-                                service.findAllChannelsFor( new ResourceSpec( employment ) ) :
-                                participation.getEffectiveChannels()
-                );
+                    );
+                }
+
+                channels.addAll( set );
+                Collections.sort( channels );
             }
         }
 
@@ -1550,7 +1588,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         }
 
         public String getRoles() {
-            List<Employment> list = new ArrayList<Employment>( roles );
+            List<Employment> list = new ArrayList<Employment>( employments );
             Collections.sort( list, new Comparator<Employment>() {
                 @Override
                 public int compare( Employment o1, Employment o2 ) {
@@ -1574,9 +1612,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         }
 
         public List<Channel> getChannels() {
-            List<Channel> result = new ArrayList<Channel>( channels );
-            Collections.sort( result );
-            return result;
+            return Collections.unmodifiableList( channels );
         }
 
         public Organization getOrganization() {
@@ -1639,12 +1675,13 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         private Delay maxDelay;
 
         private AggregatedFlow(
-                Flow flow, boolean incoming, Commitments commitments, QueryService service ) {
+            Flow flow, boolean incoming, Commitments commitments, QueryService service,
+            Assignments assignments ) {
 
             label = flow.getName();
             this.flow = flow;
             this.incoming = incoming;
-            addFlow( flow, commitments, service );
+            addFlow( flow, commitments, service, assignments );
         }
 
         private String getSourcesString( QueryService service ) {
@@ -1725,7 +1762,8 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         }
 
         private void addSpec(
-                Flow flow, Node node, Commitments commitments, QueryService service ) {
+            Flow flow, Node node, Commitments commitments, QueryService service,
+            Assignments assignments ) {
             ContactSpec spec = new ContactSpec( flow.getRestriction(),
                                                 new ResourceSpec( (Specable) node ) );
 
@@ -1733,21 +1771,22 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                 for ( Commitment commitment : commitments )
                     spec.addContact( service,
                                      incoming ? commitment.getCommitter()
-                                              : commitment.getBeneficiary() );
+                                              : commitment.getBeneficiary(), assignments );
                 others.add( spec );
             }
         }
 
-        private void addFlow( Flow flow, Commitments commitments, QueryService service ) {
+        private void addFlow(
+            Flow flow, Commitments commitments, QueryService service, Assignments assignments ) {
             Node node = incoming ? flow.getSource() : flow.getTarget();
             Commitments flowCommitments = commitments.with( flow );
             if ( node.isPart() )
-                addSpec( flow, node, flowCommitments, service );
+                addSpec( flow, node, flowCommitments, service, assignments );
             else
                 for ( ExternalFlow externalFlow : ( (Connector) node ).getExternalFlows() ) {
                     Node xNode = incoming ? externalFlow.getSource() : externalFlow.getTarget();
                     if ( xNode.isPart() )
-                        addSpec( flow, xNode, flowCommitments, service );
+                        addSpec( flow, xNode, flowCommitments, service, assignments );
                 }
 
             List<ElementOfInformation> eois = flow.getEois();
