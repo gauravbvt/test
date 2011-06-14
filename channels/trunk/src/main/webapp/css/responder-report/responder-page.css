@@ -218,6 +218,10 @@ span.reqFlow {
 	font-weight:bold;
 }
 
+span.flowHead {
+    display: block;
+    margin-right: 80px;
+}
 
 /* ----- Tables ----- */
 

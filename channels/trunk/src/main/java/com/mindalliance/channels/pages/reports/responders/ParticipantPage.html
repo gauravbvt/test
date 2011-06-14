@@ -265,11 +265,13 @@
                         <span wicket:id="perFlow">
                             <tr>
                                 <td align="left" colspan="4">
-                                    <span class="reqFlow" wicket:id="flowName2">{flow name}</span>
-
-                                    (from <span wicket:id="flowSources">{source, source or source}</span> <span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span>).
-                                    <span wicket:id="critical">This information is critical to this task.</span>
                                     <span wicket:id="incomingFeedback" class="feedback-container">[feedback panel]</span>
+                                    <span class="flowHead">
+                                        <span class="reqFlow" wicket:id="flowName2">{flow name}</span>
+
+                                        (from <span wicket:id="flowSources">{source, source or source}</span> <span wicket:id="flowTiming">{Provided|Available upon request}{immediately|within &hellip;}</span>).
+                                        <span wicket:id="critical">This information is critical to this task.</span>
+                                    </span>
                                 </td>
                             </tr>
                             <span wicket:id="eoisRow">
@@ -307,11 +309,13 @@
                         <span wicket:id="perFlow">
                             <tr>
                                 <td colspan="4" align="left">
-                                    <span wicket:id="flowName2" class="reqFlow" >{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
-                                    <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
-                                    to <span wicket:id="flowTargets">target, target or target.</span>
-                                    <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
                                     <span wicket:id="outgoingFlowFeedback" class="feedback-container">[feedback panel]</span>
+                                    <span class="flowHead">
+                                        <span wicket:id="flowName2" class="reqFlow" >{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
+                                        <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
+                                        to <span wicket:id="flowTargets">target, target or target.</span>
+                                        <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
+                                    </span>
                                 </td>
                             </tr>
                             <span wicket:id="eoisRow">
@@ -354,12 +358,14 @@
                         <span wicket:id="perFlow">
                             <tr>
                                 <td colspan="4" align="left">
-                                    <span wicket:id="flowName2" class="reqFlow">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
-                                    <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
-                                    to
-                                    <span wicket:id="flowTargets">target, target or target.</span>
-                                    <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
                                     <span wicket:id="outgoingFlowFeedback" class="feedback-container">[feedback panel]</span>
+                                    <span class="flowHead">
+                                        <span wicket:id="flowName2" class="reqFlow">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
+                                        <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
+                                        to
+                                        <span wicket:id="flowTargets">target, target or target.</span>
+                                        <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
+                                    </span>
                                 </td>
                             </tr>
                             <span wicket:id="eoisRow">
@@ -413,12 +419,14 @@
                         <span wicket:id="perFlow">
                             <tr>
                                 <td colspan="4" align="left">
-                                    <span wicket:id="flowName2" class="reqFlow">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
-                                    <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
-                                    to
-                                    <span wicket:id="flowTargets">target, target or target.</span>
-                                    <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
                                     <span wicket:id="outgoingFlowFeedback" class="feedback-container">[feedback panel]</span>                               </td>
+                                    <span class="flowHead">
+                                        <span wicket:id="flowName2" class="reqFlow">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
+                                        <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
+                                        to
+                                        <span wicket:id="flowTargets">target, target or target.</span>
+                                        <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
+                                    </span>
                             </tr>
                             <span wicket:id="eoisRow">
                                 <tr class="eoiHeads">
