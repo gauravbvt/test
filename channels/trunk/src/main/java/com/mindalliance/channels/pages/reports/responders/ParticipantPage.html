@@ -201,7 +201,7 @@
                                 </span>
                                 <span wicket:id="taskDuration">This task should be completed <span class="duration" wicket:id="dur">{duration}</span>.</span>
                                 <span wicket:id="term1">
-                                    Executed without prompting<!-- whenever <span wicket:id="eventPhase">{phase of event}</span>-->.
+                                    Executed without prompting.
                                 </span>
                             </p>
                             <p wicket:id="superNote">
@@ -305,47 +305,7 @@
                         During or after the execution of this task, the following information
                         should be sent:
                     </p>
-                    <table border="0">
-                        <span wicket:id="perFlow">
-                            <tr>
-                                <td colspan="4" align="left">
-                                    <span wicket:id="outgoingFlowFeedback" class="feedback-container">[feedback panel]</span>
-                                    <span class="flowHead">
-                                        <span wicket:id="flowName2" class="reqFlow" >{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
-                                        <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
-                                        to <span wicket:id="flowTargets">target, target or target.</span>
-                                        <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
-                                    </span>
-                                </td>
-                            </tr>
-                            <span wicket:id="eoisRow">
-                                <tr class="eoiHeads">
-                                    <th class="first">Information</th>
-                                    <th>Description</th>
-                                    <th>Handling</th>
-                                    <th class="last">Classification</th>
-                                </tr>
-                                <tr class="eoi" wicket:id="eoi">
-                                    <td class="first" wicket:id="eoi.name">{EOI}</td>
-                                    <td wicket:id="eoi.desc">{description}</td>
-                                    <td wicket:id="eoi.handling">{handling}</td>
-                                    <td class="last" wicket:id="eoi.class">{classification}</td>
-                                </tr>
-                            </span>
-                            <tr wicket:id="noContext" class="note">
-                                <!-- Optional -->
-                                <td class="note" colspan="4">
-                                    <em>Note:</em> Do not mention context.
-                                </td>
-                            </tr>
-                            <!-- Optional -->
-                            <tr wicket:id="flowEnding" class="note">
-                                <td class="terminated" colspan="4">
-                                    <em>Note:</em> This task is considered done when this information is sent.
-                                </td>
-                            </tr>
-                        </span>
-                    </table>
+                    <div wicket:id="flowTable">(Outgoing flows)</div>
                 </div>
 
                 <div wicket:id="taskRfiDiv">
@@ -354,49 +314,7 @@
                     <p>
                         The following agents may request some information acquired during execution of this task:
                     </p>
-                    <table border="0">
-                        <span wicket:id="perFlow">
-                            <tr>
-                                <td colspan="4" align="left">
-                                    <span wicket:id="outgoingFlowFeedback" class="feedback-container">[feedback panel]</span>
-                                    <span class="flowHead">
-                                        <span wicket:id="flowName2" class="reqFlow">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
-                                        <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
-                                        to
-                                        <span wicket:id="flowTargets">target, target or target.</span>
-                                        <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
-                                    </span>
-                                </td>
-                            </tr>
-                            <span wicket:id="eoisRow">
-                                <tr class="eoiHeads">
-                                    <th class="first">Information</th>
-                                    <th>Description</th>
-                                    <th>Handling</th>
-                                    <th class="last">Classification</th>
-                                </tr>
-                                <tr class="eoi" wicket:id="eoi">
-                                    <td class="first" wicket:id="eoi.name">{EOI}</td>
-                                    <td wicket:id="eoi.desc">{description}</td>
-                                    <td wicket:id="eoi.handling">{handling}</td>
-                                    <td class="last" wicket:id="eoi.class">{classification}</td>
-                                </tr>
-                            </span>
-
-                            <tr wicket:id="noContext" class="note">
-                                <!-- Optional -->
-                                <td class="note" colspan="4">
-                                    <em>Note:</em> Do not mention context.
-                                </td>
-                            </tr>
-                            <!-- Optional -->
-                            <tr wicket:id="flowEnding" class="note">
-                                <td class="terminated" colspan="4">
-                                    <em>Note:</em> This task is considered done when this information is sent.
-                                </td>
-                            </tr>
-                        </span>
-                    </table>
+                    <div wicket:id="flowTable">(Outgoing flows)</div>
                 </div>
 
                 <div wicket:id="subtaskDiv">
@@ -415,48 +333,7 @@
                     <p>
                         If this task fails, the following information should be sent:
                     </p>
-                    <table border="0">
-                        <span wicket:id="perFlow">
-                            <tr>
-                                <td colspan="4" align="left">
-                                    <span wicket:id="outgoingFlowFeedback" class="feedback-container">[feedback panel]</span>                               </td>
-                                    <span class="flowHead">
-                                        <span wicket:id="flowName2" class="reqFlow">{Alert|Issue command|Make announcement|Send report|Provide feedback} about {flow label}</span>
-                                        <span wicket:id="flowTiming">{immediately|within &hellip;}</span>
-                                        to
-                                        <span wicket:id="flowTargets">target, target or target.</span>
-                                        <span wicket:id="critical">Timely information is critical to the receiver(s).</span>
-                                    </span>
-                            </tr>
-                            <span wicket:id="eoisRow">
-                                <tr class="eoiHeads">
-                                    <th class="first">Information</th>
-                                    <th>Description</th>
-                                    <th>Handling</th>
-                                    <th class="last">Classification</th>
-                                </tr>
-                                <tr class="eoi" wicket:id="eoi">
-                                    <td class="first" wicket:id="eoi.name">{EOI}</td>
-                                    <td wicket:id="eoi.desc">{description}</td>
-                                    <td wicket:id="eoi.handling">{handling}</td>
-                                    <td class="last" wicket:id="eoi.class">{classification}</td>
-                                </tr>
-                            </span>
-
-                            <tr wicket:id="noContext" class="note">
-                                <!-- Optional -->
-                                <td class="note" colspan="4">
-                                    <em>Note:</em> Do not mention context.
-                                </td>
-                            </tr>
-                            <!-- Optional -->
-                            <tr wicket:id="flowEnding" class="note">
-                                <td class="terminated" colspan="4">
-                                    <em>Note:</em> This task is considered done when this information is sent.
-                                </td>
-                            </tr>
-                        </span>
-                    </table>
+                    <div wicket:id="flowTable">(Outgoing flows)</div>
                 </div>
                 <div wicket:id="documents">
                     <h3>See also:</h3>

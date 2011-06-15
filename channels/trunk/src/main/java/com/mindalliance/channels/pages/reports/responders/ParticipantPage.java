@@ -319,7 +319,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                         protected void populateItem( ListItem<AggregatedFlow> item ) {
                             AggregatedFlow flow = item.getModelObject();
                             List<ElementOfInformation> eois = flow.getElementsOfInformation();
-                            String sourcesString = flow.getSourcesString( getQueryService() );
+                            String sourcesString = flow.getSourcesString();
                             item.add(
                                 new WebMarkupContainer( "notifTask1" )
                                     .add( new Label( "reqFlow", flow.getLabel() ),
@@ -344,56 +344,33 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                 .setVisible( notification || task.isRequest() );
     }
 
-    private static String lcFirst( String phrase ) {
-
+    public static String lcFirst( String phrase ) {
         if ( phrase.length() < 2 )
             return phrase;
         return ChannelsUtils.smartUncapitalize( phrase );
     }
 
-    private static String ensurePeriod( String sentence ) {
-
+    public static String ensurePeriod( String sentence ) {
         return sentence == null || sentence.isEmpty() || sentence.endsWith( "." )
                 || sentence.endsWith( ";" ) ?
                 sentence :
                 sentence + '.';
     }
 
-    private Component newOutgoingFlows( String id, final List<AggregatedFlow> flows ) {
-
+    private static Component newOutgoingFlows( String id, List<AggregatedFlow> flows ) {
         return new WebMarkupContainer( id )
-                .add( new ListView<AggregatedFlow>( "perFlow", flows ) {
-                    @Override
-                    protected void populateItem( ListItem<AggregatedFlow> item ) {
-                        AggregatedFlow flow = item.getModelObject();
-                        item.add( new Label( "flowName2", flow.getFormattedLabel() ),
-                                  new Label( "flowTargets",
-                                             ensurePeriod( flow.getSourcesString( getQueryService() ) ) ),
-                                  new Label( "flowTiming", lcFirst( flow.getTiming() ) ),
-                                  new WebMarkupContainer( "critical" ).setVisible( flow.isCritical() ),
-                                  new UserFeedbackPanel( "outgoingFlowFeedback",
-                                                         flow.getBasis(),
-                                                         "Send feedback" ),
-                                  new WebMarkupContainer( "eoisRow" ).add( newEoiList( flow.getElementsOfInformation() ) ).setRenderBodyOnly(
-                                      true ).setVisible( flow.hasEois() ),
-                                  new WebMarkupContainer( "flowEnding" ).setVisible( flow.isTerminatingToSource() ),
-                                  // TODO ask JF about where to get this
-                                  new WebMarkupContainer( "noContext" ).setVisible( false ) );
-                    }
-                }.setRenderBodyOnly( true ) )
+                .add( new FlowTable( "flowTable", flows ) )
                 .setVisible( !flows.isEmpty() );
     }
 
     //-----------------------------------
     private static Component newSimpleEoiList( List<ElementOfInformation> eois ) {
-
         return new WebMarkupContainer( "eois" )
                 .add( newEoiList( eois ) )
                 .setVisible( !eois.isEmpty() );
     }
 
-    private static ListView<ElementOfInformation> newEoiList(
-            final List<ElementOfInformation> eois ) {
+    public static ListView<ElementOfInformation> newEoiList( List<ElementOfInformation> eois ) {
 
         return new ListView<ElementOfInformation>( "eoi", eois ) {
             @Override
@@ -424,8 +401,9 @@ public class ParticipantPage extends AbstractChannelsWebPage {
     //-----------------------------------
     private static String getClassificationString( List<Classification> classifications ) {
 
-        return classifications.isEmpty() ? AggregatedContact.N_A : listToString( classifications,
-                " or " );
+        return classifications.isEmpty() ?
+               AggregatedContact.N_A :
+               listToString( classifications, " or " );
     }
 
     private Component newIncomingFlows( final List<AggregatedFlow> flows ) {
@@ -437,7 +415,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                         AggregatedFlow flow = item.getModelObject();
                         item.add( new Label( "flowName2", flow.getFormattedLabel() ),
                                   new Label( "flowSources",
-                                             flow.getSourcesString( getQueryService() ) ),
+                                             flow.getSourcesString() ),
                                   new Label( "flowTiming", lcFirst( flow.getTiming() ) ),
                                   new WebMarkupContainer( "critical" ).setVisible( flow.isCritical() ),
                                   new UserFeedbackPanel( "incomingFeedback",
@@ -472,8 +450,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                                                  spec.getLabel() ).setRenderBodyOnly( true ) )
                                 .add( new AttributeModifier( "name",
                                                              true,
-                                                             new Model<String>(
-                                                                 "s_" + spec.hashCode() ) ) ),
+                                                             new Model<String>( spec.getLink() ) ) ),
 
                         new ListView<AggregatedContact>( "perFlowContact", contactList ) {
                             @Override
@@ -582,16 +559,14 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                                     flow.getLabel() ),
                                                                                      new Label(
                                                                                          "flowSources",
-                                                                                         flow.getSourcesString(
-                                                                                             planService ) ) ).setVisible(
+                                                                                         flow.getSourcesString() ) ).setVisible(
                                     !flow.isAskedFor() ),
                                               new WebMarkupContainer( "rFlow" ).add( new Label(
                                                   "flowName",
                                                   flow.getLabel() ),
                                                                                      new Label(
                                                                                          "flowSources",
-                                                                                         flow.getSourcesString(
-                                                                                             planService ) ) ).setVisible(
+                                                                                         flow.getSourcesString() ) ).setVisible(
                                                   flow.isAskedFor() ) );
                             }
                         }.setRenderBodyOnly( true ),
@@ -707,7 +682,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
     }
 
     //================================================
-    private static class ContactSpec implements Serializable, Comparable<ContactSpec> {
+    public static class ContactSpec implements Serializable, Comparable<ContactSpec> {
 
         private static final int TOO_MANY = 2;
         private final ResourceSpec spec;
@@ -715,6 +690,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         private final Set<AggregatedContact> contacts = new HashSet<AggregatedContact>();
         private final Map<Employment,AggregatedContact> contactIndex =
                     new HashMap<Employment, AggregatedContact>();
+        private String link;
 
         private ContactSpec( Restriction restriction, ResourceSpec spec ) {
             assert spec != null;
@@ -859,6 +835,14 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                 contactIndex.put( employment, e );
             }
         }
+
+        public void setLink( String link ) {
+            this.link = link;
+        }
+
+        public String getLink() {
+            return link;
+        }
     }
 
     //================================================
@@ -972,6 +956,10 @@ public class ParticipantPage extends AbstractChannelsWebPage {
 
             List<ContactSpec> result = new ArrayList<ContactSpec>( specs );
             Collections.sort( result );
+            for ( int i = 0, resultSize = result.size(); i < resultSize; i++ ) {
+                ContactSpec contactSpec = result.get( i );
+                contactSpec.setLink( "cs" + seq + "_" + i );
+            }
             return result;
         }
 
@@ -1191,7 +1179,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
 
             Set<String> sourcesStrings = new HashSet<String>();
             for ( AggregatedFlow flow : triggeringFlows )
-                sourcesStrings.add( flow.getSourcesString( service ) );
+                sourcesStrings.add( flow.getSourcesString() );
             List<String> sources = new ArrayList<String>( sourcesStrings );
             Collections.sort( sources );
             return listToString( sources, " or " );
@@ -1443,10 +1431,10 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             Set<ContactSpec> specs = new HashSet<ContactSpec>();
             for ( AggregatedFlow flow : outgoing )
                 if ( !flow.isAskedFor() )
-                    specs.addAll( flow.getOthers() );
+                    specs.addAll( flow.getSpecs() );
             for ( AggregatedFlow input : inputs )
                 if ( input.isAskedFor() )
-                    specs.addAll( input.getOthers() );
+                    specs.addAll( input.getSpecs() );
 
             return specs;
         }
@@ -1647,10 +1635,10 @@ public class ParticipantPage extends AbstractChannelsWebPage {
     }
 
     //================================================
-    private static class AggregatedFlow implements Serializable {
+    public static class AggregatedFlow implements Serializable {
 
         private final String label;
-        private final Set<ContactSpec> others = new HashSet<ContactSpec>();
+        private final Set<ContactSpec> specs = new HashSet<ContactSpec>();
         private final Map<String, ElementOfInformation> eoiIndex =
                 new HashMap<String, ElementOfInformation>();
         private final boolean incoming;
@@ -1658,6 +1646,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
         private final Set<Flow> flows = new HashSet<Flow>();
         private Assignment origin;
         private Delay maxDelay;
+        private final Set<ContactSpec> reducedSpecs = new HashSet<ContactSpec>();
 
         private AggregatedFlow( Flow basis, boolean incoming ) {
 
@@ -1667,12 +1656,9 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             addFlow( basis );
         }
 
-        private String getSourcesString( QueryService service ) {
+        public String getSourcesString() {
 
-            Set<ContactSpec> set = new HashSet<ContactSpec>();
-            for ( ContactSpec source : others )
-                set.addAll( source.actualize( service, origin ) );
-            List<ContactSpec> specList = new ArrayList<ContactSpec>( set );
+            List<ContactSpec> specList = new ArrayList<ContactSpec>( reducedSpecs );
             Collections.sort( specList );
 
             List<String> list = new ArrayList<String>( specList.size() );
@@ -1683,7 +1669,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             return listToString( list, every ? " and " : " or " );
         }
 
-        private String getFormattedLabel() {
+        public String getFormattedLabel() {
 
             String verb;
             Intent intent = getIntent();
@@ -1720,7 +1706,7 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             this.origin = origin;
         }
 
-        private String getTiming() {
+        public String getTiming() {
 
             StringWriter w = new StringWriter();
             if ( incoming ) {
@@ -1739,12 +1725,12 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             ContactSpec spec = new ContactSpec( flow.getRestriction(),
                                                 new ResourceSpec( (Specable) node ) );
 
-            if ( !others.contains( spec ) ) {
+            if ( !specs.contains( spec ) ) {
                 for ( Commitment commitment : commitments )
                     spec.addContact( service,
                                      incoming ? commitment.getCommitter()
                                               : commitment.getBeneficiary(), assignments );
-                others.add( spec );
+                specs.add( spec );
             }
         }
 
@@ -1777,6 +1763,9 @@ public class ParticipantPage extends AbstractChannelsWebPage {
                             addSpec( flow, xNode, flowCommitments, service, assignments );
                     }
             }
+
+            for ( ContactSpec source : specs )
+                reducedSpecs.addAll( source.actualize( service, origin ) );
         }
 
         public String getLabel() {
@@ -1824,8 +1813,14 @@ public class ParticipantPage extends AbstractChannelsWebPage {
             return basis;
         }
 
-        public Set<ContactSpec> getOthers() {
-            return Collections.unmodifiableSet( others );
+        public Set<ContactSpec> getSpecs() {
+            return Collections.unmodifiableSet( specs );
+        }
+
+        public List<ContactSpec> getSpecList() {
+            List<ContactSpec> result = new ArrayList<ContactSpec>( specs );
+            Collections.sort( result );
+            return result;
         }
     }
 }
