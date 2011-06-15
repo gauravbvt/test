@@ -104,11 +104,11 @@ public class ActorConverter extends EntityConverter {
             boolean isArchetype = reader.getValue().equals( "true" );
             actor.setArchetype( isArchetype );
         } else if ( nodeName.equals( "placeHolder" ) ) {
-            boolean val = reader.getValue().equals( "true" );
-            actor.setPlaceHolder( val );
             if ( reader.getAttributeCount() > 0 ) {
                 actor.setPlaceHolderSingular( Boolean.parseBoolean( reader.getAttribute( "singular" ) ) );
             }
+            boolean val = reader.getValue().equals( "true" );
+            actor.setPlaceHolder( val );
         } else if ( nodeName.equals( "clearance" ) ) {
             Classification clearance = (Classification) context.convertAnother( plan, Classification.class );
             actor.addClearance( clearance );
