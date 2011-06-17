@@ -2251,29 +2251,40 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Flow> findEssentialFlowsFrom( Part part, Boolean assumeFails ) {
-        // Find all downstream important flows, avoiding circularities
-        List<Flow> importantFlows = part.findImportantFlowsFrom( new HashSet<Part>() );
+    public List<Flow> findEssentialFlowsFrom( Part part, Boolean assumeAlternatesFail ) {
+        // Find all downstream important flows, avoiding circularity
+        List<Flow> importantFlows = findImportantFlowsFrom( part, new HashSet<Part>(), assumeAlternatesFail );
         // Iteratively trim "end flows" to non-useful parts
-        final List<Flow> essentialFlows = keepEssentialFlows( importantFlows );
         // if not assume fails, retain only the flows without alternates.
-        if ( assumeFails ) {
-            return essentialFlows;
+        return keepEssentialFlows( importantFlows );
+    }
+
+    /**
+     * Find all important flows downstream of a given part, without circularity.
+     *
+     * @param part                 a part
+     * @param visited              already visited parts
+     * @param assumeAlternatesFail a boolean
+     * @return a list of important flows
+     */
+    private List<Flow> findImportantFlowsFrom( Part part, Set<Part> visited, boolean assumeAlternatesFail ) {
+        if ( visited.contains( part ) ) {
+            return Collections.emptyList();
         } else {
-            return (List<Flow>) CollectionUtils.select(
-                    essentialFlows,
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            Flow flow = (Flow) object;
-                            List<Flow> alternates = getAlternates( flow );
-                            return alternates.isEmpty()
-                                    || CollectionUtils.isSubCollection( alternates, essentialFlows );
-                        }
-                    }
-            );
+            visited.add( part );
+            Set<Flow> importantFlows = new HashSet<Flow>();
+            for ( Flow flow : part.getAllSharingSends() ) {
+                if ( flow.isImportant() && ( assumeAlternatesFail || getAlternates( flow ).isEmpty() ) ) {
+                    importantFlows.add( flow );
+                    importantFlows.addAll( findImportantFlowsFrom(
+                            ( (Part) flow.getTarget() ),
+                            visited, assumeAlternatesFail ) );
+                }
+            }
+            return new ArrayList<Flow>( importantFlows );
         }
     }
+
 
     @Override
     public List<Part> findFailureImpacts( SegmentObject segmentObject, Boolean assumeFails ) {

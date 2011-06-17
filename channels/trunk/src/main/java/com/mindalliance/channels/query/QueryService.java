@@ -1094,10 +1094,10 @@ public interface QueryService {
      * Find essential flows from a part.
      *
      * @param part        a part
-     * @param assumeFails boolean whether downstream alternate flows assumed to fail
+     * @param assumeAlternatesFail boolean whether downstream alternate flows assumed to fail
      * @return a list of flows
      */
-    List<Flow> findEssentialFlowsFrom( Part part, Boolean assumeFails );
+    List<Flow> findEssentialFlowsFrom( Part part, Boolean assumeAlternatesFail );
 
     /**
      * If a part or sharing flow fail, what risk mitigating parts would also fail?
