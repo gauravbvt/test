@@ -490,11 +490,11 @@
             <plugin>
                 <groupId>com.agilejava.docbkx</groupId>
                 <artifactId>docbkx-maven-plugin</artifactId>
-                <version>2.0.11</version>
+                <version>2.0.13</version>
                 <executions>
                     <execution>
                         <configuration>
-                           <!--<ignoreImageScaling>false</ignoreImageScaling>-->
+                           <ignoreImageScaling>true</ignoreImageScaling>
                             <!--<generateToc>true</generateToc>
                             <generateIndex>true</generateIndex>-->
                             <!--<targetDirectory>${basedir}/src/webapp/doc</targetDirectory>-->

@@ -1092,27 +1092,6 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         return results;
     }
 
-    /**
-     * Find all important flows downstream of part, without circularity.
-     *
-     * @param visited already visited parts
-     * @return a list of important flows
-     */
-    public List<Flow> findImportantFlowsFrom( Set<Part> visited ) {
-
-        if ( visited.contains( this ) )
-            return Collections.emptyList();
-
-        visited.add( this );
-        Set<Flow> importantFlows = new HashSet<Flow>();
-        for ( Flow flow : getAllSharingSends() )
-            if ( flow.isImportant() ) {
-                importantFlows.add( flow );
-                importantFlows.addAll( ( (Part) flow.getTarget() ).findImportantFlowsFrom( visited ) );
-            }
-
-        return new ArrayList<Flow>( importantFlows );
-    }
 
     public String getOperationalLabel() {
         return isEffectivelyOperational() ? "Yes" : "No";

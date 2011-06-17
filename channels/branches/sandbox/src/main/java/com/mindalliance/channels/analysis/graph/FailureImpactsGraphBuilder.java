@@ -29,13 +29,13 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
     /**
      * Whether all alternates to downstream sharing flows are presumed to also fail.
      */
-    boolean assumeFails;
+    boolean assumeAlternatesFail;
 
     private QueryService queryService;
 
-    public FailureImpactsGraphBuilder( SegmentObject segmentObject, boolean assumeFails ) {
+    public FailureImpactsGraphBuilder( SegmentObject segmentObject, boolean assumeAlternatesFail ) {
         this.segmentObject = segmentObject;
-        this.assumeFails = assumeFails;
+        this.assumeAlternatesFail = assumeAlternatesFail;
     }
 
     public DirectedGraph<Node, Flow> buildDirectedGraph() {
@@ -53,15 +53,17 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
                     }
 
                 } );
-        populateSegmentGraph( digraph );
+        populateGraph( digraph );
         return digraph;
     }
 
-    private void populateSegmentGraph(
+    private void populateGraph(
             DirectedGraph<Node, Flow> graph ) {
-        List<Flow> essentialFlows = segmentObject.getEssentialFlows( assumeFails, queryService );
+        List<Flow> essentialFlows = segmentObject.getEssentialFlows( assumeAlternatesFail, queryService );
         if ( segmentObject instanceof Flow ) {
-            essentialFlows.add( (Flow) segmentObject );
+            Flow flow = (Flow)segmentObject;
+            if ( flow.isImportant() && ( assumeAlternatesFail || queryService.getAlternates( flow ).isEmpty() ) )
+                essentialFlows.add( flow );
         } else {
             graph.addVertex( ( Part )segmentObject );
         }
