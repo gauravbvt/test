@@ -177,7 +177,7 @@
 
             <mediaobject>
               <imageobject>
-                <imagedata fileref="quick_tour/ISP_metamodel.png"></imagedata>
+                <imagedata fileref="user_guide_images/ISP_metamodel.png"></imagedata>
               </imageobject>
             </mediaobject>
           </screenshot></para>
@@ -6155,43 +6155,42 @@
 
               <row>
                 <entry><para>Too many participations as agent</para></entry>
-                
+
                 <entry><para>Medium</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Unassign users</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>or make the agent an archetype</para>
-                  </listitem>
-                  
-                  <listitem>
-                    <para>or make the agent a placeholder of which there can be more than one</para>
-                  </listitem>
-                  
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Unassign users</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or make the agent an archetype</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or make the agent a placeholder of which there can
+                      be more than one</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>No</para></entry>
               </row>
- 
+
               <row>
-                <entry><para>More than one send can terminate the task</para></entry>
-                
+                <entry><para>More than one send can terminate the
+                task</para></entry>
+
                 <entry><para>Medium</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Have the task terminated by at most one send</para>
-                  </listitem>
-                  
-               </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Have the task terminated by at most one
+                      send</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>Yes</para></entry>
               </row>
-              
-            
             </tbody>
           </tgroup>
         </informaltable>
@@ -6342,15 +6341,15 @@
 
               <row>
                 <entry><para>Information capability or need has no element of
-                  information</para></entry>
-                
+                information</para></entry>
+
                 <entry><para>Low</para></entry>
-                
+
                 <entry><para>Add elements of information.</para></entry>
-                
+
                 <entry><para>Yes</para></entry>
               </row>
-              
+
               <row>
                 <entry><para>Sharing flow has no elements of
                 information</para></entry>
@@ -7019,41 +7018,41 @@
 
                 <entry><para>Yes</para></entry>
               </row>
-  
+
               <row>
                 <entry><para>Required channel address is empty</para></entry>
-                
-                <entry><para>Depends on impacted tasks or medium</para></entry>
-                
+
+                <entry><para>Depends on impacted tasks or
+                medium</para></entry>
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Enter a valid address</para>
-                  </listitem>
-                  
+                    <listitem>
+                      <para>Enter a valid address</para>
+                    </listitem>
                   </itemizedlist></entry>
-                
+
                 <entry><para>No</para></entry>
               </row>
- 
+
               <row>
-                <entry><para>Agent commits to share with supervisor but has none</para></entry>
-                
+                <entry><para>Agent commits to share with supervisor but has
+                none</para></entry>
+
                 <entry><para>Depends on impacted tasks</para></entry>
-                
+
                 <entry><itemizedlist>
-                  <listitem>
-                    <para>Identify the agent’s supervisor</para>
-                  </listitem>
-                  <listitem>
-                    <para>or remove the restriction to share only with a supervisor</para>
-                  </listitem>
-                  
-                </itemizedlist></entry>
-                
+                    <listitem>
+                      <para>Identify the agent’s supervisor</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>or remove the restriction to share only with a
+                      supervisor</para>
+                    </listitem>
+                  </itemizedlist></entry>
+
                 <entry><para>Yes</para></entry>
               </row>
-              
-            
             </tbody>
           </tgroup>
         </informaltable>
