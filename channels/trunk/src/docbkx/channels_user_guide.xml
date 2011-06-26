@@ -7,213 +7,445 @@
       xmlns:html="http://www.w3.org/1999/xhtml"
       xmlns:db="http://docbook.org/ns/docbook">
   <info>
-    <title>Information Sharing Planning with Channels</title>
-
+    <title>Channels Reference Guide</title>
     <copyright>
-      <year>2010</year>
+      <year>2011</year>
     </copyright>
-
-    <author>
-      <personname><firstname>Jean-Francois</firstname>
-      <surname>Cloutier</surname></personname>
-
-      <affiliation>
-        <orgname>Mind-Alliance Systems</orgname>
-      </affiliation>
-    </author>
-
-    <pubdate>December 11, 2010</pubdate>
-
+    <pubdate>June 20, 2011</pubdate>
     <abstract>
-      <para>This document introduces the key concepts of Information Sharing
-      Planning, gives a tour of the Channels ISP web application, defines the
-      ISP Method, and answers FAQs.</para>
+      <para>This document introduces key concepts of Information Sharing Planning and explains how
+        to apply the ISP Method using the Channels Web application to build and analyze information
+        sharing plans.</para>
     </abstract>
   </info>
 
   <chapter>
-    <title>Motivation and definitions</title>
+    <title>Information Sharing Planning (ISP)</title>
 
     <section>
-      <title>Why plan information sharing</title>
+      <title>Why plan the sharing of information?</title>
 
-      <para>Organizations operate in an increasingly inter-connected and
-      inter-dependent world. Systemic risks are growing. Organizations must
-      network to compete in a global marketplace. They can no longer respond
-      to major crisis nor can they seize global business opportunities on
-      their own.</para>
+      <para>Most organizations now operate in complex "ecosystems" where they depend on each other
+        for information critical to their missions. It is common wisdom that getting the right
+        information at the right time is essential to achieving mission success. This even more so
+        in a connected world where opportunities can be fleeting and risks can spread not only
+        quickly but far and wide. </para>
+      <para>Yet most organizations do not plan how they should share information within and across
+        organizational boundaries. It is something of a paradox that while they will plan their
+        finances or model their business processes to achieve greater efficiency, they will rarely
+        define how they need to communicate to prevent, respond or recover from crises.</para>
+      <para>Failure to plan how information should flow can cost lives, money, reputation. During a
+        crisis, information will not spontaneously flow as needed and maintaining contact lists is
+        clearly not enough. Organizations must prepare and create actionable information sharing
+        procedures. Information sharing can and should be planned not only to be prepared but also
+        to capture, retain and disseminate communication best practices. </para>
 
-      <para>Success now largely depends on the timely and targeted sharing of
-      information within and between organizations. During a crisis,
-      information will not spontaneously flow as needed. Maintaining contact
-      lists is not enough; organizations must plan ahead and create actionable
-      information sharing procedures.</para>
-
-      <para>Information Sharing Planning provides a framework and method for
-      designing and improving the information sharing procedures required to
-      successfully manage systemic risks and seize opportunities.</para>
+      <para><emphasis>Information Sharing Planning models, analyzes and deploys knowledge of how
+          organizations need to share information to mitigate systemic risks and seize opportunities
+          from anticipated events. </emphasis></para>
+      <para>Information Sharing Planning provides a framework and method for designing and improving
+        the information sharing procedures required by networked organizations to achieve their
+        missions. </para>
+      
     </section>
-
-    <section>
-      <title>Benefits and deliverables</title>
-
-      <para><emphasis>Information Sharing Planning captures, analyzes and
-      deploys knowledge of how organizations need to share information to
-      mitigate systemic risks and seize opportunities from anticipated events.
-      </emphasis></para>
-
-      <para>Information Sharing Planning (ISP) produces information sharing
-      procedures for event preparedness, response and recovery. Information
-      Sharing Plans capture commitments to share the information required for
-      organizations to fulfill their missions.</para>
-
-      <para>ISP uncovers:</para>
-
+      <section>
+        <title>Why use Channels to plan information sharing?</title>
+      <para>Channels is a Web application planners use to jointly build information sharing plans
+        (IS plans). Channels is meant for planning information sharing ahead of anticipated events.
+        It is not meant for managing the actual sharing of information during a crisis. </para>
+      <para>When building IS plans using Channels, planners clarify and uncover:</para>
       <itemizedlist>
         <listitem>
           <para>who needs what information, and why and when,</para>
         </listitem>
-
         <listitem>
-          <para>who has or can produce needed information, and how and
-          when,</para>
+          <para>who has or can produce needed information, and how and when,</para>
         </listitem>
-
         <listitem>
           <para>what information should flow, and when and how,</para>
         </listitem>
-
+        <listitem>
+          <para>flaws in information sharing practices,</para>
+        </listitem>
+        <listitem>
+          <para>how people, systems and organizations should be networked,</para>
+        </listitem>
         <listitem>
           <para>the consequences of not sharing according to Plan,</para>
         </listitem>
-
         <listitem>
-          <para>where shared information originally comes from and ultimately
-          ends up.</para>
+          <para>where shared information originally comes from and ultimately ends up.</para>
         </listitem>
       </itemizedlist>
-
-      <para>The deliverables of ISP are:</para>
-
+      <figure>
+        <title>Channels home page</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/home_page_planner.png" scale="75" align="center"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <db:para>Building an IS plan in Channels can be divided into<db:itemizedlist>
+          <db:listitem>
+            <para>1- modeling information sharing practices (IS practices)</para>
+          </db:listitem>
+          <db:listitem>
+            <para>2- profiling the environment (organizations, places etc.) the IS practices appy
+              to</para>
+          </db:listitem>
+        </db:itemizedlist></db:para>
+      <db:para>When modeling IS practices, planners describe what kind of the people and systems
+        (let's call them <db:firstterm>agents</db:firstterm>) are to be assigned to planned tasks.
+        More importantly, planners describe what information would be acquired by the execution of a
+        task and then shared with others who need it to carry out their own tasks. The IS practices
+        model would normally not identify task assignees by name but rather specify them by their
+        roles, qualifications and/or jurisdictions and by the types of organizations they belong to. </db:para>
+      <db:para>When entering the profiles of people, systems and organizations into an IS plan,
+        planners do so with the expectation that the profiles will match the descriptions of task
+        assignees. Once assigned to a task, an agent becomes committed to sharing information
+        acquired by executing the task as specified by the (modeled) IS practices.</db:para>
+      <figure>
+        <title>IS practices modeling interface</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/is_modeling.png" scale="75" align="center"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <db:para>All modeling is done via input forms. At all times, even if only minimal data has
+        been entered, an IS plan can be visualized, analyzed, diagnosed and applied to profiled
+        people and systems in organizations.</db:para>
+      <figure>
+        <title>Sample IS modeling form in Channels - Information flow form</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/interpreted_send.png" scale="75" align="center"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>By using Channels to build IS plans, planners produce:</para>
       <itemizedlist>
         <listitem>
-          <para>documented information sharing procedures</para>
+          <para>a reusable, transportable model of informations sharing (best) practices,</para>
         </listitem>
-
+        <listitem>
+          <para>actionable, personalized information sharing guidelines (IS practices applied to
+            profiled agents),</para>
+        </listitem>
         <listitem>
           <para>information flow analytics and visualizations,</para>
         </listitem>
-
         <listitem>
-          <para>detected information sharing gaps, bottlenecks and single
-          points of failure.</para>
+          <para>detected information sharing gaps, bottlenecks, single points of failure, and other
+            issues.</para>
         </listitem>
       </itemizedlist>
-
-      <para>It is important understand that an Information Sharing Plan is
-      <emphasis>not</emphasis> an action plan; it's objective is not to
-      dictate a sequence of actions nor is it to optimize processes.<footnote>
-          <para>However, task sequencing is not entirely absent from ISP. The
-          execution of a task may require information produced by the prior
-          execution of another task. These sequencing constraints do not
-          typically apply to all tasks and they certainly do not dictate a
-          unique ordering for all tasks. The fact that an IS Plan does not
-          dictate a strict sequence of tasks is a good thing. Attempting to
-          define an action plan for organizations that don't have a central
-          authority can be an exercise in futility. What really matters here
-          is capturing what needs to be done and then how information must
-          flow to make it possible.</para>
-        </footnote>Information sharing planning concerns itself exclusively
-      with capturing the information sharing requirements of tasks that must
-      be executed to manage disruptive events.</para>
-    </section>
+      <db:para>A model of information sharing practices is visualized primarily as information flow
+        maps. Information flow maps depict (specifications of)  tasks connected by information
+        flows.</db:para>
+      <figure>
+        <title>Snippet of a flow map</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/flow_map.png" align="center" scale="75"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <db:para>Channels automatically detects issues in an IS plan (upward of 90 different types of
+        issues). Issues are communicated to planners visually (tasks and flows drawn in red) and in
+        other ways as well (issue panels throughout, all-issues table, issue summary report). The
+        entire set of outstanding issues is recalculated with every change planners make to the
+        plan. Planners can manually indicate issues that Channels could not detect, usually because
+        they require domain knowledge.</db:para>
+      <db:para>An issue has a description, a list of suggested remediations, and a severity level
+        (minor, major, severe, extreme). The severity of an issue is either a constant for the type
+        of issue, or it is calculated from the potential cascade of task failures attributable to
+        the issue, in which case the severity is set by the most severe risk not mitigated or the
+        most valuable gain not realized because of the failure.</db:para>
+      <figure>
+        <title>Examples of issue detection and reporting</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/issue_detection.png" align="center" scale="75"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <db:para>Diagnostics is one kind of analysis Channels can perform on an IS practices model.
+        Another is failure impact analysis. Channels can show what would happen should a planned
+        task not be performed or should some information not be shared as planned.</db:para>
+      <figure>
+        <title>Failure impact analysis</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/failure_impacts.png" scale="75" align="center"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <db:para>Other question Channels can answer about IS practices once modeled are Where would
+        elements for information come from or end up according to plan? Would it arrive in time? How
+        is it transformed along the way?</db:para>
+      <figure>
+        <title>Dissemination analysis - provenance</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/dissemination_from_sources.png" scale="75"
+              align="center"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <db:para>Channels applies the modeled IS practices to the actual people and systems it knows
+        about based on the roles they play within organizations also known to it. The results are
+        personalized IS guidelines that can be accessed online by participants in the IS plan and
+        printed.</db:para>
+      <figure>
+        <title>Snippet from IS guidelines</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/guidelines_in_out.png" scale="75" align="center"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <db:para>By applying modeled IS practices to known people and systems in organizations,
+        Channels can determine how organizations ought to be networked so that the IS plan can be
+        realized.</db:para>
+      <figure>
+        <title>An organization's network based on an IS plan</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/organization_network.png" scale="75"
+              align="center"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <db:para>While the effort required to model IS practices far exceeds that of simply drawing
+        information flow maps using a drawing tool, the benefits of modeling IS practices using
+        Channels are substantial and include the automated generation of personalized IS guidelines,
+        issue detection, and analyses that illuminate the properties and consequences of applying
+        these practices.</db:para>
+      <db:para>Channels is to information sharing what spreadsheets are to financial planning, and
+        what Business Process Modeling is to business operations.  </db:para>
+        </section>
 
     <section>
-      <title>What is an Information Sharing Plan?</title>
+      <title>ISP concepts</title>
 
       <section>
-        <title>In a nutshell</title>
+        <title>Information sharing plan</title>
+        <db:para>An <firstterm linkend="information_sharing_plan">Information Sharing
+            Plan</firstterm> specifies the <db:firstterm>information sharing
+            commitments</db:firstterm> required of people and systems (<firstterm linkend="agent"
+            >agents</firstterm>) in <firstterm linkend="role">roles</firstterm> of responsibility to
+          fulfill the missions of their <firstterm linkend="organization">organizations</firstterm>,
+          before, during and/or after <firstterm linkend="event">events</firstterm> of significance. </db:para>
+        <db:para>Agents achieve their organizations' missions by executing
+            <db:firstterm>tasks</db:firstterm> assigned to them individually or as teams. By
+          executing their assigned tasks, agents directly manage <firstterm linkend="risk"
+            >risks</firstterm>, achieve <firstterm linkend="gain">gains</firstterm>, and/or produce
+          information needed by other tasks. <firstterm linkend="information_sharing_flow"
+            >Information sharing flows</firstterm> connect tasks that produce information with tasks
+          that require it to be triggered, terminated, or to be successful . Information can be
+          shared between people, people and systems or between systems, over <firstterm
+            linkend="transmission_medium">transmission media</firstterm> or face to face. Sharing
+          can be subject to <firstterm linkend="policy">policies</firstterm>.</db:para>
 
-        <para>An <firstterm linkend="information_sharing_plan">Information
-        Sharing Plan</firstterm> captures the <firstterm
-        linkend="information_sharing_procedure">information sharing
-        procedures</firstterm> (<firstterm linkend="task">tasks</firstterm>
-        and information sharing) that people and systems (<firstterm
-        linkend="agent">agents</firstterm>) in <firstterm
-        linkend="role">roles</firstterm> of responsibility are expected to
-        apply, within their <firstterm
-        linkend="jurisdiction">jurisdictions</firstterm>, in order to fulfill
-        the missions of their <firstterm
-        linkend="organization">organizations</firstterm> before, during and/or
-        after <firstterm linkend="event">events</firstterm> of
-        significance.</para>
+        <para>When defining a task, the agents to be assigned to it can be identified or specified
+          more or less broadly by identifying an agent directly or by specifying assignees in terms
+          of their organizations, <db:firstterm>roles</db:firstterm>,
+            <db:firstterm>qualifications</db:firstterm> and/or
+            <db:firstterm>jurisdictions</db:firstterm>. Agents are bound by information sharing
+          commitments whenever they are assigned to tasks that are connected by flows to other
+          tasks. These agents commit to share the <firstterm linkend="information"
+            >information</firstterm> they produce or obtain doing task with some or all agents who
+          execute the connected-to tasks that consume the information. Information shared with a
+          task and not others is meant to used only to carry out the task and not the others.</para>
+        <figure>
+          <title>ISP concepts</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/ISP_metamodel.png" align="center" scale="75"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <para>It is important understand that an Information Sharing Plan is not an
+            <db:emphasis>action</db:emphasis> plan. Unlike Business Process Modeling, the objective
+          is not to optimize, script and automate activities. The overarching objective of building
+          an IS plan is to ensure that information does flow as required in order to successfully
+          manage risks and capture opportunities. </para>
+        <para>Task sequencing is however not entirely absent from ISP. A task triggered by
+          information requires the prior execution of another task producing it. Such sequencing
+          constraints do not typically apply to all tasks in an IS plan and thus an IS plan will
+          most often not dictate a unique sequence for all tasks. This is a good thing. Attempting
+          to define a precisely orchestrated action plan for organizations without a central
+          authority is almost always an exercise in futility. So, while an IS plan certainly
+          captures what needs to be done, the focus is on how information needs to flow to ensure
+          that mission-accomplishing tasks are successful. The details of exactly how these tasks
+          are to be executed is outside the scope of ISP. </para>
+      </section>
+      <db:section>
+        <title>IS plan = IS practices + environment</title>
+        <para>An IS plan can be understood as <db:firstterm>information sharing
+            practices</db:firstterm> applied to an <db:firstterm>environment</db:firstterm>.
+          Information sharing practices are specifications of tasks and the information flows
+          between them. An environment is composed of agents (people and systems) in roles of
+          responsibility within organizations. These agents are assigned to flow-connected tasks and
+          as a result are given information sharing commitments.</para>
+        <figure>
+          <title>Flow-connected tasks in the IS practices model of an IS plan</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/flow_map.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>In order to separate (decouple) IS practices and environment, it is recommended to
+          model IS practices without mention of actual organizations or actual people or systems,
+          that is, it is best to specify tasks as being executed by "disembodied" roles from
+            <db:emphasis>types</db:emphasis> of organizations (e.g. a "forensic autopsy" is to be
+          carried by a "coroner" from a "county health office"). IS practices models that are not
+          attached to a particular environment can be applied, possibly with some modifications, to
+          various environments.</db:para>
+        <figure>
+          <title>Profile of an actual organization populating the environment of an IS plan</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/profile_actual_organization_1.png"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>An IS plan's environment identifies the actual people or systems that play the
+          organizational roles mentioned in the IS practices model (or IS model for short). For
+          example, planners could build an IS model for responding to an epidemic outbreak at the
+          state level, and then apply the same IS model to different states, each state being a
+          different environment with its own organizations and role-assigned agents.</db:para>
+        <db:para>Note that there is not yet explicit support in the current release of Channels for
+          separately managing the IS model and environment of an IS plan, or for explicitly
+          composing IS plans by applying one reusable IS model to different environments. A
+          forthcoming release of Channels will provide such support. In the meanwhile, planners are
+          strongly encouraged to follow the above best practice of keeping the IS model as decoupled
+          as possible from the IS plan's environment.</db:para>
+      </db:section>
 
-        <para>Tasks manage <firstterm linkend="risk">risks</firstterm>,
-        achieve <firstterm linkend="gain">gains</firstterm> and/or produce
-        information needed by other tasks. <firstterm
-        linkend="information_sharing_flow">Information sharing
-        flows</firstterm> connect tasks that produce information with tasks
-        that consume it. Shared information is communicated over <firstterm
-        linkend="transmission_medium">transmission media</firstterm> or face
-        to face. Sharing can be subject to <firstterm
-        linkend="policy">policies</firstterm>.</para>
+      <section>
+        <title>Event phases, goals and segments</title>
+        <db:para>The scope of an IS plan is primarily set by identifying the events of significance
+          the plan must address. (A plan's scope is also set by the list of organizations that
+          expected to participate in the plan.) An event of significance (or event for short) is
+          something that is true somewhere for some time and that challenges, in and of itself, the
+          mission of one or more organizations by introducing risks or by creating opportunities.
+          Organizations will assign their agents to mitigate these risks or make gains by capturing
+          those opportunities. An event can bring different risks or opportunities to different
+          organizations. For example, an explosion at a refinery, clearly an event of significance,
+          endangers the lives of workers, would likely cause financial losses to insurers, and might
+          profit commodity traders.</db:para>
+        <db:para>The events in an IS plan are not actual events that did or will occur at specific
+          times and locations. They are implicitly <db:emphasis>types</db:emphasis> of events that
+          might happen in some indeterminate future in some location that can be identified (e.g. in
+          New Yor City) or can be specified (e.g. in a large urban area).</db:para>
+        <figure>
+          <title>An event's definition</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/profile_event.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>Risks and opportunities can exist in the before, during or after
+            <db:firstterm>phases</db:firstterm> of an event (aka <db:firstterm>event
+            phases</db:firstterm>). Typically the purpose of tasks in a "before" phase of an event
+          will be to cause or prevent the event. Tasks in a "during" phase of an event will normally
+          be about responding to the event as it is unfolding in order to minimize its negative
+          consequences or maximize positive outcomes. Tasks in an "after" phase will often deal with
+          recovering from the aftermath of an event, or reaping its rewards. </db:para>
+        <db:para>An IS plan will typically focus on at least one and at most a few events of
+          significance, cover one or more phases for each of these events. Events within the scope
+          of a plan are a combination of events that happen outside the control of the participants
+          of the plan (so-called incident) and of events caused by planned tasks (and thus under the
+          control of participants).</db:para>
+        <figure>
+          <title>Events in the scope of an IS plan</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/events.png"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>An IS plan should also only address a manageable number of associated
+          organizational risks or opportunities. It is recommended, when starting on a new IS plan,
+          not to involve too many organizations in too many phases of too many events. It is better
+          to start small and focused and then grow as needed.</db:para>
 
-        <para>A task specifies, in more or less generic terms, which agents
-        should be assigned to it, individually or as teams. Information
-        sharing procedures are generated by matching agents within the scope
-        of the Plan to the tasks. Agents are bound by <firstterm
-        linkend="information_sharing_commitment">information sharing
-        commitments</firstterm> whenever they are assigned to tasks that are
-        connected by flows to other tasks. These agents commit to share the
-        <firstterm linkend="information">information</firstterm> they produce
-        with all agents who execute the connected-to tasks that consume it. An
-        implied but important constraint is that information can only be used
-        to execute tasks for which it is explicitly shared.</para>
-
-        <para><screenshot>
-            <info>
-              <title>Main ISP concepts</title>
-            </info>
-
-            <mediaobject>
-              <imageobject>
-                <imagedata fileref="user_guide_images/ISP_metamodel.png"></imagedata>
-              </imageobject>
-            </mediaobject>
-          </screenshot></para>
+        <para>Information sharing plans typically deal with more than one event phase, and they can
+          involve a sizable number of organizations. Because plans can become quite large, planners
+          break them into smaller, more manageable units of planning called
+            <db:firstterm>segments</db:firstterm>.</para>
+        <figure>
+          <title>A segment defined</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/segment_details.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <para>An IS plan <glossterm>segment</glossterm> covers only one phase of one event, possibly
+          in the context of some other event phases. For example, a segment might focus on
+          responding to a "stock price rally" (event phase focus) during "a volatile market" and
+          after a prior "hostile takeover attempt" (context event phases). Event phases cited as
+          context can only be of the "during" and "after" phases but never in the "before" phase,
+          since one is always in the "before" phase of any anticipated event. </para>
+        <para>A segment might address all or only some of the organizational goals associated with
+          an event phase. In other words, more than one segment may be dedicated to a given event
+          phase with each segment addressing a different list of organization goals.Two segment
+          should not address the same goal for the same event phase.</para>
+        <figure>
+          <title>Organizational goals addressed in a segment</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/segment_goals.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>A segment lists one or more organization goals (a segment without goals is an issue
+          detected by Channels). A goal is either a risk to an organization (or type of
+          organization) to be mitigated, or a gain to be realized by an organization (or type of).
+          Each risk is categorized from a list of types risks derived from actuarial risk management
+          taxonomies. Each gain is also categorized from a list that is the "mirror image" of the
+          risk types. Risks are rated as minor, major, sever or extreme. Goals are rated as low,
+          medium, high or highest. Planners can indicate if a risk is implicitly mitigated or a gain
+          implicitly realized once the event phase covered by the segment is terminated.</db:para>
+        <para>Every task and flow in an IS plan belongs to one and only one segment. A segment
+          should contains all the flow-enabled tasks that directly achieve the segment's goals, plus
+          flow-enabled tasks on which goal-achieving tasks depend to start, terminate or
+          succeed.</para>
+        <para>[TODO: screenshot here] </para>
+        <para>Segments are normally not disjoint; flows usually connect one or more tasks in one
+          segment to tasks in another. Furthermore a task in one segment might initiate the event
+          phase addressed by the other segment either by causing an event or terminating it.
+          (Initiation of an event starts the "during" phase of that event and terminates its
+          "before" phase. Termination of an event starts the "after" phase of that event.)</para>
+        <figure>
+          <title>The inter-connected segments in an IS plan</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/segments.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
 
       <section>
-        <title>Plan segments</title>
+        <title>Flows and tasks</title>
 
-        <para>Information sharing plans typically deal with more than one
-        phase of more that one anticipated event, and they can involve a large
-        number of organizations. Because plans can become quite large,
-        planners break them into smaller, more manageable units of planning
-        called segments.</para>
-
-        <para>An information sharing <glossterm>segment</glossterm> covers
-        only one phase of one event and addresses some of the related
-        organizational goals. A segment will typically focus on just a few
-        goals. Segments usually depend on other segments. Two segments are
-        co-dependent when information produced by a task in one segment is
-        consumed by a task in the other, or when a task in one segment
-        initiates the event phase covered by the other segment.</para>
-      </section>
-
-      <section>
-        <title>Tasks and flows</title>
-
-        <para>A task describes an action carried out at some location and for
-        some purpose by one or more agents. Agents act to fulfill the
-        responsibilities of roles bestowed on them by organizations. The
-        agents expected to carry out a task can be identified by any
-        combination of name, role, jurisdiction and organization. The executor
-        of a task may be identified only partially (for example, by role and
-        organization only) so that more than one person or system will match
-        the profile and get assigned to the task. According to a tasks'
-        definition, those assigned to the task are expected to carry it out
-        either as a team or on their own.</para>
+        <para>Flows and the tasks they connect are the building blocks of the IS practices model in
+          an IS plan. A task describes an action carried out at some location and for some purpose
+          by one or more agents. Agents act to fulfill the responsibilities of roles bestowed on
+          them by organizations. The agents expected to carry out a task can be identified by any
+          combination of name, role, jurisdiction and organization. The executor of a task may be
+          identified only partially (for example, by role and organization only) so that more than
+          one person or system will match the profile and get assigned to the task. According to a
+          tasks' definition, those assigned to the task are expected to carry it out either as a
+          team or on their own. The timing aspects of a task execution can be given, namely, how
+          long it takes to complete and how soon it repeats, if at all. A task might initiate or
+          prevent an event.</para>
 
         <para>Tasks are considered useful if they:</para>
 
@@ -243,13 +475,18 @@
           </listitem>
 
           <listitem>
-            <para>requests for information they receive,</para>
-          </listitem>
-
-          <listitem>
-            <para>the failure of a task.</para>
+            <para>requests for information they receive</para>
           </listitem>
         </itemizedlist>
+        <figure>
+          <title>Details of a task</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/interpreted_task.png" align="center" scale="75"
+              />
+            </imageobject>
+          </mediaobject>
+        </figure>
 
         <para><glossterm>Information flows</glossterm> link tasks that produce
         information to tasks that consume it. A flow is characterized
@@ -257,9 +494,15 @@
 
         <itemizedlist>
           <listitem>
-            <para>the information communicated (down to its elements, each
-            with optional secrecy classifications and optional sourcing and
-            handling instructions),</para>
+            <para>whether the flow is a notification, a request or a reply</para>
+          </listitem>
+          <listitem>
+            <para>the information (to be) communicated (down to its elements, each with optional
+              secrecy classifications and sourcing and handling instructions),</para>
+          </listitem>
+          <listitem>
+            <para>whether the context in which the source task is being executed (e.g. responding to
+              a suspected attack) is also to be communicated, </para>
           </listitem>
 
           <listitem>
@@ -268,7 +511,7 @@
           </listitem>
 
           <listitem>
-            <para>whether it is executed only on task failure</para>
+            <para>whether the flow is conditional on task failure</para>
           </listitem>
 
           <listitem>
@@ -283,8 +526,11 @@
           </listitem>
 
           <listitem>
-            <para>a list of preferred transmission media (phone, face-to-face
-            etc.),</para>
+            <para>a list of preferred transmission media (phone, face-to-face etc.),</para>
+          </listitem>
+          <listitem>
+            <para>the urgency (maximum delay from earliest availability if a notification, or
+              maximum delay from request if a reply)</para>
           </listitem>
 
           <listitem>
@@ -300,134 +546,215 @@
             <para>policies that mandate or prohibit sharing.</para>
           </listitem>
         </itemizedlist>
+        <figure>
+          <title>Information sent from a task</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/interpreted_send.png"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>Tasks can have <db:firstterm>information needs</db:firstterm> (information agents
+          executing the task require), <db:firstterm>information capabilities</db:firstterm>
+          (information acquired by the execution of the task that can then be shared), or both. An
+          information flow implicitly specifies an information need of the receiving task that is
+          satisfied by the implied information capability of the sending task. Planners can
+          explicitly specify information needs and capabilities of a task.</db:para>
+        <db:para>Explicitly specifying an information need of a task allows Channels to
+          automatically verify if the need is satisfied (all elements supplied in a timely manner by
+          incoming flows) and to find information-capable tasks that could be connected by flows to
+          satisfy the information need.</db:para>
+        <figure>
+          <title>An information need appears in a flow map as a flow without a source task</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/interpreted_need_map.png" scale="75"
+                align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <figure>
+          <title>Details of an information need</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/interpreted_need.png" align="center" scale="75"
+              />
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>Specifying an explicit information capability allows Channels to automatically
+          verify if the sharing capability is being exercised and to find tasks to connect to so
+          that the capability can satisfy their needs.</db:para>
+        <figure>
+          <title>An information capability appears in a flow map as a flow with no target
+            task</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/interpreted_capability_map.png" scale="75"
+                align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <figure>
+          <title>Details of an information capability</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/interpreted_capability.png" align="center"
+                scale="75"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
 
       <section>
         <title>Entities</title>
 
-        <para>Plans, segments, tasks, information needs, capabilities and
-        sharing flows are defined in terms of agents, places, roles,
-        organizations, events, transmission media and phases of events. These
-        are called entities. An ISP entity can be unambiguously referenced by
-        name in the specifications of tasks and flows, and in the profiles of
-        other entities. An entity in ISP is anything that can be named while
-        not something an agent does.</para>
+        <para>An IS plan references by name various agents, places, roles, organizations, events,
+          transmission media and phases of events. These are referred to in ISP as entities. An
+          entity in ISP is anything that can be named in an IS plan but is neither a task nor
+          information. An ISP entity can be unambiguously referenced by name in the specifications
+          of a plan, segments, tasks and flows, or in the profiles of other entities (e.g. there can
+          only be one agent named "John Doe", only one event named "lawsuit filed" etc.). </para>
 
-        <para>There are actual entities and types of entities. Actual entities
-        (“Jane Smith”, “ACME Inc.”, “Morristown, Morris County, NJ, USA” etc.)
-        are categorized by types of entities (“Senior executive”,
-        “Corporation”, “City” etc.). Entity types can refine other entity
-        types (a “Senior executive” is an “Executive”).</para>
+        <para>There are both actual entities and there are types of entities. Actual entities (“Jane
+          Smith”, “ACME Inc.”, “Morristown, Morris County, NJ, USA” etc.) are categorized by types
+          of entities (“Senior executive”, “Corporation”, “City” etc.). Entity types can refine
+          other entity types (a “Senior executive” is a kind of “Executive”).</para>
 
-        <para>An <glossterm>agent</glossterm> is either a person or an
-        information system (system for short). A system is capable of sending
-        notifications, answering queries, receiving notifications or sending
-        queries. An agent has contact information and availability (24/7 by
-        default). An agent's clearance is a list of secrecy classifications. A
-        secrecy classification has a name (“NATO”) and an ordered list of
-        secrecy levels (“Restricted”, “Confidential”, “Secret”, “Focal Top
-        Secret”, “Cosmic Top Secret”). An agent type can be thought of as a
-        qualification that can be shared by different agents (e.g. "adult" or
-        "registered driver"). An agent type is not to be confused with a role.
-        A role implies responsibilities whereas an agent type denotes
-        qualifications or status. An agent can be flagged as a system
-        (non-human). When a group of agents are indistinguisable from a
-        planning perspective (for example, call center operators), they can be
-        profiled as a single <glossterm>archetype</glossterm> agent (for
-        example, "a call center operator").</para>
+        <para>An <glossterm>agent</glossterm> is either a person or an information system (system
+          for short). An agent is capable of sending notifications, answering queries, receiving
+          notifications or sending queries. An agent has contact information and availability (24/7
+          by default). An agent's clearance is a list of secrecy classifications. </para>
+        <para>An agent type can be thought of as a qualification that can be shared by different
+          agents (e.g. "Adult" or "Registered driver"). An agent type is not to be confused with a
+          role. A role implies responsibilities whereas an agent type denotes qualifications or
+          status. An agent can be flagged as a system (non-human). When a group of agents are
+          indistinguishable from a planning perspective (for example, call center operators), they
+          can be profiled as a single <glossterm>archetype</glossterm> agent (for example, "a call
+          center operator"). When the identity of an agent is to be resolved by associating the
+          agent with one or more users of Channels, the agent is marked as a
+            <db:firstterm>placeholder</db:firstterm>. (More on this later.) Agents are references in
+          the definitions of tasks and of organizations (their members and their
+          supervisors).</para>
 
-        <para>An <glossterm>organization</glossterm> is a group of agents
-        organized to accomplish a mission. An organization assigns roles of
-        responsibility to the persons and systems that act on its behalf. An
-        organization has contact information and may contain other
-        organizations. An organization may have information sharing agreements
-        with other organizations to formalize the sharing commitments its
-        members have with members of other organizations.</para>
+        <para>An <glossterm>organization</glossterm> is a group of agents organized to accomplish a
+          mission. An organization assigns roles of responsibility to the persons and systems that
+          act on its behalf. An organization has contact information and may contain other
+          organizations. An organization may have information sharing agreements with other
+          organizations to formalize the sharing commitments its members have with members of other
+          organizations. Organizations are referenced in the definitions of a plan itself
+          (organizations that are expected to participate), in segments (organizational risks),
+          tasks and as parents of other organizations.</para>
 
-        <para>A <glossterm>role</glossterm> is a set of powers and
-        responsibilities bestowed by an organization to an agent acting on
-        behalf of the organization. A role assignment may be restricted to a
-        jurisdiction (a place).</para>
+        <para>A <glossterm>role</glossterm> is a set of powers and responsibilities bestowed by an
+          organization to an agent acting on behalf of the organization. A role assignment may be
+          restricted to a jurisdiction (a place). A role is always an entity type. Roles are
+          referenced in tasks and in organizations (roles played by their members).</para>
 
-        <para>A <glossterm>place</glossterm> is either a geographical area
-        (some city, county, state, country, natural preserve etc.) or a known
-        location (some train station, building etc.). A place can be contained
-        in another (for example, a building can be in a campus). An event and
-        an event type can both be scoped to a place.</para>
+        <para>A <glossterm>place</glossterm> is either a geographical area (some city, county,
+          state, country, natural preserve etc.) or a known location (some train station, building
+          etc.). A place can be contained in another (for example, a building can be in a campus).
+          Places are referenced in a plan's definition (the plan's default locale), in events (an
+          event and an event type can both be located to a place), in tasks (location of execution
+          and jurisdiction of assignees), in organizations (address and jurisdictions of
+          members).</para>
 
-        <para>A <glossterm>phase</glossterm> names a time period relative to
-        an event. A phase of an event is either set to before, during or after
-        the event. Typical phases are “Preparing”, “Responding” and
-        “Recovering”.</para>
+        <para>A <glossterm>phase</glossterm> names a time period relative to events. A phase is
+          either set to before, during or after. Typical phases are “Preparing”, “Responding” and
+          “Recovering”. A phase is always an entity type. Phases are referenced in a plan's
+          definition (phases in scope), and in segments (event phase in focus and event phases in
+          context).</para>
 
-        <para>A <glossterm>transmission medium</glossterm> is a means by which
-        agents transmit information to one another. A medium is either unicast
-        (transmits to a single, known agent), multicast (transmits to
-        multiple, known agents) or broadcast (little to no control over who
-        receives the transmission). Transmission media may or may not be
-        technology-based. “Telephone”, “Email”, “Instant Messaging” are
-        examples of unicast communication media, and so is “Face-to-face”.
-        “Notification system” and “Meeting” are both multicast media.
-        “Television”, “Radio” and “PA System” are examples of broadcast media.
-        A transmission medium can delegate transmissions to other media (for
-        example, VoIP can interface with Telephones). The security of a medium
-        is expressed in terms of secrecy classifications.</para>
+        <para>A <glossterm>transmission medium</glossterm> is a means by which agents transmit
+          information to one another. A medium is either unicast (transmits to a single, known
+          agent), multicast (transmits to multiple, known agents) or broadcast (little to no control
+          over who receives the transmission). Transmission media may or may not be
+          technology-based. “Telephone”, “Email”, “Instant Messaging” are examples of unicast
+          communication media, and so is “Face-to-face”. “Notification system” and “Meeting” are
+          both multicast media. “Television”, “Radio” and “PA System” are examples of broadcast
+          media. A transmission medium can delegate transmissions to other media (for example, VoIP
+          can interface with Telephones). The security of a medium is expressed in terms of secrecy
+          classifications. A transmission medium is always an entity type. Transmission media are
+          referenced in the communication channels for information flows, needs and capabilities, in
+          the communications channels of agents and organizations, and in other transmission media
+          that delegate to them.</para>
+        <db:para>Actual entities can be categorized by entity types of the same kind (agents are
+          categorized by agent types etc.) but entity types themselves can be categorized by other
+          entity types, thus forming implicit typologies.</db:para>
+        <figure>
+          <title>A typology of roles</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/typology_role.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
-
-      <section>
-        <title>Issues</title>
-
-        <para>ISP identifies many different kinds of
-        <glossterm>issues</glossterm> (80 and counting) about tasks,
-        information flows, entities and entire segments and plans. There are
-        issues of validity (definition errors), completeness (something
-        obvioudly missing from the Plan) and robustness (something that makes
-        the Plan failure-prone). An issue has a description, a list of
-        suggested remediations, and a severity level (minor, major, severe,
-        extreme). The severity is either a constant or it is calculated from
-        the potential cascade of task failures attributable to the
-        issue.</para>
-      </section>
+      <db:section>
+        <title>Secrecy classifications</title>
+        <para>An IS plan can optionally define secrecy classifications. A secrecy classification has
+          a name (e.g. “NATO”) and an ordered list of secrecy levels (“Restricted”, “Confidential”,
+          “Secret”, “Focal Top Secret”, “Cosmic Top Secret”). Secrecy levels are listed in
+          increasing order. Secrecy classifications are used not only to define agent clearances but
+          also to set the classification of elements of information and the security of transmission
+          media.</para>
+        <figure>
+          <title>Secrecy classifications</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/secrecy_classifications.png"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </db:section>
 
       <section>
         <title>The meaning of information in ISP</title>
 
-        <para>Tasks and flows are defined in terms of information needed,
-        uncovered and shared. The information is named and is broken into
-        atomic elements. Each element of information is named, can be given
-        security classifications and can be annotated with a description,
-        handling instructions and with transformative relationships to other
-        elements of information.</para>
+        <para>Tasks and flows are defined in terms of information needed, uncovered and shared. The
+          information is named and is broken into atomic elements. Each <db:firstterm>element of
+            information</db:firstterm> is named, can be given security classifications and can be
+          annotated with a description and handling instructions. </para>
+        <figure>
+          <title>Elements of information</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/eoi_transformation.png" scale="75"
+                align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <para>An element of information sent from a task can also be annotated with transformative
+          relationships to other elements of information received by the task. An element of
+          information (EOI) sent can the same as an EOI received, an EOI received but renamed, or an
+          aggregation of EOIs received (for example a count, a synthesis etc.).</para>
 
-        <para>An element of information is considered atomic for the purposes
-        of a plan; it is the indivisible unit of transmission and
-        transformation.</para>
+        <para>An element of information is considered atomic for the purposes of a plan; it is the
+          indivisible unit of transmission and transformation. Once aggregated, an EOI can not be
+          "split apart".</para>
 
         <para>The notion of the plurality of an element is left undefined. For
         example, if "suspicious activity report" information contains the
         element "suspect profile" then it is possible that there will be more
         than one suspect profiles in a report.</para>
 
-        <para>When analyzing flows, Channels is not concerned with what the
-        information actually means. Rather it cares about whether or not two
-        flows share the same information, and whether an element of
-        information is the same as, or is the transformation of, another
-        element of information.</para>
+        <para>When analyzing flows, Channels is not concerned with what the information actually
+          means. Channels has no domain knowledge to infer from. Rather it cares about whether or
+          not two flows share the same information, and whether an element of information is the
+          same as, or is the transformation of, another element of information.</para>
 
-        <para>If the information in two flows share the same name, does it
-        mean that they represent, conceptually, the same information? Not
-        necessarily. Two tasks performed respectively by a EOC commander and a
-        corporate CEO and both needing a "situation assessment" would likely
-        not need that same elements of information (even if the elements
-        themselves have identical names).</para>
+        <para>If the information in two flows share the same name, it does not necessarily mean that
+          they represent, conceptually, the same information. Two tasks performed respectively by a
+          EOC commander and a corporate CEO might both need a "situation assessment" but they would
+          likely not need the same kind of situation assessment with the same elements of
+          information (even if the elements themselves have identical names).</para>
 
-        <para>In Channels, identically named flows, needs and capabilities
-        (ignoring uppercase vs lowercase and extra spaces) are meant to
-        represent the same kind of information (they are synonymous)
-        <emphasis>only if</emphasis> they connect to the same task
-        specification. Similarly, identically named elements of information
-        represent the same atom of information <emphasis>only if</emphasis>
-        they compose synonymous information.</para>
+        <para>In Channels, identically named flows, needs and capabilities (uppercase vs lowercase
+          and extra spaces are ignored) are explicitly meant to represent the same kind of
+          information (they are synonymous) <emphasis>if and only if</emphasis> they connect to the
+          same tasks. Similarly, identically named elements of information are meant to represent
+          the same atom of information <emphasis>if only if</emphasis> they compose synonymous
+          information.</para>
 
         <para>Agents executing a task receive and send information. The
         information they receive and send may have different names an yet have
@@ -458,338 +785,640 @@
         aggregated elements, it is not acceptable to declassify a renamed,
         classified element.</para>
       </section>
+      <db:section>
+        <title>Task assignments and information sharing commitments</title>
+        <para>A task in an IS plan is a specification of some action to be done or some decision to
+          be made all the time, upon witnessing the start or end of an event, or upon receiving a
+          notification or a request. In defining a task, planners normally do not identify by name
+          the actual agents to be assigned to the tasks but describe their profile in terms of their
+          qualifications (as agent types), roles, jurisdictions (as named places or types of places)
+          and/or organizations (by name or by type).</para>
+        <db:para>It is left to Channels to look up agents in the plan's environment (agents that are
+          identitied as role-playing members of organizations in scope) and see which ones fit the
+          profile of a task's assignees. If a task is meant for any "CPR trained" (agent type)
+          "Security Officer" (role) at a "Government Agency" (organization type), then all known
+          agents who are categorized (directly or indirectly) as "CPT trained", work for an
+          organization categorized (directly or indirectly) as a "Government Agency" in the role of
+          "Security Officer" (or a role categorized as such) will be assigned to the task. </db:para>
+        <db:para>What is meant by "directly or indirectly"? Let's say that FBI (an actual
+          organization) is categorized as both a "Law Enforcement Agency" and "Federal Agency", and
+          "Federal Agency" is categorized as a "Government Agency", then the FBI would directly
+          match "Law Enforcement Agency" and indirectly match "Government Agency".</db:para>
+        <figure>
+          <title>Agents assigned to a task</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/assignments.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>Any agent assigned to a task that sends information to another task (i.e. is
+          connected by a flow targeting the other task) commits to share it with some or all agents
+          assigned to the task receiving the information. A task assigned to three agents with a
+          flow targeting another task assigned to two agents might imply six different information
+          sharing commitments, one from each assignee of the information-producing task to each
+          asssignee of the information-consuming task.</db:para>
+        <db:para>If the flow is annotated as "to every", then the commitment is to share it with all
+          assignees of the target task, otherwise the flow is "to any" and the commitment is to
+          share with at least one of the assigneed of the target task.</db:para>
+        <db:para>Not all assignees of the target task are necessarily eligible to be beneficiaries
+          of information sharing commitments (commitments for short). Commitments can be subject to
+          restrictions or prohibitions. Commitments can be restricted to agents in the same or
+          different organization or in organizations with the same parent organizations. They can be
+          restricted to agents in the same location or different location, to agents who are
+          supervisors. Commitments can be restricted to one self, which may sound odd until one
+          realizes that an agent might uncover information doing a task, keep it to oneself and
+          start another task on the basis of this information (an agent has in essence notified
+          itself to trigger another task). Commitments can also be restricted to "someone else" or
+          to agents in both the smae organization and location.</db:para>
+        <figure>
+          <title>Sharing commitments derived from assignments to tasks connected by a flow</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/commitments.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>A flow can be marked as "prohibited", in which case no commitments are implied, no
+          matter who is assigned to the source and target tasks. Flow prohibition is used to specify
+          "exceptions to the rules" in IS plans. (More on that later.)</db:para>
+        <db:para>An agent's information sharing procedures (IS procedures) is the list of all its
+          task assignments and all associated information sharing commitments. An agent's
+          information sharing guidelines are produced from the IS procedures computed by Channels
+          for that agent. </db:para>
+        <figure>
+          <title>Computing information sharing procedures</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/IS_procedures.png"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>Many analytics in Channels (dissemination, impact failure, network, various type of
+          issues) depend on the computing of IS procedures for agents in an IS plan. Because
+          matching of profiles involves entity types, the proper design of typologies (for agents,
+          roles, places, organizations etc.) is key to successfully building IS plans.</db:para>
+      </db:section>
+      <db:section>
+        <title>Expressing exceptions by overriding tasks and flows</title>
+        <db:para>It is at times necessary to express "exceptions to the rule" when modeling IS
+          practices. For example, IS practices might dictate that all employees alert their
+          supervisors if they become aware of suspicious activities, whereas managers, who are also
+          employees, should not alert their supervisors but rather directly contact the head of
+          security.</db:para>
+        <db:para>Such exceptions in IS practices can be captured by defining overriding tasks and by
+          defining prohibited flows from the overriding tasks that are otherwise equivalent to flows
+          from the overriden tasks.</db:para>
+        <figure>
+          <title>Overriding tasks and flows to express exceptions in IS practices</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/overriding.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>A task A overrides a task B if they both have the equivalent names (discounting
+          uppercase vs lowercase and extraneous blanks), they are in the same segment or to
+          compatible segments (the segment of task A addresses the same situation as that of task B
+          or a more specific version of it) , and if the assignees to task A are a strict subset of
+          the assignees of task B (all agents assignable to task A are also assignable to task B but
+          there's fewer of them in task A). In other words, in any situation where agents would be
+          assigned to tasks A, they would also be assigned to task B, but not vice versa.</db:para>
+        <db:para>When task A (for example, "managers detecting threats") overrides task B
+          ("employees detecting threats") , agents assigned to task A <db:emphasis>are not
+            assigned</db:emphasis> to task B. Furthermore, if task A is annotated as prohibited,
+          then no agent is assigned to task A and any agent assignable to task B is not assigned to
+          task B either. This allows planners to express exceptions such as "all employees leave the
+          building except for managers".</db:para>
+        <db:para>A flow A overrides another flow B if they both have equivalent names, the source
+          task of flow A overrides the source task of flow B, and the target task of flow A is the
+          same as or overrides the target of flow B.</db:para>
+        <db:para>If an agent has sharing commitments computed from flow A then they replace any and
+          all commitments for this agent computed from the overridden flow B. Furthermore, if
+          overriding flow A is prohibited, then whoever would have commitments from flow A has
+          commitments from neither flow A nor from overrident flow B</db:para>
+      </db:section>
+      <db:section>
+        <title>Information sharing agreements</title>
+        <db:para>An information sharing agreement is a formal recognition that an organization
+          commits to share certain information with another organization. </db:para>
+        <db:para>Channels computes the information sharing commitments of agents between each pair
+          of organizations and, for each "networking" pair, aggregates the commitments into distinct
+          "information sharing relationships". Each information sharing relationship is a summary
+          (the agents in the commitments and their roles are abstracted out) of sharing commitments
+          for one type of information. For example, an inforamtion sharing relationship would
+          summarize the fact that members of Bank A commit to share information about fraud with
+          members of Bank B. For each such relationship, planners can indicate whether an
+          information sharing commitment has been formalized and attach or link to a document
+          formalizing the agreement.</db:para>
+        <figure>
+          <title>The sharing agreements of an organization</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/agreements.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>An organization may require that each of its sharing commitments with other
+          organizations be covered by a sharing agreement. If there is an exception to this rule, an
+          issue is raised. Furthermore, if a sharing agreement is indicated but not documented, an
+          issue is also raised. Note that in applying these constraints Channels does not
+          distinguish when both organizations that belong to a common organization and when they do
+          not.</db:para>
+      </db:section>
+      <db:section>
+        <title>Descriptions, instructions and attachments</title>
+        <para>Not everything in an IS plan can be captured neatly as "structured data". Some
+          important data is best conveyed with free form text or via documents. </para>
+        <para>Most forms used to define elements of an IS plan contain a text field called
+          "description" where planners can optionally enter explanatory or documentary text. Instead
+          of a description field, tasks and flows have instruction fields. Descriptions and
+          instructions are not examined by Channels (it is indifferent to their content) but they do
+          appear in IS guidelines generated by Channels.</para>
+        <figure>
+          <title>A segment, like most elements of an IS plan, has a description</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/segment_details.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>Sometimes the element of a plan or the plan itself can be documented by a PDF or a
+          Web page or it can be illustrated by a photo or a video. Channels allows planners to
+          attach documents to plan element by uploading them or linking to them in the context of
+          that element.</db:para>
+        <db:para>An attachment is optionally given a name (its URL is the defualt name). It is also
+          given a type. Different kinds of plan elements allow different kinds of attachment types.
+          Certain types of attachment have different properties.</db:para>
+        <db:para>The following types of attachments are:<db:itemizedlist>
+            <listitem>
+              <para>Reference - Reference documents. Media type reference documents attached to
+                tasks and flows are highlighted.</para>
+            </listitem>
+            <listitem>
+              <para>Picture - Image documents are used to produce icons displayed in flow
+                maps.</para>
+            </listitem>
+            <listitem>
+              <para>Policy - Document containing policy statements participants need to be aware
+                of.</para>
+            </listitem>
+            <listitem>
+              <para>Mandating policy - Document containing policy statements that mandate tasks or
+                flows.</para>
+            </listitem>
+            <listitem>
+              <para>Forbidding policy - Document containing policy statements that restrict tasks or
+                flows.</para>
+            </listitem>
+            <listitem>
+              <para>MOU - Memorandum of understanding formalizing sharing agreements.</para>
+            </listitem>
+            <listitem>
+              <para>Tags - Pre-defined tags (see below). Attachable to an IS plan as a whole.</para>
+            </listitem>
+            <listitem>
+              <para>Info standards - Pre-defined elements of informations implied by tags.
+                Attachable to an IS plan as a whole.</para>
+            </listitem>
+          </db:itemizedlist></db:para>
+        <figure>
+          <title>Media reference attachement</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/attachments_media.png" scale="75" align="center"
+              />
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>Media-type reference attachments are highlighted as icons that, when clicked, shows
+          the graphic or the video, assuming that the browser in use supports the media
+          type.</db:para>
+        <figure>
+          <title>Picture attachment and use as icon</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/attachments_picture.png" scale="75"
+                align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>Channels automatically converts pictures into icons it uses in various
+          visualizations. Only one picture per plan element is allowed.</db:para>
+        <figure>
+          <title>Prohibiting policy attachment and prohibited flow</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/attachments_policy.png" scale="75"
+                align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>Note that attaching a prohibiting policy document to a flow or a task does not in
+          and of itself prohibits it. The policy might prohibit execution of the task or of the flow
+          only in some but not all circumstances (and in ways too complex to be captured formally in
+          the IS plan). To prohibit a flow or a task in an IS plan, planners must explictly nark it
+          as prohibited (via a checkbox in the task or flow form).</db:para>
+      </db:section>
+      <db:section>
+        <title>Tagging</title>
+        <db:para>Tags provide a useful mechanism for the ad hoc cataloguing of elements of an IS
+          plan that otherwise may have nothing else in common. Most elements of a plan can be
+          tagged. An element can have multiple, comma-separated tags.</db:para>
+        <figure>
+          <title>A tagged information flow</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/tagged.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>A planner can see all the tags used in an IS plan look up all elements of the plan
+          tagged with a given tag.</db:para>
+        <figure>
+          <title>Indexing by tags</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/index_all_tags.png" scale="75" align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>The set of all tags in an IS plan is called the tag domain. Tags can be grouped by
+          named sub-domains. Whe a tag belongs to a sub-domain, the tag is written as the name of
+          the sub-domain followed by a colon followed by the name of the tag. For example,
+          "esf:transportation" is the tag "transportation" in the tag sub-domain "esf". A planner
+          can easily look up all elements tagged with tags belonging to a given sub-domain. Tag
+          sub-domains can be pre-defined and attached to an IS plan (an attachment of type "Tag")
+          prior to the tags being used. Note that tags need not be pre-defined to be used in tagging
+          plan elements.<figure>
+            <title>Files defining tag sub-domains attached to an IS plan</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="user_guide_images/tag_subdomain.png" align="center" scale="75"/>
+              </imageobject>
+            </mediaobject>
+          </figure></db:para>
+        <db:para>A special kind of tag sub-domain is called an "information standard". Each
+          information standard tag is associated with a list of pre-defined elements of information,
+          each with a name, and optional description and handling instructions. When a flow is
+          tagged with an inforation standard tag, its elements of information can be auto-populated
+          with those associated with the tag. An information standard tag sub-domain is added to an
+          IS plan by attaching a file defining them (an attachment of type "Info
+          standards").</db:para>
+        <figure>
+          <title>Taggin a flow with an info standard tag to auto-populate its elements of
+            information</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/info_standard_tagging.png" scale="75"
+                align="center"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>Documents defining basic or info standard tag sub-domains must adhere to simple
+          formatting rules. For basic tag sub-domains, the rules are: </db:para>
+        <db:itemizedlist>
+          <db:listitem>
+            <para>A blank line or line starting with # is ignored.</para>
+          </db:listitem>
+          <db:listitem>
+            <para>Each line contains a single fully named tag (e.g. esf:transportation) or
+              comma-separated tags (e.g. esf:transportation, esf:hazmat).</para>
+          </db:listitem>
+        </db:itemizedlist>
+        <figure>
+          <title>File defining basic tags for the "esf" tagging sub-domain</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/simple_tags_file.png" scale="75" align="center"
+              />
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <db:para>For info standard tag sub-domain files, the rules are:<db:itemizedlist>
+            <db:listitem>
+              <para>A blank line or line starting with # is ignored.</para>
+            </db:listitem>
+            <db:listitem>
+              <para>A tag name is given in full and starts at the beginning of a line.</para>
+            </db:listitem>
+            <db:listitem>
+              <para>The elements of information for a tag each appear indented on a separate line
+                beneath the tag.</para>
+            </db:listitem>
+            <db:listitem>
+              <para>The optional description and handling instructions are separated each by a
+                hypen.</para>
+            </db:listitem>
+          </db:itemizedlist></db:para>
+        <figure>
+          <title>File defining info standard tags in the "cap" tagging sub-domain</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="user_guide_images/tag_file_info_standard.png"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </db:section>
     </section>
   </chapter>
 
   <chapter>
     <title>The ISP Method</title>
-
-    <para>Information sharing planners (Planners) apply the ISP Method to
-    build information sharing plans (Plans) from which robust information
-    sharing procedures (Procedures) can be generated. These Procedures enable
-    participating organizations to fulfill their missions before, during
-    and/or after one or more events of significance.</para>
+    <db:para>Channels implements the ISP Method, an incremental and non-linear process for building
+      information sharing plans from which useful analytics and robust information sharing
+      procedures can be generated. IS analytics enable planners to better understand the
+      consequences and weaknesses of a plan while IS procedures enable participating organizations
+      to more reliably fulfill their missions through information sharing, before, during and/or
+      after one or more events of significance.</db:para>
 
     <para>The ISP Method defines: <itemizedlist>
         <listitem>
-          <para>the conceptual building blocks of a Plan,</para>
+          <para>the conceptual building blocks of a plan (see previous chapter),</para>
         </listitem>
-
         <listitem>
-          <para>the activities by which a Plan is built, with prerequisites,
-          steps and outcomes,</para>
+          <para>the activities by which a plan is built, with prerequisites, steps and
+            outcomes,</para>
         </listitem>
-
         <listitem>
-          <para>strategies for moving a Plan to completion,</para>
+          <para>strategies for moving a plan to completion,</para>
         </listitem>
-
         <listitem>
-          <para>and issues that may keep a Plan from being valid, complete and
-          robust</para>
+          <para>and issues that may keep a plan from being deemed valid, complete and robust</para>
         </listitem>
-      </itemizedlist><screenshot>
-        <info>
-          <title>The ISP Method</title>
-        </info>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="quick_tour/ISP_method.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </screenshot></para>
+      </itemizedlist></para>
+    <figure>
+      <title>The ISP Method</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="user_guide_images/ISP_method.png" scale="75" align="center"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
 
     <section>
       <title>ISP Method and ISP Process</title>
 
-      <para>The ISP Method is part of the ISP Process. The ISP Process adds to
-      the ISP Method Best Practices for the successful promotion, definition,
-      initiation and execution of information sharing planning
-      projects.</para>
-
-      <screenshot>
-        <info>
-          <title>How the ISP Method fits in the ISP Process</title>
-        </info>
-
+      <para>The ISP Method is part of something larger called the ISP Process. The ISP Process
+        includes the ISP Method and adds best practices for the successful promotion, definition,
+        initiation, implementation and review of information sharing planning projects. The ISP
+        Process other than the ISP Method is outside the scope of this document [TODO:
+        reference]</para>
+      <figure>
+        <title>Where the ISP Method fits within the ISP Process</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="quick_tour/isp_process.png"></imagedata>
+            <imagedata fileref="user_guide_images/isp_process.png" scale="75" align="center"/>
           </imageobject>
         </mediaobject>
-      </screenshot>
+      </figure>
 
-      <para>ISP Method activities (Activities) should not be confused with
-      Best Practices. For example, a Best Practice might help planners decide
-      what the scope a Plan should be, whereas an Activity would prescribe how
-      to capture the scope of a Plan (once decided upon) and indicate which
-      Activities are triggered by changes to the scope.</para>
+      <para>The ISP Method is defined in terms of the ISP concepts covered earlier and of ISP Method
+        activities (activities for short). Activities should not be confused with ISP Process best
+        practices. For example, a ISP best practice might help planners decide what the scope an IS
+        plan should be, whereas a plan scoping activity would indicate what's requiremed for it to
+        apply, would prescribe how to capture the scope of a plan (once decided upon), and then
+        would indicate what further activities could follow up changes to the scope.</para>
     </section>
 
     <section>
-      <title>From Plans to Procedures</title>
+      <title>Building an information sharing plan</title>
 
-      <para>A Plan consists of tasks that achieve organizational goals during
-      various phases of anticipated events. These tasks consume information
-      that may be produced by other tasks and then shared by the agents who
-      execute them.</para>
-
-      <para>Known agents from participating organizations are assigned (or
-      not) to tasks based on whether the profile of each agent matches the
-      specifications of who is meant to execute a given task. The profile of
-      an agent is defined in terms of the agent’s qualifications, the roles
-      the agent plays in organizations, and the agent’s jurisdictions.</para>
-
-      <para>When a flow connects an information-producing task (source task)
-      with an information-consuming task (target task), then all agents
-      assigned to the source task, possibly subject to restrictions, commit to
-      sharing information with the agents assigned to the target task. The
-      information is strictly to be used for the execution of the target
-      task.</para>
-
-      <screenshot>
-        <info>
-          <title>Procedure generation</title>
-        </info>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="quick_tour/procedure_generation.png"></imagedata>
-          </imageobject>
-        </mediaobject>
-      </screenshot>
-
-      <para>The sum of all task assignments and sharing commitments for a
-      given agent is this agent’s Procedures.</para>
-    </section>
-
-    <section>
-      <title>Building a Plan</title>
-
-      <para>A Plan is built by information sharing planners (Planners) who
-      carry out Activities defined in the ISP Method in order to move the Plan
-      toward completion.</para>
+      <para>An IS plan is built by information sharing planners (planners) who carry out activities
+        defined in the ISP Method in order to move the plan toward completion.</para>
 
       <section>
-        <title>Activities</title>
+        <title>How ISP Method activities are grouped</title>
 
-        <para>Activities either alter the scope of a Plan, bring the Plan
-        closer to completion, or improve the quality and value of the
-        Procedures generated from it.</para>
+        <para>Activities either alter the scope of an IS plan, bring the plan closer to completion,
+          or improve the quality and value of the IS procedures generated from it.</para>
 
         <para>Activities are organized into these four groups:<itemizedlist>
             <listitem>
-              <para><emphasis>Scoping</emphasis> (a Plan),</para>
+              <para><emphasis>Scoping</emphasis> an IS plan</para>
             </listitem>
-
             <listitem>
-              <para><emphasis>Specifying</emphasis> (tasks and information
-              flows from which Procedures are derived),</para>
+              <para><emphasis>Specifying</emphasis> IS procedures by defining tasks and information
+                flows from which the IS procedures are derived</para>
             </listitem>
-
             <listitem>
-              <para><emphasis>Profiling</emphasis> (referenced events,
-              organizations, roles and other entities), and</para>
+              <para><emphasis>Profiling</emphasis> events, organizations, roles and other entities
+                referenced by name in the IS plan</para>
             </listitem>
-
             <listitem>
-              <para><emphasis>Improving</emphasis> (making changes to a plan
-              to make it more manageable or more valuable)</para>
+              <para><emphasis>Improving</emphasis> the IS plan by making it more manageable, robust,
+                complete and reusable</para>
             </listitem>
-          </itemizedlist><emphasis>Scoping</emphasis> a plan (these Activities
-        initiate planning but can be iterated on throughout):<itemizedlist>
+          </itemizedlist><emphasis>Scoping</emphasis> an IS plan: </para>
+        <para>Note: Scoping activities initiate planning but they can also be re-applied at any time
+          the scope needs to change.<itemizedlist>
             <listitem>
-              <para>defining (incident) events and phases</para>
+              <para>Identify an (incident) event</para>
             </listitem>
-
             <listitem>
-              <para>listing participating organizations and members</para>
+              <para>Identify a phase</para>
             </listitem>
-
             <listitem>
-              <para>adding a segment to the plan</para>
+              <para>Identify a participating organization</para>
             </listitem>
-
             <listitem>
-              <para>listing organization goals per event phase</para>
+              <para>Identify a participating member of an organization</para>
             </listitem>
-          </itemizedlist><emphasis>Specifying</emphasis> information sharing
-        procedures:</para>
+            <listitem>
+              <para>Add a segment to the plan</para>
+            </listitem>
+            <listitem>
+              <para>Add an organization goal to a segment</para>
+            </listitem>
+          </itemizedlist><emphasis>Specifying</emphasis> information sharing procedures:</para>
 
         <itemizedlist>
           <listitem>
-            <para>specifying a task with its agents, needs, capabilities,
-            effects...</para>
+            <para>Define a task and specify its assignees</para>
+          </listitem>
+          <listitem>
+            <para>Define a task's information need</para>
+          </listitem>
+          <listitem>
+            <para>Define a task's information capability</para>
+          </listitem>
+          <listitem>
+            <para>Connect a task to another with an information flow</para>
+          </listitem>
+          <listitem>
+            <para>Define an information flow</para>
           </listitem>
         </itemizedlist>
+
+        <para><emphasis>Profiling</emphasis> referenced entities (actual and types) by assigning
+          values to their common and idiosynchratic attributes:</para>
 
         <itemizedlist>
           <listitem>
-            <para>connecting tasks with sharing flows defined in terms of info
-            shared, channels, timing, impacts...</para>
+            <para>Profile an event (always a type)</para>
+          </listitem>
+          <listitem>
+            <para>Profile a phase (always a type)</para>
+          </listitem>
+          <listitem>
+            <para>Profile a role (always a type)</para>
+          </listitem>
+          <listitem>
+            <para>Profile an organization (actual or type)</para>
+          </listitem>
+          <listitem>
+            <para>Profile an agent (actual or type)</para>
+          </listitem>
+          <listitem>
+            <para>Profile a place (actual or type)</para>
+          </listitem>
+          <listitem>
+            <para>Profile a transmission medium (always a type)</para>
           </listitem>
         </itemizedlist>
 
-        <para><emphasis>Profiling</emphasis> referenced entities:</para>
+        <para><emphasis>Improving</emphasis> a plan by reorganizing/restructuring it to increase its
+          manageability or applicability, or by making changes that may have pervasive impacts on
+          the IS procedures from it):</para>
 
         <itemizedlist>
           <listitem>
-            <para>profiling events, phases, organizations, roles, places,
-            media, agents</para>
+            <para>Move tasks between segments</para>
           </listitem>
-        </itemizedlist>
-
-        <itemizedlist>
           <listitem>
-            <para>as actual or types of entities (as applicable)</para>
+            <para>Generalize a task definition</para>
           </listitem>
-        </itemizedlist>
-
-        <para><emphasis>Improving</emphasis> a plan
-        (reorganizing/restructuring a plan to increase its manageability or
-        applicability, or making changes with global impacts on the generated
-        Procedures):</para>
-
-        <itemizedlist>
           <listitem>
-            <para>moving tasks between segments</para>
+            <para>Change an entity's categorization</para>
           </listitem>
         </itemizedlist>
 
-        <itemizedlist>
-          <listitem>
-            <para>generalizing a task specification</para>
-          </listitem>
-        </itemizedlist>
-
-        <itemizedlist>
-          <listitem>
-            <para>changing an entity’s type categorization</para>
-          </listitem>
-        </itemizedlist>
-
-        <para>There is no fixed, prescribed order to the execution of
-        Activities. Scope can be modified at any time while a Plan is being
-        built. Tasks and information flows can also be specified at any time.
-        Entities (events, roles, organizations, agents, phases, places,
-        transmission media etc.) can be profiled as soon they are mentioned by
-        name in the specifications of tasks and information flows, the
-        profiles of other entities, or in the definition of the Plan’s scope.
-        A Plan should be improved early and often in order to keep it as
-        manageable and as valuable as possible.</para>
+        <para>There is no fixed, prescribed order to the execution of ISP Method activities. Scope
+          can be modified at any time while an IS plan is being built. Tasks and information flows
+          can also be added, removedor modified at any point in time. Entities can be profiled as
+          soon they are mentioned by name. An IS Plan can and should be improved early and often in
+          order to keep it as manageable and as valuable as possible.</para>
       </section>
 
       <section>
         <title>Issues</title>
 
-        <para>The ISP Method defines a relatively large number of issues that
-        relate to a Plan’s</para>
+        <para>The ISP Method defines a relatively large number  (90+) of types issues that can be
+          found in an IS plan. They are categorized as:</para>
 
         <itemizedlist>
           <listitem>
-            <para><emphasis>validity</emphasis> (something is incorrectly
-            specified or defined),</para>
+            <para><emphasis>validity issues</emphasis> (something is incorrectly specified or
+              defined),</para>
           </listitem>
         </itemizedlist>
 
         <itemizedlist>
           <listitem>
-            <para><emphasis>completeness</emphasis> (something is apparently
-            missing), or</para>
+            <para><emphasis>completeness issues</emphasis> (something is apparently missing),
+              or</para>
           </listitem>
         </itemizedlist>
 
         <itemizedlist>
           <listitem>
-            <para><emphasis>robustness</emphasis> (something makes the Plan
-            failure-prone).</para>
+            <para><emphasis>robustness issues</emphasis> (something makes the plan inherently
+              failure-prone).</para>
           </listitem>
         </itemizedlist>
 
-        <para>An issue can be about the Plan as a whole or about an element of
-        the Plan (a task specification, role profile, segment definition
-        etc.).</para>
+        <para>An issue can be about the IS plan as a whole or about an element of the plan (a task
+          definition, a role profile, a segment's relationship to another etc.).</para>
 
-        <para>An issue has a severity of low, medium, high, very high or
-        extreme. The severity of an issue is either constant or computed by
-        determining the severity of a potential cascade of failures caused by
-        the issue.</para>
+        <para>An issue can be assigned a severity of minor, major, severe, or extreme. The severity
+          of an issue is either set by its type or it is computed by determining the most severe
+          foiled risk mitigation or gain capture in a potential cascade of failures caused by the
+          issue.</para>
 
-        <para>An issue comes with one or more alternate options for
-        remediation. Some issues are “best guesses” and can be waived by
-        Planners.</para>
+        <para>An issue comes with one or more alternate options for remediation. </para>
 
-        <para>All defined issues can be automatically detected by software.
-        Planners can report other, ad hoc issues; these will typically be
-        domain-specific issues.</para>
+        <para>All types of issues defined in the ISP Method can automatically be detected by
+          software (Channels can detect them). Some issue detections are “best guesses” and can be
+          waived by planners if they are deemed to be false positives. Planners can report other, ad
+          hoc issues that are not in the list of ISP issue types. Issues reported by planners will
+          typically be domain-specific (all of the ISP issue types are domain-agnostic).</para>
+        <db:para>A complete list of ISP issues can be found in the Appendix.</db:para>
       </section>
 
       <section>
-        <title>Moving to completion</title>
+        <title>Moving an IS plan to completion</title>
 
-        <para>When is a plan complete? Because one could always increase the
-        scope of a Plan, a more useful question would be: Given its current
-        scope, is there something clearly missing from a Plan? If the answer
-        is no, then the Plan can be considered “complete”.</para>
+        <para>When is an IS plan complete? There is really no satisfactory answer to this question.
+          Because one could always increase the scope of a plan, a more useful question would be:
+          Given its current scope, is there something clearly missing from a Plan? If the answer is
+          no, then the plan can be deemed “complete”.</para>
+        <db:para>Knowing whether the scope of an IS Plan is properly set requires knowing the
+          domains of human endeavor involved and being able to identify the organizations that ought
+          participate in the plan. Absent this knowledge, software can at the very examine an IS
+          plan to detect what is inherently missing from it.</db:para>
 
-        <para>Nothing is clearly missing from a Plan if:<itemizedlist>
+        <para>Nothing is inherently missing from a plan if:<itemizedlist>
             <listitem>
-              <para>Each phase of each event in scope is addressed by at least
-              one segment of the Plan (see definition of segment).</para>
+              <para>Each phase of each event in scope is addressed by at least one segment of the
+                plan.</para>
             </listitem>
-          </itemizedlist><itemizedlist>
             <listitem>
               <para>Each segment has at least one defined goal.</para>
             </listitem>
-          </itemizedlist><itemizedlist>
             <listitem>
-              <para>Each goal listed in a segment is achieved by at least one
-              task within that segment.</para>
+              <para>Each goal listed in a segment is achieved by at least one task within that
+                segment.</para>
             </listitem>
-          </itemizedlist><itemizedlist>
             <listitem>
-              <para>All participating organizations and agents within scope
-              are assigned tasks.</para>
+              <para>Each participating organization and agent within scope is assigned at least one
+                task.</para>
             </listitem>
-          </itemizedlist><itemizedlist>
             <listitem>
-              <para>All information sharing flows imply sharing commitments by
-              known agents.</para>
+              <para>Each task is assigned to at least one agent.</para>
             </listitem>
-          </itemizedlist><itemizedlist>
             <listitem>
-              <para>All outstanding issues are waived.</para>
+              <para>Each information sharing flow generates at least one information sharing
+                commitment.</para>
             </listitem>
-          </itemizedlist>The scope of a plan can be changed even after it is
-        deemed complete. Plan tasks, flows and entities that do not contribute
-        to completing a Plan are considered redundant. Redundant tasks, flows
-        or entities should be removed from a Plan. If the scope of a Plan is
-        reduced, some elements of a plan may become redundant.</para>
+            <listitem>
+              <para>Each task is useful (it directly achieves a goal, or directly or indirectly
+                enables a task that does).</para>
+            </listitem>
+            <listitem>
+              <para>Each referenced role in an organization is assigned to at least one member agent
+                (if required).</para>
+            </listitem>
+            <listitem>
+              <para>Each inter-organizational info sharing commitment is covered by a sharing
+                agreement (if required).</para>
+            </listitem>
+          </itemizedlist>The scope of an IS plan can be changed even after it is deemed complete.
+          Tasks, flows and entities that do not contribute to completing a plan are considered
+          redundant. Redundant tasks, flows or entities should be removed from a plan. If the scope
+          of a plan is reduced, some elements of a plan may become redundant.</para>
 
-        <para>There are three distinct strategies for driving a Plan to
-        completion:</para>
+        <para>There are three distinct strategies for driving an IS plan toward completion:</para>
 
         <itemizedlist>
           <listitem>
-            <para><emphasis>goals-driven</emphasis>,</para>
+            <para><emphasis>Goals-driven</emphasis>,</para>
           </listitem>
         </itemizedlist>
 
         <itemizedlist>
           <listitem>
-            <para><emphasis>effect-driven</emphasis> and</para>
+            <para><emphasis>Effect-driven</emphasis> and</para>
           </listitem>
         </itemizedlist>
 
         <itemizedlist>
           <listitem>
-            <para><emphasis>issue-driven</emphasis>.</para>
+            <para><emphasis>Issue-driven</emphasis>.</para>
           </listitem>
         </itemizedlist>
 
-        <para>Planners will usually use of all three strategies at
-        once.</para>
+        <para>Planners will usually use of each of the three strategies opportunistically when
+          building an IS plan.</para>
 
         <section>
           <title>Goal-driven strategy</title>
