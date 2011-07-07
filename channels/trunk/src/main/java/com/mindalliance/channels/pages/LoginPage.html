@@ -7,15 +7,14 @@
         lang="en">
 <head>
     <title>Channels - Sign in</title>
-    <link rel="stylesheet" href="css/playbook.css" type="text/css">
-    <link rel="stylesheet" href="css/iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
+    <link rel="stylesheet" href="css/general.css" type="text/css">
 </head>
-<body id="login">
+<body>
 <div id="top">
     <div id="header">
         <div>
             <h1>Channels</h1>
-            <h3>Information Sharing Planning</h3>
+            <h2>Information Sharing Planning</h2>
         </div>
     </div>
     <div id="contents">
@@ -23,24 +22,24 @@
 			<div>
 				<label for="j_username">Username: </label>
 			</div>
-			<div id="login-username">
+			<div id="username">
 				<input width="30" name="j_username" id="j_username">
 			</div>
 			<div>
 				<label for="j_password">Password: </label>
 			</div>
-			<div id="login-password">
+			<div id="password">
 				<input width="30" name="j_password" id="j_password" type="password">
 			</div>
-			<div id="login-rememberme">
+			<div id="rememberme">
 				<label for="_spring_security_remember_me">
-					<input type="checkbox" name="_spring_security_remember_me" id="_spring_security_remember_me" /> Remember me on this browser
+					<input type="checkbox" name="_spring_security_remember_me" id="_spring_security_remember_me" /> Stay signed in
 				</label>
 			</div>
-			<div id="login-submit">
-				<input type="submit" value="Sign in">
+			<div id="submit">
+				<input type="submit" value="Sign In">
+				<a class="passwordreset" href="newPasswordRequest.html">Can't access your account?</a>
 			</div>
-            <p><a href="newPasswordRequest.html">I forgot my user id or my password</a></p>
         </form>
     </div>
 </div>

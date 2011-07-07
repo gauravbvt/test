@@ -38,8 +38,8 @@ public class NewPasswordPage extends WebPage {
     private static final String UNKNOWN_USERNAME = "Unrecognized user name.";
     private static final String UNKNOWN_EMAIL = "Unrecognized email address.";
     private static final String UNKNOWN_USERNAME_AND_EMAIL = "Unrecognized user name and email address.";
-    private static final String MISSING_USERNAME_OR_EMAIL = "Provide a user name or email address.";
-    private static final String NEW_PASSWORD_SENT = "A new password was emailed to you.";
+    private static final String MISSING_USERNAME_OR_EMAIL = "Please provide a user name or email address.";
+    private static final String NEW_PASSWORD_SENT = "A new password has been emailed to you.";
 
     private String username = "";
     private String email = "";
