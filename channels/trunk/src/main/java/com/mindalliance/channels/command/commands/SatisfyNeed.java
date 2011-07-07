@@ -94,7 +94,7 @@ public class SatisfyNeed extends AbstractCommand {
             Long priorId = (Long) get( "satisfy" );
             String name = need.getName().isEmpty() ? capability.getName() : need.getName();
             newFlow = queryService.connect( fromNode, toNode, name, priorId );
-            if ( !newFlow.isExternal() )  // don't want to change the capability!
+            if ( !newFlow.isExternal() )  // TODO: don't want to change the capability!
                 newFlow.initSharingFrom( capability, need, queryService );
             set( "satisfy", newFlow.getId() );
             set( "context", newFlow.getSegment().getId() );
