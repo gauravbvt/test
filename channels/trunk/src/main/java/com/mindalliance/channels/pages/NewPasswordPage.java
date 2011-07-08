@@ -69,7 +69,6 @@ public class NewPasswordPage extends WebPage {
             public void onClick( AjaxRequestTarget target ) {
                 requestNewPassword();
                 addOutcome();
-                addLogin();
                 if ( getOutcome().equals( NEW_PASSWORD_SENT ) ) {
                     username = "";
                     email= "";
@@ -124,9 +123,7 @@ public class NewPasswordPage extends WebPage {
                 setResponsePage( LoginPage.class );
             }
         };
-        loginLink.setOutputMarkupId( true );
-        makeVisible( loginLink, getOutcome().equals( NEW_PASSWORD_SENT ) );
-        requestForm.addOrReplace(  loginLink );
+        requestForm.add(  loginLink );
     }
 
     private void requestNewPassword() {
