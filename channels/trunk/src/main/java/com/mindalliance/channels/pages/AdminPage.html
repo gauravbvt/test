@@ -21,7 +21,7 @@
         <div id="plan">
         <form action="" wicket:id="users">
 			<div class="issues" wicket:id="feedback">(error messages)</div>
-            <h3>Create new plan</h3>
+            <h2>Create new plan</h2>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td class="label">New Plan URI:</td>
@@ -42,7 +42,22 @@
 					</td>
 				</tr>
 			</table>
-            <h3>Manage plan</h3>
+            <h2>Add new user</h2>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="label">New User ID:</td>
+					<td>
+						<input type="text" wicket:id="new">
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="submit" value="Submit" class="submit" name="Submit"/>
+					</td>
+				</tr>
+			</table>
+            <h2>Manage plan</h2>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td class="label">Select Plan:</td>
@@ -55,8 +70,8 @@
 				<tr>
 					<td class="label">&nbsp;</td>
 					<td>
-						<a class="button" wicket:id="productize">Productize plan</a>
-						<a class="button" wicket:id="deletePlan">Delete plan</a>
+						<a class="button" wicket:id="productize">Productize</a>
+						<a class="button" wicket:id="deletePlan">Delete Plan</a>
 					</td>
 				</tr>
 				<tr>
@@ -159,22 +174,7 @@
 					</td>
 				</tr>
 			</table>
-            <h3>Add user</h3>
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td class="label">New User ID:</td>
-					<td>
-						<input type="text" wicket:id="new">
-					</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>
-						<input type="submit" value="Submit" class="submit" name="Submit"/>
-					</td>
-				</tr>
-			</table>
-            <h3>Manage users</h3>
+            <h2>Manage users</h2>
             <table class="users" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <thead>
                     <tr>
