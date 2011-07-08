@@ -275,7 +275,7 @@ public class AllParticipants extends WebPage {
 
     private static void assign( Commander commander, Participation participation, Actor actor ) {
         participation.setActor( actor );
-        commander.doCommand( new UpdatePlanObject( participation,
+        commander.doUnsafeCommand( new UpdatePlanObject( participation,
                                                    "actor",
                                                    actor,
                                                    Action.Set ) );
