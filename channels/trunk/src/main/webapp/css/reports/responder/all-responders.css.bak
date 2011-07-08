@@ -20,7 +20,7 @@ a {
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     color: #333333;
     margin: 0;
     padding: 0;
@@ -42,7 +42,7 @@ div#container {
 div#header {
     width: 1000px;
     height: 60px;
-    background: url('../../images/header.png') no-repeat #c3d9ff;
+    background: url('/images/header.png') no-repeat #c3d9ff;
     border-bottom: 1px solid #cccccc;
 }
 
@@ -82,7 +82,7 @@ div#header > ul li {
 }
 
 div#header > ul li a {
-    background: url('../../images/signout-bg.png') repeat-x;
+    background: url('/images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
     color: #727272;
     font-size: 10px;
@@ -109,7 +109,7 @@ div#contents {
 /* ----- Content - Note ----- */
 
 div#contents div#note {
-    background: url("../../images/gains.png") no-repeat 5px 4px #FEF2B0;
+    background: url("/images/gains.png") no-repeat 5px 4px #FEF2B0;
     border:1px solid #C5B351;
     color: #000000;
     font-size: 12px;
@@ -130,7 +130,7 @@ div#contents table {
 }
 
 div#contents table tr.tablehead {
-	background:url("../../images/tablehead-bg.png") no-repeat;
+	background:url("/images/tablehead-bg.png") no-repeat;
 	height:67px;
 }
 
@@ -139,12 +139,12 @@ div#contents table tr th {
 }
 
 div#contents table tr.tablecont {
-	background:url("../../images/table-bg.png") no-repeat;
+	background:url("/images/table-bg.png") no-repeat;
 	height:36px;
 }
 
 div#contents table tr.tablecont.last {
-	background:url("../../images/tablebot-bg.png") no-repeat;
+	background:url("/images/tablebot-bg.png") no-repeat;
 	height:36px;
 }
 
