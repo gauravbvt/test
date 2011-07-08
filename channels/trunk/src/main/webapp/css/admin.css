@@ -86,10 +86,6 @@ div#header a.logout:hover {
 
 /* ----- Typography ----- */
 
-p {
-	padding:5px 0 5px 10px;
-}
-
 h3 {
     border-top: 1px solid #999999;
     border-bottom: 1px solid #999999;
@@ -171,7 +167,8 @@ div.submit input.submit {
 	float:right;
 }
 
-/* ----- User Table ----- */
+
+/* ----- Manage User Table ----- */
 
 table.users {
 	padding:12px 0 0 0;
@@ -213,13 +210,22 @@ table.users td input[type=checkbox] {
 }
 
 
-div.issues {
+/* ----- Error Messages ----- */
+
+div.issues ul {
+	list-style:none;
     background: #FEF2B0;
     border: 1px solid #C5B351;
     color: #000000;
     font-size: 12px;
     display: block;
-    margin: 0 0 10px;
+    margin: 0 0 20px 0;
     padding: 5px;
 	text-align:center;
+}
+
+div.issues ul li {
+	margin:0;
+	padding:0;
+	list-style:none;
 }

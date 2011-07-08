@@ -86,12 +86,12 @@ div#email {
 	padding:3px 0 10px 0;
 }
 
-div#rememberme label {
-	font-weight:normal;
+div#rememberme {
+	padding:0 0 10px 0;
 }
 
-div#submit {
-	padding:10px 0 0 0;
+div#rememberme label {
+	font-weight:normal;
 }
 
 div#submit input {
@@ -110,7 +110,7 @@ div#submit input:hover {
     color: #333333;
 }
 
-a.passwordreset {
+a.rightlink {
     border-bottom: 1px dotted #333333;
     color: #333333;
     display: block;
@@ -120,7 +120,7 @@ a.passwordreset {
     text-decoration: none;
 }
 
-a.passwordreset:hover {
+a.rightlink:hover {
 	color:#000000;
 }
 

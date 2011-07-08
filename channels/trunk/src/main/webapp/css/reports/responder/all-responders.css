@@ -33,7 +33,7 @@ body {
 }
 
 div#container {
-    width: 1000px;
+    width: 800px;
     margin: 0 auto;
     text-align: left;
     padding: 0;
@@ -42,7 +42,7 @@ div#container {
 }
 
 div#header {
-    width: 1000px;
+    width: 800px;
     height: 54px;
     background: #c3d9ff;
     border-bottom: 1px solid #999999;
@@ -51,7 +51,7 @@ div#header {
 
 div#contents {
 	padding:30px;
-	width:940px;
+	width:740px;
 }
 
 
@@ -304,19 +304,16 @@ td.assign ul li a {
     text-transform: uppercase;
 }
 
-td.assign ul li.active a {
-    background: none repeat scroll 0 0 #000000;
-    color: #FFFFFF;
-}
-
 td.assign ul li a:hover {
     color: #000000;
 	border:1px solid #000000;
+	background:#eeeeee;
 }
 
 td.assign ul li:hover a {
     color: #000000;
 	border:1px solid #000000;
+	background:#eeeeee;
 }
 
 td.assign ul ul {
