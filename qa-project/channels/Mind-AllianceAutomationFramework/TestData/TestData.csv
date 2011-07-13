@@ -1,0 +1,182 @@
+Channels administration,Channels administration
+New Plan v.1 (dev),New Plan v.1 (dev)
+Delete plan,Delete plan
+Information sharing model,Information sharing model
+Automation Test Plan v.1 (dev),Automation Test Plan v.1 (dev)
+Segment For Undo Add Segment,Segment For Undo Add Segment
+Segment For Undo Remove This Segment,Segment For Undo Remove This Segment
+Segment For Undo Add Goal,Segment For Undo Add Goal
+AddGoal,AddGoal
+Actor,Actor
+this is task 121,this is task 121
+Location,Location
+Type,Type
+Afour Tech121,Afour Tech121
+this is task 121,this is task 121
+Segment For Add Task,Segment For Add Task
+Segment for Undo Remove Goal,Segment for Undo Remove Goal
+Segment For Undo Add Task,Segment For Undo Add Task
+Task One,Task 1
+Segment For Undo Cut Task,Segment For Undo Cut Task
+Segment For Undo Paste Task Using Cut,Segment For Undo Paste Task Using Cut
+The Other Segment,The Other Segment
+Segment For Undo Paste Task Using Copy,Segment For Undo Paste Task Using Copy
+Segment For Undo Duplicate Task,Segment For Undo Duplicate Task
+Segment For Undo Intermediate,Segment For Undo Intermediate
+This is a Flow,This is a Flow
+Task Sender,Task Sender
+Task Receiver,Task Receiver
+Segment For Undo Disintermediate,Segment For Undo Disintermediate
+Segment For Undo Move Task,Segment For Undo Move Task
+Task 1,Task 1
+Task 2,Task 2
+Segment For Undo Connect Flow,Segment For Undo Connect Flow
+Segment For Undo Attach Document,Segment For Undo Attach Document
+AttachmentFileName,CAP
+Segment For Copy Attachment,Segment For Copy Attachment
+Task for attachment,Task for attachment
+Segment For Cut Attachment,Segment For Cut Attachment
+Task for attachment,Task for attachment
+Segment For Undo Paste Attachment,Segment For Undo Paste Attachment
+Segment For Copy task,Segment For Copy task
+Copy task,Copy task
+Set task from Copy,Set task from Copy
+Segment For Undo Set Task From Copy,Segment For Undo Set Task From Copy
+Segment For Undo Add Info Need,Segment For Undo Add Info Need
+Segment For Undo Add Info Capability,Segment For Undo Add Info Capability
+Segment For Undo Remove Flow,Segment For Undo Remove Flow
+Remove Flow,Remove Flow
+Add Received Info,Add Received Info
+Undo Remove Flow,Undo Remove Flow
+Segment For Undo duplicate Flow,Segment For Undo duplicate Flow
+Duplicate Flow,Duplicate Flow
+Duplicate this flow Info,Duplicate this flow Info
+Undo Duplicate Flow,Undo Duplicate Flow
+Add Test Plan,Add Test Plan
+Delete Test Plan,Delete Test Plan
+Afourtech,Afourtech
+Full Name,Full Name
+Password,Password
+User for deletion,User for deletion
+This is an phase for details,This is an phase for details
+This is an Description,This is an Description
+Segment For Add New Segment,Segment For Add New Segment
+Segment For Remove Segment,Segment For Remove Segment
+Segment For Add Event,Segment For Add Event
+Segment For Delete Event,Segment For Delete Event
+Segment For Attach File,Segment For Attach File
+This is File 1,This is File 1
+Segment For Delete Attachment,Segment For Delete Attachment
+Segment For Add Goal,Segment For Add Goal
+Add Goals,Add Goals
+This is an event for deletion,This is an event for deletion
+This is File 1 for deletion,This is File 1 for deletion
+Segment for Send info,Segment for Send info
+Segment For Undo break up flow,Segment For Undo break up flow
+Break up Flow,Break up Flow
+Undo Break Up Flow,Undo Break Up Flow
+Segment For Copy Flow,Segment For Copy Flow
+Copy flow,Copy flow
+Audit,Audit
+Receives informations,Receives informations
+Title,Title
+Role,Role
+Jurisdiction,Jurisdiction
+Supervisor,Supervisor
+Segment For Redo Add Segment,Segment For Redo Add Segment
+Segment For Redo Remove This Segment,Segment For Redo Remove This Segment
+Segment For Redo Add Goal,Segment For Redo Add Goal
+Redo Add Goal,Redo Add Goal
+Segment for Redo Remove Goal,Segment for Redo Remove Goal
+Redo Remove Goal,Redo Remove Goal
+Segment For Redo Paste Task Using Cut,Segment For Redo Paste Task Using Cut
+Segment For Redo Cut Task,Segment For Redo Cut Task
+Segment For Undo Add Task,Segment For Undo Add Task
+Segment For Redo Intermediate,Segment For Redo Intermediate
+Segment For Redo Duplicate Task,Segment For Redo Duplicate Task
+Segment For Redo Paste Task Using Copy,Segment For Redo Paste Task Using Copy
+Segment For Redo Intermediate,Segment For Redo Intermediate
+Segment For Redo Move Task,Segment For Redo Move Task
+Segment For Redo Disintermediate,Segment For Redo Disintermediate
+doing something,doing something
+Disintermediate,Disintermediate
+Segment For Redo Set Task From Copy,Segment For Redo Set Task From Copy
+Segment For Redo Paste Attachment,Segment For Redo Paste Attachment
+Reference,Reference
+CAP,CAP
+Segment For Redo Attach Document,Segment For Redo Attach Document
+Segment For Redo break up flow,Segment For Redo break up flow
+Redo Break Up Flow,Redo Break Up Flow
+Segment For Redo Remove Flow,Segment For Redo Remove Flow
+Segment For Redo duplicate Flow,Segment For Redo duplicate Flow
+Duplicate this flow Info,Duplicate this flow Info
+Redo Duplicate Flow,Redo Duplicate Flow
+Add Receive Info,Add Receive Info
+Redo Remove Flow,Redo Remove Flow
+Segment For Redo Add Info Capablity,Segment For Redo Add Info Capablity
+Segment For Redo Add Info Need,Segment For Redo Add Info Need
+Title,Title
+Role,Role
+Jurisdiction,Jurisdiction
+Supervisor,Supervisor
+Agent 1,Agent 1
+Segment For Add Phase Details,Segment For Add Phase Details
+After,After
+Low,Low
+High,High
+Segment For Remove Goal,Segment For Remove Goal
+Mitigate,Mitigate
+Financial,Financial
+Minor,Minor
+Actual,Actual
+Segment for Receive info,Segment for Receive info
+Receives informations,Receives informations
+Segment To Verify,Segment To Verify
+Segment For Move Task,Segment For Move Task
+Event,Event
+Places,Places
+Segment For Add Event To Plan,Segment For Add Event To Plan
+Segment For Add Phase,Segment For Add Phase
+Afour Tech1234,Afour Tech1234
+Segment For Redo Add Task,Segment For Redo Add Task
+View Plan,View Plan
+Productize plan, Productize plan
+New Plan v.1 (prod),New Plan v.1 (prod)
+View Plan v.1 (dev),View Plan v.1 (dev)
+Segment For Do Undo Redo Add Segment,Segment For Do Undo Redo Add Segment
+Segment For Do Undo Redo Remove This Segment,Segment For Do Undo Redo Remove This Segment
+Segment For Do Undo Redo Add Goal,Segment For Do Undo Redo Add Goal
+Segment For Do Undo Redo Add Task,Segment For Do Undo Redo Add Task
+Segment For Do Undo Redo Cut Task,Segment For Do Undo Redo Cut Task
+Segment For Do Undo Redo Cut Paste Task,Segment For Do Undo Redo Cut Paste Task
+Segment For Do Undo Redo Copy Paste Task,Segment For Do Undo Redo Copy Paste Task
+Segment For Do Undo Redo Duplicate Task,Segment For Do Undo Redo Duplicate Task
+Segment For Do Undo Redo Intermediate Task,Segment For Do Undo Redo Intermediate Task
+Segment For Do Undo Redo Disintermediate Task,Segment For Do Undo Redo Disintermediate Task
+Segment For Do Undo Redo Move Task,Segment For Do Undo Redo Move Task
+user,abcdef
+Segment For Do Undo Redo Connect Flow,Segment For Do Undo Redo Connect Flow
+Segment For Do Undo Redo Add New Issue,Segment For Do Undo Redo Add New Issue
+Segment For Do Undo Redo Remove Issue,Segment For Do Undo Redo Remove Issue
+Segment For Do Undo Redo Attach Document,Segment For Do Undo Redo Attach Document
+Segment For Do Undo Redo Paste Attachment,Segment For Do Undo Redo Paste Attachment
+Segment For Do Undo Redo Set Task From Copy,Segment For Do Undo Redo Set Task From Copy
+Segment For Do Undo Redo Add Info Need,Segment For Do Undo Redo Add Info Need
+Segment For Do Undo Redo Add Info Capability,Segment For Do Undo Redo Add Info Capability
+Segment For Do Undo Redo Remove Flow,Segment For Do Undo Redo Remove Flow
+Segment For Do Undo Redo Duplicate Flow,Segment For Do Undo Redo Duplicate Flow
+Segment For Do Undo Redo Break Up Flow,Segment For Do Undo Redo Break Up Flow
+Segment For Do Copy Flow,Segment For Do Copy Flow
+Segment For Do Copy Task,Segment For Do Copy Task
+Segment For Do Copy Attachment,Segment For Do Copy Attachment
+Segment For Do Cut Attachment,Segment For Do Cut Attachment
+AFourTechnology,AFourTechnology
+SendPlannerFeedback,jf@mind-alliance.com
+Messages,Messages
+Receives,Receives
+Sends,Sends
+Sender,Sender
+Event Description,Event Description
+Organization Description,Organization Description
+Secrecy Classifications,Secrecy classifications
+View Segment,View Segment

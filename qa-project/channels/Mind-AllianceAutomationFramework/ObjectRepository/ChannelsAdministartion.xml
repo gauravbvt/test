@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<elements>
+<xPathDeletePlan>/html/body/div/div[2]/div/form/ul[2]/li[3]/a</xPathDeletePlan>
+<xPathLogoutAdminPage>/html/body/div/div/div/div[2]/div/ul/li/a</xPathLogoutAdminPage>
+<xPathSamePlanErrorMessage>/html/body/div/div[2]/div/form/div[3]/ul/li/span</xPathSamePlanErrorMessage>
+<xPathInputUserID>/html/body/div/div[2]/div/form/ul[8]/li/input</xPathInputUserID>
+<xPathUserID>/html/body/div/div[2]/div/form/table/tbody/tr/td/span</xPathUserID>
+<xPathDeleteUser>/html/body/div/div[2]/div/form/table/tbody/tr/td[12]/input</xPathDeleteUser>
+<xPathAccessPrivilegeAdmin>/html/body/div/div[2]/div/form/table/tbody/tr/td[5]/input</xPathAccessPrivilegeAdmin>
+<xPathUserPassword>/html/body/div/div[2]/div/form/table/tbody/tr/td[4]/input</xPathUserPassword>
+<xPathDisableUser>/html/body/div/div[2]/div/form/table/tbody/tr/td[8]/input</xPathDisableUser>
+<xPathAccessPrivilegePlanner>/html/body/div/div[2]/div/form/table/tbody/tr/td[6]/input</xPathAccessPrivilegePlanner>
+<xPathThisPlanAccessPrivilegePlanner>/html/body/div/div[2]/div/form/table/tbody/tr/td[9]/input</xPathThisPlanAccessPrivilegePlanner>
+</elements>

@@ -1,0 +1,10 @@
+TestCaseId,VerificationStepNo,Description,Result,Comment
+MAC0002,1,URL opened,Passed,
+MAC0002,2,Username and password entered,Passed,
+MAC0002,3,Login is successful,Passed,
+MAC0002,4,New segment added successfully,Passed,
+MAC0002,5,Details entered,Passed,
+MAC0002,6,Segment updated,Passed,
+MAC0002,7,Remove this segment done,Passed,
+MAC0002,8,Undo remove this segment done,Passed,
+MAC0002,9,Logout is successfull,Passed,

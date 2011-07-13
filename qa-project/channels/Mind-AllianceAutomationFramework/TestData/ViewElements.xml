@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<elements>
+<adminPageTitle>Channels - Administration</adminPageTitle>
+<homePageTitle>Channels</homePageTitle>
+<loginPageTitle>Channels - Sign in</loginPageTitle>
+<planPageSubTitle>Channels:</planPageSubTitle>
+<aboutPlanPageSubTitle>About Plan: </aboutPlanPageSubTitle>	
+<assignmentsAndCommitments>Assignments and commitments</assignmentsAndCommitments>
+<informationSharingGuidelinesForAllParticipants>Information sharing guidelines for all participants</informationSharingGuidelinesForAllParticipants>
+<assignmentsAndCommitmentsPageTitle>Channels - All procedures in </assignmentsAndCommitmentsPageTitle>
+<participantPagesTitle>Channels - Participant Pages</participantPagesTitle>
+<details>details</details>	
+<untitled>Untitled</untitled>	
+<allEventsInPlan>All events in the plan</allEventsInPlan>	
+<allInterSegmentFlows>All inter-segment flows</allInterSegmentFlows>	
+<documentsAttached>Documents attached in this plan</documentsAttached>	
+<allKnownTags>All known tags</allKnownTags>	
+<classificationSystems>Classification systems</classificationSystems>	
+<organizationsInPlan>Organizations in plan</organizationsInPlan>	
+<hidePlanners>Hide planners</hidePlanners>
+<aboutPlan>About plan</aboutPlan>
+<allEvents>All events</allEvents>
+<informationSharingModel>Information sharing model</informationSharingModel>
+<secrecyClassification>Secrecy classifications</secrecyClassification>
+<allOrganizations>All organizations</allOrganizations>
+<allTypes>All types</allTypes>
+<allSegments>All segments</allSegments>
+<procedureMap>Procedure map</procedureMap>
+<channelsAdministration>Channels administration</channelsAdministration>
+<whosWho>Who's who</whosWho>
+<allIssues>All issues</allIssues>
+<bibliography>Bibliography</bibliography>
+<index>Index</index>
+<allTags>All tags</allTags>
+<evaluation>Evaluation</evaluation>
+<participation>Participations</participation>
+<versions>Versions</versions>
+<actions>Actions</actions>
+<aboutPlanSegment>About plan segment</aboutPlanSegment>
+<goals>Goals</goals>
+<goalsForThisSegment>Goals for this plan segment</goalsForThisSegment>
+<organizations>Organizations</organizations>
+<organizationsInThisSegment>Organizations in this segment</organizationsInThisSegment>
+<map>Map</map>
+<Details>Details</Details>
+<taskMover>Task mover</taskMover>
+<moveTaskToAnotherSegment>Move selected tasks to another segment</moveTaskToAnotherSegment>
+<surveys>Surveys</surveys>
+<allEventsInPlan>All events in the plan</allEventsInPlan>
+<help>Help</help>
+<addNewIssue>Add new issue</addNewIssue>
+<undoAddNewIssue>Undo add new issue</undoAddNewIssue>
+<redoAddNewIssue>Redo add new issue</redoAddNewIssue>
+<sendMessage>Send message</sendMessage>
+<to>To:</to>
+<addNewTask>Add new task</addNewTask>
+<hideDetails>Hide details</hideDetails>
+<cutTask>Cut task</cutTask>
+<pasteTask>Paste task</pasteTask>
+<moveTaskToSegment>Move tasks to segment...</moveTaskToSegment>
+<task1234>This is Task 1234</task1234>
+<pasteAttachment>Paste attachment</pasteAttachment>
+<file1>This is File 1</file1>
+<task>Task</task>
+<assignments>Assignment</assignments>
+<taskAssignments>Task assignments</taskAssignments>
+<failureImpacts>Failure impacts</failureImpacts>
+<taskFailureImpacts>Impacts of failing task "doing something"</taskFailureImpacts>
+<dissemination>Dissemination</dissemination>
+<infoDisseminationForTask>Information dissemination for task</infoDisseminationForTask>
+<removeThisSegment>Remove this segment</removeThisSegment>
+<showAllUsers>show all users</showAllUsers>
+<hideInactiveUsers>hide inactive users</hideInactiveUsers>
+<hideMyActivities>hide my activites</hideMyActivities>
+<showAllActivities>show all activites</showAllActivities>
+<showAllMessages>show all messages</showAllMessages>
+<showElements>Show elements</showElements>
+<copyNeed>Copy need</copyNeed>
+<issues>Issues</issues>
+<agents>Agents</agents>
+<network>Network</network>
+<addNewSegment>Add new segment</addNewSegment>
+<addNewTask>Add new task</addNewTask>
+<audit>Audit</audit>
+<type>Type</type>
+<hideDetails>Hide details</hideDetails>
+<after>After</after>
+<low>Low</low>
+<high>High</high>
+<moveTasksToSegment>Move tasks to segment...</moveTasksToSegment>
+<other>Other...</other>
+<mitigate>Mitigate</mitigate>
+<financial>Financial</financial>
+<minor>Minor</minor>
+<actual>Actual</actual>
+<undoUpdateSegment>Undo update segment</undoUpdateSegment>
+<redoUpdateSegment>Redo update segment</redoUpdateSegment>
+<undoRemoveThisSegment>Undo remove this segment</undoRemoveThisSegment>
+<redoRemoveThisSegment>Redo remove this segment</redoRemoveThisSegment>
+<taskMover>Task mover</taskMover>
+<undoUpdateTask>Undo update task</undoUpdateTask>
+<undoAddNewTask>Undo add new task</undoAddNewTask>
+<redoAddNewTask>Redo add new task</redoAddNewTask>
+<copyTask>Copy task</copyTask>
+<cutTask>Cut task</cutTask>
+<undoCutTask>Undo cut task</undoCutTask>
+<pasteTask>Paste task</pasteTask>
+<undoPasteTask>Undo paste task</undoPasteTask>
+<redoPasteTask>Redo paste task</redoPasteTask>
+<duplicateTask>Duplicate task</duplicateTask>
+<UndoDuplicateTask>Undo duplicate task</UndoDuplicateTask>
+<addIntermediate>Add intermediate</addIntermediate>
+<undoAddIntermediate>Undo add intermediate</undoAddIntermediate>
+<redoAddIntermediate>Redo add intermediate</redoAddIntermediate>
+<addNewIssue>Add new issue</addNewIssue>
+<undoAddNewIssue>Undo add new issue</undoAddNewIssue>
+<redoAddNewIssue>Redo add new issue</redoAddNewIssue>
+<removeIssue>Remove issue</removeIssue>
+<undoRemoveIssue>Undo remove issue</undoRemoveIssue>
+<redoRemoveIssue>Redo remove issue</redoRemoveIssue>
+<undoRedirectFlow>Undo redirect flow</undoRedirectFlow>
+<redoRedirectFlow>Redo redirect flow</redoRedirectFlow>
+<undoMoveTasks>Undo move tasks</undoMoveTasks>
+<disintermediate>Disintermediate</disintermediate>
+<undoDisintermediate>Undo disintermediate</undoDisintermediate>
+<redoDisintermediate>Redo disintermediate</redoDisintermediate>
+<reference>Reference</reference>
+<pasteAttachment>Paste attachment</pasteAttachment>
+<undoPasteAttachment>Undo paste attachment</undoPasteAttachment>
+<redoPasteAttachment>Undo paste attachment</redoPasteAttachment>
+<undoAttachDocument>Undo attach document</undoAttachDocument>
+<redoAttachDocument>Redo attach document</redoAttachDocument>
+<removeFlow>Remove flow</removeFlow>
+<undoRemoveFlow>Undo remove flow</undoRemoveFlow>
+<redoRemoveFlow>Redo remove flow</redoRemoveFlow>
+<undoAddSharingCapability>Undo add sharing capability</undoAddSharingCapability>
+<redoAddSharingCapability>Redo add sharing capability</redoAddSharingCapability>
+<setTaskFromCopy>Set task from copy</setTaskFromCopy>
+<undoSetTaskFromCopy>Undo set task from copy</undoSetTaskFromCopy>
+<redoSetTaskFromCopy>Redo set task from copy</redoSetTaskFromCopy>
+<undoAddInformationNeed>Undo add information need</undoAddInformationNeed>
+<redoAddInformationNeed>Redo add information need</redoAddInformationNeed>
+<undoDuplicateFlow>Undo duplicate flow</undoDuplicateFlow>
+<duplicateFlow>Duplicate flow</duplicateFlow>
+<undoBreakUpFlow>Undo break up flow</undoBreakUpFlow>
+<redoBreakUpFlow>Redo break up flow</redoBreakUpFlow>
+<breakUpFlow>Break up flow</breakUpFlow>
+<copyFlow>Copy flow</copyFlow>
+<redoRemoveGoal>Redo remove goal</redoRemoveGoal>
+<confirmed>Confirmed</confirmed>
+<places>Places</places>
+<messages>Messages</messages>
+<showSent>show sent</showSent>
+<showReceived>show received</showReceived>
+<calendar>Calendar</calendar>
+<showAll>show all</showAll>
+<aboutMe>About me</aboutMe>
+<issueSummaryReport>Issues summary report</issueSummaryReport>
+<channelsIssueSummaryReport>Channels - Issues Summary Report</channelsIssueSummaryReport>
+<signOut>Sign out</signOut>
+<hideBroadcast>hide broadcasts</hideBroadcast>
+<samePlan>A plan with that uri already exists</samePlan>
+<redoMoveTasks>Redo move tasks</redoMoveTasks>
+<redoUpdateOrganization>Redo update organization</redoUpdateOrganization>
+<undoUpdateOrganization>Undo update organization</undoUpdateOrganization>
+<afourtech>Afourtech</afourtech>
+<planners>Planners</planners>
+<menu>Menu</menu>
+<displayProceduresFrom>Display procedures from</displayProceduresFrom>
+<indexOn>Index on</indexOn>
+<issuesInSegment>issues in segment</issuesInSegment>
+<showTypes>Show types of</showTypes>
+<allParticipants>All users participating in the plan</allParticipants>
+<thisIsVersion>This is version</thisIsVersion>
+</elements>
