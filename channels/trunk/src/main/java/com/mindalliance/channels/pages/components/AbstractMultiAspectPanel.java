@@ -174,13 +174,9 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
     protected void init() {
         moContainer = new WebMarkupContainer( "mo" );
         add( moContainer );
-        headerTitle = new Label( "header-title", new PropertyModel<String>( this, "headerTitle" ) );
-        headerTitle.setOutputMarkupId( true );
-
         banner = new WebMarkupContainer( "banner" );
         banner.setOutputMarkupId( true );
-        banner.add( headerTitle );
-
+        addHeaderTitle();
 
         String css = getCssClass();
         moContainer.add( new AttributeModifier( "class", true, new Model<String>( css ) ) );
@@ -194,6 +190,11 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         adjustComponents();
     }
 
+    protected void addHeaderTitle() {
+        headerTitle = new Label( "header-title", new PropertyModel<String>( this, "headerTitle" ) );
+        headerTitle.setOutputMarkupId( true );
+        banner.addOrReplace( headerTitle );
+    }
 
     protected void addShowMenu() {
         showMenu = makeShowMenu( "showMenu" );
@@ -322,6 +323,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
 
     private void showAspect( String aspect ) {
         String aspectToShow = aspect == null ? getDefaultAspect() : aspect;
+        addHeaderTitle();
         aspectPanel = makeAspectPanel( aspectToShow );
         aspectPanel.setOutputMarkupId( true );
         moContainer.addOrReplace( aspectPanel );
@@ -391,6 +393,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         target.addComponent( aspectPanel );
 */
         releaseAspectShown();
+        aspectShown = aspect;
         update( target, new Change( Change.Type.AspectReplaced, getObject(), aspect ) );
     }
 
