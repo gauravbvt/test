@@ -1,0 +1,13 @@
+ChannelURL=http://192.168.1.7:8080
+UserName=afourtech
+Password=@test123
+XpathChannelsAdministration=//div[@class='goto admin']/a
+XpathInfoSharingModel=//div[@class='goto model']/a
+XpathAllProcedures=//div[@class='goto mapped']/a
+XpathShowPopUpMenu=//span[@class='menubar']/span[2]/span/span
+XpathActionsPopUpMenu=//span[@class='menubar']/span[3]/span/span
+XpathUndoOption=//div[@class='header']/span[@class='menubar']/span[3]/span[@class='dropmenu']/ul/li[1]/span/a/span
+XpathRedoOption=//div[@class='header']/span[@class='menubar']/span[3]/span[@class='dropmenu']/ul/li[2]/span/a/span
+XpathAddNewSegment=//div[@class='header']/span[@class='menubar']/span[3]/span[@class='dropmenu']/ul/li[8]/span/a/span
+XpathRemoveThisSegment=//div[@class='header']/span[@class='menubar']/span[3]/span[@class='dropmenu']/ul/li[8]/span/a/span
+XpathLogout=//div[@class='header']/span[@class='menubar']/span[3]/span[@class='dropmenu']/ul/li[11]/span/a/span
