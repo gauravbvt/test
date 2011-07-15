@@ -457,7 +457,9 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			Class<?> cls;
 			cnt = 0;
 			// Call GenericFunctionLibrary.initializeTestData()
+			System.out.println("Hie.....1");
 			GenericFunctionLibrary.initializeTestData();
+			System.out.println("Hie.....2");
 			// Get Browser Name
 			GlobalVariables.sBrowser = jComboBoxBrowser.getSelectedItem().toString();
 			// Set progressBar Values
@@ -472,7 +474,9 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			jLabelStartDateTime.setSize(jLabelStartDateTime.getPreferredSize());
 			jLabelStartDateTime.paintImmediately(jLabelStartDateTime.getVisibleRect());
 			// Call GenericFunctionLibrary.loadTestData()
+			System.out.println("Hie.....3");
 			GenericFunctionLibrary.loadObjectRepository();
+			System.out.println("Hie.....4");
 			// Execution of selected TestCases
 			for (Object testCaseId: arrayOfTestCaseId) {
 				try
@@ -501,11 +505,15 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 				}
 			}
 			// Call GenericFunctionLibrary.tearDownTestData()
+			System.out.println("Hie.....5");
 			GenericFunctionLibrary.tearDownTestData();
+			System.out.println("Hie.....6");
 			// Call ReportFunctions.generateAutomationReport()
 			ReportFunctions.generateAutomationReport();
+			System.out.println("Hie.....7");
 			// Enable Logs and Reports button
 			jButtonLogLink.setEnabled(true);
+			System.out.println("Hie.....8");
 			jButtonReportLink.setEnabled(true);
 			// Clear TestCaseId label
 			jLabelTestCaseId.setText("");
