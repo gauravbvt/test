@@ -154,7 +154,7 @@ h3 {
     border-bottom: 1px solid #999999;
     border-top: 1px solid #999999;
     font-size: 13px;
-    margin: 10px 0;
+    margin: 0;
     padding: 9px 10px;
     text-transform: uppercase;
 }
@@ -230,7 +230,7 @@ span.desc {
 }
 
 
-/* ----- Assign - Menu ----- */
+/* ----- Assign - Dropdown ----- */
 
 
 td.assign {
@@ -253,7 +253,7 @@ td.assign ul {
 td.assign ul li {
     float: left;
     left: 50%;
-    margin: 0 0 0 1px;
+    margin: 0;
     padding: 0;
     position: relative;
     top: 1px;
@@ -261,7 +261,7 @@ td.assign ul li {
 
 td.assign ul li a {
     text-decoration: none;
-    background: url("/images/signout-bg.png") repeat-x scroll 0 0 transparent;
+    background: url('/images/signout-bg.png') repeat-x scroll 0 0 transparent;
     border: 1px solid #A7A9AC;
     color: #727272;
     display: block;
@@ -290,7 +290,7 @@ td.assign ul ul {
     float: left;
     position: absolute;
     top: 1.3em;
-    margin: 0 -1px 0 0;
+    margin: 0 0 0 0;
     width: 10em;
     left: auto;
     right: 0;

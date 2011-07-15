@@ -380,7 +380,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
 
     private String getGuidelinesReportLabel( User user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
-                ? "Information sharing guidelines for all participants"
+                ? "IS guidelines for all participants"
                 : "My information sharing guidelines";
     }
 

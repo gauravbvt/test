@@ -108,6 +108,7 @@ div#submit input {
 
 div#submit input:hover {
     color: #333333;
+    border: 1px solid #000000;
 }
 
 a.rightlink {
