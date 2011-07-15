@@ -224,6 +224,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathAbtPlanSegActionAddNewIssue",oXmlElePlanPage.getElementsByTagName("xPathAbtPlanSegActionAddNewIssue").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathNewOrganization",oXmlElePlanPage.getElementsByTagName("xPathNewOrganization").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathSurvey",oXmlElePlanPage.getElementsByTagName("xPathSurvey").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathAgentContacts",oXmlElePlanPage.getElementsByTagName("xPathAgentContacts").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathAgent",oXmlElePlanPage.getElementsByTagName("xPathAgent").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathAssertionPhaseDetails", oXmlElePlanPage.getElementsByTagName("xPathAssertionPhaseDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
@@ -435,6 +437,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("showTypes",oXmlEleViewElements.getElementsByTagName("showTypes").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("allParticipants",oXmlEleViewElements.getElementsByTagName("allParticipants").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("thisIsVersion",oXmlEleViewElements.getElementsByTagName("thisIsVersion").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("agent1",oXmlEleViewElements.getElementsByTagName("agent1").item(0).getChildNodes().item(0).getNodeValue());
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
