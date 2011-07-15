@@ -97,6 +97,7 @@ public class MAV00129_viewAllTypesForms
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 		} 
 		catch (Exception e) {
+			System.out.println(e.getMessage());
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
