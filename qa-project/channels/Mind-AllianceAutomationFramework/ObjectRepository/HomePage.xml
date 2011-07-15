@@ -7,7 +7,7 @@
 <xPathSocialCalendar>/html/body/form/div[2]/div[2]/div[2]/span/div/div/div/ul/li[2]/a/span</xPathSocialCalendar>
 <xPathSocialMessages>/html/body/form/div[2]/div[2]/div[2]/span/div/div/div/ul/li/a/span</xPathSocialMessages>
 <xPathSocialSurvey>/html/body/form/div[2]/div[2]/div[2]/span/div/div/div/ul/li[3]/a/span</xPathSocialSurvey>
-<xPathSocialShowSendMessages></xPathSocialShowSendMessages>
+<xPathShowSentReceiveMessages>/html/body/form/div[2]/div[2]/div[2]/span/div/div/div[2]/div/div/a[2]/span</xPathShowSentReceiveMessages>
 <xPathSocialHideBroadCastMessages></xPathSocialHideBroadCastMessages>
 <xPathSocialSurveyHideCompleted></xPathSocialSurveyHideCompleted>
 <xPathHomeSendFeedBack></xPathHomeSendFeedBack>
