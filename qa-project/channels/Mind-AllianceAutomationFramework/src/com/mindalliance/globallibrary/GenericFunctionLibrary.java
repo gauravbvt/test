@@ -131,6 +131,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.home.put("sXpathSendFeedBack",oXmlEleHomePage.getElementsByTagName("xPathSendFeedBack").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathSendFeedbackWindow",oXmlEleHomePage.getElementsByTagName("xPathSendFeedbackWindow").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathHelpIcon",oXmlEleHomePage.getElementsByTagName("xPathHelpIcon").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.home.put("sXpathShowSentReceiveMessages",oXmlEleHomePage.getElementsByTagName("xPathShowSentReceiveMessages").item(0).getChildNodes().item(0).getNodeValue());
 			//Channels Plan Page
 			GlobalVariables.plan.put("sXpathShowPopUpMenu",oXmlElePlanPage.getElementsByTagName("xPathShowPopUpMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAllSegmentShowMenu",oXmlElePlanPage.getElementsByTagName("xPathAllSegmentShowMenu").item(0).getChildNodes().item(0).getNodeValue());
