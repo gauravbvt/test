@@ -1578,6 +1578,12 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
+    public List<? extends ModelObject> findAllModelObjectsIn( TransmissionMedium medium ) {
+        return medium.getEffectiveDelegatedToMedia();
+    }
+
+    @Override
     public List<ModelObject> findAllModelObjectsDirectlyRelatedToEvent( Event event ) {
         Set<ModelObject> mos = new HashSet<ModelObject>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -1902,6 +1908,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<? extends ModelEntity> findAllEntitiesIn( Phase phase ) {
         return (List<ModelEntity>) CollectionUtils.select(
                 findAllModelObjectsIn( phase ),
+                PredicateUtils.invokerPredicate( "isEntity" ) );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<? extends ModelEntity> findAllEntitiesIn( TransmissionMedium medium ) {
+        return (List<ModelEntity>) CollectionUtils.select(
+                findAllModelObjectsIn( medium ),
                 PredicateUtils.invokerPredicate( "isEntity" ) );
     }
 
