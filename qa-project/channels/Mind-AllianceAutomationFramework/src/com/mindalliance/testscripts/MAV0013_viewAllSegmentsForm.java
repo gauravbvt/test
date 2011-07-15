@@ -81,7 +81,7 @@ public class MAV0013_viewAllSegmentsForm
 			  }
 			  // WebElement Synchronization
 			  Thread.currentThread();
-			  Thread.sleep(1000);
+			  Thread.sleep(3000);
 			  
 			  // Call logout()
 			  GlobalVariables.iStepNo++ ;
@@ -93,7 +93,7 @@ public class MAV0013_viewAllSegmentsForm
 					  GlobalVariables.sBlank, GlobalVariables.sBlank);
 			  // WebElement Synchronization
 			  Thread.currentThread();
-			  Thread.sleep(1000);	
+			  Thread.sleep(3000);	
 		
 			  LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			  System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
