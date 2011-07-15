@@ -54,8 +54,8 @@ public class MAV0066_viewAllSegmentsActionList
 			    //Clicks on 'Actions' link under show pop up menu option of "All segments" 	
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Actions";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanAction"))).click();
-			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanAction")));
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanActionMenu"))).click();
+			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanActionMenu")));
 				GlobalVariables.oElement.click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

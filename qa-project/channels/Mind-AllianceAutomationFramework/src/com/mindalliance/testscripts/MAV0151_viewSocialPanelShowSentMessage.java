@@ -1,5 +1,7 @@
 package com.mindalliance.testscripts;
 
+import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
+
 import org.openqa.selenium.By;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
@@ -37,17 +39,20 @@ public class MAV0151_viewSocialPanelShowSentMessage
 				// Click on Show show message link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Show sent messages";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSentMessages"))).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSentMessages")));
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathShowSentReceiveMessages"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathShowSentReceiveMessages")));
 				// Assertion: Verify that message tab is present on social panel
-				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showSent"))) {
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showReceived"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("showSent")+" Actual "+GlobalVariables.oElement.getText();
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("showReceived")+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

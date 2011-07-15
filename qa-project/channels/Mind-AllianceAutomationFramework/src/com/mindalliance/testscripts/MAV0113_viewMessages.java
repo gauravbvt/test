@@ -65,11 +65,12 @@ public MAV0113_viewMessages(){
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);	
+				Thread.sleep(3000);	
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
+				ApplicationFunctionLibrary.logout();
 				ApplicationFunctionLibrary.logout();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

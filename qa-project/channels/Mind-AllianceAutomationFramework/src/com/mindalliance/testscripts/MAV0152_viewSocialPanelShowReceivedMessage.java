@@ -21,7 +21,7 @@ public class MAV0152_viewSocialPanelShowReceivedMessage
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
-								
+												
 				// Click on Message tab on social panel
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Message tab is present";
@@ -36,9 +36,20 @@ public class MAV0152_viewSocialPanelShowReceivedMessage
 				
 				// Click on Show show message link
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Show sent messages";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSentMessages"))).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSentMessages")));
+				GlobalVariables.sDescription="Show Received Messages";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathShowSentReceiveMessages"))).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathShowSentReceiveMessages")));
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);				
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathShowSentReceiveMessages"))).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathShowSentReceiveMessages")));
 				// Assertion: Verify that message tab is present on social panel
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showSent"))) {
 			    	// Write Results
@@ -47,7 +58,7 @@ public class MAV0152_viewSocialPanelShowReceivedMessage
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("showReceived")+" Actual "+GlobalVariables.oElement.getText();
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("showSent")+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

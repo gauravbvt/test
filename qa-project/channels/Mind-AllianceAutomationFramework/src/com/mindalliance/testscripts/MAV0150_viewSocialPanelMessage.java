@@ -26,6 +26,9 @@ public class MAV0150_viewSocialPanelMessage
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Message tab is present";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialMessages"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000); 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialMessages")));
 				// Assertion: Verify that message tab is present on social panel
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("messages"))) {
@@ -43,7 +46,7 @@ public class MAV0150_viewSocialPanelMessage
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000); 
+				Thread.sleep(2000); 
 				
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;

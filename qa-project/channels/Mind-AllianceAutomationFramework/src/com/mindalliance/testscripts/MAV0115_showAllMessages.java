@@ -95,6 +95,7 @@ public class MAV0115_showAllMessages
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
 				ApplicationFunctionLibrary.logout();
+				ApplicationFunctionLibrary.logout();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

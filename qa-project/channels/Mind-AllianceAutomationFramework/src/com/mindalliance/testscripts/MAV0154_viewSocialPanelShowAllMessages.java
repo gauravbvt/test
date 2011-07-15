@@ -37,20 +37,24 @@ public class MAV0154_viewSocialPanelShowAllMessages
 				// Click on hide broadcast message link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Hide broadcast";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathHideBroadcast"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideBroadcast"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathHideBroadcast")));
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideBroadcast")));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideBroadcast")));
 				// Assertion: Verify that message tab is present on social panel
-				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAllMessages"))){
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("hideBroadcast"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("showAllMessages")+" Actual "+GlobalVariables.oElement.getText();
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("hideBroadcast")+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -71,7 +75,6 @@ public class MAV0154_viewSocialPanelShowAllMessages
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			    System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-			
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
