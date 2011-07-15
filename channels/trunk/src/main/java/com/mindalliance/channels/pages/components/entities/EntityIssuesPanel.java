@@ -164,12 +164,12 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
                     : "roles played by this type of agent";
         } else if ( entity instanceof Role ) {
             return entity.isActual()
-                    ? "actors playing this role"
-                    : "actors playing this type of role";
+                    ? "agents playing this role"
+                    : "agents playing this type of role";
         } else if ( entity instanceof Organization ) {
             return entity.isActual()
-                    ? "actors and roles in this organization"
-                    : "actors and roles in this type of organization";
+                    ? "agents and roles in this organization"
+                    : "agents and roles in this type of organization";
         } else if ( entity instanceof Place ) {
             return entity.isActual()
                     ? "anything located within this place"
