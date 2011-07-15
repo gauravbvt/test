@@ -1,7 +1,12 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -59,8 +64,8 @@ public class TE003_ViewAgent
 				//Create Agent
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:5:cells:4:cell:entityName")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:5:cells:4:cell:entityName"));
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
 				for(int i=0;i<50;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
@@ -69,19 +74,28 @@ public class TE003_ViewAgent
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Assertion : Verify that Agent Created Successfully
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("index"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
-				// WebElement Synchronization
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")).click();
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
+				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+				for(WebElement option : options) {
+			    	if(GlobalVariables.viewElements.get("agents").equals(option.getText())){
+			    		option.setSelected();
+			    		break;
+			    	}
+			    }
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				//Click on Agent
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathIndexAgent"))).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathIndexAgent")));
+			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("float-bar-title")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("float-bar-title"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);								
 				//Select 'Agent' Option from List
 		    	if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("agent1"))){
 			    	// Write Results
@@ -93,14 +107,9 @@ public class TE003_ViewAgent
 		    	{
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				//Close Agent Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
