@@ -40,7 +40,7 @@ public class UntimelyDissemination extends AbstractIssueDetector {
             Part target = (Part) flow.getTarget();
             for ( ElementOfInformation eoi : flow.getEois() ) {
                 if ( eoi.isTimeSensitive() ) {
-                    Subject subject = new Subject( flow.getName(), eoi.getContent(), eoi.isTimeSensitive() );
+                    Subject subject = new Subject( flow.getName(), eoi.getContent() );
                     // dissemination from sources
                     List<Dissemination> disseminations = queryService.findAllDisseminations(
                             target,

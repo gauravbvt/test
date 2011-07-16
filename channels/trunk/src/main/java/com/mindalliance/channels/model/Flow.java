@@ -1210,7 +1210,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     public List<Subject> getAllSubjects() {
         Set<Subject> subjects = new HashSet<Subject>();
         for ( ElementOfInformation eoi : getEois() ) {
-            Subject subject = new Subject( getName(), eoi.getContent(), eoi.isTimeSensitive() );
+            Subject subject = new Subject( getName(), eoi.getContent() );
             subjects.add( subject );
         }
         List<Subject> results = new ArrayList<Subject>();
@@ -1320,7 +1320,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     @Override
                     public boolean evaluate( Object object ) {
                         ElementOfInformation eoi = (ElementOfInformation) object;
-                        return eoi.isTimeSensitive() && Matcher.getInstance().matches( eoi.getContent(), eoiContent );
+                        return eoi.isTimeSensitive() && Matcher.getInstance().same( eoi.getContent(), eoiContent );
                     }
                 }
         );

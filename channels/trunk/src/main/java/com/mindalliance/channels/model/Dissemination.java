@@ -146,17 +146,10 @@ public class Dissemination implements Serializable {
         return (Part) ( showTargets ? flow.getTarget() : flow.getSource() );
     }
 
-    public Delay getNeedMaxDelay() {
+    private Flow getMatchingNeed() {
         Part needyPart = toTargets ? getPart( true ) : startPart;
         Subject neededSubject = toTargets ? getSubject() : startSubject;
-        Flow need = needyPart.findNeedFor( neededSubject );
-        if ( need == null ) {
-            return null;
-        } else {
-            return need.isTimeSensitive( neededSubject.getContent() )
-                        ? need.getMaxDelay()
-                        : null;
-        }
+        return needyPart.findNeedFor( neededSubject );
     }
 
     public String toString() {
@@ -168,8 +161,22 @@ public class Dissemination implements Serializable {
     }
 
     public boolean isTimely() {
-        Delay required = getNeedMaxDelay();
-        return !getSubject().isTimeSensitive() || required == null || getDelay().compareTo( required ) <= 0;
+        Flow need = getMatchingNeed();
+        if ( need == null ) {
+            return true;
+        } else {
+            if ( need.isTimeSensitive( startSubject.getContent() ) ) {
+                Delay required = need.getMaxDelay();
+                return getDelay().compareTo( required ) <= 0;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public Delay getNeedMaxDelay() {
+        Flow need = getMatchingNeed();
+        return need == null ? null : need.getMaxDelay();
     }
 
     public boolean equals( Object other ) {

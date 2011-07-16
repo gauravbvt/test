@@ -2902,7 +2902,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 xform.getType(),
                                 flow.getMaxDelay(),
                                 subject,
-                                new Subject( flow.getName(), eoi.getContent(), eoi.isTimeSensitive() ),
+                                new Subject( flow.getName(), eoi.getContent() ),
                                 startPart,
                                 startSubject,
                                 showTargets ) );
