@@ -91,8 +91,11 @@
 <xPathAbtPlanSegActionAddNewIssue>/html/body/form/div[5]/div/div[2]/div/div/span/span[2]/span/ul/li[5]/span/a/span</xPathAbtPlanSegActionAddNewIssue>
 <xPathNewOrganization>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathNewOrganization>
 <xPathSurvey>/html/body/form/span[2]/div/div[2]/div/h1</xPathSurvey>
-<xPathAgentContacts>/html/body/form/div[4]/div/div[2]/div[2]/span/span/table/tbody/tr[5]/td[5]/span/a/span</xPathAgentContacts>
+<xPathAgentContacts>/html/body/form/div[4]/div/div[2]/div[2]/span/span/table/tbody/tr/td[5]/span/a/span</xPathAgentContacts>
 <xPathAgent>/html/body/form/div[4]/div/div[2]/div[2]/span/span[2]/h3/span[2]/span/a/span</xPathAgent>
+<xPathAgentCategory>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathAgentCategory>
+<xPathDeleteAgentCategory>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteAgentCategory>
+<xPathAgentViewAllTypes>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathAgentViewAllTypes>
 <!-- Assertions -->
 <xPathAssertionPhaseDetails>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathAssertionPhaseDetails>
 <xPathAssertionDetails>/html/body/form/div[4]/div/div[2]/div/div/h1</xPathAssertionDetails>
