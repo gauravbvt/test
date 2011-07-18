@@ -8,11 +8,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class TE001_CreateAgent 
+public class TE006_UpdateAgentTags 
 {
-	public TE001_CreateAgent() {
+	public TE006_UpdateAgentTags() {
 		try{
-			GlobalVariables.sTestCaseId = "TE001_CreateAgent";
+			GlobalVariables.sTestCaseId = "TE006_UpdateAgentTags";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -68,7 +68,7 @@ public class TE001_CreateAgent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Assertion : Verify that Agent Created Successfully
+				//Click on 'Agent' Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -79,11 +79,47 @@ public class TE001_CreateAgent
 				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.className("float-bar-title")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("float-bar-title"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);								
-				//Select 'Agent' Option from List
-		    	if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("agent1"))){
+				Thread.sleep(2000);
+				
+				//Update Agent Tags
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Agent Tags Updated";
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
+				for(int i=0;i<50;i++)
+					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is a Tag"));
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				//Close Agent Window
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				//Assertion : Verify that tags gets updated
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				//Click on 'Agent'
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
+				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.viewElements.get("tagDescription"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -91,26 +127,25 @@ public class TE001_CreateAgent
 			    }
 		    	else
 		    	{
-		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("agent1")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("tagDescription")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				//Close Agent Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				//Close About Plan Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-
+				Thread.sleep(1000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -122,7 +157,7 @@ public class TE001_CreateAgent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				GlobalVariables.oDriver.quit();
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
@@ -155,7 +190,7 @@ public class TE001_CreateAgent
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TE001_CreateAgent();
+			new TE006_UpdateAgentTags();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 

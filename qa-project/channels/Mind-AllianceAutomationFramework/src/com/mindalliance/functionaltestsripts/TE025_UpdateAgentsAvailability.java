@@ -8,11 +8,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class TE001_CreateAgent 
+public class TE025_UpdateAgentsAvailability 
 {
-	public TE001_CreateAgent() {
+	public TE025_UpdateAgentsAvailability() {
 		try{
-			GlobalVariables.sTestCaseId = "TE001_CreateAgent";
+			GlobalVariables.sTestCaseId = "TE025_UpdateAgentsAvailability";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -68,7 +68,7 @@ public class TE001_CreateAgent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Assertion : Verify that Agent Created Successfully
+				//Click on 'Agent' Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -77,41 +77,66 @@ public class TE001_CreateAgent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("float-bar-title")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("float-bar-title"));
+				//Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);								
-				//Select 'Agent' Option from List
-		    	if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("agent1"))){
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
-		    	else
-		    	{
-		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("agent1")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
-			    }
-			    // WebElement Synchronization
+				Thread.sleep(2000);
+				
+				//Click on 'Always Available' Check box
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="'Always Available' Checkbox unchecked";
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:twentyFourSeven")).click();
+				//Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close Agent Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
+				
+				//Update Agent's Availability
+				Boolean flag1=true,flag2=true;
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Agents Availability Updated";
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:0:timePeriod:dayOn")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:0:timePeriod:dayOn"));
+				flag1=GlobalVariables.oElement.isSelected();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:6:timePeriod:dayOn")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:6:timePeriod:dayOn"));
+				flag2=GlobalVariables.oElement.isSelected();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				//Verify that Agent's Availability gets Updated
+				if(flag1==false && flag2==false)
+				{
+					//Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else
+				{
+					//Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+				}
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close About Plan Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
+				//Check 'Always Available' Checkbox
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:twentyFourSeven")).click();
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 
-				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
@@ -122,7 +147,7 @@ public class TE001_CreateAgent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				GlobalVariables.oDriver.quit();
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
@@ -155,7 +180,7 @@ public class TE001_CreateAgent
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TE001_CreateAgent();
+			new TE025_UpdateAgentsAvailability();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 

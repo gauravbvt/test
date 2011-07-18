@@ -1,18 +1,23 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class TE001_CreateAgent 
+public class TE024_UpdateAgentContactInfo 
 {
-	public TE001_CreateAgent() {
+	public TE024_UpdateAgentContactInfo() {
 		try{
-			GlobalVariables.sTestCaseId = "TE001_CreateAgent";
+			GlobalVariables.sTestCaseId = "TE024_UpdateAgentContactInfo";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -68,7 +73,7 @@ public class TE001_CreateAgent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Assertion : Verify that Agent Created Successfully
+				//Click on 'Agent' Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -77,40 +82,68 @@ public class TE001_CreateAgent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("float-bar-title")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("float-bar-title"));
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);								
-				//Select 'Agent' Option from List
-		    	if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("agent1"))){
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
-		    	else
-		    	{
-		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("agent1")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
+				Thread.sleep(2000);
+				
+				//Update Agent Contact Information
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Agent Contact Information Updated";
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:medium")).click();
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:medium")));
+				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+				for(WebElement option : options) {
+			    	if(GlobalVariables.viewElements.get("email").equals(option.getText())){
+			    		option.setSelected();
+			    		break;
+			    	}
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
+				//Update Email
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("email"));
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				//Assertion : Verify that Agent's Contact Information Gets Updated
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address"));
+				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("email")))
+				{
+					
+			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);				
+				}
+				else{
+					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("email")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
+			    }
+				//Delete Agent's Contact Information
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:included")).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				//Close Agent Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1500);
 				//Close About Plan Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-
+				Thread.sleep(1500);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -122,7 +155,7 @@ public class TE001_CreateAgent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				GlobalVariables.oDriver.quit();
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
@@ -155,7 +188,7 @@ public class TE001_CreateAgent
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TE001_CreateAgent();
+			new TE024_UpdateAgentContactInfo();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
