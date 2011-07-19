@@ -55,7 +55,7 @@ public class MAV0072_allHelp
 			    // Assertion: Verify that "Help" page loaded 
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Help' gets loaded";		
-			    if (GlobalVariables.oDriver.getTitle().equalsIgnoreCase("Channels - help")) {
+			    if (GlobalVariables.oDriver.getTitle().contains(GlobalVariables.viewElements.get("planPageSubTitle"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
