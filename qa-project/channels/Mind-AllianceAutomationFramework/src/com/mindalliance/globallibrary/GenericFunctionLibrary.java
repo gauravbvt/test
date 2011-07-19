@@ -229,6 +229,10 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathAgentCategory",oXmlElePlanPage.getElementsByTagName("xPathAgentCategory").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathDeleteAgentCategory",oXmlElePlanPage.getElementsByTagName("xPathDeleteAgentCategory").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAgentViewAllTypes",oXmlElePlanPage.getElementsByTagName("xPathAgentViewAllTypes").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathAgentURL",oXmlElePlanPage.getElementsByTagName("xPathAgentURL").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathDeleteAgentURL",oXmlElePlanPage.getElementsByTagName("xPathDeleteAgentURL").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathAgentMore",oXmlElePlanPage.getElementsByTagName("xPathAgentMore").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathLocale",oXmlElePlanPage.getElementsByTagName("xPathLocale").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathAssertionPhaseDetails", oXmlElePlanPage.getElementsByTagName("xPathAssertionPhaseDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
@@ -446,6 +450,10 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("tagDescription",oXmlEleViewElements.getElementsByTagName("tagDescription").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("category1",oXmlEleViewElements.getElementsByTagName("category1").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("email",oXmlEleViewElements.getElementsByTagName("email").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("rolesPerformed",oXmlEleViewElements.getElementsByTagName("rolesPerformed").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("allFlowsInvolving",oXmlEleViewElements.getElementsByTagName("allFlowsInvolving").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("includeWaivedIssues",oXmlEleViewElements.getElementsByTagName("includeWaivedIssues").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("name",oXmlEleViewElements.getElementsByTagName("name").item(0).getChildNodes().item(0).getNodeValue());
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}

@@ -56,6 +56,7 @@ public class GlobalVariables {
 	public static String sEndDateTime;
 	public static String sBrowser = "Mozilla Firefox";
 	public static String sStrCheck=null;
+	public static boolean sunday=true,monday=true,tuesday=true,wednesday=true,thursday=true,friday=true,saturday=true;
 	// Extra
 	public static String sInternalErrorPageTitle="Internal Error";
 	public static String sAboutPlanPageSubTitle="About Plan: ";
