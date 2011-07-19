@@ -89,32 +89,30 @@ public class TE025_UpdateAgentsAvailability
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="'Always Available' Checkbox unchecked";
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:twentyFourSeven")).click();
-				//Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				//Assertion : Verify that Agent is available for full Time i.e from Sunday to Saturday
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:0:timePeriod:dayOn"));
+				GlobalVariables.sunday=GlobalVariables.oElement.isSelected();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:1:timePeriod:dayOn"));
+				GlobalVariables.monday=GlobalVariables.oElement.isSelected();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:2:timePeriod:dayOn"));
+				GlobalVariables.tuesday=GlobalVariables.oElement.isSelected();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:3:timePeriod:dayOn"));
+				GlobalVariables.wednesday=GlobalVariables.oElement.isSelected();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:4:timePeriod:dayOn"));
+				GlobalVariables.thursday=GlobalVariables.oElement.isSelected();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:5:timePeriod:dayOn"));
+				GlobalVariables.friday=GlobalVariables.oElement.isSelected();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:6:timePeriod:dayOn"));
+				GlobalVariables.saturday=GlobalVariables.oElement.isSelected();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
-				//Update Agent's Availability
-				Boolean flag1=true,flag2=true;
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Agents Availability Updated";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:0:timePeriod:dayOn")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:0:timePeriod:dayOn"));
-				flag1=GlobalVariables.oElement.isSelected();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:6:timePeriod:dayOn")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:6:timePeriod:dayOn"));
-				flag2=GlobalVariables.oElement.isSelected();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
 				//Verify that Agent's Availability gets Updated
-				if(flag1==false && flag2==false)
+				if(GlobalVariables.sunday==true && GlobalVariables.monday==true && GlobalVariables.tuesday==true && GlobalVariables.wednesday==true &&
+				   GlobalVariables.thursday==true && GlobalVariables.friday==true && GlobalVariables.saturday==true	)
 				{
 					//Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
