@@ -178,4 +178,8 @@
 <tagDescription>This is a Tag</tagDescription>
 <category1>Category 1</category1>
 <email>Email</email>
+<rolesPerformed>Roles performed</rolesPerformed>
+<allFlowsInvolving>All flows invoving</allFlowsInvolving>
+<includeWaivedIssues> Include waived issues</includeWaivedIssues>
+<name>Name:</name>
 </elements>
