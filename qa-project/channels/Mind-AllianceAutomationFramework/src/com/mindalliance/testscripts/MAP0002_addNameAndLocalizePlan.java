@@ -72,7 +72,7 @@ public class MAP0002_addNameAndLocalizePlan
 			    // Navigate to Home page
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Home page";
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div/div/div/img")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHomePageIcon"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

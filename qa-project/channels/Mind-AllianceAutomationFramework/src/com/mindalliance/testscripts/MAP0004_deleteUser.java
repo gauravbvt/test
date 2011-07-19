@@ -68,7 +68,7 @@ public class MAP0004_deleteUser
 				// Enter the 'Full Name', 'Email', 'Password' and select the role of the user (Admin/Planner/User/Disable)
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Details of New user entered";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 				for(WebElement td: tds){
 					if(td.getText().equals(GlobalVariables.testData.get("User for deletion"))){
@@ -91,14 +91,14 @@ public class MAP0004_deleteUser
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group"));
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New User Created";
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// Assertion:
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 				tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 				for(WebElement td: tds){
 					if(td.getText().equals(GlobalVariables.testData.get("User for deletion"))){
@@ -118,12 +118,12 @@ public class MAP0004_deleteUser
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Delete user
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Delete User";
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table/tbody/tr/td/span"));
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeleteUser")));
 				GlobalVariables.oDriver.findElement(By.name("item:0:group:delete")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group:delete"));
 				// Write Results
@@ -132,7 +132,7 @@ public class MAP0004_deleteUser
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -140,32 +140,25 @@ public class MAP0004_deleteUser
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table"));
-				tds=null;
-				tds = GlobalVariables.oElement.findElements(By.tagName("td"));
-				GlobalVariables.bIsSuccess=Boolean.FALSE;
-				for(WebElement td: tds)
-				{
-					if(!td.getText().equals(GlobalVariables.testData.get("User for deletion"))){
-						GlobalVariables.bIsSuccess=Boolean.TRUE;
-						break;
-					}
-				}		
-				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+				Thread.sleep(3000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
+				if(!GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("User for deletion"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				else
+				{
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}			
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
-								
+				Thread.sleep(3000);
+				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

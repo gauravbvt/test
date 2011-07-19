@@ -57,7 +57,7 @@ public class MAP0001_addPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -65,7 +65,7 @@ public class MAP0001_addPlan
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				// Assertion: verify Select the plan
 				GlobalVariables.bIsSuccess=Boolean.FALSE;
 				GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
@@ -74,6 +74,7 @@ public class MAP0001_addPlan
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.testData.get("New Plan v.1 (dev)").equals(option.getText())){
 			    		// Write Results
+			    		System.out.println("If Part");
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
@@ -83,19 +84,16 @@ public class MAP0001_addPlan
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
-				// WebElement Synchronization				
-				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(6000);
 				
 				// Click on 'Delete Plan' button
-				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete plan"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
 				//Thread sleep
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
