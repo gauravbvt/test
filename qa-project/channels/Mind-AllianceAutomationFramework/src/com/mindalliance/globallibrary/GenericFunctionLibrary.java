@@ -108,7 +108,6 @@ public class GenericFunctionLibrary {
 			GlobalVariables.login.put("sXpathStackTrace",oXmlEleLoginPage.getElementsByTagName("xPathStackTrace").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sXpathSignoutOnAssignmentsCommitments",oXmlEleLoginPage.getElementsByTagName("xPathSignoutOnAssignmentsCommitments").item(0).getChildNodes().item(0).getNodeValue());
 			// Channels Admin
-			GlobalVariables.channelsAdmin.put("sXpathDeletePlan",oXmlEleChannelsAdmin.getElementsByTagName("xPathDeletePlan").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.channelsAdmin.put("sXpathLogoutAdminPage",oXmlEleChannelsAdmin.getElementsByTagName("xPathLogoutAdminPage").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.channelsAdmin.put("sXpathSamePlanErrorMessage",oXmlEleChannelsAdmin.getElementsByTagName("xPathSamePlanErrorMessage").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.channelsAdmin.put("sXpathInputUserID",oXmlEleChannelsAdmin.getElementsByTagName("xPathInputUserID").item(0).getChildNodes().item(0).getNodeValue());
@@ -119,6 +118,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.channelsAdmin.put("sXpathDisableUser",oXmlEleChannelsAdmin.getElementsByTagName("xPathDisableUser").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.channelsAdmin.put("sXpathAccessPrivilegePlanner",oXmlEleChannelsAdmin.getElementsByTagName("xPathAccessPrivilegePlanner").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.channelsAdmin.put("sXpathThisPlanAccessPrivilegePlanner",oXmlEleChannelsAdmin.getElementsByTagName("xPathThisPlanAccessPrivilegePlanner").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.channelsAdmin.put("sXpathDeletePlan",oXmlEleChannelsAdmin.getElementsByTagName("xPathDeletePlan").item(0).getChildNodes().item(0).getNodeValue());
 			// Channels Home Page
 			GlobalVariables.home.put("sXpathLogoutHomePage",oXmlEleHomePage.getElementsByTagName("xPathLogoutHomePage").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathSocialAboutMe",oXmlEleHomePage.getElementsByTagName("xPathSocialAboutMe").item(0).getChildNodes().item(0).getNodeValue());
