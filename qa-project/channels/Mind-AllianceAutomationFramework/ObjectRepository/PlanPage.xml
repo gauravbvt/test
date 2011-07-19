@@ -96,6 +96,10 @@
 <xPathAgentCategory>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathAgentCategory>
 <xPathDeleteAgentCategory>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteAgentCategory>
 <xPathAgentViewAllTypes>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathAgentViewAllTypes>
+<xPathAgentURL>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathAgentURL>
+<xPathDeleteAgentURL>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteAgentURL>
+<xPathAgentMore>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/a/span</xPathAgentMore>
+<xPathLocale>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[6]/th/label/a[2]/span</xPathLocale>
 <!-- Assertions -->
 <xPathAssertionPhaseDetails>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathAssertionPhaseDetails>
 <xPathAssertionDetails>/html/body/form/div[4]/div/div[2]/div/div/h1</xPathAssertionDetails>
