@@ -11,7 +11,7 @@
 <xPathSocialHideBroadCastMessages></xPathSocialHideBroadCastMessages>
 <xPathSocialSurveyHideCompleted></xPathSocialSurveyHideCompleted>
 <xPathHomeSendFeedBack></xPathHomeSendFeedBack>
-<xPathHomePageIcon>/html/body/div/div/div/div/img</xPathHomePageIcon>
+<xPathHomePageIcon>/html/body/div/div/a/img</xPathHomePageIcon>
 <xPathSentMessages>/html/body/form/div[2]/div[2]/span/div/div/div[2]/div/div/a[2]/span</xPathSentMessages>
 <xPathHideBroadcast>/html/body/form/div[2]/div[2]/div[2]/span/div/div/div[2]/div/div/a/span</xPathHideBroadcast>
 <xPathSendFeedBack>/html/body/form/div[2]/div/span[2]/div/a/span</xPathSendFeedBack>
