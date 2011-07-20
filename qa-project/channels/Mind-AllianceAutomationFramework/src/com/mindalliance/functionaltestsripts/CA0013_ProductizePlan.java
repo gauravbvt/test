@@ -129,16 +129,11 @@ public class CA0013_ProductizePlan
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					// GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.testData.get("New Plan v.2 (dev)").equals(option.getText())){
-				    		// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription);
-							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-									GlobalVariables.sBlank, GlobalVariables.sBlank);
-				    		// option.setSelected();
+				    		option.setSelected();
 				    		break;
 				    	}
 				    }
@@ -149,11 +144,14 @@ public class CA0013_ProductizePlan
 					// Click on 'Delete Plan' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan Deleted";
-					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete plan"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
 					alert = GlobalVariables.oDriver.switchTo().alert();
 					// Click on 'OK" button of message box in order to confirm it
 					alert.accept();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					//Thread sleep
 					Thread.currentThread();
 					Thread.sleep(3000);
