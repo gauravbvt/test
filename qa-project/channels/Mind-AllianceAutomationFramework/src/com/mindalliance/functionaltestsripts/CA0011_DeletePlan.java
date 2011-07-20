@@ -96,7 +96,7 @@ public class CA0011_DeletePlan
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan Deleted";
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete plan"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// Click on 'OK" button of message box in order to confirm it
 					alert.accept();
@@ -105,7 +105,7 @@ public class CA0011_DeletePlan
 					Thread.sleep(3000);
 					// Assertion: Verify that plan deleted successfully
 					GlobalVariables.bIsSuccess=Boolean.FALSE;
-					GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
+					// GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -114,7 +114,7 @@ public class CA0011_DeletePlan
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 									GlobalVariables.sBlank, GlobalVariables.sBlank);
-				    		option.setSelected();
+				    		// option.setSelected();
 				    		break;
 				    	}
 				    }
@@ -125,6 +125,7 @@ public class CA0011_DeletePlan
 					// Click on 'Signout<user name>' Link
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Logout Successful";
+					// GlobalVariables.oDriver.findElement(By.className("logout")).click();
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
 					GlobalVariables.oDriver.quit();
 					// Write Results
