@@ -142,7 +142,6 @@ public class CA0014_UpdatePlan
 					Thread.currentThread();
 					Thread.sleep(1000);
 					// Select Plan 
-					GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -160,8 +159,7 @@ public class CA0014_UpdatePlan
 					Thread.sleep(3000);
 
 					// Click on 'Delete Plan' button
-					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete plan"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// Click on 'OK" button of message box in order to confirm it
 					alert.accept();
