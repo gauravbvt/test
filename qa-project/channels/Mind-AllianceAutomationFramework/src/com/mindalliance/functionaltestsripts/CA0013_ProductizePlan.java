@@ -95,7 +95,7 @@ public class CA0013_ProductizePlan
 					// Click on 'Productize Plan' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan Productized";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/ul[2]/li[2]/a")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathProductize"))).click();
 //					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 //					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Productize plan"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -129,7 +129,7 @@ public class CA0013_ProductizePlan
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
+					// GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -138,7 +138,7 @@ public class CA0013_ProductizePlan
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 									GlobalVariables.sBlank, GlobalVariables.sBlank);
-				    		option.setSelected();
+				    		// option.setSelected();
 				    		break;
 				    	}
 				    }
