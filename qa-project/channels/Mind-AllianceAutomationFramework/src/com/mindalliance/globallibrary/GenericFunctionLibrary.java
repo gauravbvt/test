@@ -118,6 +118,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.channelsAdmin.put("sXpathDisableUser",oXmlEleChannelsAdmin.getElementsByTagName("xPathDisableUser").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.channelsAdmin.put("sXpathAccessPrivilegePlanner",oXmlEleChannelsAdmin.getElementsByTagName("xPathAccessPrivilegePlanner").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.channelsAdmin.put("sXpathThisPlanAccessPrivilegePlanner",oXmlEleChannelsAdmin.getElementsByTagName("xPathThisPlanAccessPrivilegePlanner").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.channelsAdmin.put("sXpathProductize",oXmlEleChannelsAdmin.getElementsByTagName("xPathProductize").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.channelsAdmin.put("sXpathDeletePlan",oXmlEleChannelsAdmin.getElementsByTagName("xPathDeletePlan").item(0).getChildNodes().item(0).getNodeValue());
 			// Channels Home Page
 			GlobalVariables.home.put("sXpathLogoutHomePage",oXmlEleHomePage.getElementsByTagName("xPathLogoutHomePage").item(0).getChildNodes().item(0).getNodeValue());
