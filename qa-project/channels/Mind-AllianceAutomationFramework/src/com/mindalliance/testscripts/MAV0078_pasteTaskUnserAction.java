@@ -54,7 +54,7 @@ public class MAV0078_pasteTaskUnserAction
 			    GlobalVariables.oElement.sendKeys(Keys.ENTER);
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 			    // Click on hide details from action pop-menu bar
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 		    	// Write Results
@@ -63,7 +63,7 @@ public class MAV0078_pasteTaskUnserAction
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(3000);
+			    Thread.sleep(4000);
 			    
 			    // Click on cut task under action pop up menu of task details
 			    GlobalVariables.iStepNo++ ;

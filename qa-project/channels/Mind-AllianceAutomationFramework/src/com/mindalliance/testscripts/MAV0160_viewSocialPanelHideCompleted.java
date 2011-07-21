@@ -37,11 +37,11 @@ public class MAV0160_viewSocialPanelHideCompleted
 				// Click on hide broadcast message link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Hide Completed";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathHideBroadcast"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideBroadcast"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathHideBroadcast")));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideBroadcast")));
 				// Assertion: Verify that broad cast can be hidden on social panel
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAll"))) {
 			    	// Write Results

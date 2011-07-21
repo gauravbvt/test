@@ -171,29 +171,27 @@ public class MAC0035_RedoAddNewTask {
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
+					int cnt=0;
 					// ASSERTION:  When clicked on 'Redo add new task' option the newly added task should get added to the segment.
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
 					tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 					GlobalVariables.bIsSuccess = Boolean.FALSE;
 					for (WebElement td: tds){
-						GlobalVariables.sStrCheck=td.getText();
-						if (td.getText().equals("Task 1")){
-							GlobalVariables.bIsSuccess = Boolean.TRUE;
-							break;
+						if (td.getText().equals(GlobalVariables.viewElements.get("doingSomething"))){
+							cnt++;
 						}
 					}
-					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
+					if (cnt==2) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 1' "+" Actual " + GlobalVariables.sStrCheck;
-				    	// Write Results
+						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
 				    }
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();

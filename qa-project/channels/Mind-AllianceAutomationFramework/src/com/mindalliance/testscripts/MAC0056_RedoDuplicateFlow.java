@@ -107,10 +107,11 @@ public class MAC0056_RedoDuplicateFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);
+
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:firstChoice")));
 				List<WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	if(GlobalVariables.viewElements.get("Other").equals(option.getText())){
+			    	if(GlobalVariables.viewElements.get("other").equals(option.getText())){
 			    			option.setSelected();
 			    			break;
 			    	}

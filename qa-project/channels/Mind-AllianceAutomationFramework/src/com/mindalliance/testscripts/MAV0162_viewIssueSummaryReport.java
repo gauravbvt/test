@@ -24,10 +24,6 @@ public class MAV0162_viewIssueSummaryReport
 				  GlobalVariables.iStepNo++ ;
 				  GlobalVariables.sDescription = "Navigated to Issue Summary Report";
 				  GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("issueSummaryReport"))).click();
-				  // Write Results
-				  LogFunctions.writeLogs(GlobalVariables.sDescription);
-				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
 				  Thread.sleep(1000);

@@ -66,7 +66,7 @@ public class MAV0016_viewAllWhoForm
 			  GlobalVariables.iStepNo++;
 			  GlobalVariables.sDescription="'Who's who' Page gets renders";
 			  GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionWhowho")));
-			  if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
+			  if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("whosWho"))) {
 				  // Write Results
 	  	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	  	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -74,7 +74,7 @@ public class MAV0016_viewAllWhoForm
 			  }
 			  else
 			  {
-				  GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+ GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
+				  GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+ GlobalVariables.viewElements.get("whosWho")+" Actual "+GlobalVariables.oElement.getText();
 				  // Write Results
 				  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

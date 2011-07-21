@@ -66,14 +66,14 @@ public class MAV0017_viewAllIssueForm
 			  GlobalVariables.iStepNo++;
 			  GlobalVariables.sDescription="All Issues renders";
 			  GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionIssues")));
-			  if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
+			  if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allIssues"))) {
 				  // Write Results
 				  LogFunctions.writeLogs(GlobalVariables.sDescription);
 				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  }
 			  else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("allIssues")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

@@ -1,9 +1,7 @@
 package com.mindalliance.testscripts;
 
-import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
 
 import org.openqa.selenium.By;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
