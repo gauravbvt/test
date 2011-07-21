@@ -4,6 +4,7 @@
 <homePageTitle>Channels</homePageTitle>
 <loginPageTitle>Channels - Sign in</loginPageTitle>
 <planPageSubTitle>Channels:</planPageSubTitle>
+<helpPageTitle>Channels - Help</helpPageTitle>
 <aboutPlanPageSubTitle>About Plan: </aboutPlanPageSubTitle>	
 <assignmentsAndCommitments>Assignments and commitments</assignmentsAndCommitments>
 <informationSharingGuidelinesForAllParticipants>Information sharing guidelines for all participants</informationSharingGuidelinesForAllParticipants>
@@ -65,7 +66,7 @@
 <assignments>Assignment</assignments>
 <taskAssignments>Task assignments</taskAssignments>
 <failureImpacts>Failure impacts</failureImpacts>
-<taskFailureImpacts>Impacts of failing task "doing something"</taskFailureImpacts>
+<taskFailureImpacts>Impacts of failing task</taskFailureImpacts>
 <dissemination>Dissemination</dissemination>
 <infoDisseminationForTask>Information dissemination for task</infoDisseminationForTask>
 <removeThisSegment>Remove this segment</removeThisSegment>
@@ -182,4 +183,6 @@
 <allFlowsInvolving>All flows invoving</allFlowsInvolving>
 <includeWaivedIssues> Include waived issues</includeWaivedIssues>
 <name>Name:</name>
+<hideCompleted>hide completed</hideCompleted>
+<doingSomething>doing something</doingSomething>
 </elements>
