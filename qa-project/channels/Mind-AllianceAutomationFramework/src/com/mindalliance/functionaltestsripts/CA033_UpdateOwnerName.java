@@ -14,11 +14,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class CA0033_UpdateOwnerName 
+public class CA033_UpdateOwnerName 
 {
-	public CA0033_UpdateOwnerName() {
+	public CA033_UpdateOwnerName() {
 		try {
-			GlobalVariables.sTestCaseId = "CA0033_UpdateOwnerName";
+			GlobalVariables.sTestCaseId = "CA033_UpdateOwnerName";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -143,7 +143,7 @@ public class CA0033_UpdateOwnerName
 			try {
 				GenericFunctionLibrary.initializeTestData();
 				GenericFunctionLibrary.loadObjectRepository();
-				new CA0033_UpdateOwnerName();
+				new CA033_UpdateOwnerName();
 				GenericFunctionLibrary.tearDownTestData();
 				ReportFunctions.generateAutomationReport();
 			} 

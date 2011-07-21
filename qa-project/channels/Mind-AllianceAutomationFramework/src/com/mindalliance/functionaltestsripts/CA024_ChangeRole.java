@@ -7,11 +7,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class CA0024_ChangeRole 
+public class CA024_ChangeRole 
 {
-	public CA0024_ChangeRole() {
+	public CA024_ChangeRole() {
 		try {
-			GlobalVariables.sTestCaseId = "CA0024_ChangeRole";
+			GlobalVariables.sTestCaseId = "CA024_ChangeRole";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -186,7 +186,7 @@ public class CA0024_ChangeRole
 			try {
 				GenericFunctionLibrary.initializeTestData();
 				GenericFunctionLibrary.loadObjectRepository();
-				new CA0024_ChangeRole();
+				new CA024_ChangeRole();
 				GenericFunctionLibrary.tearDownTestData();
 				ReportFunctions.generateAutomationReport();
 			} 

@@ -7,11 +7,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class CA0021_DisableUser 
+public class CA021_DisableUser 
 {
-	public CA0021_DisableUser() {
+	public CA021_DisableUser() {
 		try {
-			GlobalVariables.sTestCaseId = "CA0021_DisableUser";
+			GlobalVariables.sTestCaseId = "CA021_DisableUser";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -129,7 +129,7 @@ public class CA0021_DisableUser
 			try {
 				GenericFunctionLibrary.initializeTestData();
 				GenericFunctionLibrary.loadObjectRepository();
-				new CA0021_DisableUser();
+				new CA021_DisableUser();
 				GenericFunctionLibrary.tearDownTestData();
 				ReportFunctions.generateAutomationReport();
 			} 

@@ -7,11 +7,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class CA0017_DeleteUser 
+public class CA017_DeleteUser 
 {
-	public CA0017_DeleteUser() {
+	public CA017_DeleteUser() {
 		try {
-			GlobalVariables.sTestCaseId = "CA0017_DeleteUser";
+			GlobalVariables.sTestCaseId = "CA017_DeleteUser";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -123,7 +123,7 @@ public class CA0017_DeleteUser
 			try {
 				GenericFunctionLibrary.initializeTestData();
 				GenericFunctionLibrary.loadObjectRepository();
-				new CA0017_DeleteUser();
+				new CA017_DeleteUser();
 				GenericFunctionLibrary.tearDownTestData();
 				ReportFunctions.generateAutomationReport();
 			} 

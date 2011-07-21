@@ -8,11 +8,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class CA0031_UpdateSendPlannerFeedback 
+public class CA031_UpdateSendPlannerFeedback 
 {
-	public CA0031_UpdateSendPlannerFeedback() {
+	public CA031_UpdateSendPlannerFeedback() {
 		try {
-			GlobalVariables.sTestCaseId = "CA0031_UpdateSendPlannerFeedback";
+			GlobalVariables.sTestCaseId = "CA031_UpdateSendPlannerFeedback";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -86,7 +86,7 @@ public class CA0031_UpdateSendPlannerFeedback
 			try {
 				GenericFunctionLibrary.initializeTestData();
 				GenericFunctionLibrary.loadObjectRepository();
-				new CA0031_UpdateSendPlannerFeedback();
+				new CA031_UpdateSendPlannerFeedback();
 				GenericFunctionLibrary.tearDownTestData();
 				ReportFunctions.generateAutomationReport();
 			} 

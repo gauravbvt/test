@@ -13,11 +13,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class CA0011_DeletePlan 
+public class CA011_DeletePlan 
 {
-	public CA0011_DeletePlan() {
+	public CA011_DeletePlan() {
 		try {
-			GlobalVariables.sTestCaseId = "CA0011_DeletePlan";
+			GlobalVariables.sTestCaseId = "CA011_DeletePlan";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -162,7 +162,7 @@ public class CA0011_DeletePlan
 			try {
 				GenericFunctionLibrary.initializeTestData();
 				GenericFunctionLibrary.loadObjectRepository();
-				new CA0011_DeletePlan();
+				new CA011_DeletePlan();
 				GenericFunctionLibrary.tearDownTestData();
 				ReportFunctions.generateAutomationReport();
 			} 

@@ -7,11 +7,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class CA0016_CreateUser 
+public class CA016_CreateUser 
 {
-	public CA0016_CreateUser() {
+	public CA016_CreateUser() {
 		try {
-			GlobalVariables.sTestCaseId = "CA0016_CreateUser";
+			GlobalVariables.sTestCaseId = "CA016_CreateUser";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -122,7 +122,7 @@ public class CA0016_CreateUser
 			try {
 				GenericFunctionLibrary.initializeTestData();
 				GenericFunctionLibrary.loadObjectRepository();
-				new CA0016_CreateUser();
+				new CA016_CreateUser();
 				GenericFunctionLibrary.tearDownTestData();
 				ReportFunctions.generateAutomationReport();
 			} 

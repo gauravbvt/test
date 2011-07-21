@@ -13,11 +13,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class CA0014_UpdatePlan 
+public class CA014_UpdatePlan 
 {
-	public CA0014_UpdatePlan() {
+	public CA014_UpdatePlan() {
 		try {
-			GlobalVariables.sTestCaseId = "CA0014_UpdatePlan";
+			GlobalVariables.sTestCaseId = "CA014_UpdatePlan";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -207,7 +207,7 @@ public class CA0014_UpdatePlan
 			try {
 				GenericFunctionLibrary.initializeTestData();
 				GenericFunctionLibrary.loadObjectRepository();
-				new CA0014_UpdatePlan();
+				new CA014_UpdatePlan();
 				GenericFunctionLibrary.tearDownTestData();
 				ReportFunctions.generateAutomationReport();
 			} 
