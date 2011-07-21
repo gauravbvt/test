@@ -455,6 +455,9 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("allFlowsInvolving",oXmlEleViewElements.getElementsByTagName("allFlowsInvolving").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("includeWaivedIssues",oXmlEleViewElements.getElementsByTagName("includeWaivedIssues").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("name",oXmlEleViewElements.getElementsByTagName("name").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("helpPageTitle",oXmlEleViewElements.getElementsByTagName("helpPageTitle").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("hideCompleted",oXmlEleViewElements.getElementsByTagName("hideCompleted").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("doingSomething",oXmlEleViewElements.getElementsByTagName("doingSomething").item(0).getChildNodes().item(0).getNodeValue());
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
