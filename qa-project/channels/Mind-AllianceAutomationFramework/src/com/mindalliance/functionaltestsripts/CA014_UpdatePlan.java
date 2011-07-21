@@ -132,7 +132,7 @@ public class CA014_UpdatePlan
 					Thread.sleep(1000);
 					//Assertion : Verify that Plan Name gets Updated
 					//Navigate to Home Page
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathPlanHomeIcon"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

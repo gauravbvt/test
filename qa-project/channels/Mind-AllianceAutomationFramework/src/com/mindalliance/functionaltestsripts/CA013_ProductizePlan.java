@@ -96,8 +96,6 @@ public class CA013_ProductizePlan
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan Productized";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathProductize"))).click();
-//					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-//					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Productize plan"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// Click on 'OK" button of message box in order to confirm it
 					alert.accept();
@@ -142,16 +140,10 @@ public class CA013_ProductizePlan
 					Thread.sleep(5000);
 
 					// Click on 'Delete Plan' button
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Plan Deleted";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
 					alert = GlobalVariables.oDriver.switchTo().alert();
 					// Click on 'OK" button of message box in order to confirm it
 					alert.accept();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					//Thread sleep
 					Thread.currentThread();
 					Thread.sleep(3000);

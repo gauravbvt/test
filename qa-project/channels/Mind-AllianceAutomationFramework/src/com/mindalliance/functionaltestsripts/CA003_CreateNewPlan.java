@@ -61,8 +61,6 @@ public class CA003_CreateNewPlan
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that plan created successfully
-				GlobalVariables.bIsSuccess=Boolean.FALSE;
-				GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {

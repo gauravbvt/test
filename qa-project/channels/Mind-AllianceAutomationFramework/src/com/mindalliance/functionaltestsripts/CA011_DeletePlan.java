@@ -74,8 +74,6 @@ public class CA011_DeletePlan
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: Verify that plan created successfully
-					GlobalVariables.bIsSuccess=Boolean.FALSE;
-					GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -95,7 +93,6 @@ public class CA011_DeletePlan
 					// Click on 'Delete Plan' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan Deleted";
-					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// Click on 'OK" button of message box in order to confirm it
@@ -120,7 +117,7 @@ public class CA011_DeletePlan
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(4000);
+					Thread.sleep(2000);
 					
 					// Click on 'Signout<user name>' Link
 					GlobalVariables.iStepNo++;

@@ -52,14 +52,12 @@ public class CA009_CreatePlanWithoutOwnerName
 
 					// Click on 'Submit' button
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Plan Created";
+					GlobalVariables.sDescription = "Plan Created Without Owner Name";
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: Verify that plan created successfully
-					GlobalVariables.bIsSuccess=Boolean.FALSE;
-					GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -77,7 +75,7 @@ public class CA009_CreatePlanWithoutOwnerName
 					Thread.sleep(3000);
 
 					// Click on 'Delete Plan' button
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete plan"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("deletePlan"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// Click on 'OK" button of message box in order to confirm it
 					alert.accept();

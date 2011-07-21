@@ -1,7 +1,13 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -32,12 +38,27 @@ public class CA005_CreatePlanWithExistingURI
 					Thread.currentThread();
 					Thread.sleep(1000);
 					
+					// Create New Plan
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
+					// newPlanClient
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					// Click on 'Submit' button
+					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+
 					// Enter Existing Plan URI
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Existing Plan URL Entered";
-					GlobalVariables.oDriver.findElement(By.name("newPlanUri")).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("View Plan"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -49,10 +70,9 @@ public class CA005_CreatePlanWithExistingURI
 					// Enter Existing Owner Name
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Owner Name Entered";
-					GlobalVariables.oDriver.findElement(By.name("newPlanClient")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
-					GlobalVariables.oElement.sendKeys(Keys.ENTER);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -60,11 +80,16 @@ public class CA005_CreatePlanWithExistingURI
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
+					// Click on 'Submit' button
+					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 						
 					// Verify that plan should not get created with existing plan name
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan Not Created";
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathSamePlanErrorMessage")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("feedbackPanelERROR"));
 					if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("samePlan"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -81,6 +106,28 @@ public class CA005_CreatePlanWithExistingURI
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
+					// Delete Plan
+					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
+					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+				    for(WebElement option : options) {
+				    	if(GlobalVariables.testData.get("New Plan v.1 (dev)").equals(option.getText())){
+				    		option.setSelected();
+				    		break;
+				    	}
+				    }
+				    // WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+
+					// Click on 'Delete Plan' button
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// Click on 'OK" button of message box in order to confirm it
+					alert.accept();
+					//Thread sleep
+					Thread.currentThread();
+					Thread.sleep(2000);
+
 					
 					// Click on 'Signout<user name>' Link
 					GlobalVariables.iStepNo++;
