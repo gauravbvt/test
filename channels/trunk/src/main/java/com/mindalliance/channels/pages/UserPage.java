@@ -351,18 +351,21 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
                 // Goto model
                 new WebMarkupContainer( "model" )
                         .add( newTargetedLink( "gotoModel", "", PlanPage.class, null, plan ) )
-                        .add( new Label( "modelDescription", getGotoModelDescription( user, plan ) ) )
+                        // TODO: set title
+                       // .add( new Label( "modelDescription", getGotoModelDescription( user, plan ) ) )
                         .setVisible( planner || plan.isTemplate() ),
 
                 // Goto mapped procedures
                 new WebMarkupContainer( "procedures" )
                         .add( newTargetedLink( "gotoProcedures", "", ProcedureMapPage.class, null, plan ) ).
+                        // TODO: set title
                         setVisible( planner || plan.isTemplate() ),
 
                 // Goto guidelines
                 new WebMarkupContainer( "guidelines" )
                         .add( gotoGuidelinesLink )
-                        .add( new Label( "guidelinesDescription", getGotoGuidelinesDescription( user, plan ) ) )
+                        // TODO: set title
+                       // .add( new Label( "guidelinesDescription", getGotoGuidelinesDescription( user, plan ) ) )
                         .setVisible( planner || actor != null ),
 
                 // Goto issues report
