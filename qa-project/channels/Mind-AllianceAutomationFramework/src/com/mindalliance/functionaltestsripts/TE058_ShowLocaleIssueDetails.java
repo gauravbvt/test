@@ -67,13 +67,12 @@ public class TE058_ShowLocaleIssueDetails
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("issues"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Issues"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("entity"));
-				System.out.println(GlobalVariables.oElement.getText());
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.viewElements.get("issues")))
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("issues")))
 				{
 	    			// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
