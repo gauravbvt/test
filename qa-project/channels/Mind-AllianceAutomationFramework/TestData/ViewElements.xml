@@ -77,7 +77,8 @@
 <showAllMessages>show all messages</showAllMessages>
 <showElements>Show elements</showElements>
 <copyNeed>Copy need</copyNeed>
-<issues>Issues</issues>
+<issues>issues</issues>
+<Issues>Issues</Issues>
 <agents>Agents</agents>
 <network>Network</network>
 <addNewSegment>Add new segment</addNewSegment>
