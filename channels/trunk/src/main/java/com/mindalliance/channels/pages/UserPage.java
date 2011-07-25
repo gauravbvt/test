@@ -341,7 +341,16 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         BookmarkablePageLink<? extends WebPage> gotoGuidelinesLink =
                 getGuidelinesLink( "gotoGuidelines", getQueryService(), getPlan(), User.current(), true );
         Label gotoReportLabel = new Label( "guidelinesLabel", getGuidelinesReportLabel( user, plan ) );
-        gotoGuidelinesLink.add( gotoReportLabel );
+        gotoGuidelinesLink.add( gotoReportLabel )
+                .add(new AttributeModifier(
+                "title",
+                true,
+                new Model<String>( getGotoGuidelinesDescription( user, plan ) ) ));
+        BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
+        gotoModelLink.add( new AttributeModifier(
+                "title",
+                true,
+                new Model<String>( getGotoModelDescription( user, plan ) ) ) );
         form.add(
                 // Goto admin
                 new WebMarkupContainer( "admin" )
@@ -350,22 +359,17 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
 
                 // Goto model
                 new WebMarkupContainer( "model" )
-                        .add( newTargetedLink( "gotoModel", "", PlanPage.class, null, plan ) )
-                        // TODO: set title
-                       // .add( new Label( "modelDescription", getGotoModelDescription( user, plan ) ) )
+                        .add( gotoModelLink )
                         .setVisible( planner || plan.isTemplate() ),
 
                 // Goto mapped procedures
                 new WebMarkupContainer( "procedures" )
                         .add( newTargetedLink( "gotoProcedures", "", ProcedureMapPage.class, null, plan ) ).
-                        // TODO: set title
-                        setVisible( planner || plan.isTemplate() ),
+                                setVisible( planner || plan.isTemplate() ),
 
                 // Goto guidelines
                 new WebMarkupContainer( "guidelines" )
                         .add( gotoGuidelinesLink )
-                        // TODO: set title
-                       // .add( new Label( "guidelinesDescription", getGotoGuidelinesDescription( user, plan ) ) )
                         .setVisible( planner || actor != null ),
 
                 // Goto issues report
