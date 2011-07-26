@@ -516,7 +516,7 @@
                 </dependencies>
                 <configuration>
                     <chunkedOutput>true</chunkedOutput>
-                    <!--<chunkSectionDepth>5</chunkSectionDepth>-->
+                    <chunkSectionDepth>5</chunkSectionDepth>
                     <targetDirectory>${basedir}/src/main/webapp/doc</targetDirectory>
                     <ignoreImageScaling>true</ignoreImageScaling>
                     <htmlStylesheet>${doc.css}</htmlStylesheet>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>The meaning of information in ISP</title><link rel="stylesheet" type="text/css" href="/css/doc.css"/><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/><link rel="home" href="channels_user_guide.html" title="Channels Planner Guide"/><link rel="up" href="ch01s03.html" title="ISP concepts"/><link rel="prev" href="ch01s03s06.html" title="Secrecy, security and clearances"/><link rel="next" href="ch01s03s08.html" title="Task assignments and information sharing commitments"/></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">The meaning of information in ISP</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch01s03s06.html">Prev</a> </td><th width="60%" align="center">ISP concepts</th><td width="20%" align="right"> <a accesskey="n" href="ch01s03s08.html">Next</a></td></tr></table><hr/></div><div class="section" title="The meaning of information in ISP"><div class="titlepage"><div><div><h3 class="title"><a id="d0e599"/>The meaning of information in ISP</h3></div></div></div><p>Tasks and flows are defined in terms of information needed, uncovered and shared.
+          Information is named and is broken into atomic elements. Each <em class="firstterm">element of
+            information</em> is named, can be given security classifications and can be
+          annotated with a description and handling instructions. </p><div class="figure"><a id="d0e607"/><p class="title"><strong>Figure 1.31. Elements of information</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/eoi_transformation.png" align="middle" alt="Elements of information"/></div></div></div><br class="figure-break"/><p>Elements of information sent from a task can be described as the result of
+          transforming elements received in the execution of the task. An element of information
+          (EOI) sent can be the same as an EOI received, can be an EOI received but renamed, or an
+          aggregation of EOIs received (for example a count, a synthesis etc.).</p><p>An element of information is considered atomic for the purposes of a plan; it is the
+          indivisible unit of transmission and transformation. Once aggregated, an EOI can not be
+          "split apart".</p><p>The notion of the plurality of an element is left undefined. For example, if
+          "suspicious activity report" information contains the element "suspect profile" then it is
+          possible that there will be more than one suspect profiles in a report.</p><p>When analyzing flows, Channels is not concerned with what the information actually
+          means. Channels has no domain knowledge to infer from. Rather, it cares about whether or
+          not two flows are about the same information, and whether an element of information is the
+          same as, or is the transformation of, another element of information.</p><p>If the information in two flows have the same name, it does not necessarily mean that
+          they represent, conceptually, the same information. Two tasks performed respectively by a
+          EOC commander and a corporate CEO might both need a "situation assessment" but they would
+          likely not need the same kind of situation assessment with the same elements of
+          information (even if the elements themselves have identical names).</p><p>In Channels, identically named flows, needs and capabilities (uppercase vs lowercase
+          and extra spaces are ignored) are explicitly meant to represent the same kind of
+          information (they are synonymous) <span class="emphasis"><em>if and only if</em></span> they connect to the
+          same tasks (one flow may be a "send" and the other one a "receive"). Similarly,
+          identically named elements of information are meant to represent the same atom of
+          information <span class="emphasis"><em>if only if</em></span> they compose synonymous information.</p><p>Agents executing a task receive and send information. The information they receive and
+          send may have different names an yet have common elements of information. For example, the
+          "suspect profile" element of a sent "suspicious activity report" information may be the
+          same as the "suspect description" element of a received "security tip", and it may be the
+          same as the "suspect profile" of received "BOLO" information.</p><p>Alternately, an element sent may aggregate elements received. Aggregation combines
+          many elements into a single element, with loss of data. For example, a "suspects count"
+          element aggregates "suspect profile" elements into a single number, losing the details of
+          the individual profiles. Counting is only one of many possible kinds of aggregation. A
+          "threat level", for example, might aggregate a great deal of different elements into a
+          high vs low rating.</p><p>In order to track the dissemination of information, it necessary to indicate when sent
+          elements are the result of renaming or are aggregating received elements. Channels need
+          only differentiate between two kinds of element transformation in order to track the
+          dissemination of information: renaming and aggregation. The description field of an
+          element of information can be used to provide more details about the specific nature of an
+          aggregation.</p><p>Issue detection takes element renaming and aggregation into account. For example,
+          while it may be acceptable to declassify aggregated elements, it is not acceptable to
+          declassify a renamed, classified element.</p></div><div class="navfooter"><hr/><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch01s03s06.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch01s03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch01s03s08.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Secrecy, security and clearances </td><td width="20%" align="center"><a accesskey="h" href="channels_user_guide.html">Home</a></td><td width="40%" align="right" valign="top"> Task assignments and information sharing commitments</td></tr></table></div></body></html>

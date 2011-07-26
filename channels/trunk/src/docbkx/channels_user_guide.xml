@@ -13,7 +13,7 @@
     <abstract>
       <para>This document introduces the key concepts of Information Sharing Planning, provides a
         reference guide to the Channels Web application, and shows how to apply the ISP Method with
-        Channels to systematically build and analyze information sharing plan. A lexicon of ISP
+        Channels to systematically build and analyze information sharing plans. A lexicon of ISP
         terms and the complete list of detectable ISP issues can be found in the Appendix.</para>
     </abstract>
   </info>
@@ -49,7 +49,7 @@
     </section>
     <section>
       <title>Why use Channels to plan information sharing?</title>
-      <para>Planners use Channels, a Web applicatio, to jointly build information sharing plans (IS
+      <para>Planners use Channels, a Web application, to jointly build information sharing plans (IS
         plans). Planning information sharing is done ahead of anticipated events. Channels is not
         meant for managing the actual sharing of information during a crisis. </para>
       <para>When building IS plans using Channels, planners clarify and uncover:</para>
@@ -89,7 +89,7 @@
             <para>modeling information sharing practices (IS practices)</para>
           </db:listitem>
           <db:listitem>
-            <para>profiling the environment (organizations, people and places) the IS practices appy
+            <para>profiling the environment (organizations, people and places) the IS practices apply
               to</para>
           </db:listitem>
         </db:itemizedlist></db:para>
@@ -302,7 +302,7 @@
           </mediaobject>
         </figure>
         <db:para>In order to separate (decouple) IS practices and environment, it is recommended to
-          model IS practices without mentionning actual organizations or actual people or systems.
+          model IS practices without mentioning actual organizations or actual people or systems.
           It is best to specify tasks as being executed by "disembodied" roles from
             <db:emphasis>types</db:emphasis> of organizations (e.g. a "forensic autopsy" is to be
           carried by a "coroner" from a "county health office"). IS practices models that are not
@@ -344,7 +344,7 @@
         <db:para>The events in an IS plan are not actual events that did or will occur at specific
           times and locations. They are implicitly <db:emphasis>types</db:emphasis> of events that
           might happen in some indeterminate future in some location that can be identified (e.g. in
-          New Yor City) or specified (e.g. in a large urban area).</db:para>
+          New York City) or specified (e.g. in a large urban area).</db:para>
         <figure>
           <title>An event's definition</title>
           <mediaobject>
@@ -396,7 +396,7 @@
           after a prior "hostile takeover attempt" (context events).</para>
         <para>A segment might address all or only some of the organizational goals associated with
           an event phase. In other words, more than one segment may be dedicated to a given event
-          phase with each segment addressing a different list of organization goals.Two segments
+          phase with each segment addressing a different list of organization goals. Two segments
           should not address the same goal for the same event phase.</para>
         <figure>
           <title>Organizational goals addressed in a segment</title>
@@ -702,7 +702,7 @@
             </imageobject>
           </mediaobject>
         </figure>
-        <para>How secure a transmission medium type is is defined by the highest classification
+        <para>How secure a transmission medium type is defined by the highest classification
           levels of the information it can transmit without infringing security requirements.</para>
         <figure>
           <title>A secure transmission medium</title>
@@ -737,7 +737,7 @@
           </listitem>
         </itemizedlist>
         <figure>
-          <title>A flow's security issues</title>
+          <title>A flow with security issues</title>
           <mediaobject>
             <imageobject>
               <imagedata fileref="user_guide_images/reference/security_issues.png" scale="75"
@@ -817,7 +817,7 @@
           jurisdictions (as named places or types of places) and/or organizations (by name or by
           type).</para>
         <db:para>It is left to Channels to look up agents in the plan's environment (agents that are
-          identitied as role-playing members of organizations that are in scope) and see which ones
+          identified as role-playing members of organizations that are in scope) and see which ones
           fit the profile of a task's assignees. If a task is meant for any "CPR trained" (agent
           type) "Security Officer" (role) at a "Government Agency" (organization type), then all
           known agents who are categorized (directly or indirectly) as "CPR trained", work for an
@@ -840,7 +840,7 @@
           assigned to the task receiving the information. A task assigned to three agents with a
           flow targeting another task assigned to two agents might imply six different information
           sharing commitments, one from each assignee of the information-producing task to each
-          asssignee of the information-consuming task.</db:para>
+          assignee of the information-consuming task.</db:para>
         <db:para>If the flow is annotated as "to every", then the commitment is to share it with all
           assignees of the target task, otherwise the flow is "to any" and the commitment is to
           share with at least one of the assignees of the target task.</db:para>
@@ -891,7 +891,7 @@
           security.</db:para>
         <db:para>Such exceptions in IS practices can be captured by defining overriding tasks and by
           defining prohibited flows from the overriding tasks that are otherwise equivalent to flows
-          from the overriden tasks.</db:para>
+          from the overridden tasks.</db:para>
         <figure>
           <title>Overriding tasks and flows to express exceptions in IS practices</title>
           <mediaobject>
@@ -924,7 +924,7 @@
           employees leave the building except for managers".</db:para>
         <db:para>A flow A overrides another flow B if:<db:itemizedlist>
             <db:listitem>
-              <para>they both have the same name (dsicounting case and extra blanks)</para>
+              <para>they both have the same name (discounting case and extra blanks)</para>
             </db:listitem>
             <db:listitem>
               <para>the source task of flow A overrides the source task of flow B</para>
@@ -937,7 +937,7 @@
         <db:para>If an agent has sharing commitments computed from flow A then they replace any and
           all commitments for this agent computed from the overridden flow B. Furthermore, if
           overriding flow A is prohibited, then whoever would have commitments from flow A has
-          commitments from neither flow A nor from overriden flow B</db:para>
+          commitments from neither flow A nor from overridden flow B</db:para>
       </db:section>
       <db:section>
         <title>Information sharing agreements</title>
@@ -1026,7 +1026,7 @@
             </listitem>
           </db:itemizedlist></db:para>
         <figure>
-          <title>Media reference attachement</title>
+          <title>Media reference attachment</title>
           <mediaobject>
             <imageobject>
               <imagedata fileref="user_guide_images/attachments_media.png" scale="75" align="center"
@@ -1060,7 +1060,7 @@
             <db:emphasis>not</db:emphasis> in and of itself prohibits it. The policy might prohibit
           execution of the task or of the flow only in some but not all circumstances (and in ways
           too complex to be captured formally in the IS plan). To prohibit a flow or a task in an IS
-          plan, planners must explictly nark it as prohibited (via a checkbox in the task or flow
+          plan, planners must explicitly mark it as prohibited (via a check box in the task or flow
           form).</db:para>
       </db:section>
       <db:section>
@@ -1087,7 +1087,7 @@
           </mediaobject>
         </figure>
         <db:para>The set of all tags in an IS plan is called the tag domain. Tags can be grouped by
-          named sub-domains. Whe a tag belongs to a sub-domain, the tag is written as the name of
+          named sub-domains. When a tag belongs to a sub-domain, the tag is written as the name of
           the sub-domain followed by a colon followed by the name of the tag. For example,
           "esf:transportation" is the tag "transportation" in the tag sub-domain "esf". A planner
           can easily look up all elements tagged with tags belonging to a given sub-domain. Tag
@@ -1109,7 +1109,7 @@
           IS plan by attaching a file defining them (an attachment of type "Info
           standards").</db:para>
         <figure>
-          <title>Taggin a flow with an info standard tag to auto-populate its elements of
+          <title>Tagging a flow with an info standard tag to auto-populate its elements of
             information</title>
           <mediaobject>
             <imageobject>
@@ -1151,7 +1151,7 @@
             </db:listitem>
             <db:listitem>
               <para>The optional description and handling instructions are separated each by a
-                hypen.</para>
+                hyphen.</para>
             </db:listitem>
           </db:itemizedlist></db:para>
         <figure>
@@ -1424,7 +1424,7 @@
       <db:para>A participant in a normal (non-template) plan can only access the IS guidelines
         generated from the production version for the agent he/she is assigned to. A participant can
         not send messages to other users from within the collaboration panel but only read messages
-        broadcast to all users (a.k.a. news) by planners (see below).</db:para>
+        broadcast to all users (or news) by planners (see below).</db:para>
       <db:para> </db:para>
       <figure>
         <title>Channels home page for participants</title>
@@ -1451,7 +1451,7 @@
       </figure>
       <db:section>
         <title>Home page collaboration and settings panel</title>
-        <db:para>The collaboration and settings tab panesl in the home page allow planners to
+        <db:para>The collaboration and settings tab panels in the home page allow planners to
           communicate with other users either via messages (news, when broadcast), calendar events
           and surveys. </db:para>
         <db:para>The "about me" tab let's a user edit his/her full name and private email, and
@@ -1491,7 +1491,7 @@
           </mediaobject>
         </figure>
         <db:para>Planners can launch surveys and send them to users. A user can see all surveys
-          received and each survey's status, and can access a survey in order to respond to
+          received and the status of each survey, and can access a survey in order to respond to
           it.</db:para>
         <figure>
           <title>Surveys sent to the user</title>
@@ -1743,7 +1743,7 @@
           </db:figure>
         </db:para>
         <para>The Help icon opens up this content for browsing in a separate window.</para>
-        <para>The Left and righ arrow buttons are Channels' "back and forward" buttons. The back
+        <para>The Left and right arrow buttons are Channels' "back and forward" buttons. The back
           button brings the plan editor to its previous state, that is, re-opening whatever panel
           was just closed or collapsed, showing the previous segment that was just switched from
           etc. The forward button brings back the state the planner backed from.</para>
@@ -1968,7 +1968,7 @@
               </imageobject>
             </mediaobject>
           </figure>
-          <para>A flow map, by defaut, does not display risks and gains (goals) and how they relate
+          <para>A flow map, by default, does not display risks and gains (goals) and how they relate
             to tasks or the segment as a whole. To display risks and gains, the planner must click
             on the "show goals" control. Clicking again hides the goals.</para>
           <figure>
@@ -1994,7 +1994,7 @@
             </mediaobject>
           </figure>
           <db:para>Tasks and flow are by default marked as "operational". Planners can change the
-            operatonal status of tasks and flows and then hide non-operational tasks and flows from
+            operational status of tasks and flows and then hide non-operational tasks and flows from
             the flow map. </db:para>
           <figure>
             <title>Flow map showing non-operation tasks and flows</title>
@@ -2033,7 +2033,7 @@
         <para>The collaboration tab panels on the right side of the plan editor let a planner see
           who else is working on the plan and what changes they made recently. A planner can send
           messages to a planner or to all and can read received messages. The collaboration tab
-          panesl can be collapsed if more screen space for the flow map and task/flow forms is
+          panels can be collapsed if more screen space for the flow map and task/flow forms is
           needed.</para>
         <figure>
           <title>Expanded collaboration tab panels in plan editor</title>
@@ -2135,7 +2135,7 @@
           planners  attempting to modify the same plan element are prevented by allowing only one
           planner at a time to modify any given task, flow, entity, segment definition or plan
           definition.</para>
-        <para>When a planner opens an edit form on a a plan element, Channels attempts to grab an
+        <para>When a planner opens an edit form on a plan element, Channels attempts to grab an
           edit lock on behalf of the planner for that plan element. If another planner already owns
           the lock, the form is shown to the first planner with the editable fields disabled.</para>
         <para>A lock on a plan element owned by a planner is released when the planner collapses or
@@ -2170,7 +2170,7 @@
         <title>Semantic proximity matching</title>
         <db:para>Naming matters a lot in Channels. Entities are referenced by their unique names and
           are created when first named. Using different names for what is essentially the same role,
-          type of organization etc. would become a source of confusion and woudl undermine the
+          type of organization etc. would become a source of confusion and would undermine the
           usefulness of an IS plan. Whether the names of tasks, flows, information needs,
           capabilities and information elements are different or the same determines whether needs
           are satisfied or satisfiable.</db:para>
@@ -2195,7 +2195,7 @@
         <title>Attaching documents</title>
         <db:para>Plan elements are documented and annotated by attaching files to them. These files
           can either be uploaded to the Channels server, or they can be linked to from Channels if
-          they are reachable over the Internet or over intranet in which Channels
+          they are reachable over the Internet or over an intranet in which Channels
           operates.</db:para>
         <figure>
           <title>Managing attachments</title>
@@ -2207,7 +2207,7 @@
           </mediaobject>
         </figure>
         <db:para>Documents can be attached, copied or detached. Attachments are assigned a type.
-          Cetain types of attachment, for example, the picture type and the tags type impact the
+          Certain types of attachment, for example, the picture type and the tags type impact the
           behavior of Channels (icons are generated and used, tags are added to the tag domain etc.)
           Attachments can be named. The default name of an attachment is its URL.</db:para>
         <figure>
@@ -2317,7 +2317,7 @@
             and on behalf of what organization. Any of the location, agent, jurisdiction, role, and
             organization (entities) that specify a task can be left unnamed so as to imply that more
             than one agent can be assigned to the task. The names of entities can be indicated to
-            refer to actual entities (Morritown, NJ, John Doe, ACME etc.) or to types of entities (a
+            refer to actual entities (Morristown, NJ, John Doe, ACME etc.) or to types of entities (a
             city, a certified technician, a corporation etc.).</para>
           <para>The execution of a task can be set to be “as a team” to indicate that all assigned
             agents are to work together when carrying out the task. By default, assignees are each
@@ -2353,7 +2353,7 @@
                 <para>The assignments panel - all agents that are assigned to the task</para>
               </db:listitem>
               <db:listitem>
-                <para>Override panel - showing tasks that override or are overriden by this task
+                <para>Override panel - showing tasks that override or are overridden by this task
                   (the menu item is not shown if there are no overrides)</para>
               </db:listitem>
               <db:listitem>
@@ -2505,7 +2505,7 @@
           <para>Information needed, shareable or to-be shared can be decomposed into named elements.
             Each element of information can be described and assigned individual secrecy
             classifications as well as handling instructions. Planners can indicate whether and how
-            a "sent" element of information is related to a received element of information (is is
+            a "sent" element of information is related to a received element of information (is
             the same one but renamed, is it an aggregation of many received elements?).</para>
           <para>An element sent is implicitly the same as one received if both are identically named
             and both compose identically named incoming and outgoing information. If an element sent
@@ -2564,7 +2564,7 @@
             </db:itemizedlist></db:para>
           <db:para>The menu for an expanded information need additionally allows the planner to:<db:itemizedlist>
               <db:listitem>
-                <para>Edit the information need's elements</para>
+                <para>Edit the elements of an information need</para>
               </db:listitem>
               <db:listitem>
                 <para>Add a new, ad hoc issue about the information need</para>
@@ -2679,7 +2679,7 @@
                   the flow</para>
               </db:listitem>
               <db:listitem>
-                <para>Break upp the flow by replacing it, if not redundant, by the implied
+                <para>Break up the flow by replacing it, if not redundant, by the implied
                   information capability to the source task plus, also if not redundant, by the
                   implied information need to the target task</para>
               </db:listitem>
@@ -2740,7 +2740,7 @@
             <para>A visualization and analysis of how all segments inter-relate</para>
           </listitem>
           <listitem>
-            <para>A visual exploration tool of assigments and commitments (IS procedures) computed
+            <para>A visual exploration tool of assignments and commitments (IS procedures) computed
               from the plan</para>
           </listitem>
           <listitem>
@@ -2756,7 +2756,7 @@
             <para>An index of all named plan elements (tasks, flows, entities etc.)</para>
           </listitem>
           <listitem>
-            <para>An overall evalutation of the plan with issues metrics</para>
+            <para>An overall evaluation of the plan with issues metrics</para>
           </listitem>
           <listitem>
             <para>A list of all registered users and their identification with agents in the plan
@@ -2971,7 +2971,7 @@
           identity of the agent, if any, that is associated with each user. The planner can make or
           change these associations as well as update the contact information a participant inherits
           from the associated agent. A user who is not associated with an agent does not have
-          information sharing guidlines.</para>
+          information sharing guidelines.</para>
         <figure>
           <title>Plan definition panel - participations</title>
           <mediaobject>
@@ -3065,7 +3065,7 @@
           the segment. A segment is expected to have at least one goal.</para>
         <para>The <emphasis>Goals view</emphasis> of a segment lets planners define the goals of
           organizations that are in scope for this segment. Goals can be added and removed. The
-          goalof an organization would be to mitigate a risk or to make a gain. A goal is defined in
+          goal of an organization would be to mitigate a risk or to make a gain. A goal is defined in
           terms of:<db:itemizedlist>
             <db:listitem>
               <para>a type picked from a taxonomy of risks or gains, an importance (minor, major,
@@ -3310,7 +3310,7 @@
           <para>Jobs can also be added to an organization by transferring them, or copying them,
             from another organization.</para>
           <figure>
-            <title>Organization profile panel - details view - transfering jobs</title>
+            <title>Organization profile panel - details view - transferring jobs</title>
             <mediaobject>
               <imageobject>
                 <imagedata fileref="user_guide_images/reference/profile_org_details_job_xfer.png"
@@ -3318,7 +3318,7 @@
               </imageobject>
             </mediaobject>
           </figure>
-          <db:para>Organizations with parent organizations form hierachical structures that can be
+          <db:para>Organizations with parent organizations form hierarchical structures that can be
             visualized as org charts.</db:para>
           <figure>
             <title>Organization profile panel - details view - org chart</title>
@@ -3336,10 +3336,10 @@
             committing organization. When viewing an organization, a planner can see the sharing
             commitments the organization makes with other organizations and confirm whether each
             commitment is covered or not by an agreement. A planner can attached documents of type
-            MOU (Memorandum of Understading) to confirmed sharing agreements. A sharing agreement
+            MOU (Memorandum of Understanding) to confirmed sharing agreements. A sharing agreement
             not documented by a Memorandum of Understanding is an issue.</para>
           <figure>
-            <title>Organization profile panel - details view - sharng agreements</title>
+            <title>Organization profile panel - details view - sharing agreements</title>
             <mediaobject>
               <imageobject>
                 <imagedata fileref="user_guide_images/reference/profile_org_details_agreements.png"
@@ -3726,10 +3726,10 @@
       <db:section>
         <title>Task overrides panel</title>
         <db:para>A task can be defined in such a way as to be a more specific case of another task,
-          in effect overriding it. An overriden task can not be assigned any of the agents assigned
+          in effect overriding it. An overridden task can not be assigned any of the agents assigned
           to the overriding task. This allows planners to model exceptions and special cases in an
           IS plan.</db:para>
-        <db:para>When a task is overriden or overrides another, planners can bring up an overrides
+        <db:para>When a task is overridden or overrides another, planners can bring up an overrides
           panel for that task.</db:para>
         <figure>
           <title>Access to the task overrides panel</title>
@@ -3741,7 +3741,7 @@
           </mediaobject>
         </figure>
         <figure>
-          <title>Task overrides panel showing an overriden task</title>
+          <title>Task overrides panel showing an overridden task</title>
           <mediaobject>
             <imageobject>
               <imagedata fileref="user_guide_images/reference/overriding.png" scale="75"
@@ -3750,7 +3750,7 @@
           </mediaobject>
         </figure>
         <figure>
-          <title>Task overrides panel showing an overridding task</title>
+          <title>Task overrides panel showing an overriding task</title>
           <mediaobject>
             <imageobject>
               <imagedata fileref="user_guide_images/reference/overridden.png" scale="75"
@@ -3774,7 +3774,7 @@
         <para>Not all sharing failures matter. If an information flow is not critical to a task or
           does not trigger it, then its failure does not propagate to other tasks. Furthermore, if
           the target of a flow can get the same information via another, non-failing flow, then the
-          flow's failure may not matter. Finally, if information produced by an agent is necessarily
+          failure of the flow may not matter. Finally, if information produced by an agent is necessarily
           consumed by the same agent then, clearly, failure to share is meaningless.</para>
         <para>Failure analysis only concerns itself with the failure of useful tasks, that is, tasks
           that either achieve stated goals or produce information that triggers or is critical to
@@ -3933,7 +3933,7 @@
       </section>
     </db:section>
     <db:section>
-      <title>Assignements and commitments page</title>
+      <title>Assignments and commitments page</title>
       <db:para>The assignments and commitments page enables planners to explore the task assignments
         and information sharing commitments (IS procedures) computed by Channels for a
         plan.</db:para>
@@ -4022,8 +4022,8 @@
     </db:section>
     <db:section>
       <title>Issues summary page</title>
-      <db:para>Channels summarizes all outstading issues detected in and manually added to a plan in
-        a page accesible from the home page. The issues summary page provides metrics about the
+      <db:para>Channels summarizes all outstanding issues detected in and manually added to a plan in
+        a page accessible from the home page. The issues summary page provides metrics about the
         severities of the three overall types of issues (robustness, completeness and validity), and
         about each kind of issue found in the plan. (Channels detects more than 90 different kinds
         of issues.)</db:para>
@@ -4094,7 +4094,7 @@
         for each participant.</para>
       <db:para>A participant accesses his/her IS guidelines directly from the home page. A planner
         accesses the IS guidelines of a participant (or an agent) indirectly from the participants
-        lis which is accessible from the home page.</db:para>
+        list which is accessible from the home page.</db:para>
       <para>The IS guidelines report organizes a participant's IS procedures generated from the plan
         by situations (relevant event phases possibly in the context of past or present events) and
         connects the IS procedures with related contact information. The IS guidelines are presented
@@ -4310,7 +4310,7 @@
           activity.</db:para>
 
         <para><emphasis>Profiling</emphasis> referenced entities (actual and types) by assigning
-          values to common and idiosynchratic attributes:</para>
+          values to common and idiosyncratic attributes:</para>
 
         <itemizedlist>
           <listitem>
@@ -4401,7 +4401,7 @@
         <para>An issue can be assigned a severity of minor, major, severe, or extreme. The severity
           of an issue is either preset according to the kind of issue (for example, an information
           flow without elements of information is always a major issue), or the severity is computed
-          by determining the most severerisk mitigation or gain capture that could be foiled by a
+          by determining the most severe risk mitigation or gain capture that could be foiled by a
           cascade of failures caused by the issue.</para>
 
         <para>An issue comes with one or more alternate options for its remediation. A planner can
@@ -4565,7 +4565,7 @@
               </imageobject>
             </mediaobject>
           </figure>
-          <db:para>Step 4 - Add a flow-connected task to satisy a need</db:para>
+          <db:para>Step 4 - Add a flow-connected task to satisfy a need</db:para>
           <figure>
             <title>A task and flow are added to satisfy an information need</title>
             <mediaobject>
@@ -4638,7 +4638,7 @@
             beginning to end, and thus may feel more natural to many planners. However some tasks
             and flows added using this strategy might not necessarily contribute directly or
             indirectly to achieving identified goals. In other words, a "starting from the
-            beginning" strategy does not guarantee that it will reach all requried end
+            beginning" strategy does not guarantee that it will reach all required end
             points.</para>
         </section>
 
@@ -4654,7 +4654,7 @@
             </mediaobject>
           </figure>
 
-          <para>When using an issue-driven strategy, planners scan the list of outstading issues and
+          <para>When using an issue-driven strategy, planners scan the list of outstanding issues and
             determine which ones to either waive or resolve. Issues of validity ought to be dealt
             with first, followed by issues of completeness and then issues of robustness. Usually,
             everything else being equal, issues of higher severity should be given higher priority
@@ -4725,7 +4725,7 @@
             considers the plan to be valid, complete and robust. Because Channels has no domain
             knowledge (for example, it knows nothing about public health or mergers and acquisitions
             etc.), domain-dependent issues will not be detected by Channels. Planners must use their
-            domain knowledge to determine if the IS pPlan has issues that lie outside the range of
+            domain knowledge to determine if the IS plan has issues that lie outside the range of
             automatically detected issues.</para>
         </section>
       </section>
@@ -4746,7 +4746,7 @@
         ..." and "Modify ..." activity. For example, "Add task" implies "Remove task" and "Modify
         task".</para>
 
-      <para>Prior to applying any activtiy, it is assumed that:</para>
+      <para>Prior to applying any activity, it is assumed that:</para>
 
       <itemizedlist>
         <listitem>
@@ -5093,7 +5093,7 @@
             </mediaobject>
           </figure>
           <figure>
-            <title>Direclty adding an organization permanently to the scope </title>
+            <title>Directly adding an organization permanently to the scope </title>
             <mediaobject>
               <imageobject>
                 <imagedata fileref="user_guide_images/scoping_orgs.png" scale="75" align="center"/>
@@ -5140,7 +5140,7 @@
             gives its contact information as part of the profile. Only one user can be associated by
             planners with a normal, actual agent. The full name of the user and of the agent are
             expected to match (an issue is raised if not). The associated user gets the agent's IS
-            guidelines.It is an ISP best practice to define agents as much as possible either as
+            guidelines. It is an ISP best practice to define agents as much as possible either as
             archetypes or as placeholders.</db:para>
           <db:para>
             <table frame="box">
@@ -5344,7 +5344,7 @@
           <db:para>A segment can be removed in its entirety, after confirmation. The operation can
             be undone.</db:para>
           <db:para>A segment identifies any number of evens as context to the event phase in focus.
-            A segment's context represent what events have occured or are already occuring when the
+            A segment's context represent what events have occurred or are already occurring when the
             event phase in focus starts. Events can also be removed from the context. </db:para>
         </section>
 
@@ -5443,9 +5443,9 @@
               </imageobject>
             </mediaobject>
           </figure>
-          <db:para>A classsecrecyification level can be removed from a secrecy classification system
+          <db:para>A secrecy classification level can be removed from a secrecy classification system
             if it is not used anywhere within the plan. Planners can see where a classification
-            kevel is being used.</db:para>
+            level is being used.</db:para>
         </db:section>
       </section>
 
@@ -6016,11 +6016,11 @@
                   <td>
                     <db:itemizedlist>
                       <db:listitem>
-                        <para>Whether the information capability is being exercized can be
+                        <para>Whether the information capability is being exercised can be
                           diagnosed.</para>
                       </db:listitem>
                       <db:listitem>
-                        <para>Channels can automate the creation of flows that exercize the
+                        <para>Channels can automate the creation of flows that exercise the
                           capability.</para>
                       </db:listitem>
                       <db:listitem>
@@ -6117,12 +6117,12 @@
                     <db:itemizedlist>
                       <db:listitem>
                         <para>The source or target task was added, or both if the tasks are in
-                          diffferent segments.</para>
+                          different segments.</para>
                       </db:listitem>
                       <db:listitem>
                         <para>An information need was added to the target task or an information
                           capability was added to the source task, or both if the tasks are in
-                          diffferent segments.</para>
+                          different segments.</para>
                       </db:listitem>
                     </db:itemizedlist>
                   </td>
@@ -6246,7 +6246,7 @@
           events. Roles, phases and communication media are inherently categories.</db:para>
         <db:para>Planners can define (profile) an entity as soon as it is first referenced by giving
           values to some or all of the entity's attributes. All entities, be they types or actual,
-          have a few attibutes in common:<db:itemizedlist>
+          have a few attributes in common:<db:itemizedlist>
             <db:listitem>
               <para>Name - set when first referenced and changeable at any time</para>
             </db:listitem>
@@ -6288,7 +6288,7 @@
                 all references to the role "Manager")</para>
             </db:listitem>
           </db:itemizedlist></db:para>
-        <db:para>As a rule, when the name of an entity (or of its kind) appears in blue, it is is a
+        <db:para>As a rule, when the name of an entity (or of its kind) appears in blue, it is a
           hyperlink that, when clicked, opens a the profile edit form for that entity. </db:para>
         <figure>
           <title>Accessing the profiles of entities from a task where they are referenced</title>
@@ -6426,7 +6426,7 @@
         <section>
           <title>Profile a phase</title>
 
-          <para role="aspect">A phase represents teim relative to events. A phase can either
+          <para role="aspect">A phase represents time relative to events. A phase can either
             represent the time before, during or after events. Planners decide what phases to
             include within the scope of an IS plan. By default, a new IS plan has a "Responding"
             phase that deals with information sharing during events.</para>
@@ -6576,7 +6576,7 @@
                           <para>A postal code</para>
                         </db:listitem>
                         <db:listitem>
-                          <para>An administrative, goegraphical area (for example, "Newark, New
+                          <para>An administrative, geographical area (for example, "Newark, New
                             Jersey, United States") - disambiguated if necessary</para>
                         </db:listitem>
                       </db:itemizedlist></db:para>
@@ -6788,7 +6788,7 @@
             </mediaobject>
           </figure>
           <figure>
-            <title>Profile of an actual organization - jobs (a.k.a. memberships)</title>
+            <title>Profile of an actual organization - jobs (or memberships)</title>
             <mediaobject>
               <imageobject>
                 <imagedata fileref="user_guide_images/profiling_organization_actual_2.png"
@@ -6901,7 +6901,7 @@
         <section>
           <title>Profile an agent</title>
 
-          <para role="aspect">Agents are people or systems who, as responsibilized members of
+          <para role="aspect">Agents are people or systems who, as responsible members of
             organizations, are assigned to tasks and commit to share information with other agents.
             An actual agent can play more than one role in more than one organization. </para>
           <para role="aspect">An agent type represents a category of agents that is distinct from
@@ -7130,7 +7130,7 @@
         <title>Improving a Plan</title>
         <db:para>A number of ISP Method activities do not change the scope of an IS plan nor do they
           add elements to it but, rather, are concerned with improving the plan overall. A plan is
-          improved either by better ditributing tasks and flows across segments, by generalizing a
+          improved either by better distributing tasks and flows across segments, by generalizing a
           task's definition to increase the number of agents that are assignable to it, or by making
           changes to entity typologies that have wide-ranging effects on the generation of IS
           procedures.</db:para>
@@ -7147,7 +7147,7 @@
           </listitem>
 
           <listitem>
-            <para>Change an entity’s categorization</para>
+            <para>Change the categorization of an entity</para>
           </listitem>
         </itemizedlist>
 
@@ -7159,19 +7159,19 @@
             past events. Segments are usually inter-connected both by flows that connect two tasks
             in different segments, and by the fact that a task in one segment may trigger the
             situation that's the focus of another segment.</para>
-          <db:para>Each segment addresses one or more risks to or opportunites for organizations
+          <db:para>Each segment addresses one or more risks to or opportunities for organizations
             (goals) for a given situation. As more goals are added to the scope, more tasks are
             needed to achieve them and to provide needed information. A segment could grow to become
             quite large and difficult to manage (the flow maps become oversized, the list of
             completeness issues for the segment become hard to track etc.)</db:para>
-          <db:para>A solution is to create a new segmen, move to the new segment tasks from the
+          <db:para>A solution is to create a new segment, move to the new segment tasks from the
             large segment that achieve or help achieve a goal, and then remove the goal from the
             initial segment.</db:para>
 
           <para>Channels provides a simple and safe mechanism for moving selected tasks all at once
             to another segment while keeping them connected with their flows. Goals listed in moved
             tasks are added as needed to the destination segment. Moving tasks is a reversible
-            (undoable) change.</para>
+            (undo-able) change.</para>
           <db:para>
             <table frame="box">
               <caption>Improving a plan: Move task across segments</caption>
@@ -7216,7 +7216,7 @@
                   <td>
                     <db:itemizedlist>
                       <db:listitem>
-                        <para>The segment of origin is of a more mageable size</para>
+                        <para>The segment of origin is of a more manageable size</para>
                       </db:listitem>
                     </db:itemizedlist>
                   </td>
@@ -7301,7 +7301,7 @@
                           replace it by an agent type</para>
                       </listitem>
                       <listitem>
-                        <para>Replace in the definition of a task a role, agent type, jursisdication
+                        <para>Replace in the definition of a task a role, agent type, jurisdiction
                           type or organization type by a another that categorizes it </para>
                       </listitem>
                       <listitem>
@@ -7359,7 +7359,7 @@
         </section>
 
         <section>
-          <title>Change an entity’s categorization</title>
+          <title>Change the categorization of an entity</title>
           <db:para>Entity types can themselves be categorized by other entity types. For example, a
             "Rail station (a place entity type) can be categorized as a "Building" (another place
             entity type) and as a "Transit system node" (another place entity type). The
@@ -8190,7 +8190,7 @@
 
                 <entry><para>High</para></entry>
 
-                <entry><para>If the plan locale is a place that’s within a place defined relative to
+                <entry><para>If the plan locale is a place that is within a place defined relative to
                     another:</para>
                   <itemizedlist>
                     <listitem>
@@ -9604,7 +9604,7 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Make the sgaring flow operational</para>
+                      <para>Make the flow operational</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -9622,7 +9622,7 @@
                     </listitem>
 
                     <listitem>
-                      <para>Rename the the sharing flow</para>
+                      <para>Rename the sharing flow</para>
                     </listitem>
                   </itemizedlist></entry>
 

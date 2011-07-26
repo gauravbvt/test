@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Add a task's information need</title><link rel="stylesheet" type="text/css" href="/css/doc.css"/><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/><link rel="home" href="channels_user_guide.html" title="Channels Planner Guide"/><link rel="up" href="ch03s03s02.html" title="Specifying information sharing procedures"/><link rel="prev" href="ch03s03s02.html" title="Specifying information sharing procedures"/><link rel="next" href="ch03s03s02s03.html" title="Add a task's information capability"/></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Add a task's information need</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03s03s02.html">Prev</a> </td><th width="60%" align="center">Specifying information sharing procedures</th><td width="20%" align="right"> <a accesskey="n" href="ch03s03s02s03.html">Next</a></td></tr></table><hr/></div><div class="section" title="Add a task's information need"><div class="titlepage"><div><div><h4 class="title"><a id="d0e4455"/>Add a task's information need</h4></div></div></div><p>The incoming flows of a task implicitly define (satisfied) needs for the task. By
+            adding an explicit information need to a task, a planner defines an information
+            requirement of the task that may or may not be satisfied by incoming flows. The planner
+            also indicates that incoming flows satisfying partially or completing this information
+            need are not necessarily the only acceptable sources. Channels looks at the information
+            needs and information capabilities of tasks to uncover missed opportunities for
+            information sharing (see command "Satisfy all needs").</p><p>Note that only the explicit information needs of a task are visible across
+            segments and offered as candidate targets for cross-segment flows. (Software types might
+            want to think of information needs and information capabilities as defining the
+            "interfaces of a segment".) </p><p>
+            </p><table frame="box" id="d0e4464"><caption>Table 3.9. Scoping: Add a task's information need</caption><col width="20%"/><col width="80%"/><tbody><tr>
+                  <td headers=""><span class="emphasis"><em>Prerequisites:</em></span></td>
+                  <td>
+                    <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>The task was added.</p></li></ul></div>
+                  </td>
+                </tr><tr>
+                  <td><span class="emphasis"><em>Steps:</em></span></td>
+                  <td>
+                    <p class="aspect">(All steps are optional and they can be taken in any
+                      order)</p>
+                    <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Name the information</p></li><li class="listitem"><p>Note: tagging with an information standard tags enables
+                          auto-population of standard elements of information</p></li><li class="listitem"><p>Categorize expected intent as one of:</p><div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem"><p><span class="emphasis"><em>report</em></span> (summary of facts and conjectures:
+                              "Here's what we know...")</p></li><li class="listitem"><p><span class="emphasis"><em>command</em></span> (an injunction: "Do this!" "Stop
+                              that!")</p></li><li class="listitem"><p><span class="emphasis"><em>announcement</em></span> (declaration, communiqué,
+                              advertisement: “I-95 is congested”, “Spinach is safe”)</p></li><li class="listitem"><p><span class="emphasis"><em>feedback</em></span> (thumbs up or down, reward,
+                              punishment: "Objectives were met", "Report is incomplete")</p></li><li class="listitem"><p><span class="emphasis"><em>alarm</em></span> (signal of an unexpected change
+                              requiring outside assistance: "Distribution point is overwhelmed",
+                              “Levee is breached”)</p></li></ul></div></li><li class="listitem"><p>Name the information's elements and indicate which ones are
+                          time-sensitive (i.e. are subject to timing requirements)</p></li><li class="listitem"><p>Indicate whether the needed information would be received as a
+                          notification or as an answer to a request.</p></li><li class="listitem"><p>Indicate what the impact on the task would be of receiving the needed
+                          information, as one of</p><div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem"><p>useful to the task</p></li><li class="listitem"><p>critical to the task (the task may fail without it)</p></li><li class="listitem"><p>triggers the task</p></li><li class="listitem"><p>terminates the task</p></li></ul></div></li><li class="listitem"><p>State a relationship restriction on the source agent, if any. Namely
+                          the source agent must be</p><div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem"><p>from the same overall organization</p></li><li class="listitem"><p>from a different overall organization</p></li><li class="listitem"><p>from the (exact) same organization</p></li><li class="listitem"><p>from a different (specific) organization</p></li><li class="listitem"><p>in the same location</p></li><li class="listitem"><p>in the same location and organization</p></li><li class="listitem"><p>in a different location</p></li><li class="listitem"><p>from a supervisor</p></li><li class="listitem"><p>from self</p></li><li class="listitem"><p>from someone else</p></li></ul></div></li><li class="listitem"><p>List the alternate transmission channels to be used, in order of
+                          preference</p></li><li class="listitem"><p>Give time constraints on receiving the information</p><div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem"><p>If the need is to be satisfied via notification, the time
+                                constraint gives the maximum delay from first availability to the
+                                task via dissemination of time-sensitive elements of
+                                information.</p></li><li class="listitem"><p>If the need is to be satisfied via reply, the time constraint
+                                gives the maximum delay between request and reply.</p></li></ul></div></li><li class="listitem"><p>Note: attaching a reference document of a graphic or video media type
+                          is highlighted.</p></li></ul></div>
+                  </td>
+                </tr><tr>
+                  <td><span class="emphasis"><em>Outcomes:</em></span></td>
+                  <td>
+                    <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Whether the information need is satisfied can be diagnosed.</p></li><li class="listitem"><p>Channels can check whether incoming flows of the same name conform to
+                          expectations (channels, timing, elements etc.) expressed in the
+                          need.</p></li><li class="listitem"><p>Channels can automate the creation of flows that satisfy the
+                          need.</p></li><li class="listitem"><p>Channels can offer the task as a candidate target for the capability
+                          of a task from another segment.</p></li></ul></div>
+                  </td>
+                </tr></tbody></table><p>
+          </p><div class="figure"><a id="d0e4629"/><p class="title"><strong>Figure 3.41. New information need added by pressing "add info received"</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/specifying_info_need_add.png" align="middle" alt="New information need added by pressing &#34;add info received&#34;"/></div></div></div><br class="figure-break"/><div class="figure"><a id="d0e4635"/><p class="title"><strong>Figure 3.42. Adding needed elements of information</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/specifying_adding_needed_eoi.png" align="middle" alt="Adding needed elements of information"/></div></div></div><br class="figure-break"/><p>A newly created information need is empty and the information name defaults to
+            "something". An information need can become a flow by identifying a source task via the
+            "From task" field for the needed information.</p></div><div class="navfooter"><hr/><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03s03s02.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch03s03s02.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch03s03s02s03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Specifying information sharing procedures </td><td width="20%" align="center"><a accesskey="h" href="channels_user_guide.html">Home</a></td><td width="40%" align="right" valign="top"> Add a task's information capability</td></tr></table></div></body></html>
