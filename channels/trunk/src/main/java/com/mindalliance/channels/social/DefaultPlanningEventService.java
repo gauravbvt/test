@@ -138,7 +138,7 @@ public class DefaultPlanningEventService implements PlanningEventService {
     private void recordAbsence( String username, Plan plan ) {
         resetLatestPresences( plan );
         // removePlanningEvents( PresenceEvent.Type.Active, username, plan );
-        addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Active, username, plan.getUri() ), plan );
+        addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Inactive , username, plan.getUri() ), plan );
     }
 
     private Map<String, Long> getUserLives( Plan plan ) {

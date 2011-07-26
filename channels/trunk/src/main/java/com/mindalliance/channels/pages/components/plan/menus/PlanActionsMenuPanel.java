@@ -22,6 +22,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -50,55 +51,61 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
             List<Component> menuItems = super.getMenuItems();
 
             // Move parts across segments
-            if ( getLockManager().isLockableByUser( getSegment() ) )
+            if ( getPlan().getSegmentCount() > 1 && getLockManager().isLockableByUser( getSegment() ) )
                 menuItems.add(
-                    new LinkMenuItem(
-                        "menuItem",
-                        new Model<String>( "Move tasks to segment..." ),
-                        new AjaxFallbackLink( "link" ) {
-                            @Override
-                            public void onClick( AjaxRequestTarget target ) {
-                                update( target,
-                                        new Change( Change.Type.Expanded, getSegment(),
-                                                    SegmentEditPanel.MOVER ) );
-                            }
-                        } ) );
+                        new LinkMenuItem(
+                                "menuItem",
+                                new Model<String>( "Move tasks to segment..." ),
+                                new AjaxFallbackLink( "link" ) {
+                                    @Override
+                                    public void onClick( AjaxRequestTarget target ) {
+                                        update( target,
+                                                new Change( Change.Type.Expanded, getSegment(),
+                                                        SegmentEditPanel.MOVER ) );
+                                    }
+                                } ) );
 
             // Logout
             menuItems.add(
-                new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Sign out " + User.current().getUsername() ),
-                    new ConfirmedAjaxFallbackLink( "link", "Sign out?" ) {
-                        @Override
-                        public void onClick( AjaxRequestTarget target ) {
-                            getCommander().absent( User.current().getUsername() );
-                            getRequestCycle().setRequestTarget(
-                                new RedirectRequestTarget( "/logout" ) );
-                        }
-                    } ) );
+                    new LinkMenuItem(
+                            "menuItem",
+                            new Model<String>( "Sign out " + User.current().getUsername() ),
+                            new ConfirmedAjaxFallbackLink( "link", "Sign out?" ) {
+                                @Override
+                                public void onClick( AjaxRequestTarget target ) {
+                                    getCommander().absent( User.current().getUsername() );
+                                    getRequestCycle().setRequestTarget(
+                                            new RedirectRequestTarget( "/logout" ) );
+                                }
+                            } ) );
 
             return menuItems;
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<CommandWrapper> getCommandWrappers() {
         final Segment segment = getSegment();
 
-        return Arrays.asList(
-            newWrapper( new PastePart( segment ) ),
-            newWrapper( new PasteAttachment( segment ) ),
-            newWrapper( new AddPart( segment ) ),
-            newWrapper( new AddUserIssue( segment ) ),
-            newWrapper( new AddSegment() ),
-            new CommandWrapper( new DisconnectAndRemoveSegment( segment ), CONFIRM ) {
-                    @Override
-                    public void onExecuted( AjaxRequestTarget target, Change change ) {
-                        update( target, change );
-                    }
-                } );
+        List<CommandWrapper> menuItems = new ArrayList<CommandWrapper>();
+        menuItems.addAll( Arrays.asList(
+                newWrapper( new PastePart( segment ) ),
+                newWrapper( new PasteAttachment( segment ) ),
+                newWrapper( new AddPart( segment ) ),
+                newWrapper( new AddUserIssue( segment ) ),
+                newWrapper( new AddSegment() ) ) );
+        if ( getLockManager().isLockableByUser( getSegment() ) ) {
+            menuItems.add( new CommandWrapper( new DisconnectAndRemoveSegment( segment ), CONFIRM ) {
+                @Override
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+        }
+        return menuItems;
     }
 
     private CommandWrapper newWrapper( final Command command ) {

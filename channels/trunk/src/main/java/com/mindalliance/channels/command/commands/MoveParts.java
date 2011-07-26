@@ -47,6 +47,15 @@ public class MoveParts extends AbstractCommand {
     }
 
     /**
+      * {@inheritDoc}
+      */
+     public boolean canDo( Commander commander ) {
+         return super.canDo( commander )
+                 && commander.getPlan().getSegmentCount() > 1;
+     }
+
+
+    /**
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
