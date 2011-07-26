@@ -401,7 +401,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private void adjustComponents() {
         List<PlannerMessage> plannerMessages = getPlannerMessages();
         addAboutMessages( plannerMessages.size() );
-        makeVisible( plannerMessagesContainer, !plannerMessages.isEmpty() );
+        //makeVisible( plannerMessagesContainer, !plannerMessages.isEmpty() );
         makeVisible( showMore, !allShown );
         makeVisible( showAFew, plannerMessages.size() > A_FEW );
     }

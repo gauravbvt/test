@@ -1060,7 +1060,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         List<Flow> flows = sent ? getAllSharingSends() : getAllSharingReceives();
         for ( Flow flow : flows ) {
             for ( ElementOfInformation eoi : flow.getEois() ) {
-                Subject subject = new Subject( flow.getName(), eoi.getContent(), eoi.isTimeSensitive() );
+                Subject subject = new Subject( flow.getName(), eoi.getContent() );
                 subject.setRoot( sent );
                 subjects.add( subject );
             }
@@ -1082,7 +1082,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
             for ( ElementOfInformation eoi : flow.getEois() ) {
-                Subject subject = new Subject( flow.getName(), eoi.getContent(), eoi.isTimeSensitive() );
+                Subject subject = new Subject( flow.getName(), eoi.getContent() );
                 subject.setRoot( sent );
                 subjects.add( subject );
             }

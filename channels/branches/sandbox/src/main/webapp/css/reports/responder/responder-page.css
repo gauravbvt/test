@@ -1,0 +1,457 @@
+/**
+ * Channels Reponder Report - Styling
+ * Copyright (C) 2010 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: romit
+ * Date: Apr 26, 2011
+ * Time: 11:06:39 AM
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #0143b4;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #013081;
+    border-bottom: 1px dotted #013081;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+a.back {
+    font-size: 13px;
+    float: right;
+    margin-right: 10px;
+}
+
+
+/* ----- Structure ----- */
+
+div#container {
+    width: 1000px;
+    margin: 0 auto;
+    text-align: left;
+    padding: 0;
+    border: 1px solid #999999;
+	background:#f6f6f6;
+}
+
+div#header {
+    width: 1000px;
+    height: 54px;
+    background: #c3d9ff;
+    border-bottom: 1px solid #999999;
+	font-size:12px;
+}
+
+div#contents {
+	padding:30px;
+	width:940px;
+}
+
+div.eoiCont {
+	padding:10px 0 0 0;
+}
+
+div#disclaimer {
+    border-top: 1px solid #CCCCCC;
+    color: #666666;
+    font-size: 11px;
+    margin: 20px 0 0 0;
+    padding: 20px 0 0 0;
+    text-align: center;
+}
+
+
+/* ----- Header ----- */
+
+div#header img {
+    float: left;
+	border: 0;
+	padding: 4px 0 0 5px;
+}
+
+div#header h1 {
+    color: #333333;
+    display: block;
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 16px 0 0 7px;
+}
+
+/*div#header a.logout {
+    background: url('../../images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin: 5px 5px 0 0;
+    text-transform: capitalize;
+    outline: none;
+	float:right;
+}
+
+div#header a.logout:hover {
+    color: #333333;
+}*/
+
+
+/* ----- Typography ----- */
+
+p {
+	padding:5px 0 5px 10px;
+}
+
+ul {
+	padding:5px 0 5px 35px;
+}
+
+ul.toc {
+}
+
+ul.toc li {
+    position: relative;
+}
+
+ul.toc span.tocHead {
+    display: block;
+    width: 75%;
+}
+ul.toc a.tocLink {
+    position: absolute;
+    left: 75%;
+    top: 0;
+    padding-left: 5px;
+}
+
+li {
+    line-height: 150%;
+    padding: 0 0 4px;
+}
+
+h1.subtitle {
+	font-size: 28px;
+	padding: 30px 0 10px;
+	text-align: center;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	line-height: 150%;
+}
+
+h2.description {
+	font-size: 20px;
+	font-weight: normal;
+	line-height: 150%;
+	padding: 0 100px 40px;
+	text-align: center;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+div#about h2,
+div.phase h2,
+div.task h2 {
+    background: #CCCCCC;
+    border-bottom: 2px solid #999999;
+    border-top: 2px solid #999999;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0 10px;
+    padding: 5px 0 5px 10px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+div.phase h2 a,
+div.task h2 a {
+	border:none;
+	color:#333333;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+div.task h2 a.back {
+    background: url('/images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 8px;
+    font-weight: bold;
+    padding: 3px 4px;
+    text-transform: capitalize;
+    outline: none;
+}
+
+
+div#about h3,
+div.phase h3,
+div.task h3 {
+    border-bottom: 1px solid #999999;
+    font-size: 13px;
+    margin: 15px 5px 7px 5px;
+    padding: 4px 5px 4px 5px;
+    text-transform: uppercase;
+}
+
+span.flowName {
+	font-style: italic;
+}
+
+span.plan-name,
+span.source,
+span.title,
+span.duration,
+span.type,
+span.reqFlow {
+	font-weight:bold;
+}
+
+span.flowHead {
+    display: block;
+    margin-right: 80px;
+}
+
+/* ----- Tables ----- */
+
+table {
+	border-collapse:collapse;
+    margin: 10px;
+    width: 920px;
+	border-bottom:1px solid #999999;
+}
+
+table td,
+table th {
+	padding: 5px 3px 5px 10px;
+}
+table th {
+    white-space: nowrap;
+}
+
+table tbody tr {
+	border: 1px solid #999999;
+	background:#e8e8e8;
+}
+
+table tr.contactHeads,
+table tr.contact,
+table tr.eoiHeads,
+table tr.eoi {
+	font-size:11px;
+    background: #f6f6f6;
+	border-top: none;
+}
+
+table tr.contactHeads {
+	background: none repeat scroll 0 0 #E8E8E8;
+}
+
+table tr.contactHeads th,
+table tr.contact td,
+table tr.eoiHeads th,
+table tr.eoi td {
+	padding:5px 10px;
+    border: 1px solid #999999;
+}
+
+table tr.eoi td {
+	line-height:150%;
+}
+
+table tr.contactHeads th.first,
+table tr.contact td.first,
+table tr.eoiHeads th.first,
+table tr.eoi td.first {
+	padding:5px 10px;
+}
+
+table.eois {
+	background:#e8e8e8;
+	border:1px solid #999999;
+}
+
+table.eois tbody tr td {
+	background:#f6f6f6;
+	padding:5px 10px;
+	font-size:11px;
+}
+
+table.eois tbody tr td:first-child {
+	padding:5px 10px 5px 25px;
+}
+
+table.eois th,
+table.eois td {
+	border: 1px solid #999999;
+}
+
+table.eois.nested {
+	width:100%;
+    font-size: 11px;
+	margin:10px 0 10px 0;
+}
+
+table.eois.nested thead tr {
+	background:#E8E8E8;
+}
+
+table.eois.nested th {
+	padding: 5px 10px;
+}
+
+table.eois.nested tbody tr td:first-child {
+	padding:5px 10px 5px 10px;
+}
+
+table.taskHeader {
+	border:none;
+}
+
+table.taskHeader tr {
+    background: #F6F6F6;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+	border-bottom:none;
+}
+
+table.taskHeader p {
+	line-height: 150%;
+	padding: 0 5px 0 0;
+}
+
+table.taskHeader div.eoiCont {
+    border-top: none;
+    margin: 4px 0 0;
+    padding: 7px 0 0;
+}
+
+table.taskHeader div.eoiCont p {
+	padding:0 5px 0 0;
+}
+
+table tr.note {
+	background: #FAF0A8;
+	font-size: 11px;
+	font-style: italic;
+}
+
+table tr.note td {
+	color: #000000;
+	padding: 7px 10px 7px 20px;
+}
+
+table tr.contact ul {
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+/* Feedback */
+span.feedback-container a:hover {
+    color: #333333;
+}
+
+span.feedback-container {
+	float:right;
+}
+
+#header span.feedback-container {
+	padding:21px 5px 0 0;
+}
+
+h2 span.feedback-container {
+	padding:3px 5px 0 0;
+}
+
+td span.feedback-container {
+	padding:0;
+}
+
+span.feedback-container a {
+    background: url('/images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px;
+    margin-left: 5px;
+    text-transform: capitalize;
+    outline: none;
+}
+
+div.phase h2 span.feedback-container a, div.task h2 span.feedback-container a {
+    color: #727272;
+}
+
+td span.feedback-container a , h2 span.feedback-container a{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 8px;
+}
+
+td span.feedback-container a{
+    padding: 2px;
+}
+
+h2 span.feedback-container a{
+    padding: 4px;
+    border: 1px solid #a7a9ac;
+}
+
+td span.feedback-container a {
+    margin-left: 5px;
+}
+
+div.feedback-form-cont {
+	display:block;
+	background: #dddddd;
+	font-size:11px;
+    border: 1px solid #a7a9ac;
+	padding:5px;
+	position:relative;
+	margin:3px 0 0 5px;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:normal;
+}
+
+div.feedback-options {
+	padding:0 0 5px 0;
+}
+
+div.feedback-urgency {
+	padding:5px 0 5px 0;
+}
+
+div.feedback-form-cont textarea {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	padding:5px;
+}
+
+div.cancelSend input {
+	font-size:10px;
+	padding:2px;
+	background:#cccccc;
+	border:1px solid #666666;
+}
+
+div.cancelSend input:hover {
+	font-size:10px;
+	padding:2px;
+	background:#f6f6f6;
+	border:1px solid #999999;
+	color:#333333;
+}

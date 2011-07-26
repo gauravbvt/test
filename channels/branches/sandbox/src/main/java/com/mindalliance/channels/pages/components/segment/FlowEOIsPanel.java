@@ -429,8 +429,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                         "subject",
                         new Subject(
                                 getFlow().getName(),
-                                eoiWrapper.getContent(),
-                                eoiWrapper.isTimeSensitive() ) );
+                                eoiWrapper.getContent() ) );
                 update( target, change );
             }
         };

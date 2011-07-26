@@ -5,34 +5,27 @@
       lang="en">
 <head>
     <title>Channels - Participant Pages</title>
-    <link rel="stylesheet" href="../css/responder-report/all-responders.css" type="text/css" title="Playbook">
-    <link rel="stylesheet" href="../css/iPhone.css" type="text/css" media="only screen and (max-device-width: 480px)">
+    <link rel="stylesheet" href="../css/reports/responder/all-responders.css" type="text/css" title="Playbook">
 </head>
 <body>
 <div id="container">
     <div id="header">
-		<img wicket:id="channelsHome" class="logo" src="../images/logo_home.png" height="48" width="48" alt="Channels - Home" />
-      	<h1>Participant list for <span wicket:id="planName">plan</span></h1>
-		<ul>
-			<li>
-				<a href="logout">Sign out <span wicket:id="userName">user</span></a>
-			</li>
-		</ul>
+		<a href="home">
+			<img class="logo" src="/images/logo_home.png" width="48" height="48" alt="Channels Logo" />
+		</a>
+      	<h1>Channels &ndash; <span wicket:id="planName">plan</span> &ndash; Participant List</h1>
+		<a class="logout" href="logout">Sign out <span wicket:id="userName">user</span></a>
     </div>
     <div id="contents">
         <div id="note">
             <span>As a planner, you get access to all the participant pages.</span>
         </div>
+
         <div wicket:id="activeDiv">
+			<h3>Active Users <span class="desc">(Users that can log in to view their participant report)</span></h3>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr class="tablehead">
-					<th colspan="2">
-			            <p class="title">Active Users</p>
-						<p class="desc">Users that can log in to view their participant report</p>
-					</th>
-				</tr>
 				<tr wicket:id="activeResponders" class="tablecont">
-					<td class="name">
+					<td class="users">
 	                    <a wicket:id="responder" class="responder">
 							<span wicket:id="responderName">a participant</span>
 						</a>
@@ -54,15 +47,10 @@
         </div>
 
         <div wicket:id="agentsDiv">
+			<h3>Agents <span class="desc">(Persons defined in the plan that can be assigned to users)</span></h3>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-            	<tr class="tablehead">
-					<th colspan="2">
-						<p class="title">Agents</p>
-						<p class="desc">Persons defined in the plan that can be assigned to users</p>
-					</th>
-				</tr>
 				<tr wicket:id="agents" class="tablecont">
-					<td>
+					<td class="agents">
 	                	<a wicket:id="responder" class="responder">
 							<span wicket:id="responderName">a participant</span>
 						</a>
@@ -89,13 +77,8 @@
 
 
         <div id="plannersDiv" wicket:id="plannersDiv">
+			<h3>Other Planners <span class="desc">(Planners who can edit this plan)</span></h3>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr class="tablehead">
-					<th>
-						<p class="title">Other Planners</p>
-						<p class="desc">Planners who can edit this plan</p>
-					</th>
-				</tr>
 				<tr wicket:id="otherPlanners" class="tablecont">
 					<td>
 	        			<a wicket:id="planner" class="planner">other planner</a>
@@ -105,13 +88,8 @@
         </div>
 
         <div id="otherPlans" wicket:id="plansDiv">
+			<h3>Other Plans <span class="desc">(Plans you can edit)</span></h3>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr class="tablehead">
-					<th>
-			            <p class="title">Other Plans</p>
-			            <p class="desc">Plans you can edit</p>
-					</th>
-				</tr>
 				<tr wicket:id="otherPlans" class="tablecont">
 					<td>
 	                	<a wicket:id="responderList" class="responderList">

@@ -341,7 +341,16 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         BookmarkablePageLink<? extends WebPage> gotoGuidelinesLink =
                 getGuidelinesLink( "gotoGuidelines", getQueryService(), getPlan(), User.current(), true );
         Label gotoReportLabel = new Label( "guidelinesLabel", getGuidelinesReportLabel( user, plan ) );
-        gotoGuidelinesLink.add( gotoReportLabel );
+        gotoGuidelinesLink.add( gotoReportLabel )
+                .add(new AttributeModifier(
+                "title",
+                true,
+                new Model<String>( getGotoGuidelinesDescription( user, plan ) ) ));
+        BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
+        gotoModelLink.add( new AttributeModifier(
+                "title",
+                true,
+                new Model<String>( getGotoModelDescription( user, plan ) ) ) );
         form.add(
                 // Goto admin
                 new WebMarkupContainer( "admin" )
@@ -350,19 +359,17 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
 
                 // Goto model
                 new WebMarkupContainer( "model" )
-                        .add( newTargetedLink( "gotoModel", "", PlanPage.class, null, plan ) )
-                        .add( new Label( "modelDescription", getGotoModelDescription( user, plan ) ) )
+                        .add( gotoModelLink )
                         .setVisible( planner || plan.isTemplate() ),
 
                 // Goto mapped procedures
                 new WebMarkupContainer( "procedures" )
                         .add( newTargetedLink( "gotoProcedures", "", ProcedureMapPage.class, null, plan ) ).
-                        setVisible( planner || plan.isTemplate() ),
+                                setVisible( planner || plan.isTemplate() ),
 
                 // Goto guidelines
                 new WebMarkupContainer( "guidelines" )
                         .add( gotoGuidelinesLink )
-                        .add( new Label( "guidelinesDescription", getGotoGuidelinesDescription( user, plan ) ) )
                         .setVisible( planner || actor != null ),
 
                 // Goto issues report
@@ -380,7 +387,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
 
     private String getGuidelinesReportLabel( User user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
-                ? "Information sharing guidelines for all participants"
+                ? "IS guidelines for all participants"
                 : "My information sharing guidelines";
     }
 

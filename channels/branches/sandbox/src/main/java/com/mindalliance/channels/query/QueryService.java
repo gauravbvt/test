@@ -40,6 +40,7 @@ import com.mindalliance.channels.model.SegmentObject;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.model.Subject;
 import com.mindalliance.channels.model.Tag;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.nlp.Proximity;
 
 import java.util.List;
@@ -794,6 +795,14 @@ public interface QueryService {
     List<? extends ModelObject> findAllModelObjectsIn( Phase phase );
 
     /**
+     * Find all delegated media for a medium.
+     *
+     * @param medium a medium
+     * @return a list of model objects
+     */
+    List<? extends ModelObject> findAllModelObjectsIn( TransmissionMedium medium );
+
+    /**
      * Find all model objects directly impacted by or impacting an event.
      *
      * @param event an event
@@ -955,6 +964,14 @@ public interface QueryService {
      * @return a list of entities
      */
     List<? extends ModelEntity> findAllEntitiesIn( Phase phase );
+
+    /**
+     * Find all entities in a given medium.
+     *
+     * @param medium a medium
+     * @return a list of entities
+     */
+    List<? extends ModelEntity> findAllEntitiesIn( TransmissionMedium medium );
 
     /**
      * Find all model objects of a given class that reference a given model object.

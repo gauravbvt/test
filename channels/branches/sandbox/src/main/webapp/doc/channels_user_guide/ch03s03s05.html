@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Actions</title><link rel="stylesheet" type="text/css" href="/css/doc.css"/><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/><link rel="home" href="channels_user_guide.html" title="Channels Planner Guide"/><link rel="up" href="ch03s03.html" title="Activities"/><link rel="prev" href="ch03s03s04s03.html" title="Change the categorization of an entity"/><link rel="next" href="ch04.html" title="Chapter 4. Appendix"/></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Actions</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03s03s04s03.html">Prev</a> </td><th width="60%" align="center">Activities</th><td width="20%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr></table><hr/></div><div class="section" title="Actions"><div class="titlepage"><div><div><h3 class="title"><a id="d0e6106"/>Actions</h3></div></div></div><p>Planners carry out ISP activities in Channels by executing Channels commands. Any
+          change to an IS plan is the result of executing a command. Planners execute commands in
+          Channels whenever they create and remove segments, when they add, cut, copy and paste
+          tasks, needs, capabilities and flows, connect tasks with information flows, disconnect
+          them, add an issue, remove a segment, move tasks across segments, add an intermediate to a
+          flow etc. </p><p>Some commands are directly triggered from “actions” menus within the context of a
+          plan, segment, task, flow or entity. Other commands are triggered by updating fields in
+          edit forms, or by pressing buttons.</p><p>Some commands have simple effects (adding a task, for example) but others can be more
+          complex:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>“disintermediate” removes a task that acts as a middleman in a flow</p></li><li class="listitem"><p>“intermediate” adds a middleman task to a flow,</p></li><li class="listitem"><p>“satisfy all needs” automatically connects information needs of a task to matching
+              but untapped information capabilities from other tasks,</p></li><li class="listitem"><p>"move tasks" moves one or more tasks from one segment to another, possibly also
+              adding goals achieved by the moved tasks to the target segment.</p></li></ul></div><p>Complex commands are defines in terms of other commands that are executed completely
+          or not at all. Most commands are reversible and can be undone and redone up and until some
+          planner takes an action that would conflict with the undoing or redoing (for example,
+          anyone removing a task prevents a planner from undoing a change he/she recently did to one
+          of its attributes). </p><p>The execution of each command is journaled for replay should the server be interrupted
+          and restarted. It is also recorded and listed in the activities tab in the collaboration
+          panel. Channels makes sure that only one command is being executed on an IS plan at a
+          time, no matter how many planners are working on a plan.</p><div class="figure"><a id="d0e6132"/><p class="title"><strong>Figure 3.70. Channels commands</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/commands.png" align="middle" alt="Channels commands"/></div></div></div><br class="figure-break"/></div><div class="navfooter"><hr/><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03s03s04s03.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch03s03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Change the categorization of an entity </td><td width="20%" align="center"><a accesskey="h" href="channels_user_guide.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 4. Appendix</td></tr></table></div></body></html>

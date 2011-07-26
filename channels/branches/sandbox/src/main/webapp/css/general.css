@@ -1,0 +1,138 @@
+/* ----- Login - Password Reset - Error Pages ----- */
+
+* {
+	margin:0;
+	padding:0;
+}
+
+body {
+	background:#E9F0FF;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 100%;
+	margin:0;
+	padding:100px 0 0 0;
+	font-size:12px;
+}
+
+div#top {
+	width:300px;
+	border:1px solid #CCCCCC;
+	margin-top:100px;
+	min-width:300px;
+    margin: 0 auto;
+}
+
+div#top-error {
+	width:600px;
+	border:1px solid #CCCCCC;
+	margin-top:100px;
+	min-width:300px;
+    margin: 0 auto;
+}
+
+div#header {
+    background: #c3d9ff url('../images/back.png') repeat-y;
+	margin-bottom:0;
+}
+
+div#header div {
+    background: transparent url('../images/logo.png') no-repeat 4px 4px;
+    padding-left: 58px;
+    height: 55px;
+}
+
+div#header h1 {
+	font-size:20px;
+	font-weight:bold;
+	padding:7px 0 0 0;
+}
+
+div#header h2 {
+	font-size:12px;
+	font-weight:normal;
+}
+
+div#contents {
+	padding:10px;
+	background:#F6F6F6;
+	border-top:1px solid #CCCCCC;
+}
+
+div#contents p {
+	padding:0 0 5px 0;
+}
+
+div#contents p a {
+	color:#333;
+	border-bottom:1px dotted #333;
+	text-decoration:none;
+}
+
+div#contents label {
+	font-weight:bold;
+}
+
+input#j_username,
+input#j_password,
+input.username,
+input.email {
+	width:275px;
+	height:20px;
+}
+
+div#username,
+div#password,
+div#email {
+	padding:3px 0 10px 0;
+}
+
+div#rememberme {
+	padding:0 0 10px 0;
+}
+
+div#rememberme label {
+	font-weight:normal;
+}
+
+div#submit input {
+    background: url("../images/button-bg.png") repeat-x scroll 0 0 transparent;
+    border: 1px solid #A7A9AC;
+    color: #666666;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-right: 5px;
+    padding: 5px 10px;
+}
+
+div#submit input:hover {
+    color: #333333;
+    border: 1px solid #000000;
+}
+
+a.rightlink {
+    border-bottom: 1px dotted #333333;
+    color: #333333;
+    display: block;
+    float: right;
+    margin: 0 4px 0 0;
+    padding: 5px 0 0;
+    text-decoration: none;
+}
+
+a.rightlink:hover {
+	color:#000000;
+}
+
+span.error,
+span.message {
+    background: #FEF2B0;
+    border: 1px solid #C5B351;
+    color: #000000;
+    font-size: 12px;
+    display: block;
+    margin: 0 0 10px;
+    padding: 5px;
+	text-align:center;
+}

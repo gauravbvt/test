@@ -11,76 +11,171 @@
 </head>
 <body>
 
-<div id="top">
+<div id="container">
     <div id="header">
-        <div class="admin-header">
-			<div class="headerlogo">
-                <img class="logo" wicket:id="channelsHome" src="images/logo_home.png" alt="Home" title="Home" style="border:0"/>
-				<div class="headertext">
-		            <h1>Channels</h1>
-					<h3>Administration</h3>
-				</div>
-			</div>
-			<div class="headermenu">
-	            <div id="nav">
-					<ul>
-						<li>
-							<a href="/logout">Sign out <span wicket:id="loggedUser">user</span></a>
-						</li>
-					</ul>
-				</div>
-			</div>
-        </div>
+		<a href="home"><img class="logo" src="/images/logo_home.png" width="48" height="48" alt="Channels Logo" /></a>
+        <h1>Channels &ndash; Administration</h1>
+		<a class="logout" href="/logout">Sign out <span wicket:id="loggedUser">user</span></a>
     </div>
     <div id="contents">
         <div id="plan">
         <form action="" wicket:id="users">
-            <h3>Create new plan</h3>
-             <ul class="toolbar new">
-                 <li>New Plan URI: <input type="text" class="big" wicket:id="newPlanUri" value=""/> owned by: <input type="text" class="big" wicket:id="newPlanClient"/></li>
-             </ul>
-            <h3>Manage plan</h3>
-             <ul class="toolbar new">
-	            <li>
-					<label class="planselect">Plan:
-	                	<select wicket:id="plan-sel" name="plan">
-	                	    <option>Some plan</option>
+			<div class="issues" wicket:id="feedback">(error messages)</div>
+            <h2>Create new plan</h2>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="label">New Plan URI:</td>
+					<td class="input">
+						<input type="text" class="big" wicket:id="newPlanUri" value=""/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">New Plan Owned by:</td>
+					<td>
+						<input type="text" class="big" wicket:id="newPlanClient"/>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="submit" value="Submit" class="submit" name="Submit"/>
+					</td>
+				</tr>
+			</table>
+            <h2>Add new user</h2>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="label">New User ID:</td>
+					<td>
+						<input type="text" wicket:id="new">
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="submit" value="Submit" class="submit" name="Submit"/>
+					</td>
+				</tr>
+			</table>
+            <h2>Manage plan</h2>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="label">Select Plan:</td>
+					<td>
+						<select wicket:id="plan-sel" name="plan">
+	                		<option>Some plan</option>
 	                	</select>
-					</label>
-				</li>
-				<li><a wicket:id="productize"> Productize plan</a></li>
-				<li><a wicket:id="deletePlan"> Delete plan </a></li>
-            </ul>
-            <ul class="toolbar">
-                <li>URI: <span wicket:id="planUri"/></li>
-                <li>Owner: <input type="text" wicket:id="planClient"/></li>
-            </ul>
-            <h4>Override email addresses</h4>
-            <ul class="toolbar">
-                <li>Send planner feedback to: <input type="text" wicket:id="plannerSupportCommunity"/></li>
-                <li>Send participant feedback to: <input type="text" wicket:id="userSupportCommunity"/></li>
-            </ul>
-            <h4>Set community calendar</h4>
-            <ul class="toolbar">
-                 <li>Community calendar host: <input type="text" wicket:id="communityCalendarHost"/></li>
-                 <li>Community calendar: <input type="text" wicket:id="communityCalendar"/></li>
-                 <li>Community calendar privacy ticket: <input type="text" wicket:id="communityCalendarPrivateTicket"/></li>
-             </ul>
-            <h4>Set survey service</h4>
-            <ul class="toolbar">
-                <li>Api key: <input type="text" class="big" wicket:id="surveyApiKey"/></li>
-                <li>User key: <input type="text" class="big" wicket:id="surveyUserKey"/></li>
-            </ul>
-            <ul class="toolbar">
-                <li>Template id: <input type="text" wicket:id="surveyTemplate"/></li>
-                <li>Default email: <input type="text" class="big" wicket:id="surveyDefaultEmailAddress"/></li>
-            </ul>
-            <h3>Add user</h3>
-            <ul class="toolbar">
-                <li>New user id: <input type="text" wicket:id="new"></li>
-            </ul>
-            <h3>Manage users</h3>
-            <table>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">&nbsp;</td>
+					<td>
+						<a class="button" wicket:id="productize">Productize</a>
+						<a class="button" wicket:id="deletePlan">Delete Plan</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Plan URI:</td>
+					<td>
+						<span wicket:id="planUri"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Plan Owner:</td>
+					<td>
+						<input type="text" wicket:id="planClient"/>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="submit" value="Submit" class="submit" name="Submit"/>
+					</td>
+				</tr>
+			</table>
+            <h3>Override email addresses</h3>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="label">Send Planner Feedback To:</td>
+					<td>
+						<input type="text" wicket:id="plannerSupportCommunity"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Send Participant Feedback To:</td>
+					<td>
+						<input type="text" wicket:id="userSupportCommunity"/>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="submit" value="Submit" class="submit" name="Submit"/>
+					</td>
+				</tr>
+			</table>
+            <h3>Set community calendar</h3>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="label">Community Calendar Host:</td>
+					<td>
+						<input type="text" wicket:id="communityCalendarHost"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Community Calendar:</td>
+					<td>
+						<input type="text" wicket:id="communityCalendar"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Community Calendar Privacy Ticket:</td>
+					<td>
+						<input type="text" wicket:id="communityCalendarPrivateTicket"/>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="submit" value="Submit" class="submit" name="Submit"/>
+					</td>
+				</tr>
+			</table>
+            <h3>Set survey service</h3>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="label">Api Key:</td>
+					<td>
+						<input type="text" class="big" wicket:id="surveyApiKey"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">User Key:</td>
+					<td>
+						<input type="text" class="big" wicket:id="surveyUserKey"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Template ID:</td>
+					<td>
+						<input type="text" wicket:id="surveyTemplate"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">Default Email:</td>
+					<td>
+						<input type="text" class="big" wicket:id="surveyDefaultEmailAddress"/>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="submit" value="Submit" class="submit" name="Submit"/>
+					</td>
+				</tr>
+			</table>
+            <h2>Manage users</h2>
+            <table class="users" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <thead>
                     <tr>
                         <th rowspan="2">User</th>
@@ -123,7 +218,6 @@
 			<div class="submit">
 				<input type="submit" value="Submit" class="submit" name="Submit"/>
 			</div>
-			<div class="issues" wicket:id="feedback">(error messages)</div>
         </form>
 		</div>
     </div>

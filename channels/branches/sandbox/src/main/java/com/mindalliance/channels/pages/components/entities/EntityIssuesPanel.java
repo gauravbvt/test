@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.ResourceSpec;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
 import com.mindalliance.channels.query.Assignments;
 import com.mindalliance.channels.query.QueryService;
@@ -164,12 +165,12 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
                     : "roles played by this type of agent";
         } else if ( entity instanceof Role ) {
             return entity.isActual()
-                    ? "actors playing this role"
-                    : "actors playing this type of role";
+                    ? "agents playing this role"
+                    : "agents playing this type of role";
         } else if ( entity instanceof Organization ) {
             return entity.isActual()
-                    ? "actors and roles in this organization"
-                    : "actors and roles in this type of organization";
+                    ? "agents and roles in this organization"
+                    : "agents and roles in this type of organization";
         } else if ( entity instanceof Place ) {
             return entity.isActual()
                     ? "anything located within this place"
@@ -178,8 +179,10 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             return "";
         } else if ( entity instanceof Phase ) {
             return "anything within this phase";
+        }else if ( entity instanceof TransmissionMedium ) {
+            return "any transmission medium delegated to";
         } else {
-            throw new IllegalStateException( "Can't diplay issue table for " + entity.getClass().getSimpleName() );
+            throw new IllegalStateException( "Can't display issue table for " + entity.getClass().getSimpleName() );
         }
     }
 
@@ -203,6 +206,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             return new ArrayList<ModelEntity>();
         } else if ( entity instanceof Phase ) {
             return queryService.findAllEntitiesIn( (Phase) entity );
+        }else if ( entity instanceof TransmissionMedium ) {
+            return queryService.findAllEntitiesIn( (TransmissionMedium) entity );
         } else {
             throw new IllegalStateException( "Can't display issue table for " + entity.getClass().getSimpleName() );
         }

@@ -139,7 +139,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
             tabs.add( tab );
         }
         if ( showTabs.contains( USER ) ) {
-            AbstractTab tab = new AbstractTab( new Model<String>( "About me") ) {
+            AbstractTab tab = new AbstractTab( new Model<String>( "About Me") ) {
                 public Panel getPanel( String id ) {
                     userProfilePanel = new UserInfoPanel( id, SocialPanel.this, collapsible );
                     return userProfilePanel;

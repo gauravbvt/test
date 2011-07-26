@@ -45,8 +45,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
                                     Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
                                     Subject inSubject = new Subject(
                                             receive.getName(),
-                                            inEOI.getContent(),
-                                            inEOI.isTimeSensitive() );
+                                            inEOI.getContent() );
                                     Subject outSubject = new Subject( flow.getName(), outEOI.getContent() );
                                     issue.setDescription( "Received element of information "
                                             + inSubject
@@ -75,7 +74,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
 
     private boolean declassifies( ElementOfInformation outEOI, Flow send, ElementOfInformation inEOI, Flow receive ) {
         Subject subjectSent = new Subject( send.getName(), outEOI.getContent() );
-        Subject subjectReceived = new Subject( receive.getName(), inEOI.getContent(), inEOI.isTimeSensitive() );
+        Subject subjectReceived = new Subject( receive.getName(), inEOI.getContent() );
         boolean isSame;
         Transformation xform = outEOI.getTransformation();
         if ( xform.isNone() ) {

@@ -6,6 +6,7 @@ import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -38,14 +39,15 @@ public class NewPasswordPage extends WebPage {
     private static final String UNKNOWN_USERNAME = "Unrecognized user name.";
     private static final String UNKNOWN_EMAIL = "Unrecognized email address.";
     private static final String UNKNOWN_USERNAME_AND_EMAIL = "Unrecognized user name and email address.";
-    private static final String MISSING_USERNAME_OR_EMAIL = "Provide a user name or email address.";
-    private static final String NEW_PASSWORD_SENT = "A new password was emailed to you.";
+    private static final String MISSING_USERNAME_OR_EMAIL = "Please provide a user name or email address.";
+    private static final String NEW_PASSWORD_SENT = "A new password has been emailed to you.";
 
     private String username = "";
     private String email = "";
     private String outcome = "";
     private WebMarkupContainer outcomeContainer;
     private Form requestForm;
+    private AjaxLink<String> loginLink;
 
     public NewPasswordPage( PageParameters parameters ) {
         super( parameters );
@@ -55,6 +57,7 @@ public class NewPasswordPage extends WebPage {
     private void init() {
         addForm();
         addOutcome();
+        addLogin();
     }
 
     private void addForm() {
@@ -73,6 +76,7 @@ public class NewPasswordPage extends WebPage {
                     target.addComponent( requestForm );
                 }
                 target.addComponent( outcomeContainer );
+                target.addComponent(  loginLink );
             }
         };
         requestForm.add( submitLink );
@@ -108,15 +112,18 @@ public class NewPasswordPage extends WebPage {
             outcomeLabel.add(  new AttributeModifier( "class", true, new Model<String>( "error" ) ) );
         }
         outcomeContainer.add( outcomeLabel );
-        AjaxLink<String> loginLink = new AjaxLink<String>( "login" ) {
+        makeVisible( outcomeLabel, !outcome.isEmpty() );
+        addOrReplace( outcomeContainer );
+    }
+
+    private void addLogin() {
+        loginLink = new AjaxLink<String>( "login" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 setResponsePage( LoginPage.class );
             }
         };
-        loginLink.setVisible( getOutcome().equals( NEW_PASSWORD_SENT ) );
-        outcomeContainer.add( loginLink );
-        addOrReplace( outcomeContainer );
+        requestForm.add(  loginLink );
     }
 
     private void requestNewPassword() {
@@ -162,6 +169,18 @@ public class NewPasswordPage extends WebPage {
             }
         }
     }
+
+    /**
+     * Set a component's visibility.
+     *
+     * @param component a component
+     * @param visible   a boolean
+     */
+    private static void makeVisible( Component component, boolean visible ) {
+        component.add( new AttributeModifier( "style", true, new Model<String>(
+                visible ? "" : "display:none" ) ) );
+    }
+
 
     public String getUsername() {
         return username;

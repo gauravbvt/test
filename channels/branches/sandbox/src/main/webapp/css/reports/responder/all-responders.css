@@ -1,0 +1,336 @@
+/**
+ * Channels Reponder Report - Styling
+ * Copyright (C) 2010 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: romit
+ * Date: Apr 26, 2011
+ * Time: 11:06:39 AM
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #0143b4;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #013081;
+    border-bottom: 1px dotted #013081;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+div#container {
+    width: 800px;
+    margin: 0 auto;
+    text-align: left;
+    padding: 0;
+    border: 1px solid #999999;
+	background:#f6f6f6;
+}
+
+div#header {
+    width: 800px;
+    height: 54px;
+    background: #c3d9ff;
+    border-bottom: 1px solid #999999;
+	font-size:12px;
+}
+
+div#contents {
+	padding:30px;
+	width:740px;
+}
+
+
+div#disclaimer {
+    border-top: 1px solid #CCCCCC;
+    color: #666666;
+    font-size: 11px;
+    margin: 20px 0 0 0;
+    padding: 20px 0 0 0;
+    text-align: center;
+}
+
+
+/* ----- Header ----- */
+
+div#header img {
+    float: left;
+	border: 0;
+	padding: 4px 0 0 5px;
+}
+
+div#header h1 {
+    color: #333333;
+    display: block;
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 16px 0 0 7px;
+}
+
+div#header a.logout {
+    background: url('/images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin: 17px 17px 0 0;
+    text-transform: capitalize;
+    outline: none;
+	float:right;
+}
+
+div#header a.logout:hover {
+    color: #000000;
+	border:1px solid #000000;
+}
+
+/*
+
+div#header > ul {
+    float: right;
+    list-style: none;
+    margin: 20px 20px 0 0;
+    padding: 0;
+    display: inline;
+}
+
+div#header > ul li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+div#header > ul li a {
+    background: url('/images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px;
+    margin-left: 5px;
+    text-transform: capitalize;
+    outline: none;
+}
+
+div#header > ul li a:hover {
+    color: #333333;
+}
+
+*/
+
+/* ----- Content - Note ----- */
+
+div#contents div#note {
+    background: url("/images/gains.png") no-repeat 5px 4px #FEF2B0;
+    border:1px solid #C5B351;
+    color: #000000;
+    font-size: 12px;
+    margin: 5px 0 15px 0;
+    padding: 5px 5px 5px 25px;
+}
+
+
+/* ----- Content - Table ----- */
+
+h3 {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
+    font-size: 13px;
+    margin: 0;
+    padding: 9px 10px;
+    text-transform: uppercase;
+}
+
+div#contents table {
+	border-collapse:collapse;
+	margin:0 0 20px 0;
+}
+
+div#contents table tr th {
+	padding:0 15px;
+}
+
+div#contents table tr td {
+	padding:7px 7px 7px 10px;
+    border-bottom: 1px solid #CCCCCC;
+    border-top: 1px solid #CCCCCC;
+}
+
+div#contents table tr td.users,
+div#contents table tr td.agents {
+	border-right:none;
+}
+
+div#contents table tr td.remove,
+div#contents table tr td.assign {
+	border-left:none;
+}
+
+div#contents table tr td.remove a {
+    background: url('/images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin: 0;
+    text-transform: uppercase;
+    outline: none;
+	float:right;
+    display: block;
+}
+
+div#contents table tr td.remove a:hover {
+    color: #000000;
+	border:1px solid #000000;
+}
+
+a.responder,
+a.planner,
+a.responderList {
+	font-weight:bold;
+	border:none;
+}
+
+a.responder:hover,
+a.planner:hover,
+a.responderList:hover {
+	font-weight:bold;
+	border-bottom:1px dotted #666666;
+	color:#000000;
+}
+
+span.profile,
+span.many {
+	border-bottom:1px dotted #666666;
+}
+
+span.desc {
+	color: #666666;
+	font-size: 11px;
+	text-transform: none;
+}
+
+
+/* ----- Assign - Dropdown ----- */
+
+
+td.assign {
+    clear: both;
+    margin: 0;
+    padding: 0;
+    position: relative;
+	width:49px;
+}
+
+td.assign ul {
+    float: right;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    right: 50%;
+}
+
+td.assign ul li {
+    float: left;
+    left: 50%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: 1px;
+}
+
+td.assign ul li a {
+    text-decoration: none;
+    background: url('/images/signout-bg.png') repeat-x scroll 0 0 transparent;
+    border: 1px solid #A7A9AC;
+    color: #727272;
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    margin: 0;
+    outline: medium none;
+    padding: 2px 4px;
+    text-transform: uppercase;
+}
+
+td.assign ul li a:hover {
+    color: #000000;
+	border:1px solid #000000;
+	background:#eeeeee;
+}
+
+td.assign ul li:hover a {
+    color: #000000;
+	border:1px solid #000000;
+	background:#eeeeee;
+}
+
+td.assign ul ul {
+    display: none;
+    float: left;
+    position: absolute;
+    top: 1.3em;
+    margin: 0 0 0 0;
+    width: 10em;
+    left: auto;
+    right: 0;
+	z-index:1000;
+}
+
+td.assign ul ul li {
+    clear: left;
+    left: auto;
+    margin: 0;
+    width: 100%;
+    float: right;
+    position: relative;
+    right: 0.8em;
+}
+
+td.assign ul ul li a,
+td.assign ul li:hover ul li a {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border-bottom: none;
+    color: #444444;
+    float: left;
+    font-size: 0.8em;
+    font-weight: normal;
+    line-height: 1.4em;
+    width: 100%;
+}
+
+td.assign ul ul li:last-child a,
+td.assign ul li:hover ul li:last-child a {
+    border-bottom: 1px solid #000000;
+}
+
+td.assign ul ul li a:hover,
+td.assign ul li:hover ul li a:hover {
+    background: #999999;
+    color: #ffffff;
+    float: left;
+}
+
+td.assign ul li:hover ul {
+    display: block;
+}

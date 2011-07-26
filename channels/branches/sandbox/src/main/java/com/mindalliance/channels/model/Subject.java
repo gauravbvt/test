@@ -28,10 +28,6 @@ public class Subject implements Serializable, Comparable {
      */
     private boolean root;
     /**
-     * Whether need is time sensitive.
-     */
-    private boolean timeSensitive;
-    /**
      * Maximum length of info in label.
      */
     private static final int MAX_INFO_LENGTH_IN_LABEL = 20;
@@ -43,18 +39,11 @@ public class Subject implements Serializable, Comparable {
         super();
         this.info = subject.getInfo();
         this.content = subject.getContent();
-        this.timeSensitive = subject.isTimeSensitive();
     }
 
     public Subject( String info, String content ) {
         this.info = info;
         this.content = content;
-    }
-
-
-    public Subject( String info, String content, boolean timeSensitive ) {
-        this( info, content );
-        this.timeSensitive = timeSensitive;
     }
 
     public String getInfo() {
@@ -79,14 +68,6 @@ public class Subject implements Serializable, Comparable {
 
     public void setRoot( boolean root ) {
         this.root = root;
-    }
-
-    public boolean isTimeSensitive() {
-        return timeSensitive;
-    }
-
-    public void setTimeSensitive( boolean timeSensitive ) {
-        this.timeSensitive = timeSensitive;
     }
 
     /**
