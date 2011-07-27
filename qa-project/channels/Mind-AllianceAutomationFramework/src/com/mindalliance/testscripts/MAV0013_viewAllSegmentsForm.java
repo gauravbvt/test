@@ -35,7 +35,7 @@ public class MAV0013_viewAllSegmentsForm
 					  GlobalVariables.sBlank, GlobalVariables.sBlank);
 			  // WebElement Synchronization
 			  Thread.currentThread();
-			  Thread.sleep(1000);  
+			  Thread.sleep(2000);  
 			  
 			  // Clicks on 'About plan' link under show pop up menu option
 			  GlobalVariables.iStepNo++ ;
@@ -47,7 +47,7 @@ public class MAV0013_viewAllSegmentsForm
 					  GlobalVariables.sBlank, GlobalVariables.sBlank);
 			  // WebElement Synchronization
 			  Thread.currentThread();
-			  Thread.sleep(1000);
+			  Thread.sleep(2000);
 			  
 			  //clicks on 'all segments' link under show pop up menu option on About plan window 
 			  GlobalVariables.iStepNo++ ;
@@ -59,7 +59,7 @@ public class MAV0013_viewAllSegmentsForm
 					  GlobalVariables.sBlank, GlobalVariables.sBlank);
 			  // WebElement Synchronization
 			  Thread.currentThread();
-			  Thread.sleep(1000);
+			  Thread.sleep(2000);
 			
 			  // Assertion: Verify that "All Segments" page loaded 
 			  GlobalVariables.iStepNo++ ;
@@ -81,7 +81,7 @@ public class MAV0013_viewAllSegmentsForm
 			  }
 			  // WebElement Synchronization
 			  Thread.currentThread();
-			  Thread.sleep(3000);
+			  Thread.sleep(2000);
 			  
 			  // Call logout()
 			  GlobalVariables.iStepNo++ ;
@@ -93,7 +93,7 @@ public class MAV0013_viewAllSegmentsForm
 					  GlobalVariables.sBlank, GlobalVariables.sBlank);
 			  // WebElement Synchronization
 			  Thread.currentThread();
-			  Thread.sleep(3000);	
+			  Thread.sleep(2000);	
 		
 			  LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			  System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
