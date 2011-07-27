@@ -4,6 +4,7 @@
 <username>jf</username>
 <password>Mind-Alliance</password>
 <login>/html/body/div/div[2]/form/div[6]/input</login>
+<xPathBody>/html/body</xPathBody>
 <xPathStackTrace>/html/body/div/div[2]/p[3]/a</xPathStackTrace>
 <xPathSignOutOnParticipantsPage>/html/body/div/div/ul/li/a</xPathSignOutOnParticipantsPage>
 <xPathSignoutOnAssignmentsCommitments>/html/body/div/span[2]/div/ul/li[3]/a</xPathSignoutOnAssignmentsCommitments>
