@@ -5,6 +5,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.*;
+
 public class ApplicationFunctionLibrary {
 
 	/**
@@ -12,6 +14,7 @@ public class ApplicationFunctionLibrary {
 	 */
 	public static boolean login() {
 		try {
+
 			GlobalVariables.iStepNo = 0;
 			GlobalVariables.iStepNo++ ;
 			GlobalVariables.sDescription = "URL opened";
@@ -20,6 +23,13 @@ public class ApplicationFunctionLibrary {
 				GlobalVariables.oDriver = new FirefoxDriver();
 			else if (GlobalVariables.sBrowser.equals("Internet Explorer"))
 				GlobalVariables.oDriver = new InternetExplorerDriver();
+
+			// Maximize Browser Window
+			((JavascriptExecutor) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
+			// WebElement Synchronization
+			Thread.currentThread();
+			Thread.sleep(1000);
+			
 			// Enter the URL
 			GlobalVariables.oDriver.get(GlobalVariables.login.get("sChannelURL"));
 			// WebElement Synchronization
