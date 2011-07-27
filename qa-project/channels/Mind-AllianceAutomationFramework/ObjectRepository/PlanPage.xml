@@ -27,7 +27,8 @@
 <xPathMessages>/html/body/form/span/span/div/div/div/ul/li[3]/a/span</xPathMessages>
 <xPathActivities>/html/body/form/span/span/div/div/div/ul/li[2]/a/span</xPathActivities>
 <xPathDoingSomeThingLink>//div[@id='part']/div[1]/div[2]/table/tbody/tr/td/span/span</xPathDoingSomeThingLink>
-<xPathLegend>/html/body/form/span/div/div/span[6]/img</xPathLegend>
+<xPathLegend>/html/body/form/span/div/div/span[7]/img</xPathLegend>
+<xPathStretchUpShrinkBack>/html/body/form/span/div/div/span[6]/img</xPathStretchUpShrinkBack>
 <xPathRespondingPhaseLink>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathRespondingPhaseLink>
 <xPathDeleteEvent>/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/div/table/tbody/tr/td[2]/a/img</xPathDeleteEvent>
 <xPathMoveTaskButton>/html/body/form/div[5]/div/div[2]/div[2]/input</xPathMoveTaskButton>
@@ -62,6 +63,7 @@
 <xPathActionRemoveSegment>/html/body/form/div[13]/span/span[3]/span/ul/li[9]/span/a/span</xPathActionRemoveSegment>     
 <xPathActionMoveTaskToSegment>/html/body/form/div[13]/span/span[3]/span/ul/li[10]/span/a/span</xPathActionMoveTaskToSegment>
 <xPathActionSignOut>/html/body/form/div[13]/span/span[3]/span/ul/li[11]/span/a/span</xPathActionSignOut>
+<xPathAddInfoSendNewMedium>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[9]/td/ol/li/span/a/span</xPathAddInfoSendNewMedium>
 <xPathHelpIcon>/html/body/form/div[13]/span/a/img</xPathHelpIcon>
 <xPathTagsLinkOnTask>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/th/label/a</xPathTagsLinkOnTask>
 <xPathAboutPlanSegmentLink>/html/body/form/div[13]/h1/span</xPathAboutPlanSegmentLink>
