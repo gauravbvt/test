@@ -28,7 +28,7 @@ public class ApplicationFunctionLibrary {
 			((JavascriptExecutor) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
 			// WebElement Synchronization
 			Thread.currentThread();
-			Thread.sleep(1000);
+			Thread.sleep(2000);
 			
 			// Enter the URL
 			GlobalVariables.oDriver.get(GlobalVariables.login.get("sChannelURL"));
