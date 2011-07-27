@@ -69,7 +69,7 @@ public class CA003_CreateNewPlan
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    		option.setSelected();
+			    		option.isSelected();
 			    		break;
 			    	}
 			    }
