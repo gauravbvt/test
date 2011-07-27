@@ -237,6 +237,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathLocale",oXmlElePlanPage.getElementsByTagName("xPathLocale").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathPlanHomeIcon",oXmlElePlanPage.getElementsByTagName("xPathPlanHomeIcon").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathParticipationNewMedium",oXmlElePlanPage.getElementsByTagName("xPathParticipationNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathAssertionPhaseDetails", oXmlElePlanPage.getElementsByTagName("xPathAssertionPhaseDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
@@ -464,6 +465,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("doingSomething",oXmlEleViewElements.getElementsByTagName("doingSomething").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("deletePlan",oXmlEleViewElements.getElementsByTagName("deletePlan").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("newMedium",oXmlEleViewElements.getElementsByTagName("newMedium").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("anyMedium",oXmlEleViewElements.getElementsByTagName("anyMedium").item(0).getChildNodes().item(0).getNodeValue());
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
