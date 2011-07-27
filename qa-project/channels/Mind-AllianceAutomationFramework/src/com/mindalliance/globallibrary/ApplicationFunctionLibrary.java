@@ -79,6 +79,7 @@ public class ApplicationFunctionLibrary {
 			// Returns TRUE
 			return Boolean.TRUE;
 		} catch (Exception e) {
+			System.out.println("\n\n"+e.getMessage()+"\n\n");
 			// Returns FALSE
 			return Boolean.FALSE;
 		}
