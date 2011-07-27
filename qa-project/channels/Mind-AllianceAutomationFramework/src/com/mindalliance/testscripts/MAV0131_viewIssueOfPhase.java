@@ -43,7 +43,7 @@ public class MAV0131_viewIssueOfPhase
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on Phase in About plan window
 				GlobalVariables.iStepNo++ ;
@@ -55,19 +55,19 @@ public class MAV0131_viewIssueOfPhase
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on Issue under show pop up menu of Phase
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Issue";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("issues"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Issues"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Assertion: Verify that "phase Issue" page loaded  
 				GlobalVariables.iStepNo++ ;
@@ -80,7 +80,7 @@ public class MAV0131_viewIssueOfPhase
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 	            }
 			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'issues' Actual "+GlobalVariables.oElement.getText();
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.viewElements.get("issues") + "' Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -88,7 +88,7 @@ public class MAV0131_viewIssueOfPhase
 				}
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000); 
+				Thread.sleep(2000); 
 				
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;
@@ -100,7 +100,7 @@ public class MAV0131_viewIssueOfPhase
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    // WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);	
+			    Thread.sleep(2000);	
 				
 			    LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			    System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

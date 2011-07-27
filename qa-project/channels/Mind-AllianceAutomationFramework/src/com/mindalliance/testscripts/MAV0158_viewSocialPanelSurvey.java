@@ -21,10 +21,6 @@ public class MAV0158_viewSocialPanelSurvey
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
 				
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000); 
-				
 				// Click on Survey tab on social panel
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Survey tab is present";
@@ -46,7 +42,7 @@ public class MAV0158_viewSocialPanelSurvey
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000); 
+				Thread.sleep(3000); 
 				
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;
@@ -57,6 +53,10 @@ public class MAV0158_viewSocialPanelSurvey
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000); 
+
 			    LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			    System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			

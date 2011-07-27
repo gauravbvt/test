@@ -85,7 +85,7 @@ public class MAV0146_viewIssueOfOrganizations
 				// Click on Issue under show pop up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Organizations Issue";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("issues"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Issues"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -119,11 +119,6 @@ public class MAV0146_viewIssueOfOrganizations
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				/*// Remove Organizations
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/span/a/span")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);*/
 				
 			    // Call logout()
 			    GlobalVariables.iStepNo++ ;

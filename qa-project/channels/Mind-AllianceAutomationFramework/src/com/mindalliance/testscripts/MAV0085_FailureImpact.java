@@ -60,7 +60,7 @@ public class MAV0085_FailureImpact
 				GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Failure impacts' gets loaded";		            		         
 			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("float-header"));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("taskFailureImpacts"))) {
+			    if (GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("taskFailureImpacts"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
