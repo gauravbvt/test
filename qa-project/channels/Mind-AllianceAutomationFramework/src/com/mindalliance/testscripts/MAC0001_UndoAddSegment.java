@@ -94,7 +94,6 @@ public class MAC0001_UndoAddSegment {
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	System.out.println(option.getText());
 			    	if(option.getText().equals(GlobalVariables.viewElements.get("untitled"))){
 			    		option.setSelected();
 						// Write Results
