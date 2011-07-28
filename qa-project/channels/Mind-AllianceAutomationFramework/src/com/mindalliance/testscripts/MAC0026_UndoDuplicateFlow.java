@@ -78,9 +78,7 @@ public class MAC0026_UndoDuplicateFlow
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
 				GlobalVariables.oElement.sendKeys("Audit");
 			    GlobalVariables.oElement.sendKeys(Keys.ENTER);
-			    // Click on hide details from action pop-menu bar
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("Hide details"));
-				// Write Results
+			    // Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
@@ -92,7 +90,7 @@ public class MAC0026_UndoDuplicateFlow
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Duplicate Flow";
 				// Click on legend for maximize the graph
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -102,7 +100,7 @@ public class MAC0026_UndoDuplicateFlow
 				Thread.sleep(5000);
 				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Duplicate this flow Info"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Received Info"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -110,7 +108,7 @@ public class MAC0026_UndoDuplicateFlow
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:firstChoice")));
 				List<WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	if(GlobalVariables.viewElements.get("Other").equals(option.getText())){
+			    	if(GlobalVariables.viewElements.get("other").equals(option.getText())){
 			    			option.setSelected();
 			    			break;
 			    	}
@@ -118,7 +116,6 @@ public class MAC0026_UndoDuplicateFlow
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
-				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
 				for (int i = 0; i <= 50; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -135,7 +132,7 @@ public class MAC0026_UndoDuplicateFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

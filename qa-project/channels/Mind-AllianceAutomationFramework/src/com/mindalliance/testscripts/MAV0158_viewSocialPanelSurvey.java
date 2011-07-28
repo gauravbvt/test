@@ -20,11 +20,17 @@ public class MAV0158_viewSocialPanelSurvey
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
-				
+
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000); 
 				// Click on Survey tab on social panel
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Survey tab is present";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialSurvey"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000); 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialSurvey")));
 				// Assertion: Verify that message tab is present on social panel
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("surveys"))) {
@@ -66,6 +72,7 @@ public class MAV0158_viewSocialPanelSurvey
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 		} 
 		catch (Exception e) {
+			System.out.println(e.getMessage());
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

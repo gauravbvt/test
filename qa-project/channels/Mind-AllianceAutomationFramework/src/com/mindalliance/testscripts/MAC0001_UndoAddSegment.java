@@ -94,19 +94,13 @@ public class MAC0001_UndoAddSegment {
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
+			    	System.out.println(option.getText());
 			    	if(option.getText().equals(GlobalVariables.viewElements.get("untitled"))){
+			    		option.setSelected();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);	    			
-						break;
-			    	}
-			    	else{
-			    		GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.viewElements.get("untitled")+"' Actual "+option.getText();
-			    		// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	    			
 						break;
 			    	}
 			    }

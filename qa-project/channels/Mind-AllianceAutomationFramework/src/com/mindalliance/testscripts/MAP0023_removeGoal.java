@@ -129,7 +129,7 @@ public class MAP0023_removeGoal {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Click on delete respective goal
 					GlobalVariables.iStepNo++ ;
@@ -145,6 +145,9 @@ public class MAP0023_removeGoal {
 					alert.accept();
 					//Assertion:Verify that goal should get removed.
 					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
 				    if(GlobalVariables.oElement.getText().equals("")){
 				    	// Write Results

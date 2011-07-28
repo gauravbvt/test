@@ -108,7 +108,7 @@ public class MAV0132_viewAgent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 			    // Click on Agent
 				GlobalVariables.iStepNo++ ;
@@ -120,7 +120,7 @@ public class MAV0132_viewAgent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Assertion: Verify that "Agent" page loaded 
 			    GlobalVariables.iStepNo++;

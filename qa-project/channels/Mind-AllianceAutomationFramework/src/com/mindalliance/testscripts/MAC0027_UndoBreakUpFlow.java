@@ -66,7 +66,6 @@ public class MAC0027_UndoBreakUpFlow
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Task detail updated";
 				// Task Name
-				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				for (int i = 0; i <= 15; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -83,7 +82,7 @@ public class MAC0027_UndoBreakUpFlow
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Receive info";
 				// Click on legend for maximize the graph
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -91,7 +90,6 @@ public class MAC0027_UndoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
-				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Break up Flow"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
@@ -109,7 +107,6 @@ public class MAC0027_UndoBreakUpFlow
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
-				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
 				for (int i = 0; i <= 50; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -139,7 +136,7 @@ public class MAC0027_UndoBreakUpFlow
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Click on legend for maximize the graph
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

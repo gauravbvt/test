@@ -20,10 +20,16 @@ public class MAV0161_viewSocialPanelAboutMe
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
 								
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				// Click on Message tab on social panel
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="About me tab is present";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialAboutMe"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialAboutMe")));
 				// Assertion: Verify that message tab is present on social panel
 				if (GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.viewElements.get("aboutMe"))) {
@@ -41,7 +47,7 @@ public class MAV0161_viewSocialPanelAboutMe
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;
@@ -52,6 +58,10 @@ public class MAV0161_viewSocialPanelAboutMe
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
 			    LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			    System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			

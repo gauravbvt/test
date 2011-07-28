@@ -66,7 +66,6 @@ public class MAC0057_RedoBreakUpFlow
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Task detail updated";
 				// Task Name
-				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				for (int i = 0; i <= 15; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -78,8 +77,6 @@ public class MAC0057_RedoBreakUpFlow
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
 				GlobalVariables.oElement.sendKeys("Audit");
 			    GlobalVariables.oElement.sendKeys(Keys.ENTER);
-			    // Click on hide details from action pop-menu bar
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -92,7 +89,7 @@ public class MAC0057_RedoBreakUpFlow
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Receive info";
 				// Click on legend for maximize the graph
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -100,9 +97,8 @@ public class MAC0057_RedoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);
-				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Break up flow"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Break up Flow"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -118,7 +114,6 @@ public class MAC0057_RedoBreakUpFlow
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);
-				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
 				for (int i = 0; i <= 50; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -148,7 +143,7 @@ public class MAC0057_RedoBreakUpFlow
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Click on legend for maximize the graph
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -218,8 +213,7 @@ public class MAC0057_RedoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				
-				
+								
 				 // Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

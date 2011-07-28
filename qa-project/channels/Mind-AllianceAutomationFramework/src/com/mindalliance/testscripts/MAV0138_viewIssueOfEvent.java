@@ -56,7 +56,7 @@ public class MAV0138_viewIssueOfEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Create an event
 				GlobalVariables.iStepNo++;
@@ -66,10 +66,10 @@ public class MAV0138_viewIssueOfEvent
 				for (int i = 0; i <= 50; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
