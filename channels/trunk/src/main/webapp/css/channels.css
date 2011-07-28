@@ -308,6 +308,16 @@ div.issues li {
 	padding:5px 0;
 }
 
+div.issues ul.attach li {
+    padding-left: 20px;
+	margin-left: 10px;
+}
+
+div.issues ul.attach li ul.menu li {
+	margin: 0;
+	padding: 0 0 0 5px;
+}
+
 div.issue-details {
     margin-top: 5px;
 }
