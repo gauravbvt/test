@@ -10,11 +10,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class MAV0078_pasteTaskUserAction
+public class MAV0078_pasteTaskUnderAction
 {
-	public MAV0078_pasteTaskUserAction() {
+	public MAV0078_pasteTaskUnderAction() {
 		try {
-			GlobalVariables.sTestCaseId = "MAV0078_pasteTaskUserAction";
+			GlobalVariables.sTestCaseId = "MAV0078_pasteTaskUnderAction";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -150,7 +150,7 @@ public class MAV0078_pasteTaskUserAction
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new MAV0078_pasteTaskUserAction();
+			new MAV0078_pasteTaskUnderAction();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
