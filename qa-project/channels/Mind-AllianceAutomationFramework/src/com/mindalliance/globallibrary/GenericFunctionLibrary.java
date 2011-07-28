@@ -357,7 +357,6 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("addNewTask",oXmlEleViewElements.getElementsByTagName("addNewTask").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("audit",oXmlEleViewElements.getElementsByTagName("audit").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("type",oXmlEleViewElements.getElementsByTagName("type").item(0).getChildNodes().item(0).getNodeValue());
-			GlobalVariables.viewElements.put("hideDetails",oXmlEleViewElements.getElementsByTagName("hideDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("high",oXmlEleViewElements.getElementsByTagName("high").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("low",oXmlEleViewElements.getElementsByTagName("low").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("after",oXmlEleViewElements.getElementsByTagName("after").item(0).getChildNodes().item(0).getNodeValue());

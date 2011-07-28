@@ -128,7 +128,7 @@ public class ApplicationFunctionLibrary {
 	 * @param optionName
 	 * @throws InterruptedException
 	 */
-	public static void MouseOverAndClick(String popUpMenu, String optionName) {
+	public static void MouseOverAndClick(String popUpMenu, String optionName) throws InterruptedException {
 		if (popUpMenu != null && optionName != null) {
 		// Mouse hover on popUpMenu
 		GlobalVariables.oDriver.findElement(By.xpath(popUpMenu)).click();
