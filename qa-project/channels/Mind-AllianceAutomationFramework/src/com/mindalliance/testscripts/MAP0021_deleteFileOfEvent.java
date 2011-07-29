@@ -49,7 +49,7 @@ public class MAP0021_deleteFileOfEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);	
+					Thread.sleep(2000);	
 					
 					// Click on 'Information Sharing Model' link
 					GlobalVariables.iStepNo++ ;
@@ -61,7 +61,7 @@ public class MAP0021_deleteFileOfEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(2000);
 				    
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++;
@@ -73,7 +73,7 @@ public class MAP0021_deleteFileOfEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(2000);
 					
 					// Details of Segment
 					GlobalVariables.iStepNo++;
@@ -83,6 +83,10 @@ public class MAP0021_deleteFileOfEvent
 					for (int i = 0; i <= 8; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment for delete file of Event"));
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -90,7 +94,7 @@ public class MAP0021_deleteFileOfEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(2000);
 					
 					// Select the Segment from 'Select Plan Segment' drop down, located on the top right corner
 					GlobalVariables.iStepNo++ ;
@@ -109,7 +113,7 @@ public class MAP0021_deleteFileOfEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					
 					// Add 'About plan segment' under Show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -121,7 +125,7 @@ public class MAP0021_deleteFileOfEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(2000);
 					
 					//Create an event
 					GlobalVariables.iStepNo++;
@@ -141,7 +145,7 @@ public class MAP0021_deleteFileOfEvent
 				    GlobalVariables.oElement.sendKeys(Keys.TAB);
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 				    GlobalVariables.oDriver.findElement(By.xpath("//form/div[5]/div[1]/div[@class='segment']/div[2]/table/tbody/tr[5]/td[1]/span[1]/div[1]/div[1]/table[@class='data-table']/tbody/tr[@class='even last']/td[1]/span[2]/a/span")).click();
 				    // Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -149,7 +153,7 @@ public class MAP0021_deleteFileOfEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);	
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					
 					// Attach a File to an event
 					GlobalVariables.iStepNo++;
@@ -161,18 +165,18 @@ public class MAP0021_deleteFileOfEvent
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);	 
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					
 					// Delete an File of an event
 					GlobalVariables.iStepNo++;
@@ -198,7 +202,7 @@ public class MAP0021_deleteFileOfEvent
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					
 					// Click on done
 					GlobalVariables.iStepNo++;
@@ -210,11 +214,11 @@ public class MAP0021_deleteFileOfEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank); 
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);			
+					Thread.sleep(2000);			
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
@@ -223,7 +227,7 @@ public class MAP0021_deleteFileOfEvent
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -235,7 +239,7 @@ public class MAP0021_deleteFileOfEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
