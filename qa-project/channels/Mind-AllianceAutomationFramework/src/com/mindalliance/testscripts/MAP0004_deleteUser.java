@@ -38,7 +38,7 @@ public class MAP0004_deleteUser
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);	
+				Thread.sleep(2000);	
 				
 				// Enter the details: newUserId
 				GlobalVariables.iStepNo++ ;
@@ -51,7 +51,7 @@ public class MAP0004_deleteUser
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -63,7 +63,7 @@ public class MAP0004_deleteUser
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Enter the 'Full Name', 'Email', 'Password' and select the role of the user (Admin/Planner/User/Disable)
 				GlobalVariables.iStepNo++ ;
@@ -91,7 +91,7 @@ public class MAP0004_deleteUser
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group"));
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -118,7 +118,7 @@ public class MAP0004_deleteUser
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Delete user
 				GlobalVariables.iStepNo++ ;
@@ -132,7 +132,7 @@ public class MAP0004_deleteUser
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -140,7 +140,7 @@ public class MAP0004_deleteUser
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 				if(!GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("User for deletion"))){
 					// Write Results
@@ -157,7 +157,7 @@ public class MAP0004_deleteUser
 				}			
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -168,6 +168,9 @@ public class MAP0004_deleteUser
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

@@ -39,7 +39,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);	
+				Thread.sleep(2000);	
 				
 				// Enter the details: newPlanUri
 				GlobalVariables.iStepNo++ ;
@@ -55,7 +55,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -67,7 +67,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 			    // Navigate to Home page
 				GlobalVariables.iStepNo++ ;
@@ -79,7 +79,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Switch Plan
 				GlobalVariables.iStepNo++ ;
@@ -98,7 +98,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Click on Information Sharing Model
 				GlobalVariables.iStepNo++ ;
@@ -106,7 +106,7 @@ public class MAP0002_addNameAndLocalizePlan
 				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);		
+				Thread.sleep(2000);		
 				GlobalVariables.oDriver.navigate().refresh();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -114,7 +114,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);		
+				Thread.sleep(2000);		
 				
 				// Click 'About plan' under 'Show' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -126,7 +126,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				//Enter the Details
 				GlobalVariables.iStepNo++ ;
@@ -141,7 +141,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;
@@ -149,14 +149,14 @@ public class MAP0002_addNameAndLocalizePlan
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				//ASSERTION: When clicked on 'done' button, the newly added plan should be updated
 				//Navigate to home Page
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/img")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathPlanHomeIcon"))).click();
 				GlobalVariables.oDriver.navigate().refresh();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				GlobalVariables.bIsSuccess=Boolean.FALSE;
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("switch-plan:plan-sel")));
 				options=GlobalVariables.oDropDown.getOptions();
@@ -182,7 +182,7 @@ public class MAP0002_addNameAndLocalizePlan
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -193,6 +193,9 @@ public class MAP0002_addNameAndLocalizePlan
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 			
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

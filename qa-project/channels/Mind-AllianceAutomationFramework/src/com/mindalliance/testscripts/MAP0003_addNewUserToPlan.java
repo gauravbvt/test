@@ -37,7 +37,7 @@ public class MAP0003_addNewUserToPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);	
+				Thread.sleep(2000);	
 				
 				// Enter the details: newUserId
 				GlobalVariables.iStepNo++ ;
@@ -50,7 +50,7 @@ public class MAP0003_addNewUserToPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -62,7 +62,7 @@ public class MAP0003_addNewUserToPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Enter the 'Full Name', 'Email', 'Password' and select the role of the user (Admin/Planner/User/Disable)
 				GlobalVariables.iStepNo++ ;
@@ -92,7 +92,7 @@ public class MAP0003_addNewUserToPlan
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group"));
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -100,7 +100,7 @@ public class MAP0003_addNewUserToPlan
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				// Assertion:
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table"));
 				tds = GlobalVariables.oElement.findElements(By.tagName("td"));
@@ -130,7 +130,7 @@ public class MAP0003_addNewUserToPlan
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -141,6 +141,9 @@ public class MAP0003_addNewUserToPlan
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 			
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

@@ -47,7 +47,7 @@ public class MAP0008_removeExpectation
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(2000);	
 					
 					// Click on 'Information Sharing Model' link
 					GlobalVariables.iStepNo++ ;
@@ -59,7 +59,7 @@ public class MAP0008_removeExpectation
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 				    					
 					//Click on 'About Plan' from show popup manu
 					GlobalVariables.iStepNo++;
@@ -71,7 +71,7 @@ public class MAP0008_removeExpectation
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(2000);
 					
 					//Click on 'all organizations' from show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -83,19 +83,18 @@ public class MAP0008_removeExpectation
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					
 					// Enter name of organization in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Name Entered";
-					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(2000);	
 					// Assertion: Verify that organization should get added to plan
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName));
 					if (GlobalVariables.oElement.getText().equals(sOrgName)) {
@@ -114,7 +113,7 @@ public class MAP0008_removeExpectation
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);		
+					Thread.sleep(2000);		
 					
 					// Remove Expectations from organization
 					GlobalVariables.iStepNo++;
@@ -127,7 +126,7 @@ public class MAP0008_removeExpectation
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(2000);
 					
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
@@ -139,7 +138,7 @@ public class MAP0008_removeExpectation
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(2000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -151,7 +150,7 @@ public class MAP0008_removeExpectation
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(2000);	
 				
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
