@@ -129,6 +129,7 @@ public class ApplicationFunctionLibrary {
 			GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathStackTrace"))).click();
 			ApplicationFunctionLibrary.logout();
 			}
+			GlobalVariables.oDriver.quit();
 			return Boolean.FALSE;
 		}
 	}
