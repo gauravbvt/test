@@ -137,7 +137,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
                         new WebMarkupContainer( "phaseAnchor" )
                                 .add( new Label( "phaseText", segment.getName() ) )
                                 .add( new AttributeModifier( "name", true, segment.getAnchor() ) ),
-                        new UserFeedbackPanel( "segmentFeedback", segment.getSegment(), "Send feedback" ),
+                        new UserFeedbackPanel( "segmentFeedback", segment.getSegment(), "Send feedback", "Guidelines" ),
 
                         new Label( "context", segment.getContext() ),
                         new Label( "segDesc", ChannelsUtils.ensurePeriod( segment.getDescription() ) )
@@ -156,7 +156,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
                                         new UserFeedbackPanel( "contactListFeedback",
                                                 segment.getSegment(),
                                                 "Send feedback",
-                                                "Contact list" ),
+                                                "Guidelines contact list" ),
                                         newContacts( segment.getContactSpecs( service ) ) )
                                 .setVisible( !segment.getContacts().isEmpty() ) );
             }
@@ -177,7 +177,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
                         new WebMarkupContainer( "taskAnchor" )
                                 .add( new Label( "taskName", task.getTitle() ) )
                                 .add( new AttributeModifier( "name", true, task.getAnchor() ) ),
-                        new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback" ),
+                        new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback", "Guidelines" ),
                         new WebMarkupContainer( "backTask" )
                                 .add( new AttributeModifier( "href", true, segment.getLink() ) ),
                         new Label( "taskSeq", task.getSeqString() ),
@@ -350,7 +350,8 @@ public class GuidelinesPage extends AbstractParticipantPage {
                                 new WebMarkupContainer( "critical" ).setVisible( flow.isCritical() ),
                                 new UserFeedbackPanel( "incomingFeedback",
                                         flow.getBasis(),
-                                        "Send feedback" ),
+                                        "Send feedback",
+                                        "Guidelines"),
                                 new WebMarkupContainer( "eoisRow" ).add( newEoiList( flow.getElementsOfInformation() ) ).setRenderBodyOnly(
                                         true ).setVisible( flow.hasEois() ),
                                 new WebMarkupContainer( "flowEnding" ).setVisible( flow.isTerminatingToTarget() ) );

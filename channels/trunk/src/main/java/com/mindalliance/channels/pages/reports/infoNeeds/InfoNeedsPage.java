@@ -103,7 +103,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                         new WebMarkupContainer( "segmentAnchor" )
                                 .add( new Label( "segmentText", reportSegment.getName() ) )
                                 .add( new AttributeModifier( "name", true, reportSegment.getAnchor() ) ),
-                        new UserFeedbackPanel( "segmentFeedback", reportSegment.getSegment(), "Send feedback" ),
+                        new UserFeedbackPanel( "segmentFeedback", reportSegment.getSegment(), "Send feedback", "Info needs" ),
 
                         new Label( "context", reportSegment.getContext() ),
                         new Label( "segDesc", ChannelsUtils.ensurePeriod( reportSegment.getDescription() ) )
@@ -125,7 +125,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                         new WebMarkupContainer( "taskAnchor" )
                                 .add( new Label( "taskName", task.getTitle() ) )
                                 .add( new AttributeModifier( "name", true, task.getAnchor() ) ),
-                        new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback" ),
+                        new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback", "Info needs" ),
                         new WebMarkupContainer( "backTask" )
                                 .add( new AttributeModifier( "href", true, reportSegment.getLink() ) ),
                         new Label( "taskSeq", task.getSeqString() ),
@@ -147,7 +147,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             protected void populateItem( ListItem<TaskInfoNeeds> item ) {
                 TaskInfoNeeds taskInfoNeeds = item.getModelObject();
                 item.add(
-                        new UserFeedbackPanel( "infoNeededFeedback", task.getPart(), "Send feedback" ),
+                        new UserFeedbackPanel( "infoNeededFeedback", task.getPart(), "Send feedback", "Info needs" ),
                         new Label( "intent", taskInfoNeeds.getIntentString() ),
                         new Label( "info", taskInfoNeeds.getInfo() ),
                         new Label( "impact", taskInfoNeeds.getImpactString() ),
