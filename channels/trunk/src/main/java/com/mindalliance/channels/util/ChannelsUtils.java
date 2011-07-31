@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,8 +77,12 @@ public final class ChannelsUtils {
         return attributes;
     }
 
+    public static Map<String, Object> mergeFlowAttributes( Flow flow, Flow other ) {
+        return mergeFlowAttributes( getFlowAttributes( flow ), getFlowAttributes( other ) );
+    }
+
     @SuppressWarnings( "unchecked" )
-    private static Map<String, Object> mergeFlowAttributes(
+    public static Map<String, Object> mergeFlowAttributes(
             Map<String, Object> attributes,
             Map<String, Object> others ) {
         Map<String, Object> merged = new HashMap<String, Object>();
@@ -610,4 +615,32 @@ public final class ChannelsUtils {
     public static String stripExtraBlanks( String s ) {
         return s.trim().replaceAll( "\\s+", " " );
     }
+
+    public static String lcFirst( String phrase ) {
+        if ( phrase.length() < 2 )
+            return phrase;
+        return ChannelsUtils.smartUncapitalize( phrase );
+    }
+
+    public static String listToString( List<?> list, String lastSep ) {
+
+        StringWriter w = new StringWriter();
+        for ( int i = 0; i < list.size(); i++ ) {
+            w.append( String.valueOf( list.get( i ) ) );
+            if ( i == list.size() - 2 )
+                w.append( lastSep );
+            else if ( i != list.size() - 1 )
+                w.append( ", " );
+        }
+        return w.toString();
+    }
+
+    public static String ensurePeriod( String sentence ) {
+        return sentence == null || sentence.isEmpty() || sentence.endsWith( "." )
+                || sentence.endsWith( ";" ) ?
+                sentence :
+                sentence + '.';
+    }
+
+
 }

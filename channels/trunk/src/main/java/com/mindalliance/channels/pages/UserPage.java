@@ -338,19 +338,31 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
         Actor actor = findActor( getQueryService(), user.getUsername() );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
+        // guidelines link
         BookmarkablePageLink<? extends WebPage> gotoGuidelinesLink =
                 getGuidelinesLink( "gotoGuidelines", getQueryService(), getPlan(), User.current(), true );
-        Label gotoReportLabel = new Label( "guidelinesLabel", getGuidelinesReportLabel( user, plan ) );
-        gotoGuidelinesLink.add( gotoReportLabel )
+        Label gotoGuidelinesLabel = new Label( "guidelinesLabel", getGuidelinesReportLabel( user, plan ) );
+        gotoGuidelinesLink.add( gotoGuidelinesLabel )
                 .add(new AttributeModifier(
                 "title",
                 true,
                 new Model<String>( getGotoGuidelinesDescription( user, plan ) ) ));
+        // info needs link
+        BookmarkablePageLink<? extends WebPage> gotoInfoNeedsLink =
+                getInfoNeedsLink( "gotoInfoNeeds", getQueryService(), getPlan(), User.current(), true );
+        Label gotoInfoNeedsLabel = new Label( "infoNeedsLabel", getInfoNeedsReportLabel( user, plan ) );
+        gotoInfoNeedsLink.add( gotoInfoNeedsLabel )
+                .add(new AttributeModifier(
+                "title",
+                true,
+                new Model<String>( getGotoInfoNeedsDescription( user, plan ) ) ));
+        // plan editor link
         BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
         gotoModelLink.add( new AttributeModifier(
                 "title",
                 true,
                 new Model<String>( getGotoModelDescription( user, plan ) ) ) );
+        // gotos
         form.add(
                 // Goto admin
                 new WebMarkupContainer( "admin" )
@@ -372,6 +384,11 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
                         .add( gotoGuidelinesLink )
                         .setVisible( planner || actor != null ),
 
+                // Goto info needs
+                new WebMarkupContainer( "infoNeeds" )
+                        .add( gotoInfoNeedsLink )
+                        .setVisible( planner || actor != null ),
+
                 // Goto issues report
                 new WebMarkupContainer( "issues" )
                         .add( AbstractChannelsWebPage.newTargetedLink(
@@ -391,18 +408,30 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
                 : "My information sharing guidelines";
     }
 
+    private String getGotoGuidelinesDescription( User user, Plan plan ) {
+        return user.isPlanner( plan.getUri() )
+                ? "Set how users participate in the plan and view their information sharing guidelines."
+                : "View all tasks and related communications assigned to me according to my participation in this plan.";
+    }
+
+    private String getInfoNeedsReportLabel( User user, Plan plan ) {
+        return user.isPlanner( plan.getUri() )
+                ? "Information needs of all participants"
+                : "My information needs";
+    }
+
+    private String getGotoInfoNeedsDescription( User user, Plan plan ) {
+        return user.isPlanner( plan.getUri() )
+                ? "View the information needs of any participant or agent in this plan."
+                : "View my information needs and their status in this plan.";
+    }
+
     private String getGotoModelDescription( User user, Plan plan ) {
         return user.isPlanner( plan.getUri() ) && getPlan().isDevelopment()
                 ? "Build or modify the information sharing plan.\n" +
                 " (Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+.)"
                 : "View the information sharing plan.\n" +
                 "  (Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+.)";
-    }
-
-    private String getGotoGuidelinesDescription( User user, Plan plan ) {
-        return user.isPlanner( plan.getUri() )
-                ? "Set how users participate in the plan and view their information sharing guidelines."
-                : "View all tasks and related communications assigned to me according to my participation in this plan.";
     }
 
     private static Actor findActor( QueryService queryService, String userName ) {

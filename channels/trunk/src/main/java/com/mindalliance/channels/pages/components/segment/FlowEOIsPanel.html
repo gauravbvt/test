@@ -37,7 +37,7 @@
                                             <img border="0" src="images/magic.png" alt="auto-populate" title="Click to auto-populate elements"/>
                                         </a></td>
                                     <td>Content</td>
-                                    <td>Time-sensitive</td>
+                                    <td wicket:id="timeSensitivityContainer">Time-sensitive</td>
                                     <td wicket:id="classificationsHeaderContainer">
 										<span class="floatl">Classifications&nbsp;</span>
                                         <a class="floatl" wicket:id="linkClassifications" href="#">
@@ -56,7 +56,7 @@
                             <tr wicket:id="eois">
                                 <td><input wicket:id="confirmed" type="checkbox" title="Uncheck to remove the element"/></td>
                                 <td><input wicket:id="content" size="40"/></td>
-                                <td><input wicket:id="timeSensitive" type="checkbox" title="Whether the EOI is time-sensitive"/></td>
+                                <td wicket:id="timeSensitiveContainer"><input wicket:id="timeSensitive" type="checkbox" title="Whether the EOI is time-sensitive"/></td>
                                 <td wicket:id="classificationsContainer"><span wicket:id="classifications">[classifications panel]</span></td>
                                 <td wicket:id="descriptionContainer"><textarea wicket:id="description" rows="1" cols="20">description</textarea></td>
                                 <td wicket:id="handlingContainer"><textarea wicket:id="specialHandling" rows="1" cols="20">handling</textarea></td>

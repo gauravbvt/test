@@ -196,6 +196,7 @@ div.task h2 a.back {
 
 
 div#about h3,
+div.toc h3,
 div.phase h3,
 div.task h3 {
     border-bottom: 1px solid #999999;

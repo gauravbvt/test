@@ -135,6 +135,11 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
 
 
     private void addHeaders() {
+        WebMarkupContainer timeSensitivityHeaderContainer =
+                new WebMarkupContainer( "timeSensitivityContainer" );
+        timeSensitivityHeaderContainer.setOutputMarkupId( true );
+        timeSensitivityHeaderContainer.setVisible( getFlow().isNeed() );
+        eoisContainer.addOrReplace( timeSensitivityHeaderContainer );
         WebMarkupContainer classificationsHeaderContainer =
                 new WebMarkupContainer( "classificationsHeaderContainer" );
         classificationsHeaderContainer.setOutputMarkupId( true );
@@ -314,6 +319,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     }
 
     private void addTimeSensitive( ListItem<EOIWrapper> item ) {
+        WebMarkupContainer timeSensitiveContainer = new WebMarkupContainer( "timeSensitiveContainer" );
+        timeSensitiveContainer.setOutputMarkupId( true );
+        timeSensitiveContainer.setVisible( getFlow().isNeed() );
+        item.addOrReplace( timeSensitiveContainer );
         EOIWrapper wrapper = item.getModelObject();
         CheckBox timeSensitiveCheckBox = new CheckBox(
                 "timeSensitive",
@@ -326,7 +335,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         } );
         makeVisible( timeSensitiveCheckBox, !isSend && !getFlow().isSharing() && !wrapper.isMarkedForCreation() );
         timeSensitiveCheckBox.setEnabled( !isReadOnly() );
-        item.addOrReplace( timeSensitiveCheckBox );
+        timeSensitiveContainer.add( timeSensitiveCheckBox );
     }
 
 

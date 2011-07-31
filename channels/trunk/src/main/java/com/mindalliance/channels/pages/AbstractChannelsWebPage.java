@@ -8,10 +8,17 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
+import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.model.Organization;
 import com.mindalliance.channels.model.Participation;
+import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.nlp.SemanticMatcher;
-import com.mindalliance.channels.pages.reports.responders.ParticipantPage;
+import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
+import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import com.mindalliance.channels.query.PlanService;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
@@ -24,6 +31,7 @@ import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValueConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -362,8 +370,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         BookmarkablePageLink<? extends WebPage> guidelinesLink = AbstractChannelsWebPage.newTargetedLink(
                 id,
                 "",
-                ParticipantPage.class,
-                ParticipantPage.createParameters( planner ? null : actor, uri, plan.getVersion() ),
+                GuidelinesPage.class,
+                GuidelinesPage.createParameters( planner ? null : actor, uri, plan.getVersion() ),
                 null,
                 plan );
         if ( !samePage )
@@ -371,11 +379,87 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         return guidelinesLink;
     }
 
+    public static BookmarkablePageLink<? extends WebPage > getInfoNeedsLink(
+            String id,
+            QueryService queryService,
+            Plan plan,
+            User user,
+            boolean samePage ) {
+        Actor actor = findActor( queryService, user.getUsername() );
+        String uri = plan.getUri();
+        boolean planner = user.isPlanner( uri );
+        BookmarkablePageLink<? extends WebPage> infoNeedsLink = AbstractChannelsWebPage.newTargetedLink(
+                id,
+                "",
+                InfoNeedsPage.class,
+                InfoNeedsPage.createParameters( planner ? null : actor, uri, plan.getVersion() ),
+                null,
+                plan );
+        if ( !samePage )
+            infoNeedsLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
+        return infoNeedsLink;
+    }
+
     private static Actor findActor( QueryService queryService, String userName ) {
         Participation participation = queryService.findParticipation( userName );
         return participation != null && participation.getActor() != null
                 ? participation.getActor()
                 : null;
+    }
+
+    //-----------------------------------
+    public static ResourceSpec getProfile( QueryService service, PageParameters parameters )
+            throws NotFoundException {
+        // TODO check read permission
+        try {
+            Actor actor = parameters.containsKey( "agent" ) ?
+                    service.find( Actor.class, parameters.getLong( "agent" ) ) :
+                    null;
+            Role role = parameters.containsKey( "role" ) ?
+                    service.find( Role.class, parameters.getLong( "role" ) ) :
+                    null;
+            Organization organization = parameters.containsKey( "org" ) ?
+                    service.find( Organization.class, parameters.getLong( "org" ) ) :
+                    null;
+            Place jurisdiction = parameters.containsKey( "place" ) ?
+                    service.find( Place.class, parameters.getLong( "place" ) ) :
+                    null;
+            return new ResourceSpec( actor, role, organization, jurisdiction );
+
+        } catch ( StringValueConversionException ignored ) {
+            throw new NotFoundException();
+        }
+    }
+
+    //-----------------------------------
+    public static ResourceSpec getProfile( QueryService service, User user )
+            throws NotFoundException {
+
+        Participation participation = service.findParticipation( user.getUsername() );
+        if ( participation == null || participation.getActor() == null )
+            throw new NotFoundException();
+
+        return new ResourceSpec( participation.getActor(), null, null, null );
+    }
+
+
+    //-----------------------------------
+    public static PageParameters createParameters( Specable profile, String uri, int version ) {
+
+        PageParameters result = new PageParameters();
+        result.put( "plan", uri );
+        result.put( "v", version );
+        if ( profile != null ) {
+            if ( profile.getActor() != null )
+                result.put( "agent", profile.getActor().getId() );
+            if ( profile.getRole() != null )
+                result.put( "role", profile.getRole().getId() );
+            if ( profile.getOrganization() != null )
+                result.put( "org", profile.getOrganization().getId() );
+            if ( profile.getJurisdiction() != null )
+                result.put( "place", profile.getJurisdiction().getId() );
+        }
+        return result;
     }
 
 
