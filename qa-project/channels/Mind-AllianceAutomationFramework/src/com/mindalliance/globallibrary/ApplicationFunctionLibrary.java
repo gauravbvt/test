@@ -23,33 +23,25 @@ public class ApplicationFunctionLibrary {
 				GlobalVariables.oDriver = new FirefoxDriver();
 			else if (GlobalVariables.sBrowser.equals("Internet Explorer"))
 			{
-				System.out.println("Hie............1");
 				try{
 					GlobalVariables.oDriver = new InternetExplorerDriver();
 				}
 				catch (Exception e){
 					GlobalVariables.oDriver = new InternetExplorerDriver();
 				}
-				System.out.println("Hie............2");
 			}
-			
-			
-			System.out.println("Hie............3");
 			// Maximize Browser Window
 			((JavascriptExecutor) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
 			// WebElement Synchronization
 			Thread.currentThread();
 			Thread.sleep(2000);
 			
-			System.out.println("Hie............4");
 			// Enter the URL
 			GlobalVariables.oDriver.get(GlobalVariables.login.get("sChannelURL"));
-			System.out.println("Hie............5");
 			// WebElement Synchronization
 			Thread.currentThread();
 			Thread.sleep(2000);
 			String title=GlobalVariables.oDriver.getTitle();
-			System.out.println("Hie............1" + title);
 			if (GlobalVariables.sBrowser.equals("Internet Explorer")){
 				if(title.equalsIgnoreCase(GlobalVariables.viewElements.get("planPageSubTitle")))
 				{
@@ -72,7 +64,6 @@ public class ApplicationFunctionLibrary {
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sSignoutOnParticipantsPage"))).click();
 				}
 			}
-			System.out.println("Hie............6");
 			// Write Results
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed,
@@ -89,12 +80,10 @@ public class ApplicationFunctionLibrary {
 			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed,
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 			// Click on Sign In button
-			System.out.println("Hie............7");
 			GlobalVariables.iStepNo++ ;
 			GlobalVariables.sDescription = "Login is successful";
 			GlobalVariables.oDriver.findElement(By.name("_spring_security_remember_me")).click();
 			GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();
-			System.out.println("Hie............8\n\n");
 			// Write Results
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed,
@@ -105,7 +94,7 @@ public class ApplicationFunctionLibrary {
 			// Returns TRUE
 			return Boolean.TRUE;
 		} catch (Exception e) {
-			System.out.println("\n\n"+e.getMessage()+"\n\n");
+			System.out.println(e.getMessage());
 			// Returns FALSE
 			return Boolean.FALSE;
 		}
