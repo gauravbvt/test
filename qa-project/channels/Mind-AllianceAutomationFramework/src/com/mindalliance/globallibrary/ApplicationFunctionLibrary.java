@@ -24,7 +24,12 @@ public class ApplicationFunctionLibrary {
 			else if (GlobalVariables.sBrowser.equals("Internet Explorer"))
 			{
 				System.out.println("Hie............1");
-				GlobalVariables.oDriver = new InternetExplorerDriver();
+				try{
+					GlobalVariables.oDriver = new InternetExplorerDriver();
+				}
+				catch (Exception e){
+					GlobalVariables.oDriver = new InternetExplorerDriver();
+				}
 				System.out.println("Hie............2");
 			}
 			
