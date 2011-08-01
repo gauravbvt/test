@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="4" lt="4" ts="1301033452666" s="true" lb="/login.html" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="1379"/>
+<httpSample t="55" lt="1" ts="1301033452671" s="true" lb="/login.do" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="16370">
+  <httpSample t="1" lt="1" ts="1301033452671" s="true" lb="http://192.168.1.128:8081/login.do" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="1" lt="1" ts="1301033452673" s="true" lb="http://192.168.1.128:8081/;jsessionid=12ys4std7apj2qndp1q5et23y" rc="302" rm="Found" tn="Admin A 1-1" dt="" by="0"/>
+  <httpSample t="52" lt="52" ts="1301033452674" s="true" lb="http://192.168.1.128:8081/home" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="16370"/>
+</httpSample>
+<httpSample t="32" lt="2" ts="1301033452727" s="true" lb="/;jsessionid=127iw2g9lrad3oz4xsjsu7yvi" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="16411">
+  <httpSample t="2" lt="2" ts="1301033452727" s="true" lb="http://192.168.1.128:8081/;jsessionid=127iw2g9lrad3oz4xsjsu7yvi" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="30" lt="30" ts="1301033452729" s="true" lb="http://192.168.1.128:8081/home" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="16411"/>
+</httpSample>
+<httpSample t="23" lt="23" ts="1301033452760" s="true" lb="/home" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="16411"/>
+<httpSample t="23" lt="23" ts="1301033452784" s="true" lb="/admin" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="20913"/>
+<httpSample t="51" lt="38" ts="1301033452809" s="true" lb="/admin?wicket:interface=:1:users::IFormSubmitListener::" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="20953">
+  <httpSample t="38" lt="38" ts="1301033452809" s="true" lb="http://192.168.1.128:8081/admin?wicket:interface=:3:users::IFormSubmitListener::" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="12" lt="12" ts="1301033452848" s="true" lb="http://192.168.1.128:8081/admin" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="20953"/>
+</httpSample>
+<httpSample t="12" lt="12" ts="1301033452861" s="true" lb="/admin" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="21052"/>
+<httpSample t="6" lt="3" ts="1301033452874" s="true" lb="/logout" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="1379">
+  <httpSample t="3" lt="3" ts="1301033452874" s="true" lb="http://192.168.1.128:8081/logout" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="2" lt="2" ts="1301033452877" s="true" lb="http://192.168.1.128:8081/" rc="302" rm="Found" tn="Admin A 1-1" dt="" by="0"/>
+  <httpSample t="1" lt="1" ts="1301033452879" s="true" lb="http://192.168.1.128:8081/login.html" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="1379"/>
+</httpSample>
+<httpSample t="5" lt="2" ts="1301033452881" s="true" lb="/" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="1379">
+  <httpSample t="2" lt="2" ts="1301033452881" s="true" lb="http://192.168.1.128:8081/" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="3" lt="3" ts="1301033452883" s="true" lb="http://192.168.1.128:8081/login.html" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="1379"/>
+</httpSample>
+<httpSample t="3" lt="3" ts="1301033452887" s="true" lb="/login.html" rc="200" rm="OK" tn="Admin A 1-1" dt="text" by="1379"/>
+<httpSample t="4" lt="4" ts="1301033453001" s="true" lb="/login.html" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="1379"/>
+<httpSample t="28" lt="4" ts="1301033453008" s="true" lb="/login.do" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="16416">
+  <httpSample t="4" lt="4" ts="1301033453008" s="true" lb="http://192.168.1.128:8081/login.do" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="2" lt="2" ts="1301033453012" s="true" lb="http://192.168.1.128:8081/;jsessionid=1p7lb1m4kzzvnnwyq8ty9vk9r" rc="302" rm="Found" tn="Admin A 1-2" dt="" by="0"/>
+  <httpSample t="22" lt="22" ts="1301033453014" s="true" lb="http://192.168.1.128:8081/home" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="16416"/>
+</httpSample>
+<httpSample t="15" lt="2" ts="1301033453038" s="true" lb="/;jsessionid=127iw2g9lrad3oz4xsjsu7yvi" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="16457">
+  <httpSample t="2" lt="2" ts="1301033453038" s="true" lb="http://192.168.1.128:8081/;jsessionid=127iw2g9lrad3oz4xsjsu7yvi" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="13" lt="13" ts="1301033453040" s="true" lb="http://192.168.1.128:8081/home" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="16457"/>
+</httpSample>
+<httpSample t="16" lt="16" ts="1301033453054" s="true" lb="/home" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="16457"/>
+<httpSample t="19" lt="19" ts="1301033453071" s="true" lb="/admin" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="20959"/>
+<httpSample t="43" lt="25" ts="1301033453091" s="true" lb="/admin?wicket:interface=:1:users::IFormSubmitListener::" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="20953">
+  <httpSample t="25" lt="25" ts="1301033453091" s="true" lb="http://192.168.1.128:8081/admin?wicket:interface=:3:users::IFormSubmitListener::" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="18" lt="17" ts="1301033453116" s="true" lb="http://192.168.1.128:8081/admin" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="20953"/>
+</httpSample>
+<httpSample t="14" lt="14" ts="1301033453135" s="true" lb="/admin" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="21052"/>
+<httpSample t="9" lt="4" ts="1301033453151" s="true" lb="/logout" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="1379">
+  <httpSample t="4" lt="4" ts="1301033453151" s="true" lb="http://192.168.1.128:8081/logout" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="2" lt="2" ts="1301033453155" s="true" lb="http://192.168.1.128:8081/" rc="302" rm="Found" tn="Admin A 1-2" dt="" by="0"/>
+  <httpSample t="2" lt="2" ts="1301033453158" s="true" lb="http://192.168.1.128:8081/login.html" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="1379"/>
+</httpSample>
+<httpSample t="5" lt="3" ts="1301033453161" s="true" lb="/" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="1379">
+  <httpSample t="3" lt="3" ts="1301033453161" s="true" lb="http://192.168.1.128:8081/" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="2" lt="2" ts="1301033453164" s="true" lb="http://192.168.1.128:8081/login.html" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="1379"/>
+</httpSample>
+<httpSample t="3" lt="3" ts="1301033453167" s="true" lb="/login.html" rc="200" rm="OK" tn="Admin A 1-2" dt="text" by="1379"/>
+<httpSample t="3" lt="3" ts="1301033453335" s="true" lb="/login.html" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="1379"/>
+<httpSample t="69" lt="5" ts="1301033453341" s="true" lb="/login.do" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="14970">
+  <httpSample t="5" lt="5" ts="1301033453341" s="true" lb="http://192.168.1.128:8081/login.do" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="2" lt="2" ts="1301033453346" s="true" lb="http://192.168.1.128:8081/;jsessionid=1dj5q3mwfd6645ox2six8lqc3" rc="302" rm="Found" tn="Admin A 1-3" dt="" by="0"/>
+  <httpSample t="62" lt="62" ts="1301033453348" s="true" lb="http://192.168.1.128:8081/home" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="14970"/>
+</httpSample>
+<httpSample t="13" lt="3" ts="1301033453411" s="true" lb="/;jsessionid=127iw2g9lrad3oz4xsjsu7yvi" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="15011">
+  <httpSample t="3" lt="3" ts="1301033453411" s="true" lb="http://192.168.1.128:8081/;jsessionid=127iw2g9lrad3oz4xsjsu7yvi" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="10" lt="10" ts="1301033453414" s="true" lb="http://192.168.1.128:8081/home" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="15011"/>
+</httpSample>
+<httpSample t="9" lt="9" ts="1301033453425" s="true" lb="/home" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="15011"/>
+<httpSample t="11" lt="11" ts="1301033453435" s="true" lb="/admin" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="21005"/>
+<httpSample t="30" lt="13" ts="1301033453447" s="true" lb="/admin?wicket:interface=:1:users::IFormSubmitListener::" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="20999">
+  <httpSample t="13" lt="13" ts="1301033453447" s="true" lb="http://192.168.1.128:8081/admin?wicket:interface=:3:users::IFormSubmitListener::" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="17" lt="17" ts="1301033453460" s="true" lb="http://192.168.1.128:8081/admin" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="20999"/>
+</httpSample>
+<httpSample t="17" lt="17" ts="1301033453478" s="true" lb="/admin" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="21089"/>
+<httpSample t="8" lt="3" ts="1301033453496" s="true" lb="/logout" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="1379">
+  <httpSample t="3" lt="3" ts="1301033453496" s="true" lb="http://192.168.1.128:8081/logout" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="3" lt="3" ts="1301033453499" s="true" lb="http://192.168.1.128:8081/" rc="302" rm="Found" tn="Admin A 1-3" dt="" by="0"/>
+  <httpSample t="2" lt="2" ts="1301033453502" s="true" lb="http://192.168.1.128:8081/login.html" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="1379"/>
+</httpSample>
+<httpSample t="4" lt="2" ts="1301033453506" s="true" lb="/" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="1379">
+  <httpSample t="2" lt="2" ts="1301033453506" s="true" lb="http://192.168.1.128:8081/" rc="302" rm="Found" tn="" dt="" by="0"/>
+  <httpSample t="2" lt="2" ts="1301033453508" s="true" lb="http://192.168.1.128:8081/login.html" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="1379"/>
+</httpSample>
+<httpSample t="3" lt="3" ts="1301033453512" s="true" lb="/login.html" rc="200" rm="OK" tn="Admin A 1-3" dt="text" by="1379"/>
+
+</testResults>
