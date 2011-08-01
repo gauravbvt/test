@@ -114,9 +114,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata align="center"
-                       fileref="user_guide_images/home_page_planner.png"
-                       scale="75"></imagedata>
+            <imagedata align="center" fileref="user_guide_images/home_page_admin.png" scale="75"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -2008,8 +2006,11 @@
           </listitem>
 
           <listitem>
-            <para>assign participants to agents in the plan and view their IS
-            guidelines (IS procedures in report format)</para>
+            <para>assign participants to agents in the plan and view their IS guidelines (IS
+              procedures in report format)</para>
+          </listitem>
+          <listitem>
+            <para>View the information needs reports of all participants</para>
           </listitem>
         </itemizedlist></para>
 
@@ -2031,8 +2032,6 @@
       within the collaboration panel, but is able to read messages broadcast
       to all users (or news) by planners (see below).</para>
 
-      <para></para>
-
       <figure>
         <title>Channels home page for participants</title>
 
@@ -2045,12 +2044,11 @@
         </mediaobject>
       </figure>
 
-      <para>An IS plan can be marked as a template. This indicates that there
-      is nothing sensitive in the plan and that a participant can see not only
-      his/her participation in the plan (personal IS guidelines), but also the
-      entire plan itself in its production version. A participant (and all
-      other users) can see but not modify the production version of the
-      plan.</para>
+      <para>An IS plan can be marked as a template. This indicates that there is nothing sensitive
+        in the plan and that a participant can see not only his/her participation in the plan
+        (personal IS guidelines, info needs report), but also the entire plan itself in its
+        production version. A participant (and all other users) can see but not modify the
+        production version of the plan.</para>
 
       <figure>
         <title>Channels home page for participants of a "template"
@@ -5733,8 +5731,8 @@
     <section>
       <title>IS Guidelines Page</title>
 
-      <para>Channels produces on demand personalized information sharing
-      guidelines in report format for each participant.</para>
+      <para>Channels produces, on demand, personalized information sharing guidelines in report
+        format for each participant.</para>
 
       <para>A participant accesses his/her IS guidelines directly from the
       Home page. A planner accesses the IS guidelines of a participant (or an
@@ -5807,6 +5805,49 @@
         </mediaobject>
       </figure>
     </section>
+    <section>
+      <title>Information needs report</title>
+      <para>Channels produces, on demand, a report on the information needs of each
+        participant.</para>
+      <para>A participant accesses his/her information needs report directly from the Home page. A
+        planner accesses the information needs report of a participant (or an agent) indirectly from
+        the participants list which is accessible from the Home page.</para>
+      <figure>
+        <title>Accessing the information needs report of participants</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/reference/info_needs_all.png" scale="75"
+              align="center"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>The report lists the information needed by an agent to execute his/her assigned tasks in
+        an IS plan. The information needs are organized by the tasks that require the information,
+        and the tasks are themselves organized by the situations (relevant event phases, possibly in
+        the context of past or present events) in which they are executed. </para>
+      <para>The degree to which information needs are satisfied (fully, somewhat or not at all) is
+        indicated. The analysis is done at the level of individual elements of information. The
+        information needs report is a single HTML document suitable for browsing and
+        printing.</para>
+      <figure>
+        <title>Information needs report</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/reference/info_needs_1.png" scale="75"
+              align="center"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <figure>
+        <title>Information needs report (cont.)</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="user_guide_images/reference/info_needs_2.png" scale="75"
+              align="center"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
 
     <section>
       <title>Help and Feedback</title>
@@ -5814,9 +5855,8 @@
       <para>A planner accesses the help documentation by pressing on the Help
       button.</para>
 
-      <para>Feedback buttons appear in the Home page, in the Help pagem, and
-      in IS guidelines. Clicking on a feedback button opens a feedback
-      panel.</para>
+      <para>Feedback buttons appear in the Home page, in the Help page, in IS guidelines, and in the
+        information needs report. Clicking on a feedback button opens a feedback panel.</para>
 
       <figure>
         <title>Help and feedback</title>
