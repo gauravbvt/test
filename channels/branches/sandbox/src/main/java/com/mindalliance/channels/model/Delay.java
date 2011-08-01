@@ -142,6 +142,10 @@ public class Delay implements Comparable, Copyable, Serializable {
         return amount * factor;
     }
 
+    public boolean isImmediate() {
+        return amount == 0;
+    }
+
     /**
      * Getting the amount as string
      *

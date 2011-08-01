@@ -478,7 +478,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     }
 
     public String getNewMessageText() {
-        return newMessageText;
+        return newMessageText == null ? "" : newMessageText;
     }
 
     public void setNewMessageText( String newMessageText ) {

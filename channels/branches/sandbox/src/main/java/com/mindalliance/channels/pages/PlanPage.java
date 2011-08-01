@@ -57,6 +57,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
@@ -117,9 +118,14 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private static final Logger LOG = LoggerFactory.getLogger( PlanPage.class );
 
     /**
-     * Length a segment title is abbreviated to
+     * Length a segment name is abbreviated to
      */
-    private static final int SEGMENT_TITLE_MAX_LENGTH = 50;
+    private static final int SEGMENT_NAME_MAX_LENGTH = 50;
+
+    /**
+     * Length a plan name is abbreviated to
+     */
+    private static final int PLAN_NAME_MAX_LENGTH = 50;
 
     /**
      * Length a segment title is abbreviated to
@@ -150,6 +156,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     private int historyCursor = -1;
 
+    /**
+     * Label with name of plan.
+     */
+    private Label planNameLabel;
     /**
      * Label with name of segment.
      */
@@ -424,8 +434,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         add( body );
         addModalDialog( body );
         addForm( body );
-        form.add( new Label( "planName",
-                new Model<String>( "Plan: " + getPlan().getVersionedName() ) ) );
+        addPlanName();
         addChannelsLogo();
         addSpinner();
         addMaximizedFlowPanel( new Change( Change.Type.None ) );
@@ -455,6 +464,20 @@ public final class PlanPage extends AbstractChannelsWebPage {
         updateNavigation();
         LOG.debug( "Segment page generated" );
         rememberState();
+    }
+
+    private void addPlanName() {
+        String planName = StringUtils.abbreviate( "Plan: " + getPlan().getVersionedName(), PLAN_NAME_MAX_LENGTH );
+        planNameLabel = new Label( "planName",
+                new Model<String>( planName ) );
+        planNameLabel.setOutputMarkupId( true );
+        planNameLabel.add(  new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getPlan() ) );
+            }
+        } );
+        form.addOrReplace( planNameLabel );
     }
 
     private void addForm( WebMarkupContainer body ) {
@@ -541,7 +564,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     @Override
                     public Object getObject() {
                         return StringUtils.abbreviate( segment.getName(),
-                                SEGMENT_TITLE_MAX_LENGTH );
+                                SEGMENT_NAME_MAX_LENGTH );
                     }
                 } );
         segmentNameLabel.setOutputMarkupId( true );
@@ -818,7 +841,18 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 // NON-NLS
                 new PropertyModel<List<? extends Segment>>(
                         this,
-                        "allSegments" ) );    // NON-NLS
+                        "allSegments" ),
+                new IChoiceRenderer<Segment>() {
+                    @Override
+                    public Object getDisplayValue( Segment seg ) {
+                        return StringUtils.abbreviate( seg.getName(), SEGMENT_NAME_MAX_LENGTH );
+                    }
+
+                    @Override
+                    public String getIdValue( Segment object, int index ) {
+                        return Integer.toString( index );
+                    }
+                });    // NON-NLS
         segmentDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) { // NON-NLS
 
             @Override
@@ -1857,6 +1891,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void updateHeaders( AjaxRequestTarget target ) {
+        addPlanName();
+        target.addComponent( planNameLabel );
         annotateSegmentName();
         target.addComponent( segmentNameLabel );
         target.addComponent( segmentDescriptionLabel );

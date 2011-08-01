@@ -1566,6 +1566,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
 
 
+        public static boolean same( Restriction restriction, Restriction other ) {
+            return restriction == null && other == null
+                    || restriction != null && other != null && restriction.equals( other );
+        }
     }
 
 }

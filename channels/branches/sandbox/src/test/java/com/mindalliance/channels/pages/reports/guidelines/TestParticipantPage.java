@@ -1,6 +1,6 @@
 // Copyright (C) 2010 Mind-Alliance Systems LLC.
 // All rights reserved.
-package com.mindalliance.channels.pages.reports.responders;
+package com.mindalliance.channels.pages.reports.guidelines;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.AbstractChannelsTest.InstallSamplesListener;
@@ -23,13 +23,13 @@ public class TestParticipantPage extends AbstractChannelsTest {
     @Test
     public void testPlanner() {
         login( "denis" );
-        assertRendered( "participants", AllParticipants.class );
+        assertRendered( "participants", AllGuidelines.class );
     }
 
     @Test
     public void testNormal() {
         associate( "guest", "mindalliance.com/channels/plans/railsec", "Joseph Neumann" );
-        assertRendered( "participants", ParticipantPage.class );
+        assertRendered( "participants", GuidelinesPage.class );
     }
 
     @Test

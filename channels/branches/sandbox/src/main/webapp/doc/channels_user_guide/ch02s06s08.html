@@ -1,43 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Tasks, receives and sends panels</title><link rel="stylesheet" type="text/css" href="/css/doc.css"/><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/><link rel="home" href="channels_user_guide.html" title="Channels Planner Guide"/><link rel="up" href="ch02s06.html" title="Information sharing model page"/><link rel="prev" href="ch02s06s07.html" title="Floating panels"/><link rel="next" href="ch02s06s08s02.html" title="Editing a &#34;send&#34; or &#34;receive&#34;"/></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Tasks, receives and sends panels</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch02s06s07.html">Prev</a> </td><th width="60%" align="center">Information sharing model page</th><td width="20%" align="right"> <a accesskey="n" href="ch02s06s08s02.html">Next</a></td></tr></table><hr/></div><div class="section" title="Tasks, receives and sends panels"><div class="titlepage"><div><div><h3 class="title"><a id="d0e1779"/>Tasks, receives and sends panels</h3></div></div></div><p>The task, receives and sends panels at the bottom of the plan editor show summaries of
-          the selected task (there is always a task that is selected) together with a list of
-          summaries of its "receives" (the task's information needs and the information flows to it)
-          and a list of its "sends" (the task's information capabilities and the information flows
-          from it). Each summary can be expanded into a form for editing (if the development version
-          of the plan was the one selected in the home page).</p><p>Each of the summaries is prefixed with a colored bullet. The color of the bullet
-          indicates how important a task or a flow is. The color indicates the calculated impact of
-          the task or the flow failing completely. Blue indicates a minor impact, yellow is major,
-          orange is severe and red is extreme. Gray bullets are used when failure impact does not
-          apply (information needs and capabilities).</p><p>Clicking on the summary of a task or flow expands it by opening its edit form.
-          Channels automatically adapts the width of task and flow forms to ease editing. Clicking
-          on the summary closes the form.</p><p>Note that, with very few exceptions, any and all fields in any form in Channels can
-          be left blank.</p><div class="figure"><a id="d0e1790"/><p class="title"><strong>Figure 2.51. Task, send and receive panels can be expanded</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/reference/task_flow_panels.png" align="middle" alt="Task, send and receive panels can be expanded"/></div></div></div><br class="figure-break"/><div class="section" title="Editing a task"><div class="titlepage"><div><div><h4 class="title"><a id="d0e1796"/>Editing a task</h4></div></div></div><p>A task is defined by naming it, categorizing it, tagging it and flagging, or not, as
-            operational and/or prohibited. (Remember, everything is optional.) It is further defined
-            by stating where it is to be executed, by whom, in what role within what jurisdiction,
-            and on behalf of what organization. Any of the location, agent, jurisdiction, role, and
-            organization (entities) that specify a task can be left unnamed so as to imply that more
-            than one agent can be assigned to the task. The names of entities can be indicated to
-            refer to actual entities (Morristown, NJ, John Doe, ACME etc.) or to types of entities (a
-            city, a certified technician, a corporation etc.).</p><p>The execution of a task can be set to be “as a team” to indicate that all assigned
-            agents are to work together when carrying out the task. By default, assignees are each
-            to execute the task independently.</p><p>A task is also described by how long it normally takes to complete, whether it
-            repeats and how quickly, and whether it starts automatically with the segment (implying
-            that the assigned agents would become aware on their own of the onset of the segment's
-            event phase).</p><p>The purpose of a task can be stated as causing an event, terminating the event phase
-            addressed by the segment, mitigating one or more risks or achieving gains within the
-            segment's scope.</p><p>Reference and policy documents can be attached to the task either by URL or by
-            uploading them. Finally, the task can be given a brief, informal set of
-            instructions.</p><div class="figure"><a id="d0e1809"/><p class="title"><strong>Figure 2.52. Edit form for a task</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/reference/task_form.png" align="middle" alt="Edit form for a task"/></div></div></div><br class="figure-break"/><p>As for any plan element, a planner can add issues to those automatically detected
-            about the task. Issues added by a planner can be later removed by any other planner.
-            Issues detected by Channels can not be removed but might be waived.</p><p>The task's "show" menu opens various "views" on the task, namely:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>The details of the task as an edit form - a shortcut is to click on the task's
-                  summary</p></li><li class="listitem"><p>The assignments panel - all agents that are assigned to the task</p></li><li class="listitem"><p>Override panel - showing tasks that override or are overridden by this task
-                  (the menu item is not shown if there are no overrides)</p></li><li class="listitem"><p>The dissemination panel - analysis of element of information dissemination to
-                  and from the task</p></li><li class="listitem"><p>Entity profile panels - for all entities referenced in the definition of the
-                  task</p></li></ul></div><div class="figure"><a id="d0e1835"/><p class="title"><strong>Figure 2.53. A task's "show" menu</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/reference/task_show.png" align="middle" alt="A task's &#34;show&#34; menu"/></div></div></div><br class="figure-break"/><p>The task actions menu becomes available when the task is expanded into its edit
-            form (and the planner has acquired exclusive editing rights). Actions that do not apply
-            are grayed out.</p><p>The actions available from the task actions menu are:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Undo the planner's last change to any plan element, if applicable</p></li><li class="listitem"><p>Redo the planner's last undone change, if applicable</p></li><li class="listitem"><p>Send a message about the task</p></li><li class="listitem"><p>Take a copy of the task</p></li><li class="listitem"><p>Cut (copy and delete) the task</p></li><li class="listitem"><p>Paste a copied attachment to the task's documentation, if applicable</p></li><li class="listitem"><p>Paste the copied task, if any - apply the copied task's definition to this
-                  task</p></li><li class="listitem"><p>Create a new task in this segment that's a copy of this one</p></li><li class="listitem"><p>Connect this task with flows from other tasks that can satisfy (partially or
-                  completely) the info needs of this task</p></li><li class="listitem"><p>Disintermediate this task - directly connect tasks that use this one as a
-                  "middleman" for information sharing, bypassing this task</p></li></ul></div><div class="figure"><a id="d0e1876"/><p class="title"><strong>Figure 2.54. A task's "actions" menu</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/reference/task_actions.png" align="middle" alt="A task's &#34;actions&#34; menu"/></div></div></div><br class="figure-break"/></div></div><div class="navfooter"><hr/><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch02s06s07.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch02s06.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch02s06s08s02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Floating panels </td><td width="20%" align="center"><a accesskey="h" href="channels_user_guide.html">Home</a></td><td width="40%" align="right" valign="top"> Editing a "send" or "receive"</td></tr></table></div></body></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Tasks, receives and sends panels</title><link rel="stylesheet" type="text/css" href="/css/doc.css"/><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/><link rel="home" href="channels_user_guide.html" title="Channels Planner Guide"/><link rel="up" href="ch02s06.html" title="Information Sharing Model Page"/><link rel="prev" href="ch02s06s07.html" title="Floating panels"/><link rel="next" href="ch02s06s08s02.html" title="Editing a &#34;send&#34; or &#34;receive&#34;"/></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Tasks, receives and sends panels</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch02s06s07.html">Prev</a> </td><th width="60%" align="center">Information Sharing Model Page</th><td width="20%" align="right"> <a accesskey="n" href="ch02s06s08s02.html">Next</a></td></tr></table><hr/></div><div class="section" title="Tasks, receives and sends panels"><div class="titlepage"><div><div><h3 class="title"><a id="d1917e1772"/>Tasks, receives and sends panels</h3></div></div></div><p>The task, receives and sends panels at the bottom of the plan
+        editor show summaries of the selected task (there is always a task
+        that is selected) together with a list of summaries of its "receives"
+        (the task's information needs and the information flows to it) and a
+        list of its "sends" (the task's information capabilities and the
+        information flows from it). Each summary can be expanded into a form
+        for editing (if the development version of the plan was the one
+        selected on the Home page).</p><p>Each of the summaries is prefixed with a colored bullet. The
+        color of the bullet indicates how important a task or a flow is. The
+        color indicates the calculated impact of the task or the flow failing
+        completely. Blue indicates a minor impact, yellow is major, orange is
+        severe, and red is extreme. Gray bullets are used when failure impact
+        does not apply (information needs and capabilities).</p><p>Clicking on the summary of a task or flow expands it by opening
+        its edit form. Channels automatically adapts the width of task and
+        flow forms to provide ease of editing. Clicking on the summary closes
+        the form.</p><p>Note that, with very few exceptions, any and all fields in any
+        form in Channels can be left blank. Of course, leaving <span class="emphasis"><em>all</em></span> fields in a form blank is of little value.</p><div class="figure"><a id="d1917e1786"/><p class="title"><strong>Figure 2.51. Task, send and receive panels can be expanded</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/reference/task_flow_panels.png" align="middle" alt="Task, send and receive panels can be expanded"/></div></div></div><br class="figure-break"/><div class="section" title="Editing a task"><div class="titlepage"><div><div><h4 class="title"><a id="d1917e1792"/>Editing a task</h4></div></div></div><p>A task is defined by naming it, categorizing it, tagging it,
+          and flagging it, or not, as operational and/or prohibited.
+          (Remember, everything is optional.) It is further defined by stating
+          where it is to be executed, by whom, in what role within what
+          jurisdiction, and on behalf of what organization. Any of the
+          location, agent, jurisdiction, role, and organization entities that
+          specify a task can be left unnamed so as to imply that more than one
+          agent can be assigned to the task. The names of entities can be
+          indicated to refer to actual entities (Morristown, NJ, John Doe,
+          ACME, etc.) or to types of entities (a city, a certified technician,
+          a corporation, etc.).</p><p>The execution of a task can be set to be “as a team” to
+          indicate that all assigned agents are to work together when carrying
+          out the task. By default, assignees are each to execute the task
+          independently.</p><p>A task is also described by how long it normally takes to
+          complete, whether it repeats and how quickly, and whether it starts
+          automatically with the segment (implying that the assigned agents
+          would become aware on their own of the onset of the segment's event
+          phase).</p><p>The purpose of a task can be stated as causing an event,
+          terminating the event phase addressed by the segment, mitigating one
+          or more risks, or achieving gains within the segment's scope.</p><p>Reference and policy documents can be attached to the task
+          either by URL or by uploading them. Finally, the task can be given a
+          brief, informal set of instructions.</p><div class="figure"><a id="d1917e1805"/><p class="title"><strong>Figure 2.52. Edit form for a task</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/reference/task_form.png" align="middle" alt="Edit form for a task"/></div></div></div><br class="figure-break"/><p>As for any plan element, a planner can add issues to those
+          automatically detected about the task. Issues added by a planner can
+          later be removed by any other planner. Issues detected by Channels
+          cannot be removed, but can be waived.</p><p>The task's "Show" menu opens various views on the task,
+          namely:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>The details of the task as an edit form - a shortcut is
+                to click on the task's summary</p></li><li class="listitem"><p>The assignments panel - all agents that are assigned to
+                the task</p></li><li class="listitem"><p>Override panel - showing tasks that override or are
+                overridden by this task (the menu item is not shown if there
+                are no overrides)</p></li><li class="listitem"><p>The dissemination panel - analysis of element of
+                information dissemination to and from the task</p></li><li class="listitem"><p>Entity profile panels - for all entities referenced in
+                the definition of the task</p></li></ul></div><div class="figure"><a id="d1917e1831"/><p class="title"><strong>Figure 2.53. A task's "Show" menu</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/reference/task_show.png" align="middle" alt="A task's &#34;Show&#34; menu"/></div></div></div><br class="figure-break"/><p>The task actions menu becomes available when the task is
+          expanded into its edit form (and the planner has acquired exclusive
+          editing rights). Actions that do not apply are grayed out.</p><p>The actions available from the task actions menu
+          are:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Undo the planner's last change to any plan element, if
+                applicable</p></li><li class="listitem"><p>Redo the planner's last undone change, if
+                applicable</p></li><li class="listitem"><p>Send a message about the task</p></li><li class="listitem"><p>Take a copy of the task</p></li><li class="listitem"><p>Cut (copy and delete) the task</p></li><li class="listitem"><p>Paste a copied attachment to the task's documentation,
+                if applicable</p></li><li class="listitem"><p>Paste the copied task, if any - apply the copied task's
+                definition to this task</p></li><li class="listitem"><p>Create a new task in this segment that is a copy of the
+                current task</p></li><li class="listitem"><p>Connect this task with flows from other tasks that can
+                satisfy (partially or completely) the info needs of this
+                task</p></li><li class="listitem"><p>Disintermediate this task - directly connect tasks that
+                use this one as a "middleman" for information sharing,
+                bypassing this task</p></li></ul></div><div class="figure"><a id="d1917e1872"/><p class="title"><strong>Figure 2.54. A task's "actions" menu</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/reference/task_actions.png" align="middle" alt="A task's &#34;actions&#34; menu"/></div></div></div><br class="figure-break"/></div></div><div class="navfooter"><hr/><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch02s06s07.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch02s06.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch02s06s08s02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Floating panels </td><td width="20%" align="center"><a accesskey="h" href="channels_user_guide.html">Home</a></td><td width="40%" align="right" valign="top"> Editing a "send" or "receive"</td></tr></table></div></body></html>

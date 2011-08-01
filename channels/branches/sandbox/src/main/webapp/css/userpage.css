@@ -333,6 +333,7 @@ div.goto a:hover {
 
 div.goto img.icon {
 	padding:0 0 10px 0;
+	border:0;
 }
 
 div.goto span {

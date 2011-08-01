@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Expressing exceptions by overriding tasks and flows</title><link rel="stylesheet" type="text/css" href="/css/doc.css"/><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/><link rel="home" href="channels_user_guide.html" title="Channels Planner Guide"/><link rel="up" href="ch01s03.html" title="ISP concepts"/><link rel="prev" href="ch01s03s08.html" title="Task assignments and information sharing commitments"/><link rel="next" href="ch01s03s10.html" title="Information sharing agreements"/></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Expressing exceptions by overriding tasks and flows</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch01s03s08.html">Prev</a> </td><th width="60%" align="center">ISP concepts</th><td width="20%" align="right"> <a accesskey="n" href="ch01s03s10.html">Next</a></td></tr></table><hr/></div><div class="section" title="Expressing exceptions by overriding tasks and flows"><div class="titlepage"><div><div><h3 class="title"><a id="d0e678"/>Expressing exceptions by overriding tasks and flows</h3></div></div></div><p>It is at times necessary to express "exceptions to the rule" when modeling IS
-          practices. For example, IS practices might dictate that all employees alert their
-          supervisors if they become aware of suspicious activities, whereas managers, who are also
-          employees, should not alert their supervisors but rather directly contact the head of
-          security.</p><p>Such exceptions in IS practices can be captured by defining overriding tasks and by
-          defining prohibited flows from the overriding tasks that are otherwise equivalent to flows
-          from the overridden tasks.</p><div class="figure"><a id="d0e685"/><p class="title"><strong>Figure 1.35. Overriding tasks and flows to express exceptions in IS practices</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/overriding.png" align="middle" alt="Overriding tasks and flows to express exceptions in IS practices"/></div></div></div><br class="figure-break"/><p>A task A overrides a task B if: </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>they both have the same name (discounting uppercase vs lowercase and extraneous
-                blanks)</p></li><li class="listitem"><p>they are in the same segment or to compatible segments (the segment of task A
-                addresses the same situation as that of task B or a more specific version of
-                it)</p></li><li class="listitem"><p>and the assignees to task A are a strict subset of the assignees of task B (all
-                agents assignable to task A are also assignable to task B but there's fewer of them
-                in task A)</p></li></ul></div><p>When task A (for example, "managers detecting threats") overrides task B
-          ("employees detecting threats") , agents assigned to task A <span class="emphasis"><em>are not
-            assigned</em></span> to overridden task B. Furthermore, if task A is annotated as
-          prohibited, then no agent is assigned to task A and any agent assignable to task B is not
-          assigned to task B either. This allows planners to express exceptions such as "all
-          employees leave the building except for managers".</p><p>A flow A overrides another flow B if:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>they both have the same name (discounting case and extra blanks)</p></li><li class="listitem"><p>the source task of flow A overrides the source task of flow B</p></li><li class="listitem"><p> and the target task of flow A is the same as or overrides the target of flow
-                B</p></li></ul></div><p>If an agent has sharing commitments computed from flow A then they replace any and
-          all commitments for this agent computed from the overridden flow B. Furthermore, if
-          overriding flow A is prohibited, then whoever would have commitments from flow A has
-          commitments from neither flow A nor from overridden flow B</p></div><div class="navfooter"><hr/><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch01s03s08.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch01s03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch01s03s10.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Task assignments and information sharing commitments </td><td width="20%" align="center"><a accesskey="h" href="channels_user_guide.html">Home</a></td><td width="40%" align="right" valign="top"> Information sharing agreements</td></tr></table></div></body></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Expressing exceptions by overriding tasks and flows</title><link rel="stylesheet" type="text/css" href="/css/doc.css"/><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/><link rel="home" href="channels_user_guide.html" title="Channels Planner Guide"/><link rel="up" href="ch01s03.html" title="ISP Concepts"/><link rel="prev" href="ch01s03s08.html" title="Task assignments and information sharing commitments"/><link rel="next" href="ch01s03s10.html" title="Information sharing agreements"/></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Expressing exceptions by overriding tasks and flows</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch01s03s08.html">Prev</a> </td><th width="60%" align="center">ISP Concepts </th><td width="20%" align="right"> <a accesskey="n" href="ch01s03s10.html">Next</a></td></tr></table><hr/></div><div class="section" title="Expressing exceptions by overriding tasks and flows"><div class="titlepage"><div><div><h3 class="title"><a id="d1917e684"/>Expressing exceptions by overriding tasks and flows</h3></div></div></div><p>It is at times necessary to express "exceptions to the rule"
+        when modeling IS practices. For example, IS practices might dictate
+        that all employees alert their supervisors if they become aware of
+        suspicious activities, whereas managers, who are also employees,
+        should not alert their supervisors but rather directly contact the
+        head of security.</p><p>Such exceptions in IS practices can be captured by defining
+        overriding tasks and by defining prohibited flows from the overriding
+        tasks that are otherwise equivalent to flows from the overriden
+        tasks.</p><div class="figure"><a id="d1917e691"/><p class="title"><strong>Figure 1.35. Overriding tasks and flows to express exceptions in IS
+          practices</strong></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="user_guide_images/overriding.png" align="middle" alt="Overriding tasks and flows to express exceptions in IS practices"/></div></div></div><br class="figure-break"/><p>Task A overrides task B if: </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>they both have the same name (discounting uppercase vs.
+              lowercase and extraneous blanks);</p></li><li class="listitem"><p>they are in the same segment or compatible segments (the
+              segment of task A addresses the same situation as that of task B
+              or a more specific version of it);</p></li><li class="listitem"><p>and the assignees to task A are a strict subset of the
+              assignees of task B (all agents assignable to task A are also
+              assignable to task B but there's fewer of them in task
+              A).</p></li></ul></div><p>When task A (for example, "managers detecting threats")
+        overrides task B ("employees detecting threats") , agents assigned to
+        task A <span class="emphasis"><em>are not assigned</em></span> to the overridden task B.
+        Furthermore, if task A is annotated as "prohibited," then no agent is
+        assigned to task A and any agent assignable to task B is not assigned
+        to task B either. This allows planners to express exceptions such as
+        "all employees leave the building except for managers".</p><p>A flow A overrides another flow B if:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>they both have the same name (dsicounting case and extra
+              blanks)</p></li><li class="listitem"><p>the source task of flow A overrides the source task of
+              flow B</p></li><li class="listitem"><p>and the target task of flow A is the same as or overrides
+              the target of flow B</p></li></ul></div><p>If an agent has sharing commitments computed from flow A then
+        they replace any and all commitments for this agent computed from the
+        overridden flow B. Furthermore, if overriding flow A is prohibited,
+        then whoever would have commitments from flow A has commitments from
+        neither flow A nor from overriden flow B.</p></div><div class="navfooter"><hr/><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch01s03s08.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch01s03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch01s03s10.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Task assignments and information sharing commitments </td><td width="20%" align="center"><a accesskey="h" href="channels_user_guide.html">Home</a></td><td width="40%" align="right" valign="top"> Information sharing agreements</td></tr></table></div></body></html>

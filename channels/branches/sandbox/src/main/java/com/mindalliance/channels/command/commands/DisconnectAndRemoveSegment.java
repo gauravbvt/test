@@ -43,6 +43,15 @@ public class DisconnectAndRemoveSegment extends AbstractCommand {
         return "remove this segment";
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canDo( Commander commander ) {
+        return super.canDo( commander )
+                && commander.getPlan().getSegmentCount() > 1;
+    }
+
     public Change execute( Commander commander ) throws CommandException {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         describeTarget( segment );                
