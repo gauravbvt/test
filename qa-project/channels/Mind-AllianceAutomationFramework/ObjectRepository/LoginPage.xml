@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <elements>
-<channelURL>http://192.168.1.128:8081</channelURL>
+<channelURL>http://192.168.1.126:8081</channelURL>
 <username>jf</username>
 <password>Mind-Alliance</password>
 <login>/html/body/div/div[2]/form/div[6]/input</login>
