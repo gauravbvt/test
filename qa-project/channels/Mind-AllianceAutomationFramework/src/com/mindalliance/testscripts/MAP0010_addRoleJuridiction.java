@@ -124,9 +124,7 @@ public class MAP0010_addRoleJuridiction
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("index"));
 					GlobalVariables.oElement.click();
 						GlobalVariables.oElement.sendKeys(Keys.END);
-					
 					}
-//					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td[3]/ul/li/span/span/a/span")).click();
 					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
