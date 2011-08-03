@@ -33,6 +33,46 @@ public class TE019_AgentAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(1000);
 				
+				// Click on 'Add new segment' option under 'Actions' pop up menu
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New segment added";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Enter the details for new segment
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Details entered";
+				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+					for (int i = 0; i <= 8; i++)
+						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Attach File as URL"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Click on 'done' button
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Segment updated";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
 				//About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "About Plan Window Opened";
@@ -75,11 +115,19 @@ public class TE019_AgentAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("float-bar-title")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("float-bar-title"));
+				
+				// Click on 'URL' radio button
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="URL radio button clicked";			
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:radios")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:radios"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -95,24 +143,27 @@ public class TE019_AgentAttachmentAsURL
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url")).click();
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("controls"));
+					GlobalVariables.oElement.click();
+						GlobalVariables.oElement.sendKeys(Keys.ARROW_UP);
+					}
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
 				//Assertion : Verify that URL gets Attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL")))
-				{
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-		    	else
-		    	{
+		    	else{
 		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("URL")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -137,9 +188,15 @@ public class TE019_AgentAttachmentAsURL
 				Thread.sleep(1500);
 				//Close About Plan Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1500);
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

@@ -96,7 +96,7 @@ public class TE011_AgentAttachmentAsFile
 					Thread.currentThread();
 					Thread.sleep(1000);
 
-					//clicks on 'Participations' link under show pop up menu option on About plan window 
+					// Clicks on 'Participations' link under show pop up menu option on About plan window 
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Participation section opened";
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("participation"));
@@ -108,46 +108,44 @@ public class TE011_AgentAttachmentAsFile
 					Thread.currentThread();
 					Thread.sleep(1000);
 					
-					// Create Agent in All Participants
+					//Create Agent
 					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Agent created";
-					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:3:cells:4:cell:entityName")).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:3:cells:4:cell:entityName"));
-					for (int i = 0; i <= 50; i++)
+					GlobalVariables.sDescription="Agent Created";
+					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).click();
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
+					for(int i=0;i<50;i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					//Click on 'Agent' Details
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
-					// Click on 'Agent 1' for details
+					// Click on 'File' radio button
 					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Agent Details";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentDetails"))).click();
+					GlobalVariables.sDescription="File radio button clicked";			
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:radios")).click();
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:radios"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
-					
-					// Click on Agent name
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Agent name";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentName"))).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Attach file to Agent
 					GlobalVariables.iStepNo++;
@@ -164,46 +162,39 @@ public class TE011_AgentAttachmentAsFile
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that file is attached
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
-					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
-					for (WebElement li: tds){
-						if (li.getText().equals(GlobalVariables.testData.get("This is File 1"))){
-							// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription);
-							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-									GlobalVariables.sBlank, GlobalVariables.sBlank);
-							break;
-						}
-						else{
-							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'This is File 1' "+" Actual "+li.getText();
-					    	// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-					    }
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
+					if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'This is File 1' "+" Actual "+GlobalVariables.oElement.getText();
+				    	// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				    }
+					// Delete Attachment
+					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					
-					// Click on done
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="File is Attahced";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
-					
+					Thread.sleep(1000);				
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);				
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					alert = GlobalVariables.oDriver.switchTo().alert();
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
