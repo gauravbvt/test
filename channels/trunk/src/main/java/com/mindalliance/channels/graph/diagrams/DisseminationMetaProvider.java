@@ -224,6 +224,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( flow.isAskedFor() ) {
+                list.add( new DOTAttribute( "dir", "both" ) );
                 list.add( new DOTAttribute( "arrowtail", "onormal" ) );
                 list.add( new DOTAttribute( "style", flow.isCritical() ? "bold" : "solid" ) );
             } else {

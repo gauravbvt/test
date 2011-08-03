@@ -440,7 +440,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private boolean canGetIfTaskFails() {
         Flow f = getFlow();
         // true if agent has the initiative (notifies or asks)
-        return isSend() && f.isNotification() || !isSend() && f.isAskedFor();
+        //return isSend() && f.isNotification() || !isSend() && f.isAskedFor();
+        return isSend() && f.isNotification();
     }
 
     private void addNameField() {
@@ -515,11 +516,17 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         askedForButtons.add( new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
+/*
                 makeVisible( channelRow, isChannelRelevant( getFlow() ) );
                 target.addComponent( channelRow );
+*/
                 makeVisible( ifTaskFailsContainer, canGetIfTaskFails() );
                 ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
                 target.addComponent( ifTaskFailsContainer );
+                addSignificanceToTarget();
+                target.addComponent( significanceToTargetLabel );
+                addSignificanceToSource();
+                target.addComponent( significanceToSourceRow );
                 update( target, new Change( Change.Type.Updated, getFlow(), "askedFor" ) );
             }
         } );
@@ -529,7 +536,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     private void addSignificanceToTarget() {
         significanceToTargetLabel = new WebMarkupContainer( "target-significance-label" );
-        add( significanceToTargetLabel );
+        significanceToTargetLabel.setOutputMarkupId( true );
+        addOrReplace( significanceToTargetLabel );
         significanceToTargetLabel.add(
                 new Label( "target-label", isSend() ? "the recipient's task" : "this task" ) );
         significanceToTargetChoice = new DropDownChoice<Flow.Significance>(
@@ -562,7 +570,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     private void addSignificanceToSource() {
         significanceToSourceRow = new WebMarkupContainer( "significance-to-source" );
-        add( significanceToSourceRow );
+        significanceToSourceRow.setOutputMarkupId( true );
+        addOrReplace( significanceToSourceRow );
         Component sourceTaskReference;
         if ( isSend() ) {
             sourceTaskReference = new Label( "source-task", "This task" );

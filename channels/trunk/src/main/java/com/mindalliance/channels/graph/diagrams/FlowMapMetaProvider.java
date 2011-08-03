@@ -295,6 +295,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( edge.isAskedFor() ) {
                 list.add( new DOTAttribute( "arrowtail", "onormal" ) );
+                list.add( new DOTAttribute( "dir", "both" ) );
                 list.add( new DOTAttribute(
                         "style",
                         edge.isIfTaskFails()

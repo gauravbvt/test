@@ -197,7 +197,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                 new AttributeModifier(
                         "style",
                         true,
-                        new Model<String>( visible ? "display:inline" : "display:none" ) ) );
+                        new Model<String>( visible ? "" : "display:none" ) ) );
     }
 
     /**

@@ -22,7 +22,8 @@ public class ExpandedSendPanel extends ExpandedFlowPanel {
     /** {@inheritDoc} */
     @Override
     protected boolean isChannelRelevant( Flow f ) {
-        return !getOther().isConnector() || f.isAskedFor() || !f.isInternal();
+       // return !(getOther().isConnector() && f.isAskedFor() && f.isInternal() );
+        return true;
     }
 
     /** {@inheritDoc} */
