@@ -33,7 +33,7 @@ public class HP001_HomePage
 		    	  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 		    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 		    			  GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-		      }	
+			}	
 			
 			// Call logout()
 			GlobalVariables.iStepNo++ ;
