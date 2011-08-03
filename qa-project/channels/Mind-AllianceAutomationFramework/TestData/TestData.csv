@@ -203,3 +203,7 @@ Segment For Attach File as URL,Segment For Attach File as URL
 Segment For Attach File For Invalid URL,Segment For Attach File For Invalid URL
 Segment For Attach File To Locale,Segment For Attach File To Locale
 Segment For Delete Locale Attachment,Segment For Delete Locale Attachment
+Segment For Attach Picture To Locale,Segment For Attach Picture To Locale
+Segment For Delete Picture File To Locale,Segment For Delete Picture File To Locale
+Segment For Attach Named File To Locale,Segment For Attach Named File To Locale
+Segment For Attach Invalid URL To Locale,Segment For Attach Invalid URL To Locale
