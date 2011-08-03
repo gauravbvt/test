@@ -109,7 +109,7 @@ public class TE048_LocaleAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(5000);
 				//Assertion : Verify that URL gets Attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL")))
 				{
 			    	// Write Results
