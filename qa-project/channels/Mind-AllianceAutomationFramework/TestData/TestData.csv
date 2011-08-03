@@ -195,3 +195,11 @@ Address,Address
 Medium 1,Medium 1
 Segment for delete file of Event,Segment for delete file of Event
 Segment For Attach File To Agent,Segment For Attach File To Agent
+Segment For Attach Picture Of Agent,Segment For Attach Picture Of Agent
+Picture,Picture
+Mind-Alliance_Logo.png,Mind-Alliance_Logo.png
+Segment For Delete Picture Of Agent,Segment For Delete Picture Of Agent
+Segment For Attach File as URL,Segment For Attach File as URL
+Segment For Attach File For Invalid URL,Segment For Attach File For Invalid URL
+Segment For Attach File To Locale,Segment For Attach File To Locale
+Segment For Delete Locale Attachment,Segment For Delete Locale Attachment
