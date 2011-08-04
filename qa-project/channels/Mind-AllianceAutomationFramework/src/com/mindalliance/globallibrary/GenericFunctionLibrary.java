@@ -470,6 +470,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("newMedium",oXmlEleViewElements.getElementsByTagName("newMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("anyMedium",oXmlEleViewElements.getElementsByTagName("anyMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("participations",oXmlEleViewElements.getElementsByTagName("participations").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("redoRemoveIssue",oXmlEleViewElements.getElementsByTagName("redoRemoveIssue").item(0).getChildNodes().item(0).getNodeValue());
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
