@@ -139,13 +139,13 @@ public class CCE010_DoUndoDisintermediateTask
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Intermediate Flow created";
 					// Click on Legend to maximize the information flow details
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),GlobalVariables.viewElements.get("addIntermediate"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Click on Legend to minimize the information flow details
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -195,7 +195,7 @@ public class CCE010_DoUndoDisintermediateTask
 					// Click on 'Disintermediate' option under 'Actions' pop up menu of task section
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task disintermediated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -203,7 +203,7 @@ public class CCE010_DoUndoDisintermediateTask
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
