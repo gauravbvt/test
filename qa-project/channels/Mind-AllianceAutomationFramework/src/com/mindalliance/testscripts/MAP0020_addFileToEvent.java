@@ -75,7 +75,6 @@ public class MAP0020_addFileToEvent
 					Thread.sleep(5000);	
 					
 					// Details of Segment
-					System.out.println(GlobalVariables.testData.get("Segment For Add File To Event"));
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Details of Segment enetered";
 					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();

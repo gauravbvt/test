@@ -170,7 +170,6 @@ public class MAC0025_UndoRemoveFlow
 				List<WebElement> areas = GlobalVariables.oElement.findElements(By.tagName("area"));
 				for(WebElement area:areas){
 					GlobalVariables.sStrCheck=area.getAttribute("id");
-					System.out.println(area.getAttribute("id"));
 				if(area.getAttribute("id").equals("node1"))
 					 GlobalVariables.bIsSuccess = Boolean.TRUE;
 					 break;
