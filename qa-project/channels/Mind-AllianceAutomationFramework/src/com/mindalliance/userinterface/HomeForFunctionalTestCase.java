@@ -839,7 +839,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				ifmFlag=true;
 			}
 		}
-		else if(chk.getText().equalsIgnoreCase("Information Sharing Guidelines")) {
+		else if(chk.getText().equalsIgnoreCase("Information Sharing Guidelines For Participants")) {
 			if(chk.isSelected() && isgFlag==true){
 				jScrollPane0.setViewportView(getJList0(13));
 				isgFlag=false;
