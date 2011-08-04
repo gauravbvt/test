@@ -242,6 +242,11 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathAgentName",oXmlElePlanPage.getElementsByTagName("xPathAgentName").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathIssueSummaryReportToHome",oXmlElePlanPage.getElementsByTagName("xPathIssueSummaryReportToHome").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathViewAllTypesOfAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathViewAllTypesOfAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathEventTagsLink",oXmlElePlanPage.getElementsByTagName("xPathEventTagsLink").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathDeleteCategoriesOfEvent",oXmlElePlanPage.getElementsByTagName("xPathDeleteCategoriesOfEvent").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathInformationSharingGuidelinesForParticipantsToHome",oXmlElePlanPage.getElementsByTagName("xPathInformationSharingGuidelinesForParticipantsToHome").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathActiveUsers",oXmlElePlanPage.getElementsByTagName("xPathActiveUsers").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathParticipantsPageSubTitle",oXmlElePlanPage.getElementsByTagName("xPathParticipantsPageSubTitle").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathAssertionPhaseDetails", oXmlElePlanPage.getElementsByTagName("xPathAssertionPhaseDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
