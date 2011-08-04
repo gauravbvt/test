@@ -504,10 +504,8 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			GenericFunctionLibrary.tearDownTestData();
 			// Call ReportFunctions.generateAutomationReport()
 			ReportFunctions.generateAutomationReport();
-			System.out.println("Hie.....7");
 			// Enable Logs and Reports button
 			jButtonLogLink.setEnabled(true);
-			System.out.println("Hie.....8");
 			jButtonReportLink.setEnabled(true);
 			// Clear TestCaseId label
 			jLabelTestCaseId.setText("");
