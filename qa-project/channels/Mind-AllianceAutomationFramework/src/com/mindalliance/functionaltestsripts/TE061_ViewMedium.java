@@ -34,8 +34,7 @@ public class TE061_ViewMedium
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
+				Thread.sleep(2000);				
 				//Stretch Up Forms
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
@@ -62,14 +61,14 @@ public class TE061_ViewMedium
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("newMedium").equals(option.getText())){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    		option.setSelected();
+						option.setSelected();
 			    		break;
 			    	}
 			    }
+			    // Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -100,14 +99,12 @@ public class TE061_ViewMedium
 				}
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
+				Thread.sleep(2000);				
 				// Close New Medium Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick("/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span/span/span/span","Remove sharing capability");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -128,7 +125,7 @@ public class TE061_ViewMedium
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.quit();
+				
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
