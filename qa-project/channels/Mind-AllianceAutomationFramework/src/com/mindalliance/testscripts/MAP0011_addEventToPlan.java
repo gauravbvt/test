@@ -136,8 +136,7 @@ public class MAP0011_addEventToPlan
 					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
-					
+					Thread.sleep(2000);					
 					// Assertion : verify that Event is added
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(event));
 					if(GlobalVariables.oElement.getText().equals(event)){
