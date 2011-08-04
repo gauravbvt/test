@@ -83,7 +83,6 @@ public class MAC0022_UndoSetTaskFromCopy {
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Task detail updated";
 				// Task Name
-				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				for (int i = 0; i <= 15; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -118,7 +117,6 @@ public class MAC0022_UndoSetTaskFromCopy {
 				// Select the other segment
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Other segment selected";
-				GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("The Other Segment"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);

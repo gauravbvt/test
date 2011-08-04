@@ -61,7 +61,6 @@ public class MAV0138_viewIssueOfEvent
 				// Create an event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 				for (int i = 0; i <= 50; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
