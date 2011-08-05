@@ -33,7 +33,7 @@ public class ImportantFlowNotOperational  extends AbstractIssueDetector {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
                 issue.setDescription( "Flow \""
                         + flow.getTitle()
-                        + "\" is important but is not operational." );
+                        + "\" is important but is conceptual." );
                 issue.setSeverity( importance );
                 issue.setRemediation( "Make the flow operational." );
                 issues.add( issue );

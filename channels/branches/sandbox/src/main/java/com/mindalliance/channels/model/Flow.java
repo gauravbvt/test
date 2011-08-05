@@ -263,7 +263,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public Significance getSignificanceToSource() {
-        return significanceToSource;
+        return !isAskedFor() && significanceToSource == Significance.Triggers
+                ? Significance.None
+                : significanceToSource;
     }
 
     public void setSignificanceToSource( Significance significance ) {
@@ -271,7 +273,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public Significance getSignificanceToTarget() {
-        return significanceToTarget;
+        return isAskedFor() && significanceToTarget == Significance.Triggers
+                ? Significance.Useful
+                : significanceToTarget;
     }
 
     public void setSignificanceToTarget( Significance significanceToTarget ) {
