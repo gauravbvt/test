@@ -39,8 +39,7 @@ public class UpdatePlanner
 				GlobalVariables.oDriver.findElement(By.linkText("Channels administration")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				
+				Thread.sleep(3000);				
 				// get list under Actions pop up menu
 				int countUsers = 1 , countPlanners = 0;
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
@@ -78,7 +77,6 @@ public class UpdatePlanner
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oDriver.quit();
-
 	} 
 		catch (Exception e) {
 			System.out.println(e.getMessage());
