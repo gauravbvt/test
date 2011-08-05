@@ -94,7 +94,7 @@ public class SocialItemMenuPanel extends MenuPanel {
         if ( po != null && po instanceof PlannerMessage ) {
             PlannerMessage message = (PlannerMessage) po;
             if ( message.getFromUsername().equals( currentUsername ) ) {
-                Link link = new ConfirmedAjaxFallbackLink( "link", "Delete this message? (\"Unsend\" it)" ) {
+                Link deleteLink = new ConfirmedAjaxFallbackLink( "link", "Delete this message? (\"Unsend\" it)" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         updatable.update( target, po, SocialPanel.DELETE_MESSAGE );
                     }
@@ -102,17 +102,20 @@ public class SocialItemMenuPanel extends MenuPanel {
                 menuItems.add( new LinkMenuItem(
                         "menuItem",
                         new Model<String>( "Delete message" ),
-                        link ) );
-            }
-            Link link = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    updatable.update( target, po, SocialPanel.EMAIL_MESSAGE );
+                        deleteLink ) );
+
+                if ( getQueryService().findUserEmail( message.getFromUsername() ) != null ) {
+                    Link emailLink = new AjaxFallbackLink( "link" ) {
+                        public void onClick( AjaxRequestTarget target ) {
+                            updatable.update( target, po, SocialPanel.EMAIL_MESSAGE );
+                        }
+                    };
+                    menuItems.add( new LinkMenuItem(
+                            "menuItem",
+                            new Model<String>( message.isEmailed() ? "Resend email" : "Email this message" ),
+                            emailLink ) );
                 }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( message.isEmailed() ? "Resend email" : "Email this message" ),
-                    link ) );
+            }
         }
         return menuItems;
     }

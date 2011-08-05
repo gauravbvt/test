@@ -165,7 +165,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 String name = getQueryService().findUserFullName( userName );
                 String userRole = getQueryService().findUserRole( userName );
                 if ( name == null || userRole == null )
-                    return "?";
+                    return getUsername() + " (removed)";
                 else
                     return name
                             + (
