@@ -40,7 +40,6 @@ public class CA014_UpdatePlan
 					// Enter Plan URI
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Plan URI Entered";
-					GlobalVariables.oDriver.findElement(By.name("newPlanUri")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
 					// Write Results
@@ -54,7 +53,6 @@ public class CA014_UpdatePlan
 					// Enter Owner Name
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Owner Name Entered";
-					GlobalVariables.oDriver.findElement(By.name("newPlanClient")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);
@@ -87,7 +85,6 @@ public class CA014_UpdatePlan
 					Thread.currentThread();
 					Thread.sleep(2000);					
 					// Select Plan 
-					GlobalVariables.oDriver.findElement(By.name("switch-plan:plan-sel")).click();
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("switch-plan:plan-sel")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -116,7 +113,6 @@ public class CA014_UpdatePlan
 					//Thread sleep
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:name")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:name"));
 					for(int i=0;i<50;i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);

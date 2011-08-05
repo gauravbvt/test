@@ -62,7 +62,6 @@ public class CA017_DeleteUser
 					Thread.currentThread();
 					Thread.sleep(1000);
 					//Assertion : Verify that user gets deleted successfully
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID"))).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 					if(!GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("user")))
 					{

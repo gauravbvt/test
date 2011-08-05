@@ -63,7 +63,6 @@ public class CA033_UpdateOwnerName
 				Thread.sleep(3000);
 				// Assertion: Verify that plan created successfully
 				GlobalVariables.bIsSuccess=Boolean.FALSE;
-				GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
@@ -123,7 +122,6 @@ public class CA033_UpdateOwnerName
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 		}
 		catch (Exception e) {
-			 	System.out.println(e.getMessage()+"Hie.......");
 				if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

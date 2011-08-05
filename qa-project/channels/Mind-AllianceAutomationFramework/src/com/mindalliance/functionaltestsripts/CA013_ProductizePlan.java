@@ -40,7 +40,6 @@ public class CA013_ProductizePlan
 					// Enter Plan URI
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Plan URI Entered";
-					GlobalVariables.oDriver.findElement(By.name("newPlanUri")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
 					// Write Results
@@ -54,7 +53,6 @@ public class CA013_ProductizePlan
 					// Enter Owner Name
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Owner Name Entered";
-					GlobalVariables.oDriver.findElement(By.name("newPlanClient")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);
@@ -75,7 +73,6 @@ public class CA013_ProductizePlan
 					Thread.sleep(3000);
 					// Assertion: Verify that plan created successfully
 					GlobalVariables.bIsSuccess=Boolean.FALSE;
-					GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -137,8 +134,8 @@ public class CA013_ProductizePlan
 				    }
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
-
+					Thread.sleep(3000);
+					
 					// Click on 'Delete Plan' button
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
 					alert = GlobalVariables.oDriver.switchTo().alert();

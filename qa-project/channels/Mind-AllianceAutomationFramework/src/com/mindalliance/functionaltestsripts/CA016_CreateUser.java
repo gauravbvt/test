@@ -34,8 +34,7 @@ public class CA016_CreateUser
 					// Enter User ID
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="User ID Entered";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("new"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

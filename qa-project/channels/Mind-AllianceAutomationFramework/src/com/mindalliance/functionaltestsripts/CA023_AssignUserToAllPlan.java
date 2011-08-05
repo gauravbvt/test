@@ -66,7 +66,6 @@ public class CA023_AssignUserToAllPlan
 				//Create User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="User Created";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// WebElement Synchronization
@@ -83,7 +82,6 @@ public class CA023_AssignUserToAllPlan
 				//Assign Access Privilege 'Planner' to User
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Assign Access Privilege 'Planner' to User (This Plan Tab)";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 				// WebElement Synchronization
@@ -199,7 +197,6 @@ public class CA023_AssignUserToAllPlan
 		    	// WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);					
-			    GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {

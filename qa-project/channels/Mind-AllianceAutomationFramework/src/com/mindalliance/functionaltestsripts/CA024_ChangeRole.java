@@ -11,6 +11,7 @@ public class CA024_ChangeRole
 {
 	public CA024_ChangeRole() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA024_ChangeRole";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -34,7 +35,6 @@ public class CA024_ChangeRole
 				// Create User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="User Created";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// WebElement Synchronization
@@ -56,7 +56,6 @@ public class CA024_ChangeRole
 				//Assign Access Privilege 'Planner' to User
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Assign Access Privilege 'Planner' to User";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 				// WebElement Synchronization
@@ -166,7 +165,6 @@ public class CA024_ChangeRole
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 		}
 		catch (Exception e) {
-			 	System.out.println(e.getMessage()+"Hie.......");
 				if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

@@ -127,7 +127,6 @@ public class CA005_CreatePlanWithExistingURI
 					//Thread sleep
 					Thread.currentThread();
 					Thread.sleep(2000);
-
 					
 					// Click on 'Signout<user name>' Link
 					GlobalVariables.iStepNo++;

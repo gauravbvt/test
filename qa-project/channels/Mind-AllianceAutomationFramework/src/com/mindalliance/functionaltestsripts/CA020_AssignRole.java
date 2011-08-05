@@ -34,7 +34,6 @@ public class CA020_AssignRole
 				// Create User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="User Created";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// WebElement Synchronization
@@ -56,7 +55,6 @@ public class CA020_AssignRole
 				//Assign Access Privilege 'Admin' to User
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Assign Access Privilege 'Admin' to User";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 				// WebElement Synchronization
@@ -140,7 +138,7 @@ public class CA020_AssignRole
 			    Thread.currentThread();
 			    Thread.sleep(1000);
 
-			 // Call logout()
+			    // Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();

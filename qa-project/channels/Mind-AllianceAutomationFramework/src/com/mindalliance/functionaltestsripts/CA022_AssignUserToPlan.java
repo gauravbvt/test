@@ -16,6 +16,7 @@ public class CA022_AssignUserToPlan
 {
 	public CA022_AssignUserToPlan() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA022_AssignUserToPlan";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -64,7 +65,6 @@ public class CA022_AssignUserToPlan
 				Thread.sleep(3000);
 
 				//Select Newly Created Plan
-				GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
@@ -80,7 +80,6 @@ public class CA022_AssignUserToPlan
 				//Create User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="User Created";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// WebElement Synchronization
@@ -97,7 +96,6 @@ public class CA022_AssignUserToPlan
 				//Assign Access Privilege 'Planner' to User
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Assign Access Privilege 'Planner' to User (This Plan Tab)";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 				// WebElement Synchronization
@@ -160,7 +158,6 @@ public class CA022_AssignUserToPlan
 			    //Assertion : Verify that User is able to view & access the plan created by Administrator
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "User is able to view the plan created by Administrator";
-			    GlobalVariables.oDriver.findElement(By.className("planTitle")).click();
 			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("planTitle"));
 			    if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("afourtech")))
 			    {
@@ -208,7 +205,6 @@ public class CA022_AssignUserToPlan
 		    	// WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);					
-			    GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
