@@ -155,21 +155,26 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
             return "all users";
         else {
             String userName = getUsername();
-            if ( username.equals( PlannerMessagingService.PLANNERS ) ) {
+            if ( username == null ) {
+                return "?";
+            } else if ( username.equals( PlannerMessagingService.PLANNERS ) ) {
                 return "All planners";
             } else if ( username.equals( PlannerMessagingService.USERS ) ) {
                 return "Everyone";
             } else {
                 String name = getQueryService().findUserFullName( userName );
                 String userRole = getQueryService().findUserRole( userName );
-                return name
-                        + (
-                        userRole.equals( User.PLANNER )
-                                ? " (planner)"
-                                : userRole.equals( User.ADMIN )
-                                ? " (admin)"
-                                : ""
-                );
+                if ( name == null || userRole == null )
+                    return getUsername() + " (removed)";
+                else
+                    return name
+                            + (
+                            userRole.equals( User.PLANNER )
+                                    ? " (planner)"
+                                    : userRole.equals( User.ADMIN )
+                                    ? " (admin)"
+                                    : ""
+                    );
             }
         }
     }
