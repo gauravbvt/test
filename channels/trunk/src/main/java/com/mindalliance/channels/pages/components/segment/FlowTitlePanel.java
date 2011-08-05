@@ -55,7 +55,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
 
     private String operationalString() {
         return flow.canGetOperational() && !flow.isEffectivelyOperational()
-                ? " Not operational."
+                ? " Conceptual."
                 : "";
     }
 

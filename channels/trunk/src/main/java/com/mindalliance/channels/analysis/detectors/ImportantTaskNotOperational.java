@@ -33,7 +33,7 @@ public class ImportantTaskNotOperational extends AbstractIssueDetector {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, part );
                 issue.setDescription( "Task \""
                         + part.getTitle()
-                        + "\" is important but is not operational." );
+                        + "\" is important but is conceptual." );
                 issue.setSeverity( importance );
                 issue.setRemediation( "Make the task operational." );
                 issues.add( issue );

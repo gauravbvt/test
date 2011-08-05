@@ -161,7 +161,7 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
             sb.append( " Assignees work as a team." );
         }
         if ( !part.isOperational() ) {
-            sb.append( " Not operational." );
+            sb.append( " Conceptual." );
         }
         if ( part.isProhibited() ) {
             sb.append( " PROHIBITED." );

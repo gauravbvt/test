@@ -169,13 +169,13 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     private CheckBox ifTaskFailsCheckBox;
     /**
-     * Operational checkbox container.
+     * Conceptual checkbox container.
      */
-    private WebMarkupContainer operationalContainer;
+    private WebMarkupContainer conceptualContainer;
     /**
-     * If operational.
+     * If conceptual.
      */
-    private CheckBox operationalCheckBox;
+    private CheckBox conceptualCheckBox;
     /**
      * Prohibited checkbox container.
      */
@@ -227,7 +227,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addOtherField();
         addRestrictionFields();
         addIfTaskFails();
-        addOperationalField();
+        addConceptualField();
         addProhibitedField();
         addAllField();
 
@@ -409,8 +409,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
         makeVisible( prohibitedContainer, f.canGetProhibited() );
         prohibitedCheckBox.setEnabled( lockedByUser && f.canSetProhibited() );
-        makeVisible( operationalContainer, f.canGetOperational() );
-        operationalCheckBox.setEnabled( lockedByUser && f.canSetOperational() );
+        makeVisible( conceptualContainer, f.canGetOperational() );
+        conceptualCheckBox.setEnabled( lockedByUser && f.canSetOperational() );
         makeVisible( referencesEventPhaseContainer, f.canGetReferencesEventPhase() );
         referencesEventPhaseCheckBox.setEnabled( lockedByUser && f.canSetReferencesEventPhase() );
     }
@@ -635,15 +635,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         ifTaskFailsContainer.add( ifTaskFailsCheckBox );
     }
 
-    private void addOperationalField() {
-        operationalContainer = new WebMarkupContainer( "operationalContainer" );
-        operationalContainer.setOutputMarkupId( true );
-        add( operationalContainer );
-        operationalCheckBox = new CheckBox(
-                "operational",
-                new PropertyModel<Boolean>( this, "operational" )
+    private void addConceptualField() {
+        conceptualContainer = new WebMarkupContainer( "conceptualContainer" );
+        conceptualContainer.setOutputMarkupId( true );
+        add( conceptualContainer );
+        conceptualCheckBox = new CheckBox(
+                "conceptual",
+                new PropertyModel<Boolean>( this, "conceptual" )
         );
-        operationalCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+        conceptualCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update(
@@ -651,7 +651,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                         new Change( Change.Type.Updated, getFlow(), "operational" ) );
             }
         } );
-        operationalContainer.add( operationalCheckBox );
+        conceptualContainer.add( conceptualCheckBox );
     }
 
     private void addProhibitedField() {
@@ -1450,18 +1450,16 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     /**
-     * Get whether flow is operational.
+     * Get whether flow is conceptual.
      *
      * @return a boolean
      */
-    public boolean isOperational() {
-        return getFlow().isOperational();
+    public boolean isConceptual() {
+        return !getFlow().isOperational();
     }
 
-    public void setOperational( boolean val ) {
-        if ( val != getFlow().isOperational() ) {
-            doCommand( new UpdateSegmentObject( getFlow(), "operational", val ) );
-        }
+    public void setConceptual( boolean val ) {
+        doCommand( new UpdateSegmentObject( getFlow(), "operational", !val ) );
     }
 
     /**

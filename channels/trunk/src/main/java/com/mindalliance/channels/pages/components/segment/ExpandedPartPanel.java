@@ -188,9 +188,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     private DropDownChoice<String> categoryChoice;
     /**
-     * Operational checkbox.
+     * Conceptual checkbox.
      */
-    private CheckBox operationalCheckBox;
+    private CheckBox conceptualCheckBox;
 
     /**
      * Prohibited checkbox.
@@ -290,9 +290,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     private void addOperationalField() {
-        operationalCheckBox = new CheckBox("operational", new PropertyModel<Boolean>( this, "operational"));
-        add( operationalCheckBox );
-        operationalCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+        conceptualCheckBox = new CheckBox("conceptual", new PropertyModel<Boolean>( this, "conceptual"));
+        add( conceptualCheckBox );
+        conceptualCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "operational" ) );
             }
@@ -366,7 +366,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void adjustFields() {
         taskField.setEnabled( isLockedByUser( getPart() ) );
         categoryChoice.setEnabled( isLockedByUser( getPart() ) );
-        operationalCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        conceptualCheckBox.setEnabled( isLockedByUser( getPart() ) );
         prohibitedCheckBox.setEnabled( isLockedByUser( getPart() ) );
         for ( EntityReferencePanel entityReferencePanel : entityFields ) {
             entityReferencePanel.enable( isLockedByUser( getPart() ) );
@@ -988,14 +988,12 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         }
     }
 
-    public boolean isOperational() {
-        return getPart().isOperational();
+    public boolean isConceptual() {
+        return !getPart().isOperational();
     }
 
-    public void setOperational( boolean val ) {
-        if ( val != isOperational() ) {
-            doCommand( new UpdateSegmentObject( getPart(), "operational", val ) );
-        }
+    public void setConceptual( boolean val ) {
+            doCommand( new UpdateSegmentObject( getPart(), "operational", !val ) );
     }
 
     public boolean isProhibited() {
