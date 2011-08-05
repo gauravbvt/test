@@ -11,6 +11,7 @@ public class CA002_Logout
 {
 	public CA002_Logout() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA002_Logout";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -54,7 +55,7 @@ public class CA002_Logout
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-				    	  GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("loginPageTitle")+" Actual "+GlobalVariables.oElement.getText();
+				    	  GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("loginPageTitle")+" Actual "+GlobalVariables.oDriver.getTitle();
 				    	  // Write Results
 				    	  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 				    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

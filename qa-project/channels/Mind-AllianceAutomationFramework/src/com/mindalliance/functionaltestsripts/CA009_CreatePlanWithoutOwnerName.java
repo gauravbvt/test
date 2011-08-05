@@ -16,6 +16,7 @@ public class CA009_CreatePlanWithoutOwnerName
 {
 	public CA009_CreatePlanWithoutOwnerName() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA009_CreatePlanWithoutOwnerName";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -34,7 +35,7 @@ public class CA009_CreatePlanWithoutOwnerName
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Enter Plan URI
 					GlobalVariables.iStepNo++;
@@ -47,7 +48,7 @@ public class CA009_CreatePlanWithoutOwnerName
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 
 					// Click on 'Submit' button
 					GlobalVariables.iStepNo++ ;
@@ -55,7 +56,7 @@ public class CA009_CreatePlanWithoutOwnerName
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					// Assertion: Verify that plan created successfully
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
@@ -71,7 +72,7 @@ public class CA009_CreatePlanWithoutOwnerName
 				    }
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 
 					// Click on 'Delete Plan' button
 					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("deletePlan"))).click();
@@ -80,7 +81,7 @@ public class CA009_CreatePlanWithoutOwnerName
 					alert.accept();
 					//Thread sleep
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Click on 'Signout<user name>' Link
 					GlobalVariables.iStepNo++;
@@ -93,7 +94,8 @@ public class CA009_CreatePlanWithoutOwnerName
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
+					
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}

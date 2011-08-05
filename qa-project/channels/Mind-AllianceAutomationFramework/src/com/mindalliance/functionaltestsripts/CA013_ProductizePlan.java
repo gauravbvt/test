@@ -17,6 +17,7 @@ public class CA013_ProductizePlan
 {
 	public CA013_ProductizePlan() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA013_ProductizePlan";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -35,24 +36,14 @@ public class CA013_ProductizePlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Enter Plan URI
 					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Plan URI Entered";
+					GlobalVariables.sDescription="Plan URI & Owner Name Entered";
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					
-					// Enter Owner Name
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Owner Name Entered";
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);
@@ -62,17 +53,17 @@ public class CA013_ProductizePlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
-
+					Thread.sleep(2000);
+					
 					// Click on 'Submit' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan Created";
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
+
 					// Assertion: Verify that plan created successfully
-					GlobalVariables.bIsSuccess=Boolean.FALSE;
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -109,6 +100,7 @@ public class CA013_ProductizePlan
 					options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.testData.get("New Plan v.1 (prod)").equals(option.getText())){
+				    			option.setSelected();
 				    			// Write Results
 								LogFunctions.writeLogs(GlobalVariables.sDescription);
 								LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -134,7 +126,7 @@ public class CA013_ProductizePlan
 				    }
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Click on 'Delete Plan' button
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
@@ -143,7 +135,7 @@ public class CA013_ProductizePlan
 					alert.accept();
 					//Thread sleep
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 
 					// Click on 'Signout<user name>' Link
 					GlobalVariables.iStepNo++;
@@ -156,7 +148,8 @@ public class CA013_ProductizePlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
+					
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}

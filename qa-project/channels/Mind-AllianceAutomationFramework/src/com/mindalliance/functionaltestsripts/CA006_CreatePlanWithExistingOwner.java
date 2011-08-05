@@ -34,7 +34,7 @@ public class CA006_CreatePlanWithExistingOwner
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Create New Plan
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
@@ -44,12 +44,12 @@ public class CA006_CreatePlanWithExistingOwner
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					// Click on 'Submit' button
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Enter Plan URI
 					GlobalVariables.iStepNo++;
@@ -62,7 +62,7 @@ public class CA006_CreatePlanWithExistingOwner
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 
 					// Enter Existing Owner Name
 					GlobalVariables.iStepNo++;
@@ -75,11 +75,11 @@ public class CA006_CreatePlanWithExistingOwner
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 						
 					// Click on 'Submit' button
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Plan Created";
+					GlobalVariables.sDescription = "Plan Created with Existing Owner Name";
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 					// WebElement Synchronization
 					Thread.currentThread();
