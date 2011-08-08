@@ -108,7 +108,6 @@ public class TE072_DeleteMediumAttachment
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				
 				// Delete Attachment
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Delete Attachment";
@@ -120,7 +119,7 @@ public class TE072_DeleteMediumAttachment
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// Assertion: verify that file is deleted
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div2]div[2]/div/table/tbody/tr[6]/td"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathMediumDeleteAttachmentAssertion")));
 				if (GlobalVariables.oElement.getText().equals("")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
