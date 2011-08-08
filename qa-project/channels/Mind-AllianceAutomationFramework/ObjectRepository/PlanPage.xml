@@ -113,6 +113,7 @@
 <xPathInformationSharingGuidelinesForParticipantsToHome>/html/body/div/div/a/img</xPathInformationSharingGuidelinesForParticipantsToHome>
 <xPathActiveUsers>/html/body/div/div[2]/div[2]/table/tbody/tr/td/a</xPathActiveUsers>
 <xPathParticipantsPageSubTitle>/html/body/div/div[2]/div/h1</xPathParticipantsPageSubTitle>
+<xPathOperationalNonOperational>/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[3]</xPathOperationalNonOperational>
 <!-- Assertions -->
 <xPathAssertionPhaseDetails>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathAssertionPhaseDetails>
 <xPathAssertionDetails>/html/body/form/div[4]/div/div[2]/div/div/h1</xPathAssertionDetails>
