@@ -118,6 +118,8 @@
 <xPathOperationalNonOperational>/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[3]</xPathOperationalNonOperational>
 <xPathCrossOnAttachmentCopiedMessage>/html/body/form/div[14]/span/a/img</xPathCrossOnAttachmentCopiedMessage>
 <!-- Assertions -->
+<xPathDeletePhaseAssertion>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathDeletePhaseAssertion>
+<xPathPhaseCreatedAssertion>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathPhaseCreatedAssertion>
 <xPathMediumDeleteAttachmentAssertion>/html/body/form/div[3]/div/div2/div[2]/div/table/tbody/tr[6]/td</xPathMediumDeleteAttachmentAssertion>
 <xPathDeleteEventAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td</xPathDeleteEventAttachmentAssertion>
 <xPathCopyEventAttachmentAssertion>//div[@class='change-message']/span/span</xPathCopyEventAttachmentAssertion>
