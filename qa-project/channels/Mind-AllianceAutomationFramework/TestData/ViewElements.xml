@@ -190,4 +190,15 @@
 <anyMedium>any medium</anyMedium>
 <participations>Participations</participations>
 <notOperational>. Not operational.</notOperational>
+<unspecified>Unspecified</unspecified>
+<analysis>Analysis</analysis>
+<direction>Direction</direction>
+<operationalCoordination>Operational coordination</operationalCoordination>
+<operations>Operations</operations>
+<operationsManagement>Operations management</operationsManagement>
+<planningAndPreparing>Planning/preparing</planningAndPreparing>
+<policySetting>Policy setting</policySetting>
+<prohibited>. PROHIBITED.</prohibited>
+<responding>Responding</responding>
+<unnamed>unnamed</unnamed>
 </elements>
