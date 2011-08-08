@@ -234,3 +234,13 @@ Segment For Copy File To Event,Segment For Copy File To Event
 Segment For Delete Attachment Of Event,Segment For Delete Attachment Of Event
 Segment For Create New Phase,Segment For Create New Phase
 Segment For Delete New Phase,Segment For Delete New Phase
+Segment For Update Phase Name,Segment For Update Phase Name
+This is Updated Phase Name,This is Updated Phase Name
+Segment For Phase Description,Segment For Phase Description
+Segment For Tag Link Of Phase,Segment For Tag Link Of Phase
+Segment For Phase Tags,Segment For Phase Tags
+This is an tags,This is an tags
+Segment For Phase Categories,Segment For Phase Categories
+This is an Categories,This is an Categories
+Segment For Remove Phase Categories,Segment For Remove Phase Categories
+Segment For Attach File To Phase,Segment For Attach File To Phase
