@@ -117,8 +117,14 @@
 <xPathParticipantsPageSubTitle>/html/body/div/div[2]/div/h1</xPathParticipantsPageSubTitle>
 <xPathOperationalNonOperational>/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[3]</xPathOperationalNonOperational>
 <xPathCrossOnAttachmentCopiedMessage>/html/body/form/div[14]/span/a/img</xPathCrossOnAttachmentCopiedMessage>
+<<<<<<< .mine
+<xPathTaskCausesEvent>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[10]/th/label/span/a/span</xPathTaskCausesEvent>
+<xPathTaskEventUnnamed>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[4]/span</xPathTaskEventUnnamed>
+<xPathTaskPhaseResponding>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[2]/span</xPathTaskPhaseResponding>
+=======
 <xPathDeletePhaseCategories>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeletePhaseCategories>
 <xPathDeletePhaseAttachment>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePhaseAttachment>
+>>>>>>> .r2677
 <!-- Assertions -->
 <xPathPhaseAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathPhaseAttachmentAssertion>
 <xPathPhaseCategoriesAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathPhaseCategoriesAssertion>
