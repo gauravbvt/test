@@ -1,5 +1,6 @@
 package com.mindalliance.functionaltestsripts;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
@@ -72,6 +73,14 @@ public class TFP014_AddLocation
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				// Click on 'Remove this segment' under 'Actions' pop up menu
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+				// Get a handle to the open alert, prompt or confirmation
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
