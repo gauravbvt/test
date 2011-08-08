@@ -1,6 +1,6 @@
 Channels administration,Channels administration
 New Plan v.1 (dev),New Plan v.1 (dev)
-Delete plan,Delete plan
+Delete Plan,Delete Plan
 Information sharing model,Information sharing model
 Automation Test Plan v.1 (dev),Automation Test Plan v.1 (dev)
 Segment For Undo Add Segment,Segment For Undo Add Segment
@@ -156,7 +156,7 @@ Segment For Do Undo Redo Duplicate Task,Segment For Do Undo Redo Duplicate Task
 Segment For Do Undo Redo Intermediate Task,Segment For Do Undo Redo Intermediate Task
 Segment For Do Undo Redo Disintermediate Task,Segment For Do Undo Redo Disintermediate Task
 Segment For Do Undo Redo Move Task,Segment For Do Undo Redo Move Task
-user,user
+user,abcdef
 Segment For Do Undo Redo Connect Flow,Segment For Do Undo Redo Connect Flow
 Segment For Do Undo Redo Add New Issue,Segment For Do Undo Redo Add New Issue
 Segment For Do Undo Redo Remove Issue,Segment For Do Undo Redo Remove Issue
