@@ -247,6 +247,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathInformationSharingGuidelinesForParticipantsToHome",oXmlElePlanPage.getElementsByTagName("xPathInformationSharingGuidelinesForParticipantsToHome").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathActiveUsers",oXmlElePlanPage.getElementsByTagName("xPathActiveUsers").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathParticipantsPageSubTitle",oXmlElePlanPage.getElementsByTagName("xPathParticipantsPageSubTitle").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathOperationalNonOperational",oXmlElePlanPage.getElementsByTagName("xPathOperationalNonOperational").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathAssertionPhaseDetails", oXmlElePlanPage.getElementsByTagName("xPathAssertionPhaseDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
@@ -288,6 +289,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
 					
 			// View Elements
+			GlobalVariables.viewElements.put("notOperational",oXmlEleViewElements.getElementsByTagName("notOperational").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("adminPageTitle",oXmlEleViewElements.getElementsByTagName("adminPageTitle").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("homePageTitle",oXmlEleViewElements.getElementsByTagName("homePageTitle").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("loginPageTitle",oXmlEleViewElements.getElementsByTagName("loginPageTitle").item(0).getChildNodes().item(0).getNodeValue());
