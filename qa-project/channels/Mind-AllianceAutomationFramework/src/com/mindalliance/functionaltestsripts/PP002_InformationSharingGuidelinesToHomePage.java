@@ -38,7 +38,7 @@ public class PP002_InformationSharingGuidelinesToHomePage
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on Home Icon
 				GlobalVariables.iStepNo++;
@@ -59,7 +59,7 @@ public class PP002_InformationSharingGuidelinesToHomePage
 				}	
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -71,7 +71,7 @@ public class PP002_InformationSharingGuidelinesToHomePage
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.quit();
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

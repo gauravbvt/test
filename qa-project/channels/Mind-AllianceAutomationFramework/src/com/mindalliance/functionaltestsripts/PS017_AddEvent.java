@@ -30,7 +30,7 @@ public class PS017_AddEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				//About Plan Segment Window Opened
 				GlobalVariables.iStepNo++ ;
@@ -42,7 +42,7 @@ public class PS017_AddEvent
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
@@ -54,12 +54,11 @@ public class PS017_AddEvent
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 				// Create Event 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Event Created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 				for(int i=0;i<50;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -67,7 +66,7 @@ public class PS017_AddEvent
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -75,7 +74,7 @@ public class PS017_AddEvent
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 				// Update Event
 				GlobalVariables.iStepNo++ ;
@@ -83,8 +82,7 @@ public class PS017_AddEvent
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathEvent"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).click();
+				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
 				for(int i=0;i<50;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -92,17 +90,19 @@ public class PS017_AddEvent
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				
 				//Delete Event
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
+				// Close 'About Plan' Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -110,7 +110,7 @@ public class PS017_AddEvent
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -122,8 +122,7 @@ public class PS017_AddEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				GlobalVariables.oDriver.quit();
+				Thread.sleep(2000);
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
@@ -133,7 +132,6 @@ public class PS017_AddEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
-			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

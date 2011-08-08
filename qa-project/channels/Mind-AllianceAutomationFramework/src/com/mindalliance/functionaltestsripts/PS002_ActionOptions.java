@@ -36,7 +36,6 @@ public class PS002_ActionOptions
 				GlobalVariables.sDescription = "Click on 'Actions' Menu";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionsPopUpMenu"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionsPopUpMenu")));
-				System.out.println(GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionSignOut"))).getText());
 				//Assertion : Verify that After clicking on 'show' menu hide planners, About plan, About plan segment, All segments, Surveys ,All issues , All types ,Index & Help Options Displayed to user
 				if(GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionSendMessage"))).getText().equals(GlobalVariables.viewElements.get("sendMessage")) &&
 				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionAddNewTask"))).getText().equals(GlobalVariables.viewElements.get("addNewTask")) &&

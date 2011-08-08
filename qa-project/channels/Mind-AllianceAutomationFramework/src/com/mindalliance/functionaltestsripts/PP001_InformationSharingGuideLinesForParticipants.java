@@ -40,7 +40,7 @@ public class PP001_InformationSharingGuideLinesForParticipants
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on 'Information sharing guidelines for all participants' link
 				GlobalVariables.iStepNo++ ;
@@ -60,7 +60,7 @@ public class PP001_InformationSharingGuideLinesForParticipants
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -72,7 +72,7 @@ public class PP001_InformationSharingGuideLinesForParticipants
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.quit();
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
