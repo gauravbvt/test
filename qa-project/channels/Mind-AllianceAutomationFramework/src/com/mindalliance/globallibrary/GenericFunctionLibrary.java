@@ -255,8 +255,14 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathDeleteEventAttachment",oXmlElePlanPage.getElementsByTagName("xPathDeleteEventAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCopyEventAttachment",oXmlElePlanPage.getElementsByTagName("xPathCopyEventAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCrossOnAttachmentCopiedMessage",oXmlElePlanPage.getElementsByTagName("xPathCrossOnAttachmentCopiedMessage").item(0).getChildNodes().item(0).getNodeValue());
+<<<<<<< .mine
+			GlobalVariables.plan.put("sXpathTaskCausesEvent",oXmlElePlanPage.getElementsByTagName("xPathTaskCausesEvent").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathTaskPhaseResponding",oXmlElePlanPage.getElementsByTagName("xPathTaskPhaseResponding").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathTaskEventUnnamed",oXmlElePlanPage.getElementsByTagName("xPathTaskEventUnnamed").item(0).getChildNodes().item(0).getNodeValue());
+=======
 			GlobalVariables.plan.put("sXpathDeletePhaseCategories",oXmlElePlanPage.getElementsByTagName("xPathDeletePhaseCategories").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathDeletePhaseAttachment",oXmlElePlanPage.getElementsByTagName("xPathDeletePhaseAttachment").item(0).getChildNodes().item(0).getNodeValue());
+>>>>>>> .r2680
 			// Assertions
 			GlobalVariables.assertion.put("sXpathPhaseAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathPhaseAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathPhaseCategoriesAssertion", oXmlElePlanPage.getElementsByTagName("xPathPhaseCategoriesAssertion").item(0).getChildNodes().item(0).getNodeValue());
@@ -495,6 +501,17 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("anyMedium",oXmlEleViewElements.getElementsByTagName("anyMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("participations",oXmlEleViewElements.getElementsByTagName("participations").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("redoRemoveIssue",oXmlEleViewElements.getElementsByTagName("redoRemoveIssue").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("unspecified",oXmlEleViewElements.getElementsByTagName("unspecified").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("analysis",oXmlEleViewElements.getElementsByTagName("analysis").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("direction",oXmlEleViewElements.getElementsByTagName("direction").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("operationalCoordination",oXmlEleViewElements.getElementsByTagName("operationalCoordination").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("operations",oXmlEleViewElements.getElementsByTagName("operations").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("operationsManagement",oXmlEleViewElements.getElementsByTagName("operationsManagement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("planningAndPreparing",oXmlEleViewElements.getElementsByTagName("planningAndPreparing").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("policySetting",oXmlEleViewElements.getElementsByTagName("policySetting").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("prohibited",oXmlEleViewElements.getElementsByTagName("prohibited").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("responding",oXmlEleViewElements.getElementsByTagName("responding").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("unnamed",oXmlEleViewElements.getElementsByTagName("unnamed").item(0).getChildNodes().item(0).getNodeValue());
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
