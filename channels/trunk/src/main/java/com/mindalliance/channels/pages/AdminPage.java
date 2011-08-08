@@ -99,7 +99,6 @@ public class AdminPage extends AbstractChannelsWebPage {
 
     private void init() {
         setStatelessHint( true );
-        addChannelsLogo();
         userList = new ListView<User>( "item",
                 new PropertyModel<List<User>>( userService, "users" ) ) {
             private static final long serialVersionUID = 2266583072592123487L;

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * CONFIDENTIAL.
+ */
+
 package com.mindalliance.channels.odb;
 
 import java.io.Serializable;
@@ -5,18 +11,10 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-/**
- * An object persisted in a database.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jul 6, 2010
- * Time: 11:04:25 AM
- */
 public class PersistentObject implements Serializable {
 
-    private Date date;
-    private String id;
+    private final Date date;
+    private final String id;
 
     public PersistentObject() {
         date = new Date();
@@ -84,7 +82,7 @@ public class PersistentObject implements Serializable {
         Date end = new Date();
         long diffInSeconds = ( end.getTime() - date.getTime() ) / 1000;
         /* sec */
-        long seconds = ( diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds );
+        long seconds = diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds;
         /* min */
         long minutes = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
         /* hours */

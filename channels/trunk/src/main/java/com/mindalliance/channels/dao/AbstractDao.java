@@ -14,6 +14,7 @@ import com.mindalliance.channels.model.Segment;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,13 +43,12 @@ abstract class AbstractDao implements Dao {
      */
     public abstract IdGenerator getIdGenerator();
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( { "unchecked" } )
     public <T extends ModelObject> List<T> list( final Class<T> clazz ) {
         synchronized ( indexMap ) {
             return (List<T>) CollectionUtils.select( indexMap.values(), new Predicate() {
+                @Override
                 public boolean evaluate( Object object ) {
                     return clazz.isAssignableFrom( object.getClass() );
                 }
@@ -56,16 +56,12 @@ abstract class AbstractDao implements Dao {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void add( ModelObject object ) {
         add( object, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void add( ModelObject object, Long id ) {
         synchronized ( indexMap ) {
             if ( id != null && indexMap.containsKey( id ) )
@@ -78,36 +74,26 @@ abstract class AbstractDao implements Dao {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void update( ModelObject object ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Part createPart( Segment segment, Long id ) {
         return segment.addNode( assignId( new Part(), id, getIdGenerator() ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Connector createConnector( Segment segment, Long id ) {
         return segment.addNode( assignId( new Connector(), id, getIdGenerator() ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public ExternalFlow createExternalFlow( Node source, Node target, String name, Long id ) {
         return assignId( new ExternalFlow( source, target, name ), id, getIdGenerator() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public InternalFlow createInternalFlow( Node source, Node target, String name, Long id ) {
         return assignId( new InternalFlow( source, target, name ), id, getIdGenerator() );
     }
@@ -118,17 +104,13 @@ abstract class AbstractDao implements Dao {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( {"unchecked"} )
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
         return (T) find( id );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void remove( ModelObject object ) {
         if ( object instanceof Segment )
             removeSegment( (Segment) object );
@@ -167,9 +149,7 @@ abstract class AbstractDao implements Dao {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelObject> T find( Class<T> clazz, String name ) {
         for ( T object : list( clazz ) )
             if ( name.equals( object.getName() ) )
@@ -178,18 +158,21 @@ abstract class AbstractDao implements Dao {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id ) {
         T result = null;
 
         if ( name != null && !name.isEmpty() ) {
 
             result = find( clazz, name );
+            boolean newId = false;
             if ( result == null && id != null )
                 try {
-                    result = find( clazz, id );
+                    ModelObject modelObject = find( id );
+                    if ( modelObject.getClass().isAssignableFrom( clazz ) )
+                        result = (T) modelObject;
+                    else
+                        newId = true;
                 } catch ( NotFoundException ignored ) {
                     // fall through and create new
                 }
@@ -197,13 +180,17 @@ abstract class AbstractDao implements Dao {
             if ( result == null )
                 try {
                     // Create new entity with name
-                    result = clazz.newInstance();
+                    result = clazz.getConstructor().newInstance();
                     result.setName( name );
-                    add( result, id );
+                    add( result, newId ? null : id );
 
                 } catch ( InstantiationException e ) {
                     throw new RuntimeException( e );
                 } catch ( IllegalAccessException e ) {
+                    throw new RuntimeException( e );
+                } catch ( NoSuchMethodException e ) {
+                    throw new RuntimeException( e );
+                } catch ( InvocationTargetException e ) {
                     throw new RuntimeException( e );
                 }
         }
@@ -211,9 +198,7 @@ abstract class AbstractDao implements Dao {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Segment findSegment( String name ) throws NotFoundException {
         for ( Segment s : list( Segment.class ) )
             if ( name.equals( s.getName() ) )
@@ -222,9 +207,7 @@ abstract class AbstractDao implements Dao {
         throw new NotFoundException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id ) {
         T entityType = ModelEntity.getUniversalType( name, clazz );
         if ( entityType == null ) {
@@ -237,9 +220,6 @@ abstract class AbstractDao implements Dao {
         return entityType;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Flow connect( Node source, Node target, String name, Long id ) {
         Flow result;
 
@@ -354,6 +334,7 @@ abstract class AbstractDao implements Dao {
      * @param node the node
      * @return an internal flow to a new connector
      */
+    @Override
     public Flow createSend( Node node ) {
         return connect( node,
                 createConnector( node.getSegment(), null ), Node.DEFAULT_FLOW_NAME, null );
@@ -365,6 +346,7 @@ abstract class AbstractDao implements Dao {
      * @param node the node
      * @return a flow from a new connector to this node
      */
+    @Override
     public Flow createReceive( Node node ) {
         return connect(
                 createConnector( node.getSegment(), null ), node, Node.DEFAULT_FLOW_NAME, null );

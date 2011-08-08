@@ -262,7 +262,8 @@ public class PlanManager {
     }
 
     private void createPersistentObjectDB( Plan plan ) {
-        ODBAccessor.init( databaseFactory, plan.getUri() );
+        String planUri = plan.getUri();
+        ODBAccessor.init( databaseFactory, PlanDefinition.sanitize( planUri ) );
     }
 
     public DefinitionManager getDefinitionManager() {

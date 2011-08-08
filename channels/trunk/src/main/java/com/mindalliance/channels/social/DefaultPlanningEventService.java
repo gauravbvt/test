@@ -2,6 +2,7 @@ package com.mindalliance.channels.social;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
+import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.odb.ODBAccessor;
 import com.mindalliance.channels.odb.ODBTransactionFactory;
@@ -186,7 +187,8 @@ public class DefaultPlanningEventService implements PlanningEventService {
 
 
     private ODBAccessor getOdb( Plan plan ) {
-        return databaseFactory.getODBAccessor( plan.getUri() );
+        String planUri = plan.getUri();
+        return databaseFactory.getODBAccessor( PlanDefinition.sanitize( planUri ) );
     }
 
 

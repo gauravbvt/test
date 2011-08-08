@@ -72,12 +72,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>1.6.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
             <version>1.0</version>
@@ -173,12 +167,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.3</version>
@@ -189,7 +177,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring-security.version}</version>
+            <version>${spring.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -323,25 +311,24 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.5</version>
+            <version>1.5.8</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.5.5</version>
+            <version>1.5.8</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.5.5</version>
+            <version>1.5.8</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
-            <scope>runtime</scope>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
         </dependency>
 
         <!-- GEONAMES -->
@@ -350,11 +337,12 @@
             <artifactId>geonames</artifactId>
             <version>1.0.1</version>
             <!-- Download from: http://www.geonames.org/source-code/geonames-1.0.1.jar -->
+            <!-- Install with: mvn install:install-file -DgroupId=org.geonames -DartifactId=geonames -Dversion=1.0.1 -Dpackaging=jar -Dfile=... -->
         </dependency>
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>gmap2</artifactId>
-            <version>1.4.14</version>
+            <version>${wicket.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -363,25 +351,13 @@
             </exclusions>
         </dependency>
 
-<!--
-        <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>simile-timeline</artifactId>
-            <version>1.4.12</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
--->
         <!-- Database -->
         <dependency>
             <groupId>org.neodatis</groupId>
             <artifactId>neodatis-odb</artifactId>
             <version>1.9.24.679</version>
+            <!-- get from: http://downloads.sourceforge.net/project/neodatis-odb/NeoDatis%20ODB%20for%20Java/1.9/1.9.24/neodatis-odb-1.9.24.679.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fneodatis-odb%2Ffiles%2FNeoDatis%2520ODB%2520for%2520Java%2F1.9%2F1.9.24%2F&ts=1312403362&use_mirror=superb-sea2 -->
+            <!-- install with: mvn install:install-file -DgroupId=org.neodatis -DartifactId=neodatis-odb -Dversion=1.9.24.679 -Dpackaging=jar -Dfile=... -->
         </dependency>
 
         <!--  JUNIT DEPENDENCY FOR TESTING -->
@@ -624,8 +600,7 @@
     </reporting>
 
     <properties>
-        <spring.version>3.0.0.RELEASE</spring.version>
-        <spring-security.version>3.0.1.RELEASE</spring-security.version>
+        <spring.version>3.0.5.RELEASE</spring.version>
         <wicket.version>1.4.15</wicket.version>
         <jetty.version>6.1.4</jetty.version>
         <doc.css>/css/doc.css</doc.css>

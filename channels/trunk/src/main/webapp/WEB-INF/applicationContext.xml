@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
 
 CONFIGURATION NOTES:
 
@@ -7,21 +6,9 @@ CONFIGURATION NOTES:
 
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:tx="http://www.springframework.org/schema/tx"
-        xmlns:aop="http://www.springframework.org/schema/aop"
-        xmlns:sec="http://www.springframework.org/schema/security"
-        xmlns:context="http://www.springframework.org/schema/context"
-
-        xsi:schemaLocation="
-            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-
-            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
-
-        default-autowire="byName">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+       default-autowire="byName">
 
     <!-- =========================== Main Components -->
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels"/>
@@ -57,7 +44,7 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="planManager" class="com.mindalliance.channels.dao.PlanManager" lazy-init="true">
-        <constructor-arg ref="definitionManager" />
+        <constructor-arg ref="definitionManager"/>
         <property name="importDirectory" value="${channels.home}${file.separator}import"/>
         <property name="databaseFactory" ref="databaseFactory"/>
         <property name="defaultSupportCommunity" value="channels@mind-alliance.com"/>
@@ -72,9 +59,9 @@ CONFIGURATION NOTES:
                 <ref bean="cell"/>
                 <ref bean="pager"/>
                 <ref bean="conferenceCall"/>
-<!--
-                <ref bean="web"/>
--->
+                <!--
+                                <ref bean="web"/>
+                -->
                 <ref bean="email"/>
                 <ref bean="notificationSystem"/>
                 <ref bean="chat"/>
@@ -104,8 +91,8 @@ CONFIGURATION NOTES:
         <property name="timeout" value="10000"/>
     </bean>
 
-    <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst"
-          init-method="start" destroy-method="stop"/>
+    <bean id="analyst" class="com.mindalliance.channels.analysis.DefaultAnalyst" init-method="start"
+          destroy-method="stop"/>
 
     <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
         <property name="iconDirectory" value="${channels.home}${file.separator}icons"/>
@@ -119,12 +106,13 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="semanticMatcher" class="com.mindalliance.channels.nlp.WordnetSemanticMatcher">
-        <property name="wordnetDict" value="WEB-INF${file.separator}data${file.separator}wordnet-2${file.separator}dict"/>
+        <property name="wordnetDict"
+                  value="WEB-INF${file.separator}data${file.separator}wordnet-2${file.separator}dict"/>
         <property name="simIndex" value="WEB-INF${file.separator}data${file.separator}jwsl${file.separator}wn_index"/>
     </bean>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
-       <property name="resourceLoaderPath" value="/WEB-INF/templates"/>
+        <property name="resourceLoaderPath" value="/WEB-INF/templates"/>
     </bean>
 
     <bean id="detective" class="com.mindalliance.channels.analysis.DefaultDetective">
@@ -175,7 +163,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.UntimelyNecessarySharing"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnTargetPart"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.InconsistentImpactOnSourcePart"/>
-               <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure"/>
+                <bean class="com.mindalliance.channels.analysis.detectors.SinglePointOfFailure"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.NonParticipatingNormalUser"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.NoSegmentForEventPhase"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.UnplayedPart"/>
@@ -195,7 +183,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.analysis.detectors.AlarmNotANotification"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithoutAssignments"/>
                 <!--<bean class="com.mindalliance.channels.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>-->
-               <!-- <bean class="com.mindalliance.channels.analysis.detectors.OrganizationMissingExpectedCommitment"/>-->
+                <!-- <bean class="com.mindalliance.channels.analysis.detectors.OrganizationMissingExpectedCommitment"/>-->
                 <bean class="com.mindalliance.channels.analysis.detectors.EmptySharingFlow"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorWithoutContactInfo"/>
                 <bean class="com.mindalliance.channels.analysis.detectors.ActorIsTaskBottleneck"/>
@@ -227,16 +215,13 @@ CONFIGURATION NOTES:
     </bean>
 
     <!-- =========================== Prototypes -->
-    <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory"
-          scope="prototype">
+    <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory" scope="prototype">
         <property name="imageDirectory" value="WEB-INF${file.separator}images"/>
     </bean>
 
-    <bean id="lockManager" class="com.mindalliance.channels.command.DefaultLockManager"
-          scope="prototype"/>
+    <bean id="lockManager" class="com.mindalliance.channels.command.DefaultLockManager" scope="prototype"/>
 
-    <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander"
-          scope="prototype" autowire="no">
+    <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander" scope="prototype" autowire="no">
         <property name="analyst" ref="analyst"/>
         <property name="planManager" ref="planManager"/>
         <property name="attachmentManager" ref="attachmentManager"/>
@@ -260,8 +245,7 @@ CONFIGURATION NOTES:
     <bean id="phone" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Phone"/>
         <property name="kind" value="Type"/>
-        <property name="addressPattern"
-                  value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
+        <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
         <property name="cast" value="Unicast"/>
     </bean>
     <bean id="landline" class="com.mindalliance.channels.model.TransmissionMedium">
@@ -297,8 +281,7 @@ CONFIGURATION NOTES:
     <bean id="pager" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Pager"/>
         <property name="kind" value="Type"/>
-        <property name="addressPattern"
-                  value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
+        <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
         <property name="cast" value="Unicast"/>
     </bean>
     <bean id="conferenceCall" class="com.mindalliance.channels.model.TransmissionMedium">
@@ -317,14 +300,14 @@ CONFIGURATION NOTES:
         <property name="addressPattern" value="[^@\s]+@[^@\s]+\.\w+"/>
         <property name="cast" value="Unicast"/>
     </bean>
-<!--
-    <bean id="web" class="com.mindalliance.channels.model.TransmissionMedium">
-        <property name="name" value="Web"/>
-        <property name="kind" value="Type"/>
-        <property name="addressPattern" value="(http|ftp|https):.*"/>
-        <property name="cast" value="Unicast"/>
-    </bean>
--->
+    <!--
+        <bean id="web" class="com.mindalliance.channels.model.TransmissionMedium">
+            <property name="name" value="Web"/>
+            <property name="kind" value="Type"/>
+            <property name="addressPattern" value="(http|ftp|https):.*"/>
+            <property name="cast" value="Unicast"/>
+        </bean>
+    -->
     <bean id="notificationSystem" class="com.mindalliance.channels.model.TransmissionMedium">
         <property name="name" value="Notification system"/>
         <property name="kind" value="Type"/>
@@ -424,7 +407,7 @@ CONFIGURATION NOTES:
 
     <!-- Collaboration services -->
 
-    <bean id="databaseFactory" class="com.mindalliance.channels.odb.DefaultODBTransactionFactory">
+    <bean id="databaseFactory" class="com.mindalliance.channels.odb.ODBTransactionFactory">
         <property name="odbDir" value="${channels.home}${file.separator}data"/>
     </bean>
 

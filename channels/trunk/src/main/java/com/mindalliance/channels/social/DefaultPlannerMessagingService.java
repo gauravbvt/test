@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social;
 
+import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Plan;
@@ -147,7 +148,8 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
     }
 
     private ODBAccessor getOdb( Plan plan ) {
-        return databaseFactory.getODBAccessor( plan.getUri() );
+        String planUri = plan.getUri();
+        return databaseFactory.getODBAccessor( PlanDefinition.sanitize( planUri ) );
     }
 
 

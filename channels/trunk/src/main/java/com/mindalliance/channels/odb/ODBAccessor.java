@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * CONFIDENTIAL.
+ */
+
 package com.mindalliance.channels.odb;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -15,28 +21,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Access layer to neodatis ODB.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jul 10, 2010
- * Time: 1:18:31 PM
- */
+/** Access layer to neodatis ODB. */
 public class ODBAccessor {
-
 
     public enum Ordering {
         Ascendant,
         Descendant
     }
 
-    /**
-     * Logger.
-     */
+    /** Logger. */
     private static final Logger LOG = LoggerFactory.getLogger( ODBAccessor.class );
 
     private final ODBTransactionFactory odbTxFactory;
+
     private final String planUri;
 
     public ODBAccessor( ODBTransactionFactory odbTxFactory, String planUri ) {
@@ -58,7 +55,6 @@ public class ODBAccessor {
 
     /**
      * Store a persistent object.
-     *
      * @param po a persistent object.
      */
     public void store( PersistentObject po ) {
@@ -78,9 +74,9 @@ public class ODBAccessor {
 
     /**
      * Iterate over the results of a query.
-     *
-     * @param clazz     a class of persistent objects
+     * @param clazz a class of persistent objects
      * @param criterion a criterion
+     *
      * @return an iterator on persistent objects
      */
     public <T extends PersistentObject> Iterator<T> iterate( Class<T> clazz, ICriterion criterion ) {
@@ -89,18 +85,18 @@ public class ODBAccessor {
 
     /**
      * Iterate over the results of a query.
-     *
-     * @param clazz           a class of persistent objects
-     * @param criterion       a criterion
-     * @param ordering        an ordering
+     * @param clazz a class of persistent objects
+     * @param criterion a criterion
+     * @param ordering an ordering
      * @param orderedProperty a string
+     *
      * @return an iterator on persistent objects
      */
     public <T extends PersistentObject> Iterator<T> iterate(
             Class<T> clazz, ICriterion criterion, Ordering ordering, String orderedProperty ) {
-        synchronized ( odbTxFactory ) {
-            ODB odb = null;
-            try {
+        ODB odb = null;
+        try {
+            synchronized ( odbTxFactory ) {
                 odb = odbTxFactory.openDatabase( planUri );
 
                 IQuery query = new CriteriaQuery( clazz, criterion );
@@ -112,22 +108,21 @@ public class ODBAccessor {
                 }
 
                 return odb.<T>getObjects( query ).iterator();
-
-            } catch ( IOException e ) {
-                LOG.warn( "Query failed", e );
-                return new ArrayList<T>().iterator();
-            } finally {
-                if ( odb != null && !odb.isClosed() )
-                    odb.close();
             }
+        } catch ( IOException e ) {
+            LOG.warn( "Query failed", e );
+            return new ArrayList<T>().iterator();
+        } finally {
+            if ( odb != null && !odb.isClosed() )
+                odb.close();
         }
     }
 
     /**
      * Find the first answer to a query
-     *
-     * @param clazz     a class of persistent objects
+     * @param clazz a class of persistent objects
      * @param criterion a criterion
+     *
      * @return a persistent object or null
      */
     public <T extends PersistentObject> T first( Class<T> clazz, ICriterion criterion ) {
@@ -136,9 +131,9 @@ public class ODBAccessor {
 
     /**
      * Retrieve persistent object given its unique id.
-     *
      * @param clazz a class of persistent objects
-     * @param id    a string
+     * @param id a string
+     *
      * @return a persistent object or null
      */
     public <T extends PersistentObject> T fromId( Class<T> clazz, String id ) {
@@ -146,12 +141,12 @@ public class ODBAccessor {
     }
 
     /**
-     * Find the first answer to a query
-     *
-     * @param clazz           a class of persistent objects
-     * @param criterion       a criterion
-     * @param ordering        an ordering
+     * Find the first answer to a query.
+     * @param clazz a class of persistent objects
+     * @param criterion a criterion
+     * @param ordering an ordering
      * @param orderedProperty a string
+     *
      * @return a persistent object or null
      */
     public <T extends PersistentObject> T first(
@@ -163,59 +158,53 @@ public class ODBAccessor {
 
     /**
      * Delete an object from the database.
-     *
      * @param clazz a class of persistent objects
-     * @param id    a string
+     * @param id a string
      */
     public <T extends PersistentObject> void delete( Class<T> clazz, String id ) {
-        synchronized ( odbTxFactory ) {
-            ODB odb = null;
-            try {
+        ODB odb = null;
+        try {
+            synchronized ( odbTxFactory ) {
                 odb = odbTxFactory.openDatabase( planUri );
-                IQuery query = new CriteriaQuery(
-                        clazz, Where.equal( "id", id ) );
+                IQuery query = new CriteriaQuery( clazz, Where.equal( "id", id ) );
 
                 Objects<T> objects = odb.getObjects( query );
                 Iterator<T> answers = objects.iterator();
                 if ( answers.hasNext() )
                     odb.delete( answers.next() );
-
-            } catch ( IOException e ) {
-                LOG.warn( "Unable to delete object", e );
-            } finally {
-                if ( odb != null && !odb.isClosed() )
-                    odb.close();
             }
+        } catch ( IOException e ) {
+            LOG.warn( "Unable to delete object", e );
+        } finally {
+            if ( odb != null && !odb.isClosed() )
+                odb.close();
         }
     }
 
     public <T extends PersistentObject> void deleteAll( Class<T> poClass, ComposedExpression ce ) {
-        synchronized ( odbTxFactory ) {
-            ODB odb = null;
-            try {
+        ODB odb = null;
+        try {
+            synchronized ( odbTxFactory ) {
                 odb = odbTxFactory.openDatabase( planUri );
                 IQuery query = new CriteriaQuery( poClass, ce );
                 Objects<T> objects = odb.getObjects( query );
-                for ( T object : objects ) {
+                for ( T object : objects )
                     odb.delete( object );
-                }
-            } catch ( IOException e ) {
-                  LOG.warn( "Unable to delete object", e );
-              } finally {
-                  if ( odb != null && !odb.isClosed() )
-                      odb.close();
-              }
+            }
+        } catch ( IOException e ) {
+            LOG.warn( "Unable to delete object", e );
+        } finally {
+            if ( odb != null && !odb.isClosed() )
+                odb.close();
         }
-     }
-
+    }
 
     public <T extends PersistentObject> void update( Class<T> clazz, String id, String property, Object value ) {
-        synchronized ( odbTxFactory ) {
-            ODB odb = null;
-            try {
+        ODB odb = null;
+        try {
+            synchronized ( odbTxFactory ) {
                 odb = odbTxFactory.openDatabase( planUri );
-                IQuery query = new CriteriaQuery(
-                        clazz, Where.equal( "id", id ) );
+                IQuery query = new CriteriaQuery( clazz, Where.equal( "id", id ) );
                 Objects<T> objects = odb.getObjects( query );
                 Iterator<T> answers = objects.iterator();
                 if ( answers.hasNext() ) {
@@ -223,13 +212,13 @@ public class ODBAccessor {
                     PropertyUtils.setProperty( object, property, value );
                     odb.store( object );
                 }
-            } catch ( Exception e ) {
-                LOG.error( "Update failed", e );
-                throw new RuntimeException( e );
-            } finally {
-                if ( odb != null && !odb.isClosed() )
-                    odb.close();
             }
+        } catch ( Exception e ) {
+            LOG.error( "Update failed", e );
+            throw new RuntimeException( e );
+        } finally {
+            if ( odb != null && !odb.isClosed() )
+                odb.close();
         }
     }
 }

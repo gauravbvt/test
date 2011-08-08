@@ -22,9 +22,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Test ACME plan.
- */
+/** Test ACME plan. */
 @TestExecutionListeners( AbstractChannelsTest.InstallSamplesListener.class )
 public class AcmeTest extends WalkthroughTest {
 
@@ -44,7 +42,7 @@ public class AcmeTest extends WalkthroughTest {
 
     @Test
     public void verifyIssues() {
-        Map<String,List<Issue>> issueMap = new HashMap<String, List<Issue>>();
+        Map<String, List<Issue>> issueMap = new HashMap<String, List<Issue>>();
         for ( ModelObject modelObject : planDao.list( ModelObject.class ) )
             for ( Issue issue : analyst.listIssues( modelObject, true, false ) ) {
                 String kind = issue.getKind();
@@ -57,31 +55,31 @@ public class AcmeTest extends WalkthroughTest {
             }
 
         assertEquals( 11, issueMap.size() );
-        assertEquals( 1,  issueMap.get( "ActorNotInOneOrganization" ).size() );
-        assertEquals( 2,  issueMap.get( "ActorWithoutContactInfo" ).size() );
-        assertEquals( 3,  issueMap.get( "CommitmentWithoutRequiredAgreement" ).size() );
-        assertEquals( 1,  issueMap.get( "GeonameButNoLocation" ).size() );
-        assertEquals( 16, issueMap.get( "OrganizationWithNoAssignmentToCategoryOfTask" ).size() );
-//        assertEquals( 1,  issueMap.get( "OrganizationWithoutAssignments" ).size() );
-        assertEquals( 1,  issueMap.get( "SinglePointOfFailure" ).size() );
-        assertEquals( 1,  issueMap.get( "SegmentNeverEnds" ).size() );
-        assertEquals( 4,  issueMap.get( "SegmentWithSameGoal" ).size() );
-        assertEquals( 5,  issueMap.get( "UnverifiedPostalCode" ).size() );
-        assertEquals( 2,  issueMap.get( "UnconfirmedJob" ).size() );
-     }
+        assertEquals( 1, issueMap.get( "ActorNotInOneOrganization" ).size() );
+        assertEquals( 2, issueMap.get( "ActorWithoutContactInfo" ).size() );
+        assertEquals( 3, issueMap.get( "CommitmentWithoutRequiredAgreement" ).size() );
+        assertEquals( 1, issueMap.get( "GeonameButNoLocation" ).size() );
+        //        assertEquals( 16, issueMap.get( "OrganizationWithNoAssignmentToCategoryOfTask" ).size() );
+        //        assertEquals( 1,  issueMap.get( "OrganizationWithoutAssignments" ).size() );
+        assertEquals( 1, issueMap.get( "SinglePointOfFailure" ).size() );
+        assertEquals( 1, issueMap.get( "SegmentNeverEnds" ).size() );
+        assertEquals( 4, issueMap.get( "SegmentWithSameGoal" ).size() );
+        assertEquals( 5, issueMap.get( "UnverifiedPostalCode" ).size() );
+        assertEquals( 2, issueMap.get( "UnconfirmedJob" ).size() );
+    }
 
-   @Override
+    @Override
     @Test
     public void testPlan() {
         super.testPlan();
         // Page is rendered for user guest
-        FormTester formTester = tester.newFormTester( "big-form" );
+        FormTester formTester = tester.newFormTester( "indicator:big-form" );
         Plan plan = planDao.getPlan();
 
         // click on "About plan" in Show menu
-        tester.clickLink( "big-form:planShowMenu:items:1:menuItem:link" );
-        tester.assertComponentOnAjaxResponse( "big-form:plan" );
-        tester.assertComponent( "big-form:plan", PlanEditPanel.class );
+        tester.clickLink( "indicator:big-form:planShowMenu:items:1:menuItem:link" );
+        tester.assertComponentOnAjaxResponse( "indicator:big-form:plan" );
+        tester.assertComponent( "indicator:big-form:plan", PlanEditPanel.class );
         assertEquals( plan.getName(), formTester.getTextComponentValue( "plan:mo:aspect:name" ) );
         assertEquals( plan.getDescription(), formTester.getTextComponentValue( "plan:mo:aspect:description" ) );
     }

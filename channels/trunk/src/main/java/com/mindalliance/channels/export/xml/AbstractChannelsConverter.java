@@ -311,7 +311,7 @@ public abstract class AbstractChannelsConverter implements Converter {
     }
 
     /**
-     * Find or make entity
+     * Find or make entity.
      *
      * @param clazz         entity class
      * @param name          entity name
@@ -322,23 +322,14 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return an entity model object
      */
     protected <T extends ModelEntity> T getEntity(
-            Class<T> clazz,
-            String name,
-            Long id,
-            boolean isType,
-            boolean importingPlan,
-            Map<Long, Long> idMap ) {
+            Class<T> clazz, String name, Long id, boolean isType, boolean importingPlan, Map<Long, Long> idMap ) {
 
         T entity;
         if ( isType ) {
-            entity = importingPlan
-                    ? getPlanDao().findOrCreateType( clazz, name, id )
-                    : getPlanDao().findOrCreateType( clazz, name, null );
+            entity = getPlanDao().findOrCreateType( clazz, name, importingPlan ? id : null );
             entity.setType();
         } else {
-            entity = importingPlan
-                    ? getPlanDao().findOrCreate( clazz, name, id )
-                    : getPlanDao().findOrCreate( clazz, name , null);
+            entity = getPlanDao().findOrCreate( clazz, name, importingPlan ? id : null );
             entity.setActual();
         }
         idMap.put( id, entity.getId() );
