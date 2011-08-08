@@ -62,7 +62,7 @@
 <xPathActionAddNewSegment>/html/body/form/div[13]/span/span[3]/span/ul/li[8]/span/a/span</xPathActionAddNewSegment>
 <xPathActionRemoveSegment>/html/body/form/div[13]/span/span[3]/span/ul/li[9]/span/a/span</xPathActionRemoveSegment>     
 <xPathActionMoveTaskToSegment>/html/body/form/div[13]/span/span[3]/span/ul/li[10]/span/a/span</xPathActionMoveTaskToSegment>
-<xPathActionSignOut>/html/body/form/div[13]/span/span[3]/span/ul/li[11]/span/a/span</xPathActionSignOut>
+<xPathActionSignOut>/html/body/form/div[13]/span/span[3]/span/ul/li[10]/span/a/span</xPathActionSignOut>
 <xPathAddInfoSendNewMedium>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[9]/td/ol/li/span/a/span</xPathAddInfoSendNewMedium>
 <xPathParticipationNewMedium>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[10]/td/ol/li/span/a/span</xPathParticipationNewMedium>
 <xPathHelpIcon>/html/body/form/div[13]/span/a/img</xPathHelpIcon>
