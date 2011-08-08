@@ -40,7 +40,7 @@ public class CL017_BackToLogin
 		      // Click on Forgot UserId or Password Link
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Forgot UserId or Passowrd Link";
-		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/p/a")).click();
+		      GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathForgotUsernamePassword"))).click();
 	    	  // Write Results
 	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -52,9 +52,8 @@ public class CL017_BackToLogin
 		      // Click on Provide user name test box
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Enter user name";
-		      GlobalVariables.oDriver.findElement(By.name("username")).click();
 		      GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("username"));
-		      GlobalVariables.oElement.sendKeys("priyanka");
+		      GlobalVariables.oElement.sendKeys("manohar");
 		      // Write Results
 	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -66,7 +65,7 @@ public class CL017_BackToLogin
 		      // Click on Request new password
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Request new password ";
-		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/input")).click();
+		      GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathRequestNewPassword"))).click();
 		      // Write Results
 	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -78,7 +77,7 @@ public class CL017_BackToLogin
 		      // Click on Back to Login Link
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Back to Login Page";
-		      GlobalVariables.oDriver.findElement(By.xpath("")).click();
+		      GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathBackToLogin"))).click();
 		      // Write Results
 	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

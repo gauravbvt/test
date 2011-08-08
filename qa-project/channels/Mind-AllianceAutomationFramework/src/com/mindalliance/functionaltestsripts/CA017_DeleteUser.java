@@ -1,6 +1,10 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -51,37 +55,65 @@ public class CA017_DeleteUser
 					Thread.sleep(3000);
 
 					//Delete Created User
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "User Deleted";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeleteUser"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					//Assertion : Verify that user gets deleted successfully
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
-					if(!GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("user")))
-					{
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);						
-					}
-					else
-					{
-						GlobalVariables.sVerifyError="Verification Failed. Expected null' Actual '"+GlobalVariables.oElement.getText()+"'";
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sVerifyError, GlobalVariables.sBlank);
+					GlobalVariables.iStepNo++;
+					GlobalVariables.sDescription="User Deleted";
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+					List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
+					List<WebElement> tds;
+					GlobalVariables.bIsSuccess=false;
+					int cnt=0;
+					for(WebElement tr: trs) {
+						cnt++;
+						tds = tr.findElements(By.tagName("td"));
+						for(WebElement td: tds) {
+							if(td.getText().equals(GlobalVariables.testData.get("user"))) {
+								GlobalVariables.bIsSuccess=true;
+								break;
+							}
+						}
+						if(GlobalVariables.bIsSuccess==true)
+							break;
 					}
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 
+					//Delete Created User
+					if(cnt==1)
+						GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody/tr/td[12]/input")).click();
+					else
+						GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody/tr["+cnt+"]/td[12]/input")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+
+					// Assertion : Verify that User Deleted Successfully
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+					trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
+					for(WebElement tr: trs){
+						if(!tr.getText().equals(GlobalVariables.testData.get("user"))) {
+							GlobalVariables.bIsSuccess=true;
+						}
+						else
+							GlobalVariables.bIsSuccess=false;
+					}
+					if(GlobalVariables.bIsSuccess) {
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
+					else{
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
+		
 					// Click on 'Signout<user name>' Link
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Logout Successful";

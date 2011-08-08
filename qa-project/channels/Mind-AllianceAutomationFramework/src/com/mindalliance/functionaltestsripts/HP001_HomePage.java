@@ -20,7 +20,7 @@ public class HP001_HomePage
 			
 			// Assertion: Verify "Channels" title and logo at top left corner of Home page
 			GlobalVariables.iStepNo++;
-			GlobalVariables.sDescription="Home Page";
+			GlobalVariables.sDescription="Home Page Displayed";
 			if (GlobalVariables.oDriver.getTitle().contains(GlobalVariables.viewElements.get("homePageTitle"))) {
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -45,7 +45,7 @@ public class HP001_HomePage
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 			// WebElement Synchronization
 			Thread.currentThread();
-			Thread.sleep(3000);
+			Thread.sleep(2000);
 			GlobalVariables.oDriver.quit();
 		      
 			LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

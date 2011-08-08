@@ -29,20 +29,19 @@ public class PS002_ActionOptions
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 				// Click on 'show' Link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Click on 'Actions' Menu";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionsPopUpMenu"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionsPopUpMenu")));
+				System.out.println(GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionSignOut"))).getText());
 				//Assertion : Verify that After clicking on 'show' menu hide planners, About plan, About plan segment, All segments, Surveys ,All issues , All types ,Index & Help Options Displayed to user
 				if(GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionSendMessage"))).getText().equals(GlobalVariables.viewElements.get("sendMessage")) &&
 				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionAddNewTask"))).getText().equals(GlobalVariables.viewElements.get("addNewTask")) &&
 				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionAddNewIssue"))).getText().equals(GlobalVariables.viewElements.get("addNewIssue")) &&
 				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionAddNewSegment"))).getText().equals(GlobalVariables.viewElements.get("addNewSegment")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionRemoveSegment"))).getText().equals(GlobalVariables.viewElements.get("removeThisSegment")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionMoveTaskToSegment"))).getText().equals(GlobalVariables.viewElements.get("moveTaskToSegment")) &&
 				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionSignOut"))).getText().contains(GlobalVariables.viewElements.get("signOut"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -57,7 +56,7 @@ public class PS002_ActionOptions
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -69,8 +68,7 @@ public class PS002_ActionOptions
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				GlobalVariables.oDriver.quit();
+				Thread.sleep(2000);
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
