@@ -256,6 +256,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathCopyEventAttachment",oXmlElePlanPage.getElementsByTagName("xPathCopyEventAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCrossOnAttachmentCopiedMessage",oXmlElePlanPage.getElementsByTagName("xPathCrossOnAttachmentCopiedMessage").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
+			GlobalVariables.assertion.put("sXpathDeletePhaseAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeletePhaseAssertion").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.assertion.put("sXpathPhaseCreatedAssertion", oXmlElePlanPage.getElementsByTagName("xPathPhaseCreatedAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathMediumDeleteAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathMediumDeleteAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathDeleteEventAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeleteEventAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXathCopyEventAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathCopyEventAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
