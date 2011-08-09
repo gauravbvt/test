@@ -139,6 +139,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.home.put("sXpathHelpIcon",oXmlEleHomePage.getElementsByTagName("xPathHelpIcon").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathShowSentReceiveMessages",oXmlEleHomePage.getElementsByTagName("xPathShowSentReceiveMessages").item(0).getChildNodes().item(0).getNodeValue());
 			//Channels Plan Page
+			GlobalVariables.plan.put("sXpathSendFeedBackOfIssueSummaryReport",oXmlElePlanPage.getElementsByTagName("xPathSendFeedBackOfIssueSummaryReport").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathShowPopUpMenu",oXmlElePlanPage.getElementsByTagName("xPathShowPopUpMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAllSegmentShowMenu",oXmlElePlanPage.getElementsByTagName("xPathAllSegmentShowMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathActionsPopUpMenu",oXmlElePlanPage.getElementsByTagName("xPathActionsPopUpMenu").item(0).getChildNodes().item(0).getNodeValue());
@@ -315,6 +316,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
 			GlobalVariables.assertion.put("sXpathEventAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathEventAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			// View Elements
+			GlobalVariables.viewElements.put("issueSummaryReport",oXmlEleViewElements.getElementsByTagName("issueSummaryReport").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("myInformationSharingGuidelines",oXmlEleViewElements.getElementsByTagName("myInformationSharingGuidelines").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("notOperational",oXmlEleViewElements.getElementsByTagName("notOperational").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("adminPageTitle",oXmlEleViewElements.getElementsByTagName("adminPageTitle").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("homePageTitle",oXmlEleViewElements.getElementsByTagName("homePageTitle").item(0).getChildNodes().item(0).getNodeValue());
