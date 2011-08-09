@@ -31,7 +31,12 @@ public class TFP012_TaskIsOperational
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				
+				// Strech Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
@@ -42,7 +47,7 @@ public class TFP012_TaskIsOperational
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click 'Add new task' option under 'Actions' pop up menu 
 				GlobalVariables.iStepNo++ ;
@@ -54,77 +59,83 @@ public class TFP012_TaskIsOperational
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
-				// Click on operational Check box for non-operational
+				// Uncheck 'Operational' Option to make task as 'Not Operational'
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Non Operational";
+				GlobalVariables.sDescription="Task Not Operational";
 				GlobalVariables.oDriver.findElement(By.name("segment:part:operational")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
+				// Assertion : Verify that Task gets Prohibited
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.viewElements.get("notOperational"))){
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("notOperational"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+				}
+				else {
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Non Opertaional' "+" Actual " + GlobalVariables.oElement.getValue();
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-			    }
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
-				// Click on operational Check box for operational
+
+				// Check 'Operational' Option to make task as 'Operational'
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Operational";
+				GlobalVariables.sDescription="Task Operational";
 				GlobalVariables.oDriver.findElement(By.name("segment:part:operational")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
+				// Assertion : Verify that Task gets Prohibited
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("")){
+				if(GlobalVariables.oElement.getText().equals(".")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+				}
+				else {
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual " + GlobalVariables.oElement.getValue();
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				// Click on 'Remove this segment' under 'Actions' pop up menu
+				Thread.sleep(2000);
+				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);				
-				
-				// Call logout()
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Logout is successful";
+				Thread.sleep(2000);
+
+				// 	Call Logout
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Logout Successful";
 				ApplicationFunctionLibrary.logout();
-				// Write Results
+				// 	Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
+
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

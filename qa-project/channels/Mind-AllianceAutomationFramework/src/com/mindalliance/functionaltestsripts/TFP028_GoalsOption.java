@@ -136,33 +136,32 @@ public class TFP028_GoalsOption
 				// 	Select Goal From Option
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Goals <Options>";
-				GlobalVariables.oDriver.findElement(By.linkText("Goals:")).click();
-//				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:goals:goals:0:goal:goalChoice")));
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:goals:goals:0:goal:goalChoice")));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
-//				options = GlobalVariables.oDropDown.getOptions();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(5000);
+				options = GlobalVariables.oDropDown.getOptions();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
 				System.out.println(options.size());
-//				options.get(1).setSelected();
-//				// Assertion : Verify that the Goal gets selected
-//				if(options.get(1).isSelected())	 {
-//					// 	Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-//				}
-//				else {
-//					// 	Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-//				}
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(2000);
+				options.get(1).setSelected();
+				// Assertion : Verify that the Goal gets selected
+				if(options.get(1).isSelected())	 {
+					// 	Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+				}
+				else {
+					// 	Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				// 	Call Logout
 				GlobalVariables.iStepNo++;
