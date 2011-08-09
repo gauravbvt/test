@@ -31,7 +31,6 @@ public class TFP013_ProhibitedOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-								
 				// Strech Up Task Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
@@ -98,7 +97,6 @@ public class TFP013_ProhibitedOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
 				// Remove Added Task
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoUpdateTask"));
 				// WebElement Synchronization
