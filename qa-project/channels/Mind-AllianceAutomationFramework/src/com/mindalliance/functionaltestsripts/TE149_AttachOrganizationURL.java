@@ -34,7 +34,7 @@ public class TE149_AttachOrganizationURL
 					Thread.currentThread();
 					Thread.sleep(2000);				     
 				    
-					//Click on 'About Plan' from show popup manu
+					//Click on 'About Plan' from show pop up menu
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="About plan";
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"), GlobalVariables.viewElements.get("aboutPlan"));
