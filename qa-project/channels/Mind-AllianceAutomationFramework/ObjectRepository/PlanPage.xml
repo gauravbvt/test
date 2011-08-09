@@ -122,14 +122,20 @@
 <xPathTaskPhaseResponding>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[2]/span</xPathTaskPhaseResponding>
 <xPathDeletePhaseCategories>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeletePhaseCategories>
 <xPathDeletePhaseAttachment>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePhaseAttachment>
+<xPathCopyPhaseAttachment>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyPhaseAttachment>
+<xPathDeleteOrganizationCategories>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteOrganizationCategories>
 <!-- Assertions -->
+<xPathDeleteOrganizationAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li</xPathDeleteOrganizationAttachmentAssertion>
+<xPathRemoveOrganizationAssertion>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul</xPathRemoveOrganizationAssertion>
+<xPathDeletePhaseAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li</xPathDeletePhaseAttachmentAssertion>
 <xPathPhaseAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathPhaseAttachmentAssertion>
+<xPathOrganizationAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathOrganizationAttachmentAssertion>
 <xPathPhaseCategoriesAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathPhaseCategoriesAssertion>
 <xPathDeletePhaseAssertion>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathDeletePhaseAssertion>
 <xPathPhaseCreatedAssertion>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathPhaseCreatedAssertion>
 <xPathMediumDeleteAttachmentAssertion>/html/body/form/div[3]/div/div2/div[2]/div/table/tbody/tr[6]/td</xPathMediumDeleteAttachmentAssertion>
 <xPathDeleteEventAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td</xPathDeleteEventAttachmentAssertion>
-<xPathCopyEventAttachmentAssertion>//div[@class='change-message']/span/span</xPathCopyEventAttachmentAssertion>
+<xPathCopyAttachmentAssertion>//div[@class='change-message']/span/span</xPathCopyAttachmentAssertion>
 <xPathAssertionPhaseDetails>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathAssertionPhaseDetails>
 <xPathAssertionDetails>/html/body/form/div[4]/div/div[2]/div/div/h1</xPathAssertionDetails>
 <xPathPhaseAssertionDetails>/html/body/form/div[3]/div/div[2]/div/div/h1</xPathPhaseAssertionDetails>
