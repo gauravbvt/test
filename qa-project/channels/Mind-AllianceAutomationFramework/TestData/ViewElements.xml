@@ -201,5 +201,10 @@
 <prohibited>. PROHIBITED.</prohibited>
 <responding>Responding</responding>
 <unnamed>unnamed</unnamed>
+<<<<<<< .mine
+<taskStart>. The task starts with "responding while unnamed".</taskStart>
+<taskEnd>. The task can end "responding while unnamed".</taskEnd>
+=======
 <myInformationSharingGuidelines>My information sharing guidelines</myInformationSharingGuidelines>
+>>>>>>> .r2697
 </elements>
