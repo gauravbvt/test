@@ -165,7 +165,7 @@ public class TE102_CopyEventAttachment
 				Thread.currentThread();
 				Thread.sleep(1000);
 				// Assertion: verify that When clicked on copy option, the respective attachment should be copied
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXathCopyEventAttachmentAssertion")));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXathCopyAttachmentAssertion")));
 			    if(GlobalVariables.oElement.getText().equalsIgnoreCase("Attachment copied")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

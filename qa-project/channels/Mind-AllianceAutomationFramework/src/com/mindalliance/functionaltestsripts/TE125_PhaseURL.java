@@ -102,38 +102,53 @@ public class TE125_PhaseURL
 					Thread.currentThread();
 					Thread.sleep(1000);
 					
-					// Attach File to an phase
+					// Click on 'URL' radio button
 					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Attach File to phase";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
-					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:upload"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
+					GlobalVariables.sDescription="URL radio button clicked";			
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:radios")).click();
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:radios"));
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
+					Thread.sleep(2000);
+					
+					//Attach Attachment as a URL
+					GlobalVariables.iStepNo++;
+					GlobalVariables.sDescription="Attachment attached as a URL";
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathURL"))).click();
 					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url")).click();
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
+						GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("controls"));
+						GlobalVariables.oElement.click();
+							GlobalVariables.oElement.sendKeys(Keys.ARROW_UP);
+						}
+				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					// Assertion: Verify that file is attached
+					//Assertion : Verify that URL gets Attached
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAttachmentAssertion")));
-					if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
-						// Write Results
+					if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
+				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'This is File 1' "+" Actual "+GlobalVariables.oElement.getText();
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				    }
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
+			    	else{
+			    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("URL")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+				    	// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
+				    }
 					// Delete Attachment
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhaseAttachment"))).click();
 					// WebElement Synchronization
