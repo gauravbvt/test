@@ -207,4 +207,5 @@
 <policy>Policy</policy>
 <mandatingPolicy>Mandating policy</mandatingPolicy>
 <prohibitingPolicy>Prohibiting policy</prohibitingPolicy>
+<picture>Picture</picture>
 </elements>
