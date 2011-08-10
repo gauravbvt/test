@@ -520,6 +520,9 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("unnamed",oXmlEleViewElements.getElementsByTagName("unnamed").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("taskStart",oXmlEleViewElements.getElementsByTagName("taskStart").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("taskEnd",oXmlEleViewElements.getElementsByTagName("taskEnd").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("policy",oXmlEleViewElements.getElementsByTagName("policy").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("mandatingPolicy",oXmlEleViewElements.getElementsByTagName("mandatingPolicy").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("prohibitingPolicy",oXmlEleViewElements.getElementsByTagName("prohibitingPolicy").item(0).getChildNodes().item(0).getNodeValue());
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
