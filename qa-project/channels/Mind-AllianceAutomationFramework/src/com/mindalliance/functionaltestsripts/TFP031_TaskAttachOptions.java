@@ -92,6 +92,7 @@ public class TFP031_TaskAttachOptions
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else {
+					
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
