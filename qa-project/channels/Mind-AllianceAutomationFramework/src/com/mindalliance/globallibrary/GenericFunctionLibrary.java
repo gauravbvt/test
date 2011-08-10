@@ -316,6 +316,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
 			GlobalVariables.assertion.put("sXpathEventAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathEventAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			// View Elements
+			GlobalVariables.viewElements.put("picture",oXmlEleViewElements.getElementsByTagName("picture").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("issueSummaryReport",oXmlEleViewElements.getElementsByTagName("issueSummaryReport").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("myInformationSharingGuidelines",oXmlEleViewElements.getElementsByTagName("myInformationSharingGuidelines").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("notOperational",oXmlEleViewElements.getElementsByTagName("notOperational").item(0).getChildNodes().item(0).getNodeValue());
