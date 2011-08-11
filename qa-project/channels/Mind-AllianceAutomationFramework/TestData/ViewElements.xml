@@ -207,5 +207,12 @@
 <policy>Policy</policy>
 <mandatingPolicy>Mandating policy</mandatingPolicy>
 <prohibitingPolicy>Prohibiting policy</prohibitingPolicy>
+<issue>Issue:</issue>
+<validity>Validity</validity>
+<completeness>Completeness</completeness>
+<robustness>Robustness</robustness>
+<major>Major</major>
+<severe>Severe</severe>
+<extreme>Extreme</extreme>
 <picture>Picture</picture>
 </elements>
