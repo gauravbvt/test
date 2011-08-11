@@ -112,50 +112,17 @@ public class TFP029_GoalsOptionUnchecked
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Remove Segment
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
-				
-				GlobalVariables.oDriver.navigate().refresh();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 
 				// 	Select Goal From Option
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Goals <Options> Selected";
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:goals:goals:0:goal:goalChoice")));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				options = GlobalVariables.oDropDown.getOptions();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				options.get(1).setSelected();
-				// Assertion : Verify that the Goal gets selected
-				if(options.get(1).isSelected())	 {
-					// 	Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				}
-				else {
-					// 	Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				}
+				// 	Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -181,7 +148,22 @@ public class TFP029_GoalsOptionUnchecked
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
-				
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);								
+				// Remove Segment
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Get a handle to the open alert, prompt or confirmation
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
 				// 	Call Logout
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Logout Successful";

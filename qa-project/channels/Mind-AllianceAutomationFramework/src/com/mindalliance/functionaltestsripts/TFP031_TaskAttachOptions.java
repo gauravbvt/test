@@ -86,36 +86,19 @@ public class TFP031_TaskAttachOptions
 				   options.get(2).getText().equals(GlobalVariables.viewElements.get("mandatingPolicy")) &&
 				   options.get(3).getText().equals(GlobalVariables.viewElements.get("prohibitingPolicy"))) {
 					options.get(3).setSelected();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					if(options.get(3).isSelected()) {
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);					
+					}
 				}
 				else {
 					
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
-				// Click on Attach List
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Attach <Option> Selected";
-				if(options.get(3).isSelected()) {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				}
-				else {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);										
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
