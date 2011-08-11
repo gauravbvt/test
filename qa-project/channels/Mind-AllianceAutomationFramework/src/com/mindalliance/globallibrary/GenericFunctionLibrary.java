@@ -263,6 +263,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathDeletePhaseAttachment",oXmlElePlanPage.getElementsByTagName("xPathDeletePhaseAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCopyPhaseAttachment",oXmlElePlanPage.getElementsByTagName("xPathCopyPhaseAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathDeleteOrganizationCategories",oXmlElePlanPage.getElementsByTagName("xPathDeleteOrganizationCategories").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathTaskAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathTaskAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathDeleteOrganizationAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeleteOrganizationAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathOrganizationAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathOrganizationAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
@@ -524,6 +525,13 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("policy",oXmlEleViewElements.getElementsByTagName("policy").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("mandatingPolicy",oXmlEleViewElements.getElementsByTagName("mandatingPolicy").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("prohibitingPolicy",oXmlEleViewElements.getElementsByTagName("prohibitingPolicy").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("issue",oXmlEleViewElements.getElementsByTagName("issue").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("validity",oXmlEleViewElements.getElementsByTagName("validity").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("completeness",oXmlEleViewElements.getElementsByTagName("completeness").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("robustness",oXmlEleViewElements.getElementsByTagName("robustness").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("major",oXmlEleViewElements.getElementsByTagName("major").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("severe",oXmlEleViewElements.getElementsByTagName("severe").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("extreme",oXmlEleViewElements.getElementsByTagName("extreme").item(0).getChildNodes().item(0).getNodeValue());
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
