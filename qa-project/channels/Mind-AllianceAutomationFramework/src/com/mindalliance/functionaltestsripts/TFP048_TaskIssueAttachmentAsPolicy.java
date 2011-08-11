@@ -96,25 +96,25 @@ public class TFP048_TaskIssueAttachmentAsPolicy
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Issue Attach File as Policy
+				// Issue : Attach File as Policy
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Issue : File Attached as Policy";
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:type")));
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:issues:issues-container:issues:0:issue:attachments:container:controls:type")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				options.get(1).setSelected();
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:upload"));
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:issues:issues-container:issues:0:issue:attachments:container:controls:upload"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:submit")).click();
+				Thread.sleep(3000);
+				GlobalVariables.oDriver.findElement(By.name("segment:part:issues:issues-container:issues:0:issue:attachments:container:controls:submit")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Scroll Down
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
 				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
+				for(int i=0;i<40;i++)
 					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -136,6 +136,11 @@ public class TFP048_TaskIssueAttachmentAsPolicy
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				// Remove Issue
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskIssueMenu"),GlobalVariables.viewElements.get("removeIssue"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
