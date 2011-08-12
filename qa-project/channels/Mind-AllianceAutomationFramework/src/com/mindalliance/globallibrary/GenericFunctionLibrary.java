@@ -534,6 +534,12 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("major",oXmlEleViewElements.getElementsByTagName("major").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("severe",oXmlEleViewElements.getElementsByTagName("severe").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("extreme",oXmlEleViewElements.getElementsByTagName("extreme").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("announcement",oXmlEleViewElements.getElementsByTagName("announcement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("alarm",oXmlEleViewElements.getElementsByTagName("alarm").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("command",oXmlEleViewElements.getElementsByTagName("command").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("feedback",oXmlEleViewElements.getElementsByTagName("feedback").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("report",oXmlEleViewElements.getElementsByTagName("report").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("elementsOfInformation",oXmlEleViewElements.getElementsByTagName("elementsOfInformation").item(0).getChildNodes().item(0).getNodeValue());
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
