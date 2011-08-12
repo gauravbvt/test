@@ -215,4 +215,10 @@
 <severe>Severe</severe>
 <extreme>Extreme</extreme>
 <picture>Picture</picture>
+<announcement>Announcement</announcement>
+<alarm>Alarm</alarm>
+<command>Command</command>
+<feedback>Feedback</feedback>
+<report>Report</report>
+<elementsOfInformation>Elements of information</elementsOfInformation>
 </elements>
