@@ -540,6 +540,37 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("feedback",oXmlEleViewElements.getElementsByTagName("feedback").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("report",oXmlEleViewElements.getElementsByTagName("report").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("elementsOfInformation",oXmlEleViewElements.getElementsByTagName("elementsOfInformation").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("inDiffLoc",oXmlEleViewElements.getElementsByTagName("inDiffLoc").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("inDiffOrg",oXmlEleViewElements.getElementsByTagName("inDiffOrg").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("inDiffOverallOrg",oXmlEleViewElements.getElementsByTagName("inDiffOverallOrg").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("inSameLoc",oXmlEleViewElements.getElementsByTagName("inSameLoc").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("inSameOrg",oXmlEleViewElements.getElementsByTagName("inSameOrg").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("inSameOrgAndLoc",oXmlEleViewElements.getElementsByTagName("inSameOrgAndLoc").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("inSameOverallOrg",oXmlEleViewElements.getElementsByTagName("inSameOverallOrg").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("toSupervisor",oXmlEleViewElements.getElementsByTagName("toSupervisor").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("toSelf",oXmlEleViewElements.getElementsByTagName("toSelf").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("toSomeoneElse",oXmlEleViewElements.getElementsByTagName("toSomeoneElse").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("fromSupervisor",oXmlEleViewElements.getElementsByTagName("fromSupervisor").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("fromSelf",oXmlEleViewElements.getElementsByTagName("fromSelf").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("fromSomeoneElse",oXmlEleViewElements.getElementsByTagName("fromSomeoneElse").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("cell",oXmlEleViewElements.getElementsByTagName("cell").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("conferenceCall",oXmlEleViewElements.getElementsByTagName("conferenceCall").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("courier",oXmlEleViewElements.getElementsByTagName("courier").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("faceToFace",oXmlEleViewElements.getElementsByTagName("faceToFace").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("fax",oXmlEleViewElements.getElementsByTagName("fax").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("im",oXmlEleViewElements.getElementsByTagName("im").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("landline",oXmlEleViewElements.getElementsByTagName("landline").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("mail",oXmlEleViewElements.getElementsByTagName("mail").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("meeting",oXmlEleViewElements.getElementsByTagName("meeting").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("notificationSystem",oXmlEleViewElements.getElementsByTagName("notificationSystem").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("onlineChat",oXmlEleViewElements.getElementsByTagName("onlineChat").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("pager",oXmlEleViewElements.getElementsByTagName("pager").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("paSystems",oXmlEleViewElements.getElementsByTagName("paSystems").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("phone",oXmlEleViewElements.getElementsByTagName("phone").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("radio",oXmlEleViewElements.getElementsByTagName("radio").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("television",oXmlEleViewElements.getElementsByTagName("television").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("twoWayRadio",oXmlEleViewElements.getElementsByTagName("twoWayRadio").item(0).getChildNodes().item(0).getNodeValue());
+			
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
