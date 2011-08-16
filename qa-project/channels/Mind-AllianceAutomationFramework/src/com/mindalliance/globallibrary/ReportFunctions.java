@@ -659,42 +659,6 @@ public class ReportFunctions {
 		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
 		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
 		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-		
-		// TestCase sheet : Issue Summary Report
-		sheet = sheet.getSpreadSheet().getSheet(17);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-		
-		// TestCase sheet : Information Sharing Guidelines for Participants
-		sheet = sheet.getSpreadSheet().getSheet(13);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-		
-		// TestCase sheet : My Information Sharing guidelines
-		sheet = sheet.getSpreadSheet().getSheet(16);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
 
 		File outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\FunctionalTestCase.ods");
 		sheet.getSpreadSheet().saveAs(outputFile);

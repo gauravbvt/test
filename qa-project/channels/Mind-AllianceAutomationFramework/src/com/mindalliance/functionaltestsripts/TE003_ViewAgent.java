@@ -35,7 +35,7 @@ public class TE003_ViewAgent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				
 				//About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
@@ -47,7 +47,7 @@ public class TE003_ViewAgent
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				
 				// Click on 'Participation' Option under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
@@ -59,11 +59,12 @@ public class TE003_ViewAgent
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				//Create Agent
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Created";
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
 				for(int i=0;i<50;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -77,6 +78,7 @@ public class TE003_ViewAgent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				for(WebElement option : options) {
@@ -87,7 +89,7 @@ public class TE003_ViewAgent
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				//Click on Agent
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathIndexAgent"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathIndexAgent")));
@@ -116,6 +118,7 @@ public class TE003_ViewAgent
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -128,6 +131,7 @@ public class TE003_ViewAgent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.quit();
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

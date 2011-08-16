@@ -91,14 +91,14 @@ public class TFP049_IssueAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(2000);
 
-				// Issue : Attachment as a URL
+				// Attachment as a URL
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Issue : Attachment as a URL";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathTaskIssueAttachmentURL"))).click();
+				GlobalVariables.sDescription="Attachment as a URL";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathTaskAttachmentURL"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:issues:issues-container:issues:0:issue:attachments:container:controls:url"));
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
@@ -121,11 +121,6 @@ public class TFP049_IssueAttachmentAsURL
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Remove Issue
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskIssueMenu"),GlobalVariables.viewElements.get("removeIssue"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization

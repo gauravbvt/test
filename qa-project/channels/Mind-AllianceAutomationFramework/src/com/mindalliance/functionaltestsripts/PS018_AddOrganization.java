@@ -30,7 +30,7 @@ public class PS018_AddOrganization
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				
 				//About Plan Segment Window Opened
 				GlobalVariables.iStepNo++ ;
@@ -42,7 +42,7 @@ public class PS018_AddOrganization
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				
 				// Click on 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
@@ -54,11 +54,12 @@ public class PS018_AddOrganization
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				// Create Organization 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Organization Created";
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
@@ -68,7 +69,7 @@ public class PS018_AddOrganization
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				// Update Organization
 				GlobalVariables.iStepNo++ ;
@@ -76,8 +77,8 @@ public class PS018_AddOrganization
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewOrganization"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				// Update Organization Description
+				Thread.sleep(1000);
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
 				for(int i=0;i<50;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -85,21 +86,12 @@ public class PS018_AddOrganization
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				// Close 'Organization' Window 
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				Thread.sleep(1000);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
-
-				// Delete Organization
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewOrganization"))).click();
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewOrganization"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);				
+				Thread.sleep(1000);
 				//Undo Update Organization
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
 				for(int i=0;i<50;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -108,7 +100,7 @@ public class PS018_AddOrganization
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Select Organiation to Delete
+				//Delete Organization
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewOrganization"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -121,7 +113,7 @@ public class PS018_AddOrganization
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -136,7 +128,8 @@ public class PS018_AddOrganization
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
+				GlobalVariables.oDriver.quit();
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
@@ -146,6 +139,7 @@ public class PS018_AddOrganization
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
+			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

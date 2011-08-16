@@ -46,7 +46,7 @@ public class MAV00129_viewAllTypesForms
 			
 			// Clicks on 'All types' link under show pop up menu option on About plan window 
 			GlobalVariables.iStepNo++ ;
-			GlobalVariables.sDescription = "All Types section opened";
+			GlobalVariables.sDescription = "Index section opened";
 			ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"), GlobalVariables.viewElements.get("allTypes"));
 			// Write Results
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -58,16 +58,16 @@ public class MAV00129_viewAllTypesForms
 					 
 			// Assertion: Verify that "All types" page loaded 
 			GlobalVariables.iStepNo++;
-			GlobalVariables.sDescription="'All Types' gets loaded on the About Plan window";		            		         
+			GlobalVariables.sDescription="'Index' gets loaded on the About Plan window";		            		         
 			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionTypes")));
-			if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allTypes"))) {
+			if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);    	    	     
 			}
 			else{			
-				GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("allTypes")+" Actual "+GlobalVariables.oElement.getText();
+				GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

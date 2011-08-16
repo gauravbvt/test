@@ -26,7 +26,7 @@ public class MAV0001_viewLoginPage{
 		  System.out.println(GlobalVariables.sDescription);
 		  // WebElement Synchronization
 	      Thread.currentThread();
-	      Thread.sleep(4000);
+	      Thread.sleep(3000);
 			
     	  // Login Page
     	  GlobalVariables.iStepNo++;
@@ -52,7 +52,7 @@ public class MAV0001_viewLoginPage{
 		  }
 	      // WebElement Synchronization
 	      Thread.currentThread();
-	      Thread.sleep(4000);
+	      Thread.sleep(3000);
 	      
 	      GlobalVariables.oDriver.quit();
 	      

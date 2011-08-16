@@ -19,7 +19,7 @@ public class CL011_RecoverPasswordUsingUserId
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Login Page
 	    	  GlobalVariables.iStepNo++;
@@ -35,43 +35,44 @@ public class CL011_RecoverPasswordUsingUserId
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Click on Forgot UserId or Password Link
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Forgot UserId or Passowrd Link";
-		      GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathForgotUsernamePassword"))).click();
+		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/p/a")).click();
 	    	  // Write Results
 	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
-		      // Click on Provide user name text box
+		      // Click on Provide user name test box
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Enter user name";
+		      GlobalVariables.oDriver.findElement(By.name("username")).click();
 		      GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("username"));
-		      GlobalVariables.oElement.sendKeys("manohar");
+		      GlobalVariables.oElement.sendKeys("priyanka");
 		      // Write Results
 	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Click on Request new password
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Request new password ";
-		      GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathRequestNewPassword"))).click();
+		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/input")).click();
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(10000);
+		      Thread.sleep(5000);
 		      // Assertion: Verify that a message is displayed to the user as 'A new password is emailed to you'
-		      GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathRequestPasswordMessage")));
-		      if(GlobalVariables.oElement.getText().equals("A new password has been emailed to you.")) {
+		      GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/span"));
+		      if(GlobalVariables.oElement.getText().equals("A new password is emailed to you")) {
 		    	  // Write Results
 		    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 		    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

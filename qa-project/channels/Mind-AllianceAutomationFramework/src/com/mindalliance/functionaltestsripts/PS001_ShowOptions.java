@@ -29,7 +29,7 @@ public class PS001_ShowOptions
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				// Click on 'show' Link
 				GlobalVariables.iStepNo++ ;
@@ -59,7 +59,7 @@ public class PS001_ShowOptions
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -71,8 +71,9 @@ public class PS001_ShowOptions
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				  
+				Thread.sleep(3000);
+				GlobalVariables.oDriver.quit();
+			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}

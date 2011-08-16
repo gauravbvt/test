@@ -38,8 +38,8 @@ public class MAP0020_addFileToEvent
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.testData.get("Automation Test Plan v.1 (dev)").equals(option.getText())){
-				    		option.setSelected();
-				    		break;
+				    			option.setSelected();
+				    			break;
 				    	}
 				    }
 				    // Write Results
@@ -109,7 +109,7 @@ public class MAP0020_addFileToEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 					
 					// Add 'About plan segment' under Show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -121,7 +121,7 @@ public class MAP0020_addFileToEvent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 					
 					//Create an event
 					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:event")).click();

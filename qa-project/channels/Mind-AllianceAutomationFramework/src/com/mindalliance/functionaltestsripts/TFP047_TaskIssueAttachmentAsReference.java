@@ -19,7 +19,7 @@ public class TFP047_TaskIssueAttachmentAsReference
 	public TFP047_TaskIssueAttachmentAsReference(){
     	try {
     		
-    		GlobalVariables.sTestCaseId = "TFP047_TaskIssueAttachmentAsReference";
+    		GlobalVariables.sTestCaseId = "TFP033_TaskAttachmentAsReference";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -107,18 +107,19 @@ public class TFP047_TaskIssueAttachmentAsReference
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				GlobalVariables.oDriver.findElement(By.name("segment:part:issues:issues-container:issues:0:issue:attachments:container:controls:submit")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:submit")).click();
+				System.out.println("Hie......");
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<30;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+//				// Scroll Down
+//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
+//				GlobalVariables.oElement.click();
+//				for(int i=0;i<15;i++)
+//					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
@@ -136,11 +137,6 @@ public class TFP047_TaskIssueAttachmentAsReference
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Remove Issue
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskIssueMenu"),GlobalVariables.viewElements.get("removeIssue"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
@@ -152,7 +148,7 @@ public class TFP047_TaskIssueAttachmentAsReference
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// 	Call Logout
 				GlobalVariables.iStepNo++;

@@ -48,6 +48,7 @@ public class MAV0100_moveTaskUnderAction
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="Verify that window opens with title 'About Plan Segmenet : <plan name>' and heading 'MOVE SELECTED TASK TO ANOTHER SEGMENT'";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathTaskMoverDetail")));
+			    System.out.println(GlobalVariables.oElement.getText()+"\t"+GlobalVariables.viewElements.get("taskMover"));
 			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("moveTaskToAnotherSegment"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

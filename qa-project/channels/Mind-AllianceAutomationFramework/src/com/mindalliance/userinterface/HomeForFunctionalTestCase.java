@@ -76,7 +76,6 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private JCheckBox jCheckBoxAssignmentCommitments;
 	private JCheckBox jCheckBoxLockFunctionality;
 	private JCheckBox jCheckBoxInfoGuidelines;
-	private JCheckBox jCheckBoxIssueReportSummary;
 	private JLabel jLabelNumberOfTestCasesExecuted;
 	private JLabel jLabelStartDateTime;
 	private JLabel jLabelEndDateTime;
@@ -95,7 +94,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	}
 
 	private void initComponents() {
-		setTitle("");
+		setTitle("Mind Alliance Automation Framework");
 		setLayout(new GroupLayout());
 		add(getJTextField0(), new Constraints(new Leading(256, -53, 10, 10), new Leading(63, 12, 12)));
 		add(getJScrollPane3(), new Constraints(new Leading(1027, 298, 10, 10), new Leading(34, 317, 10, 10)));
@@ -127,7 +126,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		add(getJCheckBox12(), new Constraints(new Leading(100,950,850), new Leading(250,10,10)));
 		add(getJCheckBox13(), new Constraints(new Leading(100,960,850), new Leading(270,10,10)));
 		add(getJCheckBox14(), new Constraints(new Leading(100,970,850), new Leading(290,10,10)));
-		add(getJCheckBox15(), new Constraints(new Leading(100,990,850), new Leading(310,10,10)));
+
 		setSize(1356, 698);
 	}
 
@@ -368,15 +367,6 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jCheckBoxInfoGuidelines;
 	}
 
-	private JCheckBox getJCheckBox15(){
-		if (jCheckBoxIssueReportSummary == null) {
-			jCheckBoxIssueReportSummary = new JCheckBox();
-			jCheckBoxIssueReportSummary.setText("Issue Summary Report");
-			jCheckBoxIssueReportSummary.addItemListener(this);
-		}
-		return jCheckBoxIssueReportSummary;
-	}
-	
 	private JButton getJButton3() {
 		if (jButtonReportLink == null) {
 			jButtonReportLink = new JButton();
@@ -839,7 +829,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				ifmFlag=true;
 			}
 		}
-		else if(chk.getText().equalsIgnoreCase("Information Sharing Guidelines For Participants")) {
+		else if(chk.getText().equalsIgnoreCase("Information Sharing Guidelines")) {
 			if(chk.isSelected() && isgFlag==true){
 				jScrollPane0.setViewportView(getJList0(13));
 				isgFlag=false;
@@ -876,16 +866,6 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 			}
 			else{
 				jScrollPane0.setViewportView(getJListModified0("SG"));
-				misgFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Issue Summary Report")){
-			if(chk.isSelected() && misgFlag==true){
-				jScrollPane0.setViewportView(getJList0(17));
-				misgFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("ISR"));
 				misgFlag=true;
 			}
 		}

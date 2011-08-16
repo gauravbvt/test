@@ -31,7 +31,7 @@ public class ApplicationFunctionLibrary {
 				}
 			}
 			// Maximize Browser Window
-			(( JavascriptExecutor ) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
+			((JavascriptExecutor) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
 			// WebElement Synchronization
 			Thread.currentThread();
 			Thread.sleep(2000);

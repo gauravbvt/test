@@ -48,7 +48,7 @@ public class MAP0011_addEventToPlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 				
 					// Click on 'Information Sharing Model' link
 					GlobalVariables.iStepNo++ ;
@@ -60,7 +60,7 @@ public class MAP0011_addEventToPlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(10000);
 					
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++;
@@ -72,11 +72,12 @@ public class MAP0011_addEventToPlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);	
+					Thread.sleep(5000);	
 					
 					// Details of Segment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Details of Segment enetered";
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
 					for (int i = 0; i <= 8; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -88,7 +89,7 @@ public class MAP0011_addEventToPlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);	
+					Thread.sleep(5000);	
 					
 					//Click on 'About Plan' under show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -100,7 +101,7 @@ public class MAP0011_addEventToPlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					
 					//Click on 'All Events' under show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -112,7 +113,7 @@ public class MAP0011_addEventToPlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					
 					// Create an event
 					String event="Add Event To The Plan";
@@ -128,7 +129,7 @@ public class MAP0011_addEventToPlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(8000);
 					
 					// Select check box
 					GlobalVariables.iStepNo++;
@@ -136,7 +137,8 @@ public class MAP0011_addEventToPlan
 					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);					
+					Thread.sleep(5000);
+					
 					// Assertion : verify that Event is added
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(event));
 					if(GlobalVariables.oElement.getText().equals(event)){
@@ -154,7 +156,7 @@ public class MAP0011_addEventToPlan
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
@@ -166,7 +168,7 @@ public class MAP0011_addEventToPlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
@@ -175,7 +177,7 @@ public class MAP0011_addEventToPlan
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -187,7 +189,7 @@ public class MAP0011_addEventToPlan
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

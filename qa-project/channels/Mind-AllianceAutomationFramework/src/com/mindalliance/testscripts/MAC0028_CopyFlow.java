@@ -52,6 +52,7 @@ public class MAC0028_CopyFlow
 					// Enter the details for new segment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Segment's details entered";
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
 						for (int i = 0; i <= 8; i++)
 							GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -84,6 +85,7 @@ public class MAC0028_CopyFlow
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Write Task
+					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					for (int i = 0; i <= 50; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -111,7 +113,7 @@ public class MAC0028_CopyFlow
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Receives Informations";
 					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
@@ -119,6 +121,7 @@ public class MAC0028_CopyFlow
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
+					GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Receives informations"));
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);
@@ -136,6 +139,7 @@ public class MAC0028_CopyFlow
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
+					GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
 					for (int i = 0; i <= 50; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
@@ -185,7 +189,7 @@ public class MAC0028_CopyFlow
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

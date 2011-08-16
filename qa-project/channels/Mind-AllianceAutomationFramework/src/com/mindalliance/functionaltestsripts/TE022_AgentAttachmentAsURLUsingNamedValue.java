@@ -98,7 +98,7 @@ public class TE022_AgentAttachmentAsURLUsingNamedValue
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathURL"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentURL"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -110,7 +110,7 @@ public class TE022_AgentAttachmentAsURLUsingNamedValue
 				Thread.currentThread();
 				Thread.sleep(3000);
 				//Assertion : Verify that URL gets Attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("AttachmentFileName")))
 				{
 			    	// Write Results

@@ -19,7 +19,7 @@ public class CL005_InavlidPassword
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Login Page
 	    	  GlobalVariables.iStepNo++;
@@ -35,7 +35,7 @@ public class CL005_InavlidPassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Enter User name and password
 		      GlobalVariables.iStepNo++;
@@ -50,7 +50,7 @@ public class CL005_InavlidPassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Click on Sign In button
 		      GlobalVariables.iStepNo++ ;
@@ -63,7 +63,7 @@ public class CL005_InavlidPassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Assertion: Verify that new page is displayed with title as 'Channels Sign In failed!'
 		      GlobalVariables.iStepNo++ ;
@@ -83,7 +83,7 @@ public class CL005_InavlidPassword
 		      }	
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      GlobalVariables.oDriver.quit();
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

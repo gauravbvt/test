@@ -1,8 +1,9 @@
 package com.mindalliance.testscripts;
 
-import org.openqa.selenium.Alert;
+import java.util.List;
+
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -18,7 +19,6 @@ import com.mindalliance.globallibrary.ReportFunctions;
 public class MAC0046_RedoRemoveIssue {
     public MAC0046_RedoRemoveIssue() {
 		try {
-			
 			GlobalVariables.sTestCaseId = "MAC0046_RedoRemoveIssue";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -39,34 +39,6 @@ public class MAC0046_RedoRemoveIssue {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Click on 'Add new segment' option under 'Actions' pop up menu
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				// Enter the details for new segment
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Details entered";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment for Redo Remove Issue"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// Close Segment Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				Thread.currentThread();
-				Thread.sleep(2000);  	
-				
 				// Click on 'Add new issue' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue added";
@@ -80,13 +52,60 @@ public class MAC0046_RedoRemoveIssue {
 				Thread.sleep(3000);
 				
 				// Click on 'Remove issue' option under 'Menu' pop up menu
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Issue removed";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathRemoveIssue"),GlobalVariables.viewElements.get("removeIssue"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);				
+				// Assertion: Verify that When clicked on 'Remove issue' option, a respective issue should be removed from the segment
+				GlobalVariables.oDriver.findElement(By.className("issues")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[2]"));
+				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
+				for (WebElement ol: tds){
+					if(ol.getText().equals("")){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+						break;
+					}
+					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual " + ol.getText();
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+						break;
+					}
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				
 				// Click on 'Undo remove issue' under 'Actions' pop up menu
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoRemoveIssue"));
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Undo remove issue done";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathRemoveIssue"),GlobalVariables.viewElements.get("undoRemoveIssue"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				// Assertion: Verify that When clicked on 'Undo remove issue' option, a issue which was removed from the issue should be restored in the segment
+				GlobalVariables.oDriver.findElement(By.className("issues")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Menu' "+" Actual " + GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
@@ -94,45 +113,34 @@ public class MAC0046_RedoRemoveIssue {
 				// Click on Redo remove issue under Action pop up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Redo remove issue";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("redoRemoveIssue"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("Redo remove issue"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Assertion: Verify that When clicked on 'Remove issue' option, a respective issue should be removed from the segment
-				try{
-						GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathRemoveIssue"))).click();
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				catch (Exception e){
+				// Assertion: Verify that When clicked on 'Redo remove issue' option, the restored  issue should be removed
+				GlobalVariables.oDriver.findElement(By.className("issues")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[2]"));
+				tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
+				for (WebElement ol: tds){
+					if(ol.getText().equals("")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
+						break;
+					}
+					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual " + ol.getText();
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+						break;
+					}
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-
-				// Close 'About plan' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-
-				// Click on 'Remove this segment' under 'Actions' pop up menu
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-				Thread.currentThread();
-				Thread.sleep(2000);				
-				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;

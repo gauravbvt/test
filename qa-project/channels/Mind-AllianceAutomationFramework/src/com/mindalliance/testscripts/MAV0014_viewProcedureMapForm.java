@@ -68,7 +68,7 @@ public class MAV0014_viewProcedureMapForm
 		GlobalVariables.sDescription="Procedure Map renders";
 		GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionProcedureMap")));
 		// Assertion: Verify that "Procedures map" page loaded 
-		if (GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.viewElements.get("procedureMap"))) {
+		if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
 			// Write Results
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -76,7 +76,7 @@ public class MAV0014_viewProcedureMapForm
 		}
 		else
 		{
-			GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Procedure Map' Actual "+GlobalVariables.oElement.getText();
+			GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
 			// Write Results
 			LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

@@ -1,11 +1,13 @@
 package com.mindalliance.functionaltestsripts;
 
 import java.util.List;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -34,7 +36,7 @@ public class CA033_UpdateOwnerName
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Enter the details: newPlanUri
 				GlobalVariables.iStepNo++ ;
@@ -50,7 +52,7 @@ public class CA033_UpdateOwnerName
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -58,9 +60,10 @@ public class CA033_UpdateOwnerName
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Assertion: Verify that plan created successfully
 				GlobalVariables.bIsSuccess=Boolean.FALSE;
+				GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
@@ -75,7 +78,7 @@ public class CA033_UpdateOwnerName
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Update Owner Name
 				GlobalVariables.iStepNo++ ;
@@ -85,54 +88,22 @@ public class CA033_UpdateOwnerName
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AFourTechnology"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
+				//Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				// Assertion : Verify that Owner Name Updated
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHomePageIcon"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("about-plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AFourTechnology"))) {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				}
-				else {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);										
-				}
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Navigate to Channels Administration Page
-				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("channelsAdministration"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
-				options = GlobalVariables.oDropDown.getOptions();
-			    for(WebElement option : options) {
-			    	if(GlobalVariables.testData.get("New Plan v.1 (dev)").equals(option.getText())){
-			    		option.setSelected();
-			    		break;
-			    	}
-			    }
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
+				
 				// Click on 'Delete Plan' button
-				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete Plan"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete plan"))).click();
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
-				// WebElement Synchronization
+				//Thread sleep
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -152,6 +123,7 @@ public class CA033_UpdateOwnerName
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 		}
 		catch (Exception e) {
+			 	System.out.println(e.getMessage()+"Hie.......");
 				if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

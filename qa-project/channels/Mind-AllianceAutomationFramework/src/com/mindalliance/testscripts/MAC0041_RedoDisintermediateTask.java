@@ -144,7 +144,7 @@ public class MAC0041_RedoDisintermediateTask {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Intermediate Flow created";		
 					// Click on Legend to maximize the information flow details
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -153,7 +153,7 @@ public class MAC0041_RedoDisintermediateTask {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Click on Legend to minimize the information flow details
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -207,7 +207,7 @@ public class MAC0041_RedoDisintermediateTask {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task disintermediated";
 					// Click on Legend to minimize the information flow details
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

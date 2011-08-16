@@ -35,7 +35,7 @@ public class CA003_CreateNewPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Enter the details: newPlanUri
 				GlobalVariables.iStepNo++ ;
@@ -51,7 +51,7 @@ public class CA003_CreateNewPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -59,8 +59,10 @@ public class CA003_CreateNewPlan
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Assertion: Verify that plan created successfully
+				GlobalVariables.bIsSuccess=Boolean.FALSE;
+				GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
@@ -75,7 +77,7 @@ public class CA003_CreateNewPlan
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Click on 'Delete Plan' button
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
@@ -84,7 +86,7 @@ public class CA003_CreateNewPlan
 				alert.accept();
 				//Thread sleep
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;

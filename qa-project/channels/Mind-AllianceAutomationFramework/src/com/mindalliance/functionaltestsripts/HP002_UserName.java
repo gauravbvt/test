@@ -34,11 +34,7 @@ public class HP002_UserName
 				LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-			}
-			// WebElement Synchronization
-			Thread.currentThread();
-			Thread.sleep(2000);
-
+			}	
 			// Call logout()
 			GlobalVariables.iStepNo++ ;
 			GlobalVariables.sDescription = "Logout is successful";
@@ -49,7 +45,7 @@ public class HP002_UserName
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 			// WebElement Synchronization
 			Thread.currentThread();
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 			GlobalVariables.oDriver.quit();
 		      
 			LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

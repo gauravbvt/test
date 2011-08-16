@@ -2,7 +2,6 @@ package com.mindalliance.testscripts;
 
 import java.util.List;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -40,7 +39,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);	
+				Thread.sleep(5000);	
 				
 				// Enter the details: newPlanUri
 				GlobalVariables.iStepNo++ ;
@@ -56,7 +55,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -68,7 +67,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 			    // Navigate to Home page
 				GlobalVariables.iStepNo++ ;
@@ -80,7 +79,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				// Switch Plan
 				GlobalVariables.iStepNo++ ;
@@ -99,15 +98,15 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				// Click on Information Sharing Model
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Navigated Information Sahring Model";
+				GlobalVariables.sDescription = "Navigateto Information Sahring Model";
 				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);		
+				Thread.sleep(5000);		
 				GlobalVariables.oDriver.navigate().refresh();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -115,7 +114,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);		
+				Thread.sleep(5000);		
 				
 				// Click 'About plan' under 'Show' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -127,7 +126,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				//Enter the Details
 				GlobalVariables.iStepNo++ ;
@@ -142,7 +141,7 @@ public class MAP0002_addNameAndLocalizePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;
@@ -150,60 +149,51 @@ public class MAP0002_addNameAndLocalizePlan
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				//Assertion : Verify that Plan Name gets Updated
-				//Navigate to Home Page
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathPlanHomeIcon"))).click();
+				Thread.sleep(5000);
+				//ASSERTION: When clicked on 'done' button, the newly added plan should be updated
+				//Navigate to home Page
+				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/img")).click();
 				GlobalVariables.oDriver.navigate().refresh();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				//Navigate to Channels Administration Page
-				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("channelsAdministration"))).click();
-				GlobalVariables.oDriver.navigate().refresh();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Select Plan 
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
-				options = GlobalVariables.oDropDown.getOptions();
-			    for(WebElement option : options) {
-			    	System.out.println(option.getText());
-			    	if(GlobalVariables.testData.get("Add Test Plan v.1 (dev)").equals(option.getText())){
+				Thread.sleep(5000);
+				GlobalVariables.bIsSuccess=Boolean.FALSE;
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("switch-plan:plan-sel")));
+				options=GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options){
+			    	if(GlobalVariables.testData.get("Add Test Plan").equals(option.getText())){
 			    		// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    		GlobalVariables.bIsSuccess=Boolean.TRUE;
 			    		option.setSelected();
-			    		break;
-			    	}
+					     break;
+					}
+			    }
+			    if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-
-				// Click on 'Delete Plan' button
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
-				alert.accept();
-				//Thread sleep
-				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
-				// Click on 'Signout<user name>' Link
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Logout Successful";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
+			    // Call logout()
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Logout is successful";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
 				GlobalVariables.oDriver.quit();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
+			
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			    

@@ -43,7 +43,7 @@ public class HP009_InformationSharingForParticipnats
 				
 				// Click on 'Information Sharing Model' link
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Navigated to Information Sharing for all Participants";
+				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
 				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingGuidelinesForAllParticipants"))).click();
 				if(GlobalVariables.oDriver.getTitle().contains(GlobalVariables.viewElements.get("participantPagesTitle"))){
 					// Write Results

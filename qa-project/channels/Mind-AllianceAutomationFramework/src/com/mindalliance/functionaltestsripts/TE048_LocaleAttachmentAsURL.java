@@ -97,7 +97,7 @@ public class TE048_LocaleAttachmentAsURL
 				// Attach Attachment as a URL
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attachment attached as a URL";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathURL"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentURL"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
@@ -109,7 +109,7 @@ public class TE048_LocaleAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(5000);
 				//Assertion : Verify that URL gets Attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL")))
 				{
 			    	// Write Results

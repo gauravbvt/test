@@ -15,11 +15,11 @@
 	<classpathentry exported="true" kind="lib" path="Library/org.dyno.visual.swing.parser_0.9.12.I20090522-2330.jar"/>
 	<classpathentry exported="true" kind="lib" path="Library/org.dyno.visual.swing.types_0.9.12.I20090527-2200.jar"/>
 	<classpathentry exported="true" kind="lib" path="Library/org.dyno.visual.swing.widgets_0.9.12.I20090527-2200.jar"/>
-	<classpathentry kind="con" path="org.dyno.visual.swing.VS_LIBRARY/layoutext"/>
-	<classpathentry kind="lib" path="Library/httpclient-4.0.2.jar"/>
-	<classpathentry kind="lib" path="Library/jna.jar"/>
-	<classpathentry kind="lib" path="Library/selenium-server-standalone-2.0b3.jar"/>
-	<classpathentry kind="lib" path="Library/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="Library/javacsv-2.0.jar"/>
+	<classpathentry exported="true" kind="con" path="org.dyno.visual.swing.VS_LIBRARY/layoutext"/>
+	<classpathentry exported="true" kind="lib" path="Library/httpclient-4.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="Library/jna.jar"/>
+	<classpathentry exported="true" kind="lib" path="Library/selenium-server-standalone-2.0b3.jar"/>
+	<classpathentry exported="true" kind="lib" path="Library/commons-logging-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="Library/javacsv-2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

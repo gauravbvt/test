@@ -40,7 +40,7 @@ public class MAP0005_deletePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				// Enter the details: newPlanUri
 				GlobalVariables.iStepNo++ ;
@@ -56,7 +56,7 @@ public class MAP0005_deletePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -68,11 +68,12 @@ public class MAP0005_deletePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 
 				// Select the plan
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Plan selected";
+				GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
@@ -87,7 +88,7 @@ public class MAP0005_deletePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization				
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				// Click on 'Delete Plan' button
 				GlobalVariables.iStepNo++ ;
@@ -98,7 +99,7 @@ public class MAP0005_deletePlan
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(500);
 				//Assertion:Verify that plan should get deleted.
 				GlobalVariables.bIsSuccess=Boolean.FALSE;
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
@@ -125,7 +126,7 @@ public class MAP0005_deletePlan
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				// Logout
 				GlobalVariables.iStepNo++ ;
@@ -136,9 +137,6 @@ public class MAP0005_deletePlan
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 			    
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

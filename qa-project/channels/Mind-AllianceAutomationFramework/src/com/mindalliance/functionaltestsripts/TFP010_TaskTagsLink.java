@@ -79,7 +79,7 @@ public class TFP010_TaskTagsLink
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(3000);	
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

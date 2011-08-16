@@ -130,14 +130,6 @@ public class MAC0052_RedoSetTaskFromCopy {
 	            Thread.currentThread();
 				Thread.sleep(5000);
 				
-				//Move Slider
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body"));
-				GlobalVariables.oElement.sendKeys(Keys.HOME);
-				// WebElement Synchronization
-	            Thread.currentThread();
-				Thread.sleep(5000);
-
 				// Click on 'Add new task' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New task added";

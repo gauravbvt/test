@@ -20,7 +20,7 @@ public class CL001_LoginPage
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 				
 	    	  // Login Page
 	    	  GlobalVariables.iStepNo++;
@@ -46,7 +46,7 @@ public class CL001_LoginPage
 		      }	
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      GlobalVariables.oDriver.quit();
 		      

@@ -34,26 +34,12 @@ public class CA006_CreatePlanWithExistingOwner
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
-					
-					// Create New Plan
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
-					// newPlanClient
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					// Click on 'Submit' button
-					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 					
 					// Enter Plan URI
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Plan URI Entered";
+					GlobalVariables.oDriver.findElement(By.name("newPlanUri")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
 					// Write Results
@@ -62,11 +48,12 @@ public class CA006_CreatePlanWithExistingOwner
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 
 					// Enter Existing Owner Name
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Existing Owner name entered";
+					GlobalVariables.oDriver.findElement(By.name("newPlanClient")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 					// Write Results
@@ -75,63 +62,43 @@ public class CA006_CreatePlanWithExistingOwner
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 						
 					// Click on 'Submit' button
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Plan Created with Existing Owner Name";
+					GlobalVariables.sDescription = "Plan Created";
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: Verify that plan created successfully
-					int cnt=0;
+					GlobalVariables.bIsSuccess=Boolean.FALSE;
+					GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.testData.get("New Plan v.1 (dev)").equals(option.getText())){
-				    		cnt++;
+				    		// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+				    		option.setSelected();
+				    		break;
 				    	}
-				    }
-				    if(cnt==2)
-				    {
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);				    	
-				    }
-				    else
-				    {
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);				    	
 				    }
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 
-					// Click Newly Created Plans
-					while (cnt!=0)
-					{
-						GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
-						options = GlobalVariables.oDropDown.getOptions();
-						for(WebElement option : options) {
-							if(GlobalVariables.testData.get("New Plan v.1 (dev)").equals(option.getText())){
-								option.setSelected();
-								break;
-							}
-						}
-						GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("deletePlan"))).click();
-				    	Alert alert = GlobalVariables.oDriver.switchTo().alert();
-						// Click on 'OK" button of message box in order to confirm it
-						alert.accept();
-						//Thread sleep
-						Thread.currentThread();
-						Thread.sleep(3000);
-						cnt--;
-				    }
-
+					// Click on 'Delete Plan' button
+					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete plan"))).click();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// Click on 'OK" button of message box in order to confirm it
+					alert.accept();
+					//Thread sleep
+					Thread.currentThread();
+					Thread.sleep(3000);
+					
 					// Click on 'Signout<user name>' Link
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Logout Successful";

@@ -41,7 +41,7 @@ public class MAV0154_viewSocialPanelShowAllMessages
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideBroadcast"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideBroadcast")));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

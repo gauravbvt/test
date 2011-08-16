@@ -29,7 +29,7 @@ public class PS019_AboutPlanShowComponents
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				//About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
@@ -50,6 +50,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("float-header")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("float-header"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("details")))
 				{
@@ -77,6 +78,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allEventsInPlan")))
 				{
@@ -104,6 +106,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("classificationSystems")))
 				{
@@ -131,6 +134,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("organizationsInPlan")))
 				{
@@ -158,6 +162,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("aspect")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("aspect"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allInterSegmentFlows")))
 				{
@@ -185,6 +190,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("displayProceduresFrom")))
 				{
@@ -212,6 +218,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("indexOn")))
 				{
@@ -239,6 +246,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("issuesInSegment")))
 				{
@@ -266,6 +274,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("documentsAttached")))
 				{
@@ -293,6 +302,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("index")))
 				{
@@ -320,6 +330,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("showTypes")))
 				{
@@ -347,6 +358,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allKnownTags")))
 				{
@@ -374,6 +386,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("evaluation")))
 				{
@@ -401,6 +414,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allParticipants")))
 				{
@@ -428,6 +442,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("plan")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("thisIsVersion")))
 				{
@@ -465,6 +480,7 @@ public class PS019_AboutPlanShowComponents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.quit();
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
@@ -474,6 +490,7 @@ public class PS019_AboutPlanShowComponents
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
+			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

@@ -16,7 +16,6 @@ public class CA022_AssignUserToPlan
 {
 	public CA022_AssignUserToPlan() {
 		try {
-			
 			GlobalVariables.sTestCaseId = "CA022_AssignUserToPlan";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -65,6 +64,7 @@ public class CA022_AssignUserToPlan
 				Thread.sleep(3000);
 
 				//Select Newly Created Plan
+				GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
@@ -77,92 +77,50 @@ public class CA022_AssignUserToPlan
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Create User
+				//Create User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="User Created";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);								
-				// Click on 'Submit' button
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);								
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
+				Thread.sleep(2000);					
 				//Assign Access Privilege 'Planner' to User
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Assign Access Privilege 'Planner' to User";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
-				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
-				List<WebElement> tds;
-				GlobalVariables.bIsSuccess=false;
-				int cnt=0;
-				for(WebElement tr: trs)
-				{
-					cnt++;
-					tds = tr.findElements(By.tagName("td"));
-					for(WebElement td: tds)
-					{
-						if(td.getText().equals(GlobalVariables.testData.get("user")))
-						{
-							GlobalVariables.bIsSuccess=true;
-							break;
-						}
-					}
-					if(GlobalVariables.bIsSuccess==true)
-						break;
-				}
+				GlobalVariables.sDescription = "Assign Access Privilege 'Planner' to User (This Plan Tab)";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword"))).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword")));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
-				// Assign Access Privilege 'Planner' to User
-				if(cnt==1)
-				{
-					GlobalVariables.oDriver.findElement(By.name("item:"+(cnt-1)+":group:password")).clear();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:"+(cnt-1)+":group:password"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					// Assign Access Privilege
-					GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody/tr/td[9]/input")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-				}
-				else
-				{
-					GlobalVariables.oDriver.findElement(By.name("item:"+(cnt-1)+":group:password")).clear();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:"+(cnt-1)+":group:password"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					// Assign Access Privilege
-					GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody/tr["+cnt+"]/td[9]/input")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-				}
-				// Click on 'Submit' Button
+				//Assign Access Privilege
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathThisPlanAccessPrivilegePlanner"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Click on 'Submit' button
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
-			  	// Click on 'Signout<user name>' Link
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Logout Successful";
+				// Call logout()
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Logout is successful";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -170,12 +128,11 @@ public class CA022_AssignUserToPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
-				//Assertion : Verify that newly created user log into the system & 'Channels Administration' Link is accessible to the user
-				// Enter User name and password
+				// Login with newly Created user
 			    GlobalVariables.iStepNo++;
-			    GlobalVariables.sDescription="Login with access privilege 'Planner'";
+			    GlobalVariables.sDescription="Login with newly Created User";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
@@ -186,10 +143,11 @@ public class CA022_AssignUserToPlan
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		    	// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(2000);			    
+			    Thread.sleep(1000);			    
+			    
 			    // Click on Sign In button
 			    GlobalVariables.iStepNo++ ;
-			    GlobalVariables.sDescription = "Login successful";
+			    GlobalVariables.sDescription = "Login Successful";
 			    GlobalVariables.oDriver.findElement(By.name("_spring_security_remember_me")).click();
 			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();
 			    // Write Results
@@ -198,13 +156,13 @@ public class CA022_AssignUserToPlan
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		    	// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(2000);
-			    
-				//Assertion : Verify that User is able to view & access the plan created by Administrator
+			    Thread.sleep(1000);	
+			    //Assertion : Verify that User is able to view & access the plan created by Administrator
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "User is able to view the plan created by Administrator";
-			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("about-plan"));
-			    if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Afourtech")))
+			    GlobalVariables.oDriver.findElement(By.className("planTitle")).click();
+			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("planTitle"));
+			    if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("afourtech")))
 			    {
 				    // Write Results
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -231,7 +189,7 @@ public class CA022_AssignUserToPlan
 				Thread.currentThread();
 				Thread.sleep(1000);
 
-				// Login as an Administrator
+				// Login with newly Created user
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sUsername"));
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
@@ -250,6 +208,7 @@ public class CA022_AssignUserToPlan
 		    	// WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);					
+			    GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
@@ -262,54 +221,32 @@ public class CA022_AssignUserToPlan
 				Thread.currentThread();
 				Thread.sleep(3000);
 			    // Click on 'Delete Plan' button
-				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete Plan"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete plan"))).click();
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
 				//Thread sleep
 				Thread.currentThread();
 				Thread.sleep(3000);
-
-			    // Delete Created User 
-			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
-				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
-				GlobalVariables.bIsSuccess=false;
-				cnt=0;
-				for(WebElement tr: trs) {
-					cnt++;
-					tds = tr.findElements(By.tagName("td"));
-					for(WebElement td: tds) {
-						if(td.getText().equals(GlobalVariables.testData.get("user"))) {
-							GlobalVariables.bIsSuccess=true;
-							break;
-						}
-					}
-					if(GlobalVariables.bIsSuccess==true)
-						break;
-				}
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
 				//Delete Created User
-				if(cnt==1)
-					GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody/tr/td[12]/input")).click();
-				else
-					GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody/tr["+cnt+"]/td[12]/input")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeleteUser"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				// Click on 'Signout<user name>' Link
+				Thread.sleep(1000);
+
+			    // Call logout()
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Logout is successful";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
 				GlobalVariables.oDriver.quit();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);				
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

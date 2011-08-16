@@ -31,7 +31,7 @@ public class PS006_AboutPlanSegmentLink
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				//Click on 'About plan' option under 'Show' popup menu
 				GlobalVariables.iStepNo++ ;
@@ -48,7 +48,9 @@ public class PS006_AboutPlanSegmentLink
 				//About Plan Segment Window Opened
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "About Plan Segment Window Opened";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanSegmentLink"))).click();
 				//Assertion : Verify that 'About plan segment' window gets displayed
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAboutPlanSegmentDetails"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAboutPlanSegmentDetails")));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details")))
 				{
@@ -66,27 +68,28 @@ public class PS006_AboutPlanSegmentLink
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				
 				//About Plan segment name Entered
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "About Plan Segment Name Entered";
+				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
 				for(int i=0;i<50;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Add New Segment"));
+				GlobalVariables.oElement.sendKeys("Segment 1");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				//Close About Plan Segment Window Closed
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -98,7 +101,8 @@ public class PS006_AboutPlanSegmentLink
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
+				GlobalVariables.oDriver.quit();
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

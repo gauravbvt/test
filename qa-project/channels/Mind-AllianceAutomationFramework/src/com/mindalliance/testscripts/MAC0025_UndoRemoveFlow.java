@@ -78,6 +78,8 @@ public class MAC0025_UndoRemoveFlow
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
 				GlobalVariables.oElement.sendKeys("Audit");
 			    GlobalVariables.oElement.sendKeys(Keys.ENTER);
+			    // Click on hide details from action pop-menu bar
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -90,10 +92,10 @@ public class MAC0025_UndoRemoveFlow
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Receive Info";
 				// Click on legend for maximize the graph
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(1000);
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -141,17 +143,13 @@ public class MAC0025_UndoRemoveFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				// Shrink Back Form
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -170,6 +168,7 @@ public class MAC0025_UndoRemoveFlow
 				List<WebElement> areas = GlobalVariables.oElement.findElements(By.tagName("area"));
 				for(WebElement area:areas){
 					GlobalVariables.sStrCheck=area.getAttribute("id");
+					System.out.println(area.getAttribute("id"));
 				if(area.getAttribute("id").equals("node1"))
 					 GlobalVariables.bIsSuccess = Boolean.TRUE;
 					 break;

@@ -55,14 +55,14 @@ public class MAV0072_allHelp
 			    // Assertion: Verify that "Help" page loaded 
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Help' gets loaded";		
-			    if (GlobalVariables.oDriver.getTitle().contains(GlobalVariables.viewElements.get("helpPageTitle"))) {
+			    if (GlobalVariables.oDriver.getTitle().contains(GlobalVariables.viewElements.get("planPageSubTitle"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 	            }
 			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("helpPageTitle") +" Actual "+GlobalVariables.oDriver.getTitle();
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("planPageSubTitle") +" Actual "+GlobalVariables.oDriver.getTitle();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

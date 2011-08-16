@@ -18,7 +18,7 @@ public class CL003_LoginValidUserName
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Login Page
 	    	  GlobalVariables.iStepNo++;
@@ -34,7 +34,7 @@ public class CL003_LoginValidUserName
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Enter User name and password
 		      GlobalVariables.iStepNo++;
@@ -49,7 +49,7 @@ public class CL003_LoginValidUserName
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Click on Sign In button
 		      GlobalVariables.iStepNo++ ;
@@ -72,7 +72,7 @@ public class CL003_LoginValidUserName
 		      }	
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Call Logout
 		      GlobalVariables.iStepNo++ ;
@@ -84,7 +84,7 @@ public class CL003_LoginValidUserName
 		    		  GlobalVariables.sBlank, GlobalVariables.sBlank);
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      GlobalVariables.oDriver.quit();
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
