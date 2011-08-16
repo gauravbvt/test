@@ -128,6 +128,8 @@
 <xPathTaskAttachmentURL>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/li/span/span/input[2]</xPathTaskAttachmentURL>
 <xPathTaskIssueMenu>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/span/span/span/span</xPathTaskIssueMenu>
 <xPathTaskIssueAttachmentURL>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathTaskIssueAttachmentURL>
+<xPathSendsAttachmentURL>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[13]/td/ul/li/span/span/input[2]</xPathSendsAttachmentURL>
+<xPathReceivesAttachmentURL>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[12]/td/ul/li/span/span/input[2]</xPathReceivesAttachmentURL>
 <!-- Assertions -->
 <xPathDeleteOrganizationAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li</xPathDeleteOrganizationAttachmentAssertion>
 <xPathRemoveOrganizationAssertion>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul</xPathRemoveOrganizationAssertion>
