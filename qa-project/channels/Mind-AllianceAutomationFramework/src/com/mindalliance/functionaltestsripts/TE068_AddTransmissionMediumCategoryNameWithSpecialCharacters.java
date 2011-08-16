@@ -1,19 +1,24 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class TE007_AddAgentCategory 
+public class TE068_AddTransmissionMediumCategoryNameWithSpecialCharacters 
 {
-	public TE007_AddAgentCategory() {
+	public TE068_AddTransmissionMediumCategoryNameWithSpecialCharacters() {
 		try{
-			GlobalVariables.sTestCaseId = "TE007_AddAgentCategory";
+			GlobalVariables.sTestCaseId = "TE068_AddTransmissionMediumCategoryNameWithSpecialCharacters";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -31,7 +36,7 @@ public class TE007_AddAgentCategory
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				//About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
@@ -69,17 +74,13 @@ public class TE007_AddAgentCategory
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Click on 'Agent' Details
+				// Click on 'Contact' Link
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				// Click on '<agent name>' Link
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("float-bar-title")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("float-bar-title"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -87,59 +88,93 @@ public class TE007_AddAgentCategory
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
-				//Add Agent Category
+
+				// Add New Medium
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Agent Category Added";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType")).click();
+				GlobalVariables.sDescription="New Medium Added";
+				// Select New Medium from List
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:medium")));
+				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options) {
+			    	if(GlobalVariables.viewElements.get("newMedium").equals(option.getText())){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    		option.setSelected();
+			    		break;
+			    	}
+			    }
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Add Medium Category
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Medium Category Added";
+				// Click on 'New Medium' Link
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathParticipationNewMedium"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Category 1"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
-			    // WebElement Synchronization
+				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				//Assertion : Verify that Agent Category gets added
+				Thread.sleep(2000);
+				// Assertion : Verify that Medium Category is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory")));
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				System.out.println(GlobalVariables.oElement.getText());
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("category1"))){
-			    	// Write Results
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get(")(*&^%$#!")))
+				{
+					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
-		    	else
-		    	{
-		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("category1")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
-			    	// Write Results
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else
+				{
+					GlobalVariables.sVerifyError="Verification Failed. Expected '" + GlobalVariables.testData.get(")(*&^%$#!")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
-			    }
-				//Delete Agent Category
+							GlobalVariables.sVerifyError, GlobalVariables.sBlank);					
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Delete Medium Category
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentCategory"))).click();
 				// Get a handle to the open alert, prompt or confirmation
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				//Close Agent Window
+				Thread.sleep(2000);
+				// Close 'New Medium' Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
+				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1500);
-				//Close About Plan Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
+				Thread.sleep(2000);
+				// Click on 'Contact' Link
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
+				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1500);
-				
+				Thread.sleep(2000);
+				// Click on '<agent name>' Link
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Remove Added Medium
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:included")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
@@ -150,7 +185,7 @@ public class TE007_AddAgentCategory
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.quit();
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
@@ -183,7 +218,7 @@ public class TE007_AddAgentCategory
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TE007_AddAgentCategory();
+			new TE068_AddTransmissionMediumCategoryNameWithSpecialCharacters();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 

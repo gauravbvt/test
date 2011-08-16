@@ -3,17 +3,18 @@ package com.mindalliance.functionaltestsripts;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class TE007_AddAgentCategory 
+public class TE008_UpdateAgentsCategoriesWithSpecialCharacters 
 {
-	public TE007_AddAgentCategory() {
+	public TE008_UpdateAgentsCategoriesWithSpecialCharacters() {
 		try{
-			GlobalVariables.sTestCaseId = "TE007_AddAgentCategory";
+			GlobalVariables.sTestCaseId = "TE008_UpdateAgentsCategoriesWithSpecialCharacters";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -93,7 +94,7 @@ public class TE007_AddAgentCategory
 				GlobalVariables.sDescription="Agent Category Added";
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Category 1"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 			    // WebElement Synchronization
 				Thread.currentThread();
@@ -104,7 +105,7 @@ public class TE007_AddAgentCategory
 				Thread.currentThread();
 				Thread.sleep(3000);
 				System.out.println(GlobalVariables.oElement.getText());
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("category1"))){
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get(")(*&^%$#!"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -183,7 +184,7 @@ public class TE007_AddAgentCategory
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TE007_AddAgentCategory();
+			new TE008_UpdateAgentsCategoriesWithSpecialCharacters();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 

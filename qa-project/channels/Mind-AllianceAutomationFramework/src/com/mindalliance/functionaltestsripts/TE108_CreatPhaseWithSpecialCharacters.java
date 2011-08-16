@@ -10,11 +10,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class TE112_PhaseDescription 
+public class TE108_CreatPhaseWithSpecialCharacters 
 {
-	public TE112_PhaseDescription() {
+	public TE108_CreatPhaseWithSpecialCharacters() {
 		try {
-			GlobalVariables.sTestCaseId = "TE112_PhaseDescription";
+			GlobalVariables.sTestCaseId = "TE108_CreatPhaseWithSpecialCharacters";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -53,7 +53,7 @@ public class TE112_PhaseDescription
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
 					for (int i = 0; i <= 8; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Phase Description"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Create New Phase With Special Characters"));
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -76,61 +76,35 @@ public class TE112_PhaseDescription
 					Thread.sleep(1000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="This is phase";
+					String phase=")(*&^%$#!";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 					GlobalVariables.oElement.sendKeys(phase);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					// Assertion: Verify that Phase has been created
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCreatedAssertion")));
+					if(GlobalVariables.oElement.getText().equalsIgnoreCase(phase)){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
+					else{
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					
-					// Click on Phase
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Phase name updated";
-					GlobalVariables.oDriver.findElement(By.linkText(phase)).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
-					for(int i=0;i<15;i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Description"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					
-					// Click on Done
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Done";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);			
-					// Delete an Phase
+					//delete an phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					
-					
+										
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan closed";
@@ -190,7 +164,7 @@ public class TE112_PhaseDescription
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TE112_PhaseDescription();
+			new TE108_CreatPhaseWithSpecialCharacters();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
