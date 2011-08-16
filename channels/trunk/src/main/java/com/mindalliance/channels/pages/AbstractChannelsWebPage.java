@@ -156,7 +156,21 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         link.setParameter( VERSION_PARM, plan.getVersion() );
     }
 
+    protected PageParameters makePlanParameters() {
+        PageParameters params = new PageParameters(  );
+        try {
+        params.put( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
+        } catch ( UnsupportedEncodingException e ) {
+            // should never happen
+            LOG.error( "Failed to encode uri", e );
+        }
+        params.put( VERSION_PARM, plan.getVersion() );
+        return params;
+    }
 
+    protected void setResponsePageWithPlan() {
+        setResponsePage( AdminPage.class, makePlanParameters() );
+     }
 
     /**
      * Build a new parameter container for the current selections.
@@ -274,6 +288,9 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     }
 
     public Plan getPlan() {
+        if ( plan == null ) {
+          setPlanFromParameters( getPageParameters() );
+        }
         return plan;
     }
 

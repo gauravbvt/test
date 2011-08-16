@@ -321,7 +321,7 @@ public class Plan extends ModelObject {
     }
 
     public List<String> getProducers() {
-        return producers;
+        return producers == null ? new ArrayList<String>() : producers;
     }
 
     public void setProducers( List<String> producers ) {

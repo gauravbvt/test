@@ -7,10 +7,10 @@ import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.surveys.SurveyService;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.AbstractBehavior;
@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -99,6 +98,7 @@ public class AdminPage extends AbstractChannelsWebPage {
 
     private void init() {
         setStatelessHint( true );
+        addChannelsLogo();
         userList = new ListView<User>( "item",
                 new PropertyModel<List<User>>( userService, "users" ) ) {
             private static final long serialVersionUID = 2266583072592123487L;
@@ -127,11 +127,12 @@ public class AdminPage extends AbstractChannelsWebPage {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 getPlanManager().productize( getPlan() );
-                setResponsePage( AdminPage.class );
+                setResponsePageWithPlan();
             }
 
 
         };
+        productizeLink.setVisible( getPlan().isDevelopment() );
         ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
                 "deletePlan",
                 "Delete the selected plan?" ) {
@@ -141,12 +142,13 @@ public class AdminPage extends AbstractChannelsWebPage {
                 if ( plans.size() > 1 ) {
                     getPlanManager().delete( getPlan() );
                     setPlan( plans.get( 0 ) );
-                    setResponsePage( AdminPage.class );
+                    setResponsePageWithPlan();
                 }
             }
         };
         deleteLink.setEnabled( definitionManager.getSize() > 1 );
-
+        WebMarkupContainer managePlanSubmit = new WebMarkupContainer( "managePlanSubmit" );
+        managePlanSubmit.setVisible( getPlan().isDevelopment() );
         add(
                 new Label( "loggedUser", getUser().getUsername() ),
                 form.add(
@@ -157,9 +159,12 @@ public class AdminPage extends AbstractChannelsWebPage {
 
                         deleteLink,
 
+                        managePlanSubmit,
+
                         new Label( "planUri", getPlan().getUri() ),
                         new TextField<String>( "planClient",
-                                new PropertyModel<String>( this, "planClient" ) ),
+                                new PropertyModel<String>( this, "planClient" ) )
+                                .setEnabled( getPlan().isDevelopment() ),
 
                         new TextField<String>( "plannerSupportCommunity",
                                 new PropertyModel<String>( this, "plannerSupportCommunity" ) ),
@@ -197,13 +202,13 @@ public class AdminPage extends AbstractChannelsWebPage {
 
                         new DropDownChoice<Plan>( "plan-sel",
                                 new PropertyModel<Plan>( this, "plan" ),
-                                new PropertyModel<List<? extends Plan>>( this, "developmentPlans" ) )
+                                new PropertyModel<List<? extends Plan>>( this, "activePlans" ) )
                                 .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                                     private static final long serialVersionUID = -5466916152047216396L;
 
                                     @Override
                                     protected void onUpdate( AjaxRequestTarget target ) {
-                                        setResponsePage( AdminPage.class );
+                                        setResponsePageWithPlan();
                                     }
                                 } ),
 
@@ -239,15 +244,9 @@ public class AdminPage extends AbstractChannelsWebPage {
     }
 
     private void addChannelsLogo() {
-        WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome");
-        channels_logo.add( new AjaxEventBehavior( "onclick") {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                String homeUrl =  AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
-                RedirectPage page =  new RedirectPage( homeUrl );
-                setResponsePage( page );
-            }
-        });
+        WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome" );
+        String homeUrl = AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
+        channels_logo.add( new AttributeModifier( "href", true, new Model<String>( "/" + homeUrl ) ) );
         add( channels_logo );
     }
 
@@ -306,7 +305,6 @@ public class AdminPage extends AbstractChannelsWebPage {
         if ( val != null && !val.isEmpty() && !val.equals( defaultCalendarPrivateTicket ) )
             getPlan().setCommunityCalendarPrivateTicket( val );
     }
-
 
 
     public String getSurveyApiKey() {
@@ -384,14 +382,14 @@ public class AdminPage extends AbstractChannelsWebPage {
         } catch ( IOException e ) {
             LOG.error( "Unable to save user definitions", e );
         }
-        setResponsePage( AdminPage.class );
+        setResponsePageWithPlan();
     }
 
 
-    public List<Plan> getDevelopmentPlans() {
+    public List<Plan> getActivePlans() {
         List<Plan> answer = new ArrayList<Plan>();
         for ( Plan plan : getPlanManager().getPlans() )
-            if ( plan.isDevelopment() )
+            if ( plan.isDevelopment() || plan.isProduction() )
                 answer.add( plan );
 
         return answer;
@@ -424,15 +422,16 @@ public class AdminPage extends AbstractChannelsWebPage {
 
     private MarkupContainer createUserRow( IModel<String> uriModel, final ListItem<User> item ) {
         IModel<User> userModel = item.getModel();
+        boolean notMe = !userModel.getObject().equals( User.current() );
         return new RadioGroup<Access>( "group", new RadioModel( userModel, uriModel ) ).add(
 
-                new Radio<Access>( "admin", new Model<Access>( Access.Admin ) ),
-                new Radio<Access>( "planner", new Model<Access>( Access.Planner ) ),
-                new Radio<Access>( "user", new Model<Access>( Access.User ) ),
-                new Radio<Access>( "disabled", new Model<Access>( Access.Disabled ) ),
-                new Radio<Access>( "localPlanner", new Model<Access>( Access.LPlanner ) ),
-                new Radio<Access>( "localUser", new Model<Access>( Access.LUser ) ),
-                new Radio<Access>( "localDisabled", new Model<Access>( Access.LDisabled ) ),
+                new Radio<Access>( "admin", new Model<Access>( Access.Admin ) ).setEnabled( notMe ),
+                new Radio<Access>( "planner", new Model<Access>( Access.Planner ) ).setEnabled( notMe ),
+                new Radio<Access>( "user", new Model<Access>( Access.User ) ).setEnabled( notMe ),
+                new Radio<Access>( "disabled", new Model<Access>( Access.Disabled ) ).setEnabled( notMe ),
+                new Radio<Access>( "localPlanner", new Model<Access>( Access.LPlanner ) ).setEnabled( notMe ),
+                new Radio<Access>( "localUser", new Model<Access>( Access.LUser ) ).setEnabled( notMe ),
+                new Radio<Access>( "localDisabled", new Model<Access>( Access.LDisabled ) ).setEnabled( notMe ),
 
                 new Label( "username", new PropertyModel<String>( userModel, "username" ) ),
                 new TextField<String>( "fullName",
@@ -461,7 +460,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                     protected void onModelChanged() {
                         toDelete.add( item.getModelObject() );
                     }
-                } );
+                }.setVisible( notMe ) );
     }
 
     //==================================================================
@@ -532,30 +531,32 @@ public class AdminPage extends AbstractChannelsWebPage {
         }
 
         public void setObject( Access object ) {
-            User rowUser = userModel.getObject();
-            switch ( object ) {
-                case Admin:
-                    getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_ADMIN, null );
-                    break;
-                case Planner:
-                    getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_PLANNER, null );
-                    break;
-                case User:
-                    getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_USER, null );
-                    break;
-                case LPlanner:
-                    getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_PLANNER, getUri() );
-                    break;
-                case LUser:
-                    getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_USER, getUri() );
-                    break;
-                case LDisabled:
-                    getPlanManager().setAuthorities( rowUser, null, getUri() );
-                    break;
-                case Disabled:
-                default:
-                    getPlanManager().setAuthorities( rowUser, null, null );
-                    break;
+            if ( object != null ) {
+                User rowUser = userModel.getObject();
+                switch ( object ) {
+                    case Admin:
+                        getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_ADMIN, null );
+                        break;
+                    case Planner:
+                        getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_PLANNER, null );
+                        break;
+                    case User:
+                        getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_USER, null );
+                        break;
+                    case LPlanner:
+                        getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_PLANNER, getUri() );
+                        break;
+                    case LUser:
+                        getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_USER, getUri() );
+                        break;
+                    case LDisabled:
+                        getPlanManager().setAuthorities( rowUser, null, getUri() );
+                        break;
+                    case Disabled:
+                    default:
+                        getPlanManager().setAuthorities( rowUser, null, null );
+                        break;
+                }
             }
         }
     }
