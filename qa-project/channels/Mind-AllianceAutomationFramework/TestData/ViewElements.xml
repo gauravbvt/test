@@ -221,4 +221,34 @@
 <feedback>Feedback</feedback>
 <report>Report</report>
 <elementsOfInformation>Elements of information</elementsOfInformation>
+<inDiffLoc>in different locations</inDiffLoc>
+<inDiffOrg>in different organizations</inDiffOrg>
+<inDiffOverallOrg>in different overall organizations</inDiffOverallOrg>
+<inSameLoc>in the same location</inSameLoc>
+<inSameOrg>in the same organization</inSameOrg>
+<inSameOrgAndLoc>in the same organization and location</inSameOrgAndLoc>
+<inSameOverallOrg>in the same overall organization</inSameOverallOrg>
+<toSupervisor>to a supervisor</toSupervisor>
+<toSelf>to self</toSelf>
+<toSomeoneElse>to someone else</toSomeoneElse>
+<fromSupervisor>from a supervisor</fromSupervisor>
+<fromSelf>from self</fromSelf>
+<fromSomeoneElse>from someone else</fromSomeoneElse>
+<cell>Cell</cell>
+<conferenceCall>Conference call</conferenceCall>
+<courier>Courier</courier>
+<faceToFace>Face to face</faceToFace>
+<fax>Fax</fax>
+<im>IM</im>
+<landline>Landline</landline>
+<mail>Mail</mail>
+<meeting>Meeting</meeting>
+<notificationSystem>Notification system</notificationSystem>
+<onlineChat>Online chat</onlineChat>
+<pager>Pager</pager>
+<paSystems>PA System</paSystems>
+<phone>Phone</phone>
+<radio>Radio</radio>
+<television>Television</television>
+<twoWayRadio>Two way radio</twoWayRadio>
 </elements>
