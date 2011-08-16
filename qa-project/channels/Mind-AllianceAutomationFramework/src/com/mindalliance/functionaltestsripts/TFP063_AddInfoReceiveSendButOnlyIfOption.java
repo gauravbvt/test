@@ -69,19 +69,24 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Select but only if <option> from List";
 				// Click on Check box
-				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:1:flow:restrictionContainer:restricted")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:restrictionContainer:restricted")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Select option from List
-				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:1:flow:restrictionContainer:restriction")));
+				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:restrictionContainer:restriction")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				if(options.get(0).getText().equals(GlobalVariables.viewElements.get("unspecified")) &&
-				   options.get(1).getText().equals(GlobalVariables.viewElements.get("alarm")) &&
-				   options.get(2).getText().equals(GlobalVariables.viewElements.get("announcement")) &&
-				   options.get(3).getText().equals(GlobalVariables.viewElements.get("command")) &&
-				   options.get(4).getText().equals(GlobalVariables.viewElements.get("feedback")) &&
-				   options.get(5).getText().equals(GlobalVariables.viewElements.get("report"))) {
+				   options.get(1).getText().equals(GlobalVariables.viewElements.get("inDiffLoc")) &&
+				   options.get(2).getText().equals(GlobalVariables.viewElements.get("inDiffOrg")) &&
+				   options.get(3).getText().equals(GlobalVariables.viewElements.get("inDiffOverallOrg")) &&
+				   options.get(4).getText().equals(GlobalVariables.viewElements.get("inSameLoc")) &&
+				   options.get(5).getText().equals(GlobalVariables.viewElements.get("inSameOrg")) &&
+				   options.get(6).getText().equals(GlobalVariables.viewElements.get("inSameOrgAndLoc")) &&
+				   options.get(7).getText().equals(GlobalVariables.viewElements.get("inSameOverallOrg")) &&
+				   options.get(8).getText().equals(GlobalVariables.viewElements.get("toSupervisor")) &&
+				   options.get(9).getText().equals(GlobalVariables.viewElements.get("toSelf")) &&
+				   options.get(10).getText().equals(GlobalVariables.viewElements.get("toSomeoneElse"))) {
 					options.get(5).setSelected();
 					if(options.get(5).isSelected())
 					{
@@ -113,17 +118,28 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				Thread.currentThread();
 				Thread.sleep(2000);
 
-				// Received : Intent <option> List 
+				// Receives : but only if <option> List 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Select Intent <option> from List";				
-				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:intent")));
+				GlobalVariables.sDescription = "Select but only if <option> from List";
+				// Click on Check box
+				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:restrictionContainer:restricted")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Select option from List
+				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:restrictionContainer:restriction")));
 				options = GlobalVariables.oDropDown.getOptions();
 				if(options.get(0).getText().equals(GlobalVariables.viewElements.get("unspecified")) &&
-				   options.get(1).getText().equals(GlobalVariables.viewElements.get("alarm")) &&
-				   options.get(2).getText().equals(GlobalVariables.viewElements.get("announcement")) &&
-				   options.get(3).getText().equals(GlobalVariables.viewElements.get("command")) &&
-				   options.get(4).getText().equals(GlobalVariables.viewElements.get("feedback")) &&
-				   options.get(5).getText().equals(GlobalVariables.viewElements.get("report"))) {
+				   options.get(1).getText().equals(GlobalVariables.viewElements.get("fromSupervisor")) &&
+				   options.get(2).getText().equals(GlobalVariables.viewElements.get("fromSelf")) &&
+				   options.get(3).getText().equals(GlobalVariables.viewElements.get("fromSomeoneElse")) &&
+				   options.get(4).getText().equals(GlobalVariables.viewElements.get("inDiffLoc")) &&
+				   options.get(5).getText().equals(GlobalVariables.viewElements.get("inDiffOrg")) &&
+				   options.get(6).getText().equals(GlobalVariables.viewElements.get("inDiffOverallOrg")) &&
+				   options.get(7).getText().equals(GlobalVariables.viewElements.get("inSameLoc")) &&
+				   options.get(8).getText().equals(GlobalVariables.viewElements.get("inSameOrg")) &&
+				   options.get(9).getText().equals(GlobalVariables.viewElements.get("inSameOrgAndLoc")) &&
+				   options.get(10).getText().equals(GlobalVariables.viewElements.get("inSameOverallOrg"))) {
 					options.get(5).setSelected();
 					if(options.get(5).isSelected())
 					{
