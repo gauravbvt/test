@@ -196,7 +196,6 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathActionMoveTaskToSegment",oXmlElePlanPage.getElementsByTagName("xPathActionMoveTaskToSegment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathActionSignOut",oXmlElePlanPage.getElementsByTagName("xPathActionSignOut").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathHelpIcon",oXmlElePlanPage.getElementsByTagName("xPathHelpIcon").item(0).getChildNodes().item(0).getNodeValue());
-			System.out.println("Hie.11");
 			GlobalVariables.plan.put("sXpathTagsLinkOnTask",oXmlElePlanPage.getElementsByTagName("xPathTagsLinkOnTask").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAboutPlanSegmentLink",oXmlElePlanPage.getElementsByTagName("xPathAboutPlanSegmentLink").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAboutPlanShowDetails",oXmlElePlanPage.getElementsByTagName("xPathAboutPlanShowDetails").item(0).getChildNodes().item(0).getNodeValue());
