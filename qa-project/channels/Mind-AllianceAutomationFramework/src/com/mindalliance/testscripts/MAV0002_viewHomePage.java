@@ -45,7 +45,7 @@ public class MAV0002_viewHomePage
 		      // WebElement Synchronization
 		      Thread.currentThread();
 		      Thread.sleep(3000);
-				
+		      
 		      // Call Logout
 		      GlobalVariables.iStepNo++ ;
 		      GlobalVariables.sDescription = "Logout is successful";
@@ -53,16 +53,13 @@ public class MAV0002_viewHomePage
 		      // Write Results
 		      LogFunctions.writeLogs(GlobalVariables.sDescription);
 		      LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-		      // WebElement Synchronization
-		      Thread.currentThread();
-		      Thread.sleep(3000);
-		      
+		    		  GlobalVariables.sBlank, GlobalVariables.sBlank);
+
 		      GlobalVariables.oDriver.quit();
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 		      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-				
+	      
 			  }
 				else
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -74,7 +71,8 @@ public class MAV0002_viewHomePage
 							e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 					LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-					ApplicationFunctionLibrary.logout();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
+					 GlobalVariables.oDriver.quit();
 				}
 				else {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
