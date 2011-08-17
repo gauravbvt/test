@@ -41,7 +41,7 @@ import com.mindalliance.globallibrary.ReportFunctions;
 
 //VS4E -- DO NOT REMOVE THIS LINE!
 public class HomeForFunctionalTestCase extends JFrame implements ActionListener, ItemListener{
-	boolean clFlag=true,hpFlag=true,caFlag=true,dcFlag=true,ceFlag=true,cpFlag=true,psFlag=true,tfFlag=true,teFlag=true,isgFlag=true,ifmFlag=true,acFlag=true,lfFlag=true,misgFlag=true;
+	boolean clFlag=true,hpFlag=true,caFlag=true,dcFlag=true,ceFlag=true,cpFlag=true,psFlag=true,tfFlag=true,teFlag=true,isgFlag=true,ifmFlag=true,acFlag=true,lfFlag=true,misgFlag=true,isrFlag=true;
 	private static final long serialVersionUID = 1L;
 	private static int jListCount=0;
 	private JList jListFunctional;
@@ -880,13 +880,13 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 			}
 		}
 		else if(chk.getText().equalsIgnoreCase("Issue Summary Report")){
-			if(chk.isSelected() && misgFlag==true){
+			if(chk.isSelected() && isrFlag==true){
 				jScrollPane0.setViewportView(getJList0(17));
-				misgFlag=false;
+				isrFlag=false;
 			}
 			else{
-				jScrollPane0.setViewportView(getJListModified0("ISR"));
-				misgFlag=true;
+				jScrollPane0.setViewportView(getJListModified0("IS"));
+				isrFlag=true;
 			}
 		}
 		// TODO Auto-generated method stub
