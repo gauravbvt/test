@@ -738,7 +738,9 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
+		try {
 		JCheckBox chk=(JCheckBox)e.getSource();
+		System.out.println(chk.getText());
 		if(chk.getText().equalsIgnoreCase("Channels Login")) {
 			if(chk.isSelected() && clFlag==true) {
 				jScrollPane0.setViewportView(getJList0(1));
@@ -895,6 +897,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				jListFunctional.setSelectionInterval(0, jListFunctional.getModel().getSize() - 1);
 			else
 				jListFunctional.clearSelection();
+		}
+		}
+		catch (Exception ex)
+		{
+			
+			System.out.println(ex.getMessage());
 		}
 	}
 
