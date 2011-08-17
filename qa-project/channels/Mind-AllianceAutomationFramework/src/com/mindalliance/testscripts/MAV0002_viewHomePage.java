@@ -42,7 +42,10 @@ public class MAV0002_viewHomePage
 				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 			  }
-		      
+		      // WebElement Synchronization
+		      Thread.currentThread();
+		      Thread.sleep(3000);
+				
 		      // Call Logout
 		      GlobalVariables.iStepNo++ ;
 		      GlobalVariables.sDescription = "Logout is successful";
@@ -51,7 +54,12 @@ public class MAV0002_viewHomePage
 		      LogFunctions.writeLogs(GlobalVariables.sDescription);
 		      LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+		      // WebElement Synchronization
+		      Thread.currentThread();
+		      Thread.sleep(3000);
+		      
 		      GlobalVariables.oDriver.quit();
+		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 		      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				

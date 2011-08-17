@@ -35,7 +35,13 @@ public class MAV0001_viewLoginPage{
 				GlobalVariables.oDriver = new FirefoxDriver();
     	  if (GlobalVariables.sBrowser.equals("Internet Explorer"))
 				GlobalVariables.oDriver = new InternetExplorerDriver();
+    	  // WebElement Synchronization
+	      Thread.currentThread();
+	      Thread.sleep(3000);
 		  GlobalVariables.oDriver.get(GlobalVariables.login.get("sChannelURL"));
+		  // WebElement Synchronization
+	      Thread.currentThread();
+	      Thread.sleep(3000);
 	      // Assertion: Verify that user is able to view 'Log in' form with title 'ChannelsInformation Sharing Planning'
 	      if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.viewElements.get("loginPageTitle"))) {
 	    	  // Write Results
@@ -43,8 +49,8 @@ public class MAV0001_viewLoginPage{
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	      }
-	      else
-		  {
+	      else{
+	    	  GlobalVariables.sVerifyError="Verification Failed "+GlobalVariables.oDriver.getTitle()+" expected";
 			  // Write Results
 			  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 			  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
