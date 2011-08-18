@@ -251,5 +251,6 @@
 <radio>Radio</radio>
 <television>Television</television>
 <twoWayRadio>Two way radio</twoWayRadio>
+<newPasswordMsg>A new password has been emailed to you.</newPasswordMsg>
 <impactsOfFailingTaskDoingSomething>Impacts of failing task "doing something"</impactsOfFailingTaskDoingSomething>
 </elements>
