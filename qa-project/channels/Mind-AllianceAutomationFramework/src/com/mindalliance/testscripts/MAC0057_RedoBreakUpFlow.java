@@ -92,7 +92,7 @@ public class MAC0057_RedoBreakUpFlow
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Receive info";
 				// Click on legend for maximize the graph
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -148,7 +148,7 @@ public class MAC0057_RedoBreakUpFlow
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Click on legend for maximize the graph
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

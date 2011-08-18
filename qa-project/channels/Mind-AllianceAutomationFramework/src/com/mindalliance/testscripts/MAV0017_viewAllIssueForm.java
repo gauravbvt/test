@@ -66,7 +66,7 @@ public class MAV0017_viewAllIssueForm
 			  GlobalVariables.iStepNo++;
 			  GlobalVariables.sDescription="All Issues renders";
 			  GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionIssues")));
-			  if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
+			  if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allIssues"))) {
 				  // Write Results
 				  LogFunctions.writeLogs(GlobalVariables.sDescription);
 				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
