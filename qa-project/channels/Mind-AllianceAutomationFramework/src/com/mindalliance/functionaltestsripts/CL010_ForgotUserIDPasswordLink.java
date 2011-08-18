@@ -19,7 +19,7 @@ public class CL010_ForgotUserIDPasswordLink
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Login Page
 	    	  GlobalVariables.iStepNo++;
@@ -35,12 +35,12 @@ public class CL010_ForgotUserIDPasswordLink
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Click on Forgot UserId or Password Link
 		      GlobalVariables.iStepNo++;
-		      GlobalVariables.sDescription="Forgot UserId or Passowrd Link";
-		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/p/a")).click();
+		      GlobalVariables.sDescription="Can't access your account? Link Clicked";
+		      GlobalVariables.oDriver.findElement(By.linkText("Can't access your account?")).click();
 		      // Assertion: 1. Verify that new page is displayed to user with title 'Channels New password request'
 		      if(GlobalVariables.oDriver.getTitle().equals("Channels - Sign in")){
 		    	  // Write Results
@@ -57,9 +57,10 @@ public class CL010_ForgotUserIDPasswordLink
 		      }	
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      GlobalVariables.oDriver.quit();
+		      GlobalVariables.iStepNo=0;
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 		      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

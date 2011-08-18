@@ -13,13 +13,14 @@ public class CL005_InavlidPassword
 {
 	public CL005_InavlidPassword(){
 		  try {
+			  
 			  GlobalVariables.sTestCaseId = "CL005_InavlidPassword";
 			  GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			  LogFunctions.writeLogs(GlobalVariables.sDescription);
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Login Page
 	    	  GlobalVariables.iStepNo++;
@@ -35,26 +36,26 @@ public class CL005_InavlidPassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Enter User name and password
 		      GlobalVariables.iStepNo++;
-		      GlobalVariables.sDescription="Username and Password";
+		      GlobalVariables.sDescription="Valid Username and Invalid Password Entered";
 		      GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 		      GlobalVariables.oElement.sendKeys((String)GlobalVariables.login.get("sUsername"));
 		      GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
-		      GlobalVariables.oElement.sendKeys("@test123");
+		      GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("invalidPass"));
 		      // Write Results
 	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Click on Sign In button
 		      GlobalVariables.iStepNo++ ;
-		      GlobalVariables.sDescription = "Submit";
+		      GlobalVariables.sDescription = "Submit button Clicked";
 		      GlobalVariables.oDriver.findElement(By.name("_spring_security_remember_me")).click();
 		      GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();
 		      // Write Results
@@ -63,11 +64,11 @@ public class CL005_InavlidPassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Assertion: Verify that new page is displayed with title as 'Channels Sign In failed!'
 		      GlobalVariables.iStepNo++ ;
-		      GlobalVariables.sDescription = "Login Failed ";
+		      GlobalVariables.sDescription = "Login Failed";
 		      if(GlobalVariables.oDriver.getTitle().equalsIgnoreCase("Channels - Sign in")){
 		    	  // Write Results
 		    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -83,9 +84,11 @@ public class CL005_InavlidPassword
 		      }	
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
-		      GlobalVariables.oDriver.quit();
+		      Thread.sleep(2000);
 		      
+		      GlobalVariables.oDriver.quit();
+		      GlobalVariables.iStepNo=0;
+
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 		      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			

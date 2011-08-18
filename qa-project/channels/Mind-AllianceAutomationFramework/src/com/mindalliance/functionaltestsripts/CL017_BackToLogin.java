@@ -19,7 +19,7 @@ public class CL017_BackToLogin
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Login Page
 	    	  GlobalVariables.iStepNo++;
@@ -35,19 +35,19 @@ public class CL017_BackToLogin
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Click on Forgot UserId or Password Link
 		      GlobalVariables.iStepNo++;
-		      GlobalVariables.sDescription="Forgot UserId or Passowrd Link";
-		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/p/a")).click();
+		      GlobalVariables.sDescription="Can't access your account? Link Clicked";
+		      GlobalVariables.oDriver.findElement(By.linkText("Can't access your account?")).click();
 	    	  // Write Results
 	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Click on Provide user name test box
 		      GlobalVariables.iStepNo++;
