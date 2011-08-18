@@ -94,14 +94,15 @@ abstract public class AbstractParticipantPage  extends AbstractChannelsWebPage {
         }
     }
 
-    protected void init( QueryService service, ResourceSpec profile, String override ) {
+    protected void init( QueryService queryService, ResourceSpec profile, String override ) {
 
-        Plan plan = service.getPlan();
+        Plan plan = queryService.getPlan();
         AggregatedContact contact =
-                getUser().isPlanner( plan.getUri() ) ? new AggregatedContact( service, profile.getActor(), override )
-                        : new AggregatedContact( service, profile.getActor(), getUser().getUsername() );
+                getUser().isPlanner( plan.getUri() ) ? new AggregatedContact( queryService, profile.getActor(), override )
+                        : new AggregatedContact( queryService, profile.getActor(), getUser().getUsername() );
+        contact.resolveChannels( queryService );
         add(
-                new Label("reportTitle", getReportTitle() ),
+                new Label( "reportTitle", getReportTitle() ),
                 new Label( "reportName", getReportName() ),
                 new UserFeedbackPanel( "planFeedback", plan, "Send overall feedback" ),
 /*
@@ -116,7 +117,7 @@ abstract public class AbstractParticipantPage  extends AbstractChannelsWebPage {
                 newContact( "contact", contact )
                         .add( new Label( "myAvail", contact.getAvailability() ) )
                         .setRenderBodyOnly( true ) );
-                initReportBody( plan, service, profile, override, contact);
+                initReportBody( plan, queryService, profile, override, contact);
 
     }
 
@@ -277,7 +278,7 @@ abstract public class AbstractParticipantPage  extends AbstractChannelsWebPage {
                 Collections.sort( channels );
             }
 
-            if ( supervisor.getActor() != null )
+            if ( supervisor != null && supervisor.getActor() != null )
                 supervisor.resolveChannels( service );
         }
 

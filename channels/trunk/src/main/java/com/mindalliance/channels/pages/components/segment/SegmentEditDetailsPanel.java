@@ -283,7 +283,8 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
      * @param name a string
      */
     public void setName( String name ) {
-        doCommand( new UpdatePlanObject( getSegment(), "name", name ) );
+        if ( name != null && !name.isEmpty() )
+            doCommand( new UpdatePlanObject( getSegment(), "name", name ) );
     }
 
     /**
