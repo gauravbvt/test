@@ -66,7 +66,7 @@ public class MAV0016_viewAllWhoForm
 			  GlobalVariables.iStepNo++;
 			  GlobalVariables.sDescription="'Who's who' Page gets renders";
 			  GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionWhowho")));
-			  if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("whosWho"))) {
+			  if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
 				  // Write Results
 	  	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	  	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

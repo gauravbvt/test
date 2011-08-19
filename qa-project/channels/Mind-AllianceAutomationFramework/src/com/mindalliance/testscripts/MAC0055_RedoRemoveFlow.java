@@ -92,7 +92,7 @@ public class MAC0055_RedoRemoveFlow
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Receive Info";
 				// Click on legend for maximize the graph
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
@@ -143,7 +143,7 @@ public class MAC0055_RedoRemoveFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

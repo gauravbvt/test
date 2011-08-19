@@ -78,7 +78,7 @@ public class MAC0019_CutAttachment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
 					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

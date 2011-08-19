@@ -487,12 +487,11 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 			if (jListFunctional == null) {
 				jListFunctional = new JList();
 				arrayOfTestCaseIdOld = ReportFunctions.readTestCaseIdForFunctional(sheetNumber);
-				for (int i=0;i<500;i++) {
+				for (int i=0;i<500;i++)
 					if(arrayOfTestCaseIdOld[i] != null) {
 						jListCount=i;
 						listModel.addElement(arrayOfTestCaseIdOld[i]);
 					}
-				}
 				jListCount++;
 				jListFunctional.setModel(listModel);
 				jListFunctional.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -739,7 +738,6 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		try {
 		JCheckBox chk=(JCheckBox)e.getSource();
 		if(chk.getText().equalsIgnoreCase("Channels Login")) {
 			if(chk.isSelected() && clFlag==true) {
@@ -897,12 +895,6 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				jListFunctional.setSelectionInterval(0, jListFunctional.getModel().getSize() - 1);
 			else
 				jListFunctional.clearSelection();
-		}
-		}
-		catch (Exception ex)
-		{
-			
-			System.out.println(ex.getMessage());
 		}
 	}
 

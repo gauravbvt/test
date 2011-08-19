@@ -129,8 +129,7 @@ public class TE112_PhaseDescription
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					
-					
+										
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan closed";

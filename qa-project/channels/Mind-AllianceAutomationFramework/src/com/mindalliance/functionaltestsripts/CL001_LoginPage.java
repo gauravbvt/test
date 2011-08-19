@@ -14,14 +14,13 @@ public class CL001_LoginPage
 {
 	public CL001_LoginPage(){
 		  try {
-			  
 			  GlobalVariables.sTestCaseId = "CL001_LoginPage";
 			  GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			  LogFunctions.writeLogs(GlobalVariables.sDescription);
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 				
 	    	  // Login Page
 	    	  GlobalVariables.iStepNo++;
@@ -47,10 +46,9 @@ public class CL001_LoginPage
 		      }	
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      GlobalVariables.oDriver.quit();
-		      GlobalVariables.iStepNo=0;
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 		      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

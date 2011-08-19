@@ -107,8 +107,6 @@ public class GenericFunctionLibrary {
 			GlobalVariables.login.put("sSignoutOnParticipantsPage",oXmlEleLoginPage.getElementsByTagName("xPathSignOutOnParticipantsPage").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sXpathStackTrace",oXmlEleLoginPage.getElementsByTagName("xPathStackTrace").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sXpathSignoutOnAssignmentsCommitments",oXmlEleLoginPage.getElementsByTagName("xPathSignoutOnAssignmentsCommitments").item(0).getChildNodes().item(0).getNodeValue());
-			GlobalVariables.login.put("sXpathRequestNewPassword",oXmlEleLoginPage.getElementsByTagName("xPathRequestNewPassword").item(0).getChildNodes().item(0).getNodeValue());
-			GlobalVariables.login.put("sXpathRequestPasswordMessage",oXmlEleLoginPage.getElementsByTagName("xPathRequestPasswordMessage").item(0).getChildNodes().item(0).getNodeValue());
 			// Channels Admin
 			GlobalVariables.channelsAdmin.put("sXpathLogoutAdminPage",oXmlEleChannelsAdmin.getElementsByTagName("xPathLogoutAdminPage").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.channelsAdmin.put("sXpathSamePlanErrorMessage",oXmlEleChannelsAdmin.getElementsByTagName("xPathSamePlanErrorMessage").item(0).getChildNodes().item(0).getNodeValue());
@@ -136,7 +134,6 @@ public class GenericFunctionLibrary {
 			GlobalVariables.home.put("sXpathHelpIcon",oXmlEleHomePage.getElementsByTagName("xPathHelpIcon").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathShowSentReceiveMessages",oXmlEleHomePage.getElementsByTagName("xPathShowSentReceiveMessages").item(0).getChildNodes().item(0).getNodeValue());
 			//Channels Plan Page
-			GlobalVariables.plan.put("sXpathStretchUpShrinkBack",oXmlElePlanPage.getElementsByTagName("xPathStretchUpShrinkBack").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathShowPopUpMenu",oXmlElePlanPage.getElementsByTagName("xPathShowPopUpMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAllSegmentShowMenu",oXmlElePlanPage.getElementsByTagName("xPathAllSegmentShowMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathActionsPopUpMenu",oXmlElePlanPage.getElementsByTagName("xPathActionsPopUpMenu").item(0).getChildNodes().item(0).getNodeValue());
@@ -233,11 +230,13 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathAgentCategory",oXmlElePlanPage.getElementsByTagName("xPathAgentCategory").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathDeleteAgentCategory",oXmlElePlanPage.getElementsByTagName("xPathDeleteAgentCategory").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAgentViewAllTypes",oXmlElePlanPage.getElementsByTagName("xPathAgentViewAllTypes").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathAgentURL",oXmlElePlanPage.getElementsByTagName("xPathAgentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathDeleteAgentURL",oXmlElePlanPage.getElementsByTagName("xPathDeleteAgentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAgentMore",oXmlElePlanPage.getElementsByTagName("xPathAgentMore").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathLocale",oXmlElePlanPage.getElementsByTagName("xPathLocale").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAgentDetails",oXmlElePlanPage.getElementsByTagName("xPathAgentDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAgentName",oXmlElePlanPage.getElementsByTagName("xPathAgentName").item(0).getChildNodes().item(0).getNodeValue());
+			
 			GlobalVariables.plan.put("sXpathSendsAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathSendsAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathReceivesAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathReceivesAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathPlanHomeIcon",oXmlElePlanPage.getElementsByTagName("xPathPlanHomeIcon").item(0).getChildNodes().item(0).getNodeValue());
@@ -282,7 +281,6 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
 					
 			// View Elements
-			GlobalVariables.viewElements.put("impactsOfFailingTaskDoingSomething",oXmlEleViewElements.getElementsByTagName("impactsOfFailingTaskDoingSomething").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("adminPageTitle",oXmlEleViewElements.getElementsByTagName("adminPageTitle").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("homePageTitle",oXmlEleViewElements.getElementsByTagName("homePageTitle").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("loginPageTitle",oXmlEleViewElements.getElementsByTagName("loginPageTitle").item(0).getChildNodes().item(0).getNodeValue());
@@ -494,7 +492,6 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("radio",oXmlEleViewElements.getElementsByTagName("radio").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("television",oXmlEleViewElements.getElementsByTagName("television").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("twoWayRadio",oXmlEleViewElements.getElementsByTagName("twoWayRadio").item(0).getChildNodes().item(0).getNodeValue());
-			GlobalVariables.viewElements.put("newPasswordMsg",oXmlEleViewElements.getElementsByTagName("newPasswordMsg").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("iAmPlanner",oXmlEleViewElements.getElementsByTagName("iAmPlanner").item(0).getChildNodes().item(0).getNodeValue());
 			
 		} catch(Exception e) {

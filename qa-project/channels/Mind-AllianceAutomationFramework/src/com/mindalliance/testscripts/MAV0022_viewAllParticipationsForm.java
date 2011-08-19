@@ -68,7 +68,7 @@ public class MAV0022_viewAllParticipationsForm
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Participations' gets loaded on the About Plan window";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionParticipations")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("participations"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

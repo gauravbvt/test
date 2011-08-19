@@ -19,7 +19,7 @@ public class CL008_BlankUserNamePassword
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Login Page
 	    	  GlobalVariables.iStepNo++;
@@ -35,11 +35,11 @@ public class CL008_BlankUserNamePassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Enter User name and password
 		      GlobalVariables.iStepNo++;
-		      GlobalVariables.sDescription="Blank Username and Password Entered";
+		      GlobalVariables.sDescription="Username and Password";
 		      GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 		      GlobalVariables.oElement.sendKeys("");
 		      GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
@@ -50,11 +50,11 @@ public class CL008_BlankUserNamePassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Click on Sign In button
 		      GlobalVariables.iStepNo++ ;
-		      GlobalVariables.sDescription = "Submit button Clicked";
+		      GlobalVariables.sDescription = "Submit";
 		      GlobalVariables.oDriver.findElement(By.name("_spring_security_remember_me")).click();
 		      GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();
 		      // Write Results
@@ -63,7 +63,7 @@ public class CL008_BlankUserNamePassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
+		      Thread.sleep(3000);
 		      
 		      // Assertion: Verify that new page is displayed with title as 'Channels Sign In failed!'
 		      GlobalVariables.iStepNo++ ;
@@ -83,10 +83,8 @@ public class CL008_BlankUserNamePassword
 		      }	
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(2000);
-		      
+		      Thread.sleep(3000);
 		      GlobalVariables.oDriver.quit();
-		      GlobalVariables.iStepNo=0;
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 		      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
