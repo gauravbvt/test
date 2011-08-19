@@ -72,9 +72,9 @@ public class ApplicationFunctionLibrary {
 			GlobalVariables.iStepNo++ ;
 			GlobalVariables.sDescription = "Username and password entered";
 			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
-			GlobalVariables.oElement.sendKeys((String)GlobalVariables.login.get("sUsername"));
+			GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sUsername"));
 			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
-			GlobalVariables.oElement.sendKeys((String)GlobalVariables.login.get("sPassword"));
+			GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sPassword"));
 			// Write Results
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed,
