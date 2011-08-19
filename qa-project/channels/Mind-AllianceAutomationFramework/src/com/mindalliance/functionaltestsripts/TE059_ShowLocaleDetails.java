@@ -12,7 +12,7 @@ public class TE059_ShowLocaleDetails
 {
 	public TE059_ShowLocaleDetails() {
 		try{
-			GlobalVariables.sTestCaseId = "TE058_ShowLocaleIssueDetails";
+			GlobalVariables.sTestCaseId = "TE059_ShowLocaleDetails";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -119,7 +119,6 @@ public class TE059_ShowLocaleDetails
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
-			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

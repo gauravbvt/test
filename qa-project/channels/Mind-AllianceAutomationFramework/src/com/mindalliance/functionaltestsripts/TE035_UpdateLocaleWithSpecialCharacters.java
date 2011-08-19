@@ -17,7 +17,7 @@ public class TE035_UpdateLocaleWithSpecialCharacters
 {
 	public TE035_UpdateLocaleWithSpecialCharacters() {
 		try{
-			GlobalVariables.sTestCaseId = "TE033_ViewLocale";
+			GlobalVariables.sTestCaseId = "TE035_UpdateLocaleWithSpecialCharacters";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -80,7 +80,7 @@ public class TE035_UpdateLocaleWithSpecialCharacters
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	if(option.getText().equals(GlobalVariables.viewElements.get(")(*&^%$#!"))){
+			    	if(option.getText().equals(GlobalVariables.viewElements.get("places"))){
 			    			option.setSelected();
 			    			break;
 			    	}
@@ -89,7 +89,7 @@ public class TE035_UpdateLocaleWithSpecialCharacters
 				Thread.currentThread();
 				Thread.sleep(1000);
 				//Select Locale To Be Updated
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLocaleWithSpecialCharacters"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
@@ -108,7 +108,7 @@ public class TE035_UpdateLocaleWithSpecialCharacters
 				Thread.currentThread();
 				Thread.sleep(1000);
 				//Assertion : Verify that Locale Name is Updated
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLocaleWithSpecialCharacters"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
@@ -161,20 +161,17 @@ public class TE035_UpdateLocaleWithSpecialCharacters
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
-			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
-				GlobalVariables.oDriver.quit();
+				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
-				GlobalVariables.oDriver.quit();
+				ApplicationFunctionLibrary.logout();
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}

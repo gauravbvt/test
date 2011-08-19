@@ -110,10 +110,7 @@ public class TE047_NamedLocaleAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				
 				// Open Locale Window				
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Locale Window Opened";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("index"));
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -149,8 +146,8 @@ public class TE047_NamedLocaleAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Assertion: verify that file is attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[7]/td/ul/span/li/a"));
+				// Assertion: Verify that file is attached
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
 				if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

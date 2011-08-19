@@ -58,12 +58,12 @@ public class TE060_AddNewMedium
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Medium Added";
 				// Select New Medium from List
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium")));
+			    GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("newMedium").equals(option.getText())){
-			    		option.setSelected();
-			    		break;
+			    			option.setSelected();
+			    			break;
 			    	}
 			    }
 			    // WebElement Synchronization
@@ -119,7 +119,6 @@ public class TE060_AddNewMedium
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
-			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
