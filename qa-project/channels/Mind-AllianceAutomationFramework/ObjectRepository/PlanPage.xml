@@ -45,6 +45,7 @@
 <xPathOrganizationAgreement>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[12]/td/span/div/div/ul/li[3]/a/span</xPathOrganizationAgreement>
 <xPathAboutPlanLocale>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[6]/td/span/input</xPathAboutPlanLocale>
 <xPathAboutPlanLocaleLink>/html/body/form/div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td[3]/ul/li/span/span/a/span</xPathAboutPlanLocaleLink>
+<xPathLocaleWithSpecialCharacters>/html/body/form/div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathLocaleWithSpecialCharacters>
 <xPathLegend>/html/body/form/span/div/div/span[7]/img</xPathLegend>
 <xPathDoingSomeThing>/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[2]</xPathDoingSomeThing>
 <xPathPlanURIName>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr/td/span</xPathPlanURIName>
@@ -130,6 +131,7 @@
 <xPathTaskIssueAttachmentURL>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathTaskIssueAttachmentURL>
 <xPathSendsAttachmentURL>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[13]/td/ul/li/span/span/input[2]</xPathSendsAttachmentURL>
 <xPathReceivesAttachmentURL>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[12]/td/ul/li/span/span/input[2]</xPathReceivesAttachmentURL>
+<xPathAgentURL>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/th</xPathAgentURL>
 <!-- Assertions -->
 <xPathDeleteOrganizationAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li</xPathDeleteOrganizationAttachmentAssertion>
 <xPathRemoveOrganizationAssertion>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul</xPathRemoveOrganizationAssertion>
