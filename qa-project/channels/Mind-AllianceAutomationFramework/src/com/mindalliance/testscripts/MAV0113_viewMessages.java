@@ -1,7 +1,7 @@
 package com.mindalliance.testscripts;
 
 import org.openqa.selenium.By;
-
+import org.openqa.selenium.JavascriptExecutor;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -34,7 +34,13 @@ public MAV0113_viewMessages(){
 				Thread.currentThread();
 				Thread.sleep(1000);
 				
-				// Click on Messages tab from social panel
+				// Maximize Browser Window
+				((JavascriptExecutor) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Click on Messages tab from Collaboration panel
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Messages tab";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathMessages"))).click();
@@ -70,7 +76,6 @@ public MAV0113_viewMessages(){
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
-				ApplicationFunctionLibrary.logout();
 				ApplicationFunctionLibrary.logout();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

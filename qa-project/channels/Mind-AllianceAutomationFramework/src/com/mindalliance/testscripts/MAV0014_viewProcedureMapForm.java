@@ -74,8 +74,7 @@ public class MAV0014_viewProcedureMapForm
 			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 					GlobalVariables.sBlank, GlobalVariables.sBlank); 	    	    	     
 		}
-		else
-		{
+		else{
 			GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
 			// Write Results
 			LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);

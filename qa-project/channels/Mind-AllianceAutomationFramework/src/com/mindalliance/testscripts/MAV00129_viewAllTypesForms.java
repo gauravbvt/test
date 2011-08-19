@@ -60,7 +60,7 @@ public class MAV00129_viewAllTypesForms
 			GlobalVariables.iStepNo++;
 			GlobalVariables.sDescription="'Index' gets loaded on the About Plan window";		            		         
 			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionTypes")));
-			if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
+			if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allTypes"))) {
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

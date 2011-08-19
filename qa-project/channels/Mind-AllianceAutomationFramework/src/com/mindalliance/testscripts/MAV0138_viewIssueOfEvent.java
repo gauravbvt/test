@@ -95,19 +95,9 @@ public class MAV0138_viewIssueOfEvent
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event issue";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("issues"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				
 				// Assertion: Verify that "Event details" page loaded 
-			    GlobalVariables.iStepNo++;
-			    GlobalVariables.sDescription="'Event issue' gets loaded";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAssertionDetails")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("issues"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -122,7 +112,26 @@ public class MAV0138_viewIssueOfEvent
 				}
 			    // WebElement Synchronization
 				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Click on Done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Done";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
 				Thread.sleep(1000);
+				// Remove Event
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				
+				
 				
 			    // Call logout()
 			    GlobalVariables.iStepNo++ ;

@@ -124,7 +124,7 @@ public class MAV0149_viewIssueOfPlace
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Places-Issue details' page gets loaded";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAssertionDetails")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("issues"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

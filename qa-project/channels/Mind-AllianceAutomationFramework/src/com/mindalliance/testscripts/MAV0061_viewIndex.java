@@ -66,7 +66,7 @@ public class MAV0061_viewIndex
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Index' gets loaded on the About Plan Segment window";		            		         
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionDetails")));			    
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allSegments"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("index"))) {
 			    	 // Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

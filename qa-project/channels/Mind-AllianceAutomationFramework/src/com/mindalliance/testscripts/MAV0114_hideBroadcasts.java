@@ -62,7 +62,7 @@ public class MAV0114_hideBroadcasts
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Hide broadcast link changes to show all messages";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAllUsers")));				
-				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAllMessages"))) {
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("hideInactiveUsers"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -82,7 +82,6 @@ public class MAV0114_hideBroadcasts
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
-				ApplicationFunctionLibrary.logout();
 				ApplicationFunctionLibrary.logout();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

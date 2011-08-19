@@ -39,11 +39,10 @@ public class UpdatePlanner
 				GlobalVariables.oDriver.findElement(By.linkText("Channels administration")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				
+				Thread.sleep(3000);				
 				// get list under Actions pop up menu
-				int countUsers = -2 , countPlanners = 0;
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table"));
+				int countUsers = 1 , countPlanners = 0;
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
 				for(WebElement tr: trs)
@@ -52,13 +51,13 @@ public class UpdatePlanner
 					for(WebElement td: tds)
 					{
 						if(td.getText().contains("planner")){
-							GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:"+countUsers+":group:fullName"));
+							GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:"+ (countUsers - 1) +":group:fullName"));
 							for (int i = 0; i <= 8; i++)
 								GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-							GlobalVariables.oElement.sendKeys("Planner"+(countUsers-4));
-							GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:" +countUsers + ":group:password"));
+							GlobalVariables.oElement.sendKeys("Planner"+(countUsers - 5));
+							GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:" + (countUsers - 1) + ":group:password"));
 							GlobalVariables.oElement.sendKeys("@test123");
-							GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table/tbody/tr[" + (countUsers+1) + "]/td[6]/input")).click();
+							GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody/tr[" + (countUsers) + "]/td[6]/input")).click();
 							countPlanners++;
 						}
 					}
@@ -72,12 +71,12 @@ public class UpdatePlanner
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/ul/li/a")).click();
+				GlobalVariables.oDriver.findElement(By.className("logout")).click();
+				// GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/ul/li/a")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oDriver.quit();
-
 	} 
 		catch (Exception e) {
 			System.out.println(e.getMessage());

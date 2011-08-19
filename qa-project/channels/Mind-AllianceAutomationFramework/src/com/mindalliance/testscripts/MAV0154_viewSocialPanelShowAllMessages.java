@@ -47,7 +47,7 @@ public class MAV0154_viewSocialPanelShowAllMessages
 				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideBroadcast")));
 				// Assertion: Verify that message tab is present on social panel
-				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("hideBroadcast"))){
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAllMessages"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

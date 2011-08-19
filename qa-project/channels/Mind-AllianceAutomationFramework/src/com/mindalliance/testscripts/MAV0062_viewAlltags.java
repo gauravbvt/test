@@ -67,7 +67,7 @@ public class MAV0062_viewAlltags
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'All tags' gets loaded on the About Plan Segment window";		            		         
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionDetails")));			    
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allSegments"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allTags"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

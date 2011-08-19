@@ -32,16 +32,16 @@ public class MAV0159_viewSocialPanelSurveyShowAll
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Click on hide broadcast message link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Show all";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathHideBroadcast"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideBroadcast"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathHideBroadcast")));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideBroadcast")));
 				// Assertion: Verify that braod cast be shown on social panel
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAll"))) {
 			    	// Write Results
@@ -58,7 +58,7 @@ public class MAV0159_viewSocialPanelSurveyShowAll
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;
