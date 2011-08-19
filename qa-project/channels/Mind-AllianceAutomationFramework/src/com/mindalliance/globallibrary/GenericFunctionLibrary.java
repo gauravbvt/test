@@ -133,7 +133,9 @@ public class GenericFunctionLibrary {
 			GlobalVariables.home.put("sXpathSendFeedbackWindow",oXmlEleHomePage.getElementsByTagName("xPathSendFeedbackWindow").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathHelpIcon",oXmlEleHomePage.getElementsByTagName("xPathHelpIcon").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathShowSentReceiveMessages",oXmlEleHomePage.getElementsByTagName("xPathShowSentReceiveMessages").item(0).getChildNodes().item(0).getNodeValue());
-			//Channels Plan Page
+			//Channels Plan Page			
+			GlobalVariables.plan.put("sXpathAgentURL",oXmlElePlanPage.getElementsByTagName("xPathAgentURL").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathStretchUpShrinkBack",oXmlElePlanPage.getElementsByTagName("xPathStretchUpShrinkBack").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathShowPopUpMenu",oXmlElePlanPage.getElementsByTagName("xPathShowPopUpMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAllSegmentShowMenu",oXmlElePlanPage.getElementsByTagName("xPathAllSegmentShowMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathActionsPopUpMenu",oXmlElePlanPage.getElementsByTagName("xPathActionsPopUpMenu").item(0).getChildNodes().item(0).getNodeValue());
@@ -174,7 +176,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathOrganizationChart",oXmlElePlanPage.getElementsByTagName("xPathOrganizationChart").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathOrganizationAgreement",oXmlElePlanPage.getElementsByTagName("xPathOrganizationAgreement").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAboutPlanLocale",oXmlElePlanPage.getElementsByTagName("xPathAboutPlanLocale").item(0).getChildNodes().item(0).getNodeValue());
-			GlobalVariables.plan.put("sXpathAboutPlanLocaleLink",oXmlElePlanPage.getElementsByTagName("xPathAboutPlanLocaleLink").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathAboutPlanLocaleLink",oXmlElePlanPage.getElementsByTagName("xPathAboutPlanLocaleLink").item(0).getChildNodes().item(0).getNodeValue());			
+			GlobalVariables.plan.put("sXpathLocaleWithSpecialCharacters",oXmlElePlanPage.getElementsByTagName("xPathLocaleWithSpecialCharacters").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathLegend",oXmlElePlanPage.getElementsByTagName("xPathLegend").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathDoingSomeThing",oXmlElePlanPage.getElementsByTagName("xPathDoingSomeThing").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathPlanURIName",oXmlElePlanPage.getElementsByTagName("xPathPlanURIName").item(0).getChildNodes().item(0).getNodeValue());
@@ -240,6 +243,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathSendsAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathSendsAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathReceivesAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathReceivesAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathPlanHomeIcon",oXmlElePlanPage.getElementsByTagName("xPathPlanHomeIcon").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathAssertionPhaseDetails", oXmlElePlanPage.getElementsByTagName("xPathAssertionPhaseDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
@@ -281,6 +285,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
 					
 			// View Elements
+			GlobalVariables.viewElements.put("newMedium",oXmlEleViewElements.getElementsByTagName("newMedium").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("impactsOfFailingTaskDoingSomething",oXmlEleViewElements.getElementsByTagName("impactsOfFailingTaskDoingSomething").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("adminPageTitle",oXmlEleViewElements.getElementsByTagName("adminPageTitle").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("homePageTitle",oXmlEleViewElements.getElementsByTagName("homePageTitle").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("loginPageTitle",oXmlEleViewElements.getElementsByTagName("loginPageTitle").item(0).getChildNodes().item(0).getNodeValue());
