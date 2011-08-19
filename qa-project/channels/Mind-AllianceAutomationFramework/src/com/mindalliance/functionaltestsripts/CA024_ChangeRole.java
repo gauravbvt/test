@@ -1,6 +1,12 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -11,6 +17,7 @@ public class CA024_ChangeRole
 {
 	public CA024_ChangeRole() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA024_ChangeRole";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -19,9 +26,9 @@ public class CA024_ChangeRole
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
 				
-				// Click on 'Channels Administration' link
+				// Click on 'Channel Administration' link
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Navigated to Channels Administration";
+				GlobalVariables.sDescription = "Navigated to Channel Administration";
 				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("channelsAdministration"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -29,59 +36,99 @@ public class CA024_ChangeRole
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
-				// Create User
+				// Enter the Login details
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "(New Plan URI) and (owned by) entered";
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Click on 'Submit' button
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Plan Created";
+				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				//Select Newly Created Plan
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
+				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options) {
+			    	if(GlobalVariables.testData.get("New Plan v.1 (dev)").equals(option.getText())){
+			    		option.setSelected();
+			    		break;
+			    	}
+			    }
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				//Create User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="User Created";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);								
-				// Click on 'Submit' button
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);								
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				
-				//Assign Access Privilege 'Planner' to User
+				Thread.sleep(2000);					
+				//Assign Access Privilege 'planner' to User
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Assign Access Privilege 'Planner' to User";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword"))).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserPassword")));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
+				GlobalVariables.sDescription = "Assign Access Privilege 'Admin' to User";
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
+				List<WebElement> tds;
+				int i=-1;
+				for(WebElement tr: trs) {
+					i++;	
+					tds = tr.findElements(By.tagName("td"));
+					for(WebElement td: tds) {
+						if(td.getText().contains(GlobalVariables.testData.get("user"))){
+							GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:"+i+":group:password"));
+							GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
+							// WebElement Synchronization
+							Thread.currentThread();
+							Thread.sleep(2000);
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+(i+1)+"]/td[6]/input")).click();
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+						}
+					}
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathAccessPrivilegePlanner"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				//Click on 'Submit' Button
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				
-			  	// Click on 'Signout<user name>' Link
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Logout Successful";
+				Thread.sleep(2000);
+
+				// Call logout()
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Logout is successful";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -89,7 +136,7 @@ public class CA024_ChangeRole
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				//Assertion : Verify that newly created user log into the system & 'Channels Administration' Link is accessible to the user
 				// Enter User name and password
@@ -105,7 +152,8 @@ public class CA024_ChangeRole
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		    	// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);			    
+			    Thread.sleep(2000);			
+			    
 			    // Click on Sign In button
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "Login successful";
@@ -117,13 +165,12 @@ public class CA024_ChangeRole
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		    	// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(2000);
 			    
 			    // Verify that 'Channels Administration' Link is Available
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "'Channels Administration' Link Not Available";
-			    try
-			    {
+			    try {
 			    	GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("channelsAdministration")));
 				     // Write Results
 			    	GlobalVariables.sVerifyError="Verification Failed. Expected 'null' Actual '"+GlobalVariables.oElement.getText()+"'";
@@ -131,16 +178,22 @@ public class CA024_ChangeRole
 			    	LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 			    			GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 			    }
-			    catch(Exception e)
-			    {
-				     // Write Results
-			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
-			    	LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-			    			GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    catch(Exception e) {
+			    	GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialAboutMe"))).click();
+			    	// WebElement Synchronization
+				    Thread.currentThread();
+				    Thread.sleep(2000);
+			    	GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("userInfo"));
+			    	if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("iAmPlanner"))) {
+			    		// Write Results
+			    		LogFunctions.writeLogs(GlobalVariables.sDescription);
+			    		LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+			    				GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    	}
 			    }
 			    // WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(2000);
 
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -148,25 +201,80 @@ public class CA024_ChangeRole
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.quit();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				Thread.sleep(2000);
+				// Deleted Newly created plan & user
+				// Login as an Administrator
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
+			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sUsername"));
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
+			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sPassword"));
+		    	// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);			    
+			    // Click on Sign In button
+			    GlobalVariables.oDriver.findElement(By.name("_spring_security_remember_me")).click();
+			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();
+		    	// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);	
+			    //Navigate to Channels Administration Page
+				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("channelsAdministration"))).click();
+		    	// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);					
+			    GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
+				options = GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options) {
+			    	if(GlobalVariables.testData.get("New Plan v.1 (dev)").equals(option.getText())){
+			    		option.setSelected();
+			    		break;
+			    	}
+			    }
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+			    // Click on 'Delete Plan' button
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+				//Thread sleep
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Delete Created User
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
+				i=0;
+				for(WebElement tr: trs) {
+					i++;	
+					tds = tr.findElements(By.tagName("td"));
+					for(WebElement td: tds) {
+						if(td.getText().contains(GlobalVariables.testData.get("user"))){
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+i+"]/td[12]/input")).click();
+						}
+					}
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Logout of Channels
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
+				GlobalVariables.oDriver.quit();
 
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}
-			else
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
+
 		}
 		catch (Exception e) {
-			 	System.out.println(e.getMessage()+"Hie.......");
 				if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

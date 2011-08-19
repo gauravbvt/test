@@ -193,7 +193,7 @@ public class CA022_AssignUserToPlan
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
+				// Deleted Newly created plan & user
 				// Login as an Administrator
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sUsername"));
