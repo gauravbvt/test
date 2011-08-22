@@ -270,3 +270,6 @@ Segment For Create New Phase With Special Characters,Segment For Create New Phas
 invalidPass,@test123
 invalidUser,user
 Segment For Update Locale City County,Segment For Update Locale City County
+Segment For View Phase,Segment For View Phase
+Segment For Phase Attachment As Picture,Segment For Phase Attachment As Picture
+Segment For View Organization,Segment For View Organization
