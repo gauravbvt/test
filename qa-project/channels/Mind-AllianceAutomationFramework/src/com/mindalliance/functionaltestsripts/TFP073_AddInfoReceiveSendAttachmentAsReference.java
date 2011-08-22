@@ -56,7 +56,7 @@ public class TFP073_AddInfoReceiveSendAttachmentAsReference
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click 'Add Info Sent' Link. 
+				// Click 'Add Info Sent' Link.
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
 				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
