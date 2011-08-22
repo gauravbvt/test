@@ -242,9 +242,6 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathLocale",oXmlElePlanPage.getElementsByTagName("xPathLocale").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAgentDetails",oXmlElePlanPage.getElementsByTagName("xPathAgentDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAgentName",oXmlElePlanPage.getElementsByTagName("xPathAgentName").item(0).getChildNodes().item(0).getNodeValue());
-<<<<<<< .mine
-<<<<<<< .mine
-<<<<<<< .mine
 			GlobalVariables.plan.put("sXpathIssueSummaryReportToHome",oXmlElePlanPage.getElementsByTagName("xPathIssueSummaryReportToHome").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathViewAllTypesOfAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathViewAllTypesOfAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathEventTagsLink",oXmlElePlanPage.getElementsByTagName("xPathEventTagsLink").item(0).getChildNodes().item(0).getNodeValue());
@@ -263,55 +260,27 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathTaskAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathTaskAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathTaskIssueMenu",oXmlElePlanPage.getElementsByTagName("xPathTaskIssueMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathTaskIssueAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathTaskIssueAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
-=======
-			
-=======
 			GlobalVariables.plan.put("sXpathPhaseCreatedAssertion",oXmlElePlanPage.getElementsByTagName("xPathPhaseCreatedAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathEventTagsLink",oXmlElePlanPage.getElementsByTagName("xPathEventTagsLink").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathViewAllTypesOfAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathViewAllTypesOfAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
->>>>>>> .r2817
-=======
->>>>>>> .r2774
 			GlobalVariables.plan.put("sXpathSendsAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathSendsAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathReceivesAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathReceivesAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
-<<<<<<< .mine
->>>>>>> .r2753
-=======
 			GlobalVariables.plan.put("sXpathPlanHomeIcon",oXmlElePlanPage.getElementsByTagName("xPathPlanHomeIcon").item(0).getChildNodes().item(0).getNodeValue());
-<<<<<<< .mine
->>>>>>> .r2792
-=======
 			GlobalVariables.plan.put("sXpathAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
-<<<<<<< .mine
->>>>>>> .r2807
-=======
 			GlobalVariables.plan.put("sXpathTaskCausesEvent",oXmlElePlanPage.getElementsByTagName("xPathTaskCausesEvent").item(0).getChildNodes().item(0).getNodeValue());
->>>>>>> .r2819
 			// Assertions
-<<<<<<< .mine
-<<<<<<< .mine
-<<<<<<< .mine
-<<<<<<< .mine
-=======
-=======
-=======
 			GlobalVariables.assertion.put("sXpathDeleteOrganizationAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeleteOrganizationAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathOrganizationAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathOrganizationAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathRemoveOrganizationAssertion", oXmlElePlanPage.getElementsByTagName("xPathRemoveOrganizationAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathDeletePhaseAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeletePhaseAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
->>>>>>> .r2691
 			GlobalVariables.assertion.put("sXpathPhaseAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathPhaseAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathPhaseCategoriesAssertion", oXmlElePlanPage.getElementsByTagName("xPathPhaseCategoriesAssertion").item(0).getChildNodes().item(0).getNodeValue());
->>>>>>> .r2675
 			GlobalVariables.assertion.put("sXpathDeletePhaseAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeletePhaseAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathPhaseCreatedAssertion", oXmlElePlanPage.getElementsByTagName("xPathPhaseCreatedAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathMediumDeleteAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathMediumDeleteAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathDeleteEventAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeleteEventAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXathCopyAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathCopyAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathEventUrlAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathEventUrlAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
-=======
->>>>>>> .r2753
->>>>>>> .r2671
 			GlobalVariables.assertion.put("sXpathAssertionPhaseDetails", oXmlElePlanPage.getElementsByTagName("xPathAssertionPhaseDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathPhaseAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathPhaseAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
@@ -350,14 +319,10 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathSendPanel",oXmlElePlanPage.getElementsByTagName("xPathSendPanel").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAddInfoReceiveAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoReceiveAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
-					
 			// View Elements
-<<<<<<< .mine
 			GlobalVariables.viewElements.put("impactsOfFailingTaskDoingSomething",oXmlEleViewElements.getElementsByTagName("impactsOfFailingTaskDoingSomething").item(0).getChildNodes().item(0).getNodeValue());
-=======
 			GlobalVariables.viewElements.put("newMedium",oXmlEleViewElements.getElementsByTagName("newMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("impactsOfFailingTaskDoingSomething",oXmlEleViewElements.getElementsByTagName("impactsOfFailingTaskDoingSomething").item(0).getChildNodes().item(0).getNodeValue());
->>>>>>> .r2807
 			GlobalVariables.viewElements.put("adminPageTitle",oXmlEleViewElements.getElementsByTagName("adminPageTitle").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("homePageTitle",oXmlEleViewElements.getElementsByTagName("homePageTitle").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("loginPageTitle",oXmlEleViewElements.getElementsByTagName("loginPageTitle").item(0).getChildNodes().item(0).getNodeValue());
