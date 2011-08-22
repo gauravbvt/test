@@ -53,7 +53,7 @@ public class TE071_AttachFileToMedium
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
+				
 				// Add New Medium
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Medium Added";
@@ -131,11 +131,11 @@ public class TE071_AttachFileToMedium
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);				
+				Thread.sleep(1000);
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);			
+				Thread.sleep(1000);
 				
 				// Click on done
 				GlobalVariables.iStepNo++;

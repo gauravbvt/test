@@ -41,7 +41,6 @@ public class TE061_ViewMedium
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
 				// Click on 'add info send' Link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Add info send Link clicked";
