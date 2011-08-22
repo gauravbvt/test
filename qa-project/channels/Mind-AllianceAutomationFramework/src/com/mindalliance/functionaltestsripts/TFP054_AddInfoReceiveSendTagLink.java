@@ -32,11 +32,6 @@ public class TFP054_AddInfoReceiveSendTagLink
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Strech Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
@@ -50,6 +45,11 @@ public class TFP054_AddInfoReceiveSendTagLink
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
@@ -69,8 +69,9 @@ public class TFP054_AddInfoReceiveSendTagLink
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Verify that 'Tags' Window gets Opened
-				if(GlobalVariables.oDriver.findElement(By.className("floating")).getText().contains(GlobalVariables.viewElements.get("allTags"))) {
+				// Assertion: Verify that 'Tags' Window gets Opened
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allTags"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -110,8 +111,9 @@ public class TFP054_AddInfoReceiveSendTagLink
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Verify that 'Tags' Window gets Opened
-				if(GlobalVariables.oDriver.findElement(By.className("floating")).getText().contains(GlobalVariables.viewElements.get("allTags"))) {
+				// Assertion: Verify that 'Tags' Window gets Opened
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allTags"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -32,12 +32,7 @@ public class TFP053_AddInfoReceiveSendInformation
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Strech Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
+				
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
@@ -50,6 +45,11 @@ public class TFP053_AddInfoReceiveSendInformation
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
@@ -68,13 +68,14 @@ public class TFP053_AddInfoReceiveSendInformation
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Sends Information"));
 				// Assertion : Verify that Add Info Sent Information is entered successfully
-				if(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name")).getText().equals(GlobalVariables.testData.get("Sends Information"))) {
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Sends Information"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
-				else {
+				else{
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -102,7 +103,8 @@ public class TFP053_AddInfoReceiveSendInformation
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Sends Information"));
 				// Assertion : Verify that Add Info Received Information is entered successfully
-				if(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).getText().equals(GlobalVariables.testData.get("Sends Information"))) {
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Sends Information"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

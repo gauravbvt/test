@@ -37,6 +37,11 @@ public class TFP011_TaskIsOption
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Strech Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click on default task
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task Added";

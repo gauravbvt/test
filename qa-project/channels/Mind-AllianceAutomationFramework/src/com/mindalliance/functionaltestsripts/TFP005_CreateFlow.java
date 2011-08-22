@@ -2,6 +2,7 @@ package com.mindalliance.functionaltestsripts;
 
 import java.util.List;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -105,6 +106,32 @@ public class TFP005_CreateFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Break up flow");
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Show details");
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Remove info need");
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

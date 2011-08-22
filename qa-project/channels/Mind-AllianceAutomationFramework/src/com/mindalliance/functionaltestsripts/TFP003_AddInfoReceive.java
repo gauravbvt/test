@@ -1,5 +1,6 @@
 package com.mindalliance.functionaltestsripts;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
@@ -38,24 +39,32 @@ public class TFP003_AddInfoReceive
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Assertion: Verify that When click on add info receive reciev info need panel opens
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("sXpathAddInfoReceiveAssertion"));
-				if(GlobalVariables.oElement.getText().equals("Needs to be notified of")){
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Sends' "+" Actual " + GlobalVariables.oElement.getText();
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				}
-				// WebElement Synchronization
+				// Assertion: Verify that When click on add info receive info need panel opens
+//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("sXpathAddInfoReceiveAssertion"));
+//				if(GlobalVariables.oElement.getText().equals("Needs to be notified of")){
+//					// Write Results
+//					LogFunctions.writeLogs(GlobalVariables.sDescription);
+//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+//							GlobalVariables.sBlank, GlobalVariables.sBlank);
+//				}
+//				else{
+//					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Sends' "+" Actual " + GlobalVariables.oElement.getText();
+//			    	// Write Results
+//					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+//							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+//				}
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(3000);
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Remove info need");
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

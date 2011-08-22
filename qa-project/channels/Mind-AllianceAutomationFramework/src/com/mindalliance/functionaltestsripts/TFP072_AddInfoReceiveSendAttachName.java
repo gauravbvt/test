@@ -33,12 +33,7 @@ public class TFP072_AddInfoReceiveSendAttachName
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Strech Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
+				
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
@@ -51,6 +46,11 @@ public class TFP072_AddInfoReceiveSendAttachName
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";

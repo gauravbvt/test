@@ -58,7 +58,7 @@ public class TFP008_ShowOrHideTaskDetails
 				
 				// Click on show details under show pop menu
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Hide details";
+				GlobalVariables.sDescription="Show details";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"), GlobalVariables.viewElements.get("Details"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

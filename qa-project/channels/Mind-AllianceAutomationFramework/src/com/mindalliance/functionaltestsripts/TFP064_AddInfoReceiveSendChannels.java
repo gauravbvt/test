@@ -35,11 +35,6 @@ public class TFP064_AddInfoReceiveSendChannels
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Strech Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;

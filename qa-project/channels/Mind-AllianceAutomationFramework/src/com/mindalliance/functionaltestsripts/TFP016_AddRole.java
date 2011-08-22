@@ -1,5 +1,6 @@
 package com.mindalliance.functionaltestsripts;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
@@ -45,6 +46,11 @@ public class TFP016_AddRole
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add new task' option under 'Actions' pop up menu 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New task added";
@@ -72,6 +78,14 @@ public class TFP016_AddRole
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				// Click on 'Remove this segment' under 'Actions' pop up menu
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+				// Get a handle to the open alert, prompt or confirmation
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

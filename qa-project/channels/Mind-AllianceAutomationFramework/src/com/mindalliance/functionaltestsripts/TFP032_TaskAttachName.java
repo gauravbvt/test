@@ -33,12 +33,7 @@ public class TFP032_TaskAttachName
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Strech Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
+				
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
@@ -51,6 +46,11 @@ public class TFP032_TaskAttachName
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add new task' option under 'Actions' pop up menu 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New task added";

@@ -35,11 +35,6 @@ public class TFP056_AddInfoReceiveSendIntent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Strech Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
@@ -53,6 +48,11 @@ public class TFP056_AddInfoReceiveSendIntent
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
@@ -77,8 +77,7 @@ public class TFP056_AddInfoReceiveSendIntent
 				   options.get(4).getText().equals(GlobalVariables.viewElements.get("feedback")) &&
 				   options.get(5).getText().equals(GlobalVariables.viewElements.get("report"))) {
 					options.get(5).setSelected();
-					if(options.get(5).isSelected())
-					{
+					if(options.get(5).isSelected()){
 						// 	Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -117,10 +116,9 @@ public class TFP056_AddInfoReceiveSendIntent
 				   options.get(2).getText().equals(GlobalVariables.viewElements.get("announcement")) &&
 				   options.get(3).getText().equals(GlobalVariables.viewElements.get("command")) &&
 				   options.get(4).getText().equals(GlobalVariables.viewElements.get("feedback")) &&
-				   options.get(5).getText().equals(GlobalVariables.viewElements.get("report"))) {
+				   options.get(5).getText().equals(GlobalVariables.viewElements.get("report"))){
 					options.get(5).setSelected();
-					if(options.get(5).isSelected())
-					{
+					if(options.get(5).isSelected()){
 						// 	Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

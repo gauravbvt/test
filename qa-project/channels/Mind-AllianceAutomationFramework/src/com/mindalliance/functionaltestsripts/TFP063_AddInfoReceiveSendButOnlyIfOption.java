@@ -35,12 +35,7 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Strech Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
+				
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
@@ -53,6 +48,11 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
@@ -88,8 +88,7 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				   options.get(9).getText().equals(GlobalVariables.viewElements.get("toSelf")) &&
 				   options.get(10).getText().equals(GlobalVariables.viewElements.get("toSomeoneElse"))) {
 					options.get(5).setSelected();
-					if(options.get(5).isSelected())
-					{
+					if(options.get(5).isSelected()){
 						// 	Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -141,8 +140,7 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				   options.get(9).getText().equals(GlobalVariables.viewElements.get("inSameOrgAndLoc")) &&
 				   options.get(10).getText().equals(GlobalVariables.viewElements.get("inSameOverallOrg"))) {
 					options.get(5).setSelected();
-					if(options.get(5).isSelected())
-					{
+					if(options.get(5).isSelected()){
 						// 	Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
