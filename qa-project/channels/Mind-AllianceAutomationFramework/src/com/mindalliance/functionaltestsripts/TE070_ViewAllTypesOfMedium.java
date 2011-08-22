@@ -118,7 +118,7 @@ public class TE070_ViewAllTypesOfMedium
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick("/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span/span/span/span","Remove sharing capability");
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),"Remove sharing capability");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
@@ -137,8 +137,7 @@ public class TE070_ViewAllTypesOfMedium
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
-			      
+				  
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}

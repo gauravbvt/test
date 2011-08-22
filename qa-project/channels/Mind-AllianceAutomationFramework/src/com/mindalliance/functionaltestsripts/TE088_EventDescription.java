@@ -154,13 +154,8 @@ public class TE088_EventDescription
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);				
-				
-				// Click on 'done' button
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Event details window closed";
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// Assertion: Verify that event is updated
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td/span/a/span"));
+				// Assertion: Verify that description is updated
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase(updateddescription)){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -176,7 +171,14 @@ public class TE088_EventDescription
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);						
+				Thread.sleep(2000);	
+				// Click on 'done' button
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Event details window closed";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);	
 				// Click on check-box to delete the event 
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization

@@ -160,7 +160,7 @@ public class TE087_UpdateEventName
 				GlobalVariables.sDescription = "Event details window closed";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// Assertion: Verify that event is updated
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td/span/a/span"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(updatedevent));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase(updatedevent)){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

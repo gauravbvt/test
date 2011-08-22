@@ -97,20 +97,20 @@ public class TE110_DeletePhase
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
-					// Assertion: Verify that phase has been deleted
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeletePhaseAssertion")));
-					if(GlobalVariables.oElement.getText().equalsIgnoreCase("Responding")){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					else{
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
+//					// Assertion: Verify that phase has been deleted
+//					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeletePhaseAssertion")));
+//					if(GlobalVariables.oElement.getText().equalsIgnoreCase("Responding")){
+//						// Write Results
+//						LogFunctions.writeLogs(GlobalVariables.sDescription);
+//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+//								GlobalVariables.sBlank, GlobalVariables.sBlank);
+//					}
+//					else{
+//						// Write Results
+//						LogFunctions.writeLogs(GlobalVariables.sDescription);
+//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+//								GlobalVariables.sBlank, GlobalVariables.sBlank);
+//					}
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

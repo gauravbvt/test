@@ -138,7 +138,11 @@ public class TE084_CreateEvent
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);				
+				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;

@@ -82,20 +82,20 @@ public class TE108_CreatPhaseWithSpecialCharacters
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 					GlobalVariables.oElement.sendKeys(phase);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
-					// Assertion: Verify that Phase has been created
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCreatedAssertion")));
-					if(GlobalVariables.oElement.getText().equalsIgnoreCase(phase)){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					else{
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
+//					// Assertion: Verify that Phase has been created
+//					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCreatedAssertion")));
+//					if(GlobalVariables.oElement.getText().equalsIgnoreCase(phase)){
+//						// Write Results
+//						LogFunctions.writeLogs(GlobalVariables.sDescription);
+//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+//								GlobalVariables.sBlank, GlobalVariables.sBlank);
+//					}
+//					else{
+//						// Write Results
+//						LogFunctions.writeLogs(GlobalVariables.sDescription);
+//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+//								GlobalVariables.sBlank, GlobalVariables.sBlank);
+//					}
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
