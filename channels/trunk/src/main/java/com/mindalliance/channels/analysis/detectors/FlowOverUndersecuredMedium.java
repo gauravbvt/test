@@ -1,12 +1,14 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.TransmissionMedium;
 
 import java.util.ArrayList;
@@ -25,16 +27,12 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
     public FlowOverUndersecuredMedium() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Flow;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
@@ -42,12 +40,13 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
         if ( !eoiClassifications.isEmpty() ) {
             for ( Channel channel : flow.getEffectiveChannels() ) {
                 TransmissionMedium medium = channel.getMedium();
+                Plan plan = getPlan();
                 if ( !medium.isDirect() ) {
                     // under-secured immediate medium
-                    List<Classification> mediumClassifications = medium.getEffectiveSecurity();
+                    List<Classification> mediumClassifications = medium.getEffectiveSecurity( plan );
                     if ( !Classification.encompass(
                             mediumClassifications,
-                            eoiClassifications ) ) {
+                            eoiClassifications, plan ) ) {
                         Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
                         issue.setDescription( "Classified information would be communicated "
                                 + "over unsecured or insufficiently secured channel \""
@@ -61,13 +60,13 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                     }
                 }
                 // under-secured delegated medium
-                List<TransmissionMedium> delegates = medium.getEffectiveDelegates( getQueryService().getPlan().getLocale() );
+                List<TransmissionMedium> delegates = medium.getEffectiveDelegates( plan.getLocale() );
                 for ( TransmissionMedium delegate : delegates ) {
                     if ( !medium.isDirect() ) {
-                        List<Classification> delegateClassifications = medium.getEffectiveSecurity();
+                        List<Classification> delegateClassifications = medium.getEffectiveSecurity( plan );
                         if ( !Classification.encompass(
                                 delegateClassifications,
-                                eoiClassifications ) ) {
+                                eoiClassifications, plan ) ) {
                             Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
                             issue.setDescription( "Classified information could be communicated "
                                     + "over unsecured or insufficiently secured delegated channel \""
@@ -86,23 +85,17 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
         return issues;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTestedProperty() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getKindLabel() {
         return "Flow over unsecure medium";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canBeWaived() {
         return true;
     }

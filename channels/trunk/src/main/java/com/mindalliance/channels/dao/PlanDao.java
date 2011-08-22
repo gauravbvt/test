@@ -1,22 +1,7 @@
 package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Participation;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.model.*;
 import org.apache.commons.collections.iterators.IteratorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,11 +63,64 @@ public class PlanDao extends AbstractDao {
         this.version = version;
     }
 
+    public void removeUnattached() {
+        List<String> attachedUrls = findAllAttached();
+        synchronized ( attachmentManager ) {
+            File[] files = attachmentManager.getAttachedFiles( plan );
+            if ( files != null ) {
+                for ( File file : files ) {
+                    String fileName = file.getName();
+                    if ( attachmentManager.isReserved( fileName ) ) {
+                        String url = attachmentManager.getUploadPath() + fileName;
+                        if ( !attachedUrls.contains( url ) ) {
+                            if ( file.delete() )
+                                LOG.warn( "Removing unattached {}", url );
+                            attachmentManager.remove( plan, url );
+                        }
+                    }
+                }
+                attachmentManager.save( plan );
+            }
+        }
+    }
+
+    /**
+     * Find urls of all attachments.
+     *
+     * @return a list of strings
+     */
+    public List<String> findAllAttached() {
+
+        List<Attachable> attachables = new ArrayList<Attachable>();
+        attachables.addAll( list( ModelObject.class ) );
+        for ( Segment segment : list( Segment.class ) ) {
+            Iterator<Part> parts = segment.parts();
+            while ( parts.hasNext() )
+                attachables.add( parts.next() );
+
+            Iterator<Flow> flows = segment.flows();
+            while ( flows.hasNext() )
+                attachables.add( flows.next() );
+        }
+        for ( Organization org : list( Organization.class ) ) {
+            for ( Agreement agreement : org.getAgreements() )
+                attachables.add( agreement );
+        }
+        List<Attachment> allAttachments = new ArrayList<Attachment>();
+        for ( Attachable attachable : attachables )
+            allAttachments.addAll( attachable.getAttachments() );
+
+        Set<String> allAttachedUrls = new HashSet<String>();
+        for ( Attachment attachment : allAttachments )
+            allAttachedUrls.add( attachment.getUrl() );
+
+        return new ArrayList<String>( allAttachedUrls );
+    }
+
     public PlanDefinition.Version getVersion() {
         return version;
     }
 
-    /** {@inheritDoc} */
     @Override
     public synchronized Plan getPlan() {
         if ( plan == null )
@@ -224,7 +262,9 @@ public class PlanDao extends AbstractDao {
         // Make sure there is at least one segment per plan
         if ( !list( Segment.class ).iterator().hasNext() )
             plan.addSegment( createSegment( null, null ) );
-        plan.reloadTags( getAttachmentManager() );
+
+        if ( attachmentManager != null )
+            attachmentManager.reloadTags( plan );
     }
 
     /**
@@ -352,9 +392,6 @@ public class PlanDao extends AbstractDao {
         return domain;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public List<Issue> findAllUserIssues( ModelObject modelObject ) {
         List<Issue> foundIssues = new ArrayList<Issue>();
         for ( UserIssue userIssue : list( UserIssue.class ) ) {

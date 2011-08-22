@@ -53,7 +53,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext.xml /WEB-INF/*Config.xml</param-value>
+        <param-value>classpath:applicationContext.xml classpath:*Config.xml</param-value>
     </context-param>
     <context-param>
         <param-name>configuration</param-name>

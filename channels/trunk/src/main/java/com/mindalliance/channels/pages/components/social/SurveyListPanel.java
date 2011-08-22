@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.social.SurveyResponse;
+import com.mindalliance.channels.surveys.SurveyResponse;
 import com.mindalliance.channels.surveys.SurveyException;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.ajax.AjaxRequestTarget;

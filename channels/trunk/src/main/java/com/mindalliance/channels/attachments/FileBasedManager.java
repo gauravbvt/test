@@ -1,18 +1,14 @@
 package com.mindalliance.channels.attachments;
 
-import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.PlanDefinition;
 import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Agreement;
 import com.mindalliance.channels.model.Attachable;
 import com.mindalliance.channels.model.Attachment;
-import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Tag;
+import com.mindalliance.channels.util.InfoStandardsLoader;
+import com.mindalliance.channels.util.Loader;
+import com.mindalliance.channels.util.TagLoader;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -20,17 +16,7 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -42,12 +28,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * An attachment manager that keeps uploaded files in a directory.
@@ -120,6 +104,43 @@ public class FileBasedManager implements AttachmentManager {
     public FileBasedManager() {
     }
 
+    @Override
+    public void reloadTags( Plan plan ) {
+        plan.setTags( new ArrayList<Tag>() );
+        for ( Attachment attachment : plan.getAttachments() ) {
+            String url = attachment.getUrl();
+            if ( attachment.isTags() )
+                reloadTagsFromUrl( plan, url, new TagLoader( plan ) );
+            if ( attachment.isInfoStandards() )
+                reloadTagsFromUrl( plan, url, new InfoStandardsLoader( plan ) );
+        }
+    }
+
+    /**
+     * Remove a mapped url for a given plan.
+     * @param plan the plan
+     * @param url the url
+     */
+    @Override
+    public void remove( Plan plan, String url ) {
+        getDocumentMap( plan ).remove( url );
+    }
+
+    /**
+     * Check is a filename is reserved for internal housekeeping.
+     * @param fileName the file name
+     * @return true if file should not be messed with
+     */
+    @Override
+    public boolean isReserved( String fileName ) {
+        return !"readme.txt".equals( fileName ) && !fileName.equals( digestsMapFile );
+    }
+
+    @Override
+    public File[] getAttachedFiles( Plan plan ) {
+        return getUploadDirectory( plan ).listFiles();
+    }
+
     public void setPlanManager( PlanManager planManager ) {
         this.planManager = planManager;
     }
@@ -184,6 +205,7 @@ public class FileBasedManager implements AttachmentManager {
         FileDocument toSameFile = (FileDocument) CollectionUtils.find(
                 getDocumentMap( plan ).values(),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         FileDocument prior = (FileDocument) object;
                         return prior.isFile()
@@ -201,21 +223,18 @@ public class FileBasedManager implements AttachmentManager {
         return document;
     }
 
+    @Override
     public String getUploadPath() {
         return uploadPath;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean hasVideoContent( String url ) {
         String lc_url = url.toLowerCase();
         return hasExtension( lc_url, getVideoExtensions() ) || hasDomain( lc_url, getVideoDomains() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean hasImageContent( String url ) {
         String lc_url = url.toLowerCase();
         return hasExtension( lc_url, getImageExtensions() ) || hasDomain( lc_url, getImageDomains() );
@@ -225,6 +244,7 @@ public class FileBasedManager implements AttachmentManager {
         return CollectionUtils.exists(
                 domains,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         try {
                             return new URL( url ).getHost().contains( ( (String) object ).toLowerCase().trim() );
@@ -236,10 +256,11 @@ public class FileBasedManager implements AttachmentManager {
         );
     }
 
-    private boolean hasExtension( final String url, String extensions ) {
+    private static boolean hasExtension( final String url, String extensions ) {
         return CollectionUtils.exists(
                 Arrays.asList( StringUtils.split( extensions, ',' ) ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return url.endsWith( ( (String) object ).trim() );
                     }
@@ -268,57 +289,12 @@ public class FileBasedManager implements AttachmentManager {
         this.digestsMapFile = digestsMapFile;
     }
 
-
-    /**
-     * Replace offending characters in a file name so it can be reconstituted by a call to unescape.
-     *
-     * @param name the file name
-     * @return an escaped version of the file name
-     */
-    static String escape( String name ) {
-        StringBuilder buf = new StringBuilder( name.length() << 1 );
-        for ( int i = 0; i < name.length(); i++ ) {
-            char c = name.charAt( i );
-            if ( CHARS.indexOf( (int) c ) >= 0 ) {
-                buf.append( ESCAPE );
-                buf.append( Integer.toHexString( (int) c ) );
-                buf.append( ESCAPE );
-            } else {
-                buf.append( c );
-            }
-        }
-        return buf.toString();
-    }
-
-    /**
-     * Undo the escape() functionality.
-     *
-     * @param name an escaped string
-     * @return the string with escaped values converted back.
-     */
-    static String unescape( String name ) {
-        StringBuilder buf = new StringBuilder( name.length() << 1 );
-        int i = 0;
-        while ( i < name.length() ) {
-            char c = name.charAt( i );
-            if ( c == ESCAPE ) {
-                int pos = name.indexOf( (int) ESCAPE, i + 1 );
-                buf.append( (char) Integer.parseInt( name.substring( i + 1, pos ), 16 ) );
-                i = pos;
-            } else {
-                buf.append( c );
-            }
-            i++;
-        }
-        return buf.toString();
-    }
-
-
-    private void save( Plan plan ) {
+    @Override
+    public void save( Plan plan ) {
         Writer out = null;
         try {
             Properties digests = new Properties();
-            for ( Map.Entry<String, FileDocument> entry : getDocumentMap( plan ).entrySet() )
+            for ( Entry<String, FileDocument> entry : getDocumentMap( plan ).entrySet() )
                 digests.setProperty( entry.getKey(), entry.getValue().getDigest() );
 
             out = new FileWriter( new File( getUploadDirectory( plan ), digestsMapFile ) );
@@ -369,9 +345,7 @@ public class FileBasedManager implements AttachmentManager {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean exists( Plan plan, String url ) {
         return isValidUrl( url ) && ( !isFileDocument( url ) || isUploaded( plan, url ) );
     }
@@ -390,6 +364,7 @@ public class FileBasedManager implements AttachmentManager {
 
     private boolean isUploaded( Plan plan, final String url ) {
         return getUploadDirectory( plan ).listFiles( new FilenameFilter() {
+            @Override
             public boolean accept( File dir, String name ) {
                 return url.substring( url.lastIndexOf( '/' ) + 1 ).equals( name );
             }
@@ -400,9 +375,7 @@ public class FileBasedManager implements AttachmentManager {
         return url.startsWith( uploadPath );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Attachment upload(
             Plan plan,
             Attachment.Type selectedType,
@@ -459,105 +432,31 @@ public class FileBasedManager implements AttachmentManager {
         return attachment;
     }
 
-    /**
-     * {@inheritDoc }
-     */
+    @Override
     public String getLabel( Plan plan, Attachment attachment ) {
         FileDocument fileDocument = getDocumentMap( plan ).get( attachment.getUrl() );
-        return !attachment.getName().isEmpty()
-                ? attachment.getName()
-                : fileDocument == null
-                ? attachment.getUrl()
-                : fileDocument.getFile().getName();
+        return attachment.getName().isEmpty() ?
+               fileDocument == null ? attachment.getUrl() : fileDocument.getFile().getName() :
+               attachment.getName();
     }
 
-    /**
-     * {@inheritDoc }
-     *
-     * @param planDao
-     */
-    public synchronized void removeUnattached( PlanDao planDao ) {
-        List<String> attachedUrls = findAllAttached( planDao );
-        Plan plan1 = planDao.getPlan();
-        File[] files = getUploadDirectory( plan1 ).listFiles();
-        if ( files != null ) {
-            List<File> uploadedFiles = Arrays.asList( files );
-            for ( File file : uploadedFiles ) {
-                String fileName = file.getName();
-                if ( !( fileName.equals( "readme.txt" )
-                        || fileName.equals( digestsMapFile ) ) ) {
-                    String url = uploadPath + fileName;
-                    if ( !attachedUrls.contains( url ) ) {
-                        LOG.warn( "Removing unattached " + url );
-                        file.delete();
-                        getDocumentMap( plan1 ).remove( url );
-                    }
-                }
-            }
-            save( plan1 );
-        }
-    }
-
-    /**
-     * Find urls of all attachments.
-     *
-     * @param planDao the plan's dao
-     * @return a list of strings
-     */
-    private static List<String> findAllAttached( PlanDao planDao ) {
-
-        List<Attachable> attachables = new ArrayList<Attachable>();
-        attachables.addAll( planDao.list( ModelObject.class ) );
-        for ( Segment segment : planDao.list( Segment.class ) ) {
-            Iterator<Part> parts = segment.parts();
-            while ( parts.hasNext() ) {
-                attachables.add( parts.next() );
-            }
-            Iterator<Flow> flows = segment.flows();
-            while ( flows.hasNext() ) {
-                attachables.add( flows.next() );
-            }
-        }
-        for ( Organization org : planDao.list( Organization.class ) ) {
-            for ( Agreement agreement : org.getAgreements() ) {
-                attachables.add( agreement );
-            }
-        }
-        List<Attachment> allAttachments = new ArrayList<Attachment>();
-        for ( Attachable attachable : attachables )
-            allAttachments.addAll( attachable.getAttachments() );
-
-        Set<String> allAttachedUrls = new HashSet<String>();
-        for ( Attachment attachment : allAttachments )
-            allAttachedUrls.add( attachment.getUrl() );
-
-        return new ArrayList<String>( allAttachedUrls );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public File getUploadDirectory( Plan plan ) {
-        PlanDefinition.Version version = planManager.getVersion( plan );
-        File uploadsDir = new File( version.getVersionDirectory(), uploadPath );
-        if ( !uploadsDir.exists() ) {
-            uploadsDir.mkdir();
+        File versionDirectory = planManager.getVersionDirectory( plan );
+        File uploadsDir = new File( versionDirectory, uploadPath );
+        if ( !uploadsDir.exists() && uploadsDir.mkdir() )
             LOG.info( "Created upload directory: {}", uploadsDir.getAbsolutePath() );
-        }
+
         return uploadsDir;
     }
 
-    /**
-     * Get all media reference attachments.
-     *
-     * @param object
-     * @return a list of attachments
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Attachment> getMediaReferences( ModelObject object ) {
         return (List<Attachment>) CollectionUtils.select(
                 object.getAttachments(),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return isMediaReference( ( (Attachment) object ) );
                     }
@@ -565,46 +464,66 @@ public class FileBasedManager implements AttachmentManager {
         );
     }
 
-    /**
-     * Whether the attchment is an image or video reference.
-     *
-     * @param attachment
-     * @return a boolean
-     */
+    @Override
     public boolean isMediaReference( Attachment attachment ) {
         return isImageReference( attachment ) || isVideoReference( attachment );
     }
 
-    /**
-     * Whether the attachment is a reference movie.
-     *
-     * @param attachment
-     * @return a boolean
-     */
+    @Override
     public boolean isVideoReference( Attachment attachment ) {
         return attachment.getType() == Attachment.Type.Reference && hasVideoContent( attachment.getUrl() );
     }
 
-    /**
-     * Whether the attachment is a reference image.
-     *
-     * @param attachment
-     * @return a boolean
-     */
+    @Override
     public boolean isImageReference( Attachment attachment ) {
         return attachment.getType() == Attachment.Type.Reference && hasImageContent( attachment.getUrl() );
     }
 
     @Override
-    /** {@inheritDoc} */
     public boolean isUploadedFileDocument( String url ) {
         return url.startsWith( getUploadPath() );
     }
 
     @Override
-    public File getUploadedFile( String planRelativePath ) {
-        return new File( getUploadDirectory( User.plan() ),
+    public File getUploadedFile( Plan plan, String planRelativePath ) {
+        return new File( getUploadDirectory( plan ),
                          planRelativePath.replaceFirst( getUploadPath(), "" ) );
     }
 
+    private void reloadTagsFromUrl( Plan plan, String url, Loader loader ) {
+        BufferedReader in = null;
+        try {
+
+            in = new BufferedReader( new InputStreamReader( isUploadedFileDocument( url )
+                    ? new FileInputStream( getUploadedFile( plan, url ) )
+                    : new URL( url ).openStream() ) );
+
+            loader.load( in );
+
+        } catch ( Exception e ) {
+            LOG.error( "Failed to load tags file " + url, e );
+        } finally {
+            if ( in != null )
+                try {
+                    in.close();
+                } catch ( IOException e ) {
+                    LOG.warn( "Failed to close tags file " + url, e );
+                }
+        }
+    }
+
+    @Override
+    public void removeAttachment( Attachment attachment, Attachable attachable ) {
+        attachable.removeAttachment( attachment );
+
+        if ( attachable instanceof Plan && ( attachment.isTags() || attachment.isInfoStandards() ) )
+            reloadTags( (Plan) attachable );
+    }
+
+    @Override
+    public void addAttachment( Attachment attachment, Attachable attachable ) {
+        attachable.addAttachment( attachment );
+        if ( attachable instanceof Plan && ( attachment.isTags() || attachment.isInfoStandards() ) )
+            reloadTags( (Plan) attachable );
+    }
 }

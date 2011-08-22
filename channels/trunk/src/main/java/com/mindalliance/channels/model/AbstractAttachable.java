@@ -1,8 +1,9 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.model.Attachment.Type;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,60 +21,37 @@ public class AbstractAttachable implements Attachable {
      */
     private List<Attachment> attachments = new ArrayList<Attachment>();
 
+    @Override
     public List<Attachment> getAttachments() {
-        return attachments;
+        return Collections.unmodifiableList( attachments );
     }
 
+    @Override
     public void setAttachments( List<Attachment> attachments ) {
-        this.attachments = attachments;
+        this.attachments = new ArrayList<Attachment>( attachments );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void addAttachment( Attachment attachment, AttachmentManager attachmentManager ) {
-        if ( !attachments.contains( attachment ) ) {
+    @Override
+    public void addAttachment( Attachment attachment ) {
+        if ( !attachments.contains( attachment ) )
             attachments.add( attachment );
-        }
-        attachmentAdded( attachment, attachmentManager );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Attachment.Type> getAttachmentTypes(  ) {
-        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
-        types.add( Attachment.Type.Reference );
-        types.add( Attachment.Type.Policy );
+    @Override
+    public List<Type> getAttachmentTypes(  ) {
+        List<Type> types = new ArrayList<Type>();
+        types.add( Type.Reference );
+        types.add( Type.Policy );
         return types;
     }
 
     @Override
-    public void removeAttachment( Attachment attachment, AttachmentManager attachmentManager ) {
-        getAttachments().remove( attachment );
-        attachmentRemoved( attachment, attachmentManager );
+    public void removeAttachment( Attachment attachment ) {
+        attachments.remove( attachment );
     }
 
-    /**
-     * React to new attachment.
-     * @param attachment an attachment
-     */
-    protected void attachmentAdded( Attachment attachment, AttachmentManager attachmentManager ) {
-        // Do nothing
-    }
-
-    /**
-     * React to removed attachment.
-     * @param attachment an attachment
-     */
-     protected void attachmentRemoved( Attachment attachment, AttachmentManager attachmentManager ) {
-        // Do nothing
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Attachment.Type> getAttachmentTypes( String attachablePath ) {
+    @Override
+    public List<Type> getAttachmentTypes( String attachablePath ) {
         return getAttachmentTypes();
     }
 

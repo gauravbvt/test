@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AttachDocument;
 import com.mindalliance.channels.command.commands.CopyAttachment;
 import com.mindalliance.channels.command.commands.DetachDocument;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Attachable;
 import com.mindalliance.channels.model.Attachment;
@@ -459,7 +460,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void postProcess( Attachment attachment ) {
         ModelObject attachee = getAttachee();
         if ( attachment.isPicture() && attachee.isIconized() ) {
-            imagingService.iconize( attachment.getUrl(), attachee );
+            imagingService.iconize( getPlan(), attachment.getUrl(), attachee );
         }
     }
 

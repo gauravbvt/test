@@ -2,6 +2,7 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.GraphBuilder;
+import com.mindalliance.channels.analysis.graph.DirectedMultiGraphWithProperties;
 import com.mindalliance.channels.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;

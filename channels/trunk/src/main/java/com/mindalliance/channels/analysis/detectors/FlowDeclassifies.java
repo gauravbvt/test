@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
@@ -27,9 +28,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
     public FlowDeclassifies() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
@@ -75,43 +74,30 @@ public class FlowDeclassifies extends AbstractIssueDetector {
     private boolean declassifies( ElementOfInformation outEOI, Flow send, ElementOfInformation inEOI, Flow receive ) {
         Subject subjectSent = new Subject( send.getName(), outEOI.getContent() );
         Subject subjectReceived = new Subject( receive.getName(), inEOI.getContent() );
-        boolean isSame;
         Transformation xform = outEOI.getTransformation();
-        if ( xform.isNone() ) {
-            isSame = subjectSent.equals( subjectReceived );
-        } else {
-            isSame = xform.renames( subjectReceived );
-        }
+        boolean isSame = xform.isNone() ? subjectSent.equals( subjectReceived ) : xform.renames( subjectReceived );
         return isSame &&
                 Classification.hasHigherClassification(
                         inEOI.getClassifications(),
-                        outEOI.getClassifications() );
+                        outEOI.getClassifications(), getPlan() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return Flow.class.isAssignableFrom( modelObject.getClass() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTestedProperty() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getKindLabel() {
         return "Information is declassified";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canBeWaived() {
         return true;
     }

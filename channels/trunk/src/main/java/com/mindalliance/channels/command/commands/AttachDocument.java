@@ -1,5 +1,6 @@
 package com.mindalliance.channels.command.commands;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -39,41 +40,35 @@ public class AttachDocument extends AbstractCommand {
         set( "name", attachment.getName() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "attach document";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         Attachment attachment = getAttachment();
+
         String attachablePath = (String) get( "attachablePath" );
         Attachable attachable = (Attachable) ChannelsUtils.getProperty( mo, attachablePath, null );
-        if ( attachable == null ) throw new CommandException( "Can't find where attachments are" );
-        attachable.addAttachment( attachment, commander.getQueryService().getAttachmentManager() );
+        if ( attachable == null )
+            throw new CommandException( "Can't find where attachments are" );
+        AttachmentManager attachmentManager = commander.getQueryService().getAttachmentManager();
+        attachmentManager.addAttachment( attachment, attachable );
         describeTarget( mo );
-        return new Change(
-                Change.Type.Updated,
-                mo,
-                ( attachablePath.isEmpty() ? "attachments" : attachablePath + ".attachments" ) );
+        return new Change( Change.Type.Updated,
+                           mo,
+                           ( attachablePath.isEmpty() ? "attachments" : attachablePath + ".attachments" ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         String attachablePath = (String) get( "attachablePath" );

@@ -48,7 +48,7 @@ public class TestAssignments extends AbstractChannelsTest {
 
     @Test
     public void testSize() {
-        assertEquals( 57, assignments.size() );
+        assertEquals( 43, assignments.size() );
     }
 
     private QueryService getQueryService() {
@@ -67,7 +67,7 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetActors() {
         List<Specable> actors = assignments.getActors();
-        assertEquals( 27, actors.size() );
+        assertEquals( 19, actors.size() );
     }
 
     @Test
@@ -82,7 +82,7 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetOrganizations() {
         List<Organization> orgs = assignments.getOrganizations();
-        assertEquals( 4, orgs.size() );
+        assertEquals( 8, orgs.size() );
     }
 
     @Test
@@ -96,7 +96,7 @@ public class TestAssignments extends AbstractChannelsTest {
 
         assignments = queryService.getAssignments();
         List<Organization> orgs = assignments.getOrganizations();
-        assertEquals( 4, orgs.size() );
+        assertEquals( 8, orgs.size() );
     }
 
     @Test
@@ -108,20 +108,20 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetJurisdictions() {
         List<Place> places = assignments.getJurisdictions();
-        assertEquals( 8, places.size() );
+        assertEquals( 6, places.size() );
     }
 
     @Test
     public void testGetRoles() {
         List<Role> roles = assignments.getRoles();
-        assertEquals( 13, roles.size() );
+        assertEquals( 15, roles.size() );
     }
 
     @Test
     public void testWithSegment() {
         List<Segment> segments = assignments.getSegments();
         Assignments a = assignments.with( segments.get( 0 ), segments.get( 1 ) );
-        assertEquals( 43, a.size() );
+        assertEquals( 33, a.size() );
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -135,15 +135,15 @@ public class TestAssignments extends AbstractChannelsTest {
 
         Organization organization = orgs.get( 3 );
         Assignments a1 = assignments.withAll( organization );
-        assertEquals( 2, a1.size() );
+        assertEquals( 1, a1.size() );
 
         List<Role> roles = a1.getRoles();
         assertEquals( 1, roles.size() );
 
         Assignments a2 = assignments.withAll( organization, roles.get( 0 ) );
         List<Specable> actors = a2.getActors();
-        assertEquals( 2, a2.size() );
-        assertEquals( 2, actors.size() );
+        assertEquals( 1, a2.size() );
+        assertEquals( 1, actors.size() );
     }
 
     // todo - Reactivate this test?
@@ -191,7 +191,7 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testWithSome2() {
         Assignments a = assignments.with( Actor.UNKNOWN );
-        assertEquals( 18, a.size() );
+        assertEquals( 4, a.size() );
     }
 
     @Test
@@ -283,7 +283,7 @@ public class TestAssignments extends AbstractChannelsTest {
 
         Assignment n = a1.iterator().next();
         Assignments sources = assignments.getSources( n.getPart() );
-        assertEquals( 2, sources.size() );
+        assertEquals( 1, sources.size() );
     }
 
     @Test
@@ -297,7 +297,7 @@ public class TestAssignments extends AbstractChannelsTest {
 
         Assignment n = a1.iterator().next();
         Assignments sources = assignments.getSources( n.getPart() );
-        assertEquals( 3, sources.size() );
+        assertEquals( 2, sources.size() );
     }
 
     @Test

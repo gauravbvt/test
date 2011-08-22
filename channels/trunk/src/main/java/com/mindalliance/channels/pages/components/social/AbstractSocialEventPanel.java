@@ -229,12 +229,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         if ( participation != null ) {
             Actor actor = participation.getActor();
             if ( actor != null )
-                url = imagingService.getSquareIconUrl( actor );
+                url = imagingService.getSquareIconUrl( getPlan(), actor );
         }
-        if ( url == null ) {
-            url = "images/actor.user.png";
-        }
-        return url;
+        return url == null ? "images/actor.user.png" : url;
     }
 
 

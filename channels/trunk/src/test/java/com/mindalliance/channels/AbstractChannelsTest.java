@@ -18,14 +18,11 @@ import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -33,7 +30,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,14 +48,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.context.request.SessionScope;
 import org.springframework.web.context.support.GenericWebApplicationContext;
-import org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer;
-import org.springframework.web.context.support.ServletContextResourceLoader;
 
 import javax.servlet.ServletContext;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -70,35 +61,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.StringTokenizer;
 
+import static javax.servlet.http.HttpServletResponse.*;
+import static org.junit.Assert.*;
+
 /**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Dec 3, 2008
- * Time: 8:24:56 PM
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary and Confidential. User: jf Date: Dec 3,
+ * 2008 Time: 8:24:56 PM
  */
 @ContextConfiguration(
-    loader = AbstractChannelsTest.MyContextLoader.class,
-    locations = {
-            "/WEB-INF/applicationContext.xml",
-            "/WEB-INF/securityConfig.xml",
-//            "file:src/main/webapp/WEB-INF/persistenceConfig.xml",
-        "testConfig.xml" } )
-@TestExecutionListeners( {
-        AbstractChannelsTest.ClearDataListener.class,
-        AbstractChannelsTest.ReinitContextListener.class,
-        DependencyInjectionTestExecutionListener.class
+        loader = AbstractChannelsTest.MyContextLoader.class,
+        locations = {
+                "classpath*:applicationContext.xml", "classpath*:securityConfig.xml", "testConfig.xml"
         } )
+@TestExecutionListeners( {
+                                 AbstractChannelsTest.ClearDataListener.class,
+                                 AbstractChannelsTest.ReinitContextListener.class,
+                                 DependencyInjectionTestExecutionListener.class
+                         } )
 @RunWith( SpringJUnit4ClassRunner.class )
 public abstract class AbstractChannelsTest implements ApplicationContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger( AbstractChannelsTest.class );
 
     @Autowired
-    protected Channels wicketApplication;
+    protected PlanManager planManager;
 
     @Autowired
     protected DefaultQueryService queryService;
@@ -108,21 +96,21 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     @Autowired
     protected UserService userService;
 
-    private IRequestCodingStrategy rcs;
-
-    private ConfigurableApplicationContext applicationContext;
-
-    private String userName;
-
-    private String planUri;
-
     @Autowired
-    protected PlanManager planManager;
+    protected Channels wicketApplication;
 
     @Autowired
     private Analyst analyst;
 
-    //================================================================
+    private ConfigurableApplicationContext applicationContext;
+
+    private String planUri;
+
+    private IRequestCodingStrategy rcs;
+
+    private String userName;
+
+    //-------------------------------
     protected AbstractChannelsTest() {
         this( "guest", null );
     }
@@ -132,23 +120,109 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         this.planUri = planUri;
     }
 
-    public String getPlanUri() {
-        return planUri;
+    //-------------------------------
+    protected void assertErrorRendering( String path, int code ) {
+        BookmarkablePageRequestTarget bprt = getTarget( path );
+        if ( bprt == null )
+            // Fall through to default servlet (files in webapp). Assume not found.
+            assertEquals( SC_NOT_FOUND, code );
+        else {
+            tester.startPage( bprt.getPageClass(), bprt.getPageParameters() );
+            assertEquals( code, tester.getServletResponse().getCode() );
+        }
     }
 
-    public void setPlanUri( String uri ) {
-        planUri = uri;
+    private BookmarkablePageRequestTarget getTarget( String path ) {
+        if ( path == null || path.isEmpty() )
+            return new BookmarkablePageRequestTarget( wicketApplication.getHomePage() );
+        try {
+            URI url = new URI( path );
+            RequestParameters requestParameters = new RequestParameters();
+            requestParameters.setPath( url.getPath() );
+            Map<String, Object> map = new HashMap<String, Object>();
+            String queryString = url.getQuery();
+            if ( queryString != null ) {
+                requestParameters.setQueryString( queryString );
+                for ( StringTokenizer tokenizer = new StringTokenizer( queryString, "&" ); tokenizer.hasMoreTokens(); )
+                {
+                    StringTokenizer t = new StringTokenizer( tokenizer.nextToken(), "=" );
+                    map.put( t.nextToken(), t.nextToken() );
+                }
+            }
+
+            requestParameters.setParameters( map );
+            return (BookmarkablePageRequestTarget) rcs.targetForRequest( requestParameters );
+        } catch ( URISyntaxException e ) {
+            // Error in the writing of the test...
+            throw new RuntimeException( e );
+        }
+    }
+    //---------------- assertErrorRendering
+
+    protected void assertRendered( String path, Class<? extends Page> renderedClass ) {
+        BookmarkablePageRequestTarget target = getTarget( path );
+        tester.startPage( target.getPageClass(), target.getPageParameters() );
+        assertEquals( SC_OK, tester.getServletResponse().getCode() );
+        tester.assertRenderedPage( renderedClass );
+        tester.assertNoErrorMessage();
+    }
+
+    public Commander getCommander() {
+        User user = User.current();
+        assertNotNull( "No current user", user );
+        Plan plan = user.getPlan();
+        assertNotNull( "No plan defined for user", plan );
+        return wicketApplication.getCommander( plan );
+    }
+
+    public LockManager getLockManager() {
+        User user = User.current();
+        assertNotNull( "No current user", user );
+        Plan plan = user.getPlan();
+        return wicketApplication.getLockManager( plan );
+    }
+
+    /**
+     * Fake login in of a given user, for security test.
+     *
+     * @param username the given user
+     */
+    protected void login( String username ) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        UserDetails details = userService.loadUserByUsername( username );
+        TestingAuthenticationToken auth = new TestingAuthenticationToken( details,
+                                                                          "",
+                                                                          (List<GrantedAuthority>) details
+                                                                                  .getAuthorities() );
+        auth.setAuthenticated( true );
+        context.setAuthentication( auth );
+    }
+
+    /**
+     * ...
+     */
+    protected static void logout() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken( "foo",
+                                                                                             "bar",
+                                                                                             new ArrayList<GrantedAuthority>() );
+        // no granted authorities, ROLE_...
+        context.setAuthentication( token );
+    }
+
+    @Override
+    public void setApplicationContext( ApplicationContext applicationContext ) {
+        this.applicationContext = (ConfigurableApplicationContext) applicationContext;
+
     }
 
     @Before
     public void setUp() throws IOException {
-
         IRequestCycleProcessor rcp = wicketApplication.getRequestCycleProcessor();
         rcs = rcp.getRequestCodingStrategy();
 
-//        applicationContext.getBeanFactory().registerScope( "session", new SessionScope() );
-
         tester = new WicketTester( wicketApplication ) {
+
             @Override
             public ServletContext newServletContext( String path ) {
                 return ( (WebApplicationContext) applicationContext ).getServletContext();
@@ -157,15 +231,13 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
             @Override
             public WebRequestCycle setupRequestAndResponse( boolean isAjax ) {
                 WebRequestCycle result = super.setupRequestAndResponse( isAjax );
-                RequestContextHolder.setRequestAttributes(
-                        new ServletRequestAttributes( getServletRequest() ) );
+                RequestContextHolder.setRequestAttributes( new ServletRequestAttributes( getServletRequest() ) );
 
                 return result;
             }
         };
 
-        wicketApplication.setInjector(
-                new SpringComponentInjector( wicketApplication, applicationContext, true ) );
+        wicketApplication.setInjector( new SpringComponentInjector( wicketApplication, applicationContext, true ) );
 
         tester.setParametersForNextRequest( new HashMap<String, String[]>() );
 
@@ -186,158 +258,46 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         planManager.onAfterCommand( null, null );   // clear cache
     }
 
-    /**
-     * Fake login in of a given user, for security test.
-     * @param username the given user
-     */
-    protected void login( String username ) {
-        SecurityContext context = SecurityContextHolder.getContext();
-        UserDetails details = userService.loadUserByUsername( username );
-        TestingAuthenticationToken auth = new TestingAuthenticationToken(
-                details, "",  (List<GrantedAuthority>) details.getAuthorities() );
-        auth.setAuthenticated( true );
-        context.setAuthentication( auth );
+    protected Analyst getAnalyst() {
+        return analyst;
     }
 
-    /**
-     * ...
-     */
-    protected static void logout() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken( "foo", "bar",
-                                                         new ArrayList<GrantedAuthority>() );
-        // no granted authorities, ROLE_...
-        context.setAuthentication( token );
+    public String getPlanUri() {
+        return planUri;
     }
 
-    public Commander getCommander() {
-        User user = User.current();
-        assertNotNull( "No current user", user );
-        Plan plan = user.getPlan();
-        assertNotNull( "No plan defined for user", plan );
-        return wicketApplication.getCommander( plan );
+    public void setPlanUri( String uri ) {
+        planUri = uri;
     }
 
-    public LockManager getLockManager() {
-        User user = User.current();
-        assertNotNull( "No current user", user );
-        Plan plan = user.getPlan();
-        return wicketApplication.getLockManager( plan );
-    }
-
-    protected void assertRendered( String path, Class<? extends Page> renderedClass ) {
-        BookmarkablePageRequestTarget target = getTarget( path );
-        tester.startPage( target.getPageClass(), target.getPageParameters() );
-        assertEquals( SC_OK, tester.getServletResponse().getCode() );
-        tester.assertRenderedPage( renderedClass );
-        tester.assertNoErrorMessage();
-    }
-
-    protected void assertErrorRendering( String path, int code ) {
-        BookmarkablePageRequestTarget bprt = getTarget( path );
-        if ( bprt == null )
-            // Fall through to default servlet (files in webapp). Assume not found.
-            assertEquals( SC_NOT_FOUND, code );
-        else {
-            tester.startPage( bprt.getPageClass(), bprt.getPageParameters() );
-            assertEquals( code, tester.getServletResponse().getCode() );
-        }
-    }
-
-    /**
-     * Clear all persisted data.
-     */
-    protected static void clearData() {
-        LOG.debug( "Clearing all saved data" );
-        File path = new File( "target/channel-test-data" );
-        deleteDirectory( path );
-        path.mkdirs();
-    }
-
-    private static void deleteDirectory( File path ) {
-        if ( path.exists() ) {
-            for ( File file : path.listFiles() )
-                if ( file.isDirectory() )
-                    deleteDirectory( file );
-                else
-                    file.delete();
-
-            path.delete();
-        }
-    }
-
-    private BookmarkablePageRequestTarget getTarget( String path ) {
-
-        if ( path == null || path.isEmpty() )
-            return new BookmarkablePageRequestTarget( wicketApplication.getHomePage() );
-        try {
-            URI url = new URI( path );
-            RequestParameters requestParameters = new RequestParameters();
-            requestParameters.setPath( url.getPath() );
-            Map<String, Object> map = new HashMap<String, Object>();
-            String queryString = url.getQuery();
-            if ( queryString != null ) {
-                requestParameters.setQueryString( queryString );
-                for ( StringTokenizer tokenizer = new StringTokenizer( queryString, "&" );
-                      tokenizer.hasMoreTokens(); ) {
-                    StringTokenizer t = new StringTokenizer( tokenizer.nextToken(), "=" );
-                    map.put( t.nextToken(), t.nextToken() );
-                }
-            }
-
-            requestParameters.setParameters( map );
-            return (BookmarkablePageRequestTarget) rcs.targetForRequest( requestParameters );
-
-        } catch ( URISyntaxException e ) {
-            // Error in the writing of the test...
-            throw new RuntimeException( e );
-        }
-    }
-
-    @Override
-    public void setApplicationContext( ApplicationContext applicationContext ) {
-        this.applicationContext = (ConfigurableApplicationContext) applicationContext;
-    }
-
-    //=======================================================
+    //===============================
     public static class MyContextLoader extends AbstractContextLoader {
 
         private static final String BASE = "src/main/webapp";
 
-        private final ServletContext servletContext = new MockServletContext(
-                        BASE,
-                        new FileSystemResourceLoader() {
-                            @Override
-                            public Resource getResource( String location ) {
-                                Resource resource = super.getResource( location );
-                                return resource;
-                            }
-                        }
-                        );
+        private final ServletContext servletContext = new MockServletContext( BASE, new FileSystemResourceLoader() {
+
+            @Override
+            public Resource getResource( String location ) {
+                Resource resource = super.getResource( location );
+                return resource;
+            }
+        } );
 
         @Override
-        protected String[] modifyLocations( Class<?> clazz, String... locations ) {
-            for ( int i = 0, locationsLength = locations.length; i < locationsLength; i++ ) {
-                String location = locations[ i ];
-                if ( location.startsWith( "/" ) )
-                    locations[ i ] = "file:" + BASE + location;
-            }
-
-            return super.modifyLocations( clazz, locations );
+        protected String getResourceSuffix() {
+            return "-context.xml";
         }
 
         @Override
         public ConfigurableApplicationContext loadContext( String... locations ) {
             if ( LOG.isDebugEnabled() ) {
                 LOG.debug( "Loading ApplicationContext for locations [ {} ]",
-                              StringUtils.arrayToCommaDelimitedString( locations ) );
+                           StringUtils.arrayToCommaDelimitedString( locations ) );
             }
 
             GenericWebApplicationContext webContext = new GenericWebApplicationContext();
-            servletContext.setAttribute(
-                    WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
-                    webContext );
+            servletContext.setAttribute( WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, webContext );
 
             webContext.setServletContext( servletContext );
 
@@ -349,14 +309,18 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
             return webContext;
         }
 
-
         @Override
-        protected String getResourceSuffix() {
-            return "-context.xml";
+        protected String[] modifyLocations( Class<?> clazz, String... locations ) {
+            for ( int i = 0, locationsLength = locations.length; i < locationsLength; i++ ) {
+                String location = locations[i];
+                if ( location.startsWith( "/" ) )
+                    locations[i] = "file:" + BASE + location;
+            }
+
+            return super.modifyLocations( clazz, locations );
         }
     }
 
-    //=======================================================
     /**
      * Force new test to reload the context *before* test is run.
      */
@@ -371,13 +335,12 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
 
         private static void reload( TestContext testContext ) {
             testContext.markApplicationContextDirty();
-            testContext.setAttribute(
-                    DependencyInjectionTestExecutionListener.REINJECT_DEPENDENCIES_ATTRIBUTE,
-                    Boolean.TRUE );
+            testContext.setAttribute( DependencyInjectionTestExecutionListener.REINJECT_DEPENDENCIES_ATTRIBUTE,
+                                      Boolean.TRUE );
         }
+    //---------------- afterTestMethod
     }
 
-    //=======================================================
     /**
      * Clear all data *before* test class is run.
      */
@@ -386,12 +349,31 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         @Override
         public void beforeTestClass( TestContext testContext ) throws Exception {
             super.beforeTestClass( testContext );
-//            CacheManager cacheManager =
-//                    (CacheManager) testContext.getApplicationContext().getBean( "cacheManager" );
-//            cacheManager.clearAll();
-
             clearData();
         }
+
+        /**
+         * Clear all persisted data.
+         */
+        public static void clearData() {
+            LOG.debug( "Clearing all saved data" );
+            File path = new File( "target/channel-test-data" );
+            deleteDirectory( path );
+            path.mkdirs();
+        }
+
+        private static void deleteDirectory( File path ) {
+            if ( path.exists() ) {
+                for ( File file : path.listFiles() )
+                    if ( file.isDirectory() )
+                        deleteDirectory( file );
+                    else
+                        file.delete();
+
+                path.delete();
+            }
+        }
+    //---------------- clearData
     }
 
     /**
@@ -402,7 +384,7 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         private static final String DEST = "target/channel-test-data";
 
         private static final String SRC = "src/main/webapp/WEB-INF/samples";
-
+        //
         @Override
         public void beforeTestClass( TestContext testContext ) throws Exception {
             super.beforeTestClass( testContext );
@@ -413,18 +395,16 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         }
 
         /**
-         * This function will copy files or directories from one location to another.
-         * note that the source and the destination must be mutually exclusive. This
-         * function can not be used to copy a directory to a sub directory of itself.
-         * The function will also have problems if the destination files already exist.
+         * This function will copy files or directories from one location to another. note that the source and the
+         * destination must be mutually exclusive. This function can not be used to copy a directory to a sub directory
+         * of itself. The function will also have problems if the destination files already exist.
+         *
          * @param src A File object that represents the source for the copy
          * @param dest A File object that represents the destination for the copy.
          * @throws IOException if unable to copy.
          */
         private static void copyFiles( File src, File dest ) throws IOException {
-
             if ( !".svn".equals( src.getName() ) ) {
-
                 if ( src.isDirectory() ) {
                     if ( dest.mkdirs() )
                         LOG.trace( "Created {}", dest );
@@ -452,10 +432,6 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
                 }
             }
         }
-
-    }
-
-    protected Analyst getAnalyst() {
-        return analyst;
+    //---------------- beforeTestClass
     }
 }

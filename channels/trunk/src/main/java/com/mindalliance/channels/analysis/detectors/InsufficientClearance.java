@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Flow;
@@ -26,9 +27,7 @@ public class InsufficientClearance extends AbstractIssueDetector {
     public InsufficientClearance() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
@@ -37,7 +36,7 @@ public class InsufficientClearance extends AbstractIssueDetector {
             List<Assignment> assignments = getQueryService().findAllAssignments( (Part) flow.getTarget(), false );
             for ( Assignment assignment : assignments ) {
                 Actor actor = assignment.getActor();
-                if ( actor.isActual() && !actor.isClearedFor( flow ) ) {
+                if ( actor.isActual() && !actor.isClearedFor( flow, getPlan() ) ) {
                     Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
                     issue.setDescription( "Assigned recipient " + actor.getName()
                             + " of \"" + flow.getName()
@@ -70,30 +69,22 @@ public class InsufficientClearance extends AbstractIssueDetector {
         return issues;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Flow;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTestedProperty() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getKindLabel() {
         return "Insufficient clearance";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canBeWaived() {
         return true;
     }

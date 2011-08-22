@@ -1,6 +1,7 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -339,8 +340,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
         String iconName;
         String[] lines = assignment.getFullTitle( "|" ).split( "\\|" );
         int numLines = Math.min( lines.length, 5 );
-        iconName = imagingService.findIconName(
-                assignment );
+        iconName = imagingService.findIconName( getPlan(), assignment );
 
         return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
     }

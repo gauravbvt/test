@@ -1,5 +1,7 @@
 package com.mindalliance.channels.model;
 
+import com.mindalliance.channels.dao.User;
+
 import java.io.Serializable;
 import java.text.Collator;
 import java.text.MessageFormat;
@@ -219,17 +221,7 @@ public class Channel implements Serializable, Comparable<Channel> {
      * @return a boolean
      */
     public boolean references( ModelObject mo ) {
-        if ( mo instanceof TransmissionMedium ) {
-            return ModelObject.areIdentical( mo, medium );
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isSecuredFor( List<Classification> classifications ) {
-        return medium != null
-                && ( medium.isDirect()
-                || Classification.encompass( medium.getSecurity(), classifications ) );
+        return mo instanceof TransmissionMedium && ModelObject.areIdentical( mo, medium );
     }
 
     /**

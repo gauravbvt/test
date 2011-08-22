@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.dao.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -17,7 +16,7 @@ import java.util.List;
  * Date: Nov 2, 2009
  * Time: 1:31:11 PM
  */
-public class Classification implements Identifiable, Comparable {
+public class Classification implements Identifiable, Comparable<Classification> {
 
     /** Logger. */
     private static final Logger LOG = LoggerFactory.getLogger( Classification.class );
@@ -51,18 +50,22 @@ public class Classification implements Identifiable, Comparable {
         this.system = system;
     }
 
+    @Override
     public long getId() {
         return hashCode();
     }
 
+    @Override
     public String getDescription() {
         return toString();
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getTypeName() {
         return "classification";
     }
@@ -85,40 +88,32 @@ public class Classification implements Identifiable, Comparable {
         this.level = level;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String toString() {
-        return system + "/" + name;
+        return system + '/' + name;
     }
 
-    private int getEffectiveLevel() {
-        Classification referenceClassification = User.current().getPlan().getClassification( system, name );
+    private int getEffectiveLevel( Plan plan ) {
+        Classification referenceClassification = plan.getClassification( system, name );
         if ( referenceClassification == null ) {
-            LOG.warn( "Can't reference classification " + this );
+            LOG.warn( "Can't reference classification {}", this );
             return Integer.MIN_VALUE;
-        } else {
+        } else
             return referenceClassification.getLevel();
-        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean equals( Object object ) {
-        if ( object instanceof Classification ) {
-            Classification other = (Classification) object;
-            return
-                    system.equals( other.getSystem() )
-                            && name.equals( other.getName() );
-        } else {
-            return false;
+    @Override
+    public boolean equals( Object obj ) {
+        if ( this == obj )
+            return true;
+
+        if ( obj != null && getClass() == obj.getClass() ) {
+            Classification that = (Classification) obj;
+            return name.equals( that.getName() ) && system.equals( that.getSystem() );
         }
+
+        return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + system.hashCode();
@@ -131,35 +126,31 @@ public class Classification implements Identifiable, Comparable {
      * Whether a classification is higher than or equal to another.
      *
      * @param other a classification
+     * @param plan the containing plan
      * @return a boolean
      */
-    public boolean encompasses( Classification other ) {
+    public boolean encompasses( Classification other, Plan plan ) {
         return system.equals( other.getSystem() )
-                && getEffectiveLevel() <= other.getEffectiveLevel();
+            && getEffectiveLevel( plan ) <= other.getEffectiveLevel( plan );
     }
 
     /**
      * Whether a classifcation is higher than another.
      *
      * @param other a classification
+     * @param plan the context
      * @return a boolean
      */
-    public boolean isHigherThan( Classification other ) {
+    public boolean isHigherThan( Classification other, Plan plan ) {
         return system.equals( other.getSystem() )
-                && getEffectiveLevel() < other.getEffectiveLevel();
+            && getEffectiveLevel( plan ) < other.getEffectiveLevel( plan );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public int compareTo( Object object ) {
-        Classification other = (Classification) object;
-        assert system.equals( other.getSystem() );
-        return level < other.getLevel()
-                ? -1
-                : ( level > other.getLevel() )
-                ? 1
-                : 0;
+    @Override
+    public int compareTo( Classification object ) {
+        assert system.equals( object.getSystem() );
+        return level < object.getLevel() ? -1
+                                         : level > object.getLevel() ? 1 : 0;
     }
 
     /**
@@ -168,24 +159,7 @@ public class Classification implements Identifiable, Comparable {
      * @return a string
      */
     public String getLabel() {
-        return system + "/" + name;
-    }
-
-    /**
-     * Is this classification encompassed by any in a given list?
-     *
-     * @param classifications a list of classifications
-     * @return a boolean
-     */
-    public boolean impliedBy( List<Classification> classifications ) {
-        return CollectionUtils.exists(
-                classifications,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ( (Classification) obj ).encompasses( Classification.this );
-                    }
-                }
-        );
+        return system + '/' + name;
     }
 
     /**
@@ -193,39 +167,41 @@ public class Classification implements Identifiable, Comparable {
      *
      * @param classifications a list of classifications
      * @param classification  a classification
+     * @param plan the containing plan
      * @return a boolean
      */
-    public static boolean encompass(
-            final List<Classification> classifications,
-            final Classification classification ) {
+    public static boolean encompass( List<Classification> classifications, Classification classification, Plan plan ) {
         List<Classification> others = new ArrayList<Classification>();
         others.add( classification );
-        return encompass( classifications, others );
+        return encompass( classifications, others, plan );
     }
-
 
     /**
      * Whether at least one in a list of classifications is stronger than another in another list.
      *
      * @param classifications a list of classifications
      * @param others          a list of classifications
-     * @return a boolean
+     * @param plan the context
+     * @return a boolean                                                                                       1
      */
     public static boolean hasHigherClassification(
-            final List<Classification> classifications,
-            final List<Classification> others ) {
+            List<Classification> classifications, List<Classification> others, Plan plan ) {
         if ( classifications.isEmpty() && others.isEmpty() )
             // equal
             return false;
+
         if ( others.isEmpty() )
             // higher
             return true;
+
         // At least one of the classifications is higher than one of the others.
         for ( Classification other : others ) {
             for ( Classification classification : classifications ) {
-                if ( classification.isHigherThan( other ) ) return true;
+                if ( classification.isHigherThan( other, plan ) )
+                    return true;
             }
         }
+
         return false;
     }
 
@@ -234,38 +210,34 @@ public class Classification implements Identifiable, Comparable {
      *
      * @param classifications a list of classifications
      * @param others          a list of classifications
+     * @param plan the containing plan
      * @return a boolean
      */
     public static boolean encompass(
-            final List<Classification> classifications,
-            final List<Classification> others ) {
+            List<Classification> classifications, List<Classification> others, final Plan plan ) {
+
         if ( classifications.isEmpty() && others.isEmpty() )
             // equal
             return true;
-        // For each other, there is a higher or equal classification 
+
+        // For each other, there is a higher or equal classification
         // and none in the others is higher than any of the classifications.
         for ( final Classification other : others ) {
-            if ( !CollectionUtils.exists(
-                    classifications,
-                    new Predicate() {
-                        public boolean evaluate( Object object ) {
-                            Classification c = (Classification) object;
-                            return c.encompasses( other );
-                        }
-                    }
-            ) ||
-                    CollectionUtils.exists(
-                            classifications,
-                            new Predicate() {
-                                public boolean evaluate( Object object ) {
-                                    Classification c = (Classification) object;
-                                    return other.isHigherThan( c );
-                                }
+            if ( !CollectionUtils.exists( classifications, new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ((Classification) object).encompasses( other, plan );
                             }
-                    ) ) return false;
+                        } )
+                 || CollectionUtils.exists( classifications, new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return other.isHigherThan( (Classification) object, plan );
+                            }
+                        } ) )
+                return false;
         }
+
         return true;
     }
-
-
 }

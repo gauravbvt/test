@@ -4,11 +4,11 @@ import com.mindalliance.channels.dao.DefinitionManager;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.odb.ODBTransactionFactory;
 import junit.framework.TestCase;
 import org.springframework.core.io.FileSystemResource;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Iterator;
 
 /**
@@ -36,6 +36,9 @@ public class TestNode extends TestCase {
             new FileSystemResource( new File("target/channel-test-data" ) ), null );
         definitionManager.afterPropertiesSet();
         PlanManager planManager = new PlanManager( definitionManager );
+        ODBTransactionFactory databaseFactory = new ODBTransactionFactory();
+        databaseFactory.setOdbDir( new FileSystemResource( new File( "target/channel-test-data" ) ) );
+        planManager.setDatabaseFactory( databaseFactory );
         planManager.assignPlans();
 
         Plan plan = planManager.getPlans().get( 0 );

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Channel;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.ElementOfInformation;
@@ -9,6 +10,7 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -68,6 +70,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
     }
 
     private void findEOIMismatch( Flow sharing, Flow capability, List<String> mismatches, Matcher matcher ) {
+        Plan plan = getPlan();
         for ( ElementOfInformation sharedEoi : sharing.getEois() ) {
             boolean matched = false;
             for ( ElementOfInformation offeredEoi : capability.getEois() ) {
@@ -75,10 +78,10 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                     matched = true;
                     if ( Classification.hasHigherClassification(
                             offeredEoi.getClassifications(),
-                            sharedEoi.getClassifications() ) ||
+                            sharedEoi.getClassifications(), plan ) ||
                             Classification.hasHigherClassification(
                                     sharedEoi.getClassifications(),
-                                    offeredEoi.getClassifications() ) ) {
+                                    offeredEoi.getClassifications(), plan ) ) {
                         mismatches.add( "\""
                                 + sharedEoi.getContent()
                                 + "\" has different secrecy classifications." );

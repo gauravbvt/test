@@ -1,8 +1,5 @@
 package com.mindalliance.channels.model;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -89,6 +86,7 @@ public class ElementOfInformation implements Classifiable {
         this.timeSensitive = timeSensitive;
     }
 
+    @Override
     public List<Classification> getClassifications() {
         return classifications;
     }
@@ -120,35 +118,6 @@ public class ElementOfInformation implements Classifiable {
         }
     }
 
-    /**
-     * Whether there is no classification not encompassed by an actor's clearance.
-     *
-     * @param actor an actor
-     * @return a boolean
-     */
-    public boolean isClearedFor( final Actor actor ) {
-        return !CollectionUtils.exists(
-                classifications,
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        final Classification eoiClassification = (Classification) object;
-                        return !CollectionUtils.exists(
-                                actor.getClearances(),
-                                new Predicate() {
-                                    public boolean evaluate( Object object ) {
-                                        Classification clearance = (Classification) object;
-                                        return clearance.encompasses( eoiClassification );
-                                    }
-                                }
-                        );
-                    }
-                }
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( getLabel() );
@@ -182,9 +151,6 @@ public class ElementOfInformation implements Classifiable {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean equals( Object object ) {
         if ( object instanceof ElementOfInformation ) {
             ElementOfInformation other = (ElementOfInformation) object;
@@ -255,12 +221,11 @@ public class ElementOfInformation implements Classifiable {
      * Add classifications not already encompassed.
      *
      * @param classificationList a list of classifications
+     * @param plan the plan
      */
-    public void addClassifications( List<Classification> classificationList ) {
-        for ( Classification classification : classificationList ) {
-            if ( !Classification.encompass( classifications, classification ) ) {
-                classifications.add( classification );
-            }
-        }
+    public void addClassifications( List<Classification> classificationList, Plan plan ) {
+        for ( Classification classification : classificationList )
+            if ( !Classification.encompass( classifications, classification, plan ) )
+                 classifications.add( classification );
     }
 }

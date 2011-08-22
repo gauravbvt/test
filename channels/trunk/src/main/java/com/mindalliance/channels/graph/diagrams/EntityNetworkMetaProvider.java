@@ -2,6 +2,7 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -174,7 +175,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             String label = getIdentifiableLabel( entity );
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
-            iconName = service.findIconName( entity );
+            iconName = service.findIconName( getPlan(), entity );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 

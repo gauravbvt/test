@@ -118,12 +118,12 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public int[] getImageSize( String url ) {
+    public int[] getImageSize( Plan plan, String url ) {
         int[] size = new int[2];
         size[0] = 0;
         size[1] = 0;
         try {
-            BufferedImage image = getImage( url );
+            BufferedImage image = getImage( plan, url );
             size[0] = image.getWidth();
             size[1] = image.getHeight();
         } catch ( IOException e ) {
@@ -132,13 +132,14 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return size;
     }
 
-    private BufferedImage getImage( String url ) throws IOException {
-        BufferedImage image = isUploadedFileDocument( url ) ? ImageIO.read( getUploadedImageFile( url ) )
-                : isFileDocument( url ) ? ImageIO.read( new File( url ) )
-                : ImageIO.read( new URL( url ) );
+    private BufferedImage getImage( Plan plan, String url ) throws IOException {
+        File uploadedFile = attachmentManager.getUploadedFile( plan, url );
+        BufferedImage image = isUploadedFileDocument( url )
+                ? ImageIO.read( uploadedFile )
+                : isFileDocument( url ) ? ImageIO.read( new File( url ) ) : ImageIO.read( new URL( url ) );
         if ( image == null ) {
             LOG.warn( "No image at " + url );
-            throw new IOException( "No image at " + url  );
+            throw new IOException( "No image at " + url );
         }
         return image;
     }
@@ -151,14 +152,10 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return attachmentManager.isUploadedFileDocument( url );
     }
 
-    private File getUploadedImageFile( String url ) {
-        return attachmentManager.getUploadedFile( url );
-    }
-
     @Override
-    public boolean iconize( String url, ModelObject modelObject ) {
+    public boolean iconize( Plan plan, String url, ModelObject modelObject ) {
         try {
-            BufferedImage image = getImage( url );
+            BufferedImage image = getImage( plan, url );
             int height = ICON_HEIGHTS[0];
             int width = height * image.getWidth() / image.getHeight();
 
@@ -174,9 +171,9 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return true;
     }
 
-    private boolean squarify( String url, ModelObject modelObject ) {
+    private boolean squarify( Plan plan, String url, ModelObject modelObject ) {
         try {
-            BufferedImage image = getImage( url );
+            BufferedImage image = getImage( plan, url );
             int width = image.getWidth();
             int height = image.getHeight();
             int max = Math.max( width, height );
@@ -219,7 +216,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         }
     }
 
-    private String getModelObjectIconsPath( ModelObject modelObject ) {
+    private String getModelObjectIconsPath( Plan plan, ModelObject modelObject ) {
         try {
             File iconFile = getIconFile( modelObject, ".png" );
             if ( iconFile.exists() ) {
@@ -227,8 +224,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                 return path.substring( 0, path.indexOf( ".png" ) );
             }
 
-            if ( modelObject.hasImage() && iconize( modelObject.getImageUrl(), modelObject ) )
-                return getModelObjectIconsPath( modelObject );
+            if ( modelObject.hasImage() && iconize( plan, modelObject.getImageUrl(), modelObject ) )
+                return getModelObjectIconsPath( plan, modelObject );
 
         } catch ( IOException e ) {
             LOG.trace( "Exception when getting " + modelObject.getId(), e );
@@ -238,7 +235,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public String getSquareIconUrl( ModelObject modelObject ) {
+    public String getSquareIconUrl( Plan plan, ModelObject modelObject ) {
         try {
             File squareIconFile = getIconFile( modelObject, "_squared.png" );
             if ( squareIconFile.exists() ) {
@@ -251,9 +248,9 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                 return "/icons" + File.separator + encodedPath;
             }
 
-            String path = getModelObjectIconsPath( modelObject );
-            if ( path != null && squarify( path + ".png", modelObject ) )
-                return getSquareIconUrl( modelObject );
+            String path = getModelObjectIconsPath( plan, modelObject );
+            if ( path != null && squarify( plan, path + ".png", modelObject ) )
+                return getSquareIconUrl( plan, modelObject );
 
         } catch ( IOException e ) {
             LOG.warn( "Failed to get icon url", e );
@@ -391,8 +388,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public String findIconName( ModelObject modelObject ) {
-        String iconName = getModelObjectIconsPath( modelObject );
+    public String findIconName( Plan plan, ModelObject modelObject ) {
+        String iconName = getModelObjectIconsPath( plan, modelObject );
         if ( iconName != null )
             return iconName;
 
@@ -417,22 +414,22 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public String findIconName( Assignment assignment ) {
+    public String findIconName( Plan plan, Assignment assignment ) {
         String iconName = null;
         Actor actor = assignment.getActor();
         if ( actor != null && !actor.isUnknown() ) {
-            iconName = findSpecificIcon( actor, new ArrayList<Actor>() );
+            iconName = findSpecificIcon( plan, actor, new ArrayList<Actor>() );
         }
         if ( iconName == null ) {
             Role role = assignment.getRole();
             if ( role != null && !role.isUnknown() ) {
-                iconName = findSpecificIcon( role, new ArrayList<Role>() );
+                iconName = findSpecificIcon( plan, role, new ArrayList<Role>() );
             }
         }
         if ( iconName == null ) {
             Organization org = assignment.getOrganization();
             if ( org != null && !org.isUnknown() ) {
-                iconName = findSpecificIcon( org, new ArrayList<Organization>() );
+                iconName = findSpecificIcon( plan, org, new ArrayList<Organization>() );
             }
         }
         return iconName == null
@@ -441,62 +438,61 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public String findIconName( Specable part, Assignments assignments ) {
+    public String findIconName( Plan plan, Specable part, Assignments assignments ) {
 
         Assignments partAssignments = assignments.withAll( part );
-        String specific = findSpecificIcon( part, partAssignments );
+        String specific = findSpecificIcon( plan, part, partAssignments );
         return specific == null ? findGenericIconName( part )
                 : specific;
     }
 
-    private String findSpecificIcon( Specable part, Assignments assignments ) {
+    private String findSpecificIcon( Plan plan, Specable part, Assignments assignments ) {
 
-        String actorIcon = findSpecificIcon( part.getActor(), assignments.getActualActors() );
+        String actorIcon = findSpecificIcon( plan, part.getActor(), assignments.getActualActors() );
         if ( actorIcon != null )
             return actorIcon;
 
-        String roleIcon = findSpecificIcon( part.getRole(), assignments.getRoles() );
-        return roleIcon == null ? findSpecificOrgIcon( part.getOrganization(),
+        String roleIcon = findSpecificIcon( plan, part.getRole(), assignments.getRoles() );
+        return roleIcon == null ? findSpecificOrgIcon( User.plan(), part.getOrganization(),
                 assignments.getOrganizations() )
                 : roleIcon;
     }
 
-    private String findSpecificOrgIcon( Organization spec, List<Organization> candidates ) {
+    private String findSpecificOrgIcon( Plan plan, Organization spec, List<Organization> candidates ) {
 
         Organization organization = candidates.size() == 1 ? candidates.get( 0 ) : spec;
-        if ( organization == null )
-            return null;
+        if ( organization != null ) {
+            String s = getModelObjectIconsPath( plan, organization );
+            if ( s != null )
+                return s;
 
-        String s = getModelObjectIconsPath( organization );
-        if ( s != null )
-            return s;
+            List<Organization> ancestors = organization.ancestors();
+            for ( Organization ancestor : ancestors ) {
+                String path = getModelObjectIconsPath( plan, ancestor );
+                if ( path != null )
+                    return path;
+            }
 
-        List<Organization> ancestors = organization.ancestors();
-        for ( Organization ancestor : ancestors ) {
-            String path = getModelObjectIconsPath( ancestor );
-            if ( path != null )
-                return path;
-        }
-
-        for ( ModelEntity type : organization.getAllTypes() ) {
-            String path = getModelObjectIconsPath( type );
-            if ( path != null )
-                return path;
+            for ( ModelEntity type : organization.getAllTypes() ) {
+                String path = getModelObjectIconsPath( plan, type );
+                if ( path != null )
+                    return path;
+            }
         }
 
         return null;
     }
 
-    private <T extends ModelEntity> String findSpecificIcon( T spec, List<T> candidates ) {
+    private <T extends ModelEntity> String findSpecificIcon( Plan plan, T spec, List<T> candidates ) {
         T entity = candidates.size() == 1 ? candidates.get( 0 ) : spec;
 
         if ( entity != null ) {
-            String s = getModelObjectIconsPath( entity );
+            String s = getModelObjectIconsPath( plan, entity );
             if ( s != null )
                 return s;
 
             for ( ModelEntity type : entity.getAllTypes() ) {
-                String path = getModelObjectIconsPath( type );
+                String path = getModelObjectIconsPath( plan, type );
                 if ( path != null )
                     return path;
             }

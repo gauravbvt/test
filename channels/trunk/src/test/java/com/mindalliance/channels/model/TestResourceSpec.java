@@ -7,6 +7,7 @@ import com.mindalliance.channels.dao.DefinitionManager;
 import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.SimpleIdGenerator;
+import com.mindalliance.channels.odb.ODBTransactionFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.FileSystemResource;
@@ -74,6 +75,9 @@ public class TestResourceSpec {
         definitionManager.getOrCreate( "test", "test", "MAS" );
 
         PlanManager planManager = new PlanManager( definitionManager );
+        ODBTransactionFactory databaseFactory = new ODBTransactionFactory();
+        databaseFactory.setOdbDir( new FileSystemResource( new File( "target/channel-test-data" ) ) );
+        planManager.setDatabaseFactory( databaseFactory );
         planDao = planManager.getDao( "test", true );
 
         // Assume others are null too
@@ -214,10 +218,10 @@ public class TestResourceSpec {
         assertEquals( "any janitor", spec1.toString() );
 
         spec = new ResourceSpec( bob, janitor, walmart, null );
-        assertEquals( "Bob as janitor from Walmart", spec.toString() );
+        assertEquals( "Bob as janitor at Walmart", spec.toString() );
 
         spec = new ResourceSpec( bob, janitor, walmart, cafeteria );
-        assertEquals( "Bob as janitor from Walmart for cafeteria", spec.toString() );
+        assertEquals( "Bob as janitor at Walmart for cafeteria", spec.toString() );
 
         spec = new ResourceSpec( null, janitor, walmart, cafeteria );
         assertEquals( "janitor, Walmart, cafeteria", spec.displayString( 1000 ) );

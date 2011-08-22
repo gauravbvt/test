@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.procedures;
 
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.Classification;
@@ -246,7 +247,7 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
     }
 
     private String getPictureUrl( ModelEntity entity ) {
-        String s = reportHelper.getImagingService().getSquareIconUrl( entity );
+        String s = reportHelper.getImagingService().getSquareIconUrl( getPlan(), entity );
 
         if ( s == null ) {
             ResourceSpec spec = new ResourceSpec( (Specable) entity );

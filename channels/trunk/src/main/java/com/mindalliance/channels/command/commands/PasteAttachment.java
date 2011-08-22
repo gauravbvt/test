@@ -1,5 +1,6 @@
 package com.mindalliance.channels.command.commands;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
@@ -7,6 +8,7 @@ import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.model.Attachable;
 import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Attachment.Type;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.util.ChannelsUtils;
 
@@ -36,16 +38,12 @@ public class PasteAttachment extends AbstractCommand {
         set( "attachablePath", attachablePath );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "paste attachment";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canDo( Commander commander ) {
         return super.canDo( commander )
                 && commander.isAttachmentCopied()
@@ -59,48 +57,39 @@ public class PasteAttachment extends AbstractCommand {
 
     @SuppressWarnings( "unchecked" )
     private Map<String, Object> getCopy( Commander commander ) {
-        if ( commander.isReplaying() ) {
-            return (Map<String, Object>) get( "copy" );
-        } else {
-            return commander.getCopy();
-        }
+        return commander.isReplaying() ? (Map<String, Object>) get( "copy" ) : commander.getCopy();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         Map<String, Object> copy = getCopy( commander );
-        if ( !commander.isReplaying() ) {
+        if ( !commander.isReplaying() )
             set( "copy", copy );
-        }
         Attachment attachment = getAttachmentFromCopy( copy );
         String attachablePath = (String) get( "attachablePath" );
         Attachable attachable = (Attachable) ChannelsUtils.getProperty( mo, attachablePath, null );
-        if ( attachable == null ) throw new CommandException( "Can't find where attachments are" );
-        attachable.addAttachment( attachment, commander.getQueryService().getAttachmentManager() );
+        if ( attachable == null )
+            throw new CommandException( "Can't find where attachments are" );
+        AttachmentManager attachmentManager = commander.getQueryService().getAttachmentManager();
+        attachmentManager.addAttachment( attachment, attachable );
         describeTarget( mo );
         return new Change( Change.Type.Updated, mo, "attachmentTickets" );
     }
 
-    private Attachment getAttachmentFromCopy( Map<String, Object> copy ) {
+    private static Attachment getAttachmentFromCopy( Map<String, Object> copy ) {
         return new Attachment(
                 (String) copy.get( "url" ),
-                Attachment.Type.valueOf( (String) copy.get( "type" ) ),
+                Type.valueOf( (String) copy.get( "type" ) ),
                 (String) copy.get( "name" ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );

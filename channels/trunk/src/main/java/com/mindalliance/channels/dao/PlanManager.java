@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.security.access.annotation.Secured;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -90,7 +92,6 @@ public class PlanManager {
      */
     private String defaultCommunityCalendarPrivateTicket;
 
-    //------------------------------------------
     /**
      * Required for AOP decorations.
      */
@@ -578,8 +579,8 @@ public class PlanManager {
      * @param user a user
      */
     public synchronized void resynced( User user ) {
-        for ( String uri : outOfSyncUsers.keySet() ) {
-            List<String> usernames = outOfSyncUsers.get( uri );
+        for ( Entry<String, List<String>> stringListEntry : outOfSyncUsers.entrySet() ) {
+            List<String> usernames = stringListEntry.getValue();
             if ( usernames != null )
                 usernames.remove( user.getUsername() );
         }
@@ -668,8 +669,11 @@ public class PlanManager {
         user.setPlan( uri != null ? getDefaultPlan( user ) : null );
     }
 
+    public File getVersionDirectory( Plan plan ) {
+        Version version = getVersion( plan );
+        return version.getVersionDirectory();
+    }
 
-    //=============================================================
     /**
      * Listener event management.
      */

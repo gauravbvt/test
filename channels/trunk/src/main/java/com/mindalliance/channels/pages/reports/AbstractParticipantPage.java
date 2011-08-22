@@ -55,6 +55,8 @@ abstract public class AbstractParticipantPage  extends AbstractChannelsWebPage {
         try {
             QueryService service = getQueryService();
             Plan plan = service.getPlan();
+            if ( plan == null )
+                plan = getUser().getPlan();
             setRedirect( true );
             setResponsePage(
                     clazz,

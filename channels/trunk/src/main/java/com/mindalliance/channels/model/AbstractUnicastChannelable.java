@@ -4,21 +4,16 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Abstract class for channelable entity with only unicast channels.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 17, 2009
- * Time: 11:25:24 AM
+ * Abstract class for channelable entity with only unicast channels. Copyright (C) 2008 Mind-Alliance Systems. All
+ * Rights Reserved. Proprietary and Confidential. User: jf Date: Mar 17, 2009 Time: 11:25:24 AM
  */
 public abstract class AbstractUnicastChannelable extends ModelEntity implements Channelable {
 
-    /**
-     * Channels.
-     */
+    /** Channels. */
     private List<Channel> channels = new ArrayList<Channel>();
 
     protected AbstractUnicastChannelable() {
@@ -29,12 +24,10 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
     }
 
     public List<Channel> getChannels() {
-        return channels;
+        return Collections.unmodifiableList( channels );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Channel> getEffectiveChannels() {
         return getChannels();
     }
@@ -44,31 +37,24 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
         return getEffectiveChannels();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void addChannel( Channel channel ) {
         // assert channel.isUnicast();
-        if ( !channels.contains( channel ) ) channels.add( channel );
+        if ( !channels.contains( channel ) )
+            channels.add( channel );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void removeChannel( Channel channel ) {
         channels.remove( channel );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getChannelsString() {
         return Channel.toString( getEffectiveChannels() );
     }
 
-    /**
-     * {@inheritDoc }
-     */
+    @Override
     public List<Channel> allChannels() {
         return getEffectiveChannels();
     }
@@ -77,45 +63,34 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
         this.channels = channels;
     }
 
-    /**
-     * {@inheritDoc }
-     */
+    @Override
     public boolean canBeUnicast() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canSetChannels() {
         return true;
     }
 
-    /**
-     * {@inheritDoc }
-     */
+    @Override
     public String validate( Channel channel ) {
         return channel.isValid() ? null : "Invalid address";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndefined() {
         return super.isUndefined() && channels.isEmpty();
     }
 
     @Override
     public boolean references( final ModelObject mo ) {
-        return super.references( mo )
-                || ( mo instanceof TransmissionMedium
-                && CollectionUtils.exists(
-                channels,
-                new Predicate() {
+        return super.references( mo ) || mo instanceof TransmissionMedium && CollectionUtils
+                .exists( channels, new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ( (Channel) object ).getMedium().equals( mo );
+                        return mo.equals( ( (Channel) object ).getMedium() );
                     }
-                } ) );
+                } );
     }
 }

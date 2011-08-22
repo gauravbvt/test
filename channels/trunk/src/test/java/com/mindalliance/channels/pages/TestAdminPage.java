@@ -24,7 +24,7 @@ import static org.junit.Assert.fail;
 /**
  * ...
  */
-@SuppressWarnings( { "unchecked" } )
+@SuppressWarnings( "unchecked" )
 @TestExecutionListeners( AbstractChannelsTest.InstallSamplesListener.class )
 public class TestAdminPage extends AbstractChannelsTest {
 
@@ -50,7 +50,7 @@ public class TestAdminPage extends AbstractChannelsTest {
 
         form.select( "plan-sel", 0 );
         tester.executeAjaxEvent( "users:plan-sel", "onchange" );
-        tester.assertComponentOnAjaxResponse( "users" );
+        tester.assertRenderedPage( AdminPage.class );
         Plan acme = planManager.getPlansWithUri( ACME ).get( 0 );
         assertEquals( acme, User.current().getPlan() );
     }
@@ -269,14 +269,14 @@ public class TestAdminPage extends AbstractChannelsTest {
         form.select( "plan-sel", 1 );
         tester.executeAjaxEvent( "users:plan-sel", "onchange" );
         AdminPage page = (AdminPage) tester.getLastRenderedPage();
-        assertEquals( DEMO, page.getPlan().getUri() );
+        assertEquals( ACME, page.getPlan().getUri() );
 
-        PlanDefinition planDefinition = planManager.getDefinitionManager().get( DEMO );
+        PlanDefinition planDefinition = planManager.getDefinitionManager().get( ACME );
 
         tester.executeAjaxEvent( "users:deletePlan", "onclick" );
 
         assertRendered( "admin", AdminPage.class );
-        assertEquals( 0, planManager.getPlansWithUri( DEMO ).size() );
+        assertEquals( 0, planManager.getPlansWithUri( ACME ).size() );
         assertFalse( planDefinition.getPlanDirectory().exists() );
     }
 

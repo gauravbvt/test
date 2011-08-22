@@ -69,11 +69,6 @@ public class DefaultCommander implements Commander {
      */
     private History history = new History();
 
-    /**
-     * Attachment manager
-     */
-    private AttachmentManager attachmentManager;
-
     private QueryService queryService;
 
     /**
@@ -209,14 +204,6 @@ public class DefaultCommander implements Commander {
     @Override
     public void setLockManager( LockManager lockManager ) {
         this.lockManager = lockManager;
-    }
-
-    public AttachmentManager getAttachmentManager() {
-        return attachmentManager;
-    }
-
-    public void setAttachmentManager( AttachmentManager attachmentManager ) {
-        this.attachmentManager = attachmentManager;
     }
 
     public final QueryService getQueryService() {
@@ -705,7 +692,7 @@ public class DefaultCommander implements Commander {
     @Override
     public void initialize() {
         replayJournal();
-        attachmentManager.removeUnattached( planDao );
+        planDao.removeUnattached();
         analyst.onStart( planDao.getPlan() );
     }
 

@@ -10,7 +10,6 @@ import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.NotFoundException;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.social.SurveyResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.velocity.app.VelocityEngine;

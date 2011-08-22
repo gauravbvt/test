@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.social.SurveyResponse;
+import com.mindalliance.channels.surveys.SurveyResponse;
 import com.mindalliance.channels.surveys.Survey;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;

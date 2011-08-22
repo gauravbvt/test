@@ -5,7 +5,6 @@ import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
 import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.social.SurveyResponse;
 
 import java.util.List;
 

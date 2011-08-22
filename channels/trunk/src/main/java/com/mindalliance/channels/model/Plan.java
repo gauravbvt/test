@@ -1,24 +1,14 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.model.Attachment.Type;
 import com.mindalliance.channels.model.Phase.Timing;
 import com.mindalliance.channels.nlp.Matcher;
-import com.mindalliance.channels.util.InfoStandardsLoader;
-import com.mindalliance.channels.util.Loader;
-import com.mindalliance.channels.util.TagLoader;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -652,59 +642,5 @@ public class Plan extends ModelObject {
         if ( !hasAttachmentOfType( Attachment.Type.Help ) )
             types.add(  Type.Help );
         return types;
-    }
-
-    public void reloadTags( AttachmentManager attachmentManager ) {
-        setTags( new ArrayList<Tag>() );
-        for ( Attachment attachment : getAttachments() ) {
-            if ( attachment.isTags() ) {
-                String url = attachment.getUrl();
-                reloadTagsFromUrl( url, attachmentManager, new TagLoader( this ) );
-            }
-            if ( attachment.isInfoStandards() ) {
-                String url = attachment.getUrl();
-                reloadTagsFromUrl( url, attachmentManager, new InfoStandardsLoader( this ) );
-            }
-        }
-    }
-
-    private void reloadTagsFromUrl(
-        String url, AttachmentManager attachmentManager, Loader loader ) {
-        BufferedReader in = null;
-        try {
-            InputStreamReader reader;
-            if ( attachmentManager.isUploadedFileDocument( url ) ) {
-                File file = attachmentManager.getUploadedFile( url );
-                reader = new InputStreamReader( new FileInputStream( file ) );
-            } else {
-                reader = new InputStreamReader( new URL( url ).openStream() );
-            }
-            in = new BufferedReader( reader );
-            loader.load( in );
-        } catch ( Exception e ) {
-            LOG.error( "Failed to load tags file " + url, e );
-        } finally {
-            if ( in != null ) {
-                try {
-                    in.close();
-                } catch ( IOException e ) {
-                    LOG.warn( "Failed to close tags file " + url, e );
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void attachmentAdded( Attachment attachment, AttachmentManager attachmentManager ) {
-        super.attachmentAdded( attachment, attachmentManager );
-        if ( attachment.isTags() || attachment.isInfoStandards() )
-            reloadTags( attachmentManager );
-    }
-
-    @Override
-    protected void attachmentRemoved( Attachment attachment, AttachmentManager attachmentManager ) {
-        super.attachmentRemoved( attachment, attachmentManager );
-        if ( attachment.isTags() || attachment.isInfoStandards() )
-            reloadTags( attachmentManager );
     }
 }

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
@@ -220,8 +221,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
             if ( hidingNoop && !part.isOperational() )
                 iconName = "blank";
             else
-                iconName = imagingService.findIconName(
-                        part,
+                iconName = imagingService.findIconName( User.plan(), part,
                         getAnalyst().getQueryService().getAssignments() );
         }
 

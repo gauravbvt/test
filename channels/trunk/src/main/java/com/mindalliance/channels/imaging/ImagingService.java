@@ -2,6 +2,7 @@ package com.mindalliance.channels.imaging;
 
 import com.mindalliance.channels.model.Assignment;
 import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Specable;
 import com.mindalliance.channels.query.Assignments;
 
@@ -21,19 +22,23 @@ public interface ImagingService {
     /**
      * Find the size of an image given its url.
      *
+     *
+     * @param plan
      * @param url a string
      * @return an int array
      */
-    int[] getImageSize( String url );
+    int[] getImageSize( Plan plan, String url );
 
     /**
      * Create/update PNG icons for model object from image at given url.
      *
+     *
+     * @param plan
      * @param url         a string
      * @param modelObject a model object
      * @return true if successful
      */
-    boolean iconize( String url, ModelObject modelObject );
+    boolean iconize( Plan plan, String url, ModelObject modelObject );
 
     /**
      * Remove icons for model object.
@@ -45,39 +50,47 @@ public interface ImagingService {
     /**
      * Return url of squared icon..
      *
+     *
+     * @param plan
      * @param modelObject a model object
      * @return a string
      */
-    String getSquareIconUrl( ModelObject modelObject );
+    String getSquareIconUrl( Plan plan, ModelObject modelObject );
 
     /**
      * Find icon name for given model object.
      *
      *
+     *
+     * @param plan
      * @param modelObject   a model object
      * @return a string
      */
-    String findIconName( ModelObject modelObject );
+    String findIconName( Plan plan, ModelObject modelObject );
 
     /**
      * Find icon name for given model object.
      *
      *
+     *
+     * @param plan
      * @param assignment   an assignment
      * @return a string
      */
-    String findIconName( Assignment assignment );
+    String findIconName( Plan plan, Assignment assignment );
 
     /**
      * Find icon name for given part.
      *
      *
      *
+     *
+     * @param plan
      * @param part a specable
      * @param assignments a list of assignments
      * @return a string
      */
-    String findIconName( Specable part, Assignments assignments );
+    String findIconName( Plan plan, Specable part, Assignments assignments );
 
     /**
      * Get icon directory.

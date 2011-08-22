@@ -2,7 +2,6 @@ package com.mindalliance.channels.model;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,25 +10,18 @@ import java.util.List;
 
 /**
  * A tag.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 1/27/11
- * Time: 1:11 PM
  */
-public class Tag implements Serializable, Nameable, Comparable {
-    /**
-     * Tag composition string
-     */
+public class Tag implements Nameable, Comparable<Tag> {
+
+    /** Tag composition string */
     public static final String COMPOSITOR = ":";
-    /**
-     * Tag separator
-     */
+
+    /** Tag separator */
     public static final String SEPARATOR = ",";
 
-    private static Collator collator = Collator.getInstance();
+    private static final Collator CollatorInstance = Collator.getInstance();
 
-    private String name;
+    private final String name;
 
     public Tag( String s ) {
         name = StringUtils.strip( s.trim(), COMPOSITOR ).trim();
@@ -39,29 +31,27 @@ public class Tag implements Serializable, Nameable, Comparable {
         return false;
     }
 
-
+    @Override
     public String getName() {
-        return name == null ? "" : name;
+        return name;
     }
 
     public List<String> getElements() {
-        return getName().isEmpty() ? new ArrayList<String>() :
-                Arrays.asList( getName().split( COMPOSITOR ) );
+        return name.isEmpty() ? new ArrayList<String>() : Arrays.asList( name.split( COMPOSITOR ) );
     }
 
     public boolean isComposed() {
-        return getName().indexOf( COMPOSITOR ) > 0;
+        return name.indexOf( COMPOSITOR ) > 0;
     }
 
     @Override
-    public boolean equals( Object other ) {
-        return other instanceof Tag
-                && getName().toLowerCase().equals( ( (Tag) other ).getName().toLowerCase() );
+    public boolean equals( Object obj ) {
+        return obj instanceof Tag && name.equalsIgnoreCase( ( (Tag) obj ).getName() );
     }
 
     @Override
     public int hashCode() {
-        return 31 * getName().toLowerCase().hashCode();
+        return 31 * name.toLowerCase().hashCode();
     }
 
     public static String tagsToString( List<Tag> tags ) {
@@ -83,7 +73,8 @@ public class Tag implements Serializable, Nameable, Comparable {
             String name = val.trim();
             if ( !name.isEmpty() ) {
                 Tag tag = new Tag( val );
-                if ( !tags.contains( tag ) ) tags.add( tag );
+                if ( !tags.contains( tag ) )
+                    tags.add( tag );
             }
         }
         return tags;
@@ -94,7 +85,8 @@ public class Tag implements Serializable, Nameable, Comparable {
         List<String> elements = getElements();
         StringBuilder sb = new StringBuilder();
         for ( String element : elements ) {
-            if ( sb.length() > 0 ) sb.append( COMPOSITOR );
+            if ( sb.length() > 0 )
+                sb.append( COMPOSITOR );
             sb.append( element );
             components.add( sb.toString() );
         }
@@ -103,15 +95,15 @@ public class Tag implements Serializable, Nameable, Comparable {
 
     @Override
     public String toString() {
-        return getName();
+        return name;
     }
 
     public boolean isEmpty() {
-        return getName().isEmpty();
+        return name.isEmpty();
     }
 
     @Override
-    public int compareTo( Object other ) {
-        return collator.compare( getName(), ((Tag)other).getName() );
+    public int compareTo( Tag other ) {
+        return CollatorInstance.compare( name, other.getName() );
     }
 }

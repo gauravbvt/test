@@ -29,7 +29,7 @@ public class RailTest extends WalkthroughTest {
     @Test
     public void testFlowReport() {
         login( "denis" );
-        assertErrorRendering( "flow?plan=mindalliance.com/channels/plans/railsec&v=2&agent=293&task=235&flow=527",
+        assertErrorRendering( "flow?plan=mindalliance.com/channels/plans/railsec&v=2&agent=293&task=235&flow=44444527",
                               HttpServletResponse.SC_NOT_FOUND );
     }
 

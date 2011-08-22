@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.UpdateObject;
 import com.mindalliance.channels.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.pages.Updatable;
@@ -197,7 +198,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                     "src",
                     true,
                     new Model<String>( url ) ) );
-            int[] size = imagingService.getImageSize( url );
+            int[] size = imagingService.getImageSize( getPlan(), url );
             int height = size[1];
             if ( height > MAX_IMAGE_HEIGHT ) {
                 image.add( new AttributeModifier(

@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.LinkFlowClassifications;
 import com.mindalliance.channels.command.commands.UpdateObject;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.ElementOfInformation;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Identifiable;
@@ -722,7 +723,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                             }
                         }
                         // classifications
-                        newEoi.addClassifications( sourceEoi.getClassifications() );
+                        newEoi.addClassifications( sourceEoi.getClassifications(), getPlan() );
                         // description
                         String description = newEoi.getDescription();
                         String sourceDescription = sourceEoi.getDescription();

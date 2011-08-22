@@ -1,8 +1,10 @@
-package com.mindalliance.channels.graph.diagrams;
+package com.mindalliance.channels.analysis.graph;
 
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,17 +18,17 @@ import java.util.Map;
  */
 public class DirectedMultiGraphWithProperties<V,E> extends DirectedMultigraph<V,E> {
 
-    private Map<String,Object> properties = new HashMap<String, Object>();
+    private final Map<String,Serializable> properties = new HashMap<String, Serializable>();
 
     public DirectedMultiGraphWithProperties( EdgeFactory<V, E> ef ) {
         super( ef );
     }
 
-    public Map<String, Object> getProperties() {
-        return properties;
+    public Map<String, Serializable> getProperties() {
+        return Collections.unmodifiableMap( properties );
     }
 
-    public void setProperty( String name, Object value ) {
+    public void setProperty( String name, Serializable value ) {
         properties.put( name, value );
     }
 

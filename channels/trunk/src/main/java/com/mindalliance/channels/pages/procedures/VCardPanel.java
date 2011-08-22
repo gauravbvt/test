@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.procedures;
 
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Channel;
@@ -66,7 +67,7 @@ public class VCardPanel extends AbstractUpdatablePanel {
     private String getPictureUrl( ModelObject object ) {
         if ( object != null ) {
 //            String s = object.getImageUrl();
-            String s = imagingService.getSquareIconUrl( object );
+            String s = imagingService.getSquareIconUrl( getPlan(), object );
             if ( s != null )
                 try {
                     URI u = new URI( s );

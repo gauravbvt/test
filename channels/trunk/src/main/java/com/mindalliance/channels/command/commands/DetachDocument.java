@@ -1,10 +1,12 @@
 package com.mindalliance.channels.command.commands;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.AbstractCommand;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
+import com.mindalliance.channels.model.AbstractAttachable;
 import com.mindalliance.channels.model.Attachable;
 import com.mindalliance.channels.model.Attachment;
 import com.mindalliance.channels.model.ModelObject;
@@ -32,16 +34,10 @@ public class DetachDocument extends AbstractCommand {
         set( "name", attachment.getName() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getName() {
         return "detach document";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
@@ -49,22 +45,17 @@ public class DetachDocument extends AbstractCommand {
         String attachablePath = (String) get( "attachablePath" );
         Attachable attachable = (Attachable) ChannelsUtils.getProperty( mo, attachablePath, null );
         if ( attachable == null ) throw new CommandException( "Can't find where attachments are" );
-        attachable.removeAttachment( attachment, commander.getQueryService().getAttachmentManager() );
+        AttachmentManager attachmentManager = commander.getQueryService().getAttachmentManager();
+        attachmentManager.removeAttachment( attachment, ( (AbstractAttachable) attachable ) );
         describeTarget( mo );                
         return new Change( Change.Type.Updated, mo, "attachments" );
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );

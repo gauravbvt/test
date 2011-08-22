@@ -34,9 +34,9 @@ public class TestParticipantPage extends AbstractChannelsTest {
 
     @Test
     public void testBadUri() {
-        associate( "guest", "mindalliance.com/channels/plans/railsec", "Joseph Neumann" );
-        assertErrorRendering( "participants?plan=mindalliance.com/channels/plans/waitasec&v=1",
-                              HttpServletResponse.SC_NOT_FOUND );
+        String planUri = "mindalliance.com/channels/plans/railsec";
+        associate( "guest", planUri, "Joseph Neumann" );
+        assertRendered( "participants?plan=mindalliance.com/channels/plans/waitasec&v=1" , GuidelinesPage.class );
     }
 
     @Test
@@ -68,6 +68,7 @@ public class TestParticipantPage extends AbstractChannelsTest {
         user.setUserInfo( new UserInfo( userName, "bla,Test,bla,[" + planUri + "|ROLE_USER]" ) );
 
         Plan devPlan = planManager.findDevelopmentPlan( planUri );
+
         PlanService service = new PlanService( planManager, null, userService, devPlan );
 
         planManager.productize( devPlan );
@@ -81,6 +82,7 @@ public class TestParticipantPage extends AbstractChannelsTest {
 
         logout();
         login( userName );
+        user.setPlan( devPlan );
     }
 
 }

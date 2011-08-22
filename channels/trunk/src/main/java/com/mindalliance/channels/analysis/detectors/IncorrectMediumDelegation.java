@@ -1,11 +1,13 @@
 package com.mindalliance.channels.analysis.detectors;
 
 import com.mindalliance.channels.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Classification;
 import com.mindalliance.channels.model.Issue;
 import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.TransmissionMedium;
 
 import java.util.ArrayList;
@@ -71,13 +73,10 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
     }
 
     private boolean securityReduction( TransmissionMedium medium, TransmissionMedium delegate ) {
-        List<Classification> mediumSec = medium.getEffectiveSecurity();
+        Plan plan = getPlan();
+        List<Classification> mediumSec = medium.getEffectiveSecurity( plan );
         return !mediumSec.isEmpty()
-                &&
-                Classification.hasHigherClassification(
-                        mediumSec,
-                        delegate.getEffectiveSecurity()
-                );
+            && Classification.hasHigherClassification( mediumSec, delegate.getEffectiveSecurity( plan ), plan );
     }
 
     private boolean improperMode( TransmissionMedium medium, TransmissionMedium delegate ) {

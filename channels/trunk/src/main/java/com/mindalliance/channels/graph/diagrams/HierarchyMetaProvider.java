@@ -2,6 +2,7 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.analysis.Analyst;
 import com.mindalliance.channels.analysis.graph.HierarchyRelationship;
+import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -169,7 +170,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             String label = getIdentifiableLabel( modelObject );
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
-            iconName = imagingService.findIconName( modelObject );
+            iconName = imagingService.findIconName( getPlan(), modelObject );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 

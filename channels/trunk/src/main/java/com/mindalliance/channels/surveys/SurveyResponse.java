@@ -1,17 +1,10 @@
-package com.mindalliance.channels.social;
-
-import com.mindalliance.channels.surveys.Survey;
+package com.mindalliance.channels.surveys;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * A survey response.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 4/14/11
- * Time: 11:17 AM
  */
 public class SurveyResponse implements Serializable {
 
@@ -23,9 +16,9 @@ public class SurveyResponse implements Serializable {
     }
 
     private Status status;
-    private Survey survey;
-    private String userEmail;
-    private Date date;
+    private final Survey survey;
+    private final String userEmail;
+    private final Date date;
 
     public SurveyResponse( Survey survey, Status status, String userEmail ) {
         this.survey = survey;
