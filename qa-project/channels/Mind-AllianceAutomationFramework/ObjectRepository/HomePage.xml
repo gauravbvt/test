@@ -11,7 +11,9 @@
 <xPathHomePageIcon>/html/body/div/div/a/img</xPathHomePageIcon>
 <xPathSentMessages>/html/body/form/div[2]/div[2]/span/div/div/div[2]/div/div/a[2]/span</xPathSentMessages>
 <xPathHideBroadcast>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/a/span</xPathHideBroadcast>
-<xPathSendFeedBack>/html/body/form/div[2]/div/span[2]/div/a/span</xPathSendFeedBack>
-<xPathSendFeedbackWindow>/html/body/form/div[2]/div/span[2]/div/div/div/div/div[4]/input</xPathSendFeedbackWindow>
+<xPathSendFeedBack>/html/body/form/div[2]/div/div/div[2]/span/div/a/span</xPathSendFeedBack>
+<xPathSendFeedbackWindow>/html/body/form/div[2]/div/div/div[2]/span/div/div/div/div/div[4]/input</xPathSendFeedbackWindow>
+<xPathFeedbackSend>/html/body/form/div[2]/div/div/div[2]/span/div/div/div/div/div[4]/input[2]</xPathFeedbackSend>
 <xPathHelpIcon>/html/body/form/div[13]/span/a/img</xPathHelpIcon>
+<xPathHideShowAllSurvey>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/a/span</xPathHideShowAllSurvey>
 </elements>

@@ -2,6 +2,7 @@
 <elements>
 <channelURL>http://192.168.1.128:8081</channelURL>
 <username>jf</username>
+<usernamefullname>Jean-Francois Cloutier</usernamefullname>
 <password>Mind-Alliance</password>
 <login>/html/body/div/div[2]/form/div[6]/input</login>
 <xPathBody>/html/body</xPathBody>
@@ -10,6 +11,6 @@
 <xPathRequestPasswordMessage>/html/body/div/div[2]/div/span</xPathRequestPasswordMessage>
 <xPathBackToLogin>/html/body/div/div[2]/form/div[6]/a</xPathBackToLogin>
 <xPathStackTrace>/html/body/div/div[2]/p[3]/a</xPathStackTrace>
-<xPathSignOutOnParticipantsPage>/html/body/div/div/ul/li/a</xPathSignOutOnParticipantsPage>
+<xPathSignOutOnParticipantsPage>/html/body/div/div/a[2]</xPathSignOutOnParticipantsPage>
 <xPathSignoutOnAssignmentsCommitments>/html/body/div/span[2]/div/ul/li[3]/a</xPathSignoutOnAssignmentsCommitments>
 </elements>
