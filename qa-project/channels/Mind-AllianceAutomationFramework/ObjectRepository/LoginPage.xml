@@ -11,6 +11,6 @@
 <xPathRequestPasswordMessage>/html/body/div/div[2]/div/span</xPathRequestPasswordMessage>
 <xPathBackToLogin>/html/body/div/div[2]/form/div[6]/a</xPathBackToLogin>
 <xPathStackTrace>/html/body/div/div[2]/p[3]/a</xPathStackTrace>
-<xPathSignOutOnParticipantsPage>/html/body/div/div/a[2]</xPathSignOutOnParticipantsPage>
+<signoutonparticipantspage>/html/body/div/div/a[2]</signoutonparticipantspage>
 <xPathSignoutOnAssignmentsCommitments>/html/body/div/span[2]/div/ul/li[3]/a</xPathSignoutOnAssignmentsCommitments>
 </elements>
