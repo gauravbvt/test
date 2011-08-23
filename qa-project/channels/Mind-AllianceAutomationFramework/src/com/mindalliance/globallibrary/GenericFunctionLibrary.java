@@ -102,6 +102,7 @@ public class GenericFunctionLibrary {
             // Login Page
             GlobalVariables.login.put("sChannelURL",oXmlEleLoginPage.getElementsByTagName("channelURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sUsername",oXmlEleLoginPage.getElementsByTagName("username").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.login.put("sUsernameFullName",oXmlEleLoginPage.getElementsByTagName("usernamefullname").item(0).getChildNodes().item(0).getNodeValue());			
 			GlobalVariables.login.put("sPassword",oXmlEleLoginPage.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sLogin",oXmlEleLoginPage.getElementsByTagName("login").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sSignoutOnParticipantsPage",oXmlEleLoginPage.getElementsByTagName("xPathSignOutOnParticipantsPage").item(0).getChildNodes().item(0).getNodeValue());
@@ -135,7 +136,11 @@ public class GenericFunctionLibrary {
 			GlobalVariables.home.put("sXpathSendFeedbackWindow",oXmlEleHomePage.getElementsByTagName("xPathSendFeedbackWindow").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathHelpIcon",oXmlEleHomePage.getElementsByTagName("xPathHelpIcon").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathShowSentReceiveMessages",oXmlEleHomePage.getElementsByTagName("xPathShowSentReceiveMessages").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.home.put("sXpathFeedbackSend",oXmlEleHomePage.getElementsByTagName("xPathFeedbackSend").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.home.put("sXpathHideShowAllSurvey",oXmlEleHomePage.getElementsByTagName("xPathHideShowAllSurvey").item(0).getChildNodes().item(0).getNodeValue());
 			//Channels Plan Page
+			GlobalVariables.plan.put("sXpathIssueSummaryReportSendFeedbackCancel",oXmlElePlanPage.getElementsByTagName("xPathIssueSummaryReportSendFeedbackCancel").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathSendFeedBackOfIssueSummaryReport",oXmlElePlanPage.getElementsByTagName("xPathSendFeedBackOfIssueSummaryReport").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathParticipationNewMedium",oXmlElePlanPage.getElementsByTagName("xPathParticipationNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAgentURL",oXmlElePlanPage.getElementsByTagName("xPathAgentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathStretchUpShrinkBack",oXmlElePlanPage.getElementsByTagName("xPathStretchUpShrinkBack").item(0).getChildNodes().item(0).getNodeValue());
