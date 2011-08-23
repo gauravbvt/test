@@ -12,7 +12,7 @@
         <td align="left" class="pointer">
         <span class="summary" wicket:id="partSummary">
             [Part summary panel]
-        </span>
+        </span> <span wicket:id="simpleAdvanced" class="simple-advanced">Show simple form</span>
         </td>
     </tr>
 </table>
@@ -21,13 +21,13 @@
         <th align="right"><label for="task">Name:</label></th>
         <td><input type="text" size="40" id="task" wicket:id="task" value="investigating fire"></td>
     </tr>
-    <tr>
+    <tr wicket:id="tagsContainer">
         <th align="right"><label>
             <a wicket:id="tagsLink" href="#" title="Click to see all tags">Tags:</a>
         </label></th>
         <td><span wicket:id="tags">[Tags panel]</span></td>
     </tr>
-    <tr>
+    <tr wicket:id="classificationContainer">
         <th align="right"><label for="category">Task is:</label></th>
         <td>
             <select id="category" wicket:id="category"><option>Operations</option></select>
@@ -66,7 +66,7 @@
         </th>
         <td><span id="organization" wicket:id="organization">[entity reference panel]</span></td>
     </tr>
-    <tr>
+    <tr wicket:id="executionContainer">
         <th align="right"><label for="asTeam">Execution:</label>
         </th>
         <td>
@@ -82,7 +82,7 @@
         </th>
         <td><input type="text" size="40" id="initiatedEvent" wicket:id="initiatedEvent" value=""></td>
     </tr>
-    <tr>
+    <tr wicket:id="timingContainer">
         <th class="area" align="right"><label>Timing:</label></th>
         <td>
             <span class="timing">

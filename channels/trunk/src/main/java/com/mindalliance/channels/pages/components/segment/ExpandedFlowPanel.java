@@ -113,11 +113,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     /**
      * The row of max delay fields.
      */
-    private WebMarkupContainer maxDelayRow;
+    private WebMarkupContainer timingContainer;
     /**
      * The row of fields about significance to source
      */
-    private WebMarkupContainer significanceToSourceRow;
+    private WebMarkupContainer significanceToSourceContainer;
     /**
      * Markup for source triggering.
      */
@@ -198,10 +198,33 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Flow is to be restricted.
      */
     private boolean restricted;
+
+    /**
+     * Whether to show simple or advanced form.
+     */
+    private boolean showSimpleForm = true;
+
+    /**
+     * Show simple vs advanced form.
+     */
+    private Label simpleAdvanced;
+    /**
+     * Tags fields container.
+     */
+    private WebMarkupContainer tagsContainer;
+    /**
+     * Classification fields container.
+     */
+    private WebMarkupContainer classificationContainer;
+
     /**
      * EOIS aspect.
      */
     public static final String EOIS = "eois";
+    /**
+     * Restriction fields container.
+     */
+    private WebMarkupContainer restrictionContainer;
 
     protected ExpandedFlowPanel(
             String id,
@@ -216,9 +239,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void init() {
         setOutputMarkupId( true );
         addHeader();
+        addSimpleAdvanced();
         addNameField();
         addTagsPanel();
-        addIntentField();
+        addClassificationFields();
         addLabeled( "name-label", nameField );
         addEOIs();
         addReferencesEventPhaseField();
@@ -227,8 +251,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addOtherField();
         addRestrictionFields();
         addIfTaskFails();
-        addConceptualField();
-        addProhibitedField();
         addAllField();
 
         Node node = getOther();
@@ -255,16 +277,32 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addTagsPanel() {
+        tagsContainer = new WebMarkupContainer( "tagsContainer" );
+        tagsContainer.setOutputMarkupId( true );
+        makeVisible( tagsContainer, !showSimpleForm );
+        add( tagsContainer );
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );
-        add( tagsLink );
+        tagsContainer.add( tagsLink );
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getFlow() ) );
-        add( tagsPanel );
+        tagsContainer.add( tagsPanel );
     }
+
+    private void addClassificationFields() {
+         classificationContainer = new WebMarkupContainer( "classificationContainer" );
+         classificationContainer.setOutputMarkupId( true );
+         makeVisible(  classificationContainer, !showSimpleForm );
+         add(  classificationContainer );
+         addIntentField();
+         addConceptualField();
+         addProhibitedField( );
+     }
+
+
 
     private void addIntentField() {
         intentChoice = new DropDownChoice<String>(
@@ -286,12 +324,13 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Updated, getFlow(), "intent" ) );
             }
         } );
-        addOrReplace( intentChoice );
+        classificationContainer.add( intentChoice );
     }
 
     private void addRestrictionFields() {
-        WebMarkupContainer restrictionContainer = new WebMarkupContainer( "restrictionContainer" );
+        restrictionContainer = new WebMarkupContainer( "restrictionContainer" );
         restrictionContainer.setOutputMarkupId( true );
+        makeVisible( restrictionContainer, !showSimpleForm );
         addOrReplace( restrictionContainer );
         restrictedCheckBox = new CheckBox(
                 "restricted",
@@ -392,9 +431,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         significanceToTargetChoice.setEnabled(
                 lockedByUser && f.canSetSignificanceToTarget() );
         channelRow.setVisible( f.canGetChannels() );
-        maxDelayRow.setVisible( f.canGetMaxDelay() );
+        this.timingContainer.setVisible( f.canGetMaxDelay() );
         delayPanel.enable( lockedByUser && f.canSetMaxDelay() );
-        significanceToSourceRow.setVisible( f.canGetSignificanceToSource() );
+        significanceToSourceContainer.setVisible( f.canGetSignificanceToSource() );
         triggersSourceContainer.setVisible(
                 ( !isSend() || f.isAskedFor() ) && f.canGetTriggersSource() );
         triggersSourceCheckBox.setEnabled( lockedByUser && f.canSetTriggersSource() );
@@ -526,7 +565,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 addSignificanceToTarget();
                 target.addComponent( significanceToTargetLabel );
                 addSignificanceToSource();
-                target.addComponent( significanceToSourceRow );
+                target.addComponent( significanceToSourceContainer );
                 update( target, new Change( Change.Type.Updated, getFlow(), "askedFor" ) );
             }
         } );
@@ -569,9 +608,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addSignificanceToSource() {
-        significanceToSourceRow = new WebMarkupContainer( "significance-to-source" );
-        significanceToSourceRow.setOutputMarkupId( true );
-        addOrReplace( significanceToSourceRow );
+        significanceToSourceContainer = new WebMarkupContainer( "significance-to-source" );
+        significanceToSourceContainer.setOutputMarkupId( true );
+        makeVisible( significanceToSourceContainer, !showSimpleForm );
+        addOrReplace( significanceToSourceContainer );
         Component sourceTaskReference;
         if ( isSend() ) {
             sourceTaskReference = new Label( "source-task", "This task" );
@@ -581,10 +621,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     new Model<ModelObject>( getFlow().getSource() ),
                     new Model<String>( "Sender's task" ) );
         }
-        significanceToSourceRow.add( sourceTaskReference );
+        significanceToSourceContainer.add( sourceTaskReference );
         triggersSourceContainer = new WebMarkupContainer( "triggers-source-container" );
         triggersSourceContainer.setOutputMarkupId( true );
-        significanceToSourceRow.add( triggersSourceContainer );
+        significanceToSourceContainer.add( triggersSourceContainer );
         triggersSourceCheckBox = new CheckBox(
                 "triggers-source",
                 new PropertyModel<Boolean>( this, "triggeringToSource" ) );
@@ -597,7 +637,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } );
         triggersSourceContainer.add( triggersSourceCheckBox );
         terminatesSourceContainer = new WebMarkupContainer( "terminates-source-container" );
-        significanceToSourceRow.add( terminatesSourceContainer );
+        significanceToSourceContainer.add( terminatesSourceContainer );
         terminatesSourceCheckBox = new CheckBox(
                 "terminates-source",
                 new PropertyModel<Boolean>( this, "terminatingToSource" ) );
@@ -619,7 +659,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addIfTaskFails() {
         ifTaskFailsContainer = new WebMarkupContainer( "ifTaskFailsContainer" );
         ifTaskFailsContainer.setOutputMarkupId( true );
-        add( ifTaskFailsContainer );
+        classificationContainer.add( ifTaskFailsContainer );
         ifTaskFailsCheckBox = new CheckBox(
                 "ifTaskFails",
                 new PropertyModel<Boolean>( this, "ifTaskFails" )
@@ -638,7 +678,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addConceptualField() {
         conceptualContainer = new WebMarkupContainer( "conceptualContainer" );
         conceptualContainer.setOutputMarkupId( true );
-        add( conceptualContainer );
+        classificationContainer.add( conceptualContainer );
         conceptualCheckBox = new CheckBox(
                 "conceptual",
                 new PropertyModel<Boolean>( this, "conceptual" )
@@ -657,7 +697,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addProhibitedField() {
         prohibitedContainer = new WebMarkupContainer( "prohibitedContainer" );
         prohibitedContainer.setOutputMarkupId( true );
-        add( prohibitedContainer );
+        classificationContainer.add( prohibitedContainer );
         prohibitedCheckBox = new CheckBox(
                 "prohibited",
                 new PropertyModel<Boolean>( this, "prohibited" )
@@ -676,6 +716,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addReferencesEventPhaseField() {
         referencesEventPhaseContainer = new WebMarkupContainer( "referencesEventPhaseContainer" );
         referencesEventPhaseContainer.setOutputMarkupId( true );
+        makeVisible(  referencesEventPhaseContainer, !showSimpleForm );
         add( referencesEventPhaseContainer );
         referencesEventPhaseCheckBox = new CheckBox(
                 "referencesEventPhase",
@@ -748,6 +789,39 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         add( titlePanel );
         addFlowActionMenu();
     }
+
+    private void addSimpleAdvanced() {
+        simpleAdvanced = new Label(
+                "simpleAdvanced",
+                new Model<String>( showSimpleForm ? "Show advanced form" : "Show simple form" ) );
+        simpleAdvanced.setOutputMarkupId( true );
+        simpleAdvanced.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                showSimpleForm = !showSimpleForm;
+                adjustSimpleAdvancedFields( target );
+                addSimpleAdvanced();
+                target.addComponent( simpleAdvanced );
+            }
+        } );
+        addOrReplace( simpleAdvanced );
+    }
+
+    private void adjustSimpleAdvancedFields( AjaxRequestTarget target ) {
+        makeVisible( tagsContainer, !showSimpleForm );
+        target.addComponent(  tagsContainer );
+        makeVisible( classificationContainer, !showSimpleForm );
+        target.addComponent(  classificationContainer );
+        makeVisible( restrictionContainer, !showSimpleForm );
+        target.addComponent(  restrictionContainer );
+        makeVisible( referencesEventPhaseContainer, !showSimpleForm );
+        target.addComponent(  referencesEventPhaseContainer );
+        makeVisible( timingContainer, !showSimpleForm );
+        target.addComponent(  timingContainer );
+        makeVisible( significanceToSourceContainer, !showSimpleForm );
+        target.addComponent( significanceToSourceContainer );
+    }
+
 
     private void addAllField() {
         CheckBox checkBox = new CheckBox(
@@ -1043,13 +1117,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     protected abstract WebMarkupContainer createChannelRow();
 
     private void addMaxDelayRow() {
-        maxDelayRow = new WebMarkupContainer( "max-delay-row" );
-        add( maxDelayRow );
+        this.timingContainer = new WebMarkupContainer( "timing" );
+        this.timingContainer.setOutputMarkupId( true );
+        makeVisible( this.timingContainer, !showSimpleForm );
+        add( this.timingContainer );
         delayPanel = new DelayPanel(
                 "max-delay",
                 new PropertyModel<ModelObject>( this, "flow" ),
                 "maxDelay" );
-        maxDelayRow.add( delayPanel );
+        this.timingContainer.add( delayPanel );
     }
 
     /**

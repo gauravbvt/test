@@ -92,8 +92,16 @@ div.section-content {
 }
 
 #part .summary {
-    display: block;
+    display: inline;
 	padding-left:20px;
+}
+
+
+.simple-advanced {
+    cursor: pointer;
+    color: #4F2D87;
+    font-size: x-small;
+    padding-left: 0.5em;
 }
 
 #part .instructions {
