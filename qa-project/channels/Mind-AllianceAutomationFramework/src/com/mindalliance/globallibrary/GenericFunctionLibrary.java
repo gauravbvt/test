@@ -105,7 +105,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.login.put("sUsernameFullName",oXmlEleLoginPage.getElementsByTagName("usernamefullname").item(0).getChildNodes().item(0).getNodeValue());			
 			GlobalVariables.login.put("sPassword",oXmlEleLoginPage.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sLogin",oXmlEleLoginPage.getElementsByTagName("login").item(0).getChildNodes().item(0).getNodeValue());
-			GlobalVariables.login.put("sSignoutOnParticipantsPage",oXmlEleLoginPage.getElementsByTagName("xPathSignOutOnParticipantsPage").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.login.put("sSignoutOnParticipantsPage",oXmlEleLoginPage.getElementsByTagName("signoutonparticipantspage").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sXpathStackTrace",oXmlEleLoginPage.getElementsByTagName("xPathStackTrace").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sXpathSignoutOnAssignmentsCommitments",oXmlEleLoginPage.getElementsByTagName("xPathSignoutOnAssignmentsCommitments").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sXpathRequestNewPassword",oXmlEleLoginPage.getElementsByTagName("xPathRequestNewPassword").item(0).getChildNodes().item(0).getNodeValue());
