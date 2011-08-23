@@ -65,7 +65,7 @@ public class PP001_InformationSharingGuideLinesForParticipants
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("xPathSignOutOnParticipantsPage"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sSignoutOnParticipantsPage"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
