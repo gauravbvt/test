@@ -24,7 +24,7 @@ public class HP008_AssignmentsCommitmentsLink
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Assignments and Commitments Link is Present";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("assignmentsAndCommitments")));
-				if(GlobalVariables.oElement.getText().equals("Assignments and commitments")){
+				if(GlobalVariables.oElement.getText().equals("Assignments & commitments")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

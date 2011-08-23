@@ -32,68 +32,68 @@ public class PS017_AddEvent
 				Thread.currentThread();
 				Thread.sleep(1000);
 				
-				//About Plan Segment Window Opened
+				// Clicks on 'About plan' link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "About Plan Segment Window Opened";
+				GlobalVariables.sDescription = "About plan section opened";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
 				
-				// Click on 'Show' Pop up Menu 
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Click on 'All Events' option under 'Show' pop up menu";
+				// Click on 'All Event' under show pop up menu of About plan window
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="All Events";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allEvents"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-
-				// Create Event 
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Event Created";
+				
+				// Create an event
+				String event="Add Event To The Plan";
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Add Event";
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
+				GlobalVariables.oElement.sendKeys(event);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-
-				// Update Event
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Event Updated";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathEvent"))).click();
+				Thread.sleep(2000);
+				
+				// Select check box
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Event Added";
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event Description"));
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				Thread.sleep(2000);					
+				// Assertion : verify that Event is added
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(event));
+				if(GlobalVariables.oElement.getText().equals(event)){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Add Event To The Plan' "+" Actual "+GlobalVariables.oElement.getText();
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -102,15 +102,7 @@ public class PS017_AddEvent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

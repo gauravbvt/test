@@ -47,7 +47,7 @@ public class ISR003_SendFeedbackOfIssueSummaryReport
 				// Assertion: Verify that “Send Feedback” option is accessible
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Send feedback is accessible";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendFeedbackWindow")));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathIssueSummaryReportSendFeedbackCancel")));
 				if(GlobalVariables.oElement.getText().equals("")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

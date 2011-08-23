@@ -31,15 +31,19 @@ public class CA017_DeleteUser
 					Thread.currentThread();
 					Thread.sleep(1000);
 					
-					// Enter User ID
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="User Created";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
+					// Enter the details: newUserId
+					GlobalVariables.iStepNo++ ;
+					GlobalVariables.sDescription = "User Id Entered";
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("new"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);								
+					Thread.sleep(2000);						
+					
 					// Click on 'Submit' button
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 					// Write Results
@@ -64,7 +68,7 @@ public class CA017_DeleteUser
 					//Assertion : Verify that user gets deleted successfully
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID"))).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
-					if(!GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("user")))
+					if(!GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Afourtech")))
 					{
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

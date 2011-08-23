@@ -23,6 +23,7 @@ public class CL001_LoginPage
 		      Thread.sleep(3000);
 				
 	    	  // Login Page
+		      GlobalVariables.iStepNo=0;
 	    	  GlobalVariables.iStepNo++;
 	    	  GlobalVariables.sDescription="Login Page";
 	    	  if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))

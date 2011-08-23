@@ -31,39 +31,37 @@ public class CA016_CreateUser
 					Thread.currentThread();
 					Thread.sleep(1000);
 					
-					// Enter User ID
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="User ID Entered";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
+					// Enter the details: newUserId
+					GlobalVariables.iStepNo++ ;
+					GlobalVariables.sDescription = "User Id Entered";
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("new"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);					
+					Thread.sleep(2000);
+					
 					// Click on 'Submit' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "User Created";
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					//Assertion : Verify that user gets added successfully
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID"))).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
-					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("user")))
-					{
+					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Afourtech"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);						
 					}
-					else
-					{
-						GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("user")+ "' Actual '"+GlobalVariables.oElement.getText()+"'";
+					else{
+						GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("Afourtech")+ "' Actual '"+GlobalVariables.oElement.getText()+"'";
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

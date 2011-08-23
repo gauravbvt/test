@@ -22,6 +22,7 @@ public class CL007_InvalidUserNamePassword
 		      Thread.sleep(3000);
 		      
 		      // Login Page
+		      GlobalVariables.iStepNo=0;
 	    	  GlobalVariables.iStepNo++;
 	    	  GlobalVariables.sDescription="Login Page";
 	    	  if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))

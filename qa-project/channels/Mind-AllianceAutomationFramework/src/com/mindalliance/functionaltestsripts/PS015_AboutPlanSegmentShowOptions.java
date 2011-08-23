@@ -11,7 +11,7 @@ public class PS015_AboutPlanSegmentShowOptions
 {
 	public PS015_AboutPlanSegmentShowOptions() {
 		try{
-			GlobalVariables.sTestCaseId = "PS014_AboutPlanActionOptions";
+			GlobalVariables.sTestCaseId = "PS015_AboutPlanSegmentShowOptions";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);

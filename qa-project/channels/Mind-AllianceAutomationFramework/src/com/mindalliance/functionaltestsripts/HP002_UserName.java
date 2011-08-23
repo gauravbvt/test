@@ -22,7 +22,8 @@ public class HP002_UserName
 			// Assertion: Verify that Home page displayed logged in user name as "Welcome <User Name>!"
 			GlobalVariables.iStepNo++;
 			GlobalVariables.sDescription="Verify User name";
-			if(GlobalVariables.oElement.getText().equals("Welcome "+GlobalVariables.login.get("sUsername"))){
+			GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[2]/div[2]/div/h1/span"));
+			if(GlobalVariables.oElement.getText().equals(GlobalVariables.login.get("sUsernameFullName"))){
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

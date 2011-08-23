@@ -40,7 +40,7 @@ public class HP006_ChannelsAdminLink
 				}	
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(1000);
 				
 				// Click on 'Channel Administration' link
 				GlobalVariables.iStepNo++ ;
@@ -60,7 +60,7 @@ public class HP006_ChannelsAdminLink
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(1000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

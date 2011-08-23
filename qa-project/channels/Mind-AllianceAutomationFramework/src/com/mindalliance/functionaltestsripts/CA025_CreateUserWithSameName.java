@@ -34,24 +34,11 @@ public class CA025_CreateUserWithSameName
 				Thread.currentThread();
 				Thread.sleep(2000);
 					
-				// Enter User ID
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="User ID Entered";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);					
-				
-				// Click on 'Submit' button
+				// Enter the details: newUserId
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "User Created";
-				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+				GlobalVariables.sDescription = "User Id Entered";
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("new"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -60,19 +47,30 @@ public class CA025_CreateUserWithSameName
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Enter User ID
+				// Click on 'Submit' button
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="User ID Entered with same name";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
+				GlobalVariables.sDescription="User 1 Created";
+				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed,
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Enter the details: newUserId
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "User Id Entered";
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("new"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);					
+				Thread.sleep(2000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -83,7 +81,7 @@ public class CA025_CreateUserWithSameName
 				Thread.sleep(2000);
 				// Assertion: Verify that User Not Created with same name
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("feedbackPanelERROR"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("user"))) {
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Afourtech"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -105,7 +103,7 @@ public class CA025_CreateUserWithSameName
 					i++;	
 					tds = tr.findElements(By.tagName("td"));
 					for(WebElement td: tds) {
-						if(td.getText().contains(GlobalVariables.testData.get("user"))){
+						if(td.getText().contains(GlobalVariables.testData.get("Afourtech"))){
 							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+i+"]/td[12]/input")).click();
 						}
 					}

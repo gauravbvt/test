@@ -24,7 +24,6 @@ public class HP037_ShowAllSurvey
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Survey tab is present";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialSurvey"))).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialSurvey")));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -36,8 +35,8 @@ public class HP037_ShowAllSurvey
 				// Click on hide completed under survey tab
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Hide completed";
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[2]/div[2]/div[2]/span/div/div/div[2]/div/div/a/span")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[2]/div[2]/div[2]/span/div/div/div[2]/div/div/a/span"));
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideShowAllSurvey"))).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideShowAllSurvey")));
 				// Assertion: Verify that show all link is present under survey tab.
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAll"))){
 			    	// Write Results
@@ -55,7 +54,6 @@ public class HP037_ShowAllSurvey
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
 				
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;

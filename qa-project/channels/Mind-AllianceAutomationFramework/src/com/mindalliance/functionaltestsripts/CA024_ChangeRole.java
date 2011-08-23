@@ -38,11 +38,11 @@ public class CA024_ChangeRole
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Enter the Login details
+				// Enter the Plan details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "(New Plan URI) and (owned by) entered";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 				// Write Results
@@ -64,6 +64,7 @@ public class CA024_ChangeRole
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				
 				//Select Newly Created Plan
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
@@ -77,22 +78,31 @@ public class CA024_ChangeRole
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				//Create User
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="User Created";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+				// Enter the details: newUserId
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "User Id Entered";
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("new"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);					
+				Thread.sleep(2000);
+				
+				// Click on 'Submit' button
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="User Created";
+				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed,
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+												
 				//Assign Access Privilege 'planner' to User
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Assign Access Privilege 'Admin' to User";
@@ -115,6 +125,7 @@ public class CA024_ChangeRole
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 									GlobalVariables.sBlank, GlobalVariables.sBlank);
+							break;
 						}
 					}
 				}
@@ -143,7 +154,7 @@ public class CA024_ChangeRole
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="Login with access privilege 'Planner'";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
-			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
+			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 			    // Write Results

@@ -19,9 +19,10 @@ public class CL011_RecoverPasswordUsingUserId
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(1000);
 		      
 		      // Login Page
+		      GlobalVariables.iStepNo=0;
 	    	  GlobalVariables.iStepNo++;
 	    	  GlobalVariables.sDescription="Login Page";
 	    	  if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))
@@ -35,19 +36,19 @@ public class CL011_RecoverPasswordUsingUserId
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(1000);
 		      
 		      // Click on Forgot UserId or Password Link
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Forgot UserId or Passowrd Link";
-		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/p/a")).click();
+		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/a")).click();
 	    	  // Write Results
 	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(1000);
 		      
 		      // Click on Provide user name test box
 		      GlobalVariables.iStepNo++;
@@ -61,7 +62,7 @@ public class CL011_RecoverPasswordUsingUserId
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(1000);
 		      
 		      // Click on Request new password
 		      GlobalVariables.iStepNo++;
@@ -69,18 +70,17 @@ public class CL011_RecoverPasswordUsingUserId
 		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/input")).click();
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(12000);
-		      Thread.sleep(5000);
+		      Thread.sleep(10000);
 		      // Assertion: Verify that a message is displayed to the user as 'A new password is emailed to you'
 		      GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/span"));
-		      if(GlobalVariables.oElement.getText().equals("A new password is emailed to you")) {
+		      if(GlobalVariables.oElement.getText().equals("A new password has been emailed to you.")) {
 		    	  // Write Results
 		    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 		    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 		      }
 		      else{
-		    	  GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'A new password is emailed to you' "+" Actual "+GlobalVariables.oElement.getText();
+		    	  GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'A new password has been emailed to you.' "+" Actual "+GlobalVariables.oElement.getText();
 		    	  // Write Results
 		    	  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 		    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -88,7 +88,7 @@ public class CL011_RecoverPasswordUsingUserId
 		      }	
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(1000);
 		      GlobalVariables.oDriver.quit();
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

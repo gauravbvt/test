@@ -12,6 +12,7 @@ import com.mindalliance.globallibrary.ReportFunctions;
 public class CL008_BlankUserNamePassword
 {
 	public CL008_BlankUserNamePassword(){
+		
 		  try {
 			  GlobalVariables.sTestCaseId = "CL008_BlankUserNamePassword";
 			  GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
@@ -22,6 +23,7 @@ public class CL008_BlankUserNamePassword
 		      Thread.sleep(3000);
 		      
 		      // Login Page
+		      GlobalVariables.iStepNo=0;
 	    	  GlobalVariables.iStepNo++;
 	    	  GlobalVariables.sDescription="Login Page";
 	    	  if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))

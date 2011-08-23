@@ -100,8 +100,7 @@ public class TE131_AddOrganization
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
-					
+					Thread.sleep(2000);					
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;

@@ -36,23 +36,22 @@ public class CA009_CreatePlanWithoutOwnerName
 					Thread.currentThread();
 					Thread.sleep(1000);
 					
-					// Enter Plan URI
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Plan URI Entered";
-					GlobalVariables.oDriver.findElement(By.name("newPlanUri")).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
+					// Enter the details: newPlanUri
+					GlobalVariables.iStepNo++ ;
+					GlobalVariables.sDescription = "(New Plan URI) and (owned by) entered";
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
-
+					Thread.sleep(3000);
+					
 					// Click on 'Submit' button
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Plan Created";
+					GlobalVariables.sDescription = "Plan Created Without Owner name";
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -77,7 +76,7 @@ public class CA009_CreatePlanWithoutOwnerName
 					Thread.sleep(3000);
 
 					// Click on 'Delete Plan' button
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Delete plan"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// Click on 'OK" button of message box in order to confirm it
 					alert.accept();

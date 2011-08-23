@@ -24,7 +24,7 @@ public class HP009_InformationSharingForParticipnats
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Information Sharing For All Participants Link is Present";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingGuidelinesForAllParticipants")));
-				if(GlobalVariables.oElement.getText().equals("Information sharing guidelines for all participants")){
+				if(GlobalVariables.oElement.getText().equals("IS guidelines for all participants")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

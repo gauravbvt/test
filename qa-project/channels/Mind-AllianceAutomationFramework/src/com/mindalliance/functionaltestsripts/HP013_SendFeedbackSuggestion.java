@@ -61,7 +61,7 @@ public class HP013_SendFeedbackSuggestion
 				// Click on send button
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Feedback Send as suggestion";
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[2]/div/span[2]/div/div/div/div/div[4]/input[2]")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathFeedbackSend"))).click();
 //				// Assertion: Verify that alert window appears with feedback as send
 //				Alert alert=GlobalVariables.oDriver.switchTo().alert();
 //				if(GlobalVariables.oElement==GlobalVariables.oDriver.switchTo().alert())

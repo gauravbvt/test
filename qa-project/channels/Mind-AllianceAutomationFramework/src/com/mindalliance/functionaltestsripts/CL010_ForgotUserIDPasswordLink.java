@@ -22,7 +22,8 @@ public class CL010_ForgotUserIDPasswordLink
 		      Thread.sleep(3000);
 		      
 		      // Login Page
-	    	  GlobalVariables.iStepNo++;
+		      GlobalVariables.iStepNo=0;
+		      GlobalVariables.iStepNo++;
 	    	  GlobalVariables.sDescription="Login Page";
 	    	  if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))
 					GlobalVariables.oDriver = new FirefoxDriver();
@@ -40,7 +41,7 @@ public class CL010_ForgotUserIDPasswordLink
 		      // Click on Forgot UserId or Password Link
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Forgot UserId or Passowrd Link";
-		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/p/a")).click();
+		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/a")).click();
 		      // Assertion: 1. Verify that new page is displayed to user with title 'Channels New password request'
 		      if(GlobalVariables.oDriver.getTitle().equals("Channels - Sign in")){
 		    	  // Write Results

@@ -72,8 +72,8 @@ public class HP015_SendFeedbackProblemasUrgent
 				
 				// Click on send button
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Feedback Send as Problem as urgent";
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[2]/div/span[2]/div/div/div/div/div[4]/input[2]")).click();
+				GlobalVariables.sDescription="Feedback Send as urgent Problem";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathFeedbackSend"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

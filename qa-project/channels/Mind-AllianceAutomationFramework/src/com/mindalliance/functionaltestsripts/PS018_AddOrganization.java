@@ -32,88 +32,72 @@ public class PS018_AddOrganization
 				Thread.currentThread();
 				Thread.sleep(1000);
 				
-				//About Plan Segment Window Opened
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "About Plan Segment Window Opened";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
+				//Click on 'About Plan' from show popup manu
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="About plan";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"), GlobalVariables.viewElements.get("aboutPlan"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				
-				// Click on 'Show' Pop up Menu 
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Click on 'All Organizations' option under 'Show' pop up menu";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allOrganizations"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-
-				// Create Organization 
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Organization Created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-
-				// Update Organization
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Organization Updated";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewOrganization"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Organization Description"));
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				//Undo Update Organization
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Delete Organization
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewOrganization"))).click();
+				
+				//Click on 'all organizations' from show pop-up menu
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="All orgainzation";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"), GlobalVariables.viewElements.get("allOrganizations"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);				
+				Thread.sleep(2000);
+				
+				// Enter name of organization in 'Other organization that should be assigned tasks ' field
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription = "Organization Added";
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+				String sOrgName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sOrgName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);			
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);	
+				// Assertion: Verify that organization should get added to plan
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName));
+				if (GlobalVariables.oElement.getText().equals(sOrgName)) {
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName+"'"+" Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);	
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);				
+				Thread.sleep(2000);
+				
+				// Click on 'done' button
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
