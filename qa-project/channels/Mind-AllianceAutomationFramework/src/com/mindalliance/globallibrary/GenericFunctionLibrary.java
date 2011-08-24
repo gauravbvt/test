@@ -144,7 +144,6 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathParticipationNewMedium",oXmlElePlanPage.getElementsByTagName("xPathParticipationNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAgentURL",oXmlElePlanPage.getElementsByTagName("xPathAgentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathStretchUpShrinkBack",oXmlElePlanPage.getElementsByTagName("xPathStretchUpShrinkBack").item(0).getChildNodes().item(0).getNodeValue());
-			GlobalVariables.plan.put("sXpathStretchUpShrinkBack",oXmlElePlanPage.getElementsByTagName("xPathStretchUpShrinkBack").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathShowPopUpMenu",oXmlElePlanPage.getElementsByTagName("xPathShowPopUpMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAllSegmentShowMenu",oXmlElePlanPage.getElementsByTagName("xPathAllSegmentShowMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathActionsPopUpMenu",oXmlElePlanPage.getElementsByTagName("xPathActionsPopUpMenu").item(0).getChildNodes().item(0).getNodeValue());
