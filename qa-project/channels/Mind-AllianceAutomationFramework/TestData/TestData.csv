@@ -119,7 +119,7 @@ Title,Title
 Role,Role
 Jurisdiction,Jurisdiction
 Supervisor,Supervisor
-Agent 1,Agent 1
+Agent 1,Agent
 Segment For Add Phase Details,Segment For Add Phase Details
 After,After
 Low,Low
@@ -273,3 +273,5 @@ Segment For Update Locale City County,Segment For Update Locale City County
 Segment For View Phase,Segment For View Phase
 Segment For Phase Attachment As Picture,Segment For Phase Attachment As Picture
 Segment For View Organization,Segment For View Organization
+Categories,Categories
+Categories 1,Categories 1
