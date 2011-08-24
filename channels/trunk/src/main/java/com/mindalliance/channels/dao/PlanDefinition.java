@@ -261,7 +261,7 @@ public class PlanDefinition extends Observable {
     public void delete() {
         try {
             FileUtils.deleteDirectory( planDirectory );
-            LOG.info( "Deleted plan {}", uri );
+            LOG.debug( "Deleted data for plan {}", uri );
         } catch ( IOException e ) {
             LOG.error( "Unable to delete directory " + planDirectory, e );
         }

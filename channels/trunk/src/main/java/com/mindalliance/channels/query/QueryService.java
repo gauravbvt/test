@@ -1,46 +1,11 @@
 package com.mindalliance.channels.query;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.dao.Dao;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Agreement;
-import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Classification;
-import com.mindalliance.channels.model.Commitment;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Dissemination;
-import com.mindalliance.channels.model.ElementOfInformation;
-import com.mindalliance.channels.model.Employment;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.EventTiming;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Goal;
-import com.mindalliance.channels.model.Hierarchical;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Job;
-import com.mindalliance.channels.model.Level;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Participation;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.model.Subject;
-import com.mindalliance.channels.model.Tag;
-import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.model.*;
 import com.mindalliance.channels.nlp.Proximity;
 
 import java.util.List;
@@ -56,7 +21,7 @@ public interface QueryService {
      *
      * @return the dao
      */
-    Dao getDao();
+    PlanDao getDao();
 
     /**
      * Get the plan manager.

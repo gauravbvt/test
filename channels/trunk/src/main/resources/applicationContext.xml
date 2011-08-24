@@ -224,6 +224,7 @@ CONFIGURATION NOTES:
     <bean id="commander" class="com.mindalliance.channels.command.DefaultCommander" scope="prototype" autowire="no">
         <property name="analyst" ref="analyst"/>
         <property name="planManager" ref="planManager"/>
+        <property name="attachmentManager" ref="attachmentManager"/>
         <property name="userService" ref="userService"/>
         <property name="semanticMatcher" ref="semanticMatcher"/>
         <property name="importExportFactory" ref="importExportFactory"/>

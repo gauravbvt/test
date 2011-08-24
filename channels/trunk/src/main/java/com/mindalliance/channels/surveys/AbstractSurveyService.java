@@ -1,6 +1,7 @@
 package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanListener;
 import com.mindalliance.channels.dao.PlanManager;
 import com.mindalliance.channels.dao.User;
@@ -189,12 +190,13 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
                     }
 
                     @Override
-                    public void loaded( Plan plan ) {
-                        loadSurveys( plan );
+                    public void loaded( PlanDao planDao ) {
+                        loadSurveys( planDao.getPlan() );
                     }
 
                     @Override
-                    public void aboutToUnload( Plan plan ) {
+                    public void aboutToUnload( PlanDao planDao ) {
+                        Plan plan = planDao.getPlan();
                         for ( Survey survey : getSurveys( plan ) )
                             try {
                                 closeSurvey( survey, plan );

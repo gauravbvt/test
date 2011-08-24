@@ -3,17 +3,18 @@ package com.mindalliance.channels.attachments;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Attachment.Type;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.upload.FileItem;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * ...
@@ -45,9 +46,27 @@ public class TestFileBasedManager extends AbstractChannelsTest {
     @Test
     public void testUpload() {
         Attachment attachment = mgr.upload( User.current().getPlan(),
-                Attachment.Type.Reference, "",
-                upload
-        );
+                                            new Upload() {
+                                                @Override
+                                                public Type getSelectedType() {
+                                                    return Type.Reference;
+                                                }
+
+                                                @Override
+                                                public String getName() {
+                                                    return "";
+                                                }
+
+                                                @Override
+                                                public String getFileName() {
+                                                    return upload.getClientFileName();
+                                                }
+
+                                                @Override
+                                                public InputStream getInputStream() throws IOException {
+                                                    return upload.getInputStream();
+                                                }
+                                            } );
         assertNotNull( attachment );
         assertEquals( attachment.getUrl(), "test.txt" );
         assertEquals( attachment.getType(), Attachment.Type.Reference );

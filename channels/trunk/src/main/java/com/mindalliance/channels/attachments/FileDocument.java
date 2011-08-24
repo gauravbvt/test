@@ -6,100 +6,78 @@ import java.io.Serializable;
 /**
  * A file with url and digest.
  */
-public class FileDocument implements Serializable {
+final class FileDocument implements Serializable {
+
+    /**
+     * The SHA digest value for the file.
+     */
+    private final String digest;
 
     /**
      * The file on the server side.
      */
-    private File file;
-
+    private final File file;
 
     /**
      * The external link to this file. Set by the manager.
      */
-    private String url;
-    /**
-     * The SHA digest value for the file.
-     */
-    private String digest;
+    private final String url;
 
-    public FileDocument() {
-    }
+    //-------------------------------
+    FileDocument( File file, String url, String digest ) {
+        if ( file == null || url == null || digest == null )
+            throw new IllegalArgumentException();
 
-    public FileDocument( File file, String url, String digest ) {
-        this();
-        setFile( file );
-        setUrl( url );
-        setDigest( digest );
-    }
-
-    public final File getFile() {
-        return file;
-    }
-
-    public final void setFile( File file ) {
         this.file = file;
+        this.url = url;
+        this.digest = digest;
     }
 
-    public String getKey() {
-        return file.getName();
-    }
-
-    public String getLabel() {
-        // return FileBasedManager.unescape( file.getFlowName() );
-        return file.getName();
-    }
-
+    //-------------------------------
     /**
-     * {@inheritDoc}
+     * Delete the underlying file.
      */
     public void delete() {
         file.delete();
     }
 
     /**
-     * {@inheritDoc}
+     * Test if this file has the same content as a prior file.
+     * @param prior the prior file.
+     * @return true if contents are the same (presumably)
      */
-    public boolean isFile() {
-        return true;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public final void setUrl( String url ) {
-        this.url = url;
-    }
-
-    public void setDigest( String digest ) {
-        this.digest = digest;
+    boolean isDuplicate( FileDocument prior ) {
+        return file.getName().indexOf( prior.getFile().getName() ) > 0
+            && digest.equals( prior.getDigest() );
     }
 
     public String getDigest() {
         return digest;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean equals( Object obj ) {
-        if ( obj instanceof FileDocument ) {
-            FileDocument other = (FileDocument) obj;
-            return url.equals( other.getUrl() )
-                    && digest.equals( other.getDigest() );
-        }
-        return false;
+    public File getFile() {
+        return file;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        if ( this == obj )
+            return true;
+        if ( obj == null || getClass() != obj.getClass() )
+            return false;
+
+        FileDocument that = (FileDocument) obj;
+        return file.equals( that.getFile() ) && url.equals( that.getUrl() );
+    }
+
     @Override
     public int hashCode() {
-        int hash = 1;
-        hash = hash * 31 + url.hashCode();
-        hash = hash * 31 + digest.hashCode();
-        return hash;
+        int result = file.hashCode();
+        result = 31 * result + url.hashCode();
+        return result;
     }
 }

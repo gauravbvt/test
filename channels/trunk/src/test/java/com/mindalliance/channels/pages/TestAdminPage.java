@@ -269,14 +269,14 @@ public class TestAdminPage extends AbstractChannelsTest {
         form.select( "plan-sel", 1 );
         tester.executeAjaxEvent( "users:plan-sel", "onchange" );
         AdminPage page = (AdminPage) tester.getLastRenderedPage();
-        assertEquals( ACME, page.getPlan().getUri() );
+        String uri = page.getPlan().getUri();
 
-        PlanDefinition planDefinition = planManager.getDefinitionManager().get( ACME );
+        PlanDefinition planDefinition = planManager.getDefinitionManager().get( uri );
 
         tester.executeAjaxEvent( "users:deletePlan", "onclick" );
 
         assertRendered( "admin", AdminPage.class );
-        assertEquals( 0, planManager.getPlansWithUri( ACME ).size() );
+        assertEquals( 0, planManager.getPlansWithUri( uri ).size() );
         assertFalse( planDefinition.getPlanDirectory().exists() );
     }
 

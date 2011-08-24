@@ -1,6 +1,5 @@
 package com.mindalliance.channels.dao;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.dao.PlanDefinition.Version;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.model.Segment;
@@ -49,9 +48,9 @@ public class PlanManager {
     /**
      * All the plans, indexed by version uri (uri:version).
      */
-    private final Map<PlanDefinition.Version, PlanDao> daoIndex =
+    private final Map<Version, PlanDao> daoIndex =
             Collections.synchronizedMap(
-                    new HashMap<PlanDefinition.Version, PlanDao>() );
+                    new HashMap<Version, PlanDao>() );
 
     /**
      * For each plan uri, usernames of users who not in sync with its current version.
@@ -71,8 +70,6 @@ public class PlanManager {
     private List<TransmissionMedium> builtInMedia = new ArrayList<TransmissionMedium>();
 
     private UserService userService;
-
-    private AttachmentManager attachmentManager;
 
     private ImportExportFactory importExportFactory;
     /**
@@ -143,14 +140,6 @@ public class PlanManager {
         this.databaseFactory = databaseFactory;
     }
 
-    public AttachmentManager getAttachmentManager() {
-        return attachmentManager;
-    }
-
-    public void setAttachmentManager( AttachmentManager attachmentManager ) {
-        this.attachmentManager = attachmentManager;
-    }
-
     public ImportExportFactory getImportExportFactory() {
         return importExportFactory;
     }
@@ -204,7 +193,7 @@ public class PlanManager {
      * @param plan the plan
      * @return the version information
      */
-    public PlanDefinition.Version getVersion( Plan plan ) {
+    public Version getVersion( Plan plan ) {
         return definitionManager.get( plan.getUri(), plan.isDevelopment() );
     }
 
@@ -227,7 +216,7 @@ public class PlanManager {
      */
     public PlanDao getDao( String uri, boolean development ) {
         synchronized ( daoIndex ) {
-            PlanDefinition.Version version = definitionManager.get( uri, development );
+            Version version = definitionManager.get( uri, development );
             if ( version == null )
                 return null;
 
@@ -241,12 +230,11 @@ public class PlanManager {
         }
     }
 
-    private PlanDao createDao( PlanDefinition.Version version ) {
-        PlanDao dao = new PlanDao( version );
-        dao.setUserDetailsService( userService );
-        dao.setAttachmentManager( attachmentManager );
-        dao.setIdGenerator( definitionManager.getIdGenerator() );
+    private PlanDao createDao( Version version ) {
         try {
+            PlanDao dao = new PlanDao( version );
+            dao.setUserDetailsService( userService );
+            dao.setIdGenerator( definitionManager.getIdGenerator() );
             dao.resetPlan();
             dao.defineImmutableEntities( builtInMedia );
             if ( importExportFactory != null )
@@ -254,12 +242,14 @@ public class PlanManager {
             else
                 dao.validate();
 
-            listeners.fireLoaded( dao.getPlan() );
+            createPersistentObjectDB( dao.getPlan() );
+            listeners.fireLoaded( dao );
+            return dao;
+
         } catch ( IOException e ) {
             LOG.error( "Unable to load plan " + version, e );
+            return null;
         }
-        createPersistentObjectDB( dao.getPlan() );
-        return dao;
     }
 
     private void createPersistentObjectDB( Plan plan ) {
@@ -430,24 +420,25 @@ public class PlanManager {
     public void delete( Plan plan ) {
         String uri = plan.getUri();
 
-        definitionManager.delete( uri );
         for ( User user : userService.getUsers() )
             user.getUserInfo().clearAuthority( uri );
 
         assignPlans();
 
         synchronized ( daoIndex ) {
-            Set<Map.Entry<PlanDefinition.Version,PlanDao>> entries =
-                    new HashSet<Map.Entry<PlanDefinition.Version, PlanDao>>( daoIndex.entrySet() );
-            for ( Map.Entry<PlanDefinition.Version, PlanDao> entry : entries ) {
-                PlanDefinition.Version version = entry.getKey();
+            Set<Entry<Version,PlanDao>> entries =
+                    new HashSet<Entry<Version, PlanDao>>( daoIndex.entrySet() );
+            for ( Entry<Version, PlanDao> entry : entries ) {
+                Version version = entry.getKey();
                 PlanDao dao = entry.getValue();
                 if ( uri.equals( version.getPlanDefinition().getUri() ) ) {
-                    listeners.fireAboutToUnload( dao.getPlan() );
+                    listeners.fireAboutToUnload( dao );
                     daoIndex.remove( version );
                 }
             }
         }
+
+        definitionManager.delete( uri );
         LOG.info( "Deleted {}", plan );
     }
 
@@ -517,7 +508,7 @@ public class PlanManager {
     private Plan makeNewDevPlan( Plan oldDevPlan ) {
         try {
             // Create new persisted dev version
-            PlanDefinition.Version oldVersion = getVersion( oldDevPlan );
+            Version oldVersion = getVersion( oldDevPlan );
             oldVersion.getPlanDefinition().productize();
             PlanDao newDao = getDao( oldDevPlan.getUri(), true );
 
@@ -701,10 +692,10 @@ public class PlanManager {
             }
         }
 
-        public void fireAboutToUnload( Plan plan ) {
+        public void fireAboutToUnload( PlanDao planDao ) {
             synchronized ( planListeners ) {
                 for ( PlanListener planListener : planListeners )
-                    planListener.aboutToUnload( plan );
+                    planListener.aboutToUnload( planDao );
             }
         }
 
@@ -722,10 +713,10 @@ public class PlanManager {
             }
         }
 
-        public void fireLoaded( Plan plan ) {
+        public void fireLoaded( PlanDao planDao ) {
             synchronized ( planListeners ) {
                 for ( PlanListener planListener : planListeners )
-                    planListener.loaded( plan );
+                    planListener.loaded( planDao );
             }
         }
     }

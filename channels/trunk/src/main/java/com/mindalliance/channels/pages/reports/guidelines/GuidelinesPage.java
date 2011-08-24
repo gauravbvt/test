@@ -42,6 +42,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +70,9 @@ import static com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage.
 public class GuidelinesPage extends AbstractParticipantPage {
 
     private static final Logger LOG = LoggerFactory.getLogger( GuidelinesPage.class );
+
+    @SpringBean
+    private AttachmentManager attachmentManager;
 
     /**
      * Called for access without parameters. Find the actor and plan corresponding to the current
@@ -147,7 +151,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
                                 .add( newTaskLinks( segment.getImmediates() ) )
                                 .setVisible( !segment.getImmediates().isEmpty() ),
                         newInputDiv( segment.getPrompted() ),
-                        newDocSection( segment.getAttachmentsFrom( getPlanManager().getAttachmentManager() ) ),
+                        newDocSection( segment.getAttachmentsFrom( attachmentManager ) ),
 
                         newTasks( segment, segment.getTasks() ),
                         new WebMarkupContainer( "contactList" )
@@ -200,7 +204,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
                         newOutgoingFlows( "taskRfiDiv", task.getRequests() ),
                         newOutgoingFlows( "failDiv", task.getFailures() ),
                         newDocSection(
-                                task.getAttachmentsFrom( planService.getAttachmentManager() ) ) );
+                                task.getAttachmentsFrom( attachmentManager ) ) );
             }
         };
     }

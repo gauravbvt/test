@@ -30,13 +30,13 @@ public interface PlanListener {
 
     /**
      * A development plan has been loaded.
-     * @param plan the plan
+     * @param planDao the plan dao
      */
-    void loaded( Plan plan );
+    void loaded( PlanDao planDao );
 
     /**
      * A plan is about to be removed from memory.
-     * @param plan the plan
+     * @param planDao  the plan dao
      */
-    void aboutToUnload( Plan plan );
+    void aboutToUnload( PlanDao planDao );
 }

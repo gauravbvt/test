@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.command.commands.CreateEntityIfNew;
@@ -35,12 +36,8 @@ import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 /**
- * Abstract reports index page on participants and agents.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 7/28/11
- * Time: 9:54 AM
+ * Abstract reports index page on participants and agents. Copyright (C) 2008 Mind-Alliance Systems. All Rights
+ * Reserved. Proprietary and Confidential. User: jf Date: 7/28/11 Time: 9:54 AM
  */
 abstract public class AbstractAllParticipantsPage extends WebPage {
 
@@ -60,14 +57,20 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
     @SpringBean
     private LockManager lockManager;
 
+    @SpringBean
+    private AttachmentManager attachmentManager;
+
     private String uri;
+
     private int version;
+
     private List<Participation> users;
+
     private List<Actor> actors;
+
     private List<User> unassigned;
 
-
-    public AbstractAllParticipantsPage( Class<? extends AbstractParticipantPage> clazz) {
+    public AbstractAllParticipantsPage( Class<? extends AbstractParticipantPage> clazz ) {
 
         List<Plan> plans = planManager.getPlannablePlans( user );
         if ( plans.isEmpty() )
@@ -87,8 +90,7 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
 
         try {
             if ( parameters.containsKey( PLAN ) && parameters.containsKey( VERSION ) ) {
-                Plan plan = planManager.getPlan( parameters.getString( PLAN ),
-                        parameters.getInt( VERSION ) );
+                Plan plan = planManager.getPlan( parameters.getString( PLAN ), parameters.getInt( VERSION ) );
 
                 if ( plan == null )
                     throw new AbortWithWebErrorCodeException( SC_NOT_FOUND );
@@ -98,7 +100,6 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
 
                 init( createService( plan ), plan );
             }
-
         } catch ( StringValueConversionException ignored ) {
             throw new AbortWithWebErrorCodeException( SC_NOT_FOUND );
         }
@@ -141,18 +142,16 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
     }
 
     protected PlanService createService( Plan plan ) {
-        return new PlanService( planManager, null, planManager.getUserService(), plan );
+        return new PlanService( planManager, null, planManager.getUserService(), plan, attachmentManager );
     }
 
     private void init( PlanService service, final Plan plan ) {
         uri = plan.getUri();
         version = plan.getVersion();
 
-        users = validate( planManager.getUserService(),
-                service.list( Participation.class ) );
+        users = validate( planManager.getUserService(), service.list( Participation.class ) );
 
-        actors = findFreeActors( findAssignedActors( users ),
-                service.getAssignments().getActualActors() );
+        actors = findFreeActors( findAssignedActors( users ), service.getAssignments().getActualActors() );
 
         unassigned = findUnassignedUsers( service );
         initComponents( service, plan );
@@ -176,7 +175,6 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
     protected Plan getPlan() {
         return user.getPlan();
     }
-
 
     protected List<User> findUnassignedUsers( PlanService service ) {
         String uri = service.getPlan().getUri();
@@ -226,7 +224,7 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
     /**
      * Filter invalid participations.
      *
-     * @param userService    to check if users are still valid
+     * @param userService to check if users are still valid
      * @param participations the participations to check
      * @return filtered list
      */
@@ -236,9 +234,7 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
         List<Participation> answer = new ArrayList<Participation>( participations.size() );
         for ( Participation item : participations ) {
             String userName = item.getUsername();
-            if ( item.getActor() != null
-                    && userName != null
-                    && userService.getUserNamed( userName ) != null )
+            if ( item.getActor() != null && userName != null && userService.getUserNamed( userName ) != null )
                 answer.add( item );
         }
 
@@ -247,9 +243,10 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
 
     /**
      * Commander needs some tending to prior to use.
+     *
      * @param plan a plan
      * @return a commander
-     * */
+     */
     protected Commander getCommander( Plan plan ) {
         // Adjust so commander actually behave as expected
         user.setPlan( plan );
@@ -264,20 +261,13 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
         QueryService planService = cmdr.getQueryService();
         Participation participation = planService.findParticipation( username );
         if ( participation == null ) {
-            Participation newPart = (Participation) cmdr.doUnsafeCommand(
-                new CreateEntityIfNew(
-                        Participation.class,
-                        username,
-                        ModelEntity.Kind.Actual )
-                ).getSubject( planService );
+            Participation newPart = (Participation) cmdr
+                    .doUnsafeCommand( new CreateEntityIfNew( Participation.class, username, ModelEntity.Kind.Actual ) )
+                    .getSubject( planService );
 
             newPart.setActual();
             return newPart;
-        }
-        else
+        } else
             return participation;
-
     }
-
-
 }

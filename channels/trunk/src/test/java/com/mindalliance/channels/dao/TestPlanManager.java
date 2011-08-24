@@ -55,10 +55,10 @@ public class TestPlanManager {
         public void created( Plan devPlan ) {
         }
 
-        public void loaded( Plan plan ) {
+        public void loaded( PlanDao planDao ) {
         }
 
-        public void aboutToUnload( Plan plan ) {
+        public void aboutToUnload( PlanDao planDao ) {
         }
     }
 }

@@ -36,7 +36,7 @@ public class TestParticipantPage extends AbstractChannelsTest {
     public void testBadUri() {
         String planUri = "mindalliance.com/channels/plans/railsec";
         associate( "guest", planUri, "Joseph Neumann" );
-        assertRendered( "participants?plan=mindalliance.com/channels/plans/waitasec&v=1" , GuidelinesPage.class );
+        assertRendered( "participants?plan=mindalliance.com/channels/plans/waitasec&v=1", GuidelinesPage.class );
     }
 
     @Test
@@ -69,7 +69,7 @@ public class TestParticipantPage extends AbstractChannelsTest {
 
         Plan devPlan = planManager.findDevelopmentPlan( planUri );
 
-        PlanService service = new PlanService( planManager, null, userService, devPlan );
+        PlanService service = new PlanService( planManager, null, userService, devPlan, attachmentManager );
 
         planManager.productize( devPlan );
         Participation participation = new Participation( userName );

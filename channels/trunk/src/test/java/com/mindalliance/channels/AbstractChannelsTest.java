@@ -1,6 +1,7 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.attachments.AttachmentManager;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.LockManager;
 import com.mindalliance.channels.dao.PlanManager;
@@ -84,6 +85,9 @@ import static org.junit.Assert.*;
 public abstract class AbstractChannelsTest implements ApplicationContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger( AbstractChannelsTest.class );
+
+    @Autowired
+    protected AttachmentManager attachmentManager;
 
     @Autowired
     protected PlanManager planManager;

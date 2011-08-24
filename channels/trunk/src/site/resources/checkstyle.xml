@@ -5,6 +5,7 @@
 <module name="Checker">
     <module name="JavadocPackage">
         <property name="severity" value="warning"/>
+        <property name="allowLegacy" value="true"/>
     </module>
     <module name="FileLength"/>
     <module name="FileTabCharacter">
@@ -30,8 +31,8 @@
             <property name="max" value="5"/>
         </module>
 
-        <module name="ClassDataAbstractionCoupling"/>
-        <module name="ClassFanOutComplexity"/>
+        <!--<module name="ClassDataAbstractionCoupling"/>-->
+        <!--<module name="ClassFanOutComplexity"/>-->
         <module name="ClassTypeParameterName"/>
         <module name="ConstantName"/>
         <module name="CovariantEquals"/>
@@ -97,31 +98,25 @@
             <property name="scope" value="private"/>
         </module>
         <module name="LeftCurly">
-            <property name="tokens" value="CLASS_DEF,INTERFACE_DEF,METHOD_DEF,CTOR_DEF"/>
             <property name="severity" value="info"/>
             <property name="option" value="eol"/>
         </module>
-        <module name="LeftCurly">
-            <property name="severity" value="info"/>
-            <property name="tokens"
-                      value="LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_WHILE"/>
-            <property name="option" value="nlow"/>
-        </module>
         <module name="LineLength">
-            <property name="max" value="100"/>
+            <property name="max" value="120"/>
             <property name="severity" value="warning"/>
         </module>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
         <module name="MagicNumber">
             <property name="severity" value="warning"/>
+            <property name="ignoreHashCodeMethod" value="true"/>
         </module>
         <module name="MemberName"/>
         <module name="MethodLength"/>
         <module name="MethodName"/>
         <module name="MethodParamPad"/>
         <module name="MethodTypeParameterName"/>
-        <module name="MissingCtor"/>
+        <!--<module name="MissingCtor"/>-->
         <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
         <module name="MissingSwitchDefault"/>

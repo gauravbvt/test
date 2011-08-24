@@ -94,6 +94,8 @@ public class DefaultCommander implements Commander {
 
     private SemanticMatcher semanticMatcher;
 
+    private AttachmentManager attachmentManager;
+
     /**
      * Record of when users were most recently active.
      */
@@ -213,10 +215,7 @@ public class DefaultCommander implements Commander {
     }
 
     private PlanService getQueryService( Plan plan ) {
-        return new PlanService(
-                getPlanManager(), semanticMatcher,
-                userService,
-                plan );
+        return new PlanService( planManager, semanticMatcher, userService, plan, attachmentManager );
     }
 
 
@@ -256,7 +255,7 @@ public class DefaultCommander implements Commander {
             return getQueryService().find( clazz, id );
         } catch ( NotFoundException e ) {
             // If replaying a journal, recreate an entity if not found
-            if ( isReplaying() && ModelEntity.class.isAssignableFrom( clazz ) ) {
+            if ( replaying && ModelEntity.class.isAssignableFrom( clazz ) ) {
                 LOG.warn( "Recreating not found entity " + clazz.getSimpleName() + "[" + id + "] on journal replay" );
                 try {
                     return (T) getQueryService().safeFindOrCreate( (Class<? extends ModelEntity>) clazz, "unknown", id );
@@ -388,13 +387,13 @@ public class DefaultCommander implements Commander {
                 throw new CommandException(
                         "This version is no longer in development. You need to refresh. " );
             if ( command instanceof MultiCommand ) LOG.info( "*** START multicommand ***" );
-            LOG.info( ( isReplaying() ? "Replaying: " : "Doing: " ) + command.toString() );
+            LOG.info( ( replaying ? "Replaying: " : "Doing: " ) + command.toString() );
             Change change = execute( command );
             if ( command instanceof MultiCommand ) LOG.info( "*** END multicommand ***" );
             if ( !change.isNone() && !change.isFailed() ) {
                 history.recordDone( command );
                 afterExecution( command, change );
-                if ( !isReplaying() && command.isTop() ) {
+                if ( !replaying && command.isTop() ) {
                     for ( CommandListener commandListener : commandListeners ) {
                         commandListener.commandDone( command, change, getPlan() );
                     }
@@ -465,7 +464,7 @@ public class DefaultCommander implements Commander {
     }
 
     private void afterExecution( Command command, Change change ) {
-        if ( !isReplaying() && command.isTop() && !change.isNone() ) {
+        if ( !replaying && command.isTop() && !change.isNone() ) {
             LOG.debug( "***After command" );
 
             // TODO Implement proper observers/listeners
@@ -692,8 +691,7 @@ public class DefaultCommander implements Commander {
     @Override
     public void initialize() {
         replayJournal();
-        planDao.removeUnattached();
-        analyst.onStart( planDao.getPlan() );
+        analyst.onStart( getPlan() );
     }
 
     @Override
@@ -789,5 +787,12 @@ public class DefaultCommander implements Commander {
         } else if ( flow.isCapability() ) {
             return new RemoveCapability( flow );
         } else throw new RuntimeException( "Can't remove unknown kind of flow" );
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
     }
 }

@@ -1,14 +1,15 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.attachments.Upload;
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.command.commands.AttachDocument;
 import com.mindalliance.channels.command.commands.CopyAttachment;
 import com.mindalliance.channels.command.commands.DetachDocument;
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
 import com.mindalliance.channels.model.Attachable;
 import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.model.Attachment.Type;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.wicket.AttributeModifier;
@@ -35,6 +36,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -387,7 +390,28 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             ModelObject mo = getAttachee();
             LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", mo );
             Attachment attachment = attachmentManager.upload(
-                    getPlan(), getSelectedType(), getName(), upload );
+                    getPlan(),
+                    new Upload() {
+                        @Override
+                        public Type getSelectedType() {
+                            return AttachmentPanel.this.getSelectedType();
+                        }
+
+                        @Override
+                        public String getName() {
+                            return AttachmentPanel.this.getName();
+                        }
+
+                        @Override
+                        public String getFileName() {
+                            return AttachmentPanel.this.upload.getClientFileName();
+                        }
+
+                        @Override
+                        public InputStream getInputStream() throws IOException {
+                            return AttachmentPanel.this.upload.getInputStream();
+                        }
+                    } );
             // Only add non-redundant attachment.
             if ( attachment != null ) {
                 doCommand( new AttachDocument( mo, attachablePath, attachment ) );

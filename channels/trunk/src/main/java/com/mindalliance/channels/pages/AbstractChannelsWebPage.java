@@ -258,7 +258,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     }
 
     private PlanService getQueryService( Plan plan ) {
-        return new PlanService( planManager, semanticMatcher, userService, plan );
+        return new PlanService( planManager, semanticMatcher, userService, plan, attachmentManager );
     }
 
     protected String getSupportCommunity() {

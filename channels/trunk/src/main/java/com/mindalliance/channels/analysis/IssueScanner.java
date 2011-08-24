@@ -1,5 +1,6 @@
 package com.mindalliance.channels.analysis;
 
+import com.mindalliance.channels.dao.PlanDao;
 import com.mindalliance.channels.dao.PlanListener;
 import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.dao.UserInfo;
@@ -81,9 +82,7 @@ public class IssueScanner implements Scanner, PlanListener {
         }
     }*/
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void terminate() {
         LOG.debug( "Terminating issue scans" );
         synchronized ( daemons  ) {
@@ -92,15 +91,14 @@ public class IssueScanner implements Scanner, PlanListener {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void rescan( Plan plan ) {
         LOG.debug( "Rescanning issue in " + plan.getName() );
         terminate( plan.getUri() );
         scan( plan );
     }
 
+    @Override
     public void scan( Plan plan ) {
         Daemon daemon = new Daemon( plan );
         daemons.put( plan.getUri(), daemon );
@@ -125,27 +123,27 @@ public class IssueScanner implements Scanner, PlanListener {
         }
     }
 
-    /** {@inheritDoc} */
+    @Override
     public void aboutToProductize( Plan devPlan ) {
-        aboutToUnload( devPlan );
+        terminate( devPlan.getUri() );
     }
 
-    /** {@inheritDoc} */
-    public void aboutToUnload( Plan plan ) {
-        terminate( plan.getUri() );
+    @Override
+    public void aboutToUnload( PlanDao planDao ) {
+        aboutToProductize( planDao.getPlan() );
     }
 
-    /** {@inheritDoc} */
+    @Override
     public void created( Plan devPlan ) {
-        loaded( devPlan );
+        scan( devPlan );
     }
 
-    /** {@inheritDoc} */
-    public void loaded( Plan plan ) {
-        scan( plan );
+    @Override
+    public void loaded( PlanDao planDao ) {
+        created( planDao.getPlan() );
     }
 
-    /** {@inheritDoc} */
+    @Override
     public void productized( Plan plan ) {
     }
 
@@ -170,6 +168,7 @@ public class IssueScanner implements Scanner, PlanListener {
             setDaemon( true );
             setPriority( Thread.NORM_PRIORITY - PRIORITY_REDUCTION );
             planHolder = new ThreadLocal<Plan>() {
+                @Override
                 protected synchronized Plan initialValue() {
                     return plan;
                 }

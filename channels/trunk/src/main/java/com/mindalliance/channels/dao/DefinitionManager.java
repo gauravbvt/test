@@ -189,7 +189,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
         } catch ( IOException e ) {
             LOG.warn( "Failed to update plans.properties", e );
         }
-        LOG.info( "Removed plan {}", uri );
+        LOG.debug( "Deleted plan definition {}", uri );
     }
 
     private void memorize( PlanDefinition definition ) throws IOException {
