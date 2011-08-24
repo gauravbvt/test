@@ -1,7 +1,6 @@
 package com.mindalliance.functionaltestsripts;
 
 import java.util.List;
-
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -91,7 +90,8 @@ public class CA023_AssignUserToAllPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);					
+				Thread.sleep(2000);		
+				
 				//Assign Access Privilege 'planner' to User
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Assign Access Privilege 'Admin' to User";
@@ -163,7 +163,7 @@ public class CA023_AssignUserToAllPlan
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		    	// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(2000);	
+			    Thread.sleep(3000);	
 			    //Assertion : Verify that User is able to view & access the plan created by Administrator
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "User is able to view all the plans created by Administrator";
@@ -186,9 +186,8 @@ public class CA023_AssignUserToAllPlan
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				
+				Thread.sleep(3000);
+								
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
@@ -261,11 +260,10 @@ public class CA023_AssignUserToAllPlan
 				Thread.sleep(2000);
 				// Logout of Channels
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
+				GlobalVariables.oDriver.quit();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
-				GlobalVariables.oDriver.quit();
 
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

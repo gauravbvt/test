@@ -29,7 +29,7 @@ public class CA002_Logout
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Click on 'Signout<user name>' Link
 					GlobalVariables.iStepNo++;
@@ -41,7 +41,7 @@ public class CA002_Logout
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 
 					// Verify that Login window gets displayed
 					GlobalVariables.iStepNo++ ;
@@ -61,8 +61,13 @@ public class CA002_Logout
 				    			  GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }	
 					GlobalVariables.oDriver.quit();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+					
 				}
 				else
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

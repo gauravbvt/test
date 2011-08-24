@@ -17,6 +17,7 @@ public class CA007_CreatePlanWithSpecialCharacter
 {
 	public CA007_CreatePlanWithSpecialCharacter() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA007_CreatePlanWithSpecialCharacter";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -39,30 +40,28 @@ public class CA007_CreatePlanWithSpecialCharacter
 				
 				// Enter the details: newPlanUri
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "(New Plan URI) and (owned by) entered";
+				GlobalVariables.sDescription = "(New Plan URI) and (owned by) Entered with Special Characters";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#@!"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
 				// newPlanClient
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#@!"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Plan Created with special characters";
+				GlobalVariables.sDescription = "Plan Created";
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				// Assertion: Verify that plan created successfully
-				GlobalVariables.bIsSuccess=Boolean.FALSE;
-				GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
+				Thread.sleep(2000);
+				// Assertion: Verify that plan Created Successfully
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
@@ -77,8 +76,7 @@ public class CA007_CreatePlanWithSpecialCharacter
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-
+				Thread.sleep(2000);				
 				// Click on 'Delete Plan' button
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -86,13 +84,12 @@ public class CA007_CreatePlanWithSpecialCharacter
 				alert.accept();
 				//Thread sleep
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
-				GlobalVariables.oDriver.quit();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -101,8 +98,11 @@ public class CA007_CreatePlanWithSpecialCharacter
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				GlobalVariables.oDriver.quit();
+				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

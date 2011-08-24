@@ -38,7 +38,7 @@ public class CA026_CreateUserWithLessCharacters
 				
 				// Enter the details: newUserId
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "User Id Entered";
+				GlobalVariables.sDescription = "User Id Entered with less than 5 Characters";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("new"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// Write Results
@@ -51,7 +51,7 @@ public class CA026_CreateUserWithLessCharacters
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Details submitted";
+				GlobalVariables.sDescription = "User Created";
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -87,27 +87,22 @@ public class CA026_CreateUserWithLessCharacters
 							// WebElement Synchronization
 							Thread.currentThread();
 							Thread.sleep(2000);
-							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+(i+1)+"]/td[5]/input")).click();
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
 							break;
 						}
 					}
 				}
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
-				// Click on 'Submit' button
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New User Created";
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
+								
 			  	// Click on 'Signout<user name>' Link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Logout Successful";
@@ -121,8 +116,9 @@ public class CA026_CreateUserWithLessCharacters
 				Thread.sleep(2000);
 				
 				// Login to Channels with Newly Created User
+				// Enter User name and password
 			    GlobalVariables.iStepNo++;
-			    GlobalVariables.sDescription="Login with newly created username";
+			    GlobalVariables.sDescription="Login with access privilege 'Planner'";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
@@ -133,16 +129,16 @@ public class CA026_CreateUserWithLessCharacters
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		    	// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(2000);
+			    Thread.sleep(2000);			
 			    
 			    // Click on Sign In button
 			    GlobalVariables.iStepNo++ ;
-			    GlobalVariables.sDescription = "Login is successful";
+			    GlobalVariables.sDescription = "Login successful";
 			    GlobalVariables.oDriver.findElement(By.name("_spring_security_remember_me")).click();
 			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();
-		    	// WebElement Synchronization
+			    // WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(5000);
+			    Thread.sleep(2000);
 			    // Assertion : Verify that Newly created user is able to login to channels
 			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("title-switchplan"));
 			    if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Full Name"))) {
@@ -158,6 +154,9 @@ public class CA026_CreateUserWithLessCharacters
 			    	LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sVerifyError, GlobalVariables.sBlank);			    	
 			    }
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -189,8 +188,6 @@ public class CA026_CreateUserWithLessCharacters
 			    Thread.currentThread();
 			    Thread.sleep(2000);
 				// Delete Created User
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="User Deleted";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=0;
@@ -212,14 +209,14 @@ public class CA026_CreateUserWithLessCharacters
 				Thread.sleep(2000);
 				// Logout of Channels
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
+				GlobalVariables.oDriver.quit();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 
-				GlobalVariables.oDriver.quit();
-
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);

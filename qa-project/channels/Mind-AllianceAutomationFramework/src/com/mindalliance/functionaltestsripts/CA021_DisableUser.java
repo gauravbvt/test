@@ -1,10 +1,8 @@
 package com.mindalliance.functionaltestsripts;
 
 import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -15,6 +13,7 @@ public class CA021_DisableUser
 {
 	public CA021_DisableUser() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA021_DisableUser";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -33,86 +32,74 @@ public class CA021_DisableUser
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				
-				// Enter the details: newUserId
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "User Id Entered";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("new"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Create User
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);								
 				// Click on 'Submit' button
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="User Created";
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed,
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-
-				// Enter the 'Full Name', 'Email', 'Password' and select the role of the user (Admin/Planner/User/Disable)
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Details of New user entered";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table"));
-				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
-				for(WebElement td: tds)
-				{
-					if(td.getText().equals(GlobalVariables.testData.get("AfourTech"))){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-						break;
+				Thread.sleep(2000);								
+				//Assign Access Privilege 'Admin' to User
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
+				List<WebElement> tds;
+				int i=-1;
+				for(WebElement tr: trs) {
+					i++;	
+					tds = tr.findElements(By.tagName("td"));
+					for(WebElement td: tds) {
+						if(td.getText().contains(GlobalVariables.testData.get("user"))){
+							GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:"+i+":group:password"));
+							GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
+							// WebElement Synchronization
+							Thread.currentThread();
+							Thread.sleep(2000);
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+(i+1)+"]/td[5]/input")).click();
+						}
 					}
 				}
-				// Full name
-				GlobalVariables.oDriver.findElement(By.name("item:0:group:fullName")).clear();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group:fullName"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Full Name"));
-				// Password
-				GlobalVariables.oDriver.findElement(By.name("item:0:group:password")).clear();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group:password"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
-				// Role
-				GlobalVariables.oDriver.findElement(By.name("item:0:group")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group"));
-			    // WebElement Synchronization
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click on 'Submit' button
-				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();				
-
+				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
 				// Disable Existing User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Existing User Disabled";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDisableUser"))).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
+				i=-1;
+				for(WebElement tr: trs) {
+					i++;	
+					tds = tr.findElements(By.tagName("td"));
+					for(WebElement td: tds) {
+						if(td.getText().contains(GlobalVariables.testData.get("user"))){
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+(i+1)+"]/td[8]/input")).click();
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+						}
+					}
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);							
-				// Click on 'Submit' button
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 								
-			  	// Click on 'Sign out <user name>' Link
+			  	// Click on 'Signout<user name>' Link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Logout Successful";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
@@ -122,14 +109,14 @@ public class CA021_DisableUser
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				//Assertion : Verify that the Disable user should not be able to login into system
 				// Enter User name and password
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="Login with Disabled User";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
-			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AfourTech"));
+			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 			    // Write Results
@@ -138,13 +125,14 @@ public class CA021_DisableUser
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		    	// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);			    
+			    Thread.sleep(2000);
+			    
 			    // Click on Sign In button
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "Login Unsuccessful";
 			    GlobalVariables.oDriver.findElement(By.name("_spring_security_remember_me")).click();
 			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();
-			    // Assertion: Verify that is Login is successful
+			    // Assertion: Verify that is Login is Unsuccessful
 			    if (GlobalVariables.oDriver.getTitle().contains(GlobalVariables.viewElements.get("homePageTitle"))) {
 			    	// Write Results
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -158,13 +146,64 @@ public class CA021_DisableUser
 			    	LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 			    		  GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 			    }
-			    GlobalVariables.oDriver.quit();
+		    	// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);
+			    // Navigate to Channels Login Page
+			    GlobalVariables.oDriver.navigate().back();
+		    	// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);
+				// Delete Created User
+			    GlobalVariables.oDriver.findElement(By.name("j_username")).clear();
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
+			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sUsername"));
+			    GlobalVariables.oDriver.findElement(By.name("j_password")).clear();
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
+			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sPassword"));
+		    	// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);			    
+			    GlobalVariables.oDriver.findElement(By.name("_spring_security_remember_me")).click();
+			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();
+		    	// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);
+			    // Navigate to Channels Administrations Link
+			    GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("channelsAdministration"))).click();
 			    // WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
-			    
+			    Thread.sleep(2000);
+				// Delete Created User
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
+				i=0;
+				for(WebElement tr: trs) {
+					i++;	
+					tds = tr.findElements(By.tagName("td"));
+					for(WebElement td: tds) {
+						if(td.getText().contains(GlobalVariables.testData.get("user"))){
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+i+"]/td[12]/input")).click();
+						}
+					}
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Logout of Channels
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
+				GlobalVariables.oDriver.quit();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

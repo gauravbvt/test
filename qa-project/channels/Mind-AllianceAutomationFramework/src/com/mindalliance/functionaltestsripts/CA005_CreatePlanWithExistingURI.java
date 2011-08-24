@@ -35,7 +35,7 @@ public class CA005_CreatePlanWithExistingURI
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Enter the details: newPlanUri
 					GlobalVariables.iStepNo++ ;
@@ -51,7 +51,7 @@ public class CA005_CreatePlanWithExistingURI
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Click on 'Submit' button
 					GlobalVariables.iStepNo++ ;
@@ -63,7 +63,7 @@ public class CA005_CreatePlanWithExistingURI
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Enter the details: of existing newPlanUri
 					GlobalVariables.iStepNo++ ;
@@ -79,23 +79,15 @@ public class CA005_CreatePlanWithExistingURI
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Click on 'Submit' button
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Plan Created";
-					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Verify that plan should not get created with existing plan name
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan Not Created";
+					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathSamePlanErrorMessage")));
 					if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("samePlan"))){
 						// Write Results
@@ -112,25 +104,20 @@ public class CA005_CreatePlanWithExistingURI
 					}
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);		
 					
-					// Select Plan
-					GlobalVariables.oDriver.findElement(By.name("plan-sel")).click();
+					// Delete Created Plan
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.testData.get("New Plan v.1 (dev)").equals(option.getText())){
-				    		// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription);
-							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-									GlobalVariables.sBlank, GlobalVariables.sBlank);
 				    		option.setSelected();
 				    		break;
 				    	}
 				    }
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					// Click on 'Delete Plan' button
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -138,7 +125,7 @@ public class CA005_CreatePlanWithExistingURI
 					alert.accept();
 					//Thread sleep
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Click on 'Signout<user name>' Link
 					GlobalVariables.iStepNo++;
@@ -151,7 +138,8 @@ public class CA005_CreatePlanWithExistingURI
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
+					
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}
