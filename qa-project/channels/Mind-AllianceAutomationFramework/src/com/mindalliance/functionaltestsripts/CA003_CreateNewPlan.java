@@ -41,8 +41,10 @@ public class CA003_CreateNewPlan
 				// Enter the details: newPlanUri
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "(New Plan URI) and (owned by) entered";
+				GlobalVariables.oDriver.findElement(By.name("newPlanUri")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
+				GlobalVariables.oDriver.findElement(By.name("newPlanClient")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 				// Write Results

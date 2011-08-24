@@ -38,8 +38,10 @@ public class CA005_CreatePlanWithExistingURI
 					Thread.sleep(2000);
 					
 					// Enter the details: newPlanUri
+					GlobalVariables.oDriver.findElement(By.name("newPlanUri")).clear();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
+					GlobalVariables.oDriver.findElement(By.name("newPlanClient")).clear();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 					// WebElement Synchronization
@@ -53,9 +55,11 @@ public class CA005_CreatePlanWithExistingURI
 					
 					// Enter the details: of existing newPlanUri
 					GlobalVariables.iStepNo++ ;
+					GlobalVariables.oDriver.findElement(By.name("newPlanUri")).clear();
 					GlobalVariables.sDescription = "Existing (New Plan URI) and (owned by) entered";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
+					GlobalVariables.oDriver.findElement(By.name("newPlanClient")).clear();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 					// Write Results

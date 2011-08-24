@@ -40,6 +40,7 @@ public class CA009_CreatePlanWithoutOwnerName
 				// Enter Plan URI
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Plan URI Entered";
+				GlobalVariables.oDriver.findElement(By.name("newPlanUri")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
 				// Write Results

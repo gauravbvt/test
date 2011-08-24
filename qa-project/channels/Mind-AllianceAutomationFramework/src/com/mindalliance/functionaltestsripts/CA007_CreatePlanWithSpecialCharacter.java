@@ -41,9 +41,10 @@ public class CA007_CreatePlanWithSpecialCharacter
 				// Enter the details: newPlanUri
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "(New Plan URI) and (owned by) Entered with Special Characters";
+				GlobalVariables.oDriver.findElement(By.name("newPlanUri")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
-				// newPlanClient
+				GlobalVariables.oDriver.findElement(By.name("newPlanClient")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
 				// Write Results
