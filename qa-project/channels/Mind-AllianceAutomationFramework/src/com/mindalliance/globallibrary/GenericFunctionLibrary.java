@@ -328,7 +328,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathSendPanel",oXmlElePlanPage.getElementsByTagName("xPathSendPanel").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAddInfoReceiveAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoReceiveAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
-			GlobalVariables.assertion.put("sXpathEventAssertion",oXmlElePlanPage.getElementsByTagName("xPathEventAssertion").item(0).getChildNodes().item(0).getNodeValue());
+//			GlobalVariables.assertion.put("sXpathEventAssertion",oXmlElePlanPage.getElementsByTagName("xPathEventAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			// View Elements
 			GlobalVariables.viewElements.put("events",oXmlEleViewElements.getElementsByTagName("events").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("phases",oXmlEleViewElements.getElementsByTagName("phases").item(0).getChildNodes().item(0).getNodeValue());
@@ -550,7 +550,9 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("iAmPlanner",oXmlEleViewElements.getElementsByTagName("iAmPlanner").item(0).getChildNodes().item(0).getNodeValue());
 			
 		} catch(Exception e) {
+			System.out.println("Hie.....");
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
