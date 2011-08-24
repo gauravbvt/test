@@ -173,12 +173,8 @@ public class MAC0033_RedoAddGoal {
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 						GlobalVariables.oDriver.findElement(By.className("close")).click();
-						// WebElement Synchronization
-						Thread.currentThread();
-						Thread.sleep(3000);
 					}
-					else
-				    {
+					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Redo Add Goal' "+" Actual " + GlobalVariables.oElement.getValue();
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
