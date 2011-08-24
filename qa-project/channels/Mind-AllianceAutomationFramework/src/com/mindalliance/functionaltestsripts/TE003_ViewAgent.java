@@ -116,12 +116,12 @@ public class TE003_ViewAgent
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-		    	else
-		    	{
+		    	else{
+		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("agent1")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
+						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 			    }
 		    	// WebElement Synchronization
 				Thread.currentThread();

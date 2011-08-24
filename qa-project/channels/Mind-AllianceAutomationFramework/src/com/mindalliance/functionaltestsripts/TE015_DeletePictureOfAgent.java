@@ -36,7 +36,7 @@ public class TE015_DeletePictureOfAgent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(1000);
 				    
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++;
@@ -48,7 +48,7 @@ public class TE015_DeletePictureOfAgent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(1000);
 					
 					// Details of Segment
 					GlobalVariables.iStepNo++;
@@ -65,7 +65,7 @@ public class TE015_DeletePictureOfAgent
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(1000);
 					
 					// Select the Segment from 'Select Plan Segment' drop down, located on the top right corner
 					GlobalVariables.iStepNo++ ;

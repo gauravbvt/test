@@ -104,20 +104,22 @@ public class TE008_UpdateAgentsCategoriesWithSpecialCharacters
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				System.out.println(GlobalVariables.oElement.getText());
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get(")(*&^%$#!"))){
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get(""))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-		    	else		    	{
+				else{
 		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get(")(*&^%$#!'")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				//Delete Agent Category
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentCategory"))).click();
 				// Get a handle to the open alert, prompt or confirmation
@@ -161,7 +163,6 @@ public class TE008_UpdateAgentsCategoriesWithSpecialCharacters
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
-			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

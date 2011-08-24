@@ -37,47 +37,7 @@ public class TE043_DeleteLocaleAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				
-				// Click on 'Add new segment' option under 'Actions' pop up menu
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
-				// Enter the details for new segment
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Details entered";
-				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Delete Locale Attachment"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
-				// Click on 'done' button
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Segment updated";
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
+							
 				// Clicks on 'About plan' link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "About plan section opened";
@@ -155,7 +115,7 @@ public class TE043_DeleteLocaleAttachment
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Delete Locale Attachment";
 				// Delete Attachment
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePlacesAttachment"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
@@ -165,24 +125,24 @@ public class TE043_DeleteLocaleAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);				
-				// Assertion: verify that file is deleted
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td"));
-				if (GlobalVariables.oElement.getText().equals("")){
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				} 
-				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual "+GlobalVariables.oElement.getText();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
+//				// Assertion: Verify that file is deleted
+//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeletePlaceAttachmentAssertion")));
+//				if (GlobalVariables.oElement.getText().equals("")){
+//					// Write Results
+//					LogFunctions.writeLogs(GlobalVariables.sDescription);
+//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+//							GlobalVariables.sBlank, GlobalVariables.sBlank);
+//				} 
+//				else{
+//					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual "+GlobalVariables.oElement.getText();
+//					// Write Results
+//					LogFunctions.writeLogs(GlobalVariables.sDescription);
+//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+//							GlobalVariables.sBlank, GlobalVariables.sBlank);
+//			    }
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(1000);
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -196,14 +156,6 @@ public class TE043_DeleteLocaleAttachment
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				// Click on 'Remove this segment' under 'Actions' pop up menu
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-				// Get a handle to the open alert, prompt or confirmation
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);

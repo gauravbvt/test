@@ -89,8 +89,7 @@ public class TE019_AgentAttachmentAsURL
 				// Click on 'URL' radio button
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="URL radio button clicked";			
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/tabel/tbody/tr[6]/td/ul/li/span/span/input[2]")).click();
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentsURLRadioButton"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -102,9 +101,6 @@ public class TE019_AgentAttachmentAsURL
 				//Attach Attachment as a URL
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attachment attached as a URL";
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
@@ -113,16 +109,14 @@ public class TE019_AgentAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(3000);
 				//Assertion : Verify that URL gets Attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL")))
-				{
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAgentURLAssertion")));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-		    	else
-		    	{
+		    	else{
 		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("URL")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

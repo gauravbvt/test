@@ -111,7 +111,7 @@ public class TE063_UpdateMediumName
 				Thread.currentThread();
 				Thread.sleep(2000);	
 				// Assertion: Verify that new medium is updated
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("sXpathAddInfoSendNewMedium"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSendNewMedium")));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("Medium 1"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

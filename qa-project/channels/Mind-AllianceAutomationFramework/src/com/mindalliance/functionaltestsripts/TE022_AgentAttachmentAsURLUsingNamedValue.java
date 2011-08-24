@@ -13,7 +13,7 @@ public class TE022_AgentAttachmentAsURLUsingNamedValue
 {
 	public TE022_AgentAttachmentAsURLUsingNamedValue() {
 		try{
-			GlobalVariables.sTestCaseId = "TE019_AgentAttachmentAsURL";
+			GlobalVariables.sTestCaseId = "TE022_AgentAttachmentAsURLUsingNamedValue";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -88,20 +88,21 @@ public class TE022_AgentAttachmentAsURLUsingNamedValue
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Click on 'URL' radio button
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="URL radio button clicked";			
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentsURLRadioButton"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
 				//Attach Attachment as a URL
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Attachment attached as a URL Using Named Value";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentURL"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+				GlobalVariables.sDescription="Attachment attached as a URL";
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
@@ -110,17 +111,15 @@ public class TE022_AgentAttachmentAsURLUsingNamedValue
 				Thread.currentThread();
 				Thread.sleep(3000);
 				//Assertion : Verify that URL gets Attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("AttachmentFileName")))
-				{
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAgentURLAssertion")));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-		    	else
-		    	{
-		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("AttachmentFileName")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+		    	else{
+		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("URL")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

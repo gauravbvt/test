@@ -36,47 +36,7 @@ public class TE045_AttachPictureToLocale
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				
-				// Click on 'Add new segment' option under 'Actions' pop up menu
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
-				// Enter the details for new segment
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Details entered";
-				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Attach Picture To Locale"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
-				// Click on 'done' button
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Segment updated";
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
+								
 				// Clicks on 'About plan' link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "About plan section opened";
@@ -164,8 +124,8 @@ public class TE045_AttachPictureToLocale
 				GlobalVariables.sDescription="Attach File";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:upload"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "Mind-Alliance_Logo.png");
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:upload"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
@@ -173,8 +133,8 @@ public class TE045_AttachPictureToLocale
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Assertion: verify that file is attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
+				// Assertion: Verify that file is attached
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPlacesAttachmentAssertion")));
 				if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -192,7 +152,7 @@ public class TE045_AttachPictureToLocale
 				Thread.currentThread();
 				Thread.sleep(1000);
 				// Delete Attachment
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePlacesAttachment"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
@@ -206,14 +166,6 @@ public class TE045_AttachPictureToLocale
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);				
-				// Click on 'Remove this segment' under 'Actions' pop up menu
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-				// Get a handle to the open alert, prompt or confirmation
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

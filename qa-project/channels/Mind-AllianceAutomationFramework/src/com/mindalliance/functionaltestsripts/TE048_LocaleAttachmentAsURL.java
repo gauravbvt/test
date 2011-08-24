@@ -94,13 +94,21 @@ public class TE048_LocaleAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(5000);
 				
+				// Click on 'URL' radio button
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="URL radio button clicked";			
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentsURLRadioButton"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
 				// Attach Attachment as a URL
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attachment attached as a URL";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentURL"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(5000);
 				// Attach URL
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
@@ -109,16 +117,14 @@ public class TE048_LocaleAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(5000);
 				//Assertion : Verify that URL gets Attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL")))
-				{
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAgentURLAssertion")));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-		    	else
-		    	{
+		    	else{
 		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("URL")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
