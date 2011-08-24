@@ -10,15 +10,16 @@ import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.pages.components.segment.ExpandedPartPanel;
 import org.apache.wicket.model.Model;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 /**
  * Test behavoir of a part panel.
@@ -44,7 +45,7 @@ public class TestPartPanel extends AbstractChannelsTest {
                 part = (Part) n;
         }
 
-        panel = new ExpandedPartPanel( "id", new Model<Part>( part ), new HashSet<Long>() );
+        panel = new ExpandedPartPanel( "id", new Model<Part>( part ), new HashSet<Long>(), null );
         tester.startComponent( panel );
     }
 

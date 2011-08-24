@@ -77,6 +77,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     private boolean operational = true;
     /**
+     * The reason this part was declared conceptual.
+     */
+    private String conceptualReason = "";
+
+    /**
      * Whether the flow is prohibited.
      */
     private boolean prohibited = false;
@@ -288,6 +293,16 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public void setOperational( boolean operational ) {
         this.operational = operational;
+    }
+
+    public String getConceptualReason() {
+        return conceptualReason == null ? "" : conceptualReason;
+    }
+
+    public void setConceptualReason( String conceptualReason ) {
+        this.conceptualReason = conceptualReason == null
+                ? ""
+                : conceptualReason;
     }
 
     public boolean isProhibited() {

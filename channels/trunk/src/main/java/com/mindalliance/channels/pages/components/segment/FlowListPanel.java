@@ -110,8 +110,14 @@ public class FlowListPanel extends AbstractCommandablePanel {
                                     "flow",
                                     new Model<Flow>( flow ),
                                     expansions,
-                                    item.getIndex() )
-                            : new ExpandedReceivePanel( "flow", new Model<Flow>( flow ), expansions, item.getIndex() );
+                                    item.getIndex(),
+                                    planPage() )
+                            : new ExpandedReceivePanel(
+                            "flow",
+                            new Model<Flow>( flow ),
+                            expansions,
+                            item.getIndex(),
+                            planPage() );
                 } else {
                     flowPanel = new CollapsedFlowPanel(
                             "flow",

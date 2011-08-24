@@ -12,10 +12,12 @@ import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -428,4 +430,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     public void redisplay( AjaxRequestTarget target ) {
         target.addComponent( this );
     }
+
+    protected PlanPage planPage() {
+        Page page = getPage();
+        return page instanceof PlanPage ? (PlanPage)page : null;
+    }
+
 }

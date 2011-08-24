@@ -94,13 +94,17 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     private Category category;
 
     /**
-     * Whether a task is operational.
+     * Whether a task is operational (i.e. non-conceptual).
      */
     private boolean operational = true;
     /**
      * Whether the part is prohibited.
      */
     private boolean prohibited = false;
+    /**
+     * The reason this part was declared conceptual.
+     */
+    private String conceptualReason = "";
 
     public Part() {
         adjustName();
@@ -409,6 +413,16 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     @Override
     public boolean isEffectivelyOperational() {
         return operational;
+    }
+
+    public String getConceptualReason() {
+        return conceptualReason == null ? "" : conceptualReason;
+    }
+
+    public void setConceptualReason( String conceptualReason ) {
+        this.conceptualReason = conceptualReason == null
+                ? ""
+                : conceptualReason;
     }
 
     public boolean isProhibited() {

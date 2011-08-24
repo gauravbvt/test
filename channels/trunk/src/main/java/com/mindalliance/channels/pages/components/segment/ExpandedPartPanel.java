@@ -14,6 +14,7 @@ import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Taggable;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
@@ -201,10 +202,6 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     private boolean partUpdated = false;
     /**
-     * Whether to show simple or advanced form.
-     */
-    private boolean showSimpleForm = true;
-    /**
      * Tags fields container.
      */
     private WebMarkupContainer tagsContainer;
@@ -221,19 +218,37 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     private WebMarkupContainer timingContainer;
     /**
-     * Show simple vs advanced form.
+     * Conceptual fields container.
+     */
+    private WebMarkupContainer conceptualContainer;
+    /**
+     * Show simple vs advanced form label.
      */
     private Label simpleAdvanced;
+    /**
+     * Reason why task declared conceptual.
+     */
+    private TextArea<String> conceptualReasonTextArea;
+    /**
+     * Conceptual reason container.
+     */
+    private WebMarkupContainer conceptualReasonContainer;
+    /**
+     * The containing plan page;
+     */
+    private PlanPage planPage;
 
     //====================================
-    public ExpandedPartPanel( String id, IModel<Part> model, Set<Long> expansions ) {
+    public ExpandedPartPanel( String id, IModel<Part> model, Set<Long> expansions, PlanPage planPage ) {
         super( id, model, expansions );
         super.setOutputMarkupPlaceholderTag( false );
         setOutputMarkupId( true );
         this.model = model;
+        this.planPage = planPage;
         addSummaryPanel();
         addSimpleAdvanced();
         addTagsPanel();
+        addConceptualFields();
         addPartDescription();
         addTaskField();
         addClassificationFields();
@@ -247,20 +262,31 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         adjustFields();
     }
 
+    private PlanPage getPlanPage() {
+        return planPage;
+    }
+
+    private boolean isShowSimpleForm() {
+        return getPlanPage().isShowSimpleForm( getPart() );
+    }
+
+    private void setShowSimpleForm( boolean val ) {
+         getPlanPage().setShowSimpleForm( getPart(), val );
+    }
+
     private void addClassificationFields() {
         classificationContainer = new WebMarkupContainer( "classificationContainer" );
         classificationContainer.setOutputMarkupId( true );
-        makeVisible(  classificationContainer, !showSimpleForm );
-        add(  classificationContainer );
-        addCategoryField( );
-        addOperationalField( );
+        makeVisible( classificationContainer, !isShowSimpleForm() );
+        add( classificationContainer );
+        addCategoryField();
         addProhibitedField( );
     }
 
     private void addTagsPanel() {
         tagsContainer = new WebMarkupContainer( "tagsContainer" );
         tagsContainer.setOutputMarkupId( true );
-        makeVisible( tagsContainer, !showSimpleForm );
+        makeVisible( tagsContainer, !isShowSimpleForm() );
         add( tagsContainer );
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getPart() ) );
         tagsContainer.add( tagsPanel );
@@ -288,12 +314,12 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addSimpleAdvanced() {
         simpleAdvanced = new Label(
                 "simpleAdvanced",
-                new Model<String>( showSimpleForm ? "Show advanced form" : "Show simple form" ) );
+                new Model<String>( isShowSimpleForm() ? "Show advanced form" : "Show simple form" ) );
         simpleAdvanced.setOutputMarkupId( true );
         simpleAdvanced.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                showSimpleForm = !showSimpleForm;
+                setShowSimpleForm( !isShowSimpleForm() );
                 adjustSimpleAdvancedFields( target );
                 addSimpleAdvanced();
                 target.addComponent( simpleAdvanced );
@@ -303,10 +329,13 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     private void adjustSimpleAdvancedFields( AjaxRequestTarget target ) {
+        boolean showSimpleForm = isShowSimpleForm();
         makeVisible( tagsContainer, !showSimpleForm );
         target.addComponent(  tagsContainer );
         makeVisible( classificationContainer, !showSimpleForm );
         target.addComponent(  classificationContainer );
+        makeVisible( conceptualContainer, !showSimpleForm );
+        target.addComponent(  conceptualContainer );
         makeVisible( executionContainer, !showSimpleForm );
         target.addComponent(  executionContainer );
         makeVisible( timingContainer, !showSimpleForm );
@@ -354,15 +383,35 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         classificationContainer.add( categoryChoice );
     }
 
-    private void addOperationalField( ) {
+    private void addConceptualFields() {
+        conceptualContainer = new WebMarkupContainer( "conceptualContainer" );
+        conceptualContainer.setOutputMarkupId( true );
+        makeVisible( conceptualContainer, !isShowSimpleForm() );
+        add( conceptualContainer );
         conceptualCheckBox = new CheckBox( "conceptual", new PropertyModel<Boolean>( this, "conceptual" ) );
-        classificationContainer.add( conceptualCheckBox );
+        conceptualContainer.add( conceptualCheckBox );
         conceptualCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "operational" ) );
+                makeVisible( conceptualReasonContainer, isConceptual() );
+                adjustFields();
+                target.addComponent( conceptualReasonContainer );
             }
         } );
-
+        conceptualReasonContainer = new WebMarkupContainer( "conceptualReasonContainer" );
+        conceptualReasonContainer.setOutputMarkupId( true );
+        makeVisible( conceptualReasonContainer, isConceptual() );
+        conceptualContainer.add(  conceptualReasonContainer );
+        conceptualReasonTextArea = new TextArea<String>(
+                "conceptualReason",
+                new PropertyModel<String>( this, "conceptualReason"  ));
+        conceptualReasonTextArea.add(  new AjaxFormComponentUpdatingBehavior( "onchange") {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getPart(), "conceptualReason" ) );
+            }
+        } );
+        conceptualReasonContainer.add( conceptualReasonTextArea );
     }
 
     private void addProhibitedField() {
@@ -432,6 +481,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         taskField.setEnabled( isLockedByUser( getPart() ) );
         categoryChoice.setEnabled( isLockedByUser( getPart() ) );
         conceptualCheckBox.setEnabled( isLockedByUser( getPart() ) );
+        conceptualReasonTextArea.setEnabled( isConceptual() && isLockedByUser( getPart() ) );
         prohibitedCheckBox.setEnabled( isLockedByUser( getPart() ) );
         for ( EntityReferencePanel entityReferencePanel : entityFields ) {
             entityReferencePanel.enable( isLockedByUser( getPart() ) );
@@ -576,7 +626,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addTimingFields() {
         timingContainer = new WebMarkupContainer( "timingContainer" );
         timingContainer.setOutputMarkupId( true );
-        makeVisible(  timingContainer, !showSimpleForm );
+        makeVisible(  timingContainer, !isShowSimpleForm() );
         add(  timingContainer );
         repeatsEveryPanel = new DelayPanel(
                 "repeats-every",
@@ -667,7 +717,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addExecution() {
         executionContainer = new WebMarkupContainer( "executionContainer" );
         executionContainer.setOutputMarkupId( true );
-        makeVisible( executionContainer, !showSimpleForm );
+        makeVisible( executionContainer, !isShowSimpleForm() );
         add( executionContainer );
         asTeamCheckBox = new CheckBox(
                 "asTeam",
@@ -1067,6 +1117,14 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     public void setConceptual( boolean val ) {
         doCommand( new UpdateSegmentObject( getPart(), "operational", !val ) );
+    }
+
+    public String getConceptualReason() {
+        return isConceptual() ? getPart().getConceptualReason() : "";
+    }
+
+    public void setConceptualReason( String val ) {
+        doCommand( new UpdateSegmentObject( getPart(), "conceptualReason", val ) );
     }
 
     public boolean isProhibited() {

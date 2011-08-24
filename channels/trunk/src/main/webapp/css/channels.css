@@ -104,6 +104,11 @@ div.section-content {
     padding-left: 0.5em;
 }
 
+.small-text-area {
+    width: 25.5em;
+    vertical-align: middle;
+}
+
 #part .instructions {
     display: block;
     font-style: italic;

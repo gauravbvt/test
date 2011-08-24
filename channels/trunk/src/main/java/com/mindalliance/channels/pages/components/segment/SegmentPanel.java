@@ -256,7 +256,9 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             partPanel = new ExpandedPartPanel(
                     "part",
                     new PropertyModel<Part>( this, "part" ),
-                    getExpansions() );
+                    getExpansions(),
+                    planPage()
+                    );
         } else {
             partPanel = new CollapsedPartPanel(
                     "part",

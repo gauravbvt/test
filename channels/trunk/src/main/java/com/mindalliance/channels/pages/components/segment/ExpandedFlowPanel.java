@@ -18,6 +18,7 @@ import com.mindalliance.channels.model.Taggable;
 import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
@@ -200,11 +201,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private boolean restricted;
 
     /**
-     * Whether to show simple or advanced form.
-     */
-    private boolean showSimpleForm = true;
-
-    /**
      * Show simple vs advanced form.
      */
     private Label simpleAdvanced;
@@ -225,16 +221,35 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Restriction fields container.
      */
     private WebMarkupContainer restrictionContainer;
+    /**
+     * Reason why task declared conceptual.
+     */
+    private TextArea<String> conceptualReasonTextArea;
+    /**
+     * Conceptual reason container.
+     */
+    private WebMarkupContainer conceptualReasonContainer;
+    /**
+     * The containing plan page.
+     */
+    private PlanPage planPage;
 
     protected ExpandedFlowPanel(
             String id,
             IModel<Flow> model,
             boolean send,
             Set<Long> expansions,
-            int index ) {
+            int index,
+            PlanPage planPage) {
         super( id, model, send, false, expansions, index );
+        this.planPage = planPage;
         init();
     }
+
+    private PlanPage getPlanPage() {
+        return planPage;
+    }
+
 
     private void init() {
         setOutputMarkupId( true );
@@ -243,6 +258,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addNameField();
         addTagsPanel();
         addClassificationFields();
+        addConceptualFields();
         addLabeled( "name-label", nameField );
         addEOIs();
         addReferencesEventPhaseField();
@@ -276,10 +292,18 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         adjustFields( getFlow() );
     }
 
+    private boolean isShowSimpleForm() {
+        return getPlanPage().isShowSimpleForm( getFlow() );
+    }
+
+    private void setShowSimpleForm( boolean val ) {
+         getPlanPage().setShowSimpleForm( getFlow(), val );
+    }
+
     private void addTagsPanel() {
         tagsContainer = new WebMarkupContainer( "tagsContainer" );
         tagsContainer.setOutputMarkupId( true );
-        makeVisible( tagsContainer, !showSimpleForm );
+        makeVisible( tagsContainer, !isShowSimpleForm() );
         add( tagsContainer );
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -295,12 +319,42 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addClassificationFields() {
          classificationContainer = new WebMarkupContainer( "classificationContainer" );
          classificationContainer.setOutputMarkupId( true );
-         makeVisible(  classificationContainer, !showSimpleForm );
+         makeVisible(  classificationContainer, !isShowSimpleForm() );
          add(  classificationContainer );
          addIntentField();
-         addConceptualField();
          addProhibitedField( );
      }
+
+    private void addConceptualFields() {
+        conceptualContainer = new WebMarkupContainer( "conceptualContainer" );
+        conceptualContainer.setOutputMarkupId( true );
+        makeVisible( conceptualContainer, !isShowSimpleForm() && getFlow().canGetOperational() );
+        add( conceptualContainer );
+        conceptualCheckBox = new CheckBox( "conceptual", new PropertyModel<Boolean>( this, "conceptual" ) );
+        conceptualContainer.add( conceptualCheckBox );
+        conceptualCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getFlow(), "operational" ) );
+                makeVisible( conceptualReasonContainer, isConceptual() );
+                adjustFields( getFlow() );
+                target.addComponent( conceptualReasonContainer );
+            }
+        } );
+        conceptualReasonContainer = new WebMarkupContainer( "conceptualReasonContainer" );
+        conceptualReasonContainer.setOutputMarkupId( true );
+        makeVisible( conceptualReasonContainer, isConceptual() );
+        conceptualContainer.add(  conceptualReasonContainer );
+        conceptualReasonTextArea = new TextArea<String>(
+                "conceptualReason",
+                new PropertyModel<String>( this, "conceptualReason"  ));
+        conceptualReasonTextArea.add(  new AjaxFormComponentUpdatingBehavior( "onchange") {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getFlow(), "conceptualReason" ) );
+            }
+        } );
+        conceptualReasonContainer.add( conceptualReasonTextArea );
+    }
 
 
 
@@ -330,7 +384,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addRestrictionFields() {
         restrictionContainer = new WebMarkupContainer( "restrictionContainer" );
         restrictionContainer.setOutputMarkupId( true );
-        makeVisible( restrictionContainer, !showSimpleForm );
+        makeVisible( restrictionContainer, !isShowSimpleForm() );
         addOrReplace( restrictionContainer );
         restrictedCheckBox = new CheckBox(
                 "restricted",
@@ -448,8 +502,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
         makeVisible( prohibitedContainer, f.canGetProhibited() );
         prohibitedCheckBox.setEnabled( lockedByUser && f.canSetProhibited() );
-        makeVisible( conceptualContainer, f.canGetOperational() );
+        makeVisible( conceptualContainer, !isShowSimpleForm() && f.canGetOperational() );
         conceptualCheckBox.setEnabled( lockedByUser && f.canSetOperational() );
+        conceptualReasonTextArea.setEnabled( isConceptual() && isLockedByUser( f ) );
         makeVisible( referencesEventPhaseContainer, f.canGetReferencesEventPhase() );
         referencesEventPhaseCheckBox.setEnabled( lockedByUser && f.canSetReferencesEventPhase() );
     }
@@ -610,7 +665,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addSignificanceToSource() {
         significanceToSourceContainer = new WebMarkupContainer( "significance-to-source" );
         significanceToSourceContainer.setOutputMarkupId( true );
-        makeVisible( significanceToSourceContainer, !showSimpleForm );
+        makeVisible( significanceToSourceContainer, !isShowSimpleForm() );
         addOrReplace( significanceToSourceContainer );
         Component sourceTaskReference;
         if ( isSend() ) {
@@ -716,7 +771,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addReferencesEventPhaseField() {
         referencesEventPhaseContainer = new WebMarkupContainer( "referencesEventPhaseContainer" );
         referencesEventPhaseContainer.setOutputMarkupId( true );
-        makeVisible(  referencesEventPhaseContainer, !showSimpleForm );
+        makeVisible(  referencesEventPhaseContainer, !isShowSimpleForm() );
         add( referencesEventPhaseContainer );
         referencesEventPhaseCheckBox = new CheckBox(
                 "referencesEventPhase",
@@ -793,12 +848,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addSimpleAdvanced() {
         simpleAdvanced = new Label(
                 "simpleAdvanced",
-                new Model<String>( showSimpleForm ? "Show advanced form" : "Show simple form" ) );
+                new Model<String>( isShowSimpleForm() ? "Show advanced form" : "Show simple form" ) );
         simpleAdvanced.setOutputMarkupId( true );
         simpleAdvanced.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                showSimpleForm = !showSimpleForm;
+                setShowSimpleForm( !isShowSimpleForm() );
                 adjustSimpleAdvancedFields( target );
                 addSimpleAdvanced();
                 target.addComponent( simpleAdvanced );
@@ -808,6 +863,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void adjustSimpleAdvancedFields( AjaxRequestTarget target ) {
+        boolean showSimpleForm = isShowSimpleForm();
         makeVisible( tagsContainer, !showSimpleForm );
         target.addComponent(  tagsContainer );
         makeVisible( classificationContainer, !showSimpleForm );
@@ -820,6 +876,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         target.addComponent(  timingContainer );
         makeVisible( significanceToSourceContainer, !showSimpleForm );
         target.addComponent( significanceToSourceContainer );
+        makeVisible( conceptualContainer, !showSimpleForm && getFlow().canGetOperational() );
+        target.addComponent(  conceptualContainer );
     }
 
 
@@ -1119,7 +1177,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addMaxDelayRow() {
         this.timingContainer = new WebMarkupContainer( "timing" );
         this.timingContainer.setOutputMarkupId( true );
-        makeVisible( this.timingContainer, !showSimpleForm );
+        makeVisible( this.timingContainer, !isShowSimpleForm() );
         add( this.timingContainer );
         delayPanel = new DelayPanel(
                 "max-delay",
@@ -1536,6 +1594,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setConceptual( boolean val ) {
         doCommand( new UpdateSegmentObject( getFlow(), "operational", !val ) );
+    }
+
+    public String getConceptualReason() {
+        return isConceptual() ? getFlow().getConceptualReason() : "";
+    }
+
+    public void setConceptualReason( String val ) {
+        doCommand( new UpdateSegmentObject( getFlow(), "conceptualReason", val ) );
     }
 
     /**

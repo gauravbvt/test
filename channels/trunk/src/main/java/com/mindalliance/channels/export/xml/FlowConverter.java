@@ -128,6 +128,11 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.startNode( "operational" );
         writer.setValue( Boolean.toString( flow.isOperational() ) );
         writer.endNode();
+        if ( !flow.isOperational() ) {
+            writer.startNode( "conceptualReason" );
+            writer.setValue( flow.getConceptualReason() );
+            writer.endNode();
+        }
         // Prohibited
         writer.startNode( "prohibited" );
         writer.setValue( Boolean.toString( flow.isProhibited() ) );
@@ -272,6 +277,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setIfTaskFails( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "operational" ) ) {
                 flow.setOperational( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "conceptualReason" ) ) {
+                flow.setConceptualReason( reader.getValue() );
             } else if ( nodeName.equals( "prohibited" ) ) {
                 flow.setProhibited( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "referencesEventPhase" ) ) {

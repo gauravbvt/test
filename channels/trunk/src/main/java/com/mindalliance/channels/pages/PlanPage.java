@@ -339,6 +339,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     private long message_time = 0;
 
+    private Map<Long, Boolean> showSimpleForm = new HashMap<Long, Boolean>(  );
+
     /**
      * Survey service.
      */
@@ -1599,6 +1601,16 @@ public final class PlanPage extends AbstractChannelsWebPage {
         for ( Identifiable identifiable : toCollapse ) {
             collapse( identifiable );
         }
+    }
+
+    public boolean isShowSimpleForm( Identifiable identifiable ) {
+        if ( showSimpleForm.containsKey( identifiable.getId() ) )
+            return showSimpleForm.get( identifiable.getId() );
+        else return true;
+    }
+
+    public void setShowSimpleForm( Identifiable identifiable, boolean simple ) {
+        showSimpleForm.put(  identifiable.getId(), simple );
     }
 
     /**

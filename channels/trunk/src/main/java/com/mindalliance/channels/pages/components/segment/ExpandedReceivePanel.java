@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.model.Channelable;
 import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,8 +16,8 @@ import java.util.Set;
  */
 public class ExpandedReceivePanel extends ExpandedFlowPanel {
 
-    public ExpandedReceivePanel( String id, IModel<Flow> model, Set<Long> expansions, int index ) {
-        super( id, model, false, expansions, index );
+    public ExpandedReceivePanel( String id, IModel<Flow> model, Set<Long> expansions, int index, PlanPage planPage ) {
+        super( id, model, false, expansions, index, planPage );
     }
 
     /** {@inheritDoc} */
