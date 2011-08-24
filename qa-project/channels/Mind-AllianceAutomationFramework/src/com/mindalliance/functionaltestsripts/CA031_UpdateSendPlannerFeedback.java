@@ -1,7 +1,6 @@
 package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -12,6 +11,7 @@ public class CA031_UpdateSendPlannerFeedback
 {
 	public CA031_UpdateSendPlannerFeedback() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA031_UpdateSendPlannerFeedback";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -30,23 +30,21 @@ public class CA031_UpdateSendPlannerFeedback
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 			
 				// Update Send Planner Feedback
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Send Planner Feedback Updated";
+				GlobalVariables.oDriver.findElement(By.name("plannerSupportCommunity")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plannerSupportCommunity"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("SendPlannerFeedback"));
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				//Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -57,9 +55,13 @@ public class CA031_UpdateSendPlannerFeedback
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+		
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

@@ -13,6 +13,7 @@ public class CL010_ForgotUserIDPasswordLink
 {
 	public CL010_ForgotUserIDPasswordLink(){
 		  try {
+			  
 			  GlobalVariables.sTestCaseId = "CL010_ForgotUserIDPasswordLink";
 			  GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			  LogFunctions.writeLogs(GlobalVariables.sDescription);

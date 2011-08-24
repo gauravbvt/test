@@ -15,7 +15,7 @@ public class CA026_CreateUserWithLessCharacters
 {
 	public CA026_CreateUserWithLessCharacters() {
 		try {
-			
+
 			GlobalVariables.sTestCaseId = "CA026_CreateUserWithLessCharacters";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);

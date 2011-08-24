@@ -15,6 +15,7 @@ public class CA028_CreateUserWithSpecialCharacters
 {
 	public CA028_CreateUserWithSpecialCharacters() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA028_CreateUserWithSpecialCharacters";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -35,11 +36,18 @@ public class CA028_CreateUserWithSpecialCharacters
 				Thread.currentThread();
 				Thread.sleep(2000);	
 				
-				// Enter the details: newUserId
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "User Id Entered";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("new"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
+				// Create User
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="User Created with Special Characters";
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));			GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);								
+				// Click on 'Submit' button
+				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);								
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -48,86 +56,27 @@ public class CA028_CreateUserWithSpecialCharacters
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Click on 'Submit' button
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Details submitted";
-				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				// Enter the 'Full Name', 'Email', 'Password' and select the role of the user (Admin/Planner/User/Disable)
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Details of New user entered";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table"));
-				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
-				for(WebElement td: tds)
-				{
-					if(td.getText().equals(GlobalVariables.testData.get(")(*&^%$#!"))){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-						break;
+				// Delete Created User
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
+				List<WebElement> tds;
+				for(WebElement tr: trs) {
+					tds = tr.findElements(By.tagName("td"));
+					for(WebElement td: tds) {
+						if(td.getText().contains(GlobalVariables.testData.get(")(*&^%$#!"))){
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr/td[12]/input")).click();
+							break;
+						}
 					}
 				}
-				// Full name
-				GlobalVariables.oDriver.findElement(By.name("item:0:group:fullName")).clear();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group:fullName"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Full Name"));
-				// Password
-				GlobalVariables.oDriver.findElement(By.name("item:0:group:password")).clear();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group:password"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
-				// Role
-				GlobalVariables.oDriver.findElement(By.name("item:0:group")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group"));
-			    // WebElement Synchronization
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
-				// Click on 'Submit' button
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New User Created";
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Assertion:
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table"));
-				tds = GlobalVariables.oElement.findElements(By.tagName("td"));
-				for(WebElement td: tds)
-				{
-					if(td.getText().equals(GlobalVariables.testData.get(")(*&^%$#!"))){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-						break;
-					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected ')(*&^%$#!' "+" Actual "+td.getText();
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-						break;
-					}
-				}
-				//Deleting user
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table/tbody/tr/td/span"));
-				GlobalVariables.oDriver.findElement(By.name("item:0:group:delete")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group:delete"));
-				// Click on 'Submit' button
-				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
+								
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
