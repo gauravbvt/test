@@ -22,6 +22,7 @@
 <xPathDeleteTaskAttachment>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteTaskAttachment>
 <xPathCutAttachment>/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCutAttachment>
 <xPathDeleteEventAttachment>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteEventAttachment>
+<xPathDeletePlacesAttachment>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePlacesAttachment>
 <xPathCopyEventAttachment>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyEventAttachment>
 <xPathRemoveIssue>/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[3]/span/span/span/span/span</xPathRemoveIssue>
 <xPathPresenceTabs>/html/body/form/span/span/div/div/div/ul/li/a/span</xPathPresenceTabs>
@@ -30,6 +31,7 @@
 <xPathActivities>/html/body/form/span/span/div/div/div/ul/li[2]/a/span</xPathActivities>
 <xPathDoingSomeThingLink>//div[@id='part']/div[1]/div[2]/table/tbody/tr/td/span/span</xPathDoingSomeThingLink>
 <xPathLegend>/html/body/form/span/div/div/span[7]/img</xPathLegend>
+<xPathAgentsURLRadioButton>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathAgentsURLRadioButton>
 <xPathStretchUpShrinkBack>/html/body/form/span/div/div/span[6]/img</xPathStretchUpShrinkBack>
 <xPathRespondingPhaseLink>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathRespondingPhaseLink>
 <xPathDeleteEvent>/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/div/table/tbody/tr/td[2]/a/img</xPathDeleteEvent>
@@ -134,10 +136,13 @@
 <xPathAgentURL>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/th</xPathAgentURL>
 <xPathIssueSummaryReportSendFeedbackCancel>/html/body/div/div/span/div/div/div/div/div[4]/input</xPathIssueSummaryReportSendFeedbackCancel>
 <!-- Assertions -->
+<xPathDeletePlaceAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div/table/tbody/tr[6]/td</xPathDeletePlaceAttachmentAssertion>
+<xPathAgentURLAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathAgentURLAssertion>
 <xPathDeleteOrganizationAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li</xPathDeleteOrganizationAttachmentAssertion>
 <xPathRemoveOrganizationAssertion>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul</xPathRemoveOrganizationAssertion>
 <xPathDeletePhaseAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li</xPathDeletePhaseAttachmentAssertion>
 <xPathPhaseAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathPhaseAttachmentAssertion>
+<xPathPlacesAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathPlacesAttachmentAssertion>
 <xPathOrganizationAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathOrganizationAttachmentAssertion>
 <xPathPhaseCategoriesAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathPhaseCategoriesAssertion>
 <xPathDeletePhaseAssertion>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathDeletePhaseAssertion>
