@@ -11,6 +11,7 @@ public class CA002_Logout
 {
 	public CA002_Logout() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA002_Logout";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -48,17 +49,17 @@ public class CA002_Logout
 					GlobalVariables.sDescription = "Login Window Displayed";
 					// ASSERTION:When clicked on 'Signout<user name>' Link , Login window gets displayed
 					if(GlobalVariables.oDriver.getTitle().equals(GlobalVariables.viewElements.get("loginPageTitle"))){
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);	
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-					else{
+					else {
 				    	  GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("loginPageTitle")+" Actual "+GlobalVariables.oElement.getText();
 				    	  // Write Results
 				    	  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 				    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-				    			  GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				    			  GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				    }	
 					GlobalVariables.oDriver.quit();
 					// WebElement Synchronization

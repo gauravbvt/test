@@ -17,6 +17,7 @@ public class CA003_CreateNewPlan
 {
 	public CA003_CreateNewPlan() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CA003_CreateNewPlan";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -42,7 +43,6 @@ public class CA003_CreateNewPlan
 				GlobalVariables.sDescription = "(New Plan URI) and (owned by) entered";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
-				// newPlanClient
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 				// Write Results
@@ -101,6 +101,7 @@ public class CA003_CreateNewPlan
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

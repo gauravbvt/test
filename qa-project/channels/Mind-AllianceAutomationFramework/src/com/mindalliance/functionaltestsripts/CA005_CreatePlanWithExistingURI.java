@@ -38,39 +38,24 @@ public class CA005_CreatePlanWithExistingURI
 					Thread.sleep(2000);
 					
 					// Enter the details: newPlanUri
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "(New Plan URI) and (owned by) entered";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
-					// newPlanClient
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
-					
+					Thread.sleep(2000);					
 					// Click on 'Submit' button
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Plan Created";
 					GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					
 					// Enter the details: of existing newPlanUri
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "(New Plan URI) and (owned by) entered";
+					GlobalVariables.sDescription = "Existing (New Plan URI) and (owned by) entered";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
-					// newPlanClient
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 					// Write Results
@@ -142,6 +127,7 @@ public class CA005_CreatePlanWithExistingURI
 					
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+					
 				}
 				else
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
