@@ -78,7 +78,7 @@ public class CCE018_DoCutAttachment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
 					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

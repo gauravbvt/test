@@ -207,7 +207,7 @@ public class CCE002_DoUndoRedoRemoveSegment
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Remove the segment when Test case execution completes
+				/*// Remove the segment when Test case execution completes
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// Get a handle to the open alert, prompt or confirmation
 				alert = GlobalVariables.oDriver.switchTo().alert();
@@ -215,7 +215,7 @@ public class CCE002_DoUndoRedoRemoveSegment
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(5000);*/
 				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;

@@ -175,36 +175,33 @@ public class CCE003_DoUndoRedoAddGoal
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Redo update segment' option, the respective goal should be added again in the Segment
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
-					if (GlobalVariables.oElement.getValue().equals("AddGoal")) {
+					if (GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("AddGoal"))) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
-						GlobalVariables.oDriver.findElement(By.className("close")).click();
-						// WebElement Synchronization
-						Thread.currentThread();
-						Thread.sleep(3000);
 					}
-					else
-				    {
+					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Redo Add Goal' "+" Actual " + GlobalVariables.oElement.getValue();
-				    	// Write Results
+						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
+					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-					// Get a handle to the open alert, prompt or confirmation
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-					// And acknowledge the alert (equivalent to clicking "OK")
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					alert.accept();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					
 				    // Call logout()
 					GlobalVariables.iStepNo++ ;
