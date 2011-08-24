@@ -107,9 +107,7 @@ abstract public class AbstractParticipantPage  extends AbstractChannelsWebPage {
                 new Label( "reportTitle", getReportTitle() ),
                 new Label( "reportName", getReportName() ),
                 new UserFeedbackPanel( "planFeedback", plan, "Send overall feedback" ),
-/*
-            new Label( "userName", user.getUsername() ),
-*/
+                new Label( "reportType", getReportType() ),
                 new Label( "personName", contact.getActorName() ),
                 new Label( "planName", plan.getName() ),
                 new Label( "planName2", plan.getName() ),
@@ -126,6 +124,8 @@ abstract public class AbstractParticipantPage  extends AbstractChannelsWebPage {
     protected abstract String getReportTitle();
 
     protected abstract String getReportName();
+
+    protected abstract String getReportType();
 
     protected abstract void initReportBody(
             Plan plan,

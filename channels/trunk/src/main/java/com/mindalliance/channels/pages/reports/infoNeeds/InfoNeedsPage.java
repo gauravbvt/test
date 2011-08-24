@@ -76,6 +76,12 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         return " Participant Information Needs Report";
     }
 
+    @Override
+    protected String getReportType() {
+        return "Information Needs";
+    }
+
+
     protected void initReportBody(
             Plan plan,
             QueryService queryService,

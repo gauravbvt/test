@@ -108,6 +108,11 @@ public class GuidelinesPage extends AbstractParticipantPage {
         return " Participant IS Guidelines Report";
     }
 
+    @Override
+    protected String getReportType() {
+        return "Information Sharing Guidelines";
+    }
+
     //-----------------------------------
     protected void initReportBody(
             Plan plan,
