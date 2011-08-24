@@ -54,6 +54,7 @@
 <redoAddNewIssue>Redo add new issue</redoAddNewIssue>
 <sendMessage>Send message</sendMessage>
 <to>To:</to>
+<events>Events</events>
 <addNewTask>Add new task</addNewTask>
 <hideDetails>Hide details</hideDetails>
 <cutTask>Cut task</cutTask>
