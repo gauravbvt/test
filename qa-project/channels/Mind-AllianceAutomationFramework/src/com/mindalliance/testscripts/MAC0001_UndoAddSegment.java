@@ -94,7 +94,7 @@ public class MAC0001_UndoAddSegment {
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	if(option.getText().equals("Untitled")){
+			    	if(option.getText().equals("Segment For Undo Add Segment")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -102,7 +102,7 @@ public class MAC0001_UndoAddSegment {
 						break;
 			    	}
 			    	else{
-			    		GlobalVariables.sVerifyError ="Verification Failed "+"Expected Untitled "+" Actual "+option.getText();
+			    		GlobalVariables.sVerifyError ="Verification Failed "+"Expected Segment For Undo Add Segment "+" Actual "+option.getText();
 			    		// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
