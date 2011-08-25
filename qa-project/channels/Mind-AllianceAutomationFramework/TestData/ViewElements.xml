@@ -82,6 +82,7 @@
 <Issues>Issues</Issues>
 <agents>Agents</agents>
 <network>Network</network>
+<network1>network</network1>
 <addNewSegment>Add new segment</addNewSegment>
 <addNewTask>Add new task</addNewTask>
 <audit>Audit</audit>
