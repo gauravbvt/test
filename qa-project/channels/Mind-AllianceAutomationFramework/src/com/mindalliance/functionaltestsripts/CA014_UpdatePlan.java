@@ -89,19 +89,20 @@ public class CA014_UpdatePlan
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Navigate To Information Sharing Model Page
-				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
-				//Thread sleep
-				Thread.currentThread();
-				Thread.sleep(3000);
 				
 				//Plan Name Updated
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription = "Plan Name Updated";
+				//Navigate To Information Sharing Model Page
+				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
+				//Thread sleep
+				Thread.currentThread();
+				Thread.sleep(4000);
+				// Click on 'About Plan' Option under 'Show' Pop up menu
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
 				//Thread sleep
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(4000);
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:name")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));

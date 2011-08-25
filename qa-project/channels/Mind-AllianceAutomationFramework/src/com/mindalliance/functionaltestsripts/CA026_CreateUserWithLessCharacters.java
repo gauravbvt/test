@@ -1,10 +1,8 @@
 package com.mindalliance.functionaltestsripts;
 
 import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -143,15 +141,16 @@ public class CA026_CreateUserWithLessCharacters
 			    Thread.currentThread();
 			    Thread.sleep(3000);
 			    // Assertion : Verify that Newly created user is able to login to channels
-			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("title-switchplan"));
-			    if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Full Name"))) {
+			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialAboutMe"))).click();
+			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:fullName"));
+			    if(GlobalVariables.oElement.getValue().contains(GlobalVariables.testData.get("Full Name"))) {
 				    // Write Results
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    	LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);			    	
 			    }
 			    else {
-			    	GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("Full Name")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+			    	GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("Full Name")+"' Actual '"+GlobalVariables.oElement.getValue() +"'";
 				    // Write Results
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
 			    	LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -163,7 +162,7 @@ public class CA026_CreateUserWithLessCharacters
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Logout is successful";
+				GlobalVariables.sDescription = "Logout successful";
 				GlobalVariables.oDriver.findElement(By.className("logout")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

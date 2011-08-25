@@ -97,6 +97,7 @@ public class CA025_CreateUserWithSameName
 							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
 				// Delete User
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
