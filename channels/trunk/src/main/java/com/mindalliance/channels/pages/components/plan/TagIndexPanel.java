@@ -12,6 +12,7 @@ import com.mindalliance.channels.model.Segment;
 import com.mindalliance.channels.model.Tag;
 import com.mindalliance.channels.model.Taggable;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.wicket.model.IModel;
 
@@ -42,6 +43,7 @@ public class TagIndexPanel extends AbstractIndexPanel {
         doInit();
     }
 
+    @Override
     protected void init() {
         // do nothing
     }
@@ -54,18 +56,17 @@ public class TagIndexPanel extends AbstractIndexPanel {
         return tagModel.getObject();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<String> getIndexingChoices() {
         return Arrays.asList( indexingChoices );
     }
 
     private <T extends Taggable> List<T> selectTagged( List<T> taggables ) {
         List<T> tagged = new ArrayList<T>();
+        Matcher instance = Matcher.getInstance();
         if ( getTag() != null ) {
             for ( T taggable : taggables ) {
-                if ( taggable.isTaggedWith( getTag() ) ) {
+                if ( isTaggedWith( instance, taggable, getTag() ) ) {
                     tagged.add( taggable );
                 }
             }
@@ -73,73 +74,53 @@ public class TagIndexPanel extends AbstractIndexPanel {
         return tagged;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<Actor> findIndexedActors() {
         return selectTagged(
                 getQueryService().listReferencedEntities( Actor.class ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<Event> findIndexedEvents() {
         return selectTagged( getQueryService().listReferencedEntities( Event.class ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<Organization> findIndexedOrganizations() {
         return selectTagged( getQueryService().listReferencedEntities( Organization.class ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<Phase> findIndexedPhases() {
         return selectTagged( getQueryService().listReferencedEntities( Phase.class ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<TransmissionMedium> findIndexedMedia() {
         return selectTagged( getQueryService().listReferencedEntities( TransmissionMedium.class ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<Place> findIndexedPlaces() {
         return selectTagged( getQueryService().listReferencedEntities( Place.class ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<Role> findIndexedRoles() {
         return selectTagged( getQueryService().listReferencedEntities( Role.class ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<Flow> findIndexedFlows() {
         return selectTagged( getQueryService().findAllFlows() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<Part> findIndexedParts() {
         return selectTagged( getQueryService().findAllParts() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected List<Segment> findIndexedSegments() {
         return selectTagged( getQueryService().list( Segment.class ) );
     }

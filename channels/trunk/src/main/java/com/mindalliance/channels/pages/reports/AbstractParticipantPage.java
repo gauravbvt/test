@@ -56,7 +56,8 @@ abstract public class AbstractParticipantPage  extends AbstractChannelsWebPage {
             QueryService service = getQueryService();
             Plan plan = service.getPlan();
             if ( plan == null )
-                plan = getUser().getPlan();
+                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
+
             setRedirect( true );
             setResponsePage(
                     clazz,

@@ -510,14 +510,16 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
 
         @Override
         public void loaded( PlanDao planDao ) {
+            Plan plan = planDao.getPlan();
             try {
-                Plan plan = planDao.getPlan();
                 load( plan );
                 removeUnattached( plan, planDao.findAllAttached() );
                 reloadTags( plan );
 
+            } catch ( FileNotFoundException ignored ) {
+                LOG.debug( "No file digests found for plan " + plan.getUri() );
             } catch ( IOException e ) {
-                LOG.warn( "Unable to load attachments for plan " + planDao.getPlan().getUri(), e );
+                LOG.warn( "Unable to load attachments for plan " + plan.getUri(), e );
             }
         }
 

@@ -15,8 +15,10 @@ import com.mindalliance.channels.model.Phase;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.model.Tag;
 import com.mindalliance.channels.model.Taggable;
 import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.query.QueryService;
 import com.mindalliance.channels.util.NameRange;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -173,6 +176,58 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         super( id, model, expansions );
         this.css = css;
         init();
+    }
+
+    /**
+     * There is no tag from s such that there is no tag in tag that matches it
+     * (all tags from s match at least of this mo's tags).
+     *
+     * @param matcher the matcher to use
+     * @param taggable the object
+     * @param s a string
+     * @return true if the object is tagged with given string
+     */
+    private static boolean isTaggedWith( Matcher matcher, Taggable taggable, String s ) {
+        List<Tag> otherTags = Tag.tagsFromString( s );
+
+        for ( Tag otherTag : otherTags )
+            if ( !isTaggedWith( matcher, taggable, otherTag ) )
+                return false;
+
+        return true;
+    }
+
+    public static boolean isTaggedWith( Matcher matcher, Taggable taggable, Tag tag ) {
+        for ( Tag myTag : taggable.getTags() )
+            if ( matches( matcher, myTag, tag ) )
+                return true;
+
+        return false;
+    }
+
+    /**
+     * Whether two tags match.
+     *
+     * @param matcher the matcher to use
+     * @param tag a tag
+     * @param other another tag
+     * @return a boolean
+     */
+    private static boolean matches( Matcher matcher, Tag tag, Tag other ) {
+        if ( tag.equals( other ) )
+            return true;
+
+        List<String> elements = tag.getElements();
+        List<String> otherElements = other.getElements();
+        Iterator<String> shorter =
+                elements.size() < otherElements.size() ? elements.iterator() : otherElements.iterator();
+        Iterator<String> longer =
+                elements.size() >= otherElements.size() ? elements.iterator() : otherElements.iterator();
+
+        boolean matching = true;
+        while ( matching && shorter.hasNext() )
+            matching = matcher.same( shorter.next(), longer.next() );
+        return matching;
     }
 
     @Override
@@ -675,7 +730,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
 
     private boolean isFilteredOutByTags( Taggable taggable ) {
         return !filter.isEmpty()
-                && !taggable.isTaggedWith( filter );
+                && !isTaggedWith( Matcher.getInstance(), taggable, filter );
     }
 
     private void italicizeIfEntityType( Component component, ModelObject mo ) {

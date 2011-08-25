@@ -23,13 +23,25 @@ public class TestParticipantPage extends AbstractChannelsTest {
     @Test
     public void testPlanner() {
         login( "denis" );
-        assertRendered( "participants", AllGuidelines.class );
+        assertErrorRendering( "participants", HttpServletResponse.SC_FORBIDDEN );
+    }
+
+    @Test
+    public void testPlanner2() {
+        login( "denis" );
+        assertRendered( "participants?plan=mindalliance.com/channels/plans/railsec&v=1", AllGuidelines.class );
     }
 
     @Test
     public void testNormal() {
         associate( "guest", "mindalliance.com/channels/plans/railsec", "Joseph Neumann" );
-        assertRendered( "participants", GuidelinesPage.class );
+        assertErrorRendering( "participants", HttpServletResponse.SC_FORBIDDEN );
+    }
+
+    @Test
+    public void testNormal2() {
+        associate( "guest", "mindalliance.com/channels/plans/railsec", "Joseph Neumann" );
+        assertRendered( "participants?plan=mindalliance.com/channels/plans/railsec&v=1", GuidelinesPage.class );
     }
 
     @Test

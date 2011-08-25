@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.nlp.Matcher;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -37,10 +36,6 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
     private List<Tag> tags = new ArrayList<Tag>();
 
     /**
-     * Time the object was last modified. Set by aspect.
-     */
-    // private Date lastModified;
-    /**
      * List of waived issue detections (issue detector class simple names)
      */
     private List<String> waivedIssueDetections = new ArrayList<String>();
@@ -67,13 +62,10 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
      * @return a boolean
      */
     public static boolean areEqualOrNull( ModelObject modelObject, ModelObject other ) {
-        return ( modelObject == null && other == null )
+        return modelObject == null && other == null
                 || ( modelObject != null && other != null && modelObject.equals( other ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getTypeName() {
         return getClass().getSimpleName().toLowerCase();
     }
@@ -101,9 +93,6 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getName() {
         return name;
     }
@@ -130,9 +119,6 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
         description = val == null ? "" : val;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public ModelObject getModelObject() {
         return this;
     }
@@ -152,39 +138,6 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
 
     public String getTagsAsString() {
         return Tag.tagsToString( tags );
-    }
-
-    @Override
-    // There is no tag from s such that there is no tag in tag that matches it
-    // (all tags from s match at least of this mo's tags)
-    public boolean isTaggedWith( String s ) {
-        List<Tag> otherTags = Tag.tagsFromString( s );
-        final Matcher matcher = Matcher.getInstance();
-        return !CollectionUtils.exists( otherTags,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( final Object other ) {
-                        return !CollectionUtils.exists( getTags(),
-                                new Predicate() {
-                                    @Override
-                                    public boolean evaluate( Object tag ) {
-                                        return matcher.matches( (Tag) other, (Tag) tag );
-                                    }
-                                } );
-                    }
-                } );
-    }
-
-    @Override
-    public boolean isTaggedWith( final Tag tag ) {
-        final Matcher matcher = Matcher.getInstance();
-        return CollectionUtils.exists( getTags(),
-                                new Predicate() {
-                                    @Override
-                                    public boolean evaluate( Object object ) {
-                                        return matcher.matches( (Tag) object, tag );
-                                    }
-                                } );
     }
 
     public void addTag( String s ) {
@@ -222,9 +175,6 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
 
     //=============================
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals( Object obj ) {
         return this == obj
@@ -233,9 +183,6 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
                 && id == ( (ModelObject) obj ).getId();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return Long.valueOf( id ).hashCode();
@@ -250,9 +197,6 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
         return super.hashCode();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return getName();

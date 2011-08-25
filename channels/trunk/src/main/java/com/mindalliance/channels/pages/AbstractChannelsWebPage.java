@@ -455,8 +455,9 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     }
 
     public final QueryService getQueryService() {
-        if ( queryService == null )
+        if ( queryService == null ) {
             queryService = getQueryService( plan );
+        }
         return queryService;
     }
 

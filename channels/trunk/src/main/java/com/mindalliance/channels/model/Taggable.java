@@ -33,22 +33,6 @@ public interface Taggable extends Identifiable {
     void addTags( String s );
 
     /**
-     * Whether this has all tags from a string.
-     *
-     * @param s a string
-     * @return a boolean
-     */
-    boolean isTaggedWith( String s );
-
-    /**
-     * Whether this has a tag.
-     *
-     * @param tag a tag
-     * @return a boolean
-     */
-    boolean isTaggedWith( Tag tag );
-
-    /**
      * Add a tag.
      *
      * @param tag a tag

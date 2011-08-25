@@ -8,6 +8,7 @@ import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
 import com.mindalliance.channels.model.Role;
 import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.components.segment.ExpandedPartPanel;
 import org.apache.wicket.model.Model;
 import org.junit.Test;
@@ -45,7 +46,8 @@ public class TestPartPanel extends AbstractChannelsTest {
                 part = (Part) n;
         }
 
-        panel = new ExpandedPartPanel( "id", new Model<Part>( part ), new HashSet<Long>(), null );
+        PlanPage planPage = new PlanPage( segment, part );
+        panel = new ExpandedPartPanel( "id", new Model<Part>( part ), new HashSet<Long>(), planPage );
         tester.startComponent( panel );
     }
 

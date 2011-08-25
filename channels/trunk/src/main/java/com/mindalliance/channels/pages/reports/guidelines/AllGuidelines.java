@@ -48,7 +48,6 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
     protected void initComponents( PlanService service, final Plan plan ) {
         List<Plan> otherPlans = findOtherPlans( plan );
         List<User> otherPlanners = findOtherPlanners( getPlanManager().getUserService(), plan );
-        addChannelsLogo();
         add(
             new Label( "userName", user.getUsername() ),
             new Label( "planName", plan.toString() ),
