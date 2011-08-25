@@ -12,5 +12,5 @@ Coding standards
 * Checkstyle
 
  All code of the projects is validated using {{{http://checkstyle.sourceforge.net/}Checkstyle}}.
- The {{{checkstyle.html}style report}} is generated using this {{{./checkstyle.xml}configuration file}}.
+ The {{{./checkstyle.html}style report}} is generated using this {{{./checkstyle.xml}configuration file}}.
  It is a good idea to configure your IDE to validate your code automatically as you go along.

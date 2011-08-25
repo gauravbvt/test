@@ -1,8 +1,11 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.export.xml.XmlStreamer.Context;
 import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.ModelEntity.Kind;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.util.ChannelsUtils;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -11,12 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Plan event converter.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: May 5, 2009
- * Time: 10:01:12 AM
+ * Plan event converter. Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary and Confidential.
+ * User: jf Date: May 5, 2009 Time: 10:01:12 AM
  */
 public class EventConverter extends EntityConverter {
 
@@ -25,31 +24,23 @@ public class EventConverter extends EntityConverter {
      */
     private static final Logger LOG = LoggerFactory.getLogger( EventConverter.class );
 
-
-    public EventConverter( XmlStreamer.Context context ) {
+    public EventConverter( Context context ) {
         super( context );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean canConvert( Class aClass ) {
-        return Event.class.isAssignableFrom( aClass );
+    @Override
+    public boolean canConvert( Class type ) {
+        return Event.class.isAssignableFrom( type );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Class<? extends ModelEntity> getEntityClass() {
         return Event.class;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected void writeSpecifics( ModelEntity entity,
-                                   HierarchicalStreamWriter writer,
-                                   MarshallingContext context ) {
+    @Override
+    protected void writeSpecifics(
+            ModelEntity entity, HierarchicalStreamWriter writer, MarshallingContext context ) {
         Event event = (Event) entity;
         Place scope = event.getScope();
         if ( scope != null && !scope.getName().trim().isEmpty() ) {
@@ -61,37 +52,28 @@ public class EventConverter extends EntityConverter {
         }
         if ( event.isSelfTerminating() ) {
             writer.startNode( "self-terminating" );
-            writer.setValue( "" + event.isSelfTerminating() );
+            writer.setValue( String.valueOf( event.isSelfTerminating() ) );
             writer.endNode();
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected void setSpecific( ModelEntity entity,
-                                String nodeName,
-                                HierarchicalStreamReader reader,
-                                UnmarshallingContext context ) {
+    @Override
+    protected void setSpecific(
+            ModelEntity entity, String nodeName, HierarchicalStreamReader reader, UnmarshallingContext context ) {
+
         Event event = (Event) entity;
-        if ( nodeName.equals( "scope" ) ) {
-            String id = reader.getAttribute( "id");
+        event.setLowerCasedName( ChannelsUtils.smartUncapitalize( event.getName() ) );
+        if ( "scope".equals( nodeName ) ) {
+            String id = reader.getAttribute( "id" );
             String kindName = reader.getAttribute( "kind" );
-            boolean isType = kindName != null && kindName.equals( ModelEntity.Kind.Type.name() );
             String name = reader.getValue();
-            if ( isType ) {
-                event.setScope( findOrCreateType( Place.class, name, id ) );
-            } else {
-                event.setScope( findOrCreate( Place.class, name, id ) );
-            }
-        } else if ( nodeName.equals( "self-terminating" ) ) {
-            event.setSelfTerminating( reader.getValue().equals( "true" ) );
-        } else {
+            event.setScope( kindName != null && kindName.equals( Kind.Type.name() ) ?
+                            findOrCreateType( Place.class, name, id ) :
+                            findOrCreate( Place.class, name, id ) );
+
+        } else if ( "self-terminating".equals( nodeName ) )
+            event.setSelfTerminating( "true".equals( reader.getValue() ) );
+        else
             LOG.warn( "Unknown element " + nodeName );
-        }
     }
-
-
-
-
 }

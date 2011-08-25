@@ -10,6 +10,7 @@ import com.mindalliance.channels.model.Identifiable;
 import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
+import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -259,6 +260,7 @@ public class EventListPanel extends AbstractCommandablePanel {
          */
         public void setName( String value ) {
             event.setName( value );
+            event.setLowerCasedName( ChannelsUtils.smartUncapitalize( value ) );
         }
 
         /**

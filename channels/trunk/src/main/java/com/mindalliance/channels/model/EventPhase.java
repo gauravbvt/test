@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -70,7 +69,7 @@ public class EventPhase implements Serializable, Comparable<EventPhase> {
         sb.append( ' ' );
         sb.append( phase.getPreposition() );
         sb.append( ' ' );
-        sb.append( ChannelsUtils.smartUncapitalize( event.getName() ) );
+        sb.append( event.getLowerCasedName() );
         if ( eventLevel != null ) {
             sb.append( " (" );
             sb.append( eventLevel.getLabel() );

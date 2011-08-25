@@ -16,6 +16,7 @@
     </module>
     <module name="Translation"/>
     <module name="TreeWalker">
+        <property name="cacheFile" value="target/checkCache"/>
         <property name="tabWidth" value="4"/>
 
         <module name="AbstractClassName"/>

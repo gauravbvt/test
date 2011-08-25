@@ -1,6 +1,8 @@
 package com.mindalliance.channels.export.xml;
 
+import com.mindalliance.channels.export.xml.XmlStreamer.Context;
 import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.model.ModelEntity.Kind;
 import com.mindalliance.channels.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -12,33 +14,26 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- * Abstract XStream converter for Entities.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jan 16, 2009
- * Time: 4:10:27 PM
+ * Abstract XStream converter for Entities. Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary
+ * and Confidential. User: jf Date: Jan 16, 2009 Time: 4:10:27 PM
  */
 public abstract class EntityConverter extends AbstractChannelsConverter {
 
     /**
      * Class logger.
      */
-    public static final Logger LOG = LoggerFactory.getLogger( XmlStreamer.class );
+    private static final Logger LOG = LoggerFactory.getLogger( XmlStreamer.class );
 
-    protected EntityConverter( XmlStreamer.Context context ) {
+    protected EntityConverter( Context context ) {
         super( context );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void marshal( Object object,
-                         HierarchicalStreamWriter writer,
-                         MarshallingContext context ) {
+    @Override
+    public void marshal(
+            Object object, HierarchicalStreamWriter writer, MarshallingContext context ) {
         ModelEntity entity = (ModelEntity) object;
         writer.addAttribute( "id", String.valueOf( entity.getId() ) );
-        assert ( entity.getKind() != null );
+        assert entity.getKind() != null;
         writer.addAttribute( "kind", entity.getKind().name() );
         String name = entity.getName() == null ? "" : entity.getName();
         writer.addAttribute( "name", name );
@@ -48,7 +43,7 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
         writeTags( writer, entity );
         for ( ModelEntity type : entity.getTypes() ) {
             writer.startNode( "type" );
-            writer.addAttribute( "id", type.getId() + "" );
+            writer.addAttribute( "id", String.valueOf( type.getId() ) );
             writer.addAttribute( "kind", type.getKind().name() );
             writer.setValue( type.getName() );
             writer.endNode();
@@ -63,20 +58,17 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
     /**
      * Write specific properties to xml stream.
      *
-     * @param entity  the entity  being converted
-     * @param writer  the xml stream
+     * @param entity the entity  being converted
+     * @param writer the xml stream
      * @param context a context
      */
-    abstract protected void writeSpecifics( ModelEntity entity,
-                                            HierarchicalStreamWriter writer,
-                                            MarshallingContext context );
+    protected abstract void writeSpecifics(
+            ModelEntity entity, HierarchicalStreamWriter writer, MarshallingContext context );
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
-    public Object unmarshal( HierarchicalStreamReader reader,
-                             UnmarshallingContext context ) {
+    public Object unmarshal(
+            HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Map<Long, Long> idMap = getIdMap( context );
         boolean importingPlan = isImportingPlan( context );
         String name = reader.getAttribute( "name" );
@@ -87,38 +79,28 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
             kind = ModelEntity.defaultKindFor( getEntityClass() ).name();
         }
         // The default kind is Actual
-        boolean isType = ( kind != null && ModelEntity.Kind.valueOf( kind ) == ModelEntity.Kind.Type );
-        ModelEntity entity = getEntity(
-                getEntityClass(),
-                name,
-                id,
-                isType,
-                importingPlan,
-                idMap );
+        boolean isType = kind != null && Kind.valueOf( kind ) == Kind.Type;
+        ModelEntity entity = getEntity( getEntityClass(), name, id, isType, importingPlan, idMap );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
-            if ( nodeName.equals( "description" ) ) {
+            if ( "description".equals( nodeName ) ) {
                 entity.setDescription( reader.getValue() );
-            } else if ( nodeName.equals( "tags") ) {
+            } else if ( "tags".equals( nodeName ) ) {
                 entity.addTags( reader.getValue() );
-            } else if ( nodeName.equals( "tag" ) || nodeName.equals( "type" ) ) {  // todo obsolete "tag" as of Jan. 27, 2011
+            } else if ( "tag".equals( nodeName )
+                        || "type".equals( nodeName ) ) {  // todo obsolete "tag" as of Jan. 27, 2011
                 Long typeId = Long.parseLong( reader.getAttribute( "id" ) );
                 String typeName = reader.getValue();
-                ModelEntity type = getEntity(
-                        getEntityClass(),
-                        typeName,
-                        typeId,
-                        // always a type
-                        true,
-                        importingPlan,
-                        idMap );
+                ModelEntity type = getEntity( getEntityClass(), typeName, typeId,
+                                              // always a type
+                                              true, importingPlan, idMap );
                 entity.addType( type );
-            } else if ( nodeName.equals( "detection-waivers" ) ) {
+            } else if ( "detection-waivers".equals( nodeName ) ) {
                 importDetectionWaivers( entity, reader );
-            } else if ( nodeName.equals( "attachments" ) ) {
+            } else if ( "attachments".equals( nodeName ) ) {
                 importAttachments( entity, reader );
-            } else if ( nodeName.equals( "issue" ) ) {
+            } else if ( "issue".equals( nodeName ) ) {
                 context.convertAnother( entity, UserIssue.class );
             } else {
                 setSpecific( entity, nodeName, reader, context );
@@ -133,21 +115,16 @@ public abstract class EntityConverter extends AbstractChannelsConverter {
      *
      * @return a class
      */
-    abstract protected Class<? extends ModelEntity> getEntityClass();
+    protected abstract Class<? extends ModelEntity> getEntityClass();
 
     /**
      * Set an entity model object's specific property from xml.
      *
-     * @param entity   the entity
+     * @param entity the entity
      * @param nodeName the name of the property
-     * @param reader   the xml stream
-     * @param context  a context
+     * @param reader the xml stream
+     * @param context a context
      */
-    abstract protected void setSpecific(
-            ModelEntity entity,
-            String nodeName,
-            HierarchicalStreamReader reader,
-            UnmarshallingContext context );
-
-
+    protected abstract void setSpecific(
+            ModelEntity entity, String nodeName, HierarchicalStreamReader reader, UnmarshallingContext context );
 }

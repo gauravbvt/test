@@ -1,7 +1,6 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -558,7 +557,7 @@ public class Segment extends ModelObject {
     public String initiationCause( Part part ) {
         Event initiator = part.getInitiatedEvent();
         if ( getEvent().equals( initiator ) && getPhase().isConcurrent() )
-            return "causes event \"" + getEvent().getName().toLowerCase() + '\"';
+            return "causes event \"" + getEvent().getLowerCasedName() + '\"';
         else {
             Segment partSegment = part.getSegment();
             return part.isTerminatesEventPhase()
@@ -592,7 +591,7 @@ public class Segment extends ModelObject {
         Event initiator = part.getInitiatedEvent();
         if ( equals( part.getSegment() ) && part.isTerminatesEventPhase() ) {
             return getPhase().isPreEvent()
-                    ? "can prevent " + ChannelsUtils.smartUncapitalize( getEvent().getName() )
+                    ? "can prevent " + getEvent().getLowerCasedName()
                     : "terminates " + getPhaseEventTitle().toLowerCase();
         } else if ( getEvent().equals( initiator ) && getPhase().isPreEvent() ) {
             return "causes event \"" + initiator.getName().toLowerCase() + '\"';
