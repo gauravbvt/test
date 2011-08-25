@@ -48,9 +48,13 @@ public class MAV0078_pasteTaskUnderAction
 				for (int i = 0; i <= 50; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(task);
-				// select category
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
-				GlobalVariables.oElement.sendKeys("Audit");
+				// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+//				// select category
+//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
+//				GlobalVariables.oElement.sendKeys("Audit");
 		    	// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -157,7 +157,7 @@ public class MAC0029_UndoTransferJobs
 					Thread.currentThread();
 					Thread.sleep(2000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
-					GlobalVariables .oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
+					GlobalVariables .oElement.sendKeys(GlobalVariables.testData.get("Agent"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
@@ -192,14 +192,14 @@ public class MAC0029_UndoTransferJobs
 				    Thread.sleep(3000);
 					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[12]/td/span/div/div[2]/div/table/tbody/tr/td[2]/span/a/span"));
-					if(GlobalVariables.oElement.getText().equals("Agent 1")){
+					if(GlobalVariables.oElement.getText().equals("Agent")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Agent 1' "+" Actual "+GlobalVariables.oElement.getText();
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Agent' "+" Actual "+GlobalVariables.oElement.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

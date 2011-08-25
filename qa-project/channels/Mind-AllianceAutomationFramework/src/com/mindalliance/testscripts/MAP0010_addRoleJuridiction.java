@@ -135,7 +135,7 @@ public class MAP0010_addRoleJuridiction
 					// Enter  Role, Title, Jurisdiction and supervisor for an agent inside 'Job' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Details Entered";
-					String Agent="Agent 1";
+					String Agent="Agent";
 					if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName))	;
 					GlobalVariables.oElement.click();
@@ -183,7 +183,7 @@ public class MAP0010_addRoleJuridiction
 				    Thread.sleep(3000);
 					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
 				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(Agent));
-					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Agent 1")))
+					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Agent")))
 					{
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

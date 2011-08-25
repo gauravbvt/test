@@ -111,7 +111,7 @@ public class MAC0032_RedoRemoveThisSegment {
 				GlobalVariables.bIsSuccess = Boolean.FALSE;
 				for(WebElement option : options) {
 					GlobalVariables.sStrCheck=option.getText();
-					if(option.getText().equals("")){
+					if(option.getText().equals("Untitled")){
 						GlobalVariables.bIsSuccess = Boolean.TRUE;
 						break;
 					}
@@ -159,7 +159,7 @@ public class MAC0032_RedoRemoveThisSegment {
 				GlobalVariables.bIsSuccess = Boolean.FALSE;
 				for(WebElement option : options){
 					GlobalVariables.sStrCheck=option.getText();
-					if(option.getText().equals("")){
+					if(option.getText().equals("Untitled")){
 						GlobalVariables.bIsSuccess = Boolean.TRUE;
 						// WebElement Synchronization
 						Thread.currentThread();
