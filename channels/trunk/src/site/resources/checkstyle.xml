@@ -109,7 +109,6 @@
         <module name="LocalVariableName"/>
         <module name="MagicNumber">
             <property name="severity" value="warning"/>
-            <property name="ignoreHashCodeMethod" value="true"/>
         </module>
         <module name="MemberName"/>
         <module name="MethodLength"/>
