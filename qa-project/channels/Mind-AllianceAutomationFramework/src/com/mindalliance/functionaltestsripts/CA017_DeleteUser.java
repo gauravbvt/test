@@ -37,6 +37,7 @@ public class CA017_DeleteUser
 				// Enter User ID
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="User Created";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// WebElement Synchronization

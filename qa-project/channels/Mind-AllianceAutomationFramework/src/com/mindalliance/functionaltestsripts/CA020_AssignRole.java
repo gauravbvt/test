@@ -39,6 +39,7 @@ public class CA020_AssignRole
 				// Create User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="User Created";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// WebElement Synchronization
@@ -69,6 +70,7 @@ public class CA020_AssignRole
 					tds = tr.findElements(By.tagName("td"));
 					for(WebElement td: tds) {
 						if(td.getText().contains(GlobalVariables.testData.get("user"))){
+							GlobalVariables.oDriver.findElement(By.name("item:"+i+":group:password")).clear();
 							GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:"+i+":group:password"));
 							GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 							// WebElement Synchronization
@@ -105,8 +107,10 @@ public class CA020_AssignRole
 				//Assertion : Verify that newly created user log into the system & 'Channels Administration' Link is accessible to the user
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="Login with newly created user";
+			    GlobalVariables.oDriver.findElement(By.name("j_username")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
+			    GlobalVariables.oDriver.findElement(By.name("j_password")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 			    // Write Results
@@ -163,8 +167,10 @@ public class CA020_AssignRole
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Delete Created User
+				GlobalVariables.oDriver.findElement(By.name("j_username")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sUsername"));
+			    GlobalVariables.oDriver.findElement(By.name("j_password")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sPassword"));
 		    	// WebElement Synchronization

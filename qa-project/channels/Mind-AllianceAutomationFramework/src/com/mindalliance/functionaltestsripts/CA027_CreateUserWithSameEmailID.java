@@ -39,6 +39,7 @@ public class CA027_CreateUserWithSameEmailID
 				//Create User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="First User Created";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// Write Results
@@ -89,6 +90,7 @@ public class CA027_CreateUserWithSameEmailID
 				//Create User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Second User Created";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 				// Write Results

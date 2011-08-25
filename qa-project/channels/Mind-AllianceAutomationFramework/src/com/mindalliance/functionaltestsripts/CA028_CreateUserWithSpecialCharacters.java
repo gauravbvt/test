@@ -39,7 +39,9 @@ public class CA028_CreateUserWithSpecialCharacters
 				// Create User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="User Created with Special Characters";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));			GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID"))).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathInputUserID")));			
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);								

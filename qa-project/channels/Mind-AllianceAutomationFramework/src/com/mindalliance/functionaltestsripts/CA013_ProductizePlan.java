@@ -39,8 +39,10 @@ public class CA013_ProductizePlan
 				// Enter Plan URI
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Plan URI & Owner Name Entered";
+				GlobalVariables.oDriver.findElement(By.name("newPlanUri")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
+				GlobalVariables.oDriver.findElement(By.name("newPlanClient")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 				// Write Results

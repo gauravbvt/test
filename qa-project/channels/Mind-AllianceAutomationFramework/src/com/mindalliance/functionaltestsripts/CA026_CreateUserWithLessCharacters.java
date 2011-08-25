@@ -39,6 +39,7 @@ public class CA026_CreateUserWithLessCharacters
 				// Enter the details: newUserId
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "User Id Entered with less than 5 Characters";
+				GlobalVariables.oDriver.findElement(By.name("new")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("new"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 				// Write Results
@@ -119,8 +120,10 @@ public class CA026_CreateUserWithLessCharacters
 				// Enter User name and password
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="Login with access privilege 'Planner'";
+			    GlobalVariables.oDriver.findElement(By.name("j_username")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
+			    GlobalVariables.oDriver.findElement(By.name("j_password")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 			    // Write Results
@@ -138,7 +141,7 @@ public class CA026_CreateUserWithLessCharacters
 			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();
 			    // WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(2000);
+			    Thread.sleep(3000);
 			    // Assertion : Verify that Newly created user is able to login to channels
 			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("title-switchplan"));
 			    if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Full Name"))) {
@@ -156,7 +159,7 @@ public class CA026_CreateUserWithLessCharacters
 			    }
 			    // WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(2000);
+			    Thread.sleep(3000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -170,8 +173,10 @@ public class CA026_CreateUserWithLessCharacters
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Delete Created User
+				GlobalVariables.oDriver.findElement(By.name("j_username")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sUsername"));
+			    GlobalVariables.oDriver.findElement(By.name("j_password")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sPassword"));
 		    	// WebElement Synchronization

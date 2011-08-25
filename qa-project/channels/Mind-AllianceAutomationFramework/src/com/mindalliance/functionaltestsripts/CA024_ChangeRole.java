@@ -41,8 +41,10 @@ public class CA024_ChangeRole
 				// Enter the Login details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "(New Plan URI) and (owned by) entered";
+				GlobalVariables.oDriver.findElement(By.name("newPlanUri")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
+				GlobalVariables.oDriver.findElement(By.name("newPlanClient")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanClient"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
 				// Write Results
@@ -99,6 +101,7 @@ public class CA024_ChangeRole
 					tds = tr.findElements(By.tagName("td"));
 					for(WebElement td: tds) {
 						if(td.getText().contains(GlobalVariables.testData.get("user"))){
+							GlobalVariables.oDriver.findElement(By.name("item:"+i+":group:password")).clear();
 							GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:"+i+":group:password"));
 							GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 							// WebElement Synchronization
@@ -131,6 +134,7 @@ public class CA024_ChangeRole
 					tds = tr.findElements(By.tagName("td"));
 					for(WebElement td: tds) {
 						if(td.getText().contains(GlobalVariables.testData.get("user"))){
+							GlobalVariables.oDriver.findElement(By.name("item:"+i+":group:password")).clear();
 							GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:"+i+":group:password"));
 							GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 							// WebElement Synchronization
@@ -168,8 +172,10 @@ public class CA024_ChangeRole
 				// Enter User name and password
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="Login with access privilege 'Planner'";
+			    GlobalVariables.oDriver.findElement(By.name("j_username")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
+			    GlobalVariables.oDriver.findElement(By.name("j_password")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
 			    // Write Results
@@ -234,8 +240,10 @@ public class CA024_ChangeRole
 				Thread.sleep(2000);
 				// Deleted Newly created plan & user
 				// Login as an Administrator
+				GlobalVariables.oDriver.findElement(By.name("j_username")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sUsername"));
+			    GlobalVariables.oDriver.findElement(By.name("j_password")).clear();
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
 			    GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sPassword"));
 		    	// WebElement Synchronization
