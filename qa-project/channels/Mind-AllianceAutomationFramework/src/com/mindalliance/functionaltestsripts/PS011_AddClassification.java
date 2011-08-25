@@ -2,6 +2,7 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -12,6 +13,7 @@ public class PS011_AddClassification
 {
 	public PS011_AddClassification() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "PS011_AddClassification";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -30,7 +32,7 @@ public class PS011_AddClassification
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				//About Plan Segment Window Opened
 				GlobalVariables.iStepNo++ ;
@@ -42,7 +44,7 @@ public class PS011_AddClassification
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on 'Secrecy Classification' Option under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
@@ -54,21 +56,17 @@ public class PS011_AddClassification
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 
 				// Add Classification 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Classification Added";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:classification-systems-container:new-classification-system-container:new-classification-system")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:classification-systems-container:new-classification-system-container:new-classification-system"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Secrecy Classifications"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				//Assertion : Verify that Secrecy Classification Added Successfully
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("secrecyClassification")))
@@ -102,11 +100,11 @@ public class PS011_AddClassification
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				GlobalVariables.oDriver.quit();
-			      
+				Thread.sleep(2000);
+				  
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

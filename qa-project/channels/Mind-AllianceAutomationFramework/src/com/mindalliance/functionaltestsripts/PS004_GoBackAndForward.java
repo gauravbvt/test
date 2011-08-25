@@ -11,6 +11,7 @@ public class PS004_GoBackAndForward
 {
 	public PS004_GoBackAndForward() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "PS004_GoBackAndForward";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -29,7 +30,7 @@ public class PS004_GoBackAndForward
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 				//Click on 'About plan' option under 'Show' popup menu
 				GlobalVariables.iStepNo++ ;
@@ -41,7 +42,7 @@ public class PS004_GoBackAndForward
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 				// Click on 'Go Back' icon
 				GlobalVariables.iStepNo++ ;
@@ -53,7 +54,7 @@ public class PS004_GoBackAndForward
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 				// Click on 'Go Forward' icon
 				GlobalVariables.iStepNo++ ;
@@ -61,7 +62,7 @@ public class PS004_GoBackAndForward
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathGoForward"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				//Assertion : Verify that 'About plan' window gets displayed
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionDetails")));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details")))
@@ -74,13 +75,13 @@ public class PS004_GoBackAndForward
 				else
 				{
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -92,11 +93,11 @@ public class PS004_GoBackAndForward
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				GlobalVariables.oDriver.quit();
+				Thread.sleep(2000);
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

@@ -12,13 +12,14 @@ public class CL003_LoginValidUserName
 {
 	public CL003_LoginValidUserName(){
 		  try {
+			  
 			  GlobalVariables.sTestCaseId = "CL003_LoginValidUserName";
 			  GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			  LogFunctions.writeLogs(GlobalVariables.sDescription);
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Login Page
 		      GlobalVariables.iStepNo=0;
@@ -35,7 +36,7 @@ public class CL003_LoginValidUserName
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Enter User name and password
 		      GlobalVariables.iStepNo++;
@@ -50,7 +51,7 @@ public class CL003_LoginValidUserName
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Click on Sign In button
 		      GlobalVariables.iStepNo++ ;
@@ -73,20 +74,20 @@ public class CL003_LoginValidUserName
 		      }	
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Call Logout
 		      GlobalVariables.iStepNo++ ;
 		      GlobalVariables.sDescription = "Logout is successful";
 		      GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
+		      GlobalVariables.oDriver.quit();
 		      // Write Results
 		      LogFunctions.writeLogs(GlobalVariables.sDescription);
 		      LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 		    		  GlobalVariables.sBlank, GlobalVariables.sBlank);
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
-		      GlobalVariables.oDriver.quit();
+		      Thread.sleep(2000);
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 		      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

@@ -12,13 +12,14 @@ public class CL006_InvalidUserName
 {
 	public CL006_InvalidUserName(){
 		  try {
+			  
 			  GlobalVariables.sTestCaseId = "CL006_InvalidUserName";
 			  GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			  LogFunctions.writeLogs(GlobalVariables.sDescription);
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Login Page
 		      GlobalVariables.iStepNo=0;
@@ -35,22 +36,22 @@ public class CL006_InvalidUserName
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Enter User name and password
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Username and Password";
 		      GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
-		      GlobalVariables.oElement.sendKeys("Priyanka");
+		      GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("user"));
 		      GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
-		      GlobalVariables.oElement.sendKeys((String)GlobalVariables.login.get("sPassword"));
+		      GlobalVariables.oElement.sendKeys(GlobalVariables.login.get("sPassword"));
 		      // Write Results
 	    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 	    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Click on Sign In button
 		      GlobalVariables.iStepNo++ ;
@@ -63,7 +64,7 @@ public class CL006_InvalidUserName
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Assertion: Verify that new page is displayed with title as 'Channels Sign In failed!'
 		      GlobalVariables.iStepNo++ ;
@@ -83,7 +84,7 @@ public class CL006_InvalidUserName
 		      }	
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      GlobalVariables.oDriver.quit();
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

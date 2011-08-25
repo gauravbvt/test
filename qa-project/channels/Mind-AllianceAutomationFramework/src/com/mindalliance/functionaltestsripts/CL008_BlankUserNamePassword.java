@@ -14,13 +14,14 @@ public class CL008_BlankUserNamePassword
 	public CL008_BlankUserNamePassword(){
 		
 		  try {
+			  
 			  GlobalVariables.sTestCaseId = "CL008_BlankUserNamePassword";
 			  GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			  LogFunctions.writeLogs(GlobalVariables.sDescription);
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Login Page
 		      GlobalVariables.iStepNo=0;
@@ -37,7 +38,7 @@ public class CL008_BlankUserNamePassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Enter User name and password
 		      GlobalVariables.iStepNo++;
@@ -52,7 +53,7 @@ public class CL008_BlankUserNamePassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Click on Sign In button
 		      GlobalVariables.iStepNo++ ;
@@ -65,7 +66,7 @@ public class CL008_BlankUserNamePassword
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Assertion: Verify that new page is displayed with title as 'Channels Sign In failed!'
 		      GlobalVariables.iStepNo++ ;
@@ -85,7 +86,7 @@ public class CL008_BlankUserNamePassword
 		      }	
 		      // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      GlobalVariables.oDriver.quit();
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

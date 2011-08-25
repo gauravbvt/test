@@ -11,6 +11,7 @@ public class PS002_ActionOptions
 {
 	public PS002_ActionOptions() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "PS002_ActionOptions";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -29,7 +30,7 @@ public class PS002_ActionOptions
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 				// Click on 'show' Link
 				GlobalVariables.iStepNo++ ;
@@ -41,8 +42,6 @@ public class PS002_ActionOptions
 				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionAddNewTask"))).getText().equals(GlobalVariables.viewElements.get("addNewTask")) &&
 				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionAddNewIssue"))).getText().equals(GlobalVariables.viewElements.get("addNewIssue")) &&
 				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionAddNewSegment"))).getText().equals(GlobalVariables.viewElements.get("addNewSegment")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionRemoveSegment"))).getText().equals(GlobalVariables.viewElements.get("removeThisSegment")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionMoveTaskToSegment"))).getText().equals(GlobalVariables.viewElements.get("moveTaskToSegment")) &&
 				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionSignOut"))).getText().contains(GlobalVariables.viewElements.get("signOut"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -57,7 +56,7 @@ public class PS002_ActionOptions
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -69,11 +68,11 @@ public class PS002_ActionOptions
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				GlobalVariables.oDriver.quit();
+				Thread.sleep(2000);
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

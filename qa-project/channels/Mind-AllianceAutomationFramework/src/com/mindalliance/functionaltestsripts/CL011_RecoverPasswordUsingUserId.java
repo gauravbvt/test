@@ -14,6 +14,7 @@ public class CL011_RecoverPasswordUsingUserId
 {
 	public CL011_RecoverPasswordUsingUserId(){
 		  try {
+			  
 			  GlobalVariables.sTestCaseId = "CL011_RecoverPasswordUsingUserId";
 			  GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			  LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -23,6 +24,7 @@ public class CL011_RecoverPasswordUsingUserId
 		      Thread.sleep(2000);
 		      
 		      // Login Page
+		      GlobalVariables.iStepNo=0;
 	    	  GlobalVariables.iStepNo++;
 	    	  GlobalVariables.sDescription="Login Page";
 	    	  if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))
@@ -212,14 +214,13 @@ public class CL011_RecoverPasswordUsingUserId
 			  // WebElement Synchronization
 			  Thread.currentThread();
 			  Thread.sleep(2000);
+			  // Logout from Admin Page
 			  GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
+			  GlobalVariables.oDriver.quit();
 			  // WebElement Synchronization
 			  Thread.currentThread();
 			  Thread.sleep(2000);
 		     		      
-		      GlobalVariables.oDriver.quit();
-		      GlobalVariables.iStepNo=0;
-		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 		      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			

@@ -3,7 +3,6 @@ package com.mindalliance.functionaltestsripts;
 import org.openqa.selenium.By;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
@@ -20,7 +19,7 @@ public class CL010_ForgotUserIDPasswordLink
 			  System.out.println(GlobalVariables.sDescription);
 			  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Login Page
 		      GlobalVariables.iStepNo=0;
@@ -37,21 +36,25 @@ public class CL010_ForgotUserIDPasswordLink
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      // Click on Forgot UserId or Password Link
 		      GlobalVariables.iStepNo++;
 		      GlobalVariables.sDescription="Forgot UserId or Passowrd Link";
-		      GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/a")).click();
-		      // Assertion: 1. Verify that new page is displayed to user with title 'Channels New password request'
-		      if(GlobalVariables.oDriver.getTitle().equals("Channels - Sign in")){
+		      GlobalVariables.oDriver.findElement(By.linkText("Can't access your account?")).click();
+	    	  // WebElement Synchronization
+		      Thread.currentThread();
+		      Thread.sleep(2000);
+
+		      // Assertion: 1. Verify that new page is displayed to user with title 'Channels - Sign in'
+		      if(GlobalVariables.oDriver.getTitle().equals(GlobalVariables.viewElements.get("loginPageTitle"))){
 		    	  // Write Results
 		    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 		    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 		      }
-		      else{
-		    	  GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Channels - Sign in' "+" Actual "+GlobalVariables.oElement.getText();
+		      else {
+		    	  GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.viewElements.get("loginPageTitle") +"' Actual "+GlobalVariables.oElement.getText();
 		    	  // Write Results
 		    	  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 		    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -59,7 +62,7 @@ public class CL010_ForgotUserIDPasswordLink
 		      }	
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(3000);
+		      Thread.sleep(2000);
 		      
 		      GlobalVariables.oDriver.quit();
 		      
