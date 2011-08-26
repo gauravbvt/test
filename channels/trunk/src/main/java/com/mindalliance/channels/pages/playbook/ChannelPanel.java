@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;

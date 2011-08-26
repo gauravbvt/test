@@ -2,14 +2,14 @@
 // All rights reserved.
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.AdminPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.procedures.AssignmentReportPage;
 import com.mindalliance.channels.pages.procedures.ProceduresReportPage;
-import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.engine.query.Assignments;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.junit.Test;

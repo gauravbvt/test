@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.procedures;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
+import com.mindalliance.channels.core.attachments.AttachmentManager;
 import com.mindalliance.channels.imaging.ImagingService;
-import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.Commitment;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.query.Assignments;
-import com.mindalliance.channels.query.PlanService;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.engine.query.Assignments;
+import com.mindalliance.channels.engine.query.PlanService;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.model.ExternalFlow;
+import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;

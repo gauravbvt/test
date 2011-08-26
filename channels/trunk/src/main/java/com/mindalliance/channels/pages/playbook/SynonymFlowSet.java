@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.model.Attachment;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.model.Attachment;
+import com.mindalliance.channels.core.model.Connector;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.ExternalFlow;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.ResourceSpec;
+import com.mindalliance.channels.core.model.Specable;
 
 import java.io.Serializable;
 import java.util.ArrayList;

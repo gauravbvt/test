@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

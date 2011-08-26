@@ -1,18 +1,18 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.Tag;
-import com.mindalliance.channels.model.Taggable;
-import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.Tag;
+import com.mindalliance.channels.core.model.Taggable;
+import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.wicket.model.IModel;
 

@@ -1,10 +1,10 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.analysis.graph.HierarchyRelationship;
+import com.mindalliance.channels.engine.analysis.graph.HierarchyRelationship;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
-import com.mindalliance.channels.model.Hierarchical;
+import com.mindalliance.channels.core.model.Hierarchical;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.jgrapht.DirectedGraph;

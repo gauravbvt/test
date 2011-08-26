@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Classification;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;

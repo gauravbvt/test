@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Classification;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.commons.collections.CollectionUtils;

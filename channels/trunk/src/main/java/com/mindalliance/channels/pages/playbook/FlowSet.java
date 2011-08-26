@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.ResourceSpec;
+import com.mindalliance.channels.core.model.Specable;
 
 import java.util.ArrayList;
 import java.util.Collection;

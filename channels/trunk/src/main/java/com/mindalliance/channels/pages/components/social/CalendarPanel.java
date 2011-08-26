@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.User;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;

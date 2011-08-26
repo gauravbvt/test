@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.model.Availability;
-import com.mindalliance.channels.model.Available;
-import com.mindalliance.channels.model.TimePeriod;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.model.Availability;
+import com.mindalliance.channels.core.model.Available;
+import com.mindalliance.channels.core.model.TimePeriod;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.util.ChannelsUtils;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;

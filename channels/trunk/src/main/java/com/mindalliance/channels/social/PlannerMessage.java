@@ -1,11 +1,11 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.command.ModelObjectRef;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.odb.PersistentObject;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.engine.command.ModelObjectRef;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.odb.PersistentObject;
+import com.mindalliance.channels.engine.query.QueryService;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

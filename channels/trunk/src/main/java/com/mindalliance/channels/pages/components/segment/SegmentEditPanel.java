@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.segment.menus.SegmentActionsMenuPanel;

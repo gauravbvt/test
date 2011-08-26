@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.plan.menus;
 
-import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;

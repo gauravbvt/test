@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.dao.UserInfo;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Channelable;
-import com.mindalliance.channels.model.Participation;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserInfo;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Channelable;
+import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
-import com.mindalliance.channels.util.ChannelsUtils;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;

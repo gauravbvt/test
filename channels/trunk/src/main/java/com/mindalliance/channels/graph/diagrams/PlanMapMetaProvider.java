@@ -1,13 +1,13 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Segment;
 import org.apache.commons.lang.StringUtils;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;

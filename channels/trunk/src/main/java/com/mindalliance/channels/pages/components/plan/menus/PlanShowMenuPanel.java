@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.plan.menus;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.HelpPage;

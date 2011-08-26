@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.Connector;
+import com.mindalliance.channels.core.model.ExternalFlow;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import org.apache.commons.collections.Transformer;

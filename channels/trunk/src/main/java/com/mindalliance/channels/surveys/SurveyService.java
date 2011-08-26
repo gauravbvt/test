@@ -1,10 +1,10 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Plan;
 
 import java.util.List;
 

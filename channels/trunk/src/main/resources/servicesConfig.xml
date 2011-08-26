@@ -30,7 +30,7 @@
     </bean>
 
     <!-- =========================== External Services -->
-    <bean id="mailSender" class="com.mindalliance.channels.util.MailSenderProxy">
+    <bean id="mailSender" class="com.mindalliance.channels.core.util.MailSenderProxy">
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtps.auth">true</prop>
@@ -40,9 +40,9 @@
         </property>
     </bean>
 
-    <bean id="geoService" class="com.mindalliance.channels.geo.ServiceProxy">
+    <bean id="geoService" class="com.mindalliance.channels.engine.geo.ServiceProxy">
         <property name="actual">
-            <bean class="com.mindalliance.channels.geo.DefaultGeoService"/>
+            <bean class="com.mindalliance.channels.engine.geo.DefaultGeoService"/>
         </property>
     </bean>
 

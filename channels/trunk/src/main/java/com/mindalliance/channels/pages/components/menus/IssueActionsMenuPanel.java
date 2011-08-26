@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.commands.PasteAttachment;
-import com.mindalliance.channels.command.commands.RemoveIssue;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.CommandException;
+import com.mindalliance.channels.engine.command.Commander;
+import com.mindalliance.channels.engine.command.commands.PasteAttachment;
+import com.mindalliance.channels.engine.command.commands.RemoveIssue;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
 import com.mindalliance.channels.surveys.SurveyService;

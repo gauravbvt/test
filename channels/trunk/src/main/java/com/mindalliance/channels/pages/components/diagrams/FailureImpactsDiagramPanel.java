@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.png.FailureImpactsPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;

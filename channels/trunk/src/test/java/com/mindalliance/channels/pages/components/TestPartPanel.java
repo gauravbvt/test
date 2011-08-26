@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.components.segment.ExpandedPartPanel;
 import org.apache.wicket.model.Model;

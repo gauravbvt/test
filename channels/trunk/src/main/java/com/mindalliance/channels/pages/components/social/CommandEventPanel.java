@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.social.CommandEvent;
 import com.mindalliance.channels.social.PlanningEventService;
 import org.apache.commons.lang.StringUtils;

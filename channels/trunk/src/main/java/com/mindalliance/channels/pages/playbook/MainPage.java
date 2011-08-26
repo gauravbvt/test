@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Plan;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;

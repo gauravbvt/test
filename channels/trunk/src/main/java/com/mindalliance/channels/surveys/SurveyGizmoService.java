@@ -1,7 +1,7 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.surveys.Survey.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.InfoStandard;
-import com.mindalliance.channels.model.Tag;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.InfoStandard;
+import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;

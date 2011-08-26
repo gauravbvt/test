@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;

@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.menus;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.CommandException;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.engine.command.CommandException;
+import com.mindalliance.channels.engine.command.Commander;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.wicket.AttributeModifier;

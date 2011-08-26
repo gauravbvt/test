@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;

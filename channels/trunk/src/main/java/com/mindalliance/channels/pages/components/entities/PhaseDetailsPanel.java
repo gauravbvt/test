@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;

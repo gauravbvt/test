@@ -2,11 +2,11 @@ package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.PlanPage;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

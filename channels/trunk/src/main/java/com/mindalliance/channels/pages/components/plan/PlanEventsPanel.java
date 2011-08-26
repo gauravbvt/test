@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.GeoLocatable;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.GeoLocatable;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;

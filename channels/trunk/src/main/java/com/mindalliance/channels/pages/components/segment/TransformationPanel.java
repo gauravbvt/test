@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.model.ElementOfInformation;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Subject;
-import com.mindalliance.channels.model.Transformation;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.core.model.ElementOfInformation;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Subject;
+import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.odb.PersistentObject;
+import com.mindalliance.channels.core.odb.PersistentObject;
 
 /**
  * A planning event.

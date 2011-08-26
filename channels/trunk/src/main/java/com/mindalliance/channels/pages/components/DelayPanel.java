@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.command.commands.UpdateSegmentObject;
-import com.mindalliance.channels.model.Delay;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
+import com.mindalliance.channels.core.model.Delay;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.SegmentObject;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;

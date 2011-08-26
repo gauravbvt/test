@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Flow;
 
 /**
  * A flow from/to one actor.

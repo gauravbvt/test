@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;

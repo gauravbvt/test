@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.dao.UserService;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.PlanningEventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;

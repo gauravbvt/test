@@ -4,12 +4,12 @@ package com.mindalliance.channels.pages.reports.guidelines;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.AbstractChannelsTest.InstallSamplesListener;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.dao.UserInfo;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Participation;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.query.PlanService;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserInfo;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.query.PlanService;
 import org.junit.Test;
 import org.springframework.test.context.TestExecutionListeners;
 

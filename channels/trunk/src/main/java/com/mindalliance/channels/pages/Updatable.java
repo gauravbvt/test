@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.util.List;

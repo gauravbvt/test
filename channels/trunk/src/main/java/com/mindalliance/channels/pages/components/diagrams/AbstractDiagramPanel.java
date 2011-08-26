@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;

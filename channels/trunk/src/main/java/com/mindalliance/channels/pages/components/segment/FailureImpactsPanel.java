@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Goal;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Goal;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.diagrams.FailureImpactsDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
-import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;

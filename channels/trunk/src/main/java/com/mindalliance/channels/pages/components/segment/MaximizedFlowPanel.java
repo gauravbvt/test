@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;

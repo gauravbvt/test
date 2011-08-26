@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
-import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;

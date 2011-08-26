@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.util.NameRange;
+import com.mindalliance.channels.core.util.NameRange;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**

@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.model.Hierarchical;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.NotFoundException;
+import com.mindalliance.channels.core.model.Hierarchical;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.NotFoundException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;

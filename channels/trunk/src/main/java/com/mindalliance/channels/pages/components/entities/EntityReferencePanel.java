@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.command.commands.UpdateSegmentObject;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.util.ChannelsUtils;
-import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.nlp.Matcher;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;

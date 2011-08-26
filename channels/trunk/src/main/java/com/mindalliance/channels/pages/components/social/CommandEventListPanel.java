@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.CommandEvent;
 import com.mindalliance.channels.social.PlanningEventService;
-import com.mindalliance.channels.util.PeekAheadIterator;
+import com.mindalliance.channels.core.util.PeekAheadIterator;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;

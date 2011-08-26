@@ -1,18 +1,18 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Employment;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Role;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.util.NameRange;
-import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.core.util.NameRange;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;

@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components.plan.menus;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.commands.AddPart;
-import com.mindalliance.channels.command.commands.AddSegment;
-import com.mindalliance.channels.command.commands.AddUserIssue;
-import com.mindalliance.channels.command.commands.DisconnectAndRemoveSegment;
-import com.mindalliance.channels.command.commands.PasteAttachment;
-import com.mindalliance.channels.command.commands.PastePart;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.engine.command.commands.AddPart;
+import com.mindalliance.channels.engine.command.commands.AddSegment;
+import com.mindalliance.channels.engine.command.commands.AddUserIssue;
+import com.mindalliance.channels.engine.command.commands.DisconnectAndRemoveSegment;
+import com.mindalliance.channels.engine.command.commands.PasteAttachment;
+import com.mindalliance.channels.engine.command.commands.PastePart;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;

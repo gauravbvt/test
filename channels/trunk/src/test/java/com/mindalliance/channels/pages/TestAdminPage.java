@@ -3,10 +3,10 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.dao.PlanDefinition;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.PlanDefinition;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Plan;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.Test;

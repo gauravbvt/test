@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.Channelable;
-import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.Channelable;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;

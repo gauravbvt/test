@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.geo.GeoService;
-import com.mindalliance.channels.model.GeoLocatable;
-import com.mindalliance.channels.model.GeoLocation;
-import com.mindalliance.channels.model.Job;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.engine.geo.GeoService;
+import com.mindalliance.channels.core.model.GeoLocatable;
+import com.mindalliance.channels.core.model.GeoLocation;
+import com.mindalliance.channels.core.model.Job;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;

@@ -3,11 +3,11 @@
 
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.dao.PlanDao;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.Before;

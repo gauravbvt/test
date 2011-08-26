@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;

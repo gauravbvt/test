@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Level;
-import com.mindalliance.channels.model.Taggable;
-import com.mindalliance.channels.model.UserIssue;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.model.Taggable;
+import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxEventBehavior;

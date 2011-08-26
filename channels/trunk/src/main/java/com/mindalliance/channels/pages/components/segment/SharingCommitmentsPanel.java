@@ -1,12 +1,11 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Commitment;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
-import com.mindalliance.channels.query.DefaultQueryService;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;

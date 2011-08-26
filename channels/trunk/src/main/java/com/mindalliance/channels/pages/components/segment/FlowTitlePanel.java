@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;

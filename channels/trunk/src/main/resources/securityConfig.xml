@@ -7,13 +7,13 @@
 
        default-autowire="byName">
 
-    <bean name="user" class="com.mindalliance.channels.dao.User" factory-method="current" scope="session"
+    <bean name="user" class="com.mindalliance.channels.core.dao.User" factory-method="current" scope="session"
           autowire="no"/>
 
-    <bean name="plan" class="com.mindalliance.channels.model.Plan" factory-bean="user" factory-method="getPlan"
+    <bean name="plan" class="com.mindalliance.channels.core.model.Plan" factory-bean="user" factory-method="getPlan"
           scope="session"/>
 
-    <bean id="userService" class="com.mindalliance.channels.dao.FileUserDetailsService">
+    <bean id="userService" class="com.mindalliance.channels.core.dao.FileUserDetailsService">
         <property name="base" value="${channels.home}"/>
         <property name="userDefinitions" value="users.properties"/>
         <property name="defaultDefinitions" value="/WEB-INF/users.properties"/>

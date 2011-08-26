@@ -1,11 +1,11 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.dao.PlanDefinition;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.odb.ODBAccessor;
-import com.mindalliance.channels.odb.ODBTransactionFactory;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.core.dao.PlanDefinition;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.odb.ODBAccessor;
+import com.mindalliance.channels.core.odb.ODBTransactionFactory;
 import org.neodatis.odb.core.query.criteria.Where;
 
 import java.util.ArrayList;

@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.commands.AddProducer;
-import com.mindalliance.channels.command.commands.RemoveProducer;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.engine.command.commands.AddProducer;
+import com.mindalliance.channels.engine.command.commands.RemoveProducer;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;

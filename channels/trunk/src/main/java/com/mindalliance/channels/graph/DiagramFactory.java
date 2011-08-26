@@ -1,15 +1,15 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.diagrams.ProcedureMapDiagram;
-import com.mindalliance.channels.model.Hierarchical;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.Subject;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.core.model.Hierarchical;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.model.Subject;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.springframework.core.io.Resource;
 
 import java.util.List;

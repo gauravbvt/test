@@ -5,7 +5,7 @@ package com.mindalliance.channels.pages;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.core.dao.User;
 
 /**
  * Shown to non-planner users when no production plans are available on the server.

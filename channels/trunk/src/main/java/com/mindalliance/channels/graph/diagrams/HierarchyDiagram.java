@@ -1,13 +1,13 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.analysis.GraphBuilder;
-import com.mindalliance.channels.analysis.graph.HierarchyGraphBuilder;
-import com.mindalliance.channels.analysis.graph.HierarchyRelationship;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.GraphBuilder;
+import com.mindalliance.channels.engine.analysis.graph.HierarchyGraphBuilder;
+import com.mindalliance.channels.engine.analysis.graph.HierarchyRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphRenderer;
-import com.mindalliance.channels.model.Hierarchical;
+import com.mindalliance.channels.core.model.Hierarchical;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;

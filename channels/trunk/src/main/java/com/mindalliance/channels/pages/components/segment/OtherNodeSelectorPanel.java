@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.AddPart;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.AddPart;
+import com.mindalliance.channels.core.model.Connector;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;

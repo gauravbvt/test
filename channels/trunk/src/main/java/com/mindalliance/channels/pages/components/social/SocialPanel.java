@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.PlannerMessage;
 import com.mindalliance.channels.social.PlannerMessagingService;

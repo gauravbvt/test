@@ -1,11 +1,11 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Segment;
 import org.apache.commons.lang.StringUtils;
 import org.jgrapht.Graph;
 

@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.Command;
-import com.mindalliance.channels.command.commands.AddPart;
-import com.mindalliance.channels.command.commands.UpdateSegmentObject;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.engine.command.commands.AddPart;
+import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;

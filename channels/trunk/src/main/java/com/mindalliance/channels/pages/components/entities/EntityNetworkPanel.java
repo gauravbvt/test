@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.components.AbstractResizableDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.EntityNetworkDiagramPanel;

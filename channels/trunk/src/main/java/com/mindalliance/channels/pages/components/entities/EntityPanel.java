@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityActionsMenuPanel;

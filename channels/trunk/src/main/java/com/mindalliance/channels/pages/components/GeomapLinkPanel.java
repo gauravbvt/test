@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.GeoLocatable;
+import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.pages.GeoMapPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;

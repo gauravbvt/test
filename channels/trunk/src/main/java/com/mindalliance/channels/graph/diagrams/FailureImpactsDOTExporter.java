@@ -4,12 +4,12 @@ import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Goal;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Goal;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.SegmentObject;
 import org.jgrapht.Graph;
 
 import java.io.IOException;

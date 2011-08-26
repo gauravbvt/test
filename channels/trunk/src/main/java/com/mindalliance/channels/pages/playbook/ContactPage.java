@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.ResourceSpec;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.procedures.VCardPanel;
 import org.apache.wicket.PageParameters;

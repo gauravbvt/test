@@ -1,15 +1,15 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.imaging.ImagingService;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Connector;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Connector;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Part;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
 

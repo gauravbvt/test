@@ -1,11 +1,11 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.NotFoundException;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Plan;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;

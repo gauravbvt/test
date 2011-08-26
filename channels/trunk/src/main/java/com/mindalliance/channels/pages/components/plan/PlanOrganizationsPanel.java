@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.entities.EntitiesPanel;

@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.EventTiming;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Level;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.EventTiming;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;

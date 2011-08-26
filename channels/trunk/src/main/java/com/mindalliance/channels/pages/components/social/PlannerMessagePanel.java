@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.PlannerMessage;

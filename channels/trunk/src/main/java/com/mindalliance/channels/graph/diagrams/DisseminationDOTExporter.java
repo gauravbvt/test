@@ -1,11 +1,11 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.model.Dissemination;
+import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Segment;
 import org.jgrapht.Graph;
 
 import java.io.PrintWriter;

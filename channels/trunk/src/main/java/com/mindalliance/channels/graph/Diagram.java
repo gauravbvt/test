@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Analyst;
 
 import java.io.OutputStream;
 import java.io.Serializable;

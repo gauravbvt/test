@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components.entities.menus;
 
-import com.mindalliance.channels.geo.GeoService;
-import com.mindalliance.channels.model.*;
-import com.mindalliance.channels.model.GeoLocation;
+import com.mindalliance.channels.engine.geo.GeoService;
+import com.mindalliance.channels.core.model.*;
+import com.mindalliance.channels.core.model.GeoLocation;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;

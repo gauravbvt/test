@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.segment.menus.FlowActionsMenuPanel;

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Node;
 import org.springframework.core.io.Resource;
 
 /**

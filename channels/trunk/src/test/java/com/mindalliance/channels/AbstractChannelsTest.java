@@ -1,15 +1,15 @@
 package com.mindalliance.channels;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.LockManager;
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.attachments.AttachmentManager;
+import com.mindalliance.channels.engine.command.Commander;
+import com.mindalliance.channels.engine.command.LockManager;
+import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.query.DefaultQueryService;
+import com.mindalliance.channels.engine.query.DefaultQueryService;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.IRequestCodingStrategy;

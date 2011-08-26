@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.core.model.Identifiable;
 
 /**
  * That which can acquire and release locks, and other resources.

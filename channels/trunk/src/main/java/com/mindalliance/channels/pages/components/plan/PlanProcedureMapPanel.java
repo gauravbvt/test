@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.analysis.graph.ProceduresGraphBuilder;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.engine.analysis.graph.ProceduresGraphBuilder;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.diagrams.ProcedureMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;

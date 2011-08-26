@@ -1,10 +1,10 @@
 package com.mindalliance.channels.imaging;
 
-import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.engine.query.Assignments;
 
 import java.io.File;
 import java.io.IOException;

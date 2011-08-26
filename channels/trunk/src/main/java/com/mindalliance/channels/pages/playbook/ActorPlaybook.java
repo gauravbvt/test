@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;

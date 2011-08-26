@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Level;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import org.apache.wicket.AttributeModifier;

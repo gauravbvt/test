@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.model.Attachment;
+import com.mindalliance.channels.core.model.Attachment;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;

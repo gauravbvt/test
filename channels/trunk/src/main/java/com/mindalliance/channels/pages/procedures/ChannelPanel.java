@@ -2,12 +2,12 @@
 // All rights reserved.
 package com.mindalliance.channels.pages.procedures;
 
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.query.PlanService;
+import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.ResourceSpec;
+import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.engine.query.PlanService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;

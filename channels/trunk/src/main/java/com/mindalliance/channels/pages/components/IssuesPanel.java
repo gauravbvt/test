@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.AddUserIssue;
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.AddUserIssue;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.Updatable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;

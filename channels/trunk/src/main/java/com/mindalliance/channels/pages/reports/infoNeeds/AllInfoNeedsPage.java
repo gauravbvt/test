@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.reports.infoNeeds;
 
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Participation;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
-import com.mindalliance.channels.query.PlanService;
+import com.mindalliance.channels.engine.query.PlanService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;

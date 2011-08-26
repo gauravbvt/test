@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.util.ChannelsUtils;
-import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;

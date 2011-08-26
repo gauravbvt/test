@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.UpdateObject;
-import com.mindalliance.channels.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.dao.PlanManager;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
-import com.mindalliance.channels.util.ChannelsUtils;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;

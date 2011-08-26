@@ -1,14 +1,13 @@
 package com.mindalliance.channels.pages.procedures;
 
-import com.mindalliance.channels.dao.User;
 import com.mindalliance.channels.imaging.ImagingService;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.ResourceSpec;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;

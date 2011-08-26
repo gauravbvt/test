@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages.procedures;
 
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.Employment;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.ResourceSpec;
+import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.engine.query.Assignments;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;

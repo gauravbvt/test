@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.command.commands.MoveParts;
-import com.mindalliance.channels.model.Goal;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Commander;
+import com.mindalliance.channels.engine.command.commands.MoveParts;
+import com.mindalliance.channels.core.model.Goal;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
-import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;

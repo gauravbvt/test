@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;

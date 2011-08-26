@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.support;
 
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.SegmentObject;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.AjaxIndicatorAwareContainer;

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.Specable;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.ResourceSpec;
+import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;

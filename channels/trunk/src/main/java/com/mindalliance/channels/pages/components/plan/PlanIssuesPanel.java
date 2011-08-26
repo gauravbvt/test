@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.model.Issue;
-import com.mindalliance.channels.model.Level;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Segment;
-import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.nlp.Matcher;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;

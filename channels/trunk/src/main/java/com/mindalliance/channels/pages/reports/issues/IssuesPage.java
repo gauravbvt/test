@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports.issues;
 
-import com.mindalliance.channels.model.Issue;
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.plan.IssuesSummaryTable;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;

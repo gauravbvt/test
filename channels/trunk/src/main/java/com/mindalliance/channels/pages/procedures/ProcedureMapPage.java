@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.procedures;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;

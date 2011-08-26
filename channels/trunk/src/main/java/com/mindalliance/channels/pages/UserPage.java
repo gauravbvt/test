@@ -1,18 +1,18 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Attachment;
-import com.mindalliance.channels.model.Participation;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Attachment;
+import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;

@@ -1,11 +1,11 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.dao.PlanDefinition;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.odb.ODBAccessor;
-import com.mindalliance.channels.odb.ODBTransactionFactory;
+import com.mindalliance.channels.core.dao.PlanDefinition;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.odb.ODBAccessor;
+import com.mindalliance.channels.core.odb.ODBTransactionFactory;
 import org.apache.commons.lang.StringUtils;
 import org.neodatis.odb.core.query.criteria.ComposedExpression;
 import org.neodatis.odb.core.query.criteria.Where;

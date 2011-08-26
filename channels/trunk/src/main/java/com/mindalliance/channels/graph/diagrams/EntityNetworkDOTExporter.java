@@ -1,9 +1,9 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.MetaProvider;
-import com.mindalliance.channels.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelEntity;
 
 /**
  * Entity network DOT exporter.

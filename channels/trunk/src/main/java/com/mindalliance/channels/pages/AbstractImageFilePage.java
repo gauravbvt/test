@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Plan;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Response;

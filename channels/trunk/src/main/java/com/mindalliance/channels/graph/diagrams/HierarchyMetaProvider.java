@@ -1,15 +1,14 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.analysis.graph.HierarchyRelationship;
-import com.mindalliance.channels.dao.User;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.graph.HierarchyRelationship;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.imaging.ImagingService;
-import com.mindalliance.channels.model.Hierarchical;
-import com.mindalliance.channels.model.ModelObject;
+import com.mindalliance.channels.core.model.Hierarchical;
+import com.mindalliance.channels.core.model.ModelObject;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;

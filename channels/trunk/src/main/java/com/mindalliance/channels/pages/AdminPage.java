@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.dao.DefinitionManager;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.dao.UserInfo;
-import com.mindalliance.channels.dao.UserService;
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.core.dao.DefinitionManager;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserInfo;
+import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;

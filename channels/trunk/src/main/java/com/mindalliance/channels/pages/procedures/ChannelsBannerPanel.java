@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.procedures;
 
-import com.mindalliance.channels.model.Channel;
-import com.mindalliance.channels.model.ResourceSpec;
-import com.mindalliance.channels.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.ResourceSpec;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;

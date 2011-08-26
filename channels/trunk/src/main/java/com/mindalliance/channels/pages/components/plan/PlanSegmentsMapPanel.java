@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.analysis.Analyst;
-import com.mindalliance.channels.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Event;
-import com.mindalliance.channels.model.ExternalFlow;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.Phase;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.ExternalFlow;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;

@@ -2,10 +2,10 @@ package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.PlanPage;
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 

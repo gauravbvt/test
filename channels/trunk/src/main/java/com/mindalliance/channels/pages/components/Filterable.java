@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.core.model.Identifiable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**

@@ -1,19 +1,19 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Dissemination;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.Transformation;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Dissemination;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.model.Transformation;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.springframework.core.io.Resource;
 

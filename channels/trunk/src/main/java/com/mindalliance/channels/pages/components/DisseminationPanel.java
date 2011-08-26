@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.Dissemination;
-import com.mindalliance.channels.model.Flow;
-import com.mindalliance.channels.model.Part;
-import com.mindalliance.channels.model.SegmentObject;
-import com.mindalliance.channels.model.Subject;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Dissemination;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.pages.components.diagrams.DisseminationDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
-import com.mindalliance.channels.query.QueryService;
-import com.mindalliance.channels.util.SortableBeanProvider;
+import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;

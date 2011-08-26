@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.model.Channelable;
-import com.mindalliance.channels.model.Flow;
+import com.mindalliance.channels.core.model.Channelable;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;

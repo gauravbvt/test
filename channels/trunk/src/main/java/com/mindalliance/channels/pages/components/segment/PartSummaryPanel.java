@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Part;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;

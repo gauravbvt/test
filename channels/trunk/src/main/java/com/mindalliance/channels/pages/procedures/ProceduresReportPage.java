@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.procedures;
 
-import com.mindalliance.channels.command.Commander;
-import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.engine.command.Commander;
+import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;

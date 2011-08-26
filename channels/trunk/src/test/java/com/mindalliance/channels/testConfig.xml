@@ -24,7 +24,7 @@
     </bean>
 
     <bean id="geoService" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="com.mindalliance.channels.geo.DefaultGeoService"/>
+        <constructor-arg value="com.mindalliance.channels.engine.geo.DefaultGeoService"/>
     </bean>
 
     <bean id="surveyService" class="org.mockito.Mockito" factory-method="mock">

@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.segment.menus;
 
-import com.mindalliance.channels.command.Change;
-import com.mindalliance.channels.command.commands.AddUserIssue;
-import com.mindalliance.channels.command.commands.PasteAttachment;
-import com.mindalliance.channels.model.Identifiable;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.AddUserIssue;
+import com.mindalliance.channels.engine.command.commands.PasteAttachment;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
 import org.apache.wicket.ajax.AjaxRequestTarget;

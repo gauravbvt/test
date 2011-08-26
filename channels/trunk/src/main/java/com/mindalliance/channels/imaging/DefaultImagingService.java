@@ -1,18 +1,18 @@
 package com.mindalliance.channels.imaging;
 
-import com.mindalliance.channels.attachments.AttachmentManager;
-import com.mindalliance.channels.dao.User;
-import com.mindalliance.channels.model.Actor;
-import com.mindalliance.channels.model.Assignment;
-import com.mindalliance.channels.model.ModelEntity;
-import com.mindalliance.channels.model.ModelObject;
-import com.mindalliance.channels.model.Organization;
-import com.mindalliance.channels.model.Place;
-import com.mindalliance.channels.model.Plan;
-import com.mindalliance.channels.model.Role;
-import com.mindalliance.channels.model.Specable;
-import com.mindalliance.channels.model.TransmissionMedium;
-import com.mindalliance.channels.query.Assignments;
+import com.mindalliance.channels.core.attachments.AttachmentManager;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.engine.query.Assignments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -399,7 +399,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                         : modelObject instanceof Role ? "role"
                         : modelObject instanceof Organization ? "organization"
                         : modelObject instanceof Plan ? "plan"
-                        : modelObject instanceof com.mindalliance.channels.model.Event ? "event"
+                        : modelObject instanceof com.mindalliance.channels.core.model.Event ? "event"
                         : modelObject instanceof Place ? "place"
                         : modelObject instanceof TransmissionMedium ? "medium"
                         : "unknown" );

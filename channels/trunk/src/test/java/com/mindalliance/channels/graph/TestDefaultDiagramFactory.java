@@ -1,8 +1,8 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.AbstractChannelsTest;
-import com.mindalliance.channels.model.Node;
-import com.mindalliance.channels.model.Segment;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Segment;
 import org.junit.Test;
 
 import java.io.File;

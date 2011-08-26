@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.model.Plan;
+import com.mindalliance.channels.core.model.Plan;
 
 import java.util.Date;
 import java.util.Iterator;
