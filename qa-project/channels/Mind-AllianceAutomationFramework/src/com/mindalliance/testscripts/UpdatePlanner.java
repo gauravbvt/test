@@ -31,7 +31,7 @@ public class UpdatePlanner
 				GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/input")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Click on 'Channel Administration' link
 				GlobalVariables.iStepNo++ ;
