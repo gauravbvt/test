@@ -113,7 +113,7 @@ public class MAC0021_CopyTask
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Copy task' option, the task should be copied and  a message ' Task copied' should be displayed at the top of the window
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/span"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathCopyAttachmentAssertion")));
 					if (GlobalVariables.oElement.getText().equals("Task copied")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

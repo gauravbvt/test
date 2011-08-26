@@ -125,7 +125,7 @@ public class MAC0018_CopyAttachment
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that When clicked on copy option, the respective attachment should be copied
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/span"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathCopyAttachmentAssertion")));
 				    if(GlobalVariables.oElement.getText().equalsIgnoreCase("Attachment copied")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
